@@ -113,7 +113,7 @@ extern "C" {
  * @anchor Pmic_scratchPadRegSel
  * @name TPS65036x PMIC Scratch Pad Register Selection
  *
- * @brief Scratch pad register numbers used by the Pmic_setScratchPadVal() PMIC
+ * @brief Scratch pad register numbers used by the Pmic_setScratchPadValue() PMIC
  * Core API.
  *
  * @{
@@ -175,24 +175,13 @@ extern "C" {
  * @anchor Pmic_regLockUnlockValues
  * @name TPS65036x Register Lock/Unlock Values
  *
- * @brief Values to be passed into the `lock` parameter of the Pmic_setRegLock()
+ * @brief Values to be passed into the `lock` parameter of the Pmic_setRegLockState()
  * API.
  *
  * @{
  */
 #define PMIC_LOCK                           ((bool)true)
 #define PMIC_UNLOCK                         ((bool)false)
-/** @} */
-
-/**
- * @anchor Pmic_resetRecovCntThrMax
- * @name TPS65036x RESET_CNT and RECOV_CNT Maximum Threshold
- *
- * @brief Maximum thresholds of RESET_CNT and RECOV_CNT.
- *
- * @{
- */
-#define PMIC_RESET_RECOV_CNT_THR_MAX        ((uint8_t)0xFU)
 /** @} */
 
 /* ========================================================================== */
@@ -328,7 +317,7 @@ int32_t Pmic_getSiliconRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *silicon
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_setRegLock(const Pmic_CoreHandle_t *pmicHandle, bool lock);
+int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock);
 
 /**
  * @brief Unlock PMIC registers.
@@ -338,7 +327,7 @@ int32_t Pmic_setRegLock(const Pmic_CoreHandle_t *pmicHandle, bool lock);
  * @return Success code if the register unlock key has been sent to the PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_unlockRegs(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Lock PMIC registers.
@@ -348,7 +337,7 @@ int32_t Pmic_unlockRegs(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the register lock key has been sent to the PMIC, error
  * code otherwise. for valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_lockRegs(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Get the PMIC register lock status.
@@ -361,69 +350,7 @@ int32_t Pmic_lockRegs(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the PMIC register lock status has been read, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getRegLock(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat);
-
-/**
- * @brief Enable or disable PMIC serial communication CRC8.
- *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
- * will be set equal to parameter `crcEnable` upon API call success.
- *
- * @param crc8Enable [IN] CRC8 enable/disable. When set to equal to PMIC_ENABLE,
- * CRC8 will be enabled. Else, CRC8 will be disabled.
- *
- * @return Success code if CRC8 has been enabled or disabled, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_enableDisableCRC8(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable);
-
-/**
- * @brief Enable PMIC serial communication CRC8.
- *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
- * will be set to true upon API call success.
- *
- * @return Success code if CRC8 has been enabled, error code otherwise. For
- * valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_enableCRC8(Pmic_CoreHandle_t *pmicHandle);
-
-/**
- * @brief Disable PMIC serial communication CRC8.
- *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
- * will be set to false upon API call success.
- *
- * @return Success code if CRC8 has been disabled, error code otherwise. For
- * valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_disableCRC8(Pmic_CoreHandle_t *pmicHandle);
-
-/**
- * @brief Get the PMIC serial communication CRC8 enable status.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param crcEnabled [OUT] CRC8 enable status. True if CRC8 is enabled,
- * otherwise false.
- *
- * @return Success code if CRC8 enable status has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getCRC8Enable(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled);
-
-/**
- * @brief Send a FSM command to the PMIC.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param fsmCmd [IN] MCU command for FSM state transition. For valid values,
- * refer to @ref Pmic_fsmCommands.
- *
- * @return Success code if the FSM command has been sent to the PMIC, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_sendFsmCmd(const Pmic_CoreHandle_t *pmicHandle, uint8_t fsmCmd);
+int32_t Pmic_getRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat);
 
 /**
  * @brief Turn on/off the power sequence logic for regulators and other
@@ -558,7 +485,7 @@ int32_t Pmic_getABISTStat(const Pmic_CoreHandle_t *pmicHandle, bool *isActive);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -573,116 +500,7 @@ int32_t Pmic_setScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scrat
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value);
-
-/**
- * @brief Set PMIC recovery counter threshold.
- *
- * @details The PMIC has a counter called RECOV_CNT (recovery counter) that
- * that is incremented each time the PMIC goes to SAFE state. If the counter
- * meets or exceeds the recovery counter threshold (RECOV_CNT >= RECOV_CNT_THR),
- * the PMIC stays in SAFE state until a power cycle occours.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param threshold [IN] Desired recovery counter threshold to be set. See
- * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
- *
- * @return Success code if PMIC recovery counter threshold has been set, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_setRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold);
-
-/**
- * @brief Get PMIC recovery counter threshold.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param threshold [OUT] Recovery counter threshold value obtained from PMIC.
- *
- * @return Success code if PMIC recovery counter threshold has been obtained,
- * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
- */
-int32_t Pmic_getRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
-
-/**
- * @brief Get value of the PMIC recovery counter.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param recovCnt [OUT] PMIC recovery counter value obtained from PMIC.
- *
- * @return Success code if PMIC recovery counter value has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getRecovCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *recovCnt);
-
-/**
- * @brief Clear PMIC recovery counter.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @return Success code if PMIC recovery counter has been cleared without issues,
- * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
- */
-int32_t Pmic_clrRecovCnt(const Pmic_CoreHandle_t *pmicHandle);
-
-/**
- * @brief Set PMIC reset counter threshold.
- *
- * @details The PMIC has a counter called RESET_CNT (reset counter) that
- * increments each time the PMIC enters WARM RESET state. When the counter meets
- * or exceeds the reset counter threshold (RESET_CNT >= RESET_CNT_THR), the PMIC
- * executes an orderly shutdown, enters SAFE state, clears RESET_CNT, and
- * RESET_CNT_INT is asserted.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param threshold [IN] Desired PMIC reset counter threshold to be set. See
- * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
- *
- * @return Success code if PMIC reset counter threshold has been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_setResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold);
-
-/**
- * @brief Get PMIC reset counter threshold.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param threshold [OUT] PMIC reset counter threshold value obtained from the
- * PMIC.
- *
- * @return Success code if PMIC reset counter threshold has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
-
-/**
- * @brief Get value of the PMIC reset counter.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param resetCnt [OUT] PMIC reset counter value obtained from PMIC.
- *
- * @return Success code if PMIC reset counter value has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getResetCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *resetCnt);
-
-/**
- * @brief Clear PMIC reset counter.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @return Success code if PMIC reset counter has been cleared without issues,
- * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
- */
-int32_t Pmic_clrResetCnt(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_getScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

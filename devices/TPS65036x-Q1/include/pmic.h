@@ -136,7 +136,8 @@ typedef struct Pmic_CoreCfg_s
 /* ========================================================================== */
 
 /**
- * @brief Initialize a PMIC handle instance for PMIC LLD.
+ * @brief Initialize a PMIC handle instance for PMIC LLD. Reads the PMIC device
+ * for information and stores obtained data in the handle instance.
  *
  * @param pmicCfg [IN] PMIC handle configuration struct. End-user will input
  * their settings/parameters in this struct to initialize the PMIC handle.
@@ -157,6 +158,19 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle);
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Validate a PMIC handle instance for proper initialization and
+ * construction. Utilized by all public LLD APIs that accept a handle as input
+ * parameter to help prevent corrupt handle usage. Can be used in the application
+ * layer to check the handle independently.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @return Success code if the PMIC handle is valid, error code otherwise. For
+ * valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle);
 
 #ifdef __cplusplus
 }

@@ -582,7 +582,7 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if watchdog error status(es) have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes
  */
-int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat);
+int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat);
 
 /**
  * @brief Clear all PMIC watchdog error statuses. Provided as a convenience,

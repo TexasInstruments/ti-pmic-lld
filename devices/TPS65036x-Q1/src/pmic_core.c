@@ -41,26 +41,6 @@
 #include "pmic_core.h"
 #include "regmap/core.h"
 
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if (pmicHandle == NULL)
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && ((pmicHandle->commHandle == NULL) ||
-        (pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
-        (pmicHandle->critSecStart == NULL) || (pmicHandle->critSecStop == NULL) ||
-        (pmicHandle->drvInitStat != PMIC_DRV_INIT_SUCCESS)))
-    {
-        status = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    return status;
-}
-
 int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -451,23 +431,7 @@ static int32_t CORE_checkFsmCmd(uint8_t fsmCmd)
     return status;
 }
 
-int32_t Pmic_sendFsmCmd(const Pmic_CoreHandle_t *pmicHandle, uint8_t fsmCmd)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = CORE_checkFsmCmd(fsmCmd);
-    }
-
-    // Write FSM command to FSM_COMMAND_REG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_FSM_COMMAND_REG_REGADDR, fsmCmd);
-    }
-
-    return status;
-}
 
 int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat)
 {
@@ -518,7 +482,7 @@ int32_t Pmic_setPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool pwrOn)
     return status;
 }
 
-int32_t Pmic_setScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -536,7 +500,7 @@ int32_t Pmic_setScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scrat
     return status;
 }
 
-int32_t Pmic_getScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -565,73 +529,7 @@ int32_t Pmic_getScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scrat
     return status;
 }
 
-int32_t Pmic_getCRC8Enable(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (crcEnabled == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read INTERFACE_CONF register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
-    }
-
-    // Extract the CRC8 enable status (cast as boolean)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *crcEnabled = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-        pmicHandle->crcEnable = *crcEnabled;
-    }
-
-    return status;
-}
-
-int32_t Pmic_enableDisableCRC8(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read INTERFACE_CONF register
-        status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
-    }
-
-    // Modify I2C_CRC_EN bit then write new register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PMIC_I2C_CRC_EN_SHIFT, PMIC_I2C_CRC_EN_MASK, crc8Enable);
-
-        status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    // Change crcEnable struct member of PMIC handle
-    if (status == PMIC_ST_SUCCESS)
-    {
-        pmicHandle->crcEnable = crc8Enable;
-    }
-
-    return status;
-}
-
-int32_t Pmic_enableCRC8(Pmic_CoreHandle_t *pmicHandle)
-{
-    return Pmic_enableDisableCRC8(pmicHandle, PMIC_ENABLE);
-}
-
-int32_t Pmic_disableCRC8(Pmic_CoreHandle_t *pmicHandle)
-{
-    return Pmic_enableDisableCRC8(pmicHandle, PMIC_DISABLE);
-}
-
-int32_t Pmic_getRegLock(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat)
+int32_t Pmic_getRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -656,7 +554,7 @@ int32_t Pmic_getRegLock(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat)
     return status;
 }
 
-int32_t Pmic_setRegLock(const Pmic_CoreHandle_t *pmicHandle, bool lock)
+int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock)
 {
     const uint8_t key = lock ? PMIC_REG_LOCK : PMIC_REG_UNLOCK;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -670,178 +568,12 @@ int32_t Pmic_setRegLock(const Pmic_CoreHandle_t *pmicHandle, bool lock)
     return status;
 }
 
-int32_t Pmic_unlockRegs(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLock(pmicHandle, PMIC_UNLOCK);
+    return Pmic_setRegLockState(pmicHandle, PMIC_UNLOCK);
 }
 
-int32_t Pmic_lockRegs(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLock(pmicHandle, PMIC_LOCK);
-}
-
-int32_t Pmic_setRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (threshold > PMIC_RESET_RECOV_CNT_THR_MAX))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
-    }
-
-    // Modify RECOV_CNT_THR and Write RECOV_CNT_REG_2
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK, threshold);
-        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_getRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (threshold == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_2 and extract RECOV_CNT_THR
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
-        *threshold = Pmic_getBitField(regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_getRecovCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *recovCnt)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (recovCnt == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_1 and extract RECOV_CNT
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_1_REGADDR, &regData);
-        *recovCnt = Pmic_getBitField(regData, PMIC_RECOV_CNT_SHIFT, PMIC_RECOV_CNT_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_clrRecovCnt(const Pmic_CoreHandle_t *pmicHandle)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_CONTROL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, PMIC_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_CLR_MASK, 1U);
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_RECOV_CNT_CONTROL_REGADDR, regData);
-    }
-
-    return status;
-}
-
-int32_t Pmic_setResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (threshold > PMIC_RESET_RECOV_CNT_THR_MAX))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
-    }
-
-    // Modify RESET_CNT_THR and write RECOV_CNT_REG_2
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK, threshold);
-        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_getResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (threshold == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_2 and extract RESET_CNT_THR
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
-        *threshold = Pmic_getBitField(regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_getResetCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *resetCnt)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (resetCnt == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read RECOV_CNT_REG_1 and extract RESET_CNT
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_1_REGADDR, &regData);
-        *resetCnt = Pmic_getBitField(regData, PMIC_RESET_CNT_SHIFT, PMIC_RESET_CNT_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_clrResetCnt(const Pmic_CoreHandle_t *pmicHandle)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-    uint8_t regData = 0U;
-
-    // Set RESET_CNT_CLR bit field to 1 and write to RECOV_CNT_CONTROL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, PMIC_RESET_CNT_CLR_SHIFT, PMIC_RESET_CNT_CLR_MASK, 1U);
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_RECOV_CNT_CONTROL_REGADDR, regData);
-    }
-
-    return status;
+    return Pmic_setRegLockState(pmicHandle, PMIC_LOCK);
 }

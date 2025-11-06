@@ -216,7 +216,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, co
 
 /**
  * @brief Get PMIC GPIO configurations. This API supports getting the same
- * configurations that are settable through Pmic_gpioSetCfg().
+ * configurations that are settable by `Pmic_gpioSetCfg()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -232,7 +232,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pm
 
 /**
  * @brief Activate or deactivate PMIC GPIO. This API is a superset of
- * Pmic_gpioActivate() and Pmic_gpioDeactivate().
+ * `Pmic_gpioActivate()` and `Pmic_gpioDeactivate()`.
  *
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
@@ -249,7 +249,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pm
 int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool activate);
 
 /**
- * @brief Activate PMIC GPIO. This API is a subset of Pmic_gpioSetActiveState().
+ * @brief Activate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
  *
  * @details When GPIO is activated, its output functionality is enabled and its
  * output state is high (depending on configured polarity).
@@ -265,7 +265,7 @@ int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool ac
 int32_t Pmic_gpioActivate(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Deactivate PMIC GPIO. This API is a subset of Pmic_gpioSetActiveState().
+ * @brief Deactivate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
  *
  * @details When GPIO is deactivated, its output functionality is disabled and its
  * output state is low.

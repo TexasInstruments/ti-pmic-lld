@@ -72,9 +72,9 @@
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetRetLongWin_nullParam_retLongWinStat); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgSendSwTrigger_nullParam_pmicHandle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStat_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStat_nullParam_wdgErrStat); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatAll_nullParam_pmicHandle); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_pmicHandle); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_wdgErrStat); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatusAll_nullParam_pmicHandle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStat_nullParam_pmicHandle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStat_nullParam_wdgErrStat); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStat_nullParam_pmicHandle); \
@@ -131,9 +131,9 @@
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetRetLongWin_nullParam_retLongWinStat); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgSendSwTrigger_nullParam_pmicHandle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStat_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStat_nullParam_wdgErrStat); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatAll_nullParam_pmicHandle); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_pmicHandle); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_wdgErrStat); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatusAll_nullParam_pmicHandle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStat_nullParam_pmicHandle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStat_nullParam_wdgErrStat); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStat_nullParam_pmicHandle); \
@@ -469,27 +469,27 @@ void test_negative_Pmic_wdgWriteAnswer_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStat_nullParam_pmicHandle(void)
+void test_negative_Pmic_wdgClrErrStatus_nullParam_pmicHandle(void)
 {
-    // Pass NULL pmicHandle into Pmic_wdgClrErrStat()
+    // Pass NULL pmicHandle into Pmic_wdgClrErrStatus()
     Pmic_WdgErrStat_t wdgErrStat = {
         .validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID
     };
-    int32_t status = Pmic_wdgClrErrStat(NULL, &wdgErrStat);
+    int32_t status = Pmic_wdgClrErrStatus(NULL, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStat_nullParam_wdgErrStat(void)
+void test_negative_Pmic_wdgClrErrStatus_nullParam_wdgErrStat(void)
 {
-    // Pass NULL wdgErrStat into Pmic_wdgClrErrStat()
-    int32_t status = Pmic_wdgClrErrStat(&pmicHandle, NULL);
+    // Pass NULL wdgErrStat into Pmic_wdgClrErrStatus()
+    int32_t status = Pmic_wdgClrErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStatAll_nullParam_pmicHandle(void)
+void test_negative_Pmic_wdgClrErrStatusAll_nullParam_pmicHandle(void)
 {
-    // Pass NULL pmicHandle into Pmic_wdgClrErrStatAll()
-    int32_t status = Pmic_wdgClrErrStatAll(NULL);
+    // Pass NULL pmicHandle into Pmic_wdgClrErrStatusAll()
+    int32_t status = Pmic_wdgClrErrStatusAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -830,7 +830,7 @@ void test_positive_wdgSwTrigger_detectNoErrors(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -893,7 +893,7 @@ void test_positive_wdgSwTrigger_detectTrigEarlyErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -935,7 +935,7 @@ void test_positive_wdgSwTrigger_detectTrigEarlyErr(void)
     PLATFORM_ASSERT(wdgErrStat.trigEarlyErr == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -963,7 +963,7 @@ void test_positive_wdgQaSequence_detectNoErrors(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1044,7 +1044,7 @@ void test_positive_wdgQaSequence_detect_answErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1095,7 +1095,7 @@ void test_positive_wdgQaSequence_detect_answErr(void)
     PLATFORM_ASSERT(wdgErrStat.answErr == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1124,7 +1124,7 @@ void test_positive_wdgQaSequence_detect_seqErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1174,7 +1174,7 @@ void test_positive_wdgQaSequence_detect_seqErr(void)
     PLATFORM_ASSERT(wdgErrStat.seqErr == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1203,7 +1203,7 @@ void test_positive_wdgQaSequence_detect_AnswEarlyErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1251,7 +1251,7 @@ void test_positive_wdgQaSequence_detect_AnswEarlyErr(void)
     PLATFORM_ASSERT(wdgErrStat.answEarlyErr == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1284,7 +1284,7 @@ void test_positive_wdgQaSequence_detect_timeoutErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1336,7 +1336,7 @@ void test_positive_wdgQaSequence_detect_timeoutErr(void)
     PLATFORM_ASSERT(wdgErrStat.timeoutErr == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1364,7 +1364,7 @@ void test_positive_wdgQaSequence_detect_longWinTimeoutErr(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1396,7 +1396,7 @@ void test_positive_wdgQaSequence_detect_longWinTimeoutErr(void)
     PLATFORM_ASSERT(wdgErrStat.longWinTimeoutInt == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1433,7 +1433,7 @@ void test_positive_wdgQaSequence_detect_failInt(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1498,7 +1498,7 @@ void test_positive_wdgQaSequence_detect_failInt(void)
     PLATFORM_ASSERT(wdgErrStat.failInt == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1531,7 +1531,7 @@ void test_positive_wdgQaSequence_detect_RstInt(void)
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    status = Pmic_wdgClrErrStatAll(&pmicHandle);
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Configure watchdog
@@ -1590,7 +1590,7 @@ void test_positive_wdgQaSequence_detect_RstInt(void)
     PLATFORM_ASSERT(wdgErrStat.rstInt == (bool)true);
 
     // Clear the error and validate that it is cleared
-    status = Pmic_wdgClrErrStat(&pmicHandle, &wdgErrStat);
+    status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

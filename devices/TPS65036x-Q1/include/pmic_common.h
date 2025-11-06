@@ -184,20 +184,7 @@ typedef struct Pmic_CoreHandle_s
 /* ========================================================================== */
 
 /**
- * @brief Validate a PMIC handle instance for proper initialization and
- * construction. Utilized by all public LLD APIs that accept a handle as input
- * parameter to help prevent corrupt handle usage. Can be used in the application
- * layer to check the handle independently.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @return Success code if the PMIC handle is valid, error code otherwise. For
- * valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle);
-
-/**
- * @brief Check whether a validParam is set.
+ * @brief Checks whether a parameter is valid.
  *
  * @param validParamVal [IN] Set of valid parameters.
  *
@@ -211,7 +198,8 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
 }
 
 /**
- * @brief Checks both status and valid parameters.
+ * @brief Checks whether a parameter is valid and whether the status code is equal
+ * to LLD success code.
  *
  * @param vpv [IN] Valid parameter value.
  *
@@ -223,6 +211,48 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
  */
 #define Pmic_validParamStatusCheck(vpv, bMask, status) \
     (((int32_t)status == PMIC_ST_SUCCESS) && Pmic_validParamCheck((uint32_t)vpv, (uint32_t)bMask))
+
+/**
+ * @brief Start a critical section when usage of a shared resource such as an I2C or
+ * SPI bus is required.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+static inline void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pmicHandle)
+{
+    if ((pmicHandle != NULL) && (pmicHandle->critSecStart != NULL))
+    {
+        pmicHandle->critSecStart();
+    }
+}
+
+/**
+ * @brief Stop a critical section after the usage of a shared resource such as an
+ * I2C or SPI bus is complete.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+static inline void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pmicHandle)
+{
+    if ((pmicHandle != NULL) && (pmicHandle->critSecStop != NULL))
+    {
+        pmicHandle->critSecStop();
+    }
+}
+
+/**
+ * @brief Indicate via callback function that an INT event has been detected on the
+ * PMIC.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+static inline void Pmic_irqResponse(const Pmic_CoreHandle_t *pmicHandle)
+{
+    if ((pmicHandle != NULL) && (pmicHandle->irqResponse != NULL))
+    {
+        pmicHandle->irqResponse();
+    }
+}
 
 /**
  * @brief Set a bit field of a register to a desired value.
@@ -242,7 +272,22 @@ static inline void Pmic_setBitField(
 }
 
 /**
- * @brief Set a bit field of a register to a desired value, given a boolean.
+ * @brief Set the value of a bitfield based on the "NAME" of the field, rather than
+ * providing individual SHIFT/MASK values. A simplified version of
+ * `Pmic_setBitField()`.
+ *
+ * @param reg [OUT] The API modifies the desired bit field of the value held
+ * at this address.
+ *
+ * @param name [IN] Bit field name.
+ *
+ * @param val [IN] Desired value to set the bit field to.
+ */
+#define Pmic_setBitFieldByName(reg, name, val) (Pmic_setBitField(reg, name##_SHIFT, name##_MASK, val))
+
+/**
+ * @brief Sets the bit field of an 8-bit unsigned integer to the desired boolean
+ * value.
  *
  * @param regVal [OUT] Pointer to variable holding register value.
  *
@@ -262,7 +307,7 @@ static inline void Pmic_setBitField_b(
 }
 
 /**
- * @brief Get a bit field value of a register.
+ * @brief Get desired bit field of an 8-bit unsigned integer.
  *
  * @param regData [IN] Register data/value.
  *
@@ -278,7 +323,21 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, u
 }
 
 /**
- * @brief Get a bit field value of a register cast as boolean.
+ * @brief Retrieve the value of a bitfield based on the "NAME" of the field, rather
+ * than providing individual SHIFT/MASK values. A simplified version of
+ * `Pmic_getBitField()`.
+ *
+ * @param reg [IN] The API gets the desired bit field from this value.
+ *
+ * @param name [IN] Bit field name.
+ *
+ * @return Value of the desired bit field.
+ */
+#define Pmic_getBitFieldByName(reg, name) (Pmic_getBitField(reg, name##_SHIFT, name##_MASK))
+
+/**
+ * @brief Gets the desired bit field of an 8-bit unsigned integer, casted as a
+ * boolean.
  *
  * @param regData [IN] Register data/value.
  *
@@ -291,45 +350,6 @@ static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
     const uint8_t bitVal = ((regData & (1U << regFieldShift)) >> regFieldShift);
 
     return (bitVal == 1U);
-}
-
-/**
- * @brief Start a critical section.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- */
-static inline void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pmicHandle)
-{
-    if ((pmicHandle != NULL) && (pmicHandle->critSecStart != NULL))
-    {
-        pmicHandle->critSecStart();
-    }
-}
-
-/**
- * @brief Stop a critical section.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- */
-static inline void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pmicHandle)
-{
-    if ((pmicHandle != NULL) && (pmicHandle->critSecStop != NULL))
-    {
-        pmicHandle->critSecStop();
-    }
-}
-
-/**
- * @brief Execute application-specific IRQ response.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- */
-static inline void Pmic_irqResponse(const Pmic_CoreHandle_t *pmicHandle)
-{
-    if ((pmicHandle != NULL) && (pmicHandle->irqResponse != NULL))
-    {
-        pmicHandle->irqResponse();
-    }
 }
 
 #ifdef __cplusplus

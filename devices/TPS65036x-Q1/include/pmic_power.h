@@ -911,9 +911,8 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
 int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
- * @brief Get PMIC buck configuration. This "get" API supports obtaining the
- * same parameters that are settable through the "Set" API
- * (`Pmic_pwrSetBuckCfg`).
+ * @brief Get PMIC buck configuration. This "get" API supports obtaining the same
+ * parameters that are settable by `Pmic_pwrSetBuckCfg()`.
  *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param buckCfg    [OUT] Buck configurations obtained from the PMIC.

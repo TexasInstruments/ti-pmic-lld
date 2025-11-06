@@ -125,7 +125,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_esmStartStopValues
+ * @anchor Pmic_esmSetStartStateValues
  * @name TPS65036x ESM Start/Stop Values
  *
  * @brief Valid values of the ESM_MCU_START bit field.
@@ -233,7 +233,7 @@ typedef struct Pmic_EsmStat_s
  * For more information on ESM configurations, refer to @ref Pmic_EsmCfg.
  *
  * @attention Some ESM configurations can only be set when the ESM is stopped
- * (ESM_START=0). To stop the ESM, see Pmic_esmStartStop() or Pmic_esmStop().
+ * (ESM_START=0). To stop the ESM, see Pmic_esmSetStartState() or Pmic_esmStop().
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -245,8 +245,8 @@ typedef struct Pmic_EsmStat_s
 int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg);
 
 /**
- * @brief Get PMIC ESM configurations. This "Get" API supports obtaining
- * the same parameters that are settable through the "Set" API (`Pmic_esmSetCfg`).
+ * @brief Get PMIC ESM configurations. This API supports obtaining the same
+ * configurations that are settable by `Pmic_esmSetCfg()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -266,12 +266,12 @@ int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCf
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param start [IN] ESM start/stop. For valid values, refer to
- * @ref Pmic_esmStartStopValues
+ * @ref Pmic_esmSetStartStateValues
  *
  * @return Success code if PMIC ESM_MCU_START bit has been configured, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmStartStop(const Pmic_CoreHandle_t *pmicHandle, bool start);
+int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start);
 
 /**
  * @brief Start the PMIC ESM.
@@ -308,7 +308,7 @@ int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if PMIC ESM start/stop status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetStartStop(const Pmic_CoreHandle_t *pmicHandle, bool *start);
+int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start);
 
 /**
  * @brief Get PMIC ESM status.
@@ -326,11 +326,10 @@ int32_t Pmic_esmGetStartStop(const Pmic_CoreHandle_t *pmicHandle, bool *start);
  * @return Success code if PMIC ESM statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esmStat);
 
 /**
- * @brief Clear PMIC ESM statuses. This API supports clearing the same statuses
- * that are obtainable through the "Get" API (`Pmic_esmGetStat`).
+ * @brief Clear PMIC ESM statuses.
  *
  * @attention If end-user calls this API without addressing the root cause of
  * the ESM error statuses, the statuses could continue to be set after API call.
@@ -347,7 +346,7 @@ int32_t Pmic_esmGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esm
  * @return Success code if PMIC ESM statues have been cleared, error code
  * otherwise. for valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmClrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmStat_t *esmStat);
 
 /**
  * @brief Get PMIC ESM error count.

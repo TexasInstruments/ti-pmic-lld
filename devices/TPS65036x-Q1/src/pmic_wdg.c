@@ -816,7 +816,7 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

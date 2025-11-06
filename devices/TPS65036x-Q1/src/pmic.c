@@ -228,3 +228,23 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
 
     return status;
 }
+
+int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (pmicHandle == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && ((pmicHandle->commHandle == NULL) ||
+        (pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
+        (pmicHandle->critSecStart == NULL) || (pmicHandle->critSecStop == NULL) ||
+        (pmicHandle->drvInitStat != PMIC_DRV_INIT_SUCCESS)))
+    {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    return status;
+}

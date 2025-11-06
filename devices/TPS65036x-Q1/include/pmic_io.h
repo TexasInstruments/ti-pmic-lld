@@ -138,7 +138,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
 int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite() API but starts a critical
+ * @brief Identical to `Pmic_ioReadModifyWrite()` API but starts a critical
  * section before the read, modify, and write operations. Afterwards, the
  * critical section is stopped.
  *
@@ -158,7 +158,7 @@ int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regA
 int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite() API, but only the name of the
+ * @brief Identical to `Pmic_ioReadModifyWrite()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -228,6 +228,58 @@ int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t re
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+
+/**
+ * @brief Control whether serial communication CRC is enabled or disabled. This API
+ * is a superset of `Pmic_ioCrcEnable()` and `Pmic_ioCrcDisable()`.
+ *
+ * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * will be set equal to parameter `crcEnable` upon API call success.
+ *
+ * @param crc8Enable [IN] CRC8 enable/disable. When set to equal to PMIC_ENABLE,
+ * CRC8 will be enabled. Else, CRC8 will be disabled.
+ *
+ * @return Success code if CRC8 has been enabled or disabled, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable);
+
+/**
+ * @brief Enable serial communication CRC. This API is a subset of
+ * `Pmic_ioSetCrcEnableState()`.
+ *
+ * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * will be set to true upon API call success.
+ *
+ * @return Success code if CRC8 has been enabled, error code otherwise. For
+ * valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Disable serial communication CRC. This API is a subset of
+ * `Pmic_ioSetCrcEnableState()`.
+ *
+ * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * will be set to false upon API call success.
+ *
+ * @return Success code if CRC8 has been disabled, error code otherwise. For
+ * valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Get serial communication CRC enable/disable state.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param crcEnabled [OUT] CRC8 enable status. True if CRC8 is enabled,
+ * otherwise false.
+ *
+ * @return Success code if CRC8 enable status has been obtained, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled);
 
 #ifdef __cplusplus
 }
