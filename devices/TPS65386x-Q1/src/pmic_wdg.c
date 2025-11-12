@@ -524,18 +524,18 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
-    Pmic_criticalSectionStart(handle);
-
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+
         status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField_b(&regVal, PMIC_WD_EN_SHIFT, enable);
-        status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
-    }
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField_b(&regVal, PMIC_WD_EN_SHIFT, enable);
+            status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
@@ -549,17 +549,17 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    Pmic_criticalSectionStart(handle);
-
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+
         status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regData);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        *isEnabled = Pmic_getBitField_b(regData, PMIC_WD_EN_SHIFT);
-    }
+        if (status == PMIC_ST_SUCCESS) {
+            *isEnabled = Pmic_getBitField_b(regData, PMIC_WD_EN_SHIFT);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
@@ -675,18 +675,18 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
-    Pmic_criticalSectionStart(handle);
-
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+
         status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField_b(&regVal, PMIC_WD_PWRHOLD_SHIFT, enable);
-        status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
-    }
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField_b(&regVal, PMIC_WD_PWRHOLD_SHIFT, enable);
+            status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
@@ -700,17 +700,17 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    Pmic_criticalSectionStart(handle);
-
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+
         status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regData);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        *isEnabled = Pmic_getBitField_b(regData, PMIC_WD_PWRHOLD_SHIFT);
-    }
+        if (status == PMIC_ST_SUCCESS) {
+            *isEnabled = Pmic_getBitField_b(regData, PMIC_WD_PWRHOLD_SHIFT);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
@@ -719,18 +719,18 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
-    Pmic_criticalSectionStart(handle);
-
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+
         status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField_b(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, enable);
-        status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
-    }
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField_b(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, enable);
+            status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
