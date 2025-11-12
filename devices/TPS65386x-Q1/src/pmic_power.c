@@ -2682,6 +2682,12 @@ int32_t Pmic_pwrGetPGoodInStby(Pmic_CoreHandle_t *handle, bool *isEnabled)
     int32_t status = Pmic_checkPmicCoreHandle(handle);
     uint8_t regData = 0U;
 
+    // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     // Read PLDO_EN_OUT_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
