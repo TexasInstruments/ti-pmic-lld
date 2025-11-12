@@ -169,9 +169,21 @@ int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBu
 int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, regAddr, rxBuffer);
-    Pmic_criticalSectionStop(handle);
+    // Validate handle before critical section
+    if (handle == NULL) {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    // Validate rxBuffer parameter
+    if ((status == PMIC_ST_SUCCESS) && (rxBuffer == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, regAddr, rxBuffer);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
@@ -213,9 +225,16 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
 int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioTxByte(handle, regAddr, txData);
-    Pmic_criticalSectionStop(handle);
+    // Validate handle before critical section
+    if (handle == NULL) {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, regAddr, txData);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
