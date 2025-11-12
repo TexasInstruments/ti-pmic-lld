@@ -2659,20 +2659,20 @@ int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable)
     int32_t status = Pmic_checkPmicCoreHandle(handle);
     uint8_t regData = 0U;
 
-    // Read PLDO_EN_OUT_CTRL
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
+        // Read PLDO_EN_OUT_CTRL
+        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, PLDO_EN_OUT_CTRL_REG, &regData);
-    }
 
-    // Modify PGOOD_CTRL and write PLDO_EN_OUT_CTRL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PGOOD_CTRL_SHIFT, enable);
-        status = Pmic_ioTxByte(handle, PLDO_EN_OUT_CTRL_REG, regData);
+        // Modify PGOOD_CTRL and write PLDO_EN_OUT_CTRL
+        if (status == PMIC_ST_SUCCESS)
+        {
+            Pmic_setBitField_b(&regData, PGOOD_CTRL_SHIFT, enable);
+            status = Pmic_ioTxByte(handle, PLDO_EN_OUT_CTRL_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
     }
-    Pmic_criticalSectionStop(handle);
 
     return status;
 }
