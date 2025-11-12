@@ -1152,45 +1152,48 @@ int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
     uint8_t regData = 0U;
     uint16_t reg = 0U;
 
-    // All IRQ statuses are W1C, writing to reserved bits has no effect, so just
-    // write every bit to 1
-    Pmic_criticalSectionStart(handle);
-    for (uint8_t i = 0U; i < NUM_STAT_REGISTERS; i++) {
-        if (status != PMIC_ST_SUCCESS) {
-            break;
-        }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // All IRQ statuses are W1C, writing to reserved bits has no effect, so just
+        // write every bit to 1
+        Pmic_criticalSectionStart(handle);
+        for (uint8_t i = 0U; i < NUM_STAT_REGISTERS; i++) {
+            if (status != PMIC_ST_SUCCESS) {
+                break;
+            }
 
-        reg = IrqStatusRegisters[i];
+            reg = IrqStatusRegisters[i];
 
-        // OFF_STATE_STAT{1,2}_REG are special case, and will be handled
-        // separately
-        if ((reg == OFF_STATE_STAT1_REG) || (reg == OFF_STATE_STAT2_REG)) {
-            continue;
-        }
+            // OFF_STATE_STAT{1,2}_REG are special case, and will be handled
+            // separately
+            if ((reg == OFF_STATE_STAT1_REG) || (reg == OFF_STATE_STAT2_REG)) {
+                continue;
+            }
 
-        if (reg != DEV_ERR_STAT_REG)
-        {
-            status = Pmic_ioTxByte(handle, reg, 0xFFU);
-        }
-        // Special case: DEV_ERR_STAT has DEV_ERR_CNT bit field in it. Setting it can
-        // incur unexpected or undesired behavior, such as causing PMIC to turn off
-        else
-        {
-            status = Pmic_ioRxByte(handle, reg, &regData);
-            if (status == PMIC_ST_SUCCESS)
+            if (reg != DEV_ERR_STAT_REG)
             {
-                Pmic_setBitField_b(&regData, SAFE_ST_TMO_RST_ERR_SHIFT, PMIC_ENABLE);
-                status = Pmic_ioTxByte(handle, reg, regData);
+                status = Pmic_ioTxByte(handle, reg, 0xFFU);
+            }
+            // Special case: DEV_ERR_STAT has DEV_ERR_CNT bit field in it. Setting it can
+            // incur unexpected or undesired behavior, such as causing PMIC to turn off
+            else
+            {
+                status = Pmic_ioRxByte(handle, reg, &regData);
+                if (status == PMIC_ST_SUCCESS)
+                {
+                    Pmic_setBitField_b(&regData, SAFE_ST_TMO_RST_ERR_SHIFT, PMIC_ENABLE);
+                    status = Pmic_ioTxByte(handle, reg, regData);
+                }
             }
         }
-    }
 
-    // Clear OFF_STATE_STAT{1,2}_REG
-    if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioTxByte(handle, OFF_STATE_CLR_REG, 1U << OFF_STATE_STAT_CLR_SHIFT);
-    }
+        // Clear OFF_STATE_STAT{1,2}_REG
+        if (status == PMIC_ST_SUCCESS) {
+            status = Pmic_ioTxByte(handle, OFF_STATE_CLR_REG, 1U << OFF_STATE_STAT_CLR_SHIFT);
+        }
 
-    Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle);
+    }
 
     return status;
 }
