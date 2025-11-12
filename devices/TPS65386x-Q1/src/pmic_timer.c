@@ -184,21 +184,21 @@ int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle)
     int32_t status = Pmic_checkPmicCoreHandle(handle);
     uint8_t regData = 0U;
 
-    // Read TMR_CFG_REG
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
+        // Read TMR_CFG_REG
+        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
-    }
 
-    // Set TMR_CLR bit field to 1 to clear the timer counter then write new
-    // register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, TMR_CLR_SHIFT, TMR_CLR_MASK, 1U);
-        status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
+        // Set TMR_CLR bit field to 1 to clear the timer counter then write new
+        // register value back to PMIC
+        if (status == PMIC_ST_SUCCESS)
+        {
+            Pmic_setBitField(&regData, TMR_CLR_SHIFT, TMR_CLR_MASK, 1U);
+            status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
     }
-    Pmic_criticalSectionStop(handle);
 
     return status;
 }
