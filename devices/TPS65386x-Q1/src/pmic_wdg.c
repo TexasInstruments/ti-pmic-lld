@@ -567,6 +567,10 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
 int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS) {
         status = WDG_setWindowsTimeIntervals(handle, config);
     }
