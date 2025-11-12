@@ -818,6 +818,10 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *e
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
 
+    if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS) {
         if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {
             Pmic_setBitField_b(&regVal, PMIC_WD_LONGWIN_TMO_SHIFT, errors->longWindowTimeout);
