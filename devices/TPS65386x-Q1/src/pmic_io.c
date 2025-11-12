@@ -35,6 +35,7 @@
 /*                            Include Files                                  */
 /*========================================================================== */
 #include <stdint.h>
+#include <stddef.h>
 
 #include "pmic.h"
 #include "pmic_io.h"
@@ -122,32 +123,44 @@ int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBu
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
 
-    // spiBuf[0] = Target register address
-    spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
-
-    // spiBuf[1] = page, R/W, reserved bits
-    // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-    spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
-    spiBuf[1U] |= PMIC_IO_REQ_RW;
-    bufLen = 3U;
-
-    // spiBuf[3] = CCRC calculated based on spiBuf[0], spiBuf[1], and spiBuf[2]
-    spiBuf[3U] = getCRC8Val(spiBuf, bufLen);
-    bufLen = 4U;
-
-    // User-implemented hook transmits spiBuf then overwrites spiBuf with received data
-    status = handle->pFnPmicCommIoRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
-
-    // Validate PCRC
-    if (status == PMIC_ST_SUCCESS) {
-        if (getCRC8Val(spiBuf, bufLen - 1U) != spiBuf[3U]) {
-            status = PMIC_ST_ERR_DATA_IO_CRC;
-        }
+    // Validate handle
+    if (handle == NULL) {
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    // Save RDATA[7:0]
+    // Validate rxBuffer parameter
+    if ((status == PMIC_ST_SUCCESS) && (rxBuffer == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS) {
-        *rxBuffer = spiBuf[2U];
+        // spiBuf[0] = Target register address
+        spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
+
+        // spiBuf[1] = page, R/W, reserved bits
+        // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
+        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
+        spiBuf[1U] |= PMIC_IO_REQ_RW;
+        bufLen = 3U;
+
+        // spiBuf[3] = CCRC calculated based on spiBuf[0], spiBuf[1], and spiBuf[2]
+        spiBuf[3U] = getCRC8Val(spiBuf, bufLen);
+        bufLen = 4U;
+
+        // User-implemented hook transmits spiBuf then overwrites spiBuf with received data
+        status = handle->pFnPmicCommIoRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+
+        // Validate PCRC
+        if (status == PMIC_ST_SUCCESS) {
+            if (getCRC8Val(spiBuf, bufLen - 1U) != spiBuf[3U]) {
+                status = PMIC_ST_ERR_DATA_IO_CRC;
+            }
+        }
+
+        // Save RDATA[7:0]
+        if (status == PMIC_ST_SUCCESS) {
+            *rxBuffer = spiBuf[2U];
+        }
     }
 
     return status;
@@ -168,24 +181,31 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
 
-    // spiBuf[0] = Target register address
-    spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
+    // Validate handle
+    if (handle == NULL) {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-    // spiBuf[1] = page, R/W, reserved bits
-    // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-    spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
-    spiBuf[1U] &= (uint8_t)(~PMIC_IO_REQ_RW);
+    if (status == PMIC_ST_SUCCESS) {
+        // spiBuf[0] = Target register address
+        spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
 
-    // spiBuf[2] = WDATA[7:0]
-    spiBuf[2U] = txData;
-    bufLen = 3U;
+        // spiBuf[1] = page, R/W, reserved bits
+        // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
+        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
+        spiBuf[1U] &= (uint8_t)(~PMIC_IO_REQ_RW);
 
-    // spiBuf[3] = CCRC calculated based on spiBuf[0], spiBuf[1], and spiBuf[2]
-    spiBuf[3U] = getCRC8Val(spiBuf, bufLen);
-    bufLen = 4U;
+        // spiBuf[2] = WDATA[7:0]
+        spiBuf[2U] = txData;
+        bufLen = 3U;
 
-    // User-implemented hook transmits spiBuf
-    status = handle->pFnPmicCommIoWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+        // spiBuf[3] = CCRC calculated based on spiBuf[0], spiBuf[1], and spiBuf[2]
+        spiBuf[3U] = getCRC8Val(spiBuf, bufLen);
+        bufLen = 4U;
+
+        // User-implemented hook transmits spiBuf
+        status = handle->pFnPmicCommIoWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+    }
 
     return status;
 }
@@ -225,8 +245,14 @@ int32_t Pmic_ioRxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t 
     uint32_t value = 0U;
     uint8_t regData = 0U;
 
+    // Validate rxData parameter
+    if (rxData == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     // Validate that `count` is within bounds of the storage type
-    if (count > sizeof(uint32_t))
+    if ((status == PMIC_ST_SUCCESS) && (count > sizeof(uint32_t)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
