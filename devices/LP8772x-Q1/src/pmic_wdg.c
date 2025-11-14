@@ -843,9 +843,9 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
 }
 
 int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
-    int32_t status = PMIC_ST_SUCCESS;
+    int32_t status = Pmic_checkHandle(handle);
 
-    if (wdgAnsInfo == NULL) {
+    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 

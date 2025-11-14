@@ -52,19 +52,19 @@ bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t 
 }
 
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStart != (void *)0U) {
+    if ((handle != (void *)0U) && (handle->pFnPmicCritSecStart != (void *)0U)) {
         handle->pFnPmicCritSecStart();
     }
 }
 
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStop != (void *)0U) {
+    if ((handle != (void *)0U) && (handle->pFnPmicCritSecStop != (void *)0U)) {
         handle->pFnPmicCritSecStop();
     }
 }
 
 void Pmic_irqResponse(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicPseudoIrq != (void *)0U) {
+    if ((handle != (void *)0U) && (handle->pFnPmicPseudoIrq != (void *)0U)) {
         handle->pFnPmicPseudoIrq();
     }
 }
