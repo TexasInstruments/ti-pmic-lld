@@ -141,10 +141,10 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite()` API but starts a critical
+ * @brief Identical to `Pmic_ioUpdateByte()` API but starts a critical
  * section before the read, modify, and write operations. Afterwards, the
  * critical section is stopped.
  *
@@ -161,10 +161,10 @@ int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regA
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite()` API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -178,11 +178,11 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t r
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName(pmicHandle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName(pmicHandle, regAddr, name, value) \
+    Pmic_ioUpdateByte((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite_CS()` API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte_CS()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -196,8 +196,8 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t r
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName_CS(pmicHandle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite_CS((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName_CS(pmicHandle, regAddr, name, value) \
+    Pmic_ioUpdateByte_CS((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
@@ -214,10 +214,10 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t r
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite_b()` API but starts a critical
+ * @brief Identical to `Pmic_ioUpdateByte_b()` API but starts a critical
  * section before the read, modify, and write operations. Afterwards, the critical
  * section is stopped.
  *
@@ -233,7 +233,7 @@ int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t re
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE

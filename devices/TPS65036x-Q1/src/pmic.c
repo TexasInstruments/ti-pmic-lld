@@ -134,7 +134,7 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
     // So if NRSTOUT_READBACK_MASK is writable, the device is A0
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioReadModifyWrite_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
+        status = Pmic_ioUpdateByte_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
     }
 
     // Get actual NRSTOUT_READBACK_MASK value

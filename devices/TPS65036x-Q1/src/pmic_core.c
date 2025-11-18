@@ -58,18 +58,18 @@ int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId)
     return status;
 }
 
-int32_t Pmic_getNvmId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmId)
+int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
-    if ((status == PMIC_ST_SUCCESS) && (nvmId == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (nvmCode == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *nvmId = pmicHandle->nvmId;
+        *nvmCode = pmicHandle->nvmId;
     }
 
     return status;

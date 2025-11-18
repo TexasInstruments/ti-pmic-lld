@@ -839,7 +839,7 @@ int32_t Pmic_PwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
  * @return PMIC_ST_SUCCESS if resource statuses has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *rsrcStatus);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *rsrcStatus);
 
 #ifdef __cplusplus
 }

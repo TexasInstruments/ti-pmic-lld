@@ -135,16 +135,16 @@ typedef struct Pmic_ConfigCrcStat_s {
 int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
 
 /**
- * @brief Get PMIC NVM identifier.
+ * @brief Get PMIC NVM code.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param nvmId [OUT] NVM identifier.
+ * @param nvmCode [OUT] NVM code.
  *
- * @return PMIC_ST_SUCCESS if PMIC NVM identifier has been obtained, error code
+ * @return PMIC_ST_SUCCESS if PMIC NVM code has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmId(Pmic_CoreHandle_t *handle, uint8_t *nvmId);
+int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.
@@ -163,12 +163,12 @@ int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param siRev [OUT] Silicon revision.
+ * @param siliconRev [OUT] Silicon revision.
  *
  * @return PMIC_ST_SUCCESS if PMIC silicon revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getSiRev(Pmic_CoreHandle_t *handle, uint8_t *siRev);
+int32_t Pmic_getSiliconRev(Pmic_CoreHandle_t *handle, uint8_t *siliconRev);
 
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.

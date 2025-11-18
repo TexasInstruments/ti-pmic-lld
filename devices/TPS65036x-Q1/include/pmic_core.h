@@ -270,16 +270,16 @@ typedef struct Pmic_CoreCrc16Cfg_s
 int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId);
 
 /**
- * @brief Get PMIC NVM ID.
+ * @brief Get PMIC NVM code.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param nvmId [IN] PMIC NVM ID.
+ * @param nvmCode [OUT] PMIC NVM code.
  *
- * @return Success code if the PMIC NVM ID has been obtained, error code
+ * @return Success code if the PMIC NVM code has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmId);
+int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.

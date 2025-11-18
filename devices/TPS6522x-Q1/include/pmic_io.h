@@ -136,7 +136,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
  * @brief Identical to `Pmic_ioReadModifyWrite()` API but starts a critical
@@ -156,10 +156,10 @@ int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uin
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite()` API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param handle [IN] PMIC interface handle.
@@ -170,14 +170,14 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  *
  * @param value [IN] Desired value to set the bit field to.
  *
- * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
+ * @return PMIC_ST_SUCCESS if update byte operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName(handle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName(handle, regAddr, name, value) \
+    Pmic_ioUpdateByte((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
- * @brief Identical to `Pmic_ioReadModifyWrite_CS()` API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte_CS()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param handle [IN] PMIC interface handle.
@@ -188,11 +188,11 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  *
  * @param value [IN] Desired value to set the bit field to.
  *
- * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
+ * @return PMIC_ST_SUCCESS if update byte operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName_CS(handle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite_CS((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName_CS(handle, regAddr, name, value) \
+    Pmic_ioUpdateByte_CS((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
@@ -209,7 +209,7 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Identical to `Pmic_ioReadModifyWrite_b()` API but starts a critical
@@ -228,7 +228,7 @@ int32_t Pmic_ioReadModifyWrite_b(const Pmic_Handle_t *handle, uint8_t regAddr, u
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Control whether serial communication CRC is enabled or disabled. This API
