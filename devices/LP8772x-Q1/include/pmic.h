@@ -396,8 +396,8 @@ extern "C" {
  * @param pFnPmicCritSecStop Pointer to Pmic Critical-Section Stop Function.
  * Valid only when `PMIC_CFG_CRITSECSTOP_VALID` bit of `validParams` is set.
  *
- * @param pFnPmicPseudoIrq Pointer to a user provided callback function that can
- * be used to support Pseudo-nINT functionality when servicing WD QA sequences.
+ * @param irqResponseCallback Pointer to a user provided callback function that
+ * can be used to support Pseudo-nINT functionality when servicing WD QA sequences.
  * While performing a WD QA sequence, the PMIC LLD will check the INT_TOP_STATUS
  * field, and if set will call this function to notify the user that an
  * interrupt is pending. Valid only when `PMIC_CFG_PSEUDO_IRQ_VALID` bit of
@@ -429,7 +429,7 @@ typedef struct Pmic_CoreCfg_s {
                                uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
-    void (*pFnPmicPseudoIrq)(void);
+    void (*irqResponseCallback)(void);
 } Pmic_CoreCfg_t;
 
 /*==========================================================================*/

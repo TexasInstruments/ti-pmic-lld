@@ -54,7 +54,7 @@
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoWr); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStart); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicPseudoIrq); \
+                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect_coreCfg_instType); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect__coreCfg_pmicDeviceType); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect_coreCfg_commMode); \
@@ -76,7 +76,7 @@
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoWr); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStart); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_pFnPmicPseudoIrq); \
+                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect_coreCfg_instType); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect__coreCfg_pmicDeviceType); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_incorrect_coreCfg_commMode); \
@@ -181,7 +181,7 @@ static inline void pmicInitTest_initCoreCfg(Pmic_CoreCfg_t *coreCfg)
     coreCfg->pFnPmicCommIoWr = &platform_txByte;
     coreCfg->pFnPmicCritSecStart = &platform_critSecStart;
     coreCfg->pFnPmicCritSecStop = &platform_critSecStop;
-    coreCfg->pFnPmicPseudoIrq = &platform_irqResponse;
+    coreCfg->irqResponseCallback = &platform_irqResponse;
 }
 
 void test_negative_Pmic_init_nullParam_coreCfg_pCommHandle(void)
@@ -262,15 +262,15 @@ void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicPseudoIrq(void)
+void test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
     Pmic_CoreHandle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
-    // Pass NULL pFnPmicPseudoIrq into Pmic_init()
-    coreCfg.pFnPmicPseudoIrq = NULL;
+    // Pass NULL irqResponseCallback into Pmic_init()
+    coreCfg.irqResponseCallback = NULL;
     int32_t status = Pmic_init(&handle, &coreCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
@@ -342,7 +342,7 @@ void test_negative_Pmic_checkPmicCoreHandle_nullParam_pCommHandle(void)
         .pFnPmicCommIoWr = &platform_txByte,
         .pFnPmicCritSecStart = &platform_critSecStart,
         .pFnPmicCritSecStop = &platform_critSecStop,
-        .pFnPmicPseudoIrq = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse
     };
 
     // Pass NULL pCommHandle into Pmic_checkPmicCoreHandle()
@@ -364,7 +364,7 @@ void test_negative_Pmic_checkPmicCoreHandle_nullParam_pFnPmicCommIoRd(void)
         .pFnPmicCommIoWr = &platform_txByte,
         .pFnPmicCritSecStart = &platform_critSecStart,
         .pFnPmicCritSecStop = &platform_critSecStop,
-        .pFnPmicPseudoIrq = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse
     };
 
     // Pass NULL pFnPmicCommIoRd into Pmic_checkPmicCoreHandle()
@@ -387,7 +387,7 @@ void test_negative_Pmic_checkPmicCoreHandle_incorrect_drvInitStatus(void)
         .pFnPmicCommIoWr = &platform_txByte,
         .pFnPmicCritSecStart = &platform_critSecStart,
         .pFnPmicCritSecStop = &platform_critSecStop,
-        .pFnPmicPseudoIrq = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse
     };
     int32_t status = Pmic_checkPmicCoreHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -416,7 +416,7 @@ void test_positive_Pmic_init(void)
     PLATFORM_ASSERT(pmicHandle.pFnPmicCommIoWr == &platform_txByte);
     PLATFORM_ASSERT(pmicHandle.pFnPmicCritSecStart == &platform_critSecStart);
     PLATFORM_ASSERT(pmicHandle.pFnPmicCritSecStop == &platform_critSecStop);
-    PLATFORM_ASSERT(pmicHandle.pFnPmicPseudoIrq == &platform_irqResponse);
+    PLATFORM_ASSERT(pmicHandle.irqResponseCallback == &platform_irqResponse);
 }
 
 void test_positive_Pmic_checkPmicCoreHandle(void)
@@ -450,7 +450,7 @@ void test_positive_Pmic_deinit(void)
     PLATFORM_ASSERT(pmicHandle.pFnPmicCommIoWr == NULL);
     PLATFORM_ASSERT(pmicHandle.pFnPmicCritSecStart == NULL);
     PLATFORM_ASSERT(pmicHandle.pFnPmicCritSecStop == NULL);
-    PLATFORM_ASSERT(pmicHandle.pFnPmicPseudoIrq == NULL);
+    PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
 /**

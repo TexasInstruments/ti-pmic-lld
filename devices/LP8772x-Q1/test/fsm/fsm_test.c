@@ -137,7 +137,7 @@ void fsm_test(void *args)
         .pFnPmicCommIoWr = &platform_txByte,
         .pFnPmicCritSecStart = &platform_critSecStart,
         .pFnPmicCritSecStop = &platform_critSecStop,
-        .pFnPmicPseudoIrq = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse
     };
 
     platform_init();

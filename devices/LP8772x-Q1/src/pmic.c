@@ -154,10 +154,10 @@ static int32_t initCallbackFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHand
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PSEUDO_IRQ_VALID, status)) {
-        if (!config->pFnPmicPseudoIrq) {
+        if (!config->irqResponseCallback) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
-            handle->pFnPmicPseudoIrq = config->pFnPmicPseudoIrq;
+            handle->irqResponseCallback = config->irqResponseCallback;
         }
     }
 
@@ -315,7 +315,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *handle) {
         handle->pFnPmicCommIoWr = (void *)0U;
         handle->pFnPmicCritSecStart = (void *)0U;
         handle->pFnPmicCritSecStop = (void *)0U;
-        handle->pFnPmicPseudoIrq = (void *)0U;
+        handle->irqResponseCallback = (void *)0U;
     }
 
     return status;

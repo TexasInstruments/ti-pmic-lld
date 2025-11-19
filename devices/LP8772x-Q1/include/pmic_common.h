@@ -141,7 +141,7 @@ typedef struct Pmic_DevSubSysInfo_s {
  *
  * @param pFnPmicCritSecStop Function pointer to OS-specific critical section stop.
  *
- * @param pFnPmicPseudoIrq Function pointer to application-specific IRQ response
+ * @param irqResponseCallback Function pointer to application-specific IRQ response
  * when an IRQ is detected during WDG servicing.
  */
 typedef struct Pmic_CoreHandle_s {
@@ -168,7 +168,7 @@ typedef struct Pmic_CoreHandle_s {
                                uint8_t *pTxBuf, uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
-    void (*pFnPmicPseudoIrq)(void);
+    void (*irqResponseCallback)(void);
 } Pmic_CoreHandle_t;
 
 /*==========================================================================*/

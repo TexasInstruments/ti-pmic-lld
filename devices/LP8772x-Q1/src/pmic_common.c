@@ -64,7 +64,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
 }
 
 void Pmic_irqResponseCallback(const Pmic_CoreHandle_t *handle) {
-    if ((handle != (void *)0U) && (handle->pFnPmicPseudoIrq != (void *)0U)) {
-        handle->pFnPmicPseudoIrq();
+    if ((handle != (void *)0U) && (handle->irqResponseCallback != (void *)0U)) {
+        handle->irqResponseCallback();
     }
 }
