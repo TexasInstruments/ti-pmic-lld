@@ -270,7 +270,7 @@ static inline void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pmicHandle)
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-static inline void Pmic_irqResponse(const Pmic_CoreHandle_t *pmicHandle)
+static inline void Pmic_irqResponseCallback(const Pmic_CoreHandle_t *pmicHandle)
 {
     if ((pmicHandle != NULL) && (pmicHandle->irqResponse != NULL))
     {

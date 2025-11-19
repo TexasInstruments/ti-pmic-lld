@@ -155,7 +155,7 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
             // Call the IRQ response API hook if INT_TOP_STATUS bit is set to 1
             if (intTopStatus != 0U)
             {
-                Pmic_irqResponse(pmicHandle);
+                Pmic_irqResponseCallback(pmicHandle);
             }
         }
     }

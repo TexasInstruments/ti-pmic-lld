@@ -352,7 +352,7 @@ static int32_t WDG_getQuestionAndAnswer(Pmic_CoreHandle_t *handle, uint8_t *ansC
 
     /* Check whether INT_TOP_STATUS is set or not, if so indicate this to the user. */
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regVal, PMIC_INT_TOP_STATUS_SHIFT)) {
-        Pmic_irqResponse(handle);
+        Pmic_irqResponseCallback(handle);
     }
 
     return status;
@@ -855,7 +855,7 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
 
         // Execute application-specific IRQ response if INT_TOP_STATUS is 1
         if (Pmic_getBitField_b(regData, PMIC_INT_TOP_STATUS_SHIFT)) {
-            Pmic_irqResponse(handle);
+            Pmic_irqResponseCallback(handle);
         }
     }
 

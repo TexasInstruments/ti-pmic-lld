@@ -250,7 +250,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
-void Pmic_irqResponse(const Pmic_CoreHandle_t *handle);
+void Pmic_irqResponseCallback(const Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired value.
