@@ -91,8 +91,8 @@
                                  PLATFORM_RUN_TEST(test_positive_configCrcCalclate); \
                                  PLATFORM_RUN_TEST(test_positive_getConfigCrc)
 
-#define CORE_TEST_CALCUL_CONFIG_CRC_1_REGADDR (0x61U)
-#define CORE_TEST_CALCUL_CONFIG_CRC_2_REGADDR (0x62U)
+#define CORE_TEST_CALCUL_CONFIG_CRC_1_REG (0x61U)
+#define CORE_TEST_CALCUL_CONFIG_CRC_2_REG (0x62U)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -369,11 +369,11 @@ static int32_t coreTest_getConfigCrc(uint16_t *crc)
     uint8_t crcMsb = 0U, crcLsb = 0U;
     const uint8_t bufLen = 1U;
 
-    status = platform_rxByte(&pmicHandle, PMIC_MAIN_INST, CORE_TEST_CALCUL_CONFIG_CRC_1_REGADDR, &crcLsb, bufLen);
+    status = platform_rxByte(&pmicHandle, PMIC_MAIN_INST, CORE_TEST_CALCUL_CONFIG_CRC_1_REG, &crcLsb, bufLen);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = platform_rxByte(&pmicHandle, PMIC_MAIN_INST, CORE_TEST_CALCUL_CONFIG_CRC_2_REGADDR, &crcMsb, bufLen);
+        status = platform_rxByte(&pmicHandle, PMIC_MAIN_INST, CORE_TEST_CALCUL_CONFIG_CRC_2_REG, &crcMsb, bufLen);
     }
 
     if (status == PMIC_ST_SUCCESS)

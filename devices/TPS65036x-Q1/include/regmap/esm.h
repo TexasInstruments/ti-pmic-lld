@@ -52,15 +52,15 @@ extern "C" {
 /*                      TPS65036x ESM Module Register Map                     */
 /* ========================================================================== */
 
-#define PMIC_ESM_START_REG_REGADDR          ((uint8_t)0x08U)
-#define PMIC_ESM_DELAY1_REG_REGADDR         ((uint8_t)0x3EU)
-#define PMIC_ESM_DELAY2_REG_REGADDR         ((uint8_t)0x3FU)
-#define PMIC_ESM_MODE_CFG_REGADDR           ((uint8_t)0x40U)
-#define PMIC_ESM_HMAX_REG_REGADDR           ((uint8_t)0x41U)
-#define PMIC_ESM_HMIN_REG_REGADDR           ((uint8_t)0x42U)
-#define PMIC_ESM_LMAX_REG_REGADDR           ((uint8_t)0x43U)
-#define PMIC_ESM_LMIN_REG_REGADDR           ((uint8_t)0x44U)
-#define PMIC_ESM_ERR_CNT_REG_REGADDR        ((uint8_t)0x60U)
+#define PMIC_ESM_START_REG_REG          ((uint8_t)0x08U)
+#define PMIC_ESM_DELAY1_REG_REG         ((uint8_t)0x3EU)
+#define PMIC_ESM_DELAY2_REG_REG         ((uint8_t)0x3FU)
+#define PMIC_ESM_MODE_CFG_REG           ((uint8_t)0x40U)
+#define PMIC_ESM_HMAX_REG_REG           ((uint8_t)0x41U)
+#define PMIC_ESM_HMIN_REG_REG           ((uint8_t)0x42U)
+#define PMIC_ESM_LMAX_REG_REG           ((uint8_t)0x43U)
+#define PMIC_ESM_LMIN_REG_REG           ((uint8_t)0x44U)
+#define PMIC_ESM_ERR_CNT_REG_REG        ((uint8_t)0x60U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */

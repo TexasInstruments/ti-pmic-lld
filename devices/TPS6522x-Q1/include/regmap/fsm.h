@@ -51,14 +51,14 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define FSM_TRIG_SEL_1_REGADDR (0x44U)
-#define FSM_TRIG_SEL_2_REGADDR (0x45U)
-#define FSM_TRIG_MASK_1_REGADDR (0x46U)
-#define FSM_TRIG_MASK_2_REGADDR (0x47U)
-#define RECOV_CNT_REG_1_REGADDR (0x83U)
-#define RECOV_CNT_REG_2_REGADDR (0x84U)
-#define SOFT_REBOOT_REG_REGADDR (0xABU)
-#define STARTUP_CTRL_REGADDR    (0xC3U)
+#define FSM_TRIG_SEL_1_REG (0x44U)
+#define FSM_TRIG_SEL_2_REG (0x45U)
+#define FSM_TRIG_MASK_1_REG (0x46U)
+#define FSM_TRIG_MASK_2_REG (0x47U)
+#define RECOV_CNT_REG_1_REG (0x83U)
+#define RECOV_CNT_REG_2_REG (0x84U)
+#define SOFT_REBOOT_REG_REG (0xABU)
+#define STARTUP_CTRL_REG    (0xC3U)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */

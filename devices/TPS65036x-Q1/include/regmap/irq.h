@@ -52,22 +52,22 @@ extern "C" {
 /*                      TPS65036x IRQ Module Register Map                     */
 /* ========================================================================== */
 
-#define PMIC_MASK_BUCK1_2_REGADDR           ((uint8_t)0x36U)
-#define PMIC_MASK_BUCK3_LDO_REGADDR         ((uint8_t)0x37U)
-#define PMIC_MASK_MISC_REGADDR              ((uint8_t)0x38U)
-#define PMIC_MASK_MODERATE_ERR_REGADDR      ((uint8_t)0x39U)
-#define PMIC_MASK_COMM_ERR_REGADDR          ((uint8_t)0x3AU)
-#define PMIC_MASK_ESM_REGADDR               ((uint8_t)0x3BU)
-#define PMIC_INT_TOP_REGADDR                ((uint8_t)0x4FU)
-#define PMIC_INT_BUCK_LDO_REGADDR           ((uint8_t)0x50U)
-#define PMIC_INT_BUCK1_2_REGADDR            ((uint8_t)0x51U)
-#define PMIC_INT_BUCK3_LDO_REGADDR          ((uint8_t)0x52U)
-#define PMIC_INT_MISC_REGADDR               ((uint8_t)0x53U)
-#define PMIC_INT_MODERATE_ERR_REGADDR       ((uint8_t)0x54U)
-#define PMIC_INT_SEVERE_ERR_REGADDR         ((uint8_t)0x55U)
-#define PMIC_INT_FSM_ERR_REGADDR            ((uint8_t)0x56U)
-#define PMIC_INT_COMM_ERR_REGADDR           ((uint8_t)0x57U)
-#define PMIC_INT_ESM_REGADDR                ((uint8_t)0x58U)
+#define PMIC_MASK_BUCK1_2_REG           ((uint8_t)0x36U)
+#define PMIC_MASK_BUCK3_LDO_REG         ((uint8_t)0x37U)
+#define PMIC_MASK_MISC_REG              ((uint8_t)0x38U)
+#define PMIC_MASK_MODERATE_ERR_REG      ((uint8_t)0x39U)
+#define PMIC_MASK_COMM_ERR_REG          ((uint8_t)0x3AU)
+#define PMIC_MASK_ESM_REG               ((uint8_t)0x3BU)
+#define PMIC_INT_TOP_REG                ((uint8_t)0x4FU)
+#define PMIC_INT_BUCK_LDO_REG           ((uint8_t)0x50U)
+#define PMIC_INT_BUCK1_2_REG            ((uint8_t)0x51U)
+#define PMIC_INT_BUCK3_LDO_REG          ((uint8_t)0x52U)
+#define PMIC_INT_MISC_REG               ((uint8_t)0x53U)
+#define PMIC_INT_MODERATE_ERR_REG       ((uint8_t)0x54U)
+#define PMIC_INT_SEVERE_ERR_REG         ((uint8_t)0x55U)
+#define PMIC_INT_FSM_ERR_REG            ((uint8_t)0x56U)
+#define PMIC_INT_COMM_ERR_REG           ((uint8_t)0x57U)
+#define PMIC_INT_ESM_REG                ((uint8_t)0x58U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */

@@ -47,10 +47,10 @@
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define TEST_COMMON_MIN_INT_REGADDR        ((uint8_t)0x50U)
-#define TEST_COMMON_MAX_INT_REGADDR        ((uint8_t)0x58U)
-#define TEST_COMMON_WDG_ERR_STATUS_REGADDR ((uint8_t)0x62U)
-#define TEST_COMMON_REGISTER_LOCK_REGADDR  ((uint8_t)0x09U)
+#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
+#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
+#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
+#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
 #define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
 
 // BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
@@ -65,7 +65,7 @@ int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle)
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
     uint8_t txBuf = 0xFFU;
 
-    for (uint8_t regAddr = TEST_COMMON_MIN_INT_REGADDR; regAddr <= TEST_COMMON_MAX_INT_REGADDR; regAddr++)
+    for (uint8_t regAddr = TEST_COMMON_MIN_INT_REG; regAddr <= TEST_COMMON_MAX_INT_REG; regAddr++)
     {
         if (status != PMIC_ST_SUCCESS)
         {
@@ -77,7 +77,7 @@ int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = platform_txByte(pmicHandle, TEST_COMMON_WDG_ERR_STATUS_REGADDR, 1U, &txBuf);
+        status = platform_txByte(pmicHandle, TEST_COMMON_WDG_ERR_STATUS_REG, 1U, &txBuf);
     }
 
     return status;
@@ -90,7 +90,7 @@ int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = platform_txByte(pmicHandle, TEST_COMMON_REGISTER_LOCK_REGADDR, 1U, &txBuf);
+        status = platform_txByte(pmicHandle, TEST_COMMON_REGISTER_LOCK_REG, 1U, &txBuf);
     }
 
     return status;

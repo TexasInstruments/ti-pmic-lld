@@ -50,7 +50,7 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, REGISTER_LOCK_REGADDR, key);
+        status = Pmic_ioTxByte_CS(handle, REGISTER_LOCK_REG, key);
     }
 
     return status;
@@ -68,7 +68,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, REGISTER_LOCK_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, REGISTER_LOCK_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -90,7 +90,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(pmicHandle, SCRATCH_PAD_REG_1_REGADDR + scratchpadRegNum, value);
+        status = Pmic_ioTxByte_CS(pmicHandle, SCRATCH_PAD_REG_1_REG + scratchpadRegNum, value);
     }
 
     return status;
@@ -112,7 +112,7 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, SCRATCH_PAD_REG_1_REGADDR + scratchpadRegNum, value);
+        status = Pmic_ioRxByte_CS(pmicHandle, SCRATCH_PAD_REG_1_REG + scratchpadRegNum, value);
     }
 
     return status;

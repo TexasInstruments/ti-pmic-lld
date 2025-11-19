@@ -51,16 +51,16 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define WD_ANSWER_REG_REGADDR        (0x401U)
-#define WD_QUESTION_ANSW_CNT_REGADDR (0x402U)
-#define WD_WIN1_CFG_REGADDR          (0x403U)
-#define WD_WIN2_CFG_REGADDR          (0x404U)
-#define WD_LONGWIN_CFG_REGADDR       (0x405U)
-#define WD_MODE_REG_REGADDR          (0x406U)
-#define WD_QA_CFG_REGADDR            (0x407U)
-#define WD_ERR_STATUS_REGADDR        (0x408U)
-#define WD_THR_CFG_REGADDR           (0x409U)
-#define WD_FAIL_CNT_REG_REGADDR      (0x40AU)
+#define WD_ANSWER_REG_REG        (0x401U)
+#define WD_QUESTION_ANSW_CNT_REG (0x402U)
+#define WD_WIN1_CFG_REG          (0x403U)
+#define WD_WIN2_CFG_REG          (0x404U)
+#define WD_LONGWIN_CFG_REG       (0x405U)
+#define WD_MODE_REG_REG          (0x406U)
+#define WD_QA_CFG_REG            (0x407U)
+#define WD_ERR_STATUS_REG        (0x408U)
+#define WD_THR_CFG_REG           (0x409U)
+#define WD_FAIL_CNT_REG_REG      (0x40AU)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */

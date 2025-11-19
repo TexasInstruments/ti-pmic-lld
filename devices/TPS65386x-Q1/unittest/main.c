@@ -68,20 +68,20 @@ Test(core, write_and_read, .init = PmicHandleInitSetup) {
     const uint8_t testPattern = 0x55;
 
     // Read the initial value of the register so we can set it back when done.
-    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regDataInitial);
+    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REG, &regDataInitial);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
     // Write to the customer scratch 1 register, then read it back to confirm
     // transport layer.
-    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, testPattern);
+    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REG, testPattern);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regData);
+    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REG, &regData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     cr_assert(eq(u8, regData, testPattern));
 
     // Now set the register back to what it was originally
-    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, regDataInitial);
+    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REG, regDataInitial);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 }
 

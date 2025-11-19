@@ -62,7 +62,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
     // Read RECOV_CNT_REG_1 and extract RECOV_CNT
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_1_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_1_REG, &regData);
         *recovCnt = Pmic_getBitField(regData, RECOV_CNT_SHIFT, RECOV_CNT_MASK);
     }
 
@@ -78,7 +78,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, RECOV_CNT_CLR_SHIFT, RECOV_CNT_CLR_MASK, 1U);
-        status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REGADDR, regData);
+        status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REG, regData);
     }
 
     return status;
@@ -98,14 +98,14 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
     Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, RECOV_CNT_REG_2_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, RECOV_CNT_REG_2_REG, &regData);
     }
 
     // Modify RECOV_CNT_THR and Write RECOV_CNT_REG_2
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK, recovCntThr);
-        status = Pmic_ioTxByte(handle, RECOV_CNT_REG_2_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, RECOV_CNT_REG_2_REG, regData);
     }
     Pmic_criticalSectionStop(handle);
 
@@ -125,7 +125,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr
     // Read RECOV_CNT_REG_2 and extract RECOV_CNT_THR
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_2_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_2_REG, &regData);
         *recovCntThr = Pmic_getBitField(regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK);
     }
 
@@ -141,7 +141,7 @@ int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, SOFT_REBOOT_SHIFT, SOFT_REBOOT_MASK, 1U);
-        status = Pmic_ioTxByte_CS(handle, SOFT_REBOOT_REG_REGADDR, regData);
+        status = Pmic_ioTxByte_CS(handle, SOFT_REBOOT_REG_REG, regData);
     }
 
     return status;
@@ -161,14 +161,14 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
     Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, STARTUP_CTRL_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, STARTUP_CTRL_REG, &regData);
     }
 
     // Modify STARTUP_DEST and write STARTUP_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK, destination);
-        status = Pmic_ioTxByte(handle, STARTUP_CTRL_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, STARTUP_CTRL_REG, regData);
     }
     Pmic_criticalSectionStop(handle);
 
@@ -188,7 +188,7 @@ int32_t Pmic_fsmGetStartupDest(const Pmic_Handle_t *handle, uint8_t *destination
     // Read STARTUP_CTRL and extract STARTUP_DEST
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, STARTUP_CTRL_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, STARTUP_CTRL_REG, &regData);
         *destination = Pmic_getBitField(regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK);
     }
 
@@ -235,32 +235,32 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
         switch (gpioTriggerCfg->pinNum)
         {
             case PMIC_FSM_GPIO_PIN1:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO1_FSM_MASK_SHIFT;
                 maskPolShift = GPIO1_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN2:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO2_FSM_MASK_SHIFT;
                 maskPolShift = GPIO2_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN3:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO3_FSM_MASK_SHIFT;
                 maskPolShift = GPIO3_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN4:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO4_FSM_MASK_SHIFT;
                 maskPolShift = GPIO4_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN5:
-                regAddr = FSM_TRIG_MASK_2_REGADDR;
+                regAddr = FSM_TRIG_MASK_2_REG;
                 maskShift = GPIO5_FSM_MASK_SHIFT;
                 maskPolShift = GPIO5_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN6:
-                regAddr = FSM_TRIG_MASK_2_REGADDR;
+                regAddr = FSM_TRIG_MASK_2_REG;
                 maskShift = GPIO6_FSM_MASK_SHIFT;
                 maskPolShift = GPIO6_FSM_MASK_POL_SHIFT;
                 break;
@@ -331,32 +331,32 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
         switch (gpioTriggerCfg->pinNum)
         {
             case PMIC_FSM_GPIO_PIN1:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO1_FSM_MASK_SHIFT;
                 maskPolShift = GPIO1_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN2:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO2_FSM_MASK_SHIFT;
                 maskPolShift = GPIO2_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN3:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO3_FSM_MASK_SHIFT;
                 maskPolShift = GPIO3_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN4:
-                regAddr = FSM_TRIG_MASK_1_REGADDR;
+                regAddr = FSM_TRIG_MASK_1_REG;
                 maskShift = GPIO4_FSM_MASK_SHIFT;
                 maskPolShift = GPIO4_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN5:
-                regAddr = FSM_TRIG_MASK_2_REGADDR;
+                regAddr = FSM_TRIG_MASK_2_REG;
                 maskShift = GPIO5_FSM_MASK_SHIFT;
                 maskPolShift = GPIO5_FSM_MASK_POL_SHIFT;
                 break;
             case PMIC_FSM_GPIO_PIN6:
-                regAddr = FSM_TRIG_MASK_2_REGADDR;
+                regAddr = FSM_TRIG_MASK_2_REG;
                 maskShift = GPIO6_FSM_MASK_SHIFT;
                 maskPolShift = GPIO6_FSM_MASK_POL_SHIFT;
                 break;
@@ -454,7 +454,7 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
     // Update FSM_TRIG_SEL_1 register
     if ((status == PMIC_ST_SUCCESS) && updateReg1)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REGADDR, &regData1);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -475,19 +475,19 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
                 Pmic_setBitField(&regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK, triggerCfg->mcuRailTrig);
             }
 
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REGADDR, regData1);
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REG, regData1);
         }
     }
 
     // Update FSM_TRIG_SEL_2 register
     if ((status == PMIC_ST_SUCCESS) && updateReg2)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REGADDR, &regData2);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
 
         if (status == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField(&regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK, triggerCfg->moderateErrTrig);
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REGADDR, regData2);
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REG, regData2);
         }
     }
 
@@ -530,7 +530,7 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
     // Read FSM_TRIG_SEL_1 register
     if ((status == PMIC_ST_SUCCESS) && readReg1)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REGADDR, &regData1);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -556,7 +556,7 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
     // Read FSM_TRIG_SEL_2 register
     if ((status == PMIC_ST_SUCCESS) && readReg2)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REGADDR, &regData2);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
 
         if (status == PMIC_ST_SUCCESS)
         {

@@ -294,7 +294,7 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled
     // Read INTERFACE_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
     }
 
     // Extract the CRC8 enable status (cast as boolean)
@@ -316,7 +316,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read INTERFACE_CONF register
-        status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
     }
 
     // Modify I2C_CRC_EN bit then write new register value back to PMIC
@@ -324,7 +324,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
     {
         Pmic_setBitField_b(&regData, PMIC_I2C_CRC_EN_SHIFT, PMIC_I2C_CRC_EN_MASK, crc8Enable);
 
-        status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, regData);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, regData);
     }
     Pmic_criticalSectionStop(pmicHandle);
 

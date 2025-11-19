@@ -96,7 +96,7 @@ static int32_t GPIO_validatePinNum(uint8_t pinNum)
  */
 static uint8_t GPIO_getConfRegAddr(uint8_t pinNum)
 {
-    return (uint8_t)(GPIO1_CONF_REGADDR + (pinNum - PMIC_GPIO_PIN1));
+    return (uint8_t)(GPIO1_CONF_REG + (pinNum - PMIC_GPIO_PIN1));
 }
 
 /**
@@ -436,14 +436,14 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, GPIO_OUT_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, GPIO_OUT_1_REG, &regData);
     }
 
     // Set or clear the bit for this GPIO
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, bitShift, bitMask, (uint8_t)(high ? 1U : 0U));
-        status = Pmic_ioTxByte(handle, GPIO_OUT_1_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, GPIO_OUT_1_REG, regData);
     }
 
     // End critical section
@@ -480,7 +480,7 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, GPIO_IN_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, GPIO_IN_1_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -513,7 +513,7 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
     }
 
     // Set function select
@@ -539,7 +539,7 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
     // Write modified register data back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, POWER_ON_CONFIG_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, POWER_ON_CONFIG_REG, regData);
     }
 
     // End critical section
@@ -568,7 +568,7 @@ int32_t Pmic_gpioGetNIntEnDrvCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrv
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -606,7 +606,7 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high)
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -639,7 +639,7 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
     }
 
     // Set function select
@@ -690,7 +690,7 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
     // Write modified register data back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, POWER_ON_CONFIG_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, POWER_ON_CONFIG_REG, regData);
     }
 
     // End critical section
@@ -719,7 +719,7 @@ int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDr
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -762,7 +762,7 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -809,7 +809,7 @@ int32_t Pmic_gpioGetNRstOutVal(const Pmic_Handle_t *handle, bool *high)
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 

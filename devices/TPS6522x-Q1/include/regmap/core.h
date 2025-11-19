@@ -51,18 +51,18 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define DEV_REV_REGADDR           (0x01U)
-#define NVM_CODE_1_REGADDR        (0x02U)
-#define NVM_CODE_2_REGADDR        (0x03U)
-#define CONFIG_1_REGADDR          (0x7DU)
-#define CONFIG_2_REGADDR          (0x7EU)
-#define MISC_CTRL_REGADDR         (0x81U)
-#define REGISTER_LOCK_REGADDR     (0xA1U)
-#define MANUFACTURING_VER_REGADDR (0xA6U)
-#define SCRATCH_PAD_REG_1_REGADDR (0xC9U)
-#define SCRATCH_PAD_REG_2_REGADDR (0xCAU)
-#define SCRATCH_PAD_REG_3_REGADDR (0xCBU)
-#define SCRATCH_PAD_REG_4_REGADDR (0xCCU)
+#define DEV_REV_REG           (0x01U)
+#define NVM_CODE_1_REG        (0x02U)
+#define NVM_CODE_2_REG        (0x03U)
+#define CONFIG_1_REG          (0x7DU)
+#define CONFIG_2_REG          (0x7EU)
+#define MISC_CTRL_REG         (0x81U)
+#define REGISTER_LOCK_REG     (0xA1U)
+#define MANUFACTURING_VER_REG (0xA6U)
+#define SCRATCH_PAD_REG_1_REG (0xC9U)
+#define SCRATCH_PAD_REG_2_REG (0xCAU)
+#define SCRATCH_PAD_REG_3_REG (0xCBU)
+#define SCRATCH_PAD_REG_4_REG (0xCCU)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */

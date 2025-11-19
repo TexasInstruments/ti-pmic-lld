@@ -70,34 +70,34 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
     // Read INTERFACE_CONF register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract I2C_CRC_EN bit field and read DEV_REV register
         pmicHandle->crcEnable = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_DEV_REV_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_DEV_REV_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
         pmicHandle->devRev = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_1_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
         pmicHandle->nvmId = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_REV bit field and read MANUFACTURING_VER register
         pmicHandle->nvmRev = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_MANUFACTURING_VER_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_MANUFACTURING_VER_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -117,7 +117,7 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
     int32_t status = PMIC_ST_SUCCESS;
 
     // Get register lock status
-    status = Pmic_ioRxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, &regData);
 
     // Unlock registers if they are locked
     if (status == PMIC_ST_SUCCESS)
@@ -126,7 +126,7 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
 
         if (regsLocked)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, REG_LOCK_KEY);
+            status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, REG_LOCK_KEY);
         }
     }
 
@@ -134,13 +134,13 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
     // So if NRSTOUT_READBACK_MASK is writable, the device is A0
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioUpdateByte_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
+        status = Pmic_ioUpdateByte_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REG, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
     }
 
     // Get actual NRSTOUT_READBACK_MASK value
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_MASK_MODERATE_ERR_REG, &regData);
     }
 
     // Device is A0 if NRSTOUT_READBACK_MASK is 1. Otherwise, device is B0.
@@ -155,7 +155,7 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
     if ((status == PMIC_ST_SUCCESS) && regsLocked)
     {
 
-        status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, REG_LOCK_VALUE);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, REG_LOCK_VALUE);
     }
 
     return status;

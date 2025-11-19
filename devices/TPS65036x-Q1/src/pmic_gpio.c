@@ -56,7 +56,7 @@ static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_G
 
     // Read INTERFACE_CONF
     Pmic_criticalSectionStart(pmicHandle);
-    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
     // Set GPIO polarity
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_POLARITY_VALID, status))
@@ -87,7 +87,7 @@ static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_G
     // Write INTERFACE_CONF
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, regData);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, regData);
     }
     Pmic_criticalSectionStop(pmicHandle);
 
@@ -101,7 +101,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, const Pmi
 
     // Read FUNC_CONF
     Pmic_criticalSectionStart(pmicHandle);
-    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_FUNC_CONF_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
 
     // Set NINT_GPI pullup/pulldown resistor configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_PU_PD_CFG_VALID, status))
@@ -158,7 +158,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, const Pmi
     // Write FUNC_CONF
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_FUNC_CONF_REGADDR, regData);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_FUNC_CONF_REG, regData);
     }
     Pmic_criticalSectionStop(pmicHandle);
 
@@ -211,7 +211,7 @@ static int32_t GPIO_getGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_GpioCfg
     uint8_t regData = 0U;
 
     // Read INTERFACE_CONF
-    int32_t status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -237,7 +237,7 @@ static int32_t GPIO_getNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_Gpio
     uint8_t regData = 0U;
 
     // Read FUNC_CONF
-    int32_t status = Pmic_ioRxByte_CS(pmicHandle, PMIC_FUNC_CONF_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte_CS(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -322,13 +322,13 @@ int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool ac
     {
         // Read INTERFACE_CONF
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
         // Modify GPO_EN bit field; Write INTERFACE_CONF
         if (status == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField_b(&regData, PMIC_GPO_EN_SHIFT, PMIC_GPO_EN_MASK, activate);
-            status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, regData);
+            status = Pmic_ioTxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, regData);
         }
         Pmic_criticalSectionStop(pmicHandle);
     }
@@ -359,7 +359,7 @@ int32_t Pmic_gpioGetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool *a
     if (status == PMIC_ST_SUCCESS)
     {
         // Read INTERFACE_CONF
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
         // Get GPO_EN bit field
         if (status == PMIC_ST_SUCCESS)

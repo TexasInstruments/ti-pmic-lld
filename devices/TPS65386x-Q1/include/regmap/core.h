@@ -40,22 +40,22 @@ extern "C" {
 #endif
 
 /** @brief: PMIC Module Device Revision Infos */
-#define PMIC_DEV_ID_REGADDR (0x00U)
+#define PMIC_DEV_ID_REG (0x00U)
 
 /** @brief  PMIC STAT_READBACK_ERR register Addresses */
-#define PMIC_RDBK_ERR_STAT_REGADDR (0xAU)
+#define PMIC_RDBK_ERR_STAT_REG (0xAU)
 
 /** @brief   PMIC AMUX/DMUX Control Register Address */
-#define PMIC_DIAG_OUT_CFG_CTRL_REGADDR (0x58U)
-#define PMIC_DIAG_OUT_CFG_REGADDR      (0x59U)
+#define PMIC_DIAG_OUT_CFG_CTRL_REG (0x58U)
+#define PMIC_DIAG_OUT_CFG_REG      (0x59U)
 
 /** @brief: PMIC STATE_STAT and RST_MCU_TMR Registers */
-#define PMIC_STATE_CTRL_REGADDR  (0x16U)
-#define PMIC_STATE_STAT_REGADDR  (0x17U)
-#define PMIC_RST_MCU_TMR_REGADDR (0x18U)
+#define PMIC_STATE_CTRL_REG  (0x16U)
+#define PMIC_STATE_STAT_REG  (0x17U)
+#define PMIC_RST_MCU_TMR_REG (0x18U)
 
 /** @brief  PMIC Dual Random Spread Spectrum register Addresses */
-#define PMIC_BUCK_BST_CFG_REGADDR (0x1BU)
+#define PMIC_BUCK_BST_CFG_REG (0x1BU)
 
 /** @brief  PMIC Register, Timer and Counter Lock register Addresses */
 #define CFG_REG_UNLOCK_SEQ_REG          (uint16_t)(0x03)
@@ -63,26 +63,26 @@ extern "C" {
 #define REG_STAT_REG                    (uint16_t)(0x09)
 
 /** @brief  PMIC Scratchpad register Addresses */
-#define PMIC_CUSTOMER_SCRATCH1_REGADDR (0x68U)
-#define PMIC_CUSTOMER_SCRATCH2_REGADDR (0x69U)
+#define PMIC_CUSTOMER_SCRATCH1_REG (0x68U)
+#define PMIC_CUSTOMER_SCRATCH2_REG (0x69U)
 
 /** @brief  PMIC Watchdog Long Window Config register Addresses */
 #define PMIC_WD_LONGWIN_CFG_REG (0x3DU)
 
 /** @brief  PMIC SAFE_TMO_CFG register Addresses */
-#define PMIC_SAFE_TMO_CFG_REGADDR (0x52U)
+#define PMIC_SAFE_TMO_CFG_REG (0x52U)
 
 /** @brief  PMIC SAFE_OUT register Addresses */
-#define PMIC_SAFE_OUT_CFG_CTRL_REGADDR (0x54U)
+#define PMIC_SAFE_OUT_CFG_CTRL_REG (0x54U)
 
 /** @brief  PMIC SAFE_OUT2_CFG1 register Addresses */
-#define PMIC_SAFE_OUT2_CFG1_REGADDR (0x55U)
+#define PMIC_SAFE_OUT2_CFG1_REG (0x55U)
 
 /** @brief  PMIC SAFE_OUT2_CFG2 register Addresses */
-#define PMIC_SAFE_OUT2_CFG2_REGADDR (0x56U)
+#define PMIC_SAFE_OUT2_CFG2_REG (0x56U)
 
 /** @brief  PMIC SAFE_OUT2_CFG3 register Addresses */
-#define PMIC_SAFE_OUT2_CFG3_REGADDR (0x57U)
+#define PMIC_SAFE_OUT2_CFG3_REG (0x57U)
 
 #define PMIC_CUSTOMER_SCRATCH1_SHIFT (0X00U)
 #define PMIC_CUSTOMER_SCRATCH2_SHIFT (0X00U)
@@ -232,10 +232,10 @@ extern "C" {
 #define PMIC_SAFEOUT2_PWML_PLS_SC_MASK ((uint8_t)(0x0FU << PMIC_SAFEOUT2_PWML_PLS_SC_SHIFT))
 
 /** @brief  PMIC power Configuration Register Address */
-#define PMIC_CFG1_REGADDR (0x7DU)
+#define PMIC_CFG1_REG (0x7DU)
 
 /** @brief  PMIC CONFIG_2 register Addresses */
-#define PMIC_CONFIG_2_REGADDR (0x7EU)
+#define PMIC_CONFIG_2_REG (0x7EU)
 
 /* Sub address command as per tps653860xx datasheet */
 #define CRC_POLY			(0x107U)

@@ -82,13 +82,13 @@
                                PLATFORM_RUN_TEST(test_positive_enableDisableCrc)
 
 /* PMIC scratchpad register addresses */
-#define IO_TEST_SCRATCH_PAD_REG_1_REGADDR (0x0AU)
-#define IO_TEST_SCRATCH_PAD_REG_2_REGADDR (0x0BU)
-#define IO_TEST_SCRATCH_PAD_REG_3_REGADDR (0x0CU)
-#define IO_TEST_SCRATCH_PAD_REG_4_REGADDR (0x0DU)
+#define IO_TEST_SCRATCH_PAD_REG_1_REG (0x0AU)
+#define IO_TEST_SCRATCH_PAD_REG_2_REG (0x0BU)
+#define IO_TEST_SCRATCH_PAD_REG_3_REG (0x0CU)
+#define IO_TEST_SCRATCH_PAD_REG_4_REG (0x0DU)
 
 /* Max PMIC user-space register address */
-#define IO_TEST_MAX_REGADDR (0x62U)
+#define IO_TEST_MAX_REG (0x62U)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -202,7 +202,7 @@ void test_negative_Pmic_ioTxByte_nullParam_handle(void)
 {
     // Pass null handle into Pmic_ioTxByte()
     const uint8_t regData = 0xAAU;
-    int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, regData);
+    int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
@@ -210,14 +210,14 @@ void test_negative_Pmic_ioRxByte_nullParam_handle(void)
 {
     // Pass null handle into Pmic_ioRxByte()
     uint8_t regData = 0U;
-    int32_t status = Pmic_ioRxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
 void test_negative_Pmic_ioRxByte_nullParam_rxBuffer(void)
 {
     // Pass null rxBuffer into Pmic_ioRxByte()
-    int32_t status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, NULL);
+    int32_t status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -225,7 +225,7 @@ void test_negative_Pmic_ioTxByte_CS_nullParam_handle(void)
 {
     // Pass null handle into Pmic_ioTxByte_CS()
     const uint8_t regData = 0xAAU;
-    int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, regData);
+    int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
@@ -233,14 +233,14 @@ void test_negative_Pmic_ioRxByte_CS_nullParam_handle(void)
 {
     // Pass null handle into Pmic_ioRxByte_CS()
     uint8_t regData = 0U;
-    int32_t status = Pmic_ioRxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, &regData);
+    int32_t status = Pmic_ioRxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
 void test_negative_Pmic_ioRxByte_CS_nullParam_rxBuffer(void)
 {
     // Pass null rxBuffer into Pmic_ioRxByte_CS()
-    int32_t status = Pmic_ioRxByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REGADDR, NULL);
+    int32_t status = Pmic_ioRxByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -286,7 +286,7 @@ void test_positive_Pmic_ioTxByte_Pmic_ioRxByte_writeReadScratchpadReg1To4(void)
     uint8_t initVal = 0U, expVal = 0U, actVal = 0U;
 
     // For each scratchpad register...
-    for (uint8_t regAddr = IO_TEST_SCRATCH_PAD_REG_1_REGADDR; regAddr <= IO_TEST_SCRATCH_PAD_REG_4_REGADDR; regAddr++)
+    for (uint8_t regAddr = IO_TEST_SCRATCH_PAD_REG_1_REG; regAddr <= IO_TEST_SCRATCH_PAD_REG_4_REG; regAddr++)
     {
         // Get initial scratchpad register value
         status = Pmic_ioRxByte(&pmicHandle, regAddr, &initVal);
@@ -311,7 +311,7 @@ void test_positive_Pmic_ioTxByte_CS_Pmic_ioRxByte_CS_writeReadScratchpadReg1To4(
     uint8_t initVal = 0U, expVal = 0U, actVal = 0U;
 
     // For each scratchpad register...
-    for (uint8_t regAddr = IO_TEST_SCRATCH_PAD_REG_1_REGADDR; regAddr <= IO_TEST_SCRATCH_PAD_REG_4_REGADDR; regAddr++)
+    for (uint8_t regAddr = IO_TEST_SCRATCH_PAD_REG_1_REG; regAddr <= IO_TEST_SCRATCH_PAD_REG_4_REG; regAddr++)
     {
         // Get initial scratchpad register value
         status = Pmic_ioRxByte_CS(&pmicHandle, regAddr, &initVal);

@@ -105,75 +105,75 @@ static inline bool PWR_isVmon(uint16_t pwrRsrc)
 // Get buck control register address
 static inline uint16_t PWR_getBuckCtrlRegAddr(uint8_t buckId)
 {
-    return (uint16_t)(BUCK1_CTRL_REGADDR + (2U * (buckId - 1U)));
+    return (uint16_t)(BUCK1_CTRL_REG + (2U * (buckId - 1U)));
 }
 
 // Get buck config register address
 static inline uint16_t PWR_getBuckConfRegAddr(uint8_t buckId)
 {
-    return (uint16_t)(BUCK1_CONF_REGADDR + (2U * (buckId - 1U)));
+    return (uint16_t)(BUCK1_CONF_REG + (2U * (buckId - 1U)));
 }
 
 // Get buck VOUT register address
 static inline uint16_t PWR_getBuckVoutRegAddr(uint8_t buckId)
 {
-    return (uint16_t)(BUCK1_VOUT_REGADDR + (2U * (buckId - 1U)));
+    return (uint16_t)(BUCK1_VOUT_REG + (2U * (buckId - 1U)));
 }
 
 // Get buck PG window register address
 static inline uint16_t PWR_getBuckPgWindowRegAddr(uint8_t buckId)
 {
-    return (uint16_t)(BUCK1_PG_WINDOW_REGADDR + (buckId - 1U));
+    return (uint16_t)(BUCK1_PG_WINDOW_REG + (buckId - 1U));
 }
 
 // Get LDO control register address
 static inline uint16_t PWR_getLdoCtrlRegAddr(uint8_t ldoId)
 {
-    return (uint16_t)(LDO1_CTRL_REGADDR + (ldoId - 1U));
+    return (uint16_t)(LDO1_CTRL_REG + (ldoId - 1U));
 }
 
 // Get LDO VOUT register address
 static inline uint16_t PWR_getLdoVoutRegAddr(uint8_t ldoId)
 {
-    return (uint16_t)(LDO1_VOUT_REGADDR + (ldoId - 1U));
+    return (uint16_t)(LDO1_VOUT_REG + (ldoId - 1U));
 }
 
 // Get LDO PG window register address
 static inline uint16_t PWR_getLdoPgWindowRegAddr(uint8_t ldoId)
 {
-    return (uint16_t)(LDO1_PG_WINDOW_REGADDR + (ldoId - 1U));
+    return (uint16_t)(LDO1_PG_WINDOW_REG + (ldoId - 1U));
 }
 
 // Get VMON PG level register address (for VMON1 and VMON2)
 static inline uint16_t PWR_getVmonPgLevelRegAddr(uint8_t vmonId)
 {
-    return (uint16_t)(VMON1_PG_LEVEL_REGADDR + (2U * (vmonId - 1U)));
+    return (uint16_t)(VMON1_PG_LEVEL_REG + (2U * (vmonId - 1U)));
 }
 
 // Get VMON PG window register address
 static inline uint16_t PWR_getVmonPgWindowRegAddr(uint8_t vmonId)
 {
-    return (uint16_t)(VMON1_PG_WINDOW_REGADDR + (2U * (vmonId - 1U)));
+    return (uint16_t)(VMON1_PG_WINDOW_REG + (2U * (vmonId - 1U)));
 }
 
 // Get buck group select register and shift based on buck ID
 static inline void PWR_getBuckGrpSelInfo(uint8_t buckId, uint16_t *regAddr, uint8_t *shift)
 {
-    *regAddr = RAIL_SEL_1_REGADDR;
+    *regAddr = RAIL_SEL_1_REG;
     *shift = (uint8_t)((buckId - 1U) * 2U);
 }
 
 // Get LDO group select register and shift based on LDO ID
 static inline void PWR_getLdoGrpSelInfo(uint8_t ldoId, uint16_t *regAddr, uint8_t *shift)
 {
-    *regAddr = RAIL_SEL_2_REGADDR;
+    *regAddr = RAIL_SEL_2_REG;
     *shift = (uint8_t)((ldoId - 1U) * 2U);
 }
 
 // Get VMON group select register and shift based on VMON ID
 static inline void PWR_getVmonGrpSelInfo(uint8_t vmonId, uint16_t *regAddr, uint8_t *shift)
 {
-    *regAddr = RAIL_SEL_3_REGADDR;
+    *regAddr = RAIL_SEL_3_REG;
     *shift = (uint8_t)((vmonId - 1U) * 2U);
 }
 
@@ -661,12 +661,12 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
         }
 
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, VCCA_VMON_CTRL_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, VCCA_VMON_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField_b(&regData, vmonEnShift, (uint8_t)(1U << vmonEnShift), vccaVmonCfg->vmonEn);
-            status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REGADDR, regData);
+            status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REG, regData);
         }
         Pmic_criticalSectionStop(handle);
     }
@@ -679,7 +679,7 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
 
         if (isVcca)
         {
-            pgWindowRegAddr = VCCA_PG_WINDOW_REGADDR;
+            pgWindowRegAddr = VCCA_PG_WINDOW_REG;
         }
         else
         {
@@ -808,7 +808,7 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
             vmonEnShift = VMON2_EN_SHIFT;
         }
 
-        status = Pmic_ioRxByte_CS(handle, VCCA_VMON_CTRL_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, VCCA_VMON_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -820,7 +820,7 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
     if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_THR_VALID, status) ||
         (isVcca && Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_PG_SET_VALID, status)))
     {
-        uint16_t pgWindowRegAddr = isVcca ? VCCA_PG_WINDOW_REGADDR : PWR_getVmonPgWindowRegAddr(vmonId);
+        uint16_t pgWindowRegAddr = isVcca ? VCCA_PG_WINDOW_REG : PWR_getVmonPgWindowRegAddr(vmonId);
 
         status = Pmic_ioRxByte_CS(handle, pgWindowRegAddr, &regData);
 
@@ -1051,12 +1051,12 @@ int32_t Pmic_PwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl)
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, VCCA_VMON_CTRL_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, VCCA_VMON_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField(&regData, VMON_DEGLITCH_SEL_SHIFT, VMON_DEGLITCH_SEL_MASK, vmonDegl);
-            status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REGADDR, regData);
+            status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REG, regData);
         }
         Pmic_criticalSectionStop(handle);
     }
@@ -1082,7 +1082,7 @@ int32_t Pmic_PwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, CONFIG_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, CONFIG_1_REG, &regData);
 
         if (Pmic_validParamStatusCheck(thermalCfg->validParams, PMIC_POWER_TWARN_LEVEL_VALID, status))
         {
@@ -1110,7 +1110,7 @@ int32_t Pmic_PwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
 
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(handle, CONFIG_1_REGADDR, regData);
+            status = Pmic_ioTxByte(handle, CONFIG_1_REG, regData);
         }
         Pmic_criticalSectionStop(handle);
     }
@@ -1135,7 +1135,7 @@ int32_t Pmic_PwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, CONFIG_1_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, CONFIG_1_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1172,7 +1172,7 @@ int32_t Pmic_PwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, SPREAD_SPECTRUM_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, SPREAD_SPECTRUM_1_REG, &regData);
 
         if (Pmic_validParamStatusCheck(spreadSpectrumCfg->validParams, PMIC_POWER_SS_EN_VALID, status))
         {
@@ -1186,7 +1186,7 @@ int32_t Pmic_PwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(handle, SPREAD_SPECTRUM_1_REGADDR, regData);
+            status = Pmic_ioTxByte(handle, SPREAD_SPECTRUM_1_REG, regData);
         }
         Pmic_criticalSectionStop(handle);
     }
@@ -1211,7 +1211,7 @@ int32_t Pmic_PwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, SPREAD_SPECTRUM_1_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, SPREAD_SPECTRUM_1_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1252,7 +1252,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
          Pmic_validParamCheck(rsrcStatus->validParams, PMIC_POWER_BUCK3_UVOV_VALID) ||
          Pmic_validParamCheck(rsrcStatus->validParams, PMIC_POWER_BUCK4_UVOV_VALID)))
     {
-        status = Pmic_ioRxByte_CS(handle, STAT_BUCK_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, STAT_BUCK_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1287,7 +1287,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
          Pmic_validParamCheck(rsrcStatus->validParams, PMIC_POWER_VMON2_UVOV_VALID) ||
          Pmic_validParamCheck(rsrcStatus->validParams, PMIC_POWER_VCCA_VMON_UVOV_VALID)))
     {
-        status = Pmic_ioRxByte_CS(handle, STAT_LDO_VMON_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, STAT_LDO_VMON_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {

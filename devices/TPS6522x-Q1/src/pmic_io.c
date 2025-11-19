@@ -342,7 +342,7 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *enabled)
     // Read CONFIG_2 register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, CONFIG_2_REGADDR, &regData);
+        status = Pmic_ioRxByte_CS(handle, CONFIG_2_REG, &regData);
     }
 
     // Extract the CRC enable status (cast as boolean)
@@ -366,7 +366,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read CONFIG_2 register
-        status = Pmic_ioRxByte(handle, CONFIG_2_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, CONFIG_2_REG, &regData);
     }
 
     // Modify I2C1_SPI_CRC_EN bit then write new register value back to PMIC
@@ -374,7 +374,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable)
     {
         Pmic_setBitField_b(&regData, I2C1_SPI_CRC_EN_SHIFT, I2C1_SPI_CRC_EN_MASK, enable);
 
-        status = Pmic_ioTxByte(handle, CONFIG_2_REGADDR, regData);
+        status = Pmic_ioTxByte(handle, CONFIG_2_REG, regData);
     }
     Pmic_criticalSectionStop(handle);
 

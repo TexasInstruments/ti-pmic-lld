@@ -89,27 +89,27 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
 
     // Read DEV_REV register
     Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, DEV_REV_REGADDR, &regData);
+    status = Pmic_ioRxByte(handle, DEV_REV_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
         handle->devId = Pmic_getBitField(regData, TI_DEVICE_ID_SHIFT, TI_DEVICE_ID_MASK);
-        status = Pmic_ioRxByte(handle, NVM_CODE_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, NVM_CODE_1_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
         handle->nvmId = Pmic_getBitField(regData, TI_NVM_ID_SHIFT, TI_NVM_ID_MASK);
-        status = Pmic_ioRxByte(handle, NVM_CODE_2_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, NVM_CODE_2_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_REV bit field and read MANUFACTURING_VER register
         handle->nvmRev = Pmic_getBitField(regData, TI_NVM_REV_SHIFT, TI_NVM_REV_MASK);
-        status = Pmic_ioRxByte(handle, MANUFACTURING_VER_REGADDR, &regData);
+        status = Pmic_ioRxByte(handle, MANUFACTURING_VER_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)

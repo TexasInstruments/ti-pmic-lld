@@ -52,18 +52,18 @@ extern "C" {
 /*                      TPS65036x Watchdog Register Map                       */
 /* ========================================================================== */
 
-#define PMIC_WD_ANSWER_REG_REGADDR              ((uint8_t)0x0EU)
-#define PMIC_WD_ENABLE_REG_REGADDR              ((uint8_t)0x0FU)
-#define PMIC_WD_MODE_REG_REGADDR                ((uint8_t)0x10U)
-#define PMIC_WD_CONFIG_REGADDR                  ((uint8_t)0x16U)
-#define PMIC_WD_WIN1_CFG_REGADDR                ((uint8_t)0x45U)
-#define PMIC_WD_WIN2_CFG_REGADDR                ((uint8_t)0x46U)
-#define PMIC_WD_LONGWIN_CFG_REGADDR             ((uint8_t)0x47U)
-#define PMIC_WD_QA_CFG_REGADDR                  ((uint8_t)0x48U)
-#define PMIC_WD_THR_CFG_REGADDR                 ((uint8_t)0x49U)
-#define PMIC_WD_QUESTION_ANSW_CNT_REGADDR       ((uint8_t)0x61U)
-#define PMIC_WD_ERR_STATUS_REGADDR              ((uint8_t)0x62U)
-#define PMIC_WD_FAIL_CNT_REG_REGADDR            ((uint8_t)0x63U)
+#define PMIC_WD_ANSWER_REG_REG              ((uint8_t)0x0EU)
+#define PMIC_WD_ENABLE_REG_REG              ((uint8_t)0x0FU)
+#define PMIC_WD_MODE_REG_REG                ((uint8_t)0x10U)
+#define PMIC_WD_CONFIG_REG                  ((uint8_t)0x16U)
+#define PMIC_WD_WIN1_CFG_REG                ((uint8_t)0x45U)
+#define PMIC_WD_WIN2_CFG_REG                ((uint8_t)0x46U)
+#define PMIC_WD_LONGWIN_CFG_REG             ((uint8_t)0x47U)
+#define PMIC_WD_QA_CFG_REG                  ((uint8_t)0x48U)
+#define PMIC_WD_THR_CFG_REG                 ((uint8_t)0x49U)
+#define PMIC_WD_QUESTION_ANSW_CNT_REG       ((uint8_t)0x61U)
+#define PMIC_WD_ERR_STATUS_REG              ((uint8_t)0x62U)
+#define PMIC_WD_FAIL_CNT_REG_REG            ((uint8_t)0x63U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */

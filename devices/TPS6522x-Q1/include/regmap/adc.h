@@ -51,9 +51,9 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define ADC_CTRL_REGADDR         (0xACU)
-#define ADC_RESULT_REG_1_REGADDR (0xADU)
-#define ADC_RESULT_REG_2_REGADDR (0xAEU)
+#define ADC_CTRL_REG         (0xACU)
+#define ADC_RESULT_REG_1_REG (0xADU)
+#define ADC_RESULT_REG_2_REG (0xAEU)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */

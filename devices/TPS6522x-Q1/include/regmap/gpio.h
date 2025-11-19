@@ -51,17 +51,17 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define GPIO1_CONF_REGADDR      (0x31U)
-#define GPIO2_CONF_REGADDR      (0x32U)
-#define GPIO3_CONF_REGADDR      (0x33U)
-#define GPIO4_CONF_REGADDR      (0x34U)
-#define GPIO5_CONF_REGADDR      (0x35U)
-#define GPIO6_CONF_REGADDR      (0x36U)
-#define POWER_ON_CONFIG_REGADDR (0x3CU)
-#define GPIO_OUT_1_REGADDR      (0x3DU)
-#define GPIO_IN_1_REGADDR       (0x3FU)
-#define ENABLE_DRV_REG_REGADDR  (0x80U)
-#define ENABLE_DRV_STAT_REGADDR (0x82U)
+#define GPIO1_CONF_REG      (0x31U)
+#define GPIO2_CONF_REG      (0x32U)
+#define GPIO3_CONF_REG      (0x33U)
+#define GPIO4_CONF_REG      (0x34U)
+#define GPIO5_CONF_REG      (0x35U)
+#define GPIO6_CONF_REG      (0x36U)
+#define POWER_ON_CONFIG_REG (0x3CU)
+#define GPIO_OUT_1_REG      (0x3DU)
+#define GPIO_IN_1_REG       (0x3FU)
+#define ENABLE_DRV_REG_REG  (0x80U)
+#define ENABLE_DRV_STAT_REG (0x82U)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */
