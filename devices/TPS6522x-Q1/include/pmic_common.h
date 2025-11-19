@@ -259,7 +259,7 @@ typedef struct Pmic_Handle_s {
  * @return True if validParam is set, false if validParam is not set.
  */
 static inline bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
-    return ((validParamVal & bitMask) != 0U);
+    return ((validParams & bitMask) != 0U);
 }
 
 /**
