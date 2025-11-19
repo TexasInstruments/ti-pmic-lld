@@ -42,12 +42,10 @@
 #include "pmic_io.h"
 #include "regmap/irq.h"
 
-#define PMIC_INVALID_REGADDR ((uint8_t)0xFFU)
-
 typedef struct Pmic_IrqInfo_s
 {
-    uint8_t statRegAddr;
-    uint8_t maskRegAddr;
+    uint16_t statRegAddr;
+    uint16_t maskRegAddr;
     uint8_t bitShift;
 } Pmic_IrqInfo_t;
 
@@ -336,7 +334,7 @@ int32_t Pmic_irqClrFlag(Pmic_Handle_t *handle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // Set the bit to 1 to clear (write-1-to-clear)
-        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, true);
+        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1U << pmicIRQs[irqNum].bitShift), true);
         status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);
     }
 

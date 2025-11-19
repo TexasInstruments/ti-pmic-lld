@@ -90,7 +90,7 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_INVALID_REGADDR ((uint8_t)0xFFU)
+#define PMIC_INVALID_REGADDR ((uint16_t)0xFFFFU)
 /** @} */
 
 /**
