@@ -695,7 +695,7 @@ typedef struct Pmic_PwrSpreadSpectrumCfg_s {
  * @return PMIC_ST_SUCCESS if buck configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Get PMIC power buck configurations.
@@ -712,7 +712,7 @@ int32_t Pmic_PwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
  * @return PMIC_ST_SUCCESS if buck configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Set PMIC LDO configurations.
@@ -729,7 +729,7 @@ int32_t Pmic_PwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
  * @return PMIC_ST_SUCCESS if LDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get PMIC LDO configurations.
@@ -746,7 +746,7 @@ int32_t Pmic_PwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
  * @return PMIC_ST_SUCCESS if LDO configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Set PMIC VCCA_VMON/VMONx configurations.
@@ -764,7 +764,7 @@ int32_t Pmic_PwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
  * @return PMIC_ST_SUCCESS if VCCA_VMON/VMONx configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg);
+int32_t Pmic_pwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg);
 
 /**
  * @brief Get PMIC VCCA_VMON/VMONx configurations.
@@ -782,7 +782,7 @@ int32_t Pmic_PwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVm
  * @return PMIC_ST_SUCCESS if VCCA_VMON/VMONx configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg);
+int32_t Pmic_pwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg);
 
 /**
  * @brief Set deglitch configuration for all VMONs.
@@ -799,7 +799,7 @@ int32_t Pmic_PwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_
  * @return PMIC_ST_SUCCESS if VMON deglitch configuration has been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl);
+int32_t Pmic_pwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl);
 
 /**
  * @brief Set PMIC thermal configurations.
@@ -816,7 +816,7 @@ int32_t Pmic_PwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl)
  * @return PMIC_ST_SUCCESS if thermal configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermalCfg_t *thermalCfg);
+int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermalCfg_t *thermalCfg);
 
 /**
  * @brief Get PMIC thermal configurations.
@@ -833,7 +833,7 @@ int32_t Pmic_PwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
  * @return PMIC_ST_SUCCESS if thermal configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t *thermalCfg);
+int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t *thermalCfg);
 
 /**
  * @brief Set PMIC spread spectrum configurations.
@@ -851,7 +851,7 @@ int32_t Pmic_PwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
  * @return PMIC_ST_SUCCESS if spread spectrum configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg);
+int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg);
 
 /**
  * @brief Get PMIC spread spectrum configurations.
@@ -869,7 +869,7 @@ int32_t Pmic_PwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
  * @return PMIC_ST_SUCCESS if spread spectrum configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_PwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg);
+int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg);
 
 /**
  * @brief Get PMIC resource status.
