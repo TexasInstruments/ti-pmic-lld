@@ -152,7 +152,7 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (destination > PMIOC_FSM_START_UP_DEST_MAX))
+    if ((status == PMIC_ST_SUCCESS) && (destination > PMIC_FSM_START_UP_DEST_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
