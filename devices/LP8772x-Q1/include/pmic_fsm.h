@@ -95,6 +95,10 @@ extern "C" {
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Set desired PMIC device state.
  *
+ * Design: PMICDRV-601
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC Interface Handle
  * @param cmd    [IN] Command request to perform, see @ref Pmic_FsmMcuCommands.
  *
@@ -106,6 +110,10 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t cmd);
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Set PMIC reset counter threshold (RESET_CNT_THR).
+ *
+ * Design: PMICDRV-740
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details Each time the PMIC goes through Warm Reset, the reset counter
  * (RESET_CNT) increments. When RESET_CNT exceeds RESET_CNT_THR - the value in
@@ -125,6 +133,10 @@ int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr);
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Get PMIC reset counter threshold (RESET_CNT_THR).
  *
+ * Design: PMICDRV-741
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param resetCntThr [OUT] Reset counter threshold value obtained from the
@@ -138,6 +150,10 @@ int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr);
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Get PMIC reset counter.
+ *
+ * Design: PMICDRV-742
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The PMIC increments the reset counter - the value in which this
  * API obtains - each time it goes through warm reset.
@@ -155,6 +171,10 @@ int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt);
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Clear PMIC reset counter to zero.
  *
+ * Design: PMICDRV-743
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -165,6 +185,10 @@ int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle);
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Set PMIC recovery counter threshold.
+ *
+ * Design: PMICDRV-695
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The PMIC increments the recovery counter (RECOV_CNT) when it
  * transitions from ACTIVE to SAFE state. When RECOV_CNT exceeds
@@ -185,6 +209,10 @@ int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr);
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Get PMIC recovery counter threshold.
  *
+ * Design: PMICDRV-696
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param recovCntThr [OUT] Recovery counter threshold value obtained from the
@@ -198,6 +226,10 @@ int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr);
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Get PMIC recovery counter.
+ *
+ * Design: PMICDRV-693
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The PMIC increments the recovery counter - the value in which this
  * API obtains - each time it transitions from ACTIVE to SAFE state.
@@ -214,6 +246,10 @@ int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt);
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
  * @brief Clear PMIC recovery counter.
+ *
+ * Design: PMICDRV-694
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *

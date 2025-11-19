@@ -505,6 +505,10 @@ typedef struct Pmic_PowerSequenceCfg_s {
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Enable or disable a PMIC power resource.
  *
+ * Design: PMICDRV-744
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle   [IN] PMIC Interface Handle
  * @param resource [IN] Power resource to control, see @ref Pmic_PwrResource.
  * @param enable   [IN] If set to true (PMIC_ENABLE) the power resource will be
@@ -520,6 +524,10 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get the enable/disable state of a PMIC power resource.
  *
+ * Design: PMICDRV-745
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle   [IN]  PMIC Interface Handle
  * @param resource [IN]  Power resource to get status of, see @ref Pmic_PwrResource.
  * @param enable   [OUT] If set to true (PMIC_ENABLE) the power resource is *
@@ -534,6 +542,10 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to set the configuration of a PMIC power resources.
  *
+ * Design: PMICDRV-746
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC Interface Handle
  * @param config [IN] Configuration options for this power resource. See @ref
  * Pmic_PowerResourceCfg_t.
@@ -546,6 +558,10 @@ int32_t Pmic_pwrSetResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResour
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to get the configuration of a PMIC power resources.
+ *
+ * Design: PMICDRV-747
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle [IN]     PMIC Interface Handle
  * @param config [IN/OUT] Configuration options for this power resource. See @ref
@@ -560,6 +576,10 @@ int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Set configurations of multiple PMIC power resources.
  *
+ * Design: PMICDRV-748
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle     [IN] PMIC Interface Handle
  * @param numConfigs [IN] The number of configurations in the `config` array.
  * @param config     [IN] An array of configuration options for power resources.
@@ -573,6 +593,10 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get configurations of multiple PMIC power resources.
+ *
+ * Design: PMICDRV-749
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle     [IN]     PMIC Interface Handle
 
@@ -593,6 +617,10 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
  * @brief API to set the power sequencing configuration of a PMIC power
  * resource.
  *
+ * Design: PMICDRV-750
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @note VCCA_VMON does not support sequencing configuration.
  *
  * @param handle [IN] PMIC Interface Handle
@@ -609,6 +637,10 @@ int32_t Pmic_pwrSetSequenceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerSequen
  * @brief API to get the power sequencing configuration of a PMIC power
  * resource.
  *
+ * Design: PMICDRV-751
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @note VCCA_VMON does not support sequencing configuration.
  *
  * @param handle [IN]     PMIC Interface Handle
@@ -623,6 +655,10 @@ int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Set the power sequencing configuration of multiple PMIC power resources.
+ *
+ * Design: PMICDRV-752
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -639,6 +675,10 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get the power sequencing configuration of multiple PMIC power resources.
+ *
+ * Design: PMICDRV-753
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *

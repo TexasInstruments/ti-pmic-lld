@@ -421,6 +421,10 @@ typedef struct Pmic_WdgAnsInfo_s {
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Enable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
+ * Design: PMICDRV-660
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-538
+ *
  * @param handle [IN] PMIC Interface Handle
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -431,6 +435,10 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle);
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Disable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
+ *
+ * Design: PMICDRV-661
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-538
  *
  * @param handle [IN] PMIC Interface Handle
  *
@@ -443,6 +451,10 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Enable or disable the PMIC watchdog. This API is a superset of
  * `Pmic_wdgEnable()` and `Pmic_wdgDisable()`.
+ *
+ * Design: PMICDRV-662
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @param handle [IN]  PMIC interface handle
  * @param enable [IN]  Set to true (PMIC_ENABLE) to enable watchdog, false
@@ -457,6 +469,10 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Get the enable state of the PMIC watchdog.
  *
+ * Design: PMICDRV-663
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param handle    [IN]  PMIC interface handle
  * @param isEnabled [OUT] true (PMIC_ENABLE) if watchdog is enabled, otherwise
  * false (PMIC_DISABLE). See @ref Pmic_EnableDisable.
@@ -469,6 +485,10 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Set PMIC watchdog configurations.
+ *
+ * Design: PMICDRV-664
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @note User has to call `Pmic_wdgEnable()` before setting the configuration.
  *
@@ -484,6 +504,10 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Get PMIC watchdog configurations. This API supports getting the same
  * configurations that are settable by `Pmic_wdgSetCfg()`.
+ *
+ * Design: PMICDRV-665
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the configuration,
  * otherwise the results are invalid.
@@ -501,6 +525,10 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
  * @brief Enable/disable WDG Power Hold, which controls whether WDG stays in Long-
  * Window.
  *
+ * Design: PMICDRV-668
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param handle [IN] PMIC Interface Handle
  * @param enable [IN] If set to true (PMIC_ENABLE), both WDG and Long-Window
  * timer are paused and do not cause the device to reset. Otherwise, the WDG
@@ -515,6 +543,10 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief Get the WDG Power Hold enable/disable state, which indicates whether WDG
  * stays in Long-Window.
+ *
+ * Design: PMICDRV-669
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @param handle    [IN] PMIC Interface Handle
  * @param isEnabled [OUT] If set to true (PMIC_ENABLE), both WDG and
@@ -532,6 +564,10 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
  * @brief Enable/disable WDG Return to Long-Window, which controls whether WDG
  * returns to Long-Window at the end of the current sequence.
  *
+ * Design: PMICDRV-670
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param handle [IN] PMIC Interface Handle
  * @param enable [IN] If set to true (PMIC_ENABLE) while the WDG is in normal
  * operating mode it will return to Long-Window mode, otherwise the WDG will
@@ -547,6 +583,10 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
  * @brief Get WDG Return to Long-Window enable/disable state, which indicates
  * whether WDG will return to Long-Window at the end of the current sequence.
  *
+ * Design: PMICDRV-671
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param handle    [IN] PMIC Interface Handle
  * @param isEnabled [IN] Tracks the value of the WD_RETURN_LONGWIN bit, will be
  * false (PMIC_DISABLE) if the WDG is in normal operating mode. See @ref
@@ -560,6 +600,10 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
  * @brief Get PMIC watchdog error statuses.
+ *
+ * Design: PMICDRV-731
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the error status,
  * otherwise the results are invalid.
@@ -575,6 +619,10 @@ int32_t Pmic_wdgGetErrStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors)
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
  * @brief API to clear PMIC watchdog error status.
+ *
+ * Design: PMICDRV-673
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * This function is used to clear the watchdog error status from the PMIC for
  * trigger mode or Q&A (question and answer) mode.
@@ -594,6 +642,10 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *e
  * however, it is recommended to process watchdog statuses via
  * `Pmic_wdgGetErrStatus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
+ * Design: PMICDRV-674
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param handle [IN] PMIC Interface Handle
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -604,6 +656,10 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
  * @brief Get PMIC watchdog fail counter statuses.
+ *
+ * Design: PMICDRV-675
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the fail count,
  * otherwise the results are invalid.
@@ -619,6 +675,10 @@ int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_
 /**
  * @ingroup DRV_PMIC_WDG_APP_GROUP
  * @brief Calculate and send a WDG Q&A answer byte to the PMIC.
+ *
+ * Design: PMICDRV-676
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @note In the event this API returns PMIC_ST_ERR_INV_WDG_ANSWER, the user
  * should adjust the Long window time interval, Window1 time interval, and
@@ -648,6 +708,10 @@ int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle);
 /**
  * @brief Read PMIC register that has the WDG Q&A feedback.
  *
+ * Design: PMICDRV-754
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @details To calculate and send the correct WDG answer byte, the MCU needs
  * the correct WDG feedback, answer count, and question values. This API is
  * used as part of a series of 5 APIs which can be used to write an answer
@@ -672,6 +736,10 @@ int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
 
 /**
  * @brief Extract WDG feedback value from the input register data.
+ *
+ * Design: PMICDRV-755
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details To calculate and send the correct WDG answer byte, the MCU needs
  * the correct WDG feedback, answer count, and question values. This API is
@@ -699,6 +767,10 @@ int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
 /**
  * @brief Read PMIC register that has the WDG Q&A answer count and question.
  *
+ * Design: PMICDRV-756
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @details To calculate and send the correct WDG answer byte, the MCU needs
  * the correct WDG feedback, answer count, and question values. This API is
  * used as part of a series of 5 APIs which can be used to write an answer
@@ -724,6 +796,10 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
 
 /**
  * @brief Extract WDG answer count and question from the input register data.
+ *
+ * Design: PMICDRV-757
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details To calculate and send the correct WDG answer byte, the MCU needs
  * the correct WDG feedback, answer count, and question values. This API is
@@ -754,6 +830,10 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
 
 /**
  * @brief Calculate and write WDG answer byte to the PMIC.
+ *
+ * Design: PMICDRV-758
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details To calculate and send the correct WDG answer byte, the MCU needs
  * the correct WDG feedback, answer count, and question values. This API is

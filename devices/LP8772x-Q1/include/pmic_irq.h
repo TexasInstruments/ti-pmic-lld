@@ -180,6 +180,10 @@ typedef struct Pmic_IrqStat_s {
 /**
  * @brief Set the mask configuration for a single PMIC IRQ.
  *
+ * Design: PMICDRV-715
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  * @param irqNum     [IN] Number of IRQ mask configurations to set.
  * @param shouldMask [IN] Whether this IRQ should be masked or not. See @ref
@@ -193,6 +197,10 @@ int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMa
 /**
  * @brief Set the mask configuration for multiple PMIC IRQs.
  *
+ * Design: PMICDRV-716
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle  [IN] PMIC interface handle.
  * @param numIrqMasks [IN] Number of IRQ mask configurations to set.
  * @param irqMasks    [IN] Array of IRQ mask configurations.
@@ -204,6 +212,10 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, const P
 
 /**
  * @brief Get the mask configuration for PMIC IRQs.
+ *
+ * Design: PMICDRV-717
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle  [IN] PMIC interface handle.
  * @param numIrqMasks [IN] Number of IRQ mask configurations to obtain.
@@ -217,6 +229,10 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
 /**
  * @brief Get the status of all PMIC IRQs.
  *
+ * Design: PMICDRV-718
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ *
  * @attention End-user must call this API first before calling `Pmic_irqGetNextFlag()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -229,6 +245,10 @@ int32_t Pmic_irqGetStatus(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat);
 
 /**
  * @brief Get the next PMIC IRQ that has its flag set (status bit set to 1).
+ *
+ * Design: PMICDRV-635
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
  * @attention End-user must call `Pmic_irqGetStatus()` first to get all PMIC IRQ
  * statuses. Once the IRQ statuses have been obtained, it is passed as input to
@@ -249,6 +269,10 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
 /**
  * @brief Get the flag status of a specific IRQ.
  *
+ * Design: PMICDRV-636
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  * @param irqNum [IN] Target PMIC IRQ. For valid values, refer to @ref Pmic_IRQs.
  * @param flag [OUT] Status flag of the target PMIC IRQ. This parameter returned
@@ -262,6 +286,10 @@ int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag);
 
 /**
  * @brief Clear a specific PMIC IRQ flag.
+ *
+ * Design: PMICDRV-637
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
  * @attention This API is meant to be called after getting the next flag status from
  * `Pmic_irqGetNextFlag()` or getting a specific flag status from `Pmic_irqGetFlag()`
@@ -277,6 +305,10 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum);
 
 /**
  * @brief Clear all PMIC IRQ flags.
+ *
+ * Design: PMICDRV-638
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
