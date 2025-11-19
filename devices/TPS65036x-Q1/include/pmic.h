@@ -139,6 +139,12 @@ typedef struct Pmic_CoreCfg_s
  * @brief Initialize a PMIC handle instance for PMIC LLD. Reads the PMIC device
  * for information and stores obtained data in the handle instance.
  *
+ * Design: PMICDRV-568
+ * Architecture: PMICDRV-527, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547
+ *               PMICDRV-549, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-502, PMICDRV-506
+ *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-500
+ *               PMICDRV-512, PMICDRV-501, PMICDRV-525
+ *
  * @param pmicCfg [IN] PMIC handle configuration struct. End-user will input
  * their settings/parameters in this struct to initialize the PMIC handle.
  *
@@ -152,6 +158,10 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief De-initialize a PMIC handle instance.
  *
+ * Design: PMICDRV-569
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-545
+ *               PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC handle is de-initialized, error code otherwise.
@@ -164,6 +174,11 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle);
  * construction. Utilized by all public LLD APIs that accept a handle as input
  * parameter to help prevent corrupt handle usage. Can be used in the application
  * layer to check the handle independently.
+ *
+ * Design: PMICDRV-570
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-534, PMICDRV-521, PMICDRV-520
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

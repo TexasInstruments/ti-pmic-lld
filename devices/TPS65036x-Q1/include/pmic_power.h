@@ -871,6 +871,10 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
 /**
  * @brief Set PMIC buck configuration.
  *
+ * Design: PMICDRV-774
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @note Before setting a buck's configuration, it is recommended to ensure that
  * the resource is disabled first. This API configures the regulator enable last
  * so that the end-user could set configurations and enable the regulator in one
@@ -914,6 +918,10 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBu
  * @brief Get PMIC buck configuration. This "get" API supports obtaining the same
  * parameters that are settable by `Pmic_pwrSetBuckCfg()`.
  *
+ * Design: PMICDRV-775
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param buckCfg    [OUT] Buck configurations obtained from the PMIC.
  *
@@ -924,6 +932,10 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_
 
 /**
  * @brief Set PMIC LDO configurations.
+ *
+ * Design: PMICDRV-641
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @note Before setting the LDO configuration, it is recommended to ensure that
  * the resource is disabled first. This API configures the regulator enable last
@@ -960,6 +972,10 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdo
  * @brief Get PMIC LDO configurations. This API supports getting the same
  * configurations that are settable by `Pmic_pwrSetLdoCfg()`.
  *
+ * Design: PMICDRV-642
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param ldoCfg     [OUT] LDO configurations obtained from the PMIC.
  *
@@ -970,6 +986,10 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t 
 
 /**
  * @brief Get the statuses of a power resource (buck/LDO).
+ *
+ * Design: PMICDRV-730
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details The following power resource statuses are obtainable from this API
  * 1. active
@@ -990,6 +1010,10 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcS
 /**
  * @brief Set PMIC thermal shutdown configurations.
  *
+ * Design: PMICDRV-776
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ *
  * @details The following options are configurable via this API
  * 1. Option to stay in safe state as long as TWARN flag is active
  * 2. Immediate thermal shutdown level
@@ -1008,6 +1032,10 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsd
  * @brief Get PMIC thermal shutdown configurations. This API supports getting the
  * same configurations that are settable by `Pmic_pwrSetTsdCfg()`.
  *
+ * Design: PMICDRV-777
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param tsdCfg     [OUT] TSD configurations obtained from the PMIC.
  *
@@ -1018,6 +1046,10 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t 
 
 /**
  * @brief Get the PMIC immediate thermal shutdown status.
+ *
+ * Design: PMICDRV-778
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  * @param tsdImmStat [OUT] When set to true, the die junction temperature is
@@ -1031,6 +1063,10 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdIm
 
 /**
  * @brief Set PMIC buck and LDO sequence triggers.
+ *
+ * Design: PMICDRV-779
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqTrig_t` and length of array,
  * the API sets sequence trigger configurations of the regulators (whether or not
@@ -1048,6 +1084,10 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
 /**
  * @brief Get PMIC buck and LDO sequence triggers.
  *
+ * Design: PMICDRV-780
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqTrig_t` and length of array,
  * the API gets sequence trigger configurations of the regulators (whether or not
  * the sequence trigger is excluded/included in the power ON/OFF sequence logic).
@@ -1064,6 +1104,10 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
 /**
  * @brief Set buck and LDO sequence delays.
  *
+ * Design: PMICDRV-781
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API sets sequence delay configurations of the regulators.
  *
@@ -1078,6 +1122,10 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic
 
 /**
  * @brief Get buck and LDO sequence delays.
+ *
+ * Design: PMICDRV-782
+ * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API gets sequence delay configurations of the regulators.

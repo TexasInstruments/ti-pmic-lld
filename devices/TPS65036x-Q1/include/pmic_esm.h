@@ -220,6 +220,10 @@ typedef struct Pmic_EsmStat_s
 /**
  * @brief Set PMIC ESM configurations.
  *
+ * Design: PMICDRV-597
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @details The following options are configurable via this API
  * 1. Enable (validParam: PMIC_ESM_ENABLE_VALID)
  * 2. Mode (validParam: PMIC_ESM_MODE_VALID)
@@ -248,6 +252,10 @@ int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t 
  * @brief Get PMIC ESM configurations. This API supports obtaining the same
  * configurations that are settable by `Pmic_esmSetCfg()`.
  *
+ * Design: PMICDRV-598
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param esmCfg [OUT] ESM configurations obtained from PMIC.
@@ -259,6 +267,10 @@ int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCf
 
 /**
  * @brief Start/stop the PMIC ESM.
+ *
+ * Design: PMICDRV-593
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @details This API configures the control bit to start/stop the PMIC ESM. Some
  * ESM configurations can only be writen when the ESM is stopped.
@@ -276,6 +288,10 @@ int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start);
 /**
  * @brief Start the PMIC ESM.
  *
+ * Design: PMICDRV-594
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @note End-user should ensure their desired ESM configurations are set prior
  * to starting the ESM.
  *
@@ -289,6 +305,10 @@ int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief Stop the PMIC ESM.
  *
+ * Design: PMICDRV-595
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC ESM_MCU_START bit has been set to 0, error
@@ -298,6 +318,10 @@ int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Get the PMIC ESM start/stop status.
+ *
+ * Design: PMICDRV-596
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -312,6 +336,10 @@ int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start);
 
 /**
  * @brief Get PMIC ESM status.
+ *
+ * Design: PMICDRV-599
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The following ESM statuses are obtainable from this API
  * 1. ESM_MCU_RST_INT (validParam: PMIC_ESM_RST_INT_VALID)
@@ -330,6 +358,10 @@ int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *e
 
 /**
  * @brief Clear PMIC ESM statuses.
+ *
+ * Design: PMICDRV-600
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @attention If end-user calls this API without addressing the root cause of
  * the ESM error statuses, the statuses could continue to be set after API call.
@@ -350,6 +382,10 @@ int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmSta
 
 /**
  * @brief Get PMIC ESM error count.
+ *
+ * Design: PMICDRV-688
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

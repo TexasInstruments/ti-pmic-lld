@@ -260,6 +260,11 @@ typedef struct Pmic_CoreCrc16Cfg_s
 /**
  * @brief Get PMIC device ID.
  *
+ * Design: PMICDRV-581
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param devId [OUT] PMIC Device ID.
@@ -271,6 +276,11 @@ int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId);
 
 /**
  * @brief Get PMIC NVM code.
+ *
+ * Design: PMICDRV-733
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -284,6 +294,11 @@ int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode);
 /**
  * @brief Get PMIC NVM revision.
  *
+ * Design: PMICDRV-584
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param nvmRev [OUT] PMIC NVM revision.
@@ -296,6 +311,10 @@ int32_t Pmic_getNvmRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmRev);
 /**
  * @brief Get PMIC silicon revision.
  *
+ * Design: PMICDRV-759
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param siliconRev [OUT] PMIC silicon revision.
@@ -307,6 +326,11 @@ int32_t Pmic_getSiliconRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *silicon
 
 /**
  * @brief Unlock/lock PMIC registers.
+ *
+ * Design: PMICDRV-587
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -322,6 +346,11 @@ int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock);
 /**
  * @brief Unlock PMIC registers.
  *
+ * Design: PMICDRV-760
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-551
+ *               PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *               PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if the register unlock key has been sent to the PMIC, error
@@ -332,6 +361,11 @@ int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief Lock PMIC registers.
  *
+ * Design: PMICDRV-761
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-551
+ *               PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *               PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if the register lock key has been sent to the PMIC, error
@@ -341,6 +375,11 @@ int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Get the PMIC register lock status.
+ *
+ * Design: PMICDRV-588
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -356,6 +395,10 @@ int32_t Pmic_getRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool *regLockS
  * @brief Turn on/off the power sequence logic for regulators and other
  * components on the PMIC.
  *
+ * Design: PMICDRV-762
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param pwrOn [IN] Device PWR_ON configuration. When set to PMIC_ENABLE, the
@@ -368,6 +411,10 @@ int32_t Pmic_setPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool pwrOn);
 
 /**
  * @brief Get the status of the PMIC PWR_ON bit.
+ *
+ * Design: PMICDRV-763
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details PMIC sequence triggers for components (like regulators) can be
  * associated with the PWR_ON bit via the SEQ_TRIG_X registers, where X is the
@@ -385,6 +432,10 @@ int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
 
 /**
  * @brief Set PMIC low power mode configurations.
+ *
+ * Design: PMICDRV-764
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @details The following options are configurable via this API
  * 1. LPM pin detection option (validParam: PMIC_LPM_PIN_DETECTION_VALID)
@@ -408,6 +459,10 @@ int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCf
  * @brief Get PMIC low power mode configurations. This API supports getting the same
  * configurations that are settable by `Pmic_setLpmCfg()`.
  *
+ * Design: PMICDRV-765
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param lpmCfg [OUT] Low power mode configurations obtained from PMIC.
@@ -419,6 +474,10 @@ int32_t Pmic_getLpmCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreLpmCfg_t *l
 
 /**
  * @brief Set PMIC CRC16 configurations.
+ *
+ * Design: PMICDRV-766
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-545
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521, PMICDRV-512
  *
  * @details The following options are configurable via this API
  * 1. enable (validParam: PMIC_CRC16_ENABLE_VALID)
@@ -441,6 +500,10 @@ int32_t Pmic_setCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreCrc
  * @brief Get PMIC CRC16 configurations. This "get" API supports obtaining the
  * same parameters that are settable through the "Set" API (`Pmic_setCRC16Cfg`).
  *
+ * Design: PMICDRV-767
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-545, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param crc16Cfg [OUT] CRC16 configurations obtained from PMIC.
@@ -453,6 +516,10 @@ int32_t Pmic_getCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreCrc16Cfg_
 /**
  * @brief Trigger run-time ABIST (analog built-in self test) on the PMIC.
  *
+ * Design: PMICDRV-768
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-548, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if run-time ABIST command has been sent to PMIC, error
@@ -462,6 +529,10 @@ int32_t Pmic_runABIST(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Get the active status of PMIC ABIST.
+ *
+ * Design: PMICDRV-769
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-548
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -476,6 +547,11 @@ int32_t Pmic_getABISTStat(const Pmic_CoreHandle_t *pmicHandle, bool *isActive);
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
+ * Design: PMICDRV-684
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param scratchPadRegNum [IN] Target scratch pad register number.
@@ -489,6 +565,11 @@ int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scr
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
+ *
+ * Design: PMICDRV-685
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

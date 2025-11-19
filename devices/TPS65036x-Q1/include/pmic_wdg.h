@@ -367,6 +367,10 @@ typedef struct Pmic_WdgFailCntStat_s
  * @brief Enable or disable the PMIC watchdog. This API is a superset of
  * `Pmic_wdgEnable()` and `Pmic_wdgDisable()`.
  *
+ * Design: PMICDRV-662
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param enable [IN] When set to `PMIC_ENABLE`, the watchdog is enabled.
@@ -380,6 +384,10 @@ int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
 /**
  * @brief Enable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
+ * Design: PMICDRV-660
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC watchdog has been enabled, error code
@@ -390,6 +398,10 @@ int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief Disable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
+ * Design: PMICDRV-661
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC watchdog has been disabled, error code
@@ -399,6 +411,10 @@ int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Get the enable state of the PMIC watchdog.
+ *
+ * Design: PMICDRV-663
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -412,6 +428,10 @@ int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEna
 
 /**
  * @brief Set PMIC watchdog configurations.
+ *
+ * Design: PMICDRV-664
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details The following options are configurable via this API
  * 1. Reset enable (validParam: PMIC_WD_RST_EN_VALID)
@@ -443,6 +463,10 @@ int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t 
  * @brief Get PMIC watchdog configurations. This API supports getting the same
  * configurations that are settable by `Pmic_wdgSetCfg()`.
  *
+ * Design: PMICDRV-665
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param wdgCfg [OUT] Watchdog configurations obtained from PMIC.
@@ -455,6 +479,10 @@ int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCf
 /**
  * @brief Enable/disable WDG Power Hold, which controls whether WDG stays in Long-
  * Window.
+ *
+ * Design: PMICDRV-668
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -471,6 +499,10 @@ int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold);
  * @brief Get the WDG Power Hold enable/disable state, which indicates whether WDG
  * stays in Long-Window.
  *
+ * Design: PMICDRV-669
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param pwrHoldStat [OUT] Status of WD_PWRHOLD. If value is true, WD_PWRHOLD
@@ -484,6 +516,10 @@ int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldS
 /**
  * @brief Enable/disable WDG Return to Long-Window, which controls whether WDG
  * returns to Long-Window at the end of the current sequence.
+ *
+ * Design: PMICDRV-670
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -501,6 +537,10 @@ int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool 
  * @brief Get WDG Return to Long-Window enable/disable state, which indicates
  * whether WDG will return to Long-Window at the end of the current sequence.
  *
+ * Design: PMICDRV-671
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param retLongWinStat [OUT] Status of WD_RETURN_LONGWIN. If value is true,
@@ -513,6 +553,10 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool 
 
 /**
  * @brief Send a software trigger to the PMIC watchdog.
+ *
+ * Design: PMICDRV-783
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details When the watchdog is operating in Trigger mode with Software Trigger
  * as the trigger source, the API should be called once during Long Window to
@@ -534,6 +578,10 @@ int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief Calculate and send a WDG Q&A answer byte to the PMIC.
  *
+ * Design: PMICDRV-676
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @details When the watchdog is operating in Q&A mode, the API should be called
  * four times in Long Window to exit Long Window. For every Q&A sequence thereafter,
  * the API should be called three times in Window-1 and one time in Window-2.
@@ -551,6 +599,10 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Clear PMIC watchdog error statuses.
+ *
+ * Design: PMICDRV-673
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details The following watchdog error statuses can be cleared by this API
  * 1. WD_RST_INT (validParam: PMIC_WDG_RST_INT_VALID)
@@ -589,6 +641,10 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Wdg
  * however, it is recommended to process watchdog statuses via
  * `Pmic_wdgGetErrStatusus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
+ * Design: PMICDRV-674
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @attention If end-user calls this API without addressing the root cause of the
  * watchdog error statuses, the statuses could continue to be set after API call.
  * Additionally, it may be required to enable watchdog by calling `Pmic_wdgEnable()`
@@ -604,6 +660,10 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle);
 /**
  * @brief Get PMIC watchdog error statuses.
  *
+ * Design: PMICDRV-731
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @param wdgErrStat [OUT] Struct containing watchdog error statuses of the PMIC.
@@ -615,6 +675,10 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrSta
 
 /**
  * @brief Get PMIC watchdog fail counter statuses.
+ *
+ * Design: PMICDRV-675
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
  *
  * @details The following watchdog fail counter statuses can be obtained from this API
  * 1. WD_BAD_EVENT (validParam: PMIC_BAD_EVENT_VALID)
