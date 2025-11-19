@@ -133,7 +133,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked);
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value);
 
 /**
  * @brief Get the value of a PMIC scratchpad register.
@@ -154,7 +154,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scr
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

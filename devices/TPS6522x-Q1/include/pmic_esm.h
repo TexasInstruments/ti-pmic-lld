@@ -199,7 +199,7 @@ int32_t Pmic_esmSetEnableState(const Pmic_Handle_t *handle, bool enable);
  * @return PMIC_ST_SUCCESS if PMIC ESM enable state has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_esmGetEnableState(const PmicHandle_t *handle, bool *isEnabled);
+int32_t Pmic_esmGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled);
 
 /**
  * @brief Start or stop the PMIC ESM.

@@ -56,7 +56,7 @@
 /* ========================================================================== */
 
 static int32_t GPIO_validatePinNum(uint8_t pinNum);
-static int32_t GPIO_setPinCfgFields(Pmic_CoreHandle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData);
+static int32_t GPIO_setPinCfgFields(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData);
 static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gpioPinCfg);
 static uint8_t GPIO_getConfRegAddr(uint8_t pinNum);
 static uint8_t GPIO_getOutShift(uint8_t pinNum);
@@ -156,7 +156,7 @@ static uint8_t GPIO_getInMask(uint8_t pinNum)
  *
  * @return PMIC_ST_SUCCESS if successful, error code otherwise
  */
-static int32_t GPIO_setPinCfgFields(Pmic_CoreHandle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData)
+static int32_t GPIO_setPinCfgFields(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData)
 {
     int32_t status = PMIC_ST_SUCCESS;
 

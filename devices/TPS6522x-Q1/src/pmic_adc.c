@@ -278,7 +278,7 @@ int32_t Pmic_adcGetResultCode(const Pmic_Handle_t *handle, uint16_t *adcResult)
         uint16_t result11_4 = (uint16_t)Pmic_getBitField(regData1, ADC_RESULT_11_4_SHIFT, ADC_RESULT_11_4_MASK);
         uint16_t result3_0 = (uint16_t)Pmic_getBitField(regData2, ADC_RESULT_3_0_SHIFT, ADC_RESULT_3_0_MASK);
 
-        *adcResult = (result11_4 << 4U) | result3_0;
+        *adcResult = (uint16_t)((result11_4 << 4U) | result3_0);
     }
 
     return status;

@@ -282,13 +282,13 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
         // Modify GPIO FSM mask
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_VALID))
         {
-            Pmic_setBitField_b(&regData, maskShift, gpioTriggerCfg->mask);
+            Pmic_setBitField_b(&regData, maskShift, (uint8_t)(1U << maskShift), gpioTriggerCfg->mask);
         }
 
         // Modify GPIO FSM mask polarity
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            Pmic_setBitField(&regData, maskPolShift, (1U << maskPolShift), gpioTriggerCfg->maskPol);
+            Pmic_setBitField(&regData, maskPolShift, (uint8_t)(1U << maskPolShift), gpioTriggerCfg->maskPol);
         }
 
         // Write the modified register
@@ -383,7 +383,7 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
         // Extract GPIO FSM mask polarity
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            gpioTriggerCfg->maskPol = Pmic_getBitField(regData, maskPolShift, (1U << maskPolShift));
+            gpioTriggerCfg->maskPol = Pmic_getBitField(regData, maskPolShift, (uint8_t)(1U << maskPolShift));
         }
     }
 

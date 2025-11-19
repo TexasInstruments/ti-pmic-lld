@@ -79,7 +79,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
     return status;
 }
 
-int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -96,7 +96,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scr
     return status;
 }
 
-int32_t Pmic_getScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t *value)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 

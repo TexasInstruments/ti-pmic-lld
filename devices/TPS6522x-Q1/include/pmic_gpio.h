@@ -221,7 +221,7 @@ extern "C" {
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB     (1U)
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE (2U)
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MIN    (PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX    (PMIC_EN_PB_VSENSE_FXN_SEL_VSENSE)
+#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX    (PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE)
 /** @} */
 
 /**
@@ -439,6 +439,7 @@ typedef struct Pmic_GpioNIntEnDrvCfg_s {
     uint32_t validParams;
 
     uint8_t fxnSel;
+    uint8_t enPbDegl;
     bool enPuResistor;
 } Pmic_GpioNIntEnDrvCfg_t;
 /** @} */

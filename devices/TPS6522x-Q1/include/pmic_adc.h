@@ -65,8 +65,8 @@ extern "C" {
  */
 #define PMIC_ADC_SRC_SEL_INPUT          (0U)
 #define PMIC_ADC_SRC_SEL_THERMAL_SENSOR (1U)
-#define PMIC_ADC_SRC_SEL_MIN            (PMIC_ADC_INPUT)
-#define PMIC_ADC_SRC_SEL_MAX            (PMIC_THERMAL_SENSOR)
+#define PMIC_ADC_SRC_SEL_MIN            (PMIC_ADC_SRC_SEL_INPUT)
+#define PMIC_ADC_SRC_SEL_MAX            (PMIC_ADC_SRC_SEL_THERMAL_SENSOR)
 /** @} */
 
 /**
