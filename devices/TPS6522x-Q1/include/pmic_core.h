@@ -82,6 +82,11 @@ extern "C" {
 /**
  * @brief Enable or disable PMIC register lock.
  *
+ * Design: PMICDRV-587
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param handle Pointer to the PMIC handle.
  *
  * @param lock True to lock the registers, false to unlock.
@@ -93,6 +98,11 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock);
 
 /**
  * @brief Get PMIC register enable state.
+ *
+ * Design: PMICDRV-588
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -106,6 +116,11 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked);
 
 /**
  * @brief Set the value of a PMIC scratchpad register.
+ *
+ * Design: PMICDRV-684
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -122,6 +137,11 @@ int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scr
 
 /**
  * @brief Get the value of a PMIC scratchpad register.
+ *
+ * Design: PMICDRV-685
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

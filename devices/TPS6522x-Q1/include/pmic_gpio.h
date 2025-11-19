@@ -481,6 +481,10 @@ typedef struct Pmic_GpioEnPbVSenseStatus_s {
 /**
  * @brief Set PMIC GPIO pin configurations.
  *
+ * Design: PMICDRV-700
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpioPinCfg [IN] Desired PMIC GPIO pin configurations to set. For more
@@ -493,6 +497,10 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
 
 /**
  * @brief Get PMIC GPIO pin configurations.
+ *
+ * Design: PMICDRV-701
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -507,6 +515,10 @@ int32_t Pmic_gpioGetPinCfg(const Pmic_Handle_t *handle, Pmic_GpioPinCfg_t *gpioP
 
 /**
  * @brief Set PMIC GPIO pin value to be high or low.
+ *
+ * Design: PMICDRV-702
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -523,6 +535,10 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
 
 /**
  * @brief Get PMIC GPIO pin value.
+ *
+ * Design: PMICDRV-703
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -541,6 +557,10 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
 /**
  * @brief Set nINT/EN_DRV pin configurations.
  *
+ * Design: PMICDRV-704
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param nIntEnDrvCfg [IN] Desired nINT/EN_DRV pin configurations to set. For
@@ -555,6 +575,10 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
 /**
  * @brief Get nINT/EN_DRV pin configurations. This API supports getting the same
  * configurations that are settable by 'Pmic_GpioSetNIntEnDrvCfg()'.
+ *
+ * Design: PMICDRV-705
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -571,6 +595,10 @@ int32_t Pmic_gpioGetNIntEnDrvCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrv
 /**
  * @brief Get nINT/EN_DRV pin value (signal level).
  *
+ * Design: PMICDRV-706
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param high [OUT] True - nINT/EN_DRV pin signal level is high; false - nINT/EN_DRV
@@ -584,6 +612,10 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high);
 
 /**
  * @brief Set PMIC EN/PB/VSENSE pin configurations.
+ *
+ * Design: PMICDRV-707
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -600,6 +632,10 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
 /**
  * @brief Get PMIC EN/PB/VSENSE pin configurations.
  *
+ * Design: PMICDRV-708
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param enPbVSenseCfg [OUT] EN/PB/VSENSE pin configurations obtained from the
@@ -615,6 +651,10 @@ int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDr
 /**
  * @brief Get PMIC EN/PB/VSENSE pin status.
  *
+ * Design: PMICDRV-709
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param enPbVSenseStatus [OUT] EN/PB/VSENSE pin status obtained from the PMIC.
@@ -628,6 +668,10 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
 
 /**
  * @brief Get PMIC nRSTOUT pin value (signal level).
+ *
+ * Design: PMICDRV-710
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *

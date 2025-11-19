@@ -684,6 +684,10 @@ typedef struct Pmic_PwrSpreadSpectrumCfg_s {
 /**
  * @brief Set PMIC power buck configurations.
  *
+ * Design: PMICDRV-719
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param buckCfg [IN] Desired buck configurations to set. For more information
@@ -696,6 +700,10 @@ int32_t Pmic_PwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
 
 /**
  * @brief Get PMIC power buck configurations.
+ *
+ * Design: PMICDRV-720
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -710,6 +718,10 @@ int32_t Pmic_PwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
 /**
  * @brief Set PMIC LDO configurations.
  *
+ * Design: PMICDRV-721
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param ldoCfg [IN] Desired LDO configurations to set. For more information
@@ -723,6 +735,10 @@ int32_t Pmic_PwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
 /**
  * @brief Get PMIC LDO configurations.
  *
+ * Design: PMICDRV-722
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param ldoCfg [OUT] LDO configurations obtained from the PMIC. For more
@@ -735,6 +751,10 @@ int32_t Pmic_PwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 
 /**
  * @brief Set PMIC VCCA_VMON/VMONx configurations.
+ *
+ * Design: PMICDRV-723
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -750,6 +770,10 @@ int32_t Pmic_PwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVm
 /**
  * @brief Get PMIC VCCA_VMON/VMONx configurations.
  *
+ * Design: PMICDRV-724
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param vccaVmonCfg [OUT] VCCA_VMON/VMONx configurations obtained from the PMIC. For
@@ -764,6 +788,10 @@ int32_t Pmic_PwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_
 /**
  * @brief Set deglitch configuration for all VMONs.
  *
+ * Design: PMICDRV-725
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param vmonDegl [IN] Desired VMON deglitch configuration value to set. For
@@ -776,6 +804,10 @@ int32_t Pmic_PwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl)
 
 /**
  * @brief Set PMIC thermal configurations.
+ *
+ * Design: PMICDRV-726
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -790,6 +822,10 @@ int32_t Pmic_PwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
 /**
  * @brief Get PMIC thermal configurations.
  *
+ * Design: PMICDRV-727
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param thermalCfg [OUT] Thermal configurations obtained from the PMIC. For more
@@ -802,6 +838,10 @@ int32_t Pmic_PwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
 
 /**
  * @brief Set PMIC spread spectrum configurations.
+ *
+ * Design: PMICDRV-728
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -817,6 +857,10 @@ int32_t Pmic_PwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 /**
  * @brief Get PMIC spread spectrum configurations.
  *
+ * Design: PMICDRV-729
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param spreadSpectrumCfg [OUT] Spread spectrum configurations obtained from the PMIC. For
@@ -830,6 +874,10 @@ int32_t Pmic_PwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
 
 /**
  * @brief Get PMIC resource status.
+ *
+ * Design: PMICDRV-730
+ * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *

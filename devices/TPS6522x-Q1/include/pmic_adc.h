@@ -132,6 +132,10 @@ typedef struct Pmic_AdcCfg_s {
 /**
  * @brief Set PMIC ADC configurations.
  *
+ * Design: PMICDRV-677
+ * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param adcCfg [IN] Desired ADC configurations to set. For more information on
@@ -144,6 +148,10 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
 
 /**
  * @brief Get PMIC ADC configurations.
+ *
+ * Design: PMICDRV-678
+ * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -159,6 +167,10 @@ int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg);
  * @brief Start a single PMIC ADC conversion. If the ADC is busy, this API
  * does nothing and returns.
  *
+ * Design: PMICDRV-679
+ * Architecture: PMICDRV-543, PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @attention This API should only be called if ADC continuous conversion is
  * disabled.
  *
@@ -173,6 +185,10 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle);
  * @brief Start a single PMIC ADC conversion. If the ADC is busy, this API
  * waits for the ADC to become idle.
  *
+ * Design: PMICDRV-680
+ * Architecture: PMICDRV-543, PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @attention This API should only be called if ADC continuous conversion is
  * disabled.
  *
@@ -185,6 +201,10 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle);
 
 /**
  * @brief Get PMIC ADC status; specifically, whether the ADC is busy or idle.
+ *
+ * Design: PMICDRV-681
+ * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -200,6 +220,10 @@ int32_t Pmic_adcGetStatus(const Pmic_Handle_t *handle, bool *adcBusy);
  * @brief Get the result code that is outputted after an ADC conversion. Refer to
  * the PMIC device TRM for how to convert the result code into a human-readable
  * value (i.e., voltage or temperature).
+ *
+ * Design: PMICDRV-682
+ * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *

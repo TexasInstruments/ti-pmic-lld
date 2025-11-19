@@ -258,6 +258,10 @@ typedef struct Pmic_FsmGpioTriggerCfg_s {
  * @brief Set PMIC trigger configurations. A trigger is a signal that triggers an
  * event in the PMIC state machine.
  *
+ * Design: PMICDRV-689
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @note This API does not set the GPIO trigger configurations. Refer to
  * @ref `Pmic_fsmSetGpioTriggerCfg()` API for setting such configurations.
  *
@@ -274,6 +278,10 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
 /**
  * @brief Get PMIC trigger configurations. A trigger is a signal that triggers an
  * event in the PMIC state machine.
+ *
+ * Design: PMICDRV-690
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @note This API does not get the GPIO trigger configurations. Refer to
  * @ref `Pmic_fsmGetGpioTriggerCfg()` API for getting such configurations.
@@ -292,6 +300,10 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
  * @brief Set PMIC GPIO trigger configurations. A GPIO can be used to trigger an
  * event in the PMIC state machine.
  *
+ * Design: PMICDRV-691
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpioTriggerCfg [IN] Desired GPIO trigger configurations to set. For
@@ -306,6 +318,10 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
 /**
  * @brief Get PMIC GPIO trigger configurations. A GPIO can be used to trigger an
  * event in the PMIC state machine.
+ *
+ * Design: PMICDRV-692
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -323,6 +339,10 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
  * @brief Get value of the PMIC recovery counter, which is a counter on the PMIC
  * that increments each time the PMIC goes through warm reset.
  *
+ * Design: PMICDRV-693
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param recovCnt [OUT] Recovery counter value obtained from the PMIC.
@@ -336,6 +356,10 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt);
  * @brief Clear PMIC recovery counter, which is a counter on the PMIC that
  * increments each time the PMIC goes through warm reset.
  *
+ * Design: PMICDRV-694
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return PMIC_ST_SUCCESS if recovery counter value has been cleared, error code
@@ -347,6 +371,10 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle);
  * @brief Set PMIC recovery counter threshold. When the recovery counter on the
  * PMIC reaches this threshold, the RECOV_CNT_INT interrupt on the PMIC asserts
  * and immediate power-down of all supply rails occur.
+ *
+ * Design: PMICDRV-695
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -362,6 +390,10 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
  * PMIC reaches this threshold, the RECOV_CNT_INT interrupt on the PMIC asserts
  * and immediate power-down of all supply rails occur.
  *
+ * Design: PMICDRV-696
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param recovCntThr [OUT] Recovery counter threshold value obtained from the
@@ -375,6 +407,10 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr
 
 /**
  * @brief Send SOFT_REBOOT request to the PMIC.
+ *
+ * Design: PMICDRV-697
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details Upon sending the SOFT_REBOOT request, the PMIC will undergo ORDERLY
  * SHUTDOWN and automatically re-start to its configured startup destination.
@@ -392,6 +428,10 @@ int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle);
 /**
  * @brief Set PMIC FSM startup destination.
  *
+ * Design: PMICDRV-698
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param destination [IN] Desired startup destination to set. For more
@@ -404,6 +444,10 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
 
 /**
  * @brief Get PMIC FSM startup destination.
+ *
+ * Design: PMICDRV-699
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
