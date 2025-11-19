@@ -174,6 +174,10 @@ typedef struct Pmic_timerCfg_e {
 /**
  * @brief Set PMIC timer configuration.
  *
+ * Design: PMICDRV-652
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ *
  * @details Timer configurations that are able to be set via this API are
  * 1. Prescale (validParam: PMIC_CFG_TMR_PRESCALE_VALID_SHIFT)
  * 2. Mode (PMIC_CFG_TMR_MODE_VALID_SHIFT)
@@ -194,6 +198,10 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
  * @brief Get PMIC timer configuration. This API supports getting the same
  * configurations that are settable by `Pmic_timerSetCfg()`.
  *
+ * Design: PMICDRV-653
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param timerCfg [OUT] Timer configurations obtained from the PMIC.
@@ -208,6 +216,10 @@ int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg);
  * @brief Alternative routine to stop the PMIC timer. That is to say, this API can
  * be used instead of `Pmic_timerSetCfg()` to stop the timer.
  *
+ * Design: PMICDRV-654
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if timer is stopped, error code otherwise. For valid
@@ -218,6 +230,10 @@ int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle);
 /**
  * @brief Clear PMIC timer counter.
  *
+ * Design: PMICDRV-655
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC timer counter is cleared, error code otherwise.
@@ -227,6 +243,10 @@ int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Set the value of the PMIC timer counter.
+ *
+ * Design: PMICDRV-656
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -241,6 +261,10 @@ int32_t Pmic_timerSetCnt(Pmic_CoreHandle_t *handle, uint32_t tmrCnt);
 /**
  * @brief Get the value of the PMIC timer counter.
  *
+ * Design: PMICDRV-657
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param tmrCnt [OUT] Timer counter value obtained from the PMIC.
@@ -253,6 +277,10 @@ int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt);
 
 /**
  * @brief Set PMIC wakeup value.
+ *
+ * Design: PMICDRV-658
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
  *
  * @details The timer can be configured to generate a wakeup event based on a
  * configured time while the device is in STANDBY state - see Pmic_timerSetCfg()
@@ -270,6 +298,10 @@ int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
 
 /**
  * @brief Get PMIC wakeup value.
+ *
+ * Design: PMICDRV-659
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *

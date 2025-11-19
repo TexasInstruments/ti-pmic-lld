@@ -550,6 +550,10 @@ typedef struct Pmic_FsmPwrLatch_s {
 /**
  * @brief Set desired PMIC device state.
  *
+ * Design: PMICDRV-601
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @details The state change requests in which this API can send are listed below
  * 1. No state change request (PMIC_NO_STATE_CHANGE_REQUEST)
  * 2. SAFE to ACTIVE state request (PMIC_SAFE_TO_ACTIVE_REQUEST)
@@ -570,6 +574,10 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state);
 
 /**
  * @brief Get PMIC device state.
+ *
+ * Design: PMICDRV-602
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The device states that can be returned from this API are listed
  * below.
@@ -599,6 +607,10 @@ int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state);
 /**
  * @brief Set PMIC FSM configurations.
  *
+ * Design: PMICDRV-603
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ *
  * @details The options that are configurable via this API are listed below.
  * 1. Standby enable (validParam: Pmic_CFG_STDBY_EN_VALID_SHIFT)
  * 2. AUTO_BIST enable (validParam: PMIC_CFG_AUTO_BIST_EN_VALID_SHIFT)
@@ -624,6 +636,10 @@ int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg);
  * @brief Get PMIC FSM configurations. This API supports getting the same
  * configurations that are settable by `Pmic_fsmSetCfg()`.
  *
+ * Design: PMICDRV-604
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param fsmCfg [OUT] PMIC FSM configurations obtained from the PMIC.
@@ -635,6 +651,10 @@ int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg);
 
 /**
  * @brief Set PMIC device error count (DEV_ERR_CNT).
+ *
+ * Design: PMICDRV-605
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -648,6 +668,10 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt);
 /**
  * @brief Get PMIC device error count (DEV_ERR_CNT).
  *
+ * Design: PMICDRV-606
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param devErrCnt [OUT] Device error count value obtained from the PMIC.
@@ -660,6 +684,10 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt);
 
 /**
  * @brief Set PMIC Wakeup configurations.
+ *
+ * Design: PMICDRV-607
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable through this API are listed below.
  * 1. Power-down delay (validParam: PMIC_CFG_PWD_DLY_VALID_SHIFT)
@@ -680,6 +708,10 @@ int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_
  * @brief Get PMIC Wakeup configurations. This API supports getting the same
  * configurations that are settable by `Pmic_fsmSetWakeupCfg()`.
  *
+ * Design: PMICDRV-608
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param wakeupCfg [OUT] PMIC Wakeup configurations obtained from the PMIC.
@@ -691,6 +723,10 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wak
 
 /**
  * @brief Get PMIC Wakeup statuses.
+ *
+ * Design: PMICDRV-609
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The Wakeup statuses that can be obtained from this API are listed
  * below.
@@ -709,6 +745,10 @@ int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *w
 
 /**
  * @brief Set PMIC power latch configurations.
+ *
+ * Design: PMICDRV-610
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable through this API are listed below.
  * 1. Power-down delay (validParam: PMIC_CFG_PWD_DLY_VALID_SHIFT)
@@ -729,6 +769,10 @@ int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLat
  * @brief Get PMIC power latch configurations. This API supports getting the same
  * configurations that are settable by `Pmic_fsmSetPowerLatchCfg()`.
  *
+ * Design: PMICDRV-611
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param pwrLatchCfg [OUT] PMIC power latch configurations obtained from the
@@ -742,6 +786,10 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_
 
 /**
  * @brief Set PMIC power latches.
+ *
+ * Design: PMICDRV-612
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The power latches that can be set using this API are listed below.
  * 1. Standby error wakeup latch (validParam: PMIC_CFG_STBY_ERR_WK_LATCH_VALID_SHIFT)
@@ -763,6 +811,10 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_
  * @brief Get PMIC power latches. This API supports getting the same power latches
  * that are settable by `Pmic_fsmSetPowerLatch()`.
  *
+ * Design: PMICDRV-613
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param pwrLatch [OUT] Power latches obtained from the PMIC.
@@ -774,6 +826,10 @@ int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwr
 
 /**
  * @brief Get the duration of the last RESET-MCU event.
+ *
+ * Design: PMICDRV-614
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details See section 8.19.4.1.3 of the data sheet for more information on
  * deciphering the value that is returned from this API.

@@ -159,6 +159,11 @@ typedef struct Pmic_Lock_s {
 /**
  * @brief Get PMIC device identifier.
  *
+ * Design: PMICDRV-581
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param devId [OUT] Device identifier.
@@ -170,6 +175,11 @@ int32_t Pmic_getDevId(Pmic_CoreHandle_t *handle, uint8_t *devId);
 
 /**
  * @brief Get PMIC device revision.
+ *
+ * Design: PMICDRV-582
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -183,6 +193,11 @@ int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
 /**
  * @brief Get PMIC NVM code.
  *
+ * Design: PMICDRV-733
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param nvmCode [OUT] PMIC NVM code.
@@ -194,6 +209,11 @@ int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.
+ *
+ * Design: PMICDRV-584
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -208,6 +228,11 @@ int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
  * @brief Set register lock and counter lock configurations. This API is a superset
  * of `Pmic_setRegLockState()` and `Pmic_setCntLockState()`.
+ *
+ * Design: PMICDRV-585
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] Pointer to the PMIC core handle structure.
  * @param config [IN] Pointer to the lock configuration structure containing
@@ -224,6 +249,11 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config);
  * @brief Get register lock and counter lock configurations. This API is a superset
  * of `Pmic_getRegLockState()` and `Pmic_getCntLockState()`.
  *
+ * Design: PMICDRV-586
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle Pointer to the PMIC core handle structure.
  * @param config [IN/OUT] Pointer to the lock configuration structure to store
  * the retrieved register lock status.
@@ -238,6 +268,11 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config);
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
  * @brief Lock/unlock registers that are locked by CFG_REG_LOCK. This API is a
  * subset of `Pmic_setLockCfg()`.
+ *
+ * Design: PMICDRV-587
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param lockState [IN] Lock registers with PMIC_LOCK_ENABLE, unlock with
@@ -254,6 +289,11 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
  * @brief Get lock state for registers locked by CFG_REG_LOCK. This API is a subset
  * of `Pmic_getLockCfg()`.
  *
+ * Design: PMICDRV-588
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param lockState [OUT] If PMIC_LOCK_ENABLE, registers are locked. If
  * PMIC_LOCK_DISABLE, registers are unlocked. See @ref Pmic_CoreLockControl.
@@ -268,6 +308,11 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
  * @brief Lock/unlock registers that are locked by CNT_REG_LOCK. This API is a
  * subset of `Pmic_setLockCfg()`.
+ *
+ * Design: PMICDRV-589
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param lockState [IN] Lock registers with PMIC_LOCK_ENABLE, unlock with
@@ -284,6 +329,11 @@ int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
  * @brief Get lock state for registers locked by CNT_REG_LOCK. This API is a subset
  * of `Pmic_getLockCfg()`.
  *
+ * Design: PMICDRV-590
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param lockState [OUT] If PMIC_LOCK_ENABLE, registers are locked. If
  * PMIC_LOCK_DISABLE, registers are unlocked. See @ref Pmic_CoreLockControl.
@@ -297,6 +347,11 @@ int32_t Pmic_getCntLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
+ * Design: PMICDRV-684
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
+ *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
  * @param value            [IN] Value to be written to scratch pad register.
@@ -308,6 +363,11 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
+ *
+ * Design: PMICDRV-685
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
+ *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.

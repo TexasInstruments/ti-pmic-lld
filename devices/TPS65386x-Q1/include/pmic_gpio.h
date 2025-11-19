@@ -300,6 +300,10 @@ typedef struct Pmic_GpioCfg_s {
 /**
  * @brief Set PMIC GPIO configurations.
  *
+ * Design: PMICDRV-615
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
+ *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @details The following GPIOs are configurable by this API
  * 1. GPI1 (validParam: PMIC_CFG_GPI1_VALID_SHIFT)
  * 2. GPI4 (validParam: PMIC_CFG_GPI4_VALID_SHIFT)
@@ -322,6 +326,10 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
  * @brief Get PMIC GPIO configurations. This API supports getting the same
  * configurations that are settable by `Pmic_gpioSetCfg()`.
  *
+ * Design: PMICDRV-616
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpioCfg [OUT] GPIO configurations obtained from the PMIC. For more
@@ -334,6 +342,10 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Get the output value of a general purpose output pin on the PMIC.
+ *
+ * Design: PMICDRV-617
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @param handle [IN] PMIC interface handle.
  *

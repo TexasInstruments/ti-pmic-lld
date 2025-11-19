@@ -188,6 +188,11 @@ typedef struct Pmic_CoreHandle_s {
 /**
  * @brief Checks whether a parameter is valid.
  *
+ * Design: PMICDRV-571
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-519
+ *               PMICDRV-520
+ *
  * @param validParamVal [IN] Valid parameter value. Each bit represents whether a
  * parameter is valid.
  *
@@ -200,6 +205,11 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 /**
  * @brief Checks whether a parameter is valid and whether the status code is
  * equal to LLD success code.
+ *
+ * Design: PMICDRV-572
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-519
+ *               PMICDRV-520
  *
  * @param vpv [IN] Valid parameter value. Each bit represents whether a parameter
  * is valid.
@@ -218,6 +228,11 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  * @brief Start a critical section when usage of a shared resource such as an I2C or
  * SPI bus is required.
  *
+ * Design: PMICDRV-573
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-502, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *               PMICDRV-517, PMICDRV-505, PMICDRV-509
+ *
  * @param handle Pointer to the PMIC core handle structure.
  * @return void No return value.
  */
@@ -227,6 +242,11 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
  * @brief Stop a critical section after the usage of a shared resource such as an
  * I2C or SPI bus is complete.
  *
+ * Design: PMICDRV-574
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-502, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *               PMICDRV-517, PMICDRV-505, PMICDRV-509
+ *
  * @param handle Pointer to the PMIC core handle structure.
  * @return void No return value.
  */
@@ -234,6 +254,10 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired value.
+ *
+ * Design: PMICDRV-575
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *
  * @param regData [OUT] The API modifies the desired bit field of the value held
  * at this address.
@@ -254,6 +278,10 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
  * providing individual SHIFT/MASK values. A simplified version of
  * `Pmic_setBitField()`.
  *
+ * Design: PMICDRV-576
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *
  * @param reg [OUT] The API modifies the desired bit field of the value held
  * at this address.
  *
@@ -266,6 +294,10 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
 /**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired boolean
  * value.
+ *
+ * Design: PMICDRV-577
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *
  * @param regData [OUT] The API modifies the desired bit field of the value held
  * at this address.
@@ -281,6 +313,10 @@ static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool valu
 
 /**
  * @brief Get desired bit field of an 8-bit unsigned integer.
+ *
+ * Design: PMICDRV-578
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *
  * @param regData [IN] The API gets the desired bit field from this value.
  *
@@ -300,6 +336,10 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
  * than providing individual SHIFT/MASK values. A simplified version of
  * `Pmic_getBitField()`.
  *
+ * Design: PMICDRV-579
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ *
  * @param reg [IN] The API gets the desired bit field from this value.
  *
  * @param name [IN] Bit field name.
@@ -311,6 +351,10 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
 /**
  * @brief Gets the desired bit field of an 8-bit unsigned integer, casted as a
  * boolean.
+ *
+ * Design: PMICDRV-580
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
+ *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *
  * @param regData [IN] The API gets the desired bit field from this value.
  *
