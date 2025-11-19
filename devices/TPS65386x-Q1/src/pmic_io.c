@@ -118,7 +118,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t len) {
     return crc;
 }
 
-int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
+int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
@@ -188,7 +188,7 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
     return status;
 }
 
-int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
