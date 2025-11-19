@@ -188,52 +188,6 @@ int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, 
 int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to `Pmic_ioUpdateByte()` API, but only the name of the
- * bit field needs to be specified (case-sensitive).
- *
- * Design: PMICDRV-624
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Target register address.
- *
- * @param name [IN] Target bit field name.
- *
- * @param value [IN] Desired value to set the bit field to.
- *
- * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-#define Pmic_ioUpdateByteByName(pmicHandle, regAddr, name, value) \
-    Pmic_ioUpdateByte((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
-
-/**
- * @brief Identical to `Pmic_ioUpdateByte_CS()` API, but only the name of the
- * bit field needs to be specified (case-sensitive).
- *
- * Design: PMICDRV-625
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Target register address.
- *
- * @param name [IN] Target bit field name.
- *
- * @param value [IN] Desired value to set the bit field to.
- *
- * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-#define Pmic_ioUpdateByteByName_CS(pmicHandle, regAddr, name, value) \
-    Pmic_ioUpdateByte_CS((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
-
-/**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
  *
  * Design: PMICDRV-626

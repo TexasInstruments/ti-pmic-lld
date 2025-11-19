@@ -223,13 +223,13 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
     // Set WD_WIN1_CFG
     if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_WIN1_CODE_VALID))
     {
-        status = Pmic_ioUpdateByteByName_CS(handle, WD_WIN1_CFG_REG, WD_WIN, wdgCfg->win1Code);
+        status = Pmic_ioUpdateByte_CS(handle, WD_WIN1_CFG_REG, WD_WIN_SHIFT, WD_WIN_MASK, wdgCfg->win1Code);
     }
 
     // Set WD_WIN2_CFG
     if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_WIN2_CODE_VALID))
     {
-        status = Pmic_ioUpdateByteByName_CS(handle, WD_WIN2_CFG_REG, WD_WIN, wdgCfg->win2Code);
+        status = Pmic_ioUpdateByte_CS(handle, WD_WIN2_CFG_REG, WD_WIN_SHIFT, WD_WIN_MASK, wdgCfg->win2Code);
     }
 
     // Set WD_LONGWIN_CFG

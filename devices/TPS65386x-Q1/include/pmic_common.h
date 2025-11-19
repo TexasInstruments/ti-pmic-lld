@@ -274,24 +274,6 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
 }
 
 /**
- * @brief Set the value of a bitfield based on the "NAME" of the field, rather than
- * providing individual SHIFT/MASK values. A simplified version of
- * `Pmic_setBitField()`.
- *
- * Design: PMICDRV-576
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
- *
- * @param reg [OUT] The API modifies the desired bit field of the value held
- * at this address.
- *
- * @param name [IN] Bit field name.
- *
- * @param val [IN] Desired value to set the bit field to.
- */
-#define Pmic_setBitFieldByName(reg, name, val) (Pmic_setBitField(reg, name##_SHIFT, name##_MASK, val))
-
-/**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired boolean
  * value.
  *
@@ -330,23 +312,6 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
 {
     return ((regData & mask) >> shift);
 }
-
-/**
- * @brief Retrieve the value of a bitfield based on the "NAME" of the field, rather
- * than providing individual SHIFT/MASK values. A simplified version of
- * `Pmic_getBitField()`.
- *
- * Design: PMICDRV-579
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
- *
- * @param reg [IN] The API gets the desired bit field from this value.
- *
- * @param name [IN] Bit field name.
- *
- * @return Value of the desired bit field.
- */
-#define Pmic_getBitFieldByName(reg, name) (Pmic_getBitField(reg, name##_SHIFT, name##_MASK))
 
 /**
  * @brief Gets the desired bit field of an 8-bit unsigned integer, casted as a
