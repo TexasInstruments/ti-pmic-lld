@@ -92,7 +92,7 @@ extern "C" {
 /*                              Register Bit Fields                           */
 /* ========================================================================== */
 
-// BUCKx_CTRL
+// BUCK1_CTRL, BUCK2_CTRL, BUCK3_CTRL, BUCK4_CTRL
 #define BUCK_PLDN_SHIFT    (5U)
 #define BUCK_VMON_EN_SHIFT (4U)
 #define BUCK_FPWM_SHIFT    (1U)
@@ -102,7 +102,7 @@ extern "C" {
 #define BUCK_FPWM_MASK     (0x01U << BUCK_FPWM_SHIFT)
 #define BUCK_EN_MASK       (0x01U << BUCK_EN_SHIFT)
 
-// BUCKx_CONF
+// BUCK1_CONF, BUCK2_CONF, BUCK3_CONF, BUCK4_CONF
 #define BUCK_SLEW_RATE_SHIFT (0U)
 #define BUCK_SLEW_RATE_MASK  (0x03U << BUCK_SLEW_RATE_SHIFT)
 
@@ -114,89 +114,97 @@ extern "C" {
 #define BUCK2_3_4_VSET_SHIFT (0U)
 #define BUCK2_3_4_VSET_MASK  (0x7FU < BUCK2_3_4_VSET_SHIFT)
 
-// BUCKx_PG_WINDOW
+// BUCKq_PG_WINDOW, BUCK2_PG_WINDOW, BUCK3_PG_WINDOW, BUCK4_PG_WINDOW
 #define BUCK_VMON_THR_SHIFT (0U)
 #define BUCK_VMON_THR_MASK  (0x03U << BUCK_VMON_THR_SHIFT)
 
-// LDO1_CTRL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+// LDO1_CTRL, LDO2_CTRL, LDO3_CTRL
+#define LDO_DISCHARGE_EN_SHIFT (5U)
+#define LDO_VMON_EN_SHIFT      (4U)
+#define LDO_EN_SHIFT           (0U)
+#define LDO_DISCHARGE_EN_MASK  (0x01U << LDO_DISCHARGE_EN_SHIFT)
+#define LDO_VMON_EN_MASK       (0x01U << LDO_VMON_EN_SHIFT)
+#define LDO_EN_MASK            (0x01U << LDO_EN_SHIFT)
 
-// LDO2_CTRL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+// LDO1_VOUT, LDO2_VOUT, LDO3_VOUT
+#define LDO_BYP_CONFIG_SHIFT (7U)
+#define LDO_VSET_SHIFT       (1U)
+#define LDO_BYP_CONFIG_MASK  (0x01U << LDO_BYP_CONFIG_SHIFT)
+#define LDO_VSET_MASK        (0x3FU << LDO_VSET_SHIFT)
 
-// LDO3_CTRL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO1_VOUT
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO2_VOUT
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO3_VOUT
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO1_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO2_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// LDO3_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+// LDO1_PG_WINDOW, LDO2_PG_WINDOW, LDO3_PG_WINDOW
+#define LDO_VMON_THR_SHIFT (0U)
+#define LDO_VMON_THR_MASK  (0x03U << LDO_VMON_THR_SHIFT)
 
 // VCCA_VMON_CTRL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define VMON_DEGLITCH_SEL_SHIFT (5U)
+#define VMON2_EN_SHIFT          (3U)
+#define VMON1_EN_SHIFT          (1U)
+#define VCCA_VMON_EN_SHIFT      (0U)
+#define VMON_DEGLITCH_SEL_MASK  (0x07U << VMON_DEGLITCH_SEL_SHIFT)
+#define VMON2_EN_MASK           (0x01U << VMON2_EN_SHIFT)
+#define VMON1_EN_MASK           (0x01U << VMON1_EN_SHIFT)
+#define VCCA_VMON_EN_MASK       (0x01U << VCCA_VMON_EN_SHIFT)
 
 // VCCA_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define VCCA_PG_SET_SHIFT   (6U)
+#define VCCA_VMON_THR_SHIFT (0U)
+#define VCCA_PG_SET_MASK    (0x01U << VCCA_PG_SET_SHIFT)
+#define VCCA_VMON_THR_MASK  (0x03U << VCCA_VMON_THR_SHIFT)
 
-// VMON1_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+// VMON1_PG_WINDOW, VMON2_PG_WINDOW
+#define VMON_THR_SHIFT (0U)
+#define VMON_THR_MASK  (0x03U << VMON_THR_SHIFT)
 
 // VMON1_PG_LEVEL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
-
-// VMON2_PG_WINDOW
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define VMON1_PG_SET_SHIFT (0U)
+#define VMON1_PG_SET_MASK  (0xFFU << VMON1_PG_SET_SHIFT)
 
 // VMON2_PG_LEVEL
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define VMON2_PG_SET_SHIFT (0U)
+#define VMON2_PG_SET_MASK  (0x7FU << VMON2_PG_SET_SHIFT)
 
 // RAIL_SEL_1
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define BUCK4_GRP_SEL_SHIFT (6U)
+#define BUCK3_GRP_SEL_SHIFT (4U)
+#define BUCK2_GRP_SEL_SHIFT (2U)
+#define BUCK1_GRP_SEL_SHIFT (0U)
+#define BUCK4_GRP_SEL_MASK  (0x03U << BUCK4_GRP_SEL_SHIFT)
+#define BUCK3_GRP_SEL_MASK  (0x03U << BUCK3_GRP_SEL_SHIFT)
+#define BUCK2_GRP_SEL_MASK  (0x03U << BUCK2_GRP_SEL_SHIFT)
+#define BUCK1_GRP_SEL_MASK  (0x03U << BUCK1_GRP_SEL_SHIFT)
 
 // RAIL_SEL_2
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define LDO3_GRP_SEL_SHIFT (6U)
+#define LDO2_GRP_SEL_SHIFT (4U)
+#define LDO1_GRP_SEL_SHIFT (2U)
+#define LDO3_GRP_SEL_MASK (0x03U << LDO3_GRP_SEL_SHIFT)
+#define LDO2_GRP_SEL_MASK (0x03U << LDO2_GRP_SEL_SHIFT)
+#define LDO1_GRP_SEL_MASK (0x03U << LDO1_GRP_SEL_SHIFT)
 
 // RAIL_SEL_3
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define VMON2_GRP_SEL_SHIFT (6U)
+#define VMON1_GRP_SEL_SHIFT (4U)
+#define VCCA_GRP_SEL_SHIFT  (2U)
+#define VMON2_GRP_SEL_MASK  (0x03U << VMON2_GRP_SEL_SHIFT)
+#define VMON1_GRP_SEL_MASK  (0x03U << VMON1_GRP_SEL_SHIFT)
+#define VCCA_GRP_SEL_MASK   (0x03U << VCCA_GRP_SEL_SHIFT)
 
 // BUCK_RESET_REG
-#define _SHIFT (0U)
-#define _MASK (0x00U << 0U)
+#define BUCK4_RESET_SHIFT (3U)
+#define BUCK3_RESET_SHIFT (2U)
+#define BUCK2_RESET_SHIFT (1U)
+#define BUCK1_RESET_SHIFT (0U)
+#define BUCK4_RESET_MASK  (0x01U << BUCK4_RESET_SHIFT)
+#define BUCK3_RESET_MASK  (0x01U << BUCK3_RESET_SHIFT)
+#define BUCK2_RESET_MASK  (0x01U << BUCK2_RESET_SHIFT)
+#define BUCK1_RESET_MASK  (0x01U << BUCK1_RESET_SHIFT)
 
 // SPREAD_SPECTRUM_1
-#define _SHIFT (0U)
-#define _MASK (0U << 0U)
+#define SS_EN_SHIFT    (2U)
+#define SS_DEPTH_SHIFT (0U)
+#define SS_EN_MASK     (1U << SS_EN_SHIFT)
+#define SS_DEPTH_MASK  (1U << SS_DEPTH_SHIFT)
 
 #ifdef __cplusplus
 }
