@@ -40,8 +40,8 @@
 #include "pmic_io.h"
 #include "regmap/core.h"
 
-#define PMIC_REG_LOCK_KEY   (0x00U)
-#define PMIC_REG_UNLOCK_KEY (0x5AU)
+#define PMIC_REG_LOCK_KEY   (0xAAU)
+#define PMIC_REG_UNLOCK_KEY (0x9BU)
 
 int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
 {
