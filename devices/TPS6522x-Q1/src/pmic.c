@@ -193,7 +193,7 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
     return status;
 }
 
-static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetSyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -222,6 +222,13 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
             handle->ioWrite = handleCfg->ioWrite;
         }
     }
+
+    return status;
+}
+
+static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
 
     // asyncRxStart
     if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_RX_START_VALID, status))
@@ -275,6 +282,13 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
         }
     }
 
+    return status;
+}
+
+static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    int32_t status;
+
     // criticalSectionStart
     if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
     {
@@ -312,6 +326,26 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
         {
             handle->irqResponseCallback = handleCfg->irqResponseCallback;
         }
+    }
+
+    return status;
+}
+
+static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    // Synchronous hooks
+    int32_t status = validateAndSetSyncHooks(handle, handleCfg);
+
+    // Asynchronous hooks
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetAsyncHooks(handle, handleCfg);
+    }
+
+    // Other hooks (critical section, IRQ response callback)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetOtherHooks(handle, handleCfg);
     }
 
     return status;
