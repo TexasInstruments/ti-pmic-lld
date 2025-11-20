@@ -79,8 +79,32 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
     return status;
 }
 
+int32_t Pmic_getDevId(const Pmic_Handle_t *pmicHandle, uint8_t *devId)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (devId == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, DEV_REV_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *devId = Pmic_getBitField(regData, TI_DEVICE_ID_SHIFT, TI_DEVICE_ID_MASK);
+    }
+
+    return status;
+}
+
 int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode)
 {
+    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (nvmCode == NULL))
@@ -90,7 +114,58 @@ int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *nvmCode = pmicHandle->nvmCode;
+        status = Pmic_ioRxByte_CS(pmicHandle, NVM_CODE_1_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *nvmCode = Pmic_getBitField(regData, TI_NVM_ID_SHIFT, TI_NVM_ID_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (nvmRev == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, NVM_CODE_2_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *nvmRev = Pmic_getBitField(regData, TI_NVM_REV_SHIFT, TI_NVM_REV_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (siliconRev == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, MANUFACTURING_VER_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *siliconRev = Pmic_getBitField(regData, SILICON_REV_SHIFT, SILICON_REV_MASK);
     }
 
     return status;
