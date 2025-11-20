@@ -46,16 +46,216 @@
 #include "regmap/fsm.h"
 
 /* ========================================================================== */
+/*                           Internal Helper Functions                        */
+/* ========================================================================== */
+
+/**
+ * @brief GPIO pin mapping table entry
+ */
+typedef struct
+{
+    uint8_t regAddr;
+    uint8_t maskShift;
+    uint8_t maskPolShift;
+} Pmic_FsmGpioPinMap_t;
+
+/**
+ * @brief GPIO pin to register mapping table
+ */
+static const Pmic_FsmGpioPinMap_t gpioPinMap[] = {
+    { FSM_TRIG_MASK_1_REG, GPIO1_FSM_MASK_SHIFT, GPIO1_FSM_MASK_POL_SHIFT },  /* GPIO1 */
+    { FSM_TRIG_MASK_1_REG, GPIO2_FSM_MASK_SHIFT, GPIO2_FSM_MASK_POL_SHIFT },  /* GPIO2 */
+    { FSM_TRIG_MASK_1_REG, GPIO3_FSM_MASK_SHIFT, GPIO3_FSM_MASK_POL_SHIFT },  /* GPIO3 */
+    { FSM_TRIG_MASK_1_REG, GPIO4_FSM_MASK_SHIFT, GPIO4_FSM_MASK_POL_SHIFT },  /* GPIO4 */
+    { FSM_TRIG_MASK_2_REG, GPIO5_FSM_MASK_SHIFT, GPIO5_FSM_MASK_POL_SHIFT },  /* GPIO5 */
+    { FSM_TRIG_MASK_2_REG, GPIO6_FSM_MASK_SHIFT, GPIO6_FSM_MASK_POL_SHIFT }   /* GPIO6 */
+};
+
+/**
+ * @brief Get GPIO pin mapping from table
+ */
+static int32_t Pmic_fsmGetGpioPinMapping(uint8_t pinNum, const Pmic_FsmGpioPinMap_t **mapping)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if ((pinNum < PMIC_FSM_GPIO_PIN_MIN) || (pinNum > PMIC_FSM_GPIO_PIN_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    else
+    {
+        *mapping = &gpioPinMap[pinNum - PMIC_FSM_GPIO_PIN_MIN];
+    }
+
+    return status;
+}
+
+/**
+ * @brief Validate FSM trigger configuration parameters
+ */
+static int32_t Pmic_fsmValidateTriggerCfg(const Pmic_FsmTriggerCfg_t *triggerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) &&
+        (triggerCfg->severeErrTrig > PMIC_FSM_TRIGGER_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) &&
+        (triggerCfg->otherRailTrig > PMIC_FSM_TRIGGER_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) &&
+        (triggerCfg->socRailTrig > PMIC_FSM_TRIGGER_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID) &&
+        (triggerCfg->mcuRailTrig > PMIC_FSM_TRIGGER_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID) &&
+        (triggerCfg->moderateErrTrig > PMIC_FSM_TRIGGER_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/**
+ * @brief Configure FSM_TRIG_SEL_1 register
+ */
+static int32_t Pmic_fsmSetTrigSel1(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK, triggerCfg->severeErrTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK, triggerCfg->otherRailTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK, triggerCfg->socRailTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK, triggerCfg->mcuRailTrig);
+            }
+
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REG, regData);
+        }
+    }
+
+    return status;
+}
+
+/**
+ * @brief Configure FSM_TRIG_SEL_2 register
+ */
+static int32_t Pmic_fsmSetTrigSel2(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID))
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            Pmic_setBitField(&regData, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK, triggerCfg->moderateErrTrig);
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REG, regData);
+        }
+    }
+
+    return status;
+}
+
+/**
+ * @brief Read FSM_TRIG_SEL_1 register
+ */
+static int32_t Pmic_fsmGetTrigSel1(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
+        Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
+            {
+                triggerCfg->severeErrTrig = Pmic_getBitField(regData, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
+            {
+                triggerCfg->otherRailTrig = Pmic_getBitField(regData, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
+            {
+                triggerCfg->socRailTrig = Pmic_getBitField(regData, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+            {
+                triggerCfg->mcuRailTrig = Pmic_getBitField(regData, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK);
+            }
+        }
+    }
+
+    return status;
+}
+
+/**
+ * @brief Read FSM_TRIG_SEL_2 register
+ */
+static int32_t Pmic_fsmGetTrigSel2(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID))
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            triggerCfg->moderateErrTrig = Pmic_getBitField(regData, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK);
+        }
+    }
+
+    return status;
+}
+
+/* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
 int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData1 = 0U;
-    uint8_t regData2 = 0U;
-    bool updateReg1 = false;
-    bool updateReg2 = false;
 
     if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
     {
@@ -67,87 +267,21 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Validate trigger values
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) &&
-            (triggerCfg->severeErrTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) &&
-            (triggerCfg->otherRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) &&
-            (triggerCfg->socRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID) &&
-            (triggerCfg->mcuRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID) &&
-            (triggerCfg->moderateErrTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
+        status = Pmic_fsmValidateTriggerCfg(triggerCfg);
     }
 
     Pmic_criticalSectionStart(handle);
 
-    // Determine which registers need to be updated
     if (status == PMIC_ST_SUCCESS)
     {
-        updateReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
-
-        updateReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
+        status = Pmic_fsmSetTrigSel1(handle, triggerCfg);
     }
 
-    // Update FSM_TRIG_SEL_1 register
-    if ((status == PMIC_ST_SUCCESS) && updateReg1)
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK, triggerCfg->severeErrTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK, triggerCfg->otherRailTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK, triggerCfg->socRailTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK, triggerCfg->mcuRailTrig);
-            }
-
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REG, regData1);
-        }
-    }
-
-    // Update FSM_TRIG_SEL_2 register
-    if ((status == PMIC_ST_SUCCESS) && updateReg2)
-    {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            Pmic_setBitField(&regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK, triggerCfg->moderateErrTrig);
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REG, regData2);
-        }
+        status = Pmic_fsmSetTrigSel2(handle, triggerCfg);
     }
 
     Pmic_criticalSectionStop(handle);
@@ -158,10 +292,6 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
 int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData1 = 0U;
-    uint8_t regData2 = 0U;
-    bool readReg1 = false;
-    bool readReg2 = false;
 
     if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
     {
@@ -173,54 +303,16 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Determine which registers need to be read
-    if (status == PMIC_ST_SUCCESS)
-    {
-        readReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
-
-        readReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
-    }
-
     Pmic_criticalSectionStart(handle);
 
-    // Read FSM_TRIG_SEL_1 register
-    if ((status == PMIC_ST_SUCCESS) && readReg1)
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
-            {
-                triggerCfg->severeErrTrig = Pmic_getBitField(regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
-            {
-                triggerCfg->otherRailTrig = Pmic_getBitField(regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
-            {
-                triggerCfg->socRailTrig = Pmic_getBitField(regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
-            {
-                triggerCfg->mcuRailTrig = Pmic_getBitField(regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK);
-            }
-        }
+        status = Pmic_fsmGetTrigSel1(handle, triggerCfg);
     }
 
-    // Read FSM_TRIG_SEL_2 register
-    if ((status == PMIC_ST_SUCCESS) && readReg2)
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            triggerCfg->moderateErrTrig = Pmic_getBitField(regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK);
-        }
+        status = Pmic_fsmGetTrigSel2(handle, triggerCfg);
     }
 
     Pmic_criticalSectionStop(handle);
@@ -231,10 +323,8 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
 int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;
-    uint8_t regAddr = 0U;
-    uint8_t maskShift = 0U;
-    uint8_t maskPolShift = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg == NULL))
     {
@@ -246,15 +336,6 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Validate GPIO pin number
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((gpioTriggerCfg->pinNum < PMIC_FSM_GPIO_PIN_MIN) ||
-         (gpioTriggerCfg->pinNum > PMIC_FSM_GPIO_PIN_MAX)))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Validate mask polarity
     if ((status == PMIC_ST_SUCCESS) &&
         Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID) &&
         (gpioTriggerCfg->maskPol > PMIC_FSM_GPIO_MASK_POL_MAX))
@@ -262,70 +343,30 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Determine register address and bit field shifts based on GPIO pin number
     if (status == PMIC_ST_SUCCESS)
     {
-        switch (gpioTriggerCfg->pinNum)
-        {
-            case PMIC_FSM_GPIO_PIN1:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO1_FSM_MASK_SHIFT;
-                maskPolShift = GPIO1_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN2:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO2_FSM_MASK_SHIFT;
-                maskPolShift = GPIO2_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN3:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO3_FSM_MASK_SHIFT;
-                maskPolShift = GPIO3_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN4:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO4_FSM_MASK_SHIFT;
-                maskPolShift = GPIO4_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN5:
-                regAddr = FSM_TRIG_MASK_2_REG;
-                maskShift = GPIO5_FSM_MASK_SHIFT;
-                maskPolShift = GPIO5_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN6:
-                regAddr = FSM_TRIG_MASK_2_REG;
-                maskShift = GPIO6_FSM_MASK_SHIFT;
-                maskPolShift = GPIO6_FSM_MASK_POL_SHIFT;
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_PARAM;
-                break;
-        }
+        status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfg->pinNum, &pinMap);
     }
 
-    // Read the appropriate FSM_TRIG_MASK register
     Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
+        status = Pmic_ioRxByte(handle, pinMap->regAddr, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Modify GPIO FSM mask
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_VALID))
         {
-            Pmic_setBitField_b(&regData, maskShift, (uint8_t)(1U << maskShift), gpioTriggerCfg->mask);
+            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1U << pinMap->maskShift), gpioTriggerCfg->mask);
         }
 
-        // Modify GPIO FSM mask polarity
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            Pmic_setBitField(&regData, maskPolShift, (uint8_t)(1U << maskPolShift), gpioTriggerCfg->maskPol);
+            Pmic_setBitField(&regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift), gpioTriggerCfg->maskPol);
         }
 
-        // Write the modified register
-        status = Pmic_ioTxByte(handle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, pinMap->regAddr, regData);
     }
     Pmic_criticalSectionStop(handle);
 
@@ -335,10 +376,8 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
 int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;
-    uint8_t regAddr = 0U;
-    uint8_t maskShift = 0U;
-    uint8_t maskPolShift = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg == NULL))
     {
@@ -350,73 +389,26 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Validate GPIO pin number
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((gpioTriggerCfg->pinNum < PMIC_FSM_GPIO_PIN_MIN) ||
-         (gpioTriggerCfg->pinNum > PMIC_FSM_GPIO_PIN_MAX)))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Determine register address and bit field shifts based on GPIO pin number
     if (status == PMIC_ST_SUCCESS)
     {
-        switch (gpioTriggerCfg->pinNum)
-        {
-            case PMIC_FSM_GPIO_PIN1:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO1_FSM_MASK_SHIFT;
-                maskPolShift = GPIO1_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN2:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO2_FSM_MASK_SHIFT;
-                maskPolShift = GPIO2_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN3:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO3_FSM_MASK_SHIFT;
-                maskPolShift = GPIO3_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN4:
-                regAddr = FSM_TRIG_MASK_1_REG;
-                maskShift = GPIO4_FSM_MASK_SHIFT;
-                maskPolShift = GPIO4_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN5:
-                regAddr = FSM_TRIG_MASK_2_REG;
-                maskShift = GPIO5_FSM_MASK_SHIFT;
-                maskPolShift = GPIO5_FSM_MASK_POL_SHIFT;
-                break;
-            case PMIC_FSM_GPIO_PIN6:
-                regAddr = FSM_TRIG_MASK_2_REG;
-                maskShift = GPIO6_FSM_MASK_SHIFT;
-                maskPolShift = GPIO6_FSM_MASK_POL_SHIFT;
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_PARAM;
-                break;
-        }
-    }
-
-    // Read the appropriate FSM_TRIG_MASK register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
+        status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfg->pinNum, &pinMap);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract GPIO FSM mask
+        status = Pmic_ioRxByte_CS(handle, pinMap->regAddr, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_VALID))
         {
-            gpioTriggerCfg->mask = Pmic_getBitField_b(regData, maskShift);
+            gpioTriggerCfg->mask = Pmic_getBitField_b(regData, pinMap->maskShift);
         }
 
-        // Extract GPIO FSM mask polarity
         if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            gpioTriggerCfg->maskPol = Pmic_getBitField(regData, maskPolShift, (uint8_t)(1U << maskPolShift));
+            gpioTriggerCfg->maskPol = Pmic_getBitField(regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift));
         }
     }
 
