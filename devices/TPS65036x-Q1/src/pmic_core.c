@@ -52,7 +52,7 @@ int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *devId = pmicHandle->devRev;
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_DEV_REV_REG, devId);
     }
 
     return status;
@@ -69,7 +69,7 @@ int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *nvmCode = pmicHandle->nvmCode;
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_NVM_CODE_1_REG, nvmCode);
     }
 
     return status;
@@ -86,7 +86,7 @@ int32_t Pmic_getNvmRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmRev)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *nvmRev = pmicHandle->nvmRev;
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_NVM_CODE_2_REG, nvmRev);
     }
 
     return status;
@@ -103,7 +103,7 @@ int32_t Pmic_getSiliconRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *silicon
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *siliconRev = pmicHandle->siliconRev;
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_MANUFACTURING_VER_REG, siliconRev);
     }
 
     return status;
