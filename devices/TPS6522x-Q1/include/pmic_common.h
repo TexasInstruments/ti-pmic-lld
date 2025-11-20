@@ -225,11 +225,13 @@ typedef struct Pmic_Handle_s {
     void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
-        const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
     int32_t (*ioWrite)(
-        const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen);
-    int32_t (*asyncRxStart)(const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen);
-    int32_t (*asyncTxStart)(const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncRxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncTxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
     int32_t (*asyncRxAwait)(const struct Pmic_Handle_s *handle);
     int32_t (*asyncTxAwait)(const struct Pmic_Handle_s *handle);
     void (*criticalSectionStart)(void);

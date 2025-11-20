@@ -110,6 +110,29 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_Page
+ * @name PMIC Page
+ *
+ * @brief Each PMIC register resides in a space within the register map. The
+ * enumerations below are used to describe the space that a PMIC register belongs
+ * to so that the correct handle/address/page could be utilized in user-implemented
+ * R/W API hooks.
+ *
+ * @details The pages PMIC_PAGE_MAIN and PMIC_PAGE_WDG are commonly used. All others
+ * are seldomly used.
+ *
+ * @{
+ */
+#define PMIC_PAGE_MAIN (0U)
+#define PMIC_PAGE_NVM  (1U)
+#define PMIC_PAGE_TRIM (2U)
+#define PMIC_PAGE_SRAM (3U)
+#define PMIC_PAGE_WDG  (4U)
+#define PMIC_PAGE_MIN  (PMIC_PAGE_MAIN)
+#define PMIC_PAGE_MAX  (PMIC_PAGE_WDG)
+/** @} */
+
+/**
  * @anchor Pmic_I2CSpeedSel
  * @name PMIC Select I2C Speed
  *
@@ -324,11 +347,13 @@ typedef struct Pmic_HandleCfg_s {
     void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
-        const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
     int32_t (*ioWrite)(
-        const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen);
-    int32_t (*asyncRxStart)(const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen);
-    int32_t (*asyncTxStart)(const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncRxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncTxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
     int32_t (*asyncRxAwait)(const struct Pmic_Handle_s *handle);
     int32_t (*asyncTxAwait)(const struct Pmic_Handle_s *handle);
     void (*criticalSectionStart)(void);

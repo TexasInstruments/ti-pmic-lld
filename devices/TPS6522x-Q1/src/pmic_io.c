@@ -103,7 +103,6 @@ const static uint8_t CRC8_TABLE[] =
  *
  * @details Initial value: 0xFF
  * Big-endian bit stream order
- * Result inversion is enabled
  *
  * @param data [IN] Data for which CRC is to be determined
  * @param length [IN] Length of the buffer in bytes
@@ -133,28 +132,30 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 
     if (status == PMIC_ST_SUCCESS)
     {
+        uint8_t page = (regAddr >> 8U) & 0x07U;
+
+        // SPI MODE
         if (handle->commMode == PMIC_INTF_SPI)
         {
-            // SPI MODE
             uint8_t spiFrame[SPI_TX_FRAME_LEN] = {0U};
             uint8_t frameLen = 3U;
 
-            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU);                              // ADDR[7:0]
-            spiFrame[1U] = (uint8_t)(((regAddr >> 8U) & 0x07U) << 5U) |            // PAGE[2:0]
-                          (SPI_WRITE_BIT << 4U);                                    // R/W = 0
-            spiFrame[2U] = txData;                                                  // DATA
+            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU); // ADDR[7:0]
+            spiFrame[1U] = (uint8_t)(page << 5U) |     // PAGE[2:0]
+                           (SPI_WRITE_BIT << 4U);      // R/W = 0
+            spiFrame[2U] = txData;                     // DATA
 
-            if (handle->crcEnable == PMIC_ENABLE)
+            if (handle->crcEnable)
             {
                 spiFrame[3U] = getCRC8Val(spiFrame, frameLen);
                 frameLen++;
             }
 
-            status = handle->ioWrite(handle, regAddr, spiFrame, frameLen);
+            status = handle->ioWrite(handle, page, spiFrame[0U], spiFrame, frameLen);
         }
+        // I2C MODE
         else
         {
-            // I2C MODE
             uint8_t i2cFrameLen = 0U;
             uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
 
@@ -165,14 +166,14 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
             i2cFrameLen = 3U;
 
             // If PMIC CRC is enabled, calculate CRC and increment number of bytes in the I2C frame
-            if (handle->crcEnable == PMIC_ENABLE)
+            if (handle->crcEnable)
             {
                 i2cFrame[3U] = getCRC8Val(i2cFrame, i2cFrameLen);
                 i2cFrameLen++;
             }
 
             // Begin write exchange. TX buffer starts at i2cFrame[2U]
-            status = handle->ioWrite(handle, regAddr, &i2cFrame[2U], i2cFrameLen - 2U);
+            status = handle->ioWrite(handle, page, i2cFrame[1U], &i2cFrame[2U], i2cFrameLen - 2U);
         }
     }
 
@@ -201,44 +202,48 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
 
     if (status == PMIC_ST_SUCCESS)
     {
+        uint8_t page = (regAddr >> 8U) & 0x07U;
+
+        // SPI MODE
         if (handle->commMode == PMIC_INTF_SPI)
         {
-            // SPI MODE
             uint8_t spiFrame[SPI_RX_FRAME_LEN] = {0U};
             uint8_t frameLen = 3U;
 
             // Build TX frame for SPI read
-            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU);                              // ADDR[7:0]
-            spiFrame[1U] = (uint8_t)(((regAddr >> 8U) & 0x07U) << 5U) |            // PAGE[2:0]
-                          (SPI_READ_BIT << 4U);                                     // R/W = 1
-            spiFrame[2U] = 0x00U;                                                   // Dummy byte
+            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU); // ADDR[7:0]
+            spiFrame[1U] = (uint8_t)(page << 5U) |     // PAGE[2:0]
+                           (SPI_READ_BIT << 4U);       // R/W = 1
+            spiFrame[2U] = 0x00U;                      // Dummy byte
 
-            if (handle->crcEnable == PMIC_ENABLE)
+            if (handle->crcEnable)
             {
-                frameLen = 4U;
+                spiFrame[3U] = getCRC8Val(spiFrame, 3U);
+                frameLen++;
             }
 
             // Perform SPI transfer (TX and RX simultaneously)
-            status = handle->ioRead(handle, regAddr, spiFrame, frameLen);
+            status = handle->ioRead(handle, page, spiFrame[0U], spiFrame, frameLen);
 
-            if (status == PMIC_ST_SUCCESS)
+            // Verify received CRC
+            if ((status == PMIC_ST_SUCCESS) && handle->crcEnable)
             {
-                *rxData = spiFrame[2U];  // Data comes back in 3rd byte
-
-                if (handle->crcEnable == PMIC_ENABLE)
+                uint8_t expectedCrc = getCRC8Val(spiFrame, 3U);
+                if (spiFrame[3U] != expectedCrc)
                 {
-                    // Verify received CRC
-                    uint8_t expectedCrc = getCRC8Val(spiFrame, 3U);
-                    if (spiFrame[3U] != expectedCrc)
-                    {
-                        status = PMIC_ST_ERR_DATA_IO_CRC;
-                    }
+                    status = PMIC_ST_ERR_DATA_IO_CRC;
                 }
             }
+
+            // Save data
+            if (status == PMIC_ST_SUCCESS)
+            {
+                *rxData = spiFrame[2U];
+            }
         }
+        // I2C MODE
         else
         {
-            // I2C MODE
             uint8_t i2cFrameLen = 0U;
             uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
 
@@ -249,10 +254,10 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
             // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
-            status = handle->ioRead(handle, regAddr, &i2cFrame[3U], i2cFrameLen - 3U);
+            status = handle->ioRead(handle, page, i2cFrame[1U], &i2cFrame[3U], i2cFrameLen - 3U);
 
             // If read exchange was successful and PMIC CRC is enabled, compare SCRC to expected CRC
-            if ((status == PMIC_ST_SUCCESS) && (handle->crcEnable == PMIC_ENABLE))
+            if ((status == PMIC_ST_SUCCESS) && handle->crcEnable)
             {
                 // i2cFrame[0U] - Target device I2C address with write bit
                 // i2cFrame[1U] - Target device internal register address
