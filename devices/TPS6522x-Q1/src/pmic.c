@@ -58,58 +58,33 @@
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-static inline void setPmicHandleMembers(const Pmic_HandleCfg_t *handleCfg, Pmic_Handle_t *handle)
-{
-    handle->commMode = handleCfg->commMode;
-    handle->i2cAddr0 = handleCfg->i2cAddr0;
-    handle->i2cAddr1 = handleCfg->i2cAddr1;
-    handle->i2cAddr2 = handleCfg->i2cAddr2;
-    handle->i2c1Speed = handleCfg->i2c1Speed;
-    handle->i2c2Speed = handleCfg->i2c2Speed;
-    handle->crcEnable = handleCfg->crcEnable;
-    handle->asyncEnable = handleCfg->asyncEnable;
-    handle->commHandle0 = handleCfg->commHandle0;
-    handle->commHandle1 = handleCfg->commHandle1;
-    handle->taskHandle = handleCfg->taskHandle;
-    handle->ioRead = handleCfg->ioRead;
-    handle->ioWrite = handleCfg->ioWrite;
-    handle->asyncRxStart = handleCfg->asyncRxStart;
-    handle->asyncTxStart = handleCfg->asyncTxStart;
-    handle->asyncRxAwait = handleCfg->asyncRxAwait;
-    handle->asyncTxAwait = handleCfg->asyncTxAwait;
-    handle->criticalSectionStart = handleCfg->criticalSectionStart;
-    handle->criticalSectionStop = handleCfg->criticalSectionStop;
-    handle->irqResponseCallback = handleCfg->irqResponseCallback;
-}
-
 static int32_t getPmicInfo(Pmic_Handle_t *handle)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read DEV_REV register
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, DEV_REV_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, DEV_REV_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
         handle->devId = Pmic_getBitField(regData, TI_DEVICE_ID_SHIFT, TI_DEVICE_ID_MASK);
-        status = Pmic_ioRxByte(handle, NVM_CODE_1_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, NVM_CODE_1_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
         handle->nvmCode = Pmic_getBitField(regData, TI_NVM_ID_SHIFT, TI_NVM_ID_MASK);
-        status = Pmic_ioRxByte(handle, NVM_CODE_2_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, NVM_CODE_2_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_REV bit field and read MANUFACTURING_VER register
         handle->nvmRev = Pmic_getBitField(regData, TI_NVM_REV_SHIFT, TI_NVM_REV_MASK);
-        status = Pmic_ioRxByte(handle, MANUFACTURING_VER_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, MANUFACTURING_VER_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -117,53 +92,317 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
         // Extract SILICON_REV bit field
         handle->devSiRev = Pmic_getBitField(regData, SILICON_REV_SHIFT, SILICON_REV_MASK);
     }
-    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t validateHandleCfg(const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetI2CCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Check for NULL parameters
-    if ((handleCfg->ioRead == NULL) || (handleCfg->ioWrite == NULL) ||
-        (handleCfg->criticalSectionStart == NULL) || (handleCfg->criticalSectionStop == NULL))
+    // i2cAddr0
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR0_VALID))
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        handle->i2cAddr0 = handleCfg->i2cAddr0;
     }
 
-    // Validate communication mode
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((handleCfg->commMode < PMIC_INTF_MIN) || (handleCfg->commMode > PMIC_INTF_MAX)))
+    // i2cAddr1
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR1_VALID))
+    {
+        handle->i2cAddr1 = handleCfg->i2cAddr1;
+    }
+
+    // i2cAddr2
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR2_VALID))
+    {
+        handle->i2cAddr2 = handleCfg->i2cAddr2;
+    }
+
+    // i2c1Speed
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C1_SPEED_VALID))
+    {
+        if (handleCfg->i2c1Speed > PMIC_I2C_SPEED_SEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            handle->i2c1Speed = handleCfg->i2c1Speed;
+        }
+    }
+
+    // i2c2Speed
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_I2C2_SPEED_VALID, status))
+    {
+        if (handleCfg->i2c2Speed > PMIC_I2C_SPEED_SEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            handle->i2c2Speed = handleCfg->i2c2Speed;
+        }
+    }
+
+    return status;
+}
+
+static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // commHandle0
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_COMM_HANDLE_0_VALID))
+    {
+        if (handleCfg->commHandle0 == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            handle->commHandle0 = handleCfg->commHandle0;
+        }
+    }
+
+    // commHandle1
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_COMM_HANDLE_1_VALID, status))
+    {
+        if (handleCfg->commHandle1 == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            handle->commHandle1 = handleCfg->commHandle1;
+        }
+    }
+
+    // taskHandle
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_TASK_HANDLE_VALID, status))
+    {
+        if (handleCfg->taskHandle == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            handle->taskHandle = handleCfg->taskHandle;
+        }
+    }
+
+    return status;
+}
+
+static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // ioRead
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_IO_READ_VALID))
+    {
+        if (handleCfg->ioRead == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->ioRead = handleCfg->ioRead;
+        }
+    }
+
+    // ioWrite
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_IO_WRITE_VALID, status))
+    {
+        if (handleCfg->ioWrite == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->ioWrite = handleCfg->ioWrite;
+        }
+    }
+
+    // asyncRxStart
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_RX_START_VALID, status))
+    {
+        if (handleCfg->asyncRxStart == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->asyncRxStart = handleCfg->asyncRxStart;
+        }
+    }
+
+    // asyncTxStart
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_TX_START_VALID, status))
+    {
+        if (handleCfg->asyncTxStart == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->asyncTxStart = handleCfg->asyncTxStart;
+        }
+    }
+
+    // asyncRxAwait
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status))
+    {
+        if (handleCfg->asyncRxAwait == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->asyncRxAwait = handleCfg->asyncRxAwait;
+        }
+    }
+
+    // asyncTxAwait
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status))
+    {
+        if (handleCfg->asyncTxAwait == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->asyncTxAwait = handleCfg->asyncTxAwait;
+        }
+    }
+
+    // criticalSectionStart
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
+    {
+        if (handleCfg->criticalSectionStart == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->criticalSectionStart = handleCfg->criticalSectionStart;
+        }
+    }
+
+    // criticalSectionStop
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_STOP_VALID, status))
+    {
+        if (handleCfg->criticalSectionStop == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->criticalSectionStop = handleCfg->criticalSectionStop;
+        }
+    }
+
+    // irqResponseCallback
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_IRQ_RESPONSE_CALLBACK_VALID, status))
+    {
+        if (handleCfg->irqResponseCallback == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->irqResponseCallback = handleCfg->irqResponseCallback;
+        }
+    }
+
+    return status;
+}
+
+static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // commMode
+    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_COMM_MODE_VALID))
+    {
+        if (handleCfg->commMode > PMIC_INTF_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            handle->commMode = handleCfg->commMode;
+        }
+    }
+
+    // maxLoopCnt
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_MAX_LOOP_CNT_VALID, status))
+    {
+        handle->maxLoopCnt = handleCfg->maxLoopCnt;
+    }
+
+    // crcEnable
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRC_ENABLE_VALID, status))
+    {
+        handle->crcEnable = handleCfg->crcEnable;
+    }
+
+    // asyncEnable
+    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_ENABLE_VALID, status))
+    {
+        handle->asyncEnable = handleCfg->asyncEnable;
+    }
+
+    // Validate I2C configuration
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetI2CCfg(handle, handleCfg);
+    }
+
+    // Validate communication/task handles
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetUserHandles(handle, handleCfg);
+    }
+
+    // Validate user-implemented hooks
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetUserHooks(handle, handleCfg);
+    }
+
+    return status;
+}
+
+static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Check commMode
+    if (handle->commMode > PMIC_INTF_MAX)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Validate communication handles based on mode
-    if (status == PMIC_ST_SUCCESS)
+    // Check commHandle0
+    if (handle->commHandle0 == NULL)
     {
-        if ((handleCfg->commMode == PMIC_INTF_I2C_DUAL) &&
-            ((handleCfg->commHandle0 == NULL) || (handleCfg->commHandle1 == NULL)))
-        {
-            status = PMIC_ST_ERR_NULL_PARAM;
-        }
-        else if (((handleCfg->commMode == PMIC_INTF_I2C_SINGLE) ||
-                  (handleCfg->commMode == PMIC_INTF_SPI)) &&
-                 (handleCfg->commHandle0 == NULL))
-        {
-            status = PMIC_ST_ERR_NULL_PARAM;
-        }
+        status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Validate async mode parameters
-    if ((status == PMIC_ST_SUCCESS) && (handleCfg->asyncEnable == PMIC_ENABLE))
+    // Check asyncRxStart, asyncTxStart, asyncRxAwait, asyncTxAwait
+    if (handle->asyncEnable)
     {
-        if ((handleCfg->asyncRxStart == NULL) || (handleCfg->asyncTxStart == NULL) ||
-            (handleCfg->asyncRxAwait == NULL) || (handleCfg->asyncTxAwait == NULL) ||
-            (handleCfg->taskHandle == NULL))
+        if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) || (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL))
         {
-            status = PMIC_ST_ERR_NULL_PARAM;
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+    }
+    // Check ioRead, ioWrite
+    else
+    {
+        if ((handle->ioRead == NULL) || (handle->ioWrite == NULL))
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
         }
     }
 
@@ -183,18 +422,21 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Validate and set configuration parameters
     if (status == PMIC_ST_SUCCESS)
     {
-        // Validate configuration parameters
-        status = validateHandleCfg(handleCfg);
+        status = validateAndSetHandleCfg(handle, handleCfg);
     }
 
+    // Validate PMIC handle once configurations have been set
     if (status == PMIC_ST_SUCCESS)
     {
-        // Initialize PMIC handle with values from handleCfg
-        setPmicHandleMembers(handleCfg, handle);
+        status = validatePmicHandle(handle);
+    }
 
-        // Get PMIC info, store info in pmic handle
+    // Get PMIC info, store info in pmic handle
+    if (status == PMIC_ST_SUCCESS)
+    {
         status = getPmicInfo(handle);
     }
 
@@ -251,14 +493,15 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *handle)
 
     if (handle == NULL)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((handle->commHandle0 == NULL) || (handle->ioRead == NULL) ||
-         (handle->ioWrite == NULL) || (handle->criticalSectionStart == NULL) ||
-         (handle->criticalSectionStop == NULL) ||
-         (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS)))
+    if ((status == PMIC_ST_SUCCESS) && (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS))
+    {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (validatePmicHandle(handle) != PMIC_ST_SUCCESS))
     {
         status = PMIC_ST_ERR_INV_HANDLE;
     }

@@ -145,6 +145,8 @@ extern "C" {
  *
  * @param i2c2Speed I2C2 speed. For valid values, refer to @ref Pmic_I2CSpeedSel.
  *
+ * @param maxLoopCnt Maximum number of iterations for loops in PMIC LLD.
+ *
  * @param crcEnable Enable or disable serial communication CRC.
  *
  * @param asyncEnable Enable asynchronous serial communication operation. If set
@@ -216,6 +218,7 @@ typedef struct Pmic_Handle_s {
     uint8_t i2cAddr2;
     uint8_t i2c1Speed;
     uint8_t i2c2Speed;
+    uint32_t maxLoopCnt;
     bool crcEnable;
     bool asyncEnable;
     void *commHandle0;
