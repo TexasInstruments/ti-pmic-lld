@@ -174,7 +174,7 @@ static int32_t WDG_setQaCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgC
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_criticalSectionStart(pmicHandle);
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_FDBK_VALID | PMIC_WD_QA_LFSR_VALID | PMIC_WD_QA_SEED_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_CFG_ALL_VALID))
     {
         // Read WD_QA_CFG register
         status = Pmic_ioRxByte(pmicHandle, PMIC_WD_QA_CFG_REG, &regData);
@@ -220,7 +220,7 @@ static int32_t WDG_setQaCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgC
     }
 
     // Write new register value back to PMIC
-    if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_QA_FDBK_VALID | PMIC_WD_QA_LFSR_VALID | PMIC_WD_QA_SEED_VALID, status))
+    if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_QA_CFG_ALL_VALID, status))
     {
         status = Pmic_ioTxByte(pmicHandle, PMIC_WD_QA_CFG_REG, regData);
     }
@@ -391,7 +391,7 @@ static int32_t WDG_getQaCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_FDBK_VALID | PMIC_WD_QA_LFSR_VALID | PMIC_WD_QA_SEED_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_CFG_ALL_VALID))
     {
         // Read WD_QA_CFG register
         status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_QA_CFG_REG, &regData);

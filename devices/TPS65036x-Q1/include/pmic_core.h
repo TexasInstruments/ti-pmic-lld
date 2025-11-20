@@ -75,6 +75,7 @@ extern "C" {
 #define PMIC_LPM_VMON_EN_VALID              ((uint32_t)(1U << 2U))
 #define PMIC_LPM_ESM_EN_VALID               ((uint32_t)(1U << 3U))
 #define PMIC_LPM_WDG_EN_VALID               ((uint32_t)(1U << 4U))
+#define PMIC_LPM_ENABLE_ALL_VALID           (PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID)
 /** @} */
 
 /**

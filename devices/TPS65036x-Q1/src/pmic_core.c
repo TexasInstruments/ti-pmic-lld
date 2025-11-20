@@ -263,7 +263,7 @@ int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCf
 
     Pmic_criticalSectionStart(pmicHandle);
     if (Pmic_validParamStatusCheck(
-            lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
+            lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
         // Read LPM_CONF register
         status = Pmic_ioRxByte(pmicHandle, PMIC_LPM_CONF_REG, &regData);
@@ -292,7 +292,7 @@ int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCf
 
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(
-        lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
+        lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
         status = Pmic_ioTxByte(pmicHandle, PMIC_LPM_CONF_REG, regData);
     }

@@ -110,6 +110,9 @@ extern "C" {
 #define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         ((uint32_t)(1U << 19U))
 #define PMIC_BUCK_VSET_ACTIVE_VALID                 ((uint32_t)(1U << 20U))
 #define PMIC_BUCK_VSET_LPWR_VALID                   ((uint32_t)(1U << 21U))
+#define PMIC_BUCK_CTRL_ALL_VALID                    (PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID | \
+                                                     PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | \
+                                                     PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID)
 #define PMIC_BUCK_VMON_ONLY_VALID                   ((uint32_t)(1U << 22U))
 /** @} */
 
@@ -141,6 +144,8 @@ extern "C" {
 #define PMIC_LDO_UV_SEL_VALID                       ((uint32_t)(1U << 12U))
 #define PMIC_LDO_SC_SEL_VALID                       ((uint32_t)(1U << 13U))
 #define PMIC_LDO_RV_CONF_VALID                      ((uint32_t)(1U << 14U))
+#define PMIC_LDO_CTRL_ALL_VALID                     (PMIC_LDO_VMON_ONLY_VALID | PMIC_LDO_DISCHARGE_SEL_VALID | \
+                                                     PMIC_LDO_DISCHARGE_EN_VALID | PMIC_LDO_ENABLE_VALID)
 /** @} */
 
 /**

@@ -196,8 +196,7 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck1CtrlValidParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID |
-        PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID;
+    const uint32_t buck1CtrlValidParams = PMIC_BUCK_CTRL_ALL_VALID;
 
     if (Pmic_validParamCheck(buckCfg->validParams, buck1CtrlValidParams))
     {
@@ -931,8 +930,7 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck1CtrlValidParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID |
-        PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID;
+    const uint32_t buck1CtrlValidParams = PMIC_BUCK_CTRL_ALL_VALID;
 
     // Read BUCK1_CTRL register
     Pmic_criticalSectionStart(pmicHandle);
@@ -1555,8 +1553,7 @@ static int32_t PWR_getLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCf
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t ldoCtrlValidParams = PMIC_LDO_VMON_ONLY_VALID | PMIC_LDO_DISCHARGE_SEL_VALID |
-        PMIC_LDO_DISCHARGE_EN_VALID | PMIC_LDO_ENABLE_VALID;
+    const uint32_t ldoCtrlValidParams = PMIC_LDO_CTRL_ALL_VALID;
 
     // Read LDO_CTRL register
     if (Pmic_validParamCheck(ldoCfg->validParams, ldoCtrlValidParams))
@@ -1843,8 +1840,7 @@ static int32_t PWR_setLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Pw
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t ldoCtrlValidParams = PMIC_LDO_VMON_ONLY_VALID | PMIC_LDO_DISCHARGE_SEL_VALID |
-        PMIC_LDO_DISCHARGE_EN_VALID | PMIC_LDO_ENABLE_VALID;
+    const uint32_t ldoCtrlValidParams = PMIC_LDO_CTRL_ALL_VALID;
 
     // Read LDO_CTRL register
     Pmic_criticalSectionStart(pmicHandle);
