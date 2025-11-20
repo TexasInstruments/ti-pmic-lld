@@ -423,6 +423,12 @@ static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Check criticalSectionStart, criticalSectionStop
+    if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_FPTR;
+    }
+
     // Check asyncRxStart, asyncTxStart, asyncRxAwait, asyncTxAwait
     if (handle->asyncEnable)
     {
