@@ -569,7 +569,7 @@ typedef struct Pmic_PwrVccaVmonCfg_s {
 
     bool vmonEn;
 
-    bool pgSet;
+    uint8_t pgSet;
     uint8_t vmonThr;
     uint8_t grpSel;
 } Pmic_PwrVccaVmonCfg_t;
@@ -647,8 +647,8 @@ typedef struct Pmic_PwrRsrcStatus_s {
 typedef struct Pmic_PwrThermalCfg_s {
     uint32_t validParams;
 
-    bool twarnLvl;
-    bool tsdOrdLvl;
+    uint8_t twarnLvl;
+    uint8_t tsdOrdLvl;
 } Pmic_PwrThermalCfg_t;
 
 /**
@@ -673,7 +673,7 @@ typedef struct Pmic_PwrSpreadSpectrumCfg_s {
     uint32_t validParams;
 
     bool ssEn;
-    bool ssDepth;
+    uint8_t ssDepth;
 } Pmic_PwrSpreadSpectrumCfg_t;
 
 /* ========================================================================== */

@@ -1080,7 +1080,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
             }
             else
             {
-                Pmic_setBitField_b(&regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK, thermalCfg->twarnLvl);
+                Pmic_setBitField(&regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK, thermalCfg->twarnLvl);
             }
         }
 
@@ -1092,7 +1092,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
             }
             else
             {
-                Pmic_setBitField_b(&regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK, thermalCfg->tsdOrdLvl);
+                Pmic_setBitField(&regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK, thermalCfg->tsdOrdLvl);
             }
         }
 
@@ -1169,7 +1169,7 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
         if (Pmic_validParamStatusCheck(spreadSpectrumCfg->validParams, PMIC_POWER_SS_DEPTH_VALID, status))
         {
-            Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfg->ssDepth);
+            Pmic_setBitField(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfg->ssDepth);
         }
 
         if (status == PMIC_ST_SUCCESS)
