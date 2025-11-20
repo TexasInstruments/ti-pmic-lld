@@ -49,148 +49,181 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
-int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
+int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
+    uint8_t regData1 = 0U;
+    uint8_t regData2 = 0U;
+    bool updateReg1 = false;
+    bool updateReg2 = false;
 
-    if ((status == PMIC_ST_SUCCESS) && (recovCnt == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Read RECOV_CNT_REG_1 and extract RECOV_CNT
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_1_REG, &regData);
-        *recovCnt = Pmic_getBitField(regData, RECOV_CNT_SHIFT, RECOV_CNT_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
-{
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-
-    // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_REG_2
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, RECOV_CNT_CLR_SHIFT, RECOV_CNT_CLR_MASK, 1U);
-        status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REG, regData);
-    }
-
-    return status;
-}
-
-int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
-{
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (recovCntThr > PMIC_FSM_RECOV_CNT_THR_MAX))
+    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(handle);
+    // Validate trigger values
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, RECOV_CNT_REG_2_REG, &regData);
+        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) &&
+            (triggerCfg->severeErrTrig > PMIC_FSM_TRIGGER_MAX))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) &&
+            (triggerCfg->otherRailTrig > PMIC_FSM_TRIGGER_MAX))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) &&
+            (triggerCfg->socRailTrig > PMIC_FSM_TRIGGER_MAX))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID) &&
+            (triggerCfg->mcuRailTrig > PMIC_FSM_TRIGGER_MAX))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID) &&
+            (triggerCfg->moderateErrTrig > PMIC_FSM_TRIGGER_MAX))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
-    // Modify RECOV_CNT_THR and Write RECOV_CNT_REG_2
+    Pmic_criticalSectionStart(handle);
+
+    // Determine which registers need to be updated
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField(&regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK, recovCntThr);
-        status = Pmic_ioTxByte(handle, RECOV_CNT_REG_2_REG, regData);
+        updateReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
+                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
+                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
+                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
+
+        updateReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
     }
+
+    // Update FSM_TRIG_SEL_1 register
+    if ((status == PMIC_ST_SUCCESS) && updateReg1)
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK, triggerCfg->severeErrTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK, triggerCfg->otherRailTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK, triggerCfg->socRailTrig);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+            {
+                Pmic_setBitField(&regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK, triggerCfg->mcuRailTrig);
+            }
+
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REG, regData1);
+        }
+    }
+
+    // Update FSM_TRIG_SEL_2 register
+    if ((status == PMIC_ST_SUCCESS) && updateReg2)
+    {
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            Pmic_setBitField(&regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK, triggerCfg->moderateErrTrig);
+            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REG, regData2);
+        }
+    }
+
     Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr)
+int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
+    uint8_t regData1 = 0U;
+    uint8_t regData2 = 0U;
+    bool readReg1 = false;
+    bool readReg2 = false;
 
-    if ((status == PMIC_ST_SUCCESS) && (recovCntThr == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Read RECOV_CNT_REG_2 and extract RECOV_CNT_THR
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_2_REG, &regData);
-        *recovCntThr = Pmic_getBitField(regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK);
-    }
-
-    return status;
-}
-
-int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle)
-{
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-
-    // Set SOFT_REBOOT bit field to 1 and write to SOFT_REBOOT_REG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, SOFT_REBOOT_SHIFT, SOFT_REBOOT_MASK, 1U);
-        status = Pmic_ioTxByte_CS(handle, SOFT_REBOOT_REG_REG, regData);
-    }
-
-    return status;
-}
-
-int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
-{
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (destination > PMIC_FSM_START_UP_DEST_MAX))
+    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Read STARTUP_CTRL
+    // Determine which registers need to be read
+    if (status == PMIC_ST_SUCCESS)
+    {
+        readReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
+                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
+                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
+                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
+
+        readReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
+    }
+
     Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
+
+    // Read FSM_TRIG_SEL_1 register
+    if ((status == PMIC_ST_SUCCESS) && readReg1)
     {
-        status = Pmic_ioRxByte(handle, STARTUP_CTRL_REG, &regData);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
+            {
+                triggerCfg->severeErrTrig = Pmic_getBitField(regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
+            {
+                triggerCfg->otherRailTrig = Pmic_getBitField(regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
+            {
+                triggerCfg->socRailTrig = Pmic_getBitField(regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK);
+            }
+            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
+            {
+                triggerCfg->mcuRailTrig = Pmic_getBitField(regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK);
+            }
+        }
     }
 
-    // Modify STARTUP_DEST and write STARTUP_CTRL
-    if (status == PMIC_ST_SUCCESS)
+    // Read FSM_TRIG_SEL_2 register
+    if ((status == PMIC_ST_SUCCESS) && readReg2)
     {
-        Pmic_setBitField(&regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK, destination);
-        status = Pmic_ioTxByte(handle, STARTUP_CTRL_REG, regData);
+        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            triggerCfg->moderateErrTrig = Pmic_getBitField(regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK);
+        }
     }
+
     Pmic_criticalSectionStop(handle);
-
-    return status;
-}
-
-int32_t Pmic_fsmGetStartupDest(const Pmic_Handle_t *handle, uint8_t *destination)
-{
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-
-    if ((status == PMIC_ST_SUCCESS) && (destination == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read STARTUP_CTRL and extract STARTUP_DEST
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, STARTUP_CTRL_REG, &regData);
-        *destination = Pmic_getBitField(regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK);
-    }
 
     return status;
 }
@@ -390,181 +423,148 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
     return status;
 }
 
-int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
+int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData1 = 0U;
-    uint8_t regData2 = 0U;
-    bool updateReg1 = false;
-    bool updateReg2 = false;
+    uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (recovCnt == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
+    // Read RECOV_CNT_REG_1 and extract RECOV_CNT
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_1_REG, &regData);
+        *recovCnt = Pmic_getBitField(regData, RECOV_CNT_SHIFT, RECOV_CNT_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_REG_2
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, RECOV_CNT_CLR_SHIFT, RECOV_CNT_CLR_MASK, 1U);
+        status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REG, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (recovCntThr > PMIC_FSM_RECOV_CNT_THR_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Validate trigger values
-    if (status == PMIC_ST_SUCCESS)
-    {
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) &&
-            (triggerCfg->severeErrTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) &&
-            (triggerCfg->otherRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) &&
-            (triggerCfg->socRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID) &&
-            (triggerCfg->mcuRailTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID) &&
-            (triggerCfg->moderateErrTrig > PMIC_FSM_TRIGGER_MAX))
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-
+    // Read RECOV_CNT_REG_2
     Pmic_criticalSectionStart(handle);
-
-    // Determine which registers need to be updated
     if (status == PMIC_ST_SUCCESS)
     {
-        updateReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
-                      Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
-
-        updateReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
+        status = Pmic_ioRxByte(handle, RECOV_CNT_REG_2_REG, &regData);
     }
 
-    // Update FSM_TRIG_SEL_1 register
-    if ((status == PMIC_ST_SUCCESS) && updateReg1)
+    // Modify RECOV_CNT_THR and Write RECOV_CNT_REG_2
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK, triggerCfg->severeErrTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK, triggerCfg->otherRailTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK, triggerCfg->socRailTrig);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
-            {
-                Pmic_setBitField(&regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK, triggerCfg->mcuRailTrig);
-            }
-
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_1_REG, regData1);
-        }
+        Pmic_setBitField(&regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK, recovCntThr);
+        status = Pmic_ioTxByte(handle, RECOV_CNT_REG_2_REG, regData);
     }
-
-    // Update FSM_TRIG_SEL_2 register
-    if ((status == PMIC_ST_SUCCESS) && updateReg2)
-    {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            Pmic_setBitField(&regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK, triggerCfg->moderateErrTrig);
-            status = Pmic_ioTxByte(handle, FSM_TRIG_SEL_2_REG, regData2);
-        }
-    }
-
     Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
+int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData1 = 0U;
-    uint8_t regData2 = 0U;
-    bool readReg1 = false;
-    bool readReg2 = false;
+    uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (recovCntThr == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
+    // Read RECOV_CNT_REG_2 and extract RECOV_CNT_THR
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(handle, RECOV_CNT_REG_2_REG, &regData);
+        *recovCntThr = Pmic_getBitField(regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    // Set SOFT_REBOOT bit field to 1 and write to SOFT_REBOOT_REG
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, SOFT_REBOOT_SHIFT, SOFT_REBOOT_MASK, 1U);
+        status = Pmic_ioTxByte_CS(handle, SOFT_REBOOT_REG_REG, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (destination > PMIC_FSM_START_UP_DEST_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Determine which registers need to be read
+    // Read STARTUP_CTRL
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        readReg1 = (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID) ||
-                    Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID));
-
-        readReg2 = Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MODERATE_ERR_TRIG_VALID);
+        status = Pmic_ioRxByte(handle, STARTUP_CTRL_REG, &regData);
     }
 
-    Pmic_criticalSectionStart(handle);
-
-    // Read FSM_TRIG_SEL_1 register
-    if ((status == PMIC_ST_SUCCESS) && readReg1)
+    // Modify STARTUP_DEST and write STARTUP_CTRL
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_1_REG, &regData1);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SEVERE_ERR_TRIG_VALID))
-            {
-                triggerCfg->severeErrTrig = Pmic_getBitField(regData1, SEVERE_ERR_TRIG_SHIFT, SEVERE_ERR_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_OTHER_RAIL_TRIG_VALID))
-            {
-                triggerCfg->otherRailTrig = Pmic_getBitField(regData1, OTHER_RAIL_TRIG_SHIFT, OTHER_RAIL_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_SOC_RAIL_TRIG_VALID))
-            {
-                triggerCfg->socRailTrig = Pmic_getBitField(regData1, SOC_RAIL_TRIG_SHIFT, SOC_RAIL_TRIG_MASK);
-            }
-            if (Pmic_validParamCheck(triggerCfg->validParams, PMIC_FSM_MCU_RAIL_TRIG_VALID))
-            {
-                triggerCfg->mcuRailTrig = Pmic_getBitField(regData1, MCU_RAIL_TRIG_SHIFT, MCU_RAIL_TRIG_MASK);
-            }
-        }
+        Pmic_setBitField(&regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK, destination);
+        status = Pmic_ioTxByte(handle, STARTUP_CTRL_REG, regData);
     }
-
-    // Read FSM_TRIG_SEL_2 register
-    if ((status == PMIC_ST_SUCCESS) && readReg2)
-    {
-        status = Pmic_ioRxByte(handle, FSM_TRIG_SEL_2_REG, &regData2);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            triggerCfg->moderateErrTrig = Pmic_getBitField(regData2, MODERATE_ERR_TRIG_SHIFT, MODERATE_ERR_TRIG_MASK);
-        }
-    }
-
     Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_fsmGetStartupDest(const Pmic_Handle_t *handle, uint8_t *destination)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (destination == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read STARTUP_CTRL and extract STARTUP_DEST
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(handle, STARTUP_CTRL_REG, &regData);
+        *destination = Pmic_getBitField(regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK);
+    }
 
     return status;
 }

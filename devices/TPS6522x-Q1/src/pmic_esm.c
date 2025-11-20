@@ -224,6 +224,106 @@ static int32_t ESM_setLmaxLminRegs(const Pmic_Handle_t *handle, const Pmic_EsmCf
     return status;
 }
 
+int32_t Pmic_esmSetEnableState(const Pmic_Handle_t *handle, bool enable)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    Pmic_criticalSectionStart(handle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read ESM_MCU_MODE_CFG register
+        status = Pmic_ioRxByte(handle, ESM_MCU_MODE_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Modify ESM_MCU_EN bit
+            Pmic_setBitField_b(&regData, ESM_MCU_EN_SHIFT, ESM_MCU_EN_MASK, enable);
+
+            // Write new register value back to PMIC
+            status = Pmic_ioTxByte(handle, ESM_MCU_MODE_CFG_REG, regData);
+        }
+    }
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_esmGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read ESM_MCU_MODE_CFG register
+        status = Pmic_ioRxByte_CS(handle, ESM_MCU_MODE_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Extract ESM_MCU_EN bit
+            *isEnabled = Pmic_getBitField_b(regData, ESM_MCU_EN_SHIFT);
+        }
+    }
+
+    return status;
+}
+
+int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    Pmic_criticalSectionStart(handle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read ESM_MCU_START_REG register
+        status = Pmic_ioRxByte(handle, ESM_MCU_START_REG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Modify ESM_MCU_START bit
+            Pmic_setBitField_b(&regData, ESM_MCU_START_SHIFT, ESM_MCU_START_MASK, start);
+
+            // Write new register value back to PMIC
+            status = Pmic_ioTxByte(handle, ESM_MCU_START_REG_REG, regData);
+        }
+    }
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *started)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (started == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read ESM_MCU_START_REG register
+        status = Pmic_ioRxByte_CS(handle, ESM_MCU_START_REG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Extract ESM_MCU_START bit
+            *started = Pmic_getBitField_b(regData, ESM_MCU_START_SHIFT);
+        }
+    }
+
+    return status;
+}
+
 int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -432,106 +532,6 @@ int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
     if (status == PMIC_ST_SUCCESS)
     {
         status = ESM_readLmaxLminRegs(handle, esmCfg);
-    }
-
-    return status;
-}
-
-int32_t Pmic_esmSetEnableState(const Pmic_Handle_t *handle, bool enable)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(handle);
-
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read ESM_MCU_MODE_CFG register
-        status = Pmic_ioRxByte(handle, ESM_MCU_MODE_CFG_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            // Modify ESM_MCU_EN bit
-            Pmic_setBitField_b(&regData, ESM_MCU_EN_SHIFT, ESM_MCU_EN_MASK, enable);
-
-            // Write new register value back to PMIC
-            status = Pmic_ioTxByte(handle, ESM_MCU_MODE_CFG_REG, regData);
-        }
-    }
-    Pmic_criticalSectionStop(handle);
-
-    return status;
-}
-
-int32_t Pmic_esmGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(handle);
-
-    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read ESM_MCU_MODE_CFG register
-        status = Pmic_ioRxByte_CS(handle, ESM_MCU_MODE_CFG_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            // Extract ESM_MCU_EN bit
-            *isEnabled = Pmic_getBitField_b(regData, ESM_MCU_EN_SHIFT);
-        }
-    }
-
-    return status;
-}
-
-int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(handle);
-
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read ESM_MCU_START_REG register
-        status = Pmic_ioRxByte(handle, ESM_MCU_START_REG_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            // Modify ESM_MCU_START bit
-            Pmic_setBitField_b(&regData, ESM_MCU_START_SHIFT, ESM_MCU_START_MASK, start);
-
-            // Write new register value back to PMIC
-            status = Pmic_ioTxByte(handle, ESM_MCU_START_REG_REG, regData);
-        }
-    }
-    Pmic_criticalSectionStop(handle);
-
-    return status;
-}
-
-int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *started)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(handle);
-
-    if ((status == PMIC_ST_SUCCESS) && (started == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read ESM_MCU_START_REG register
-        status = Pmic_ioRxByte_CS(handle, ESM_MCU_START_REG_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            // Extract ESM_MCU_START bit
-            *started = Pmic_getBitField_b(regData, ESM_MCU_START_SHIFT);
-        }
     }
 
     return status;

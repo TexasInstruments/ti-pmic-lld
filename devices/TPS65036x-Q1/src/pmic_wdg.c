@@ -44,29 +44,9 @@
 #include "regmap/wdg.h"
 #include "regmap/core.h"
 
-int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    // Read RECOV_CNT_CONTROL register
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_CONTROL_REG, &regData);
-    }
-
-    // Set WD_TRIGGER bit and write new register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, PMIC_WD_TRIGGER_SHIFT, PMIC_WD_TRIGGER_MASK, 1U);
-
-        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_CONTROL_REG, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
+/*==========================================================================*/
+/*                         Static Helper Functions                          */
+/*==========================================================================*/
 
 static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t qaFdbk)
 {
@@ -123,150 +103,6 @@ static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaF
     qaAns |= ((mux_4x1(q2, q1, q0, q3, qaFdbk) ^ a0) << 7U);
 
     return qaAns;
-}
-
-int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
-{
-    uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U, intTopStatus = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    // Get the Q&A feedback value
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_QA_CFG_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            qaFdbk = Pmic_getBitField(regData, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK);
-        }
-    }
-
-    // Get the Q&A answer count, question, and status of INT_TOP
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_QUESTION_ANSW_CNT_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            intTopStatus = Pmic_getBitField(regData, PMIC_INT_TOP_STATUS_SHIFT, PMIC_INT_TOP_STATUS_MASK);
-            qaAnsCnt = Pmic_getBitField(regData, PMIC_WD_ANSW_CNT_SHIFT, PMIC_WD_ANSW_CNT_MASK);
-            question = Pmic_getBitField(regData, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
-
-            // Call the IRQ response API hook if INT_TOP_STATUS bit is set to 1
-            if (intTopStatus != 0U)
-            {
-                Pmic_irqResponseCallback(pmicHandle);
-            }
-        }
-    }
-
-    // Calculate Q&A answer byte; write the Q&A answer byte to the WD_ANSWER register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        regData = WDG_getAnswerByte(question, qaAnsCnt, qaFdbk);
-
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_WD_ANSWER_REG_REG, regData);
-    }
-
-    return status;
-}
-
-int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    // Read WD_MODE_REG register
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
-    }
-
-    // Modify WD_PWRHOLD bit field and write new register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, pwrHold);
-
-        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_MODE_REG_REG, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (pwrHoldStat == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read WD_MODE_REG register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
-    }
-
-    // Extract WD_PWRHOLD bit field (cast as boolean)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *pwrHoldStat = Pmic_getBitField_b(regData, PMIC_WD_PWRHOLD_SHIFT);
-    }
-
-    return status;
-}
-
-int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    // Read WD_MODE_REG register
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
-    }
-
-    // Modify WD_RETURN_LONGWIN bit field and write new register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, retLongWin);
-
-        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_MODE_REG_REG, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (retLongWinStat == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read WD_MODE_REG register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
-    }
-
-    // Extract WD_RETURN_LONGWIN bit field (cast as boolean)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *retLongWinStat = Pmic_getBitField_b(regData, PMIC_WD_RETURN_LONGWIN_SHIFT);
-    }
-
-    return status;
 }
 
 static int32_t WDG_setOtherCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
@@ -509,107 +345,6 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, c
     return status;
 }
 
-int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (wdgCfg == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && (wdgCfg->validParams == 0U))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Set Long Window, Window-1, and Window-2 durations
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = WDG_setWindowTimeIntervals(pmicHandle, wdgCfg);
-    }
-
-    // Set fail and reset thresholds
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = WDG_setThresholds(pmicHandle, wdgCfg);
-    }
-
-    // Set Q&A configurations (LFSR, FDBK, seed)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = WDG_setQaCfg(pmicHandle, wdgCfg);
-    }
-
-    // Set other configurations (WD_RST_EN, WD_TRIGGER_SEL, WD_MODE_SEL)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = WDG_setOtherCfg(pmicHandle, wdgCfg);
-    }
-
-    return status;
-}
-
-int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (wdgEnabled == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read WD_ENABLE_REG register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_ENABLE_REG_REG, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Extract WD_EN bit field (cast as boolean)
-        *wdgEnabled = Pmic_getBitField_b(regData, PMIC_WD_EN_SHIFT);
-    }
-
-    return status;
-}
-
-int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    // Read WD_ENABLE_REG register
-    Pmic_criticalSectionStart(pmicHandle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_ENABLE_REG_REG, &regData);
-    }
-
-    // Modify WD_EN bit field; write new register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
-
-        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_ENABLE_REG_REG, regData);
-    }
-    Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle)
-{
-    return Pmic_wdgSetEnableState(pmicHandle, PMIC_DISABLE);
-}
-
-
-int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle)
-{
-    return Pmic_wdgSetEnableState(pmicHandle, PMIC_ENABLE);
-}
-
 static int32_t WDG_getOtherCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
@@ -762,6 +497,110 @@ static int32_t WDG_getWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, P
     return status;
 }
 
+/*==========================================================================*/
+/*                         Public API Functions                             */
+/*==========================================================================*/
+
+int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    // Read WD_ENABLE_REG register
+    Pmic_criticalSectionStart(pmicHandle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_ENABLE_REG_REG, &regData);
+    }
+
+    // Modify WD_EN bit field; write new register value back to PMIC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField_b(&regData, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
+
+        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_ENABLE_REG_REG, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle)
+{
+    return Pmic_wdgSetEnableState(pmicHandle, PMIC_ENABLE);
+}
+
+int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle)
+{
+    return Pmic_wdgSetEnableState(pmicHandle, PMIC_DISABLE);
+}
+
+int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgEnabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read WD_ENABLE_REG register
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_ENABLE_REG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Extract WD_EN bit field (cast as boolean)
+        *wdgEnabled = Pmic_getBitField_b(regData, PMIC_WD_EN_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+{
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgCfg == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgCfg->validParams == 0U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Set Long Window, Window-1, and Window-2 durations
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_setWindowTimeIntervals(pmicHandle, wdgCfg);
+    }
+
+    // Set fail and reset thresholds
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_setThresholds(pmicHandle, wdgCfg);
+    }
+
+    // Set Q&A configurations (LFSR, FDBK, seed)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_setQaCfg(pmicHandle, wdgCfg);
+    }
+
+    // Set other configurations (WD_RST_EN, WD_TRIGGER_SEL, WD_MODE_SEL)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_setOtherCfg(pmicHandle, wdgCfg);
+    }
+
+    return status;
+}
+
 int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -803,14 +642,169 @@ int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCf
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
 {
+    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
 
-    // Bits of WD_ERR_STATUS register are W1C - write 1 to clear
+    // Read WD_MODE_REG register
+    Pmic_criticalSectionStart(pmicHandle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_WD_ERR_STATUS_REG, 0xFFU);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
+    }
+
+    // Modify WD_PWRHOLD bit field and write new register value back to PMIC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField_b(&regData, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, pwrHold);
+
+        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_MODE_REG_REG, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (pwrHoldStat == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read WD_MODE_REG register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
+    }
+
+    // Extract WD_PWRHOLD bit field (cast as boolean)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *pwrHoldStat = Pmic_getBitField_b(regData, PMIC_WD_PWRHOLD_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    // Read WD_MODE_REG register
+    Pmic_criticalSectionStart(pmicHandle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
+    }
+
+    // Modify WD_RETURN_LONGWIN bit field and write new register value back to PMIC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField_b(&regData, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, retLongWin);
+
+        status = Pmic_ioTxByte(pmicHandle, PMIC_WD_MODE_REG_REG, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (retLongWinStat == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read WD_MODE_REG register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_MODE_REG_REG, &regData);
+    }
+
+    // Extract WD_RETURN_LONGWIN bit field (cast as boolean)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *retLongWinStat = Pmic_getBitField_b(regData, PMIC_WD_RETURN_LONGWIN_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    // Read RECOV_CNT_CONTROL register
+    Pmic_criticalSectionStart(pmicHandle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_CONTROL_REG, &regData);
+    }
+
+    // Set WD_TRIGGER bit and write new register value back to PMIC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, PMIC_WD_TRIGGER_SHIFT, PMIC_WD_TRIGGER_MASK, 1U);
+
+        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_CONTROL_REG, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
+{
+    uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U, intTopStatus = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    // Get the Q&A feedback value
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_QA_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            qaFdbk = Pmic_getBitField(regData, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK);
+        }
+    }
+
+    // Get the Q&A answer count, question, and status of INT_TOP
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_QUESTION_ANSW_CNT_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            intTopStatus = Pmic_getBitField(regData, PMIC_INT_TOP_STATUS_SHIFT, PMIC_INT_TOP_STATUS_MASK);
+            qaAnsCnt = Pmic_getBitField(regData, PMIC_WD_ANSW_CNT_SHIFT, PMIC_WD_ANSW_CNT_MASK);
+            question = Pmic_getBitField(regData, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
+
+            // Call the IRQ response API hook if INT_TOP_STATUS bit is set to 1
+            if (intTopStatus != 0U)
+            {
+                Pmic_irqResponseCallback(pmicHandle);
+            }
+        }
+    }
+
+    // Calculate Q&A answer byte; write the Q&A answer byte to the WD_ANSWER register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        regData = WDG_getAnswerByte(question, qaAnsCnt, qaFdbk);
+
+        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_WD_ANSWER_REG_REG, regData);
     }
 
     return status;
@@ -878,6 +872,19 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Wdg
 
         // Write new WD_ERR_STATUS register value back to PMIC
         status = Pmic_ioTxByte_CS(pmicHandle, PMIC_WD_ERR_STATUS_REG, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    // Bits of WD_ERR_STATUS register are W1C - write 1 to clear
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_WD_ERR_STATUS_REG, 0xFFU);
     }
 
     return status;

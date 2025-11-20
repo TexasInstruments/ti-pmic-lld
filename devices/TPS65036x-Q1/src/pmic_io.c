@@ -281,32 +281,6 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAd
     return status;
 }
 
-int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (crcEnabled == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read INTERFACE_CONF register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
-    }
-
-    // Extract the CRC8 enable status (cast as boolean)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *crcEnabled = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-        pmicHandle->crcEnable = *crcEnabled;
-    }
-
-    return status;
-}
-
 int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
 {
     uint8_t regData = 0U;
@@ -345,4 +319,30 @@ int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *pmicHandle)
 int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *pmicHandle)
 {
     return Pmic_ioSetCrcEnableState(pmicHandle, PMIC_DISABLE);
+}
+
+int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (crcEnabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read INTERFACE_CONF register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
+    }
+
+    // Extract the CRC8 enable status (cast as boolean)
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *crcEnabled = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
+        pmicHandle->crcEnable = *crcEnabled;
+    }
+
+    return status;
 }

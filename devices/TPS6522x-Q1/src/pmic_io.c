@@ -329,34 +329,6 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint16_t regAddr, uin
     return status;
 }
 
-int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *enabled)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(handle);
-
-    if ((status == PMIC_ST_SUCCESS) && (enabled == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Read CONFIG_2 register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, CONFIG_2_REG, &regData);
-    }
-
-    // Extract the CRC enable status (cast as boolean)
-    // TPS6522x-Q1 has both I2C1_SPI_CRC_EN and I2C2_CRC_EN bits
-    // For single I2C mode, check I2C1_SPI_CRC_EN
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *enabled = Pmic_getBitField_b(regData, I2C1_SPI_CRC_EN_SHIFT);
-        handle->crcEnable = *enabled;
-    }
-
-    return status;
-}
-
 int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable)
 {
     uint8_t regData = 0U;
@@ -395,4 +367,32 @@ int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle)
 int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle)
 {
     return Pmic_ioSetCrcEnableState(handle, PMIC_DISABLE);
+}
+
+int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *enabled)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (enabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read CONFIG_2 register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(handle, CONFIG_2_REG, &regData);
+    }
+
+    // Extract the CRC enable status (cast as boolean)
+    // TPS6522x-Q1 has both I2C1_SPI_CRC_EN and I2C2_CRC_EN bits
+    // For single I2C mode, check I2C1_SPI_CRC_EN
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *enabled = Pmic_getBitField_b(regData, I2C1_SPI_CRC_EN_SHIFT);
+        handle->crcEnable = *enabled;
+    }
+
+    return status;
 }
