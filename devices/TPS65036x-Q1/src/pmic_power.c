@@ -45,6 +45,14 @@
 #include "regmap/power.h"
 #include "regmap/core.h"
 
+// Forward declarations for static setter functions
+static int32_t PWR_setSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckVout(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckFaultResponses(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+
 static int32_t PWR_getSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
@@ -595,6 +603,59 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
             buckCfg->uvloRising = Pmic_getBitField(
                 regData, PMIC_BUCK1_UVLO_RISING_SHIFT, PMIC_BUCK1_UVLO_RISING_MASK);
         }
+    }
+
+    return status;
+}
+
+int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+{
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && ((buckCfg->resource > PMIC_BUCK_MAX) || (buckCfg->validParams == 0U)))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Set spread spectrum configuration
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setSpreadSpectrumCfg(pmicHandle, buckCfg);
+    }
+
+    // Set buck VOUT register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckVout(pmicHandle, buckCfg);
+    }
+
+    // Set BUCKx_MON_CONF register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckMonConf(pmicHandle, buckCfg);
+    }
+
+    // Set buck fault responses
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckFaultResponses(pmicHandle, buckCfg);
+    }
+
+    // Set BUCK1_UVLO
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuck1Uvlo(pmicHandle, buckCfg);
+    }
+
+    // Set BUCKx_CTRL register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckCtrl(pmicHandle, buckCfg);
     }
 
     return status;
@@ -1457,59 +1518,6 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
         status = Pmic_ioTxByte(pmicHandle, PMIC_BUCK1_UVLO_REG, regData);
     }
     Pmic_criticalSectionStop(pmicHandle);
-
-    return status;
-}
-
-int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && ((buckCfg->resource > PMIC_BUCK_MAX) || (buckCfg->validParams == 0U)))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    // Set spread spectrum configuration
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setSpreadSpectrumCfg(pmicHandle, buckCfg);
-    }
-
-    // Set buck VOUT register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckVout(pmicHandle, buckCfg);
-    }
-
-    // Set BUCKx_MON_CONF register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckMonConf(pmicHandle, buckCfg);
-    }
-
-    // Set buck fault responses
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckFaultResponses(pmicHandle, buckCfg);
-    }
-
-    // Set BUCK1_UVLO
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuck1Uvlo(pmicHandle, buckCfg);
-    }
-
-    // Set BUCKx_CTRL register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckCtrl(pmicHandle, buckCfg);
-    }
 
     return status;
 }
