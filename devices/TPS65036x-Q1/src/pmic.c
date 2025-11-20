@@ -184,8 +184,9 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        pmicHandle->isA0 = (bool)false;
         const bool isB1 = Pmic_getBitField_b(pmicHandle->siliconRev, DEVICE_PG_IDENTIFER);
+
+        pmicHandle->isA0 = (bool)false;
         if (!isB1)
         {
             // Device is not B1. Decipher whether device is A0 or B0

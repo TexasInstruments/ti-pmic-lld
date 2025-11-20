@@ -267,7 +267,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAdd
 
 int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
-    return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, 1U << shift, value ? 1U : 0U);
+    return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
 int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)

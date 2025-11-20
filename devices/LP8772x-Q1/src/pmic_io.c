@@ -141,7 +141,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
     if (status == PMIC_ST_SUCCESS) {
         // Index 0 is most significant byte, last index is the least significant byte
         i2cFrame[0U] = (uint8_t)((handle->slaveAddr & 0x7FU) << 1U);
-        i2cFrame[1U] = regAddr;
+        i2cFrame[1U] = (uint8_t)regAddr;
         i2cFrame[2U] = (uint8_t)(((handle->slaveAddr & 0x7FU) << 1U) | 1U);
         i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
@@ -198,7 +198,7 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
     if (status == PMIC_ST_SUCCESS) {
         // Index 0 is most significant byte, last index is the least significant byte
         i2cFrame[0U] = (uint8_t)((handle->slaveAddr & 0x7FU) << 1U);
-        i2cFrame[1U] = regAddr;
+        i2cFrame[1U] = (uint8_t)regAddr;
         i2cFrame[2U] = txData;
         i2cFrameLen = 3U;
 
@@ -253,7 +253,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAdd
 
 int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
-    return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, 1U << shift, value ? 1U : 0U);
+    return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
 int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)

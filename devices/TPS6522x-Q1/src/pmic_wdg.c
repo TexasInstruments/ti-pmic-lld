@@ -57,7 +57,7 @@ static uint8_t calculateCrc4(uint8_t data)
     for (uint8_t i = 0U; i < 4U; i++)
     {
         uint8_t bit = ((data >> i) & 0x01U) ^ ((crc >> 3U) & 0x01U);
-        crc = (crc << 1U) | bit;
+        crc = (uint8_t)((crc << 1U) | bit);
         if (bit != 0U)
         {
             crc ^= 0x03U;  // CRC4 polynomial
@@ -528,11 +528,13 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        uint8_t answerData;
+
         question = Pmic_getBitField(questionReg, WD_QUESTION_SHIFT, WD_QUESTION_MASK);
 
         // Calculate answer using CRC4
-        uint8_t answerData = calculateCrc4(question);
-        answer = (question << 4U) | answerData;
+        answerData = calculateCrc4(question);
+        answer = (uint8_t)((question << 4U) | answerData);
 
         // Write answer to WD_ANSWER_REG
         status = Pmic_ioTxByte_CS(handle, WD_ANSWER_REG_REG, answer);

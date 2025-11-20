@@ -53,10 +53,11 @@
 static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status;
 
     // Read INTERFACE_CONF
     Pmic_criticalSectionStart(pmicHandle);
-    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
 
     // Set GPIO polarity
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_POLARITY_VALID, status))
@@ -98,10 +99,11 @@ static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_G
 static int32_t GPIO_setNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status;
 
     // Read FUNC_CONF
     Pmic_criticalSectionStart(pmicHandle);
-    int32_t status = Pmic_ioRxByte(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
 
     // Set NINT_GPI pullup/pulldown resistor configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_PU_PD_CFG_VALID, status))

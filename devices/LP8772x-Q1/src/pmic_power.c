@@ -413,6 +413,9 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, Pmic_PowerRe
     uint8_t pgLevelReg = 0U;
     uint8_t funcConfReg = 0U;
     uint8_t resolvedMode = 0U;
+    bool bypConfig;
+    bool vmon1Sel;
+    bool lswConfig;
 
     // Perform necessary register reads to decode current state
     Pmic_criticalSectionStart(handle);
@@ -432,9 +435,9 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, Pmic_PowerRe
     // "BYP"  -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=0, LDO_LS1_LSW_CONFIG=0
     // "LSW"  -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=0, LDO_LS1_LSW_CONFIG=1
     // "VMON" -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=1, LDO_LS1_LSW_CONFIG=1 ??? (unsure about this one)
-    const bool bypConfig = Pmic_getBitField_b(pgLevelReg, LDO_LS1_BYP_CONFIG_SHIFT);
-    const bool vmon1Sel = Pmic_getBitField_b(funcConfReg, LDO_LS1_VMON1_SEL_SHIFT);
-    const bool lswConfig = Pmic_getBitField_b(funcConfReg, LDO_LS1_LSW_CONFIG_SHIFT);
+    bypConfig = Pmic_getBitField_b(pgLevelReg, LDO_LS1_BYP_CONFIG_SHIFT);
+    vmon1Sel = Pmic_getBitField_b(funcConfReg, LDO_LS1_VMON1_SEL_SHIFT);
+    lswConfig = Pmic_getBitField_b(funcConfReg, LDO_LS1_LSW_CONFIG_SHIFT);
     if (!bypConfig && !vmon1Sel && !lswConfig) {
         resolvedMode = PMIC_PWR_RSRC_MODE_REG;
     } else if (bypConfig && !vmon1Sel && !lswConfig) {
