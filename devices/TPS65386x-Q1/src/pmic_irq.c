@@ -44,6 +44,7 @@
 /* ========================================================================== */
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -55,9 +56,11 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-// PMIC IRQ invalid macros
-#define PMIC_IRQ_INVALID_REG              ((uint16_t)0xFFFFU)
-#define PMIC_IRQ_INVALID_MASK_SHIFT       ((uint8_t)0xFFU)
+// PMIC IRQ maskability and configurability definitions
+#define PMIC_IRQ_MASKABLE     ((bool)true)
+#define PMIC_IRQ_NON_MASKABLE ((bool)false)
+#define PMIC_IRQ_CONFIGURABLE     ((bool)true)
+#define PMIC_IRQ_NON_CONFIGURABLE ((bool)false)
 
 // Number of R/W1C status registers supported on this device
 #define NUM_STAT_REGISTERS (16U)
@@ -65,13 +68,12 @@
 #define NUM_CONF_REGISTERS (13U)
 
 // Helper macros for defining IRQ register/shift/mask linkages
-#define IRQ_DEF_STD(sr, mr, ss, ms, cr, cs, cm) { sr, mr, ss, ms, cr, cs, cm }
-#define IRQ_DEF_NMI_CFG(sr, ss, cr, cs, cm) {\
-    sr, PMIC_IRQ_INVALID_REG, ss, PMIC_IRQ_INVALID_MASK_SHIFT,\
-    cr, cs, cm }
-#define IRQ_DEF_NMI_NCFG(sr, ss) {\
-    sr, PMIC_IRQ_INVALID_REG, ss, PMIC_IRQ_INVALID_MASK_SHIFT,\
-    PMIC_IRQ_INVALID_REG, PMIC_IRQ_INVALID_MASK_SHIFT, PMIC_IRQ_INVALID_MASK_SHIFT }
+#define IRQ_DEF_STD(sr, mr, ss, ms, cr, cs, cm) \
+    { sr, mr, ss, ms, PMIC_IRQ_MASKABLE, cr, cs, cm, PMIC_IRQ_CONFIGURABLE }
+#define IRQ_DEF_NMI_CFG(sr, ss, cr, cs, cm) \
+    { sr, 0, ss, 0, PMIC_IRQ_NON_MASKABLE, cr, cs, cm, PMIC_IRQ_CONFIGURABLE }
+#define IRQ_DEF_NMI_NCFG(sr, ss) \
+    { sr, 0, ss, 0, PMIC_IRQ_NON_MASKABLE, 0, 0, 0, PMIC_IRQ_NON_CONFIGURABLE }
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -81,10 +83,12 @@ typedef struct Pmic_IrqInfo_s {
     uint16_t maskReg;
     uint8_t statShift;
     uint8_t maskShift;
+    bool isMaskable;
 
     uint16_t confReg;
     uint8_t confShift;
     uint8_t confMask;
+    bool isConfigurable;
 } Pmic_IrqInfo_t;
 
 /* ========================================================================== */
@@ -617,7 +621,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     }
 
     // Check whether IRQ is maskable
-    if ((status == PMIC_ST_SUCCESS) && (maskReg == PMIC_IRQ_INVALID_REG)) {
+    if ((status == PMIC_ST_SUCCESS) && (IRQ[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -654,7 +658,7 @@ static int32_t IRQ_setConfig(Pmic_CoreHandle_t *handle, uint8_t irqNum, uint8_t 
     }
 
     // Check whether IRQ is configurable
-    if ((status == PMIC_ST_SUCCESS) && (configReg == PMIC_IRQ_INVALID_REG)) {
+    if ((status == PMIC_ST_SUCCESS) && (IRQ[irqNum].isConfigurable == PMIC_IRQ_NON_CONFIGURABLE)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -939,7 +943,7 @@ static int32_t IRQ_getMaskOrConfig(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irq
     }
 
     // Check whether IRQ is configurable
-    if ((status == PMIC_ST_SUCCESS) && (reg == PMIC_IRQ_INVALID_REG)) {
+    if ((status == PMIC_ST_SUCCESS) && (IRQ[irqCfg->irqNum].isConfigurable == PMIC_IRQ_NON_CONFIGURABLE)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 

@@ -80,16 +80,6 @@ extern "C" {
 #define PMIC_ENABLE                 ((bool)true)
 /** @} */
 
-/**
- * @anchor Pmic_invalidRegAddr
- * @name PMIC Invalid Register Address Definition
- *
- * @brief Used by PMIC LLD to indicate an invalid register address.
- *
- * @{
- */
-#define PMIC_INVALID_REG        ((uint8_t)0xFFU)
-/** @} */
 
 /**
  * @anchor Pmic_invalidValue

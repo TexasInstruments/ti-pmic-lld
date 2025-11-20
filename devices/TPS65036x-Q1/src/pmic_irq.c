@@ -37,6 +37,7 @@
  * interact with PMIC IRQs.
  */
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "pmic.h"
 #include "pmic_irq.h"
@@ -49,6 +50,9 @@
 #define NUM_MASKABLE_REGISTERS  ((uint8_t)6U)
 #define NUM_CLEARABLE_REGISTERS ((uint8_t)10U)
 
+#define PMIC_IRQ_MASKABLE     ((bool)true)
+#define PMIC_IRQ_NON_MASKABLE ((bool)false)
+
 /**
  * @anchor Pmic_IrqInfo
  * @name PMIC IRQ Information Struct
@@ -56,14 +60,16 @@
  * @brief This struct is used to hold information regarding an IRQ.
  *
  * @param statRegAddr Address of the register holding the IRQ status bit.
- * @param maskRegAddr Address of the register holding the bit that masks the IRQ.
+ * @param maskRegAddr Address of the register holding the bit that masks the IRQ (only valid if isMaskable is true).
  * @param bitShift Position of the IRQ status/mask bit.
+ * @param isMaskable Indicates whether this IRQ can be masked.
  */
 typedef struct Pmic_IrqInfo_s
 {
     uint8_t statRegAddr;
     uint8_t maskRegAddr;
     uint8_t bitShift;
+    bool isMaskable;
 } Pmic_IrqInfo_t;
 
 /**
@@ -71,270 +77,86 @@ typedef struct Pmic_IrqInfo_s
  */
 static const Pmic_IrqInfo_t pmicIRQs[PMIC_IRQ_MAX + 1U] =
 {
-    // 0
+    // 0 - Short-circuit NMIs
     {
         .statRegAddr = PMIC_INT_BUCK_LDO_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_LDO_SC_INT_SHIFT
+        .maskRegAddr = 0,
+        .bitShift = PMIC_LDO_SC_INT_SHIFT,
+        .isMaskable = PMIC_IRQ_NON_MASKABLE
     },
     // 1
     {
         .statRegAddr = PMIC_INT_BUCK_LDO_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_BUCK3_SC_INT_SHIFT
+        .maskRegAddr = 0,
+        .bitShift = PMIC_BUCK3_SC_INT_SHIFT,
+        .isMaskable = PMIC_IRQ_NON_MASKABLE
     },
     // 2
     {
         .statRegAddr = PMIC_INT_BUCK_LDO_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_BUCK2_SC_INT_SHIFT
+        .maskRegAddr = 0,
+        .bitShift = PMIC_BUCK2_SC_INT_SHIFT,
+        .isMaskable = PMIC_IRQ_NON_MASKABLE
     },
     // 3
     {
         .statRegAddr = PMIC_INT_BUCK_LDO_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_BUCK1_SC_INT_SHIFT
+        .maskRegAddr = 0,
+        .bitShift = PMIC_BUCK1_SC_INT_SHIFT,
+        .isMaskable = PMIC_IRQ_NON_MASKABLE
     },
-    // 4
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK2_OVP_INT_SHIFT
-    },
-    // 5
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK2_UV_INT_SHIFT
-    },
-    // 6
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK2_OV_INT_SHIFT
-    },
-    // 7
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK1_OVP_INT_SHIFT
-    },
-    // 8
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK1_UV_INT_SHIFT
-    },
-    // 9
-    {
-        .statRegAddr = PMIC_INT_BUCK1_2_REG,
-        .maskRegAddr = PMIC_MASK_BUCK1_2_REG,
-        .bitShift = PMIC_BUCK1_OV_INT_SHIFT
-    },
-    // 10
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_LDO_OVP_INT_SHIFT
-    },
-    // 11
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_LDO_UV_INT_SHIFT
-    },
-    // 12
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_LDO_OV_INT_SHIFT
-    },
-    // 13
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_BUCK3_OVP_INT_SHIFT
-    },
-    // 14
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_BUCK3_UV_INT_SHIFT
-    },
-    // 15
-    {
-        .statRegAddr = PMIC_INT_BUCK3_LDO_REG,
-        .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG,
-        .bitShift = PMIC_BUCK3_OV_INT_SHIFT
-    },
-    // 16
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_MASK_MISC_REG,
-        .bitShift = PMIC_TWARN_INT_SHIFT
-    },
-    // 17
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_MASK_MISC_REG,
-        .bitShift = PMIC_B1_PVIN_UVLO_INT_SHIFT
-    },
-    // 18
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_MASK_MISC_REG,
-        .bitShift = PMIC_BUCKS_VSET_ERR_INT_SHIFT
-    },
-    // 19
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_CFG_NVM_VERIFY_ERR_SHIFT
-    },
-    // 20
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_CFG_NVM_VERIFY_DONE_SHIFT
-    },
-    // 21
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_CFG_NVM_PRG_DONE_SHIFT
-    },
-    // 22
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_MASK_MISC_REG,
-        .bitShift = PMIC_ABIST_FAIL_INT_SHIFT
-    },
-    // 23
-    {
-        .statRegAddr = PMIC_INT_MISC_REG,
-        .maskRegAddr = PMIC_MASK_MISC_REG,
-        .bitShift = PMIC_ABIST_DONE_INT_SHIFT
-    },
-    // 24
-    {
-        .statRegAddr = PMIC_INT_MODERATE_ERR_REG,
-        .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG,
-        .bitShift = PMIC_GPO_READBACK_INT_SHIFT
-    },
-    // 25
-    {
-        .statRegAddr = PMIC_INT_MODERATE_ERR_REG,
-        .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG,
-        .bitShift = PMIC_NINT_READBACK_INT_SHIFT
-    },
-    // 26
-    {
-        .statRegAddr = PMIC_INT_MODERATE_ERR_REG,
-        .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG,
-        .bitShift = PMIC_CONFIG_CRC_INT_SHIFT
-    },
-    // 27
-    {
-        .statRegAddr = PMIC_INT_MODERATE_ERR_REG,
-        .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG,
-        .bitShift = PMIC_TRIM_TEST_CRC_INT_SHIFT
-    },
-    // 28
-    {
-        .statRegAddr = PMIC_INT_MODERATE_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_RECOV_CNT_INT_SHIFT
-    },
-    // 29
-    {
-        .statRegAddr = PMIC_INT_SEVERE_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_TSD_IMM_INT_SHIFT
-    },
-    // 30
-    {
-        .statRegAddr = PMIC_INT_FSM_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WD_FIRST_NOK_INT_SHIFT
-    },
-    // 31
-    {
-        .statRegAddr = PMIC_INT_FSM_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WAIT_FOR_PWRCYCLE_INT_SHIFT
-    },
-    // 32
-    {
-        .statRegAddr = PMIC_INT_FSM_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WARM_RESET_INT_SHIFT
-    },
-    // 33
-    {
-        .statRegAddr = PMIC_INT_FSM_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_ORD_SHUTDOWN_INT_SHIFT
-    },
-    // 34
-    {
-        .statRegAddr = PMIC_INT_FSM_ERR_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_IMM_SHUTDOWN_INT_SHIFT
-    },
-    // 35
-    {
-        .statRegAddr = PMIC_INT_COMM_ERR_REG,
-        .maskRegAddr = PMIC_MASK_COMM_ERR_REG,
-        .bitShift = PMIC_MCU_COMM_ERR_INT_SHIFT
-    },
-    // 36
-    {
-        .statRegAddr = PMIC_INT_COMM_ERR_REG,
-        .maskRegAddr = PMIC_MASK_COMM_ERR_REG,
-        .bitShift = PMIC_COMM_ADR_ERR_INT_SHIFT
-    },
-    // 37
-    {
-        .statRegAddr = PMIC_INT_COMM_ERR_REG,
-        .maskRegAddr = PMIC_MASK_COMM_ERR_REG,
-        .bitShift = PMIC_COMM_CRC_ERR_INT_SHIFT
-    },
-    // 38
-    {
-        .statRegAddr = PMIC_INT_ESM_REG,
-        .maskRegAddr = PMIC_MASK_ESM_REG,
-        .bitShift = PMIC_ESM_MCU_RST_INT_SHIFT
-    },
-    // 39
-    {
-        .statRegAddr = PMIC_INT_ESM_REG,
-        .maskRegAddr = PMIC_MASK_ESM_REG,
-        .bitShift = PMIC_ESM_MCU_FAIL_INT_SHIFT
-    },
-    // 40
-    {
-        .statRegAddr = PMIC_INT_ESM_REG,
-        .maskRegAddr = PMIC_MASK_ESM_REG,
-        .bitShift = PMIC_ESM_MCU_PIN_INT_SHIFT
-    },
-    // 41
-    {
-        .statRegAddr = PMIC_WD_ERR_STATUS_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WD_RST_INT_SHIFT
-    },
-    // 42
-    {
-        .statRegAddr = PMIC_WD_ERR_STATUS_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WD_FAIL_INT_SHIFT
-    },
-    // 43
-    {
-        .statRegAddr = PMIC_WD_ERR_STATUS_REG,
-        .maskRegAddr = PMIC_INVALID_REG,
-        .bitShift = PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT
-    }
+    // 4-9 - BUCK1/2 Maskable interrupts
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK2_OVP_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK2_UV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK2_OV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK1_OVP_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK1_UV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK1_2_REG, .maskRegAddr = PMIC_MASK_BUCK1_2_REG, .bitShift = PMIC_BUCK1_OV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 10-15 - BUCK3/LDO Maskable interrupts
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_LDO_OVP_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_LDO_UV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_LDO_OV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_BUCK3_OVP_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_BUCK3_UV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_BUCK3_LDO_REG, .maskRegAddr = PMIC_MASK_BUCK3_LDO_REG, .bitShift = PMIC_BUCK3_OV_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 16-18 - MISC Maskable interrupts
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = PMIC_MASK_MISC_REG, .bitShift = PMIC_TWARN_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = PMIC_MASK_MISC_REG, .bitShift = PMIC_B1_PVIN_UVLO_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = PMIC_MASK_MISC_REG, .bitShift = PMIC_BUCKS_VSET_ERR_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 19-21 - NVM NMIs
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = 0, .bitShift = PMIC_CFG_NVM_VERIFY_ERR_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = 0, .bitShift = PMIC_CFG_NVM_VERIFY_DONE_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = 0, .bitShift = PMIC_CFG_NVM_PRG_DONE_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    // 22-23 - ABIST Maskable
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = PMIC_MASK_MISC_REG, .bitShift = PMIC_ABIST_FAIL_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MISC_REG, .maskRegAddr = PMIC_MASK_MISC_REG, .bitShift = PMIC_ABIST_DONE_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 24-27 - MODERATE_ERR Maskable
+    {.statRegAddr = PMIC_INT_MODERATE_ERR_REG, .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG, .bitShift = PMIC_GPO_READBACK_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MODERATE_ERR_REG, .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG, .bitShift = PMIC_NINT_READBACK_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MODERATE_ERR_REG, .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG, .bitShift = PMIC_CONFIG_CRC_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_MODERATE_ERR_REG, .maskRegAddr = PMIC_MASK_MODERATE_ERR_REG, .bitShift = PMIC_TRIM_TEST_CRC_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 28 - Recovery counter NMI
+    {.statRegAddr = PMIC_INT_MODERATE_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_RECOV_CNT_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    // 29 - Thermal shutdown NMI
+    {.statRegAddr = PMIC_INT_SEVERE_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_TSD_IMM_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    // 30-34 - FSM Error NMIs
+    {.statRegAddr = PMIC_INT_FSM_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_WD_FIRST_NOK_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_FSM_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_WAIT_FOR_PWRCYCLE_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_FSM_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_WARM_RESET_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_FSM_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_ORD_SHUTDOWN_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_INT_FSM_ERR_REG, .maskRegAddr = 0, .bitShift = PMIC_IMM_SHUTDOWN_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    // 35-37 - COMM_ERR Maskable
+    {.statRegAddr = PMIC_INT_COMM_ERR_REG, .maskRegAddr = PMIC_MASK_COMM_ERR_REG, .bitShift = PMIC_MCU_COMM_ERR_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_COMM_ERR_REG, .maskRegAddr = PMIC_MASK_COMM_ERR_REG, .bitShift = PMIC_COMM_ADR_ERR_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_COMM_ERR_REG, .maskRegAddr = PMIC_MASK_COMM_ERR_REG, .bitShift = PMIC_COMM_CRC_ERR_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 38-40 - ESM Maskable
+    {.statRegAddr = PMIC_INT_ESM_REG, .maskRegAddr = PMIC_MASK_ESM_REG, .bitShift = PMIC_ESM_MCU_RST_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_ESM_REG, .maskRegAddr = PMIC_MASK_ESM_REG, .bitShift = PMIC_ESM_MCU_FAIL_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    {.statRegAddr = PMIC_INT_ESM_REG, .maskRegAddr = PMIC_MASK_ESM_REG, .bitShift = PMIC_ESM_MCU_PIN_INT_SHIFT, .isMaskable = PMIC_IRQ_MASKABLE},
+    // 41-43 - Watchdog NMIs
+    {.statRegAddr = PMIC_WD_ERR_STATUS_REG, .maskRegAddr = 0, .bitShift = PMIC_WD_RST_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_WD_ERR_STATUS_REG, .maskRegAddr = 0, .bitShift = PMIC_WD_FAIL_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE},
+    {.statRegAddr = PMIC_WD_ERR_STATUS_REG, .maskRegAddr = 0, .bitShift = PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT, .isMaskable = PMIC_IRQ_NON_MASKABLE}
 };
 
 static const uint8_t MaskableRegisters[NUM_MASKABLE_REGISTERS] = {
@@ -388,7 +210,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
 
     // Check whether IRQ is maskable
     if ((status == PMIC_ST_SUCCESS) &&
-        (irqMaskRegAddr == PMIC_INVALID_REG)) {
+        (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -418,7 +240,7 @@ static int32_t IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks,
         if (irqNum > PMIC_IRQ_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
             break;
-        } else if (pmicIRQs[irqNum].maskRegAddr == PMIC_INVALID_REG) {
+        } else if (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE) {
             status = PMIC_ST_ERR_NOT_SUPPORTED;
             break;
         } else {
@@ -547,7 +369,7 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
 
             // Check whether IRQ is maskable
             if ((status == PMIC_ST_SUCCESS) &&
-                (irqMaskRegAddr == PMIC_INVALID_REG)) {
+                (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
                 status = PMIC_ST_ERR_NOT_SUPPORTED;
             }
 
