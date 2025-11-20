@@ -5,13 +5,30 @@
 
 #include "regmap/core.h"
 
+static int32_t FSM_checkFsmCmd(uint8_t fsmCmd)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if ((fsmCmd != PMIC_SAFE_RECOVERY_REQUEST) &&
+        (fsmCmd != PMIC_COLD_BOOT_REQUEST) &&
+        (fsmCmd != PMIC_LOW_POWER_ENTRY_REQUEST) &&
+        (fsmCmd != PMIC_OFF_REQUEST) &&
+        (fsmCmd != PMIC_LOW_POWER_EXIT_REQUEST) &&
+        (fsmCmd != PMIC_WARM_RESET_REQUEST))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
 int32_t Pmic_fsmSetDevState(const Pmic_CoreHandle_t *pmicHandle, uint8_t fsmCmd)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = CORE_checkFsmCmd(fsmCmd);
+        status = FSM_checkFsmCmd(fsmCmd);
     }
 
     // Write FSM command to FSM_COMMAND_REG

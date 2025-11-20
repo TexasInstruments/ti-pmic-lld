@@ -56,10 +56,8 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-// Used to extract resource type and ID from resource value
+// Used to extract resource ID from resource value
 #define PWR_RSRC_ID_MASK    ((uint16_t)0x00FFU)
-#define PWR_RSRC_TYPE_MASK  ((uint16_t)0xFF00U)
-#define PWR_RSRC_TYPE_SHIFT (8U)
 
 /* ========================================================================== */
 /*                           Variables and Data                               */
@@ -709,7 +707,7 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
                 }
                 else
                 {
-                    Pmic_setBitField_b(&regData, VCCA_PG_SET_SHIFT, VCCA_PG_SET_MASK, (bool)vccaVmonCfg->pgSet);
+                    Pmic_setBitField_b(&regData, VCCA_PG_SET_SHIFT, VCCA_PG_SET_MASK, vccaVmonCfg->pgSet);
                 }
             }
             else
@@ -829,7 +827,7 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
 
             if (isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_PG_SET_VALID))
             {
-                vccaVmonCfg->pgSet = (uint8_t)Pmic_getBitField_b(regData, VCCA_PG_SET_SHIFT);
+                vccaVmonCfg->pgSet = Pmic_getBitField_b(regData, VCCA_PG_SET_SHIFT);
             }
         }
     }
@@ -1086,7 +1084,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
             }
             else
             {
-                Pmic_setBitField_b(&regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK, (bool)thermalCfg->twarnLvl);
+                Pmic_setBitField_b(&regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK, thermalCfg->twarnLvl);
             }
         }
 
@@ -1098,7 +1096,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
             }
             else
             {
-                Pmic_setBitField_b(&regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK, (bool)thermalCfg->tsdOrdLvl);
+                Pmic_setBitField_b(&regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK, thermalCfg->tsdOrdLvl);
             }
         }
 
@@ -1135,12 +1133,12 @@ int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
         {
             if (Pmic_validParamCheck(thermalCfg->validParams, PMIC_POWER_TWARN_LEVEL_VALID))
             {
-                thermalCfg->twarnLvl = (uint8_t)Pmic_getBitField_b(regData, TWARN_LEVEL_SHIFT);
+                thermalCfg->twarnLvl = Pmic_getBitField_b(regData, TWARN_LEVEL_SHIFT);
             }
 
             if (Pmic_validParamCheck(thermalCfg->validParams, PMIC_POWER_TSD_ORD_LEVEL_VALID))
             {
-                thermalCfg->tsdOrdLvl = (uint8_t)Pmic_getBitField_b(regData, TSD_ORD_LEVEL_SHIFT);
+                thermalCfg->tsdOrdLvl = Pmic_getBitField_b(regData, TSD_ORD_LEVEL_SHIFT);
             }
         }
     }
@@ -1175,7 +1173,7 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
         if (Pmic_validParamStatusCheck(spreadSpectrumCfg->validParams, PMIC_POWER_SS_DEPTH_VALID, status))
         {
-            Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, (bool)spreadSpectrumCfg->ssDepth);
+            Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfg->ssDepth);
         }
 
         if (status == PMIC_ST_SUCCESS)
@@ -1216,7 +1214,7 @@ int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
 
             if (Pmic_validParamCheck(spreadSpectrumCfg->validParams, PMIC_POWER_SS_DEPTH_VALID))
             {
-                spreadSpectrumCfg->ssDepth = (uint8_t)Pmic_getBitField_b(regData, SS_DEPTH_SHIFT);
+                spreadSpectrumCfg->ssDepth = Pmic_getBitField_b(regData, SS_DEPTH_SHIFT);
             }
         }
     }

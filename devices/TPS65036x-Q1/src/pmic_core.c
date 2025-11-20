@@ -414,25 +414,6 @@ int32_t Pmic_runABIST(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-static int32_t CORE_checkFsmCmd(uint8_t fsmCmd)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if ((fsmCmd != PMIC_SAFE_RECOVERY_REQUEST) &&
-        (fsmCmd != PMIC_COLD_BOOT_REQUEST) &&
-        (fsmCmd != PMIC_LOW_POWER_ENTRY_REQUEST) &&
-        (fsmCmd != PMIC_OFF_REQUEST) &&
-        (fsmCmd != PMIC_LOW_POWER_EXIT_REQUEST) &&
-        (fsmCmd != PMIC_WARM_RESET_REQUEST))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    return status;
-}
-
-
-
 int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat)
 {
     uint8_t regData = 0U;
