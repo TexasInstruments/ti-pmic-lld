@@ -125,7 +125,7 @@ extern "C" {
  *
  * @param devSiRev PMIC device silicon revision.
  *
- * @param nvmId PMIC device NVM identification.
+ * @param nvmCode PMIC device NVM identification.
  *
  * @param nvmRev PMIC device NVM revision.
  *
@@ -208,7 +208,7 @@ typedef struct Pmic_Handle_s {
     uint32_t drvInitStat;
     uint8_t devId;
     uint8_t devSiRev;
-    uint8_t nvmId;
+    uint8_t nvmCode;
     uint8_t nvmRev;
     uint8_t commMode;
     uint8_t i2cAddr0;

@@ -129,7 +129,7 @@ extern "C" {
  *
  * @param devRev PMIC device revision identifier.
  *
- * @param nvmId 0x00 - 0xF0 are reserved for TI manufactured NVM variants. 0xF1 - 0xFF
+ * @param nvmCode 0x00 - 0xF0 are reserved for TI manufactured NVM variants. 0xF1 - 0xFF
  * are reserved for special use.
  *
  * @param nvmRev NVM revision of the IC.
@@ -160,7 +160,7 @@ typedef struct Pmic_CoreHandle_s
     uint32_t drvInitStat;
     uint8_t i2cAddr;
     uint8_t devRev;
-    uint8_t nvmId;
+    uint8_t nvmCode;
     uint8_t nvmRev;
     uint8_t siliconRev;
     bool isA0;

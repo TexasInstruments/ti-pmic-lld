@@ -207,7 +207,7 @@ void test_positive_Pmic_deinit(void)
     PLATFORM_ASSERT(pmicHandle.drvInitStat == 0U);
     PLATFORM_ASSERT(pmicHandle.i2cAddr == 0U);
     PLATFORM_ASSERT(pmicHandle.devRev == 0U);
-    PLATFORM_ASSERT(pmicHandle.nvmId == 0U);
+    PLATFORM_ASSERT(pmicHandle.nvmCode == 0U);
     PLATFORM_ASSERT(pmicHandle.nvmRev == 0U);
     PLATFORM_ASSERT(pmicHandle.siliconRev == 0U);
     PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);

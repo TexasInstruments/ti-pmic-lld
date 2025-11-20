@@ -79,6 +79,23 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
     return status;
 }
 
+int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode)
+{
+    int32_t status = Pmic_checkHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (nvmCode == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *nvmCode = pmicHandle->nvmCode;
+    }
+
+    return status;
+}
+
 int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);

@@ -89,7 +89,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
-        pmicHandle->nvmId = regData;
+        pmicHandle->nvmCode = regData;
         status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REG, &regData);
     }
 
@@ -214,7 +214,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
         pmicHandle->drvInitStat = 0U;
         pmicHandle->i2cAddr = 0U;
         pmicHandle->devRev = 0U;
-        pmicHandle->nvmId = 0U;
+        pmicHandle->nvmCode = 0U;
         pmicHandle->nvmRev = 0U;
         pmicHandle->siliconRev = 0U;
         pmicHandle->isA0 = (bool)false;

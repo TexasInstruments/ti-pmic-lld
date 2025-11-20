@@ -48,8 +48,8 @@
 /* Run all Core tests */
 #define CORE_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_getDevId_nullParam_pmicHandle); \
                             PLATFORM_RUN_TEST(test_negative_Pmic_getDevId_nullParam_devId); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmId_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmId_nullParam_nvmId); \
+                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmCode_nullParam_pmicHandle); \
+                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmCode_nullParam_nvmCode); \
                             PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_pmicHandle); \
                             PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
                             PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_pmicHandle); \
@@ -98,7 +98,7 @@
                             PLATFORM_RUN_TEST(test_negative_Pmic_getResetCnt_nullParam_resetCnt); \
                             PLATFORM_RUN_TEST(test_negative_Pmic_clrResetCnt_nullParam_pmicHandle); \
                             PLATFORM_RUN_TEST(test_positive_Pmic_getDevId); \
-                            PLATFORM_RUN_TEST(test_positive_Pmic_getNvmId); \
+                            PLATFORM_RUN_TEST(test_positive_Pmic_getNvmCode); \
                             PLATFORM_RUN_TEST(test_positive_Pmic_getNvmRev); \
                             PLATFORM_RUN_TEST(test_positive_Pmic_getSiliconRev); \
                             PLATFORM_RUN_TEST(test_positive_setGetRegLock); \
@@ -119,8 +119,8 @@
 /* Run all Core negative tests */
 #define CORE_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_getDevId_nullParam_pmicHandle); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_getDevId_nullParam_devId); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmId_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmId_nullParam_nvmId); \
+                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmCode_nullParam_pmicHandle); \
+                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmCode_nullParam_nvmCode); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_pmicHandle); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_pmicHandle); \
@@ -167,7 +167,7 @@
 
 /* Run all Core positive tests */
 #define CORE_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_Pmic_getDevId); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_getNvmId); \
+                                 PLATFORM_RUN_TEST(test_positive_Pmic_getNvmCode); \
                                  PLATFORM_RUN_TEST(test_positive_Pmic_getNvmRev); \
                                  PLATFORM_RUN_TEST(test_positive_Pmic_getSiliconRev); \
                                  PLATFORM_RUN_TEST(test_positive_setGetRegLock); \
@@ -257,18 +257,18 @@ void test_negative_Pmic_getDevId_nullParam_devId(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getNvmId_nullParam_pmicHandle(void)
+void test_negative_Pmic_getNvmCode_nullParam_pmicHandle(void)
 {
-    // Pass NULL pmicHandle into Pmic_getNvmId()
-    uint8_t nvmId = 0U;
-    int32_t status = Pmic_getNvmId(NULL, &nvmId);
+    // Pass NULL pmicHandle into Pmic_getNvmCode()
+    uint8_t nvmCode = 0U;
+    int32_t status = Pmic_getNvmCode(NULL, &nvmCode);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getNvmId_nullParam_nvmId(void)
+void test_negative_Pmic_getNvmCode_nullParam_nvmCode(void)
 {
-    // Pass NULL nvmId into Pmic_getNvmId()
-    int32_t status = Pmic_getNvmId(&pmicHandle, NULL);
+    // Pass NULL nvmCode into Pmic_getNvmCode()
+    int32_t status = Pmic_getNvmCode(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -635,13 +635,13 @@ void test_positive_Pmic_getDevId(void)
     PLATFORM_ASSERT(devId != 0xFFU);
 }
 
-void test_positive_Pmic_getNvmId(void)
+void test_positive_Pmic_getNvmCode(void)
 {
     // Get PMIC NVM ID
-    uint8_t nvmId = 0xFFU;
-    int32_t status = Pmic_getNvmId(&pmicHandle, &nvmId);
+    uint8_t nvmCode = 0xFFU;
+    int32_t status = Pmic_getNvmCode(&pmicHandle, &nvmCode);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(nvmId != 0xFFU);
+    PLATFORM_ASSERT(nvmCode != 0xFFU);
 }
 
 void test_positive_Pmic_getNvmRev(void)

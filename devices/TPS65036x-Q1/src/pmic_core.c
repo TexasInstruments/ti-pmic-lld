@@ -69,7 +69,7 @@ int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        *nvmCode = pmicHandle->nvmId;
+        *nvmCode = pmicHandle->nvmCode;
     }
 
     return status;
