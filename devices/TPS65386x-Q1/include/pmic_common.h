@@ -171,10 +171,10 @@ typedef struct Pmic_CoreHandle_s {
     bool crcEnable;
     void *pCommHandle;
     void *pQACommHandle;
-    int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s *pmicCorehandle,
+    int32_t (*pFnPmicCommIoRead)(const struct Pmic_CoreHandle_s *pmicCorehandle,
                                  uint8_t instType, uint16_t regAddr,
                                  uint8_t *pRxBuf, uint8_t bufLen);
-    int32_t (*pFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *pmicCorehandle,
+    int32_t (*pFnPmicCommIoWrite)(const struct Pmic_CoreHandle_s *pmicCorehandle,
                                   uint8_t instType, uint16_t regAddr,
                                   uint8_t *pTxBuf, uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);

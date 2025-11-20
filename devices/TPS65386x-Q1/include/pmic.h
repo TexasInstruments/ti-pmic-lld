@@ -368,12 +368,12 @@ typedef struct Pmic_CoreCfg_s {
     uint8_t i2c2Speed;
     void *pCommHandle;
     void *pQACommHandle;
-    int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s *handle,
+    int32_t (*pFnPmicCommIoRead)(const struct Pmic_CoreHandle_s *handle,
                                  uint8_t instType,
                                  uint16_t regAddr,
                                  uint8_t *pRxBuf,
                                  uint8_t bufLen);
-    int32_t (*pFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *handle,
+    int32_t (*pFnPmicCommIoWrite)(const struct Pmic_CoreHandle_s *handle,
                                   uint8_t instType,
                                   uint16_t regAddr,
                                   uint8_t *pTxBuf,

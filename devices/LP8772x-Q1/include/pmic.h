@@ -417,12 +417,12 @@ typedef struct Pmic_CoreCfg_s {
     bool configCrcEnable;
     void *pCommHandle;
     void *pQACommHandle;
-    int32_t (*pFnPmicCommIoRd)(struct Pmic_CoreHandle_s *handle,
+    int32_t (*pFnPmicCommIoRd)(const struct Pmic_CoreHandle_s *handle,
                                uint8_t instType,
                                uint16_t regAddr,
                                uint8_t *pRxBuf,
                                uint8_t bufLen);
-    int32_t (*pFnPmicCommIoWr)(struct Pmic_CoreHandle_s *handle,
+    int32_t (*pFnPmicCommIoWr)(const struct Pmic_CoreHandle_s *handle,
                                uint8_t instType,
                                uint16_t regAddr,
                                uint8_t *pTxBuf,
