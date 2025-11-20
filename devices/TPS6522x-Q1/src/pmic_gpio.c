@@ -56,13 +56,12 @@
 /* ========================================================================== */
 
 static int32_t GPIO_validatePinNum(uint8_t pinNum);
-static int32_t GPIO_setPinCfgFields(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData);
+static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData);
 static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gpioPinCfg);
 static uint8_t GPIO_getConfRegAddr(uint8_t pinNum);
 static uint8_t GPIO_getOutShift(uint8_t pinNum);
 static uint8_t GPIO_getOutMask(uint8_t pinNum);
 static uint8_t GPIO_getInShift(uint8_t pinNum);
-static uint8_t GPIO_getInMask(uint8_t pinNum);
 
 /* ========================================================================== */
 /*                         Static Function Definitions                        */
@@ -136,27 +135,14 @@ static uint8_t GPIO_getInShift(uint8_t pinNum)
 }
 
 /**
- * @brief Get GPIO input bit mask for a given pin
- *
- * @param pinNum GPIO pin number (1-6)
- *
- * @return Bit mask value
- */
-static uint8_t GPIO_getInMask(uint8_t pinNum)
-{
-    return (uint8_t)(0x01U << GPIO_getInShift(pinNum));
-}
-
-/**
  * @brief Set GPIO pin configuration fields in register data
  *
- * @param handle PMIC interface handle
  * @param gpioPinCfg GPIO pin configuration structure
  * @param regData Pointer to register data to modify
  *
  * @return PMIC_ST_SUCCESS if successful, error code otherwise
  */
-static int32_t GPIO_setPinCfgFields(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData)
+static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -351,7 +337,7 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
     // Modify register data with new configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = GPIO_setPinCfgFields(handle, gpioPinCfg, &regData);
+        status = GPIO_setPinCfgFields(gpioPinCfg, &regData);
     }
 
     // Write modified register data back to PMIC

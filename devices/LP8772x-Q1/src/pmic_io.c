@@ -112,7 +112,7 @@ const static uint8_t CRC8_TABLE[] =
  */
 static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
 {
-    uint8_t crc = 0xFFU;
+    uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 
     for (uint8_t i = 0U; i < length; i++)
     {

@@ -69,12 +69,6 @@
 /*                            Function Definitions                            */
 /* ========================================================================== */
 
-// Get the resource type from resource value
-static inline uint8_t PWR_getRsrcType(uint16_t pwrRsrc)
-{
-    return (uint8_t)((pwrRsrc & PWR_RSRC_TYPE_MASK) >> PWR_RSRC_TYPE_SHIFT);
-}
-
 // Get the resource ID from resource value
 static inline uint8_t PWR_getRsrcId(uint16_t pwrRsrc)
 {
