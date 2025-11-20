@@ -49,9 +49,7 @@
 /*                           Internal Helper Functions                        */
 /* ========================================================================== */
 
-/**
- * @brief GPIO pin mapping table entry
- */
+/* GPIO pin mapping table entry */
 typedef struct
 {
     uint8_t regAddr;
@@ -59,9 +57,7 @@ typedef struct
     uint8_t maskPolShift;
 } Pmic_FsmGpioPinMap_t;
 
-/**
- * @brief GPIO pin to register mapping table
- */
+/* GPIO pin to register mapping table */
 static const Pmic_FsmGpioPinMap_t gpioPinMap[] = {
     { FSM_TRIG_MASK_1_REG, GPIO1_FSM_MASK_SHIFT, GPIO1_FSM_MASK_POL_SHIFT },  /* GPIO1 */
     { FSM_TRIG_MASK_1_REG, GPIO2_FSM_MASK_SHIFT, GPIO2_FSM_MASK_POL_SHIFT },  /* GPIO2 */
@@ -71,9 +67,7 @@ static const Pmic_FsmGpioPinMap_t gpioPinMap[] = {
     { FSM_TRIG_MASK_2_REG, GPIO6_FSM_MASK_SHIFT, GPIO6_FSM_MASK_POL_SHIFT }   /* GPIO6 */
 };
 
-/**
- * @brief Get GPIO pin mapping from table
- */
+/* Get GPIO pin mapping from table. */
 static int32_t Pmic_fsmGetGpioPinMapping(uint8_t pinNum, const Pmic_FsmGpioPinMap_t **mapping)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -90,9 +84,7 @@ static int32_t Pmic_fsmGetGpioPinMapping(uint8_t pinNum, const Pmic_FsmGpioPinMa
     return status;
 }
 
-/**
- * @brief Validate FSM trigger configuration parameters
- */
+/* Validate FSM trigger configuration parameters. */
 static int32_t Pmic_fsmValidateTriggerCfg(const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -126,9 +118,7 @@ static int32_t Pmic_fsmValidateTriggerCfg(const Pmic_FsmTriggerCfg_t *triggerCfg
     return status;
 }
 
-/**
- * @brief Configure FSM_TRIG_SEL_1 register
- */
+/* Configure FSM_TRIG_SEL_1 register. */
 static int32_t Pmic_fsmSetTrigSel1(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -167,9 +157,7 @@ static int32_t Pmic_fsmSetTrigSel1(const Pmic_Handle_t *handle, const Pmic_FsmTr
     return status;
 }
 
-/**
- * @brief Configure FSM_TRIG_SEL_2 register
- */
+/* Configure FSM_TRIG_SEL_2 register. */
 static int32_t Pmic_fsmSetTrigSel2(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -189,9 +177,7 @@ static int32_t Pmic_fsmSetTrigSel2(const Pmic_Handle_t *handle, const Pmic_FsmTr
     return status;
 }
 
-/**
- * @brief Read FSM_TRIG_SEL_1 register
- */
+/* Read FSM_TRIG_SEL_1 register. */
 static int32_t Pmic_fsmGetTrigSel1(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -228,9 +214,7 @@ static int32_t Pmic_fsmGetTrigSel1(const Pmic_Handle_t *handle, Pmic_FsmTriggerC
     return status;
 }
 
-/**
- * @brief Read FSM_TRIG_SEL_2 register
- */
+/* Read FSM_TRIG_SEL_2 register. */
 static int32_t Pmic_fsmGetTrigSel2(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;

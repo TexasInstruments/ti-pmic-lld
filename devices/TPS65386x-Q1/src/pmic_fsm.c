@@ -49,11 +49,9 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/**
- * @brief In the register map, certain states are enumerated mulitple times
+/* In the register map, certain states are enumerated mulitple times
  * within the STATE bit field in the STATE_STAT register. This set of defines
- * is used to indicate the repeated bit fields.
- */
+ * is used to indicate the repeated bit fields. */
 #define INIT_STATE_MIN      (1U)
 #define INIT_STATE_MAX      (4U)
 #define OFF_STATE_REPEATED  (0xEU)

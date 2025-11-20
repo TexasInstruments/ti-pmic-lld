@@ -67,13 +67,8 @@ static uint8_t GPIO_getInShift(uint8_t pinNum);
 /*                         Static Function Definitions                        */
 /* ========================================================================== */
 
-/**
- * @brief Validate GPIO pin number
- *
- * @param pinNum GPIO pin number to validate
- *
- * @return PMIC_ST_SUCCESS if valid, PMIC_ST_ERR_INV_PARAM otherwise
- */
+/* Validate GPIO pin number. Returns PMIC_ST_SUCCESS if valid,
+ * PMIC_ST_ERR_INV_PARAM otherwise. */
 static int32_t GPIO_validatePinNum(uint8_t pinNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -86,62 +81,32 @@ static int32_t GPIO_validatePinNum(uint8_t pinNum)
     return status;
 }
 
-/**
- * @brief Get GPIO configuration register address for a given pin
- *
- * @param pinNum GPIO pin number (1-6)
- *
- * @return Register address
- */
+/* Get GPIO configuration register address for a given pin (1-6). */
 static uint8_t GPIO_getConfRegAddr(uint8_t pinNum)
 {
     return (uint8_t)(GPIO1_CONF_REG + (pinNum - PMIC_GPIO_PIN1));
 }
 
-/**
- * @brief Get GPIO output bit shift for a given pin
- *
- * @param pinNum GPIO pin number (1-6)
- *
- * @return Bit shift value
- */
+/* Get GPIO output bit shift for a given pin (1-6). */
 static uint8_t GPIO_getOutShift(uint8_t pinNum)
 {
     return (uint8_t)(GPIO1_OUT_SHIFT + (pinNum - PMIC_GPIO_PIN1));
 }
 
-/**
- * @brief Get GPIO output bit mask for a given pin
- *
- * @param pinNum GPIO pin number (1-6)
- *
- * @return Bit mask value
- */
+/* Get GPIO output bit mask for a given pin (1-6). */
 static uint8_t GPIO_getOutMask(uint8_t pinNum)
 {
     return (uint8_t)(0x01U << GPIO_getOutShift(pinNum));
 }
 
-/**
- * @brief Get GPIO input bit shift for a given pin
- *
- * @param pinNum GPIO pin number (1-6)
- *
- * @return Bit shift value
- */
+/* Get GPIO input bit shift for a given pin (1-6). */
 static uint8_t GPIO_getInShift(uint8_t pinNum)
 {
     return (uint8_t)(GPIO1_IN_SHIFT + (pinNum - PMIC_GPIO_PIN1));
 }
 
-/**
- * @brief Set GPIO pin configuration fields in register data
- *
- * @param gpioPinCfg GPIO pin configuration structure
- * @param regData Pointer to register data to modify
- *
- * @return PMIC_ST_SUCCESS if successful, error code otherwise
- */
+/* Set GPIO pin configuration fields in register data. Returns PMIC_ST_SUCCESS
+ * if successful, error code otherwise. */
 static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -243,14 +208,8 @@ static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t
     return status;
 }
 
-/**
- * @brief Get GPIO pin configuration fields from register data
- *
- * @param regData Register data to extract from
- * @param gpioPinCfg GPIO pin configuration structure to populate
- *
- * @return PMIC_ST_SUCCESS if successful, error code otherwise
- */
+/* Get GPIO pin configuration fields from register data. Returns PMIC_ST_SUCCESS
+ * if successful, error code otherwise. */
 static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gpioPinCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
