@@ -172,14 +172,14 @@ extern "C" {
  * @param asyncRxStart Function pointer to platform-specific asynchronous read
  * transfer start API. Typically initiates a DMA read transfer. The DMA typically
  * handles the memory->peripheral and/or peripheral->memory transfer so that the
- * CPU can enter LPM or so that the calling task can be suspended (put into a blocked)
- * state.
+ * CPU can enter LPM or so that the calling task can be suspended (put into a blocked
+ * state).
  *
  * @param asyncTxStart Function pointer to platform-specific asynchronous write
  * transfer start API. Typically initiates a DMA write transfer. The DMA typically
  * handles the memory->peripheral and/or peripheral->memory transfer so that the
- * CPU can enter LPM or so that the calling task can be suspended (put into a blocked)
- * state.
+ * CPU can enter LPM or so that the calling task can be suspended (put into a blocked
+ * state).
  *
  * @param asyncRxAwait Function pointer to platform-specific asynchronous read
  * transfer await API. Typically suspends the calling task so that other tasks
