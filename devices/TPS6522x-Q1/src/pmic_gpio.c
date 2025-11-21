@@ -697,36 +697,29 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Read ENABLE_DRV_STAT register
+    // Read STAT_STARTUP register for EN/PB/VSENSE status
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
+        status = Pmic_ioRxByte(handle, STAT_STARTUP_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
-    // Note: The ENABLE_DRV_STAT register doesn't appear to have separate status bits
-    // for PB, EN, and VSENSE in the register map provided. This implementation
-    // may need to be adjusted based on actual hardware behavior or additional
-    // register definitions.
-
     if (status == PMIC_ST_SUCCESS)
     {
-        // Set all status fields to indicate that the information is not available
-        // in the current register map. This may need hardware clarification.
         if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_PB_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->pbLvlHigh = false;
+            enPbVSenseStatus->pbLvlHigh = ((regData & PB_LEVEL_STAT_MASK) != 0U);
         }
 
         if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_EN_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->enLvlHigh = false;
+            enPbVSenseStatus->enLvlHigh = ((regData & ENABLE_STAT_MASK) != 0U);
         }
 
         if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_VSENSE_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->vsenseLvlHigh = false;
+            enPbVSenseStatus->vsenseLvlHigh = ((regData & VSENSE_STAT_MASK) != 0U);
         }
     }
 

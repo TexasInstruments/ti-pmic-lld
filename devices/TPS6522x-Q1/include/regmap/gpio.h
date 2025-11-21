@@ -60,6 +60,7 @@ extern "C" {
 #define POWER_ON_CONFIG_REG (0x3CU)
 #define GPIO_OUT_1_REG      (0x3DU)
 #define GPIO_IN_1_REG       (0x3FU)
+#define STAT_STARTUP_REG    (0x73U)
 #define ENABLE_DRV_REG_REG  (0x80U)
 #define ENABLE_DRV_STAT_REG (0x82U)
 
@@ -132,6 +133,14 @@ extern "C" {
 #define FORCE_EN_DRV_LOW_MASK  (0x01U << FORCE_EN_DRV_LOW_SHIFT)
 #define NRSTOUT_IN_MASK        (0x01U << NRSTOUT_IN_SHIFT)
 #define NINT_EN_DRV_IN_MASK    (0x01U << NINT_EN_DRV_IN_SHIFT)
+
+// STAT_STARTUP
+#define PB_LEVEL_STAT_SHIFT (2U)
+#define ENABLE_STAT_SHIFT   (1U)
+#define VSENSE_STAT_SHIFT   (0U)
+#define PB_LEVEL_STAT_MASK  (0x01U << PB_LEVEL_STAT_SHIFT)
+#define ENABLE_STAT_MASK    (0x01U << ENABLE_STAT_SHIFT)
+#define VSENSE_STAT_MASK    (0x01U << VSENSE_STAT_SHIFT)
 
 #ifdef __cplusplus
 }

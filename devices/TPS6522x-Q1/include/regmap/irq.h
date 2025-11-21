@@ -72,7 +72,6 @@ extern "C" {
 #define INT_ESM_REG           (0x6CU)
 #define STAT_BUCK_REG         (0x6DU)
 #define STAT_LDO_VMON_REG     (0x70U)
-#define STAT_STARTUP_REG      (0x73U)
 #define STAT_MISC_REG         (0x74U)
 #define STAT_MODERATE_ERR_REG (0x75U)
 #define STAT_SEVERE_ERR_REG   (0x76U)
@@ -365,14 +364,6 @@ extern "C" {
 #define LDO3_UVOV_STAT_MASK   (0x01U <<  LDO3_UVOV_STAT_SHIFT)
 #define LDO2_UVOV_STAT_MASK   (0x01U <<  LDO2_UVOV_STAT_SHIFT)
 #define LDO1_UVOV_STAT_MASK   (0x01U <<  LDO1_UVOV_STAT_SHIFT)
-
-// STAT_STARTUP
-#define PB_LEVEL_STAT_SHIFT (2U)
-#define ENABLE_STAT_SHIFT   (1U)
-#define VSENSE_STAT_SHIFT   (0U)
-#define PB_LEVEL_STAT_MASK  (0x01U << PB_LEVEL_STAT_SHIFT)
-#define ENABLE_STAT_MASK    (0x01U << ENABLE_STAT_SHIFT)
-#define VSENSE_STAT_MASK    (0x01U << VSENSE_STAT_SHIFT)
 
 // STAT_MISC
 #define TWARN_STAT_SHIFT   (3U)
