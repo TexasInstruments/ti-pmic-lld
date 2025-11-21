@@ -619,7 +619,7 @@ static int32_t IRQ_getStatBucks(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqSt
     // If BUCK3_INT or LDO_LS2_VMON1_INT are set, read and extract bits from L1
     // register INT_BUCK3_LDO_LS1_VMON1
     if ((status == PMIC_ST_SUCCESS) && buck3Ldo) {
-        status = Pmic_ioRxByte(handle, INT_COMM_ERR_REG, &regData);
+        status = Pmic_ioRxByte(handle, INT_BUCK3_LDO_LS1_VMON1_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
             IRQ_extractBits(irqStat, regData, buck3LdoIrqs, COUNT(buck3LdoIrqs));
