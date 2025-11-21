@@ -128,9 +128,13 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->ioWrite == NULL) || (pmicHandle->commHandle == NULL))
+    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    else if (pmicHandle->ioWrite == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_FPTR;
     }
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
@@ -180,9 +184,13 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->ioRead == NULL) || (pmicHandle->commHandle == NULL) || (rxData == NULL))
+    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL) || (rxData == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    else if (pmicHandle->ioRead == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_FPTR;
     }
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
@@ -215,7 +223,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
         // i2cFrame[4U] - SCRC
         if (i2cFrame[4U] != getCRC8Val(i2cFrame, i2cFrameLen - 1U))
         {
-            status = PMIC_ST_ERR_INV_CRC;
+            status = PMIC_ST_ERR_DATA_IO_CRC;
         }
     }
 

@@ -68,16 +68,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ST_SUCCESS                     ((int32_t)0)
+#define PMIC_ST_SUCCESS                     (-((int32_t)0))
 #define PMIC_ST_ERR_I2C_COMM_FAIL           (-((int32_t)1))
 #define PMIC_ST_ERR_INV_PARAM               (-((int32_t)2))
 #define PMIC_ST_ERR_NULL_PARAM              (-((int32_t)3))
-#define PMIC_ST_ERR_INV_CRC                 (-((int32_t)4))
-#define PMIC_ST_ERR_REG_LOCKED              (-((int32_t)5))
-#define PMIC_ST_ERR_INV_HANDLE              (-((int32_t)6))
-#define PMIC_ST_ERR_FAIL                    (-((int32_t)7))
-#define PMIC_ST_ERR_NOT_SUPPORTED           (-((int32_t)8))
-#define PMIC_ST_WARN_NO_IRQ_REMAINING       (-((int32_t)9))
+#define PMIC_ST_ERR_DATA_IO_CRC             (-((int32_t)4))
+#define PMIC_ST_ERR_NULL_FPTR               (-((int32_t)5))
+#define PMIC_ST_ERR_REG_LOCKED              (-((int32_t)6))
+#define PMIC_ST_ERR_INV_HANDLE              (-((int32_t)7))
+#define PMIC_ST_ERR_FAIL                    (-((int32_t)8))
+#define PMIC_ST_ERR_NOT_SUPPORTED           (-((int32_t)9))
+#define PMIC_ST_WARN_NO_IRQ_REMAINING       (-((int32_t)41))
 #define PMIC_ST_WARN_NON_MASKABLE_INT       (-((int32_t)10))
 /** @} */
 

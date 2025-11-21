@@ -166,11 +166,18 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
     int32_t status = PMIC_ST_SUCCESS;
 
     // Check whether parameters are valid
-    if ((pmicCfg == NULL) || (pmicCfg->commHandle == NULL) || (pmicCfg->ioRead == NULL) ||
-        (pmicCfg->ioWrite == NULL) || (pmicCfg->critSecStart == NULL) ||
-        (pmicCfg->critSecStop == NULL) || (pmicHandle == NULL))
+    if ((pmicCfg == NULL) || (pmicHandle == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    else if (pmicCfg->commHandle == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    else if ((pmicCfg->ioRead == NULL) || (pmicCfg->ioWrite == NULL) ||
+             (pmicCfg->critSecStart == NULL) || (pmicCfg->critSecStop == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_FPTR;
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -239,12 +246,21 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && ((pmicHandle->commHandle == NULL) ||
-        (pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
-        (pmicHandle->critSecStart == NULL) || (pmicHandle->critSecStop == NULL) ||
-        (pmicHandle->drvInitStat != PMIC_DRV_INIT_SUCCESS)))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_INV_HANDLE;
+        if (pmicHandle->commHandle == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else if ((pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
+                 (pmicHandle->critSecStart == NULL) || (pmicHandle->critSecStop == NULL))
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else if (pmicHandle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
+        {
+            status = PMIC_ST_ERR_INV_HANDLE;
+        }
     }
 
     return status;

@@ -93,7 +93,7 @@ extern "C" {
 #define PMIC_ST_ERR_NOT_SUPPORTED     (-((int32_t)9))
 #define PMIC_ST_ERR_CONFIG_REG_CRC    (-((int32_t)10))
 #define PMIC_ST_ERR_MAX_LOOP_CNT_FAIL (-((int32_t)11))
-#define PMIC_ST_WARN_NO_IRQ_REMAINING (-((int32_t)0xAA))
+#define PMIC_ST_WARN_NO_IRQ_REMAINING (-((int32_t)41))
 /** @} */
 
 /**
