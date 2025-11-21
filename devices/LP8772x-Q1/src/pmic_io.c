@@ -190,7 +190,7 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-        ((handle->pFnPmicCommIoRd == NULL) || (handle->pCommHandle == NULL))) {
+        ((handle->pFnPmicCommIoWr == NULL) || (handle->pCommHandle == NULL))) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
