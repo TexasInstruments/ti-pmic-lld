@@ -54,13 +54,13 @@
 
 static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
 {
-    pmicHandle->i2cAddr = pmicCfg->i2cAddr;
-    pmicHandle->commHandle = pmicCfg->commHandle;
+    pmicHandle->i2cAddr0 = pmicCfg->i2cAddr0;
+    pmicHandle->commHandle0 = pmicCfg->commHandle0;
     pmicHandle->ioRead = pmicCfg->ioRead;
     pmicHandle->ioWrite = pmicCfg->ioWrite;
-    pmicHandle->critSecStart = pmicCfg->critSecStart;
-    pmicHandle->critSecStop = pmicCfg->critSecStop;
-    pmicHandle->irqResponse = pmicCfg->irqResponse;
+    pmicHandle->criticalSectionStart = pmicCfg->criticalSectionStart;
+    pmicHandle->criticalSectionStop = pmicCfg->criticalSectionStop;
+    pmicHandle->irqResponseCallback = pmicCfg->irqResponseCallback;
 }
 
 static int32_t getPmicInfo(Pmic_Handle_t *pmicHandle)
@@ -103,7 +103,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *pmicHandle)
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract SILICON_REV bit field
-        pmicHandle->siliconRev = regData;
+        pmicHandle->devSiRev = regData;
     }
     Pmic_criticalSectionStop(pmicHandle);
 
@@ -170,12 +170,12 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    else if (pmicCfg->commHandle == NULL)
+    else if (pmicCfg->commHandle0 == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
     else if ((pmicCfg->ioRead == NULL) || (pmicCfg->ioWrite == NULL) ||
-             (pmicCfg->critSecStart == NULL) || (pmicCfg->critSecStop == NULL))
+             (pmicCfg->criticalSectionStart == NULL) || (pmicCfg->criticalSectionStop == NULL))
     {
         status = PMIC_ST_ERR_NULL_FPTR;
     }
@@ -191,7 +191,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        const bool isB1 = Pmic_getBitField_b(pmicHandle->siliconRev, DEVICE_PG_IDENTIFER);
+        const bool isB1 = Pmic_getBitField_b(pmicHandle->devSiRev, DEVICE_PG_IDENTIFER);
 
         pmicHandle->isA0 = (bool)false;
         if (!isB1)
@@ -219,19 +219,19 @@ int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle)
     if (status == PMIC_ST_SUCCESS)
     {
         pmicHandle->drvInitStat = 0U;
-        pmicHandle->i2cAddr = 0U;
+        pmicHandle->i2cAddr0 = 0U;
         pmicHandle->devRev = 0U;
         pmicHandle->nvmCode = 0U;
         pmicHandle->nvmRev = 0U;
-        pmicHandle->siliconRev = 0U;
+        pmicHandle->devSiRev = 0U;
         pmicHandle->isA0 = (bool)false;
         pmicHandle->crcEnable = PMIC_DISABLE;
-        pmicHandle->commHandle = NULL;
+        pmicHandle->commHandle0 = NULL;
         pmicHandle->ioRead = NULL;
         pmicHandle->ioWrite = NULL;
-        pmicHandle->critSecStart = NULL;
-        pmicHandle->critSecStop = NULL;
-        pmicHandle->irqResponse = NULL;
+        pmicHandle->criticalSectionStart = NULL;
+        pmicHandle->criticalSectionStop = NULL;
+        pmicHandle->irqResponseCallback = NULL;
     }
 
     return status;
@@ -248,12 +248,12 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (pmicHandle->commHandle == NULL)
+        if (pmicHandle->commHandle0 == NULL)
         {
             status = PMIC_ST_ERR_NULL_PARAM;
         }
         else if ((pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
-                 (pmicHandle->critSecStart == NULL) || (pmicHandle->critSecStop == NULL))
+                 (pmicHandle->criticalSectionStart == NULL) || (pmicHandle->criticalSectionStop == NULL))
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }

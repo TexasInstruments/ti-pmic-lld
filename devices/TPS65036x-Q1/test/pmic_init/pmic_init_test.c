@@ -105,13 +105,13 @@ void pmic_init_test(void *args)
 
 static void pmicInitTest_initPmicCfg(Pmic_CoreCfg_t *pmicCfg)
 {
-    pmicCfg->i2cAddr = 0x60U;
-    pmicCfg->commHandle = platform_getCommHandle();
+    pmicCfg->i2cAddr0 = 0x60U;
+    pmicCfg->commHandle0 = platform_getCommHandle();
     pmicCfg->ioRead = &platform_rxByte;
     pmicCfg->ioWrite = &platform_txByte;
-    pmicCfg->critSecStart = &platform_critSecStart;
-    pmicCfg->critSecStop = &platform_critSecStop;
-    pmicCfg->irqResponse = &platform_irqResponse;
+    pmicCfg->criticalSectionStart = &platform_critSecStart;
+    pmicCfg->criticalSectionStop = &platform_critSecStop;
+    pmicCfg->irqResponseCallback = &platform_irqResponse;
 }
 
 void test_negative_Pmic_init_nullParam_pmicHandle(void)
@@ -135,16 +135,16 @@ static void pmicInitTest_nullParamPmicInit(const char *param)
     Pmic_CoreCfg_t pmicCfg = {0U};
     pmicInitTest_initPmicCfg(&pmicCfg);
 
-    if (strcmp(param, "commHandle") == 0U) {
-        pmicCfg.commHandle = NULL;
+    if (strcmp(param, "commHandle0") == 0U) {
+        pmicCfg.commHandle0 = NULL;
     } else if (strcmp(param, "ioRead") == 0U) {
         pmicCfg.ioRead = NULL;
     } else if (strcmp(param, "ioWrite") == 0U) {
         pmicCfg.ioWrite = NULL;
-    } else if (strcmp(param, "critSecStart") == 0U) {
-        pmicCfg.critSecStart = NULL;
-    } else if (strcmp(param, "critSecStop") == 0U) {
-        pmicCfg.critSecStop = NULL;
+    } else if (strcmp(param, "criticalSectionStart") == 0U) {
+        pmicCfg.criticalSectionStart = NULL;
+    } else if (strcmp(param, "criticalSectionStop") == 0U) {
+        pmicCfg.criticalSectionStop = NULL;
     } else {
         PLATFORM_ASSERT(0U);
     }
@@ -155,8 +155,8 @@ static void pmicInitTest_nullParamPmicInit(const char *param)
 
 void test_negative_Pmic_init_nullParam_pmicCfg_commHandle(void)
 {
-    // Pass NULL commHandle into Pmic_init()
-    pmicInitTest_nullParamPmicInit("commHandle");
+    // Pass NULL commHandle0 into Pmic_init()
+    pmicInitTest_nullParamPmicInit("commHandle0");
 }
 
 void test_negative_Pmic_init_nullParam_pmicCfg_ioRead(void)
@@ -173,14 +173,14 @@ void test_negative_Pmic_init_nullParam_pmicCfg_ioWrite(void)
 
 void test_negative_Pmic_init_nullParam_pmicCfg_critSecStart(void)
 {
-    // Pass NULL critSecStart into Pmic_init()
-    pmicInitTest_nullParamPmicInit("critSecStart");
+    // Pass NULL criticalSectionStart into Pmic_init()
+    pmicInitTest_nullParamPmicInit("criticalSectionStart");
 }
 
 void test_negative_Pmic_init_nullParam_pmicCfg_critSecStop(void)
 {
-    // Pass NULL critSecStop into Pmic_init()
-    pmicInitTest_nullParamPmicInit("critSecStop");
+    // Pass NULL criticalSectionStop into Pmic_init()
+    pmicInitTest_nullParamPmicInit("criticalSectionStop");
 }
 
 void test_negative_Pmic_deinit_nullParam_pmicHandle(void)
@@ -205,18 +205,18 @@ void test_positive_Pmic_deinit(void)
     int32_t status = Pmic_deinit(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(pmicHandle.drvInitStat == 0U);
-    PLATFORM_ASSERT(pmicHandle.i2cAddr == 0U);
+    PLATFORM_ASSERT(pmicHandle.i2cAddr0 == 0U);
     PLATFORM_ASSERT(pmicHandle.devRev == 0U);
     PLATFORM_ASSERT(pmicHandle.nvmCode == 0U);
     PLATFORM_ASSERT(pmicHandle.nvmRev == 0U);
-    PLATFORM_ASSERT(pmicHandle.siliconRev == 0U);
+    PLATFORM_ASSERT(pmicHandle.devSiRev == 0U);
     PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
-    PLATFORM_ASSERT(pmicHandle.commHandle == NULL);
+    PLATFORM_ASSERT(pmicHandle.commHandle0 == NULL);
     PLATFORM_ASSERT(pmicHandle.ioRead == NULL);
     PLATFORM_ASSERT(pmicHandle.ioWrite == NULL);
-    PLATFORM_ASSERT(pmicHandle.critSecStart == NULL);
-    PLATFORM_ASSERT(pmicHandle.critSecStop == NULL);
-    PLATFORM_ASSERT(pmicHandle.irqResponse == NULL);
+    PLATFORM_ASSERT(pmicHandle.criticalSectionStart == NULL);
+    PLATFORM_ASSERT(pmicHandle.criticalSectionStop == NULL);
+    PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
 /**

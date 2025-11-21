@@ -115,7 +115,7 @@ extern "C" {
  * the value comes out to be decimal value 1347242307, hex value 0x504D4943. When
  * converting to ASCII, the value reads "PMIC".
  *
- * @param i2cAddr PMIC device I2C address.
+ * @param i2cAddr0 PMIC device I2C address.
  *
  * @param devRev PMIC device revision identifier.
  *
@@ -124,7 +124,7 @@ extern "C" {
  *
  * @param nvmRev NVM revision of the IC.
  *
- * @param siliconRev PMIC silicon revision identifier. SILICON_REV[7:6] - Reserved.
+ * @param devSiRev PMIC silicon revision identifier. SILICON_REV[7:6] - Reserved.
  * SILICON_REV[5:3] - ALR. SILICON_REV[2:0] - Metal.
  *
  * @param isA0 Indication of whether the PMIC device silicon revision is A0.
@@ -132,30 +132,30 @@ extern "C" {
  * @param crcEnable Indication of whether PMIC CRC is enabled. Used by LLD to determine
  * whether to calculate CRC during communication with PMIC.
  *
- * @param commHandle Pointer to platform-specific transport layer communication handle.
+ * @param commHandle0 Pointer to platform-specific transport layer communication handle.
  *
  * @param ioRead Function pointer to platform-specific transport layer read API.
  *
  * @param ioWrite Function pointer to platform-specific transport layer write API.
  *
- * @param critSecStart Function pointer to platform-specific critical section start API.
+ * @param criticalSectionStart Function pointer to platform-specific critical section start API.
  *
- * @param critSecStop Function pointer to platform-specific critical section stop API.
+ * @param criticalSectionStop Function pointer to platform-specific critical section stop API.
  *
- * @param irqResponse Function pointer to application IRQ response. Valid only when
+ * @param irqResponseCallback Function pointer to application IRQ response. Valid only when
  * servicing the PMIC WDG in Q&A mode.
  */
 typedef struct Pmic_CoreHandle_s
 {
     uint32_t drvInitStat;
-    uint8_t i2cAddr;
+    uint8_t i2cAddr0;
     uint8_t devRev;
     uint8_t nvmCode;
     uint8_t nvmRev;
-    uint8_t siliconRev;
+    uint8_t devSiRev;
     bool isA0;
     bool crcEnable;
-    void *commHandle;
+    void *commHandle0;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,
                       uint8_t regAddr,
                       uint8_t bufLen,
@@ -164,9 +164,9 @@ typedef struct Pmic_CoreHandle_s
                        uint8_t regAddr,
                        uint8_t bufLen,
                        const uint8_t *txBuf);
-    void (*critSecStart)(void);
-    void (*critSecStop)(void);
-    void (*irqResponse)(void);
+    void (*criticalSectionStart)(void);
+    void (*criticalSectionStop)(void);
+    void (*irqResponseCallback)(void);
 } Pmic_Handle_t;
 
 /*==========================================================================  */
@@ -225,9 +225,9 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
  */
 static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *pmicHandle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->critSecStart != NULL))
+    if ((pmicHandle != NULL) && (pmicHandle->criticalSectionStart != NULL))
     {
-        pmicHandle->critSecStart();
+        pmicHandle->criticalSectionStart();
     }
 }
 
@@ -244,9 +244,9 @@ static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *pmicHandle)
  */
 static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *pmicHandle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->critSecStop != NULL))
+    if ((pmicHandle != NULL) && (pmicHandle->criticalSectionStop != NULL))
     {
-        pmicHandle->critSecStop();
+        pmicHandle->criticalSectionStop();
     }
 }
 
@@ -262,9 +262,9 @@ static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *pmicHandle)
  */
 static inline void Pmic_irqResponseCallback(const Pmic_Handle_t *pmicHandle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->irqResponse != NULL))
+    if ((pmicHandle != NULL) && (pmicHandle->irqResponseCallback != NULL))
     {
-        pmicHandle->irqResponse();
+        pmicHandle->irqResponseCallback();
     }
 }
 

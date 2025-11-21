@@ -128,7 +128,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL))
+    if ((pmicHandle == NULL) || (pmicHandle->commHandle0 == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -148,7 +148,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) << 1U);
+        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr0 & 0x7FU) << 1U);
         i2cFrame[1U] = regAddr;
         i2cFrame[2U] = txData;
         i2cFrameLen = 3U;
@@ -184,7 +184,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL) || (rxData == NULL))
+    if ((pmicHandle == NULL) || (pmicHandle->commHandle0 == NULL) || (rxData == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -204,9 +204,9 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) << 1U);
+        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr0 & 0x7FU) << 1U);
         i2cFrame[1U] = regAddr;
-        i2cFrame[2U] = (uint8_t)(((pmicHandle->i2cAddr & 0x7FU) << 1U) | 1U);
+        i2cFrame[2U] = (uint8_t)(((pmicHandle->i2cAddr0 & 0x7FU) << 1U) | 1U);
         i2cFrameLen = (pmicHandle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]

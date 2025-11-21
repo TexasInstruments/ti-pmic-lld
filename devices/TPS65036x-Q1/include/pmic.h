@@ -93,32 +93,32 @@ extern "C" {
  * @brief Configuration struct holding end-user settings/parameters relating to
  * the PMIC handle.
  *
- * @attention All parameters of the struct except `irqResponse` must be set by the
+ * @attention All parameters of the struct except `irqResponseCallback` must be set by the
  * end-user. Otherwise, an error may occur during the Pmic_init() API call.
  *
  * @note Once the user sets all struct members, the struct should be passed into
  * Pmic_init() so that the PMIC driver handle can be initialized with the user's
  * desired configurations.
  *
- * @param i2cAddr TPS65036x PMIC I2C address.
+ * @param i2cAddr0 TPS65036x PMIC I2C address.
  *
- * @param commHandle Pointer to platform-specific transport layer communication handle.
+ * @param commHandle0 Pointer to platform-specific transport layer communication handle.
  *
  * @param ioRead Function pointer to platform-specific transport layer read API.
  *
  * @param ioWrite Function pointer to platform-specific transport layer write API.
  *
- * @param critSecStart Function pointer to platform-specific critical section start API.
+ * @param criticalSectionStart Function pointer to platform-specific critical section start API.
  *
- * @param critSecStop Function pointer to platform-specific critical section stop API.
+ * @param criticalSectionStop Function pointer to platform-specific critical section stop API.
  *
- * @param irqResponse Function pointer to application IRQ response. Valid only when
+ * @param irqResponseCallback Function pointer to application IRQ response. Valid only when
  * servicing the PMIC WDG in Q&A mode.
  */
 typedef struct Pmic_CoreCfg_s
 {
-    uint8_t i2cAddr;
-    void *commHandle;
+    uint8_t i2cAddr0;
+    void *commHandle0;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,
                       uint8_t regAddr,
                       uint8_t bufLen,
@@ -127,9 +127,9 @@ typedef struct Pmic_CoreCfg_s
                        uint8_t regAddr,
                        uint8_t bufLen,
                        const uint8_t *txBuf);
-    void (*critSecStart)(void);
-    void (*critSecStop)(void);
-    void (*irqResponse)(void);
+    void (*criticalSectionStart)(void);
+    void (*criticalSectionStop)(void);
+    void (*irqResponseCallback)(void);
 } Pmic_CoreCfg_t;
 
 /* ========================================================================== */

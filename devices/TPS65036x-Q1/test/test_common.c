@@ -100,7 +100,7 @@ void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle)
 {
     char msg[50U] = {0};
 
-    if ((pmicHandle->siliconRev & DEVICE_PG_IDENTIFER_MASK) != 0U)
+    if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFER_MASK) != 0U)
     {
         (void)sprintf(msg, "PMIC device is B1\r\n\r\n");
         platform_printString(msg);

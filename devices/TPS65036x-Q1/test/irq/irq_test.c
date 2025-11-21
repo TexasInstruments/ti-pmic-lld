@@ -201,13 +201,13 @@ void irq_test(void *args)
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicCfg = {
-        .i2cAddr = PLATFORM_TARGET_I2C_ADDR,
-        .commHandle = platform_getCommHandle(),
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
-        .critSecStart = &platform_critSecStart,
-        .critSecStop = &platform_critSecStop,
-        .irqResponse = &platform_irqResponse
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
     };
 
     platform_init();
