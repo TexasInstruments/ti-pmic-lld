@@ -48,13 +48,13 @@ inline bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
 }
 
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStart != NULL) {
+    if ((handle != NULL) && (handle->pFnPmicCritSecStart != NULL)) {
         handle->pFnPmicCritSecStart();
     }
 }
 
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStop != NULL) {
+    if ((handle != NULL) && (handle->pFnPmicCritSecStop != NULL)) {
         handle->pFnPmicCritSecStop();
     }
 }
