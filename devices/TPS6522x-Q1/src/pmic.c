@@ -287,7 +287,7 @@ static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_Handle
 
 static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
 {
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // criticalSectionStart
     if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
