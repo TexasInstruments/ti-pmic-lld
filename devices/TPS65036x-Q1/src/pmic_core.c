@@ -551,10 +551,10 @@ int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock)
 
 int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLockState(pmicHandle, PMIC_UNLOCK);
+    return Pmic_setRegLockState(pmicHandle, PMIC_LOCK);
 }
 
 int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLockState(pmicHandle, PMIC_LOCK);
+    return Pmic_setRegLockState(pmicHandle, PMIC_UNLOCK);
 }
