@@ -60,7 +60,7 @@
 /*                           Function Definitions                             */
 /* ========================================================================== */
 
-int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle)
+int32_t testCommon_clrAllPmicIrq(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
     uint8_t txBuf = 0xFFU;
@@ -83,7 +83,7 @@ int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle)
+int32_t testCommon_unlockPmicRegs(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
     uint8_t txBuf = TEST_COMMON_REGISTER_UNLOCK_KEY;
@@ -96,7 +96,7 @@ int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle)
+void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle)
 {
     char msg[50U] = {0};
 
@@ -117,7 +117,7 @@ void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle)
     }
 }
 
-int32_t testCommon_disableConfigCrc(const Pmic_CoreHandle_t *pmicHandle)
+int32_t testCommon_disableConfigCrc(const Pmic_Handle_t *pmicHandle)
 {
     const uint8_t bufLen = 0U;
     uint8_t configCrcConfigRegAddr = (pmicHandle->isA0) ? 0x61U : 0x64U;

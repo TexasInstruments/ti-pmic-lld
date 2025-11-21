@@ -44,7 +44,7 @@
 #include "regmap/irq.h"
 #include "regmap/esm.h"
 
-static int32_t ESM_setModeCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setModeCfg(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -99,7 +99,7 @@ static int32_t ESM_setModeCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Es
     return status;
 }
 
-static int32_t ESM_setDelayRegs(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setDelayRegs(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -141,7 +141,7 @@ static int32_t ESM_setDelayRegs(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
     return status;
 }
 
-static int32_t ESM_setHmaxHminRegs(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setHmaxHminRegs(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -183,7 +183,7 @@ static int32_t ESM_setHmaxHminRegs(const Pmic_CoreHandle_t *pmicHandle, const Pm
     return status;
 }
 
-static int32_t ESM_setLmaxLminRegs(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setLmaxLminRegs(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -225,7 +225,7 @@ static int32_t ESM_setLmaxLminRegs(const Pmic_CoreHandle_t *pmicHandle, const Pm
     return status;
 }
 
-int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
+int32_t Pmic_esmSetCfg(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -266,7 +266,7 @@ int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t 
     return status;
 }
 
-static int32_t ESM_readModeCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_readModeCfg(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -301,7 +301,7 @@ static int32_t ESM_readModeCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_
     return status;
 }
 
-static int32_t ESM_readDelayRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_readDelayRegs(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -333,7 +333,7 @@ static int32_t ESM_readDelayRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCf
     return status;
 }
 
-static int32_t ESM_readHmaxHminRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_readHmaxHminRegs(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -365,7 +365,7 @@ static int32_t ESM_readHmaxHminRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_Es
     return status;
 }
 
-static int32_t ESM_readLmaxLminRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_readLmaxLminRegs(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -397,7 +397,7 @@ static int32_t ESM_readLmaxLminRegs(const Pmic_CoreHandle_t *pmicHandle, Pmic_Es
     return status;
 }
 
-int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
+int32_t Pmic_esmGetCfg(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -438,7 +438,7 @@ int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCf
     return status;
 }
 
-int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start)
+int32_t Pmic_esmSetStartState(const Pmic_Handle_t *pmicHandle, bool start)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -463,17 +463,17 @@ int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start)
     return status;
 }
 
-int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_esmStart(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_esmSetStartState(pmicHandle, PMIC_ESM_START);
 }
 
-int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_esmStop(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_esmSetStartState(pmicHandle, PMIC_ESM_STOP);
 }
 
-int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start)
+int32_t Pmic_esmGetStartState(const Pmic_Handle_t *pmicHandle, bool *start)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -498,7 +498,7 @@ int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start)
     return status;
 }
 
-int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esmStat)
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *pmicHandle, Pmic_EsmStat_t *esmStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -544,7 +544,7 @@ int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *e
     return status;
 }
 
-int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmStat_t *esmStat)
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *pmicHandle, const Pmic_EsmStat_t *esmStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -588,7 +588,7 @@ int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmSta
     return status;
 }
 
-int32_t Pmic_esmGetErrCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *errCnt)
+int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *pmicHandle, uint8_t *errCnt)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

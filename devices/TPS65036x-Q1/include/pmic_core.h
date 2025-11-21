@@ -99,7 +99,7 @@ extern "C" {
  * @anchor Pmic_drvInitVal
  * @name PMIC LLD Initialized Value
  *
- * @brief When the drvInitStat struct member of Pmic_CoreHandle_t struct type is
+ * @brief When the drvInitStat struct member of Pmic_Handle_t struct type is
  * equal to this value, the driver has been successfully initialized.
  *
  * @details The value is used to help prevent corrupt PMIC handle usage. When
@@ -273,7 +273,7 @@ typedef struct Pmic_CoreCrc16Cfg_s
  * @return Success code if the PMIC device ID has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId);
+int32_t Pmic_getDevId(const Pmic_Handle_t *pmicHandle, uint8_t *devId);
 
 /**
  * @brief Get PMIC NVM code.
@@ -290,7 +290,7 @@ int32_t Pmic_getDevId(const Pmic_CoreHandle_t *pmicHandle, uint8_t *devId);
  * @return Success code if the PMIC NVM code has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode);
+int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.
@@ -307,7 +307,7 @@ int32_t Pmic_getNvmCode(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmCode);
  * @return Success code if the PMIC NVM revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmRev);
+int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev);
 
 /**
  * @brief Get PMIC silicon revision.
@@ -323,7 +323,7 @@ int32_t Pmic_getNvmRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *nvmRev);
  * @return Success code if the PMIC silicon revision has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getSiliconRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *siliconRev);
+int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev);
 
 /**
  * @brief Unlock/lock PMIC registers.
@@ -342,7 +342,7 @@ int32_t Pmic_getSiliconRev(const Pmic_CoreHandle_t *pmicHandle, uint8_t *silicon
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock);
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *pmicHandle, bool lock);
 
 /**
  * @brief Unlock PMIC registers.
@@ -357,7 +357,7 @@ int32_t Pmic_setRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool lock);
  * @return Success code if the register unlock key has been sent to the PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_enableRegLock(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Lock PMIC registers.
@@ -372,7 +372,7 @@ int32_t Pmic_enableRegLock(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the register lock key has been sent to the PMIC, error
  * code otherwise. for valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_disableRegLock(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Get the PMIC register lock status.
@@ -390,7 +390,7 @@ int32_t Pmic_disableRegLock(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the PMIC register lock status has been read, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool *regLockStat);
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *pmicHandle, bool *regLockStat);
 
 /**
  * @brief Turn on/off the power sequence logic for regulators and other
@@ -408,7 +408,7 @@ int32_t Pmic_getRegLockState(const Pmic_CoreHandle_t *pmicHandle, bool *regLockS
  * @return Success code if the PMIC PWR_ON bit is set, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool pwrOn);
+int32_t Pmic_setPwrOn(const Pmic_Handle_t *pmicHandle, bool pwrOn);
 
 /**
  * @brief Get the status of the PMIC PWR_ON bit.
@@ -429,7 +429,7 @@ int32_t Pmic_setPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool pwrOn);
  * @return Success code if the device power on status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
+int32_t Pmic_getPwrOn(const Pmic_Handle_t *pmicHandle, bool *pwrOnStat);
 
 /**
  * @brief Set PMIC low power mode configurations.
@@ -454,7 +454,7 @@ int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
  * @return Success code if LPM configurations have been set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg);
+int32_t Pmic_setLpmCfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg);
 
 /**
  * @brief Get PMIC low power mode configurations. This API supports getting the same
@@ -471,7 +471,7 @@ int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCf
  * @return Success code if LPM configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getLpmCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCfg);
+int32_t Pmic_getLpmCfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCfg);
 
 /**
  * @brief Set PMIC CRC16 configurations.
@@ -495,7 +495,7 @@ int32_t Pmic_getLpmCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreLpmCfg_t *l
  * @return Success code if CRC16 configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreCrc16Cfg_t *crc16Cfg);
+int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreCrc16Cfg_t *crc16Cfg);
 
 /**
  * @brief Get PMIC CRC16 configurations. This "get" API supports obtaining the
@@ -512,7 +512,7 @@ int32_t Pmic_setCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreCrc
  * @return Success code if CRC16 configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreCrc16Cfg_t *crc16Cfg);
+int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreCrc16Cfg_t *crc16Cfg);
 
 /**
  * @brief Trigger run-time ABIST (analog built-in self test) on the PMIC.
@@ -526,7 +526,7 @@ int32_t Pmic_getCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreCrc16Cfg_
  * @return Success code if run-time ABIST command has been sent to PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_runABIST(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_runABIST(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Get the active status of PMIC ABIST.
@@ -543,7 +543,7 @@ int32_t Pmic_runABIST(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the ABIST status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getABISTStat(const Pmic_CoreHandle_t *pmicHandle, bool *isActive);
+int32_t Pmic_getABISTStat(const Pmic_Handle_t *pmicHandle, bool *isActive);
 
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
@@ -562,7 +562,7 @@ int32_t Pmic_getABISTStat(const Pmic_CoreHandle_t *pmicHandle, bool *isActive);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -582,7 +582,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scr
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadValue(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

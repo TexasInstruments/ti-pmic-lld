@@ -917,7 +917,7 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * @return Success code if PMIC buck configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Get PMIC buck configuration. This "get" API supports obtaining the same
@@ -933,7 +933,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBu
  * @return Success code if PMIC buck configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Set PMIC LDO configurations.
@@ -971,7 +971,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_
  * @return Success code if PMIC LDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get PMIC LDO configurations. This API supports getting the same
@@ -987,7 +987,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdo
  * @return Success code if PMIC LDO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get the statuses of a power resource (buck/LDO).
@@ -1010,7 +1010,7 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t 
  * @return Success code if PMIC power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Set PMIC thermal shutdown configurations.
@@ -1031,7 +1031,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcS
  * @return Success code if PMIC TSD configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg);
+int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg);
 
 /**
  * @brief Get PMIC thermal shutdown configurations. This API supports getting the
@@ -1047,7 +1047,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsd
  * @return Success code if PMIC TSD configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg);
+int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg);
 
 /**
  * @brief Get the PMIC immediate thermal shutdown status.
@@ -1064,7 +1064,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t 
  * @return Success code if the PMIC immediate TSD status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat);
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmStat);
 
 /**
  * @brief Set PMIC buck and LDO sequence triggers.
@@ -1084,7 +1084,7 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdIm
  * @return Success code if sequence trigger configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
+int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
 /**
  * @brief Get PMIC buck and LDO sequence triggers.
@@ -1104,7 +1104,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
  * @return Success code if sequence trigger configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
+int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
 /**
  * @brief Set buck and LDO sequence delays.
@@ -1123,7 +1123,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
  * @return Success code if sequence delay configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
+int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 
 /**
  * @brief Get buck and LDO sequence delays.
@@ -1142,7 +1142,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic
  * @return Success code if sequence delay configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
+int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 
 #ifdef __cplusplus
 }

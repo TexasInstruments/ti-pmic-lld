@@ -98,24 +98,24 @@ typedef struct Pmic_DevSubSysInfo_s {
  *
  * @param pPmic_SubSysInfo Structure used to indicate enabled/disabled subsystems.
  *
- * @param drvInitStatus Driver initialization status. Used by LLD as a measure to
+ * @param drvInitStat Driver initialization status. Used by LLD as a measure to
  * prevent corrupted handle usage.
  *
- * @param pmicDeviceType PMIC device type.
+ * @param devId PMIC device type.
  *
  * @param pmicDevRev PMIC device revision.
  *
- * @param pmicDevSiliconRev PMIC device silicon revision.
+ * @param devSiRev PMIC device silicon revision.
  *
  * @param commMode Communication mode of the PMIC. Some PMICs may only have one
  * communication mode while others could have multiple (e.g., single I2C, dual I2C,
  * SPI).
  *
- * @param slaveAddr Main PMIC device address.
+ * @param i2cAddr0 Main PMIC device address.
  *
- * @param qaSlaveAddr Address for interacting with PMIC WDG Q&A.
+ * @param i2cAddr1 Address for interacting with PMIC WDG Q&A.
  *
- * @param nvmSlaveAddr Address for interacting with PMIC NVM space.
+ * @param i2cAddr2 Address for interacting with PMIC NVM space.
  *
  * @param i2c1Speed I2C1 speed.
  *
@@ -127,49 +127,49 @@ typedef struct Pmic_DevSubSysInfo_s {
  * @param configCrcEnable Status of whether configuration CRC is enabled. Set to true
  * if enabled, false otherwise.
  *
- * @param pCommHandle Pointer to serial communication handle for the PMIC device.
+ * @param commHandle0 Pointer to serial communication handle for the PMIC device.
  *
- * @param pQACommHandle Pointer to serial communication handle for PMIC WDG.
+ * @param commHandle1 Pointer to serial communication handle for PMIC WDG.
  *
- * @param pFnPmicCommIoRd Function pointer to platform-specific serial communication
+ * @param ioRead Function pointer to platform-specific serial communication
  * read API.
  *
- * @param pFnPmicCommIoWr Function pointer to platform-specific serial communication
+ * @param ioWrite Function pointer to platform-specific serial communication
  * write API.
  *
- * @param pFnPmicCritSecStart Function pointer to OS-specific critical section start.
+ * @param criticalSectionStart Function pointer to OS-specific critical section start.
  *
- * @param pFnPmicCritSecStop Function pointer to OS-specific critical section stop.
+ * @param criticalSectionStop Function pointer to OS-specific critical section stop.
  *
  * @param irqResponseCallback Function pointer to application-specific IRQ response
  * when an IRQ is detected during WDG servicing.
  */
 typedef struct Pmic_CoreHandle_s {
     const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
-    uint32_t drvInitStatus;
-    uint8_t pmicDeviceType;
+    uint32_t drvInitStat;
+    uint8_t devId;
     uint8_t pmicDevRev;
-    uint8_t pmicDevSiliconRev;
+    uint8_t devSiRev;
     uint8_t commMode;
-    uint8_t slaveAddr;
-    uint8_t qaSlaveAddr;
-    uint8_t nvmSlaveAddr;
+    uint8_t i2cAddr0;
+    uint8_t i2cAddr1;
+    uint8_t i2cAddr2;
     uint8_t i2c1Speed;
     uint8_t i2c2Speed;
     bool crcEnable;
     bool configCrcEnable;
-    void *pCommHandle;
-    void *pQACommHandle;
-    int32_t (*pFnPmicCommIoRd)(const struct Pmic_CoreHandle_s *pmicCorehandle,
-                               uint8_t instType, uint16_t regAddr,
-                               uint8_t *pRxBuf, uint8_t bufLen);
-    int32_t (*pFnPmicCommIoWr)(const struct Pmic_CoreHandle_s *pmicCorehandle,
-                               uint8_t instType, uint16_t regAddr,
-                               uint8_t *pTxBuf, uint8_t bufLen);
-    void (*pFnPmicCritSecStart)(void);
-    void (*pFnPmicCritSecStop)(void);
+    void *commHandle0;
+    void *commHandle1;
+    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicCorehandle,
+                      uint8_t instType, uint16_t regAddr,
+                      uint8_t *pRxBuf, uint8_t bufLen);
+    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *pmicCorehandle,
+                       uint8_t instType, uint16_t regAddr,
+                       uint8_t *pTxBuf, uint8_t bufLen);
+    void (*criticalSectionStart)(void);
+    void (*criticalSectionStop)(void);
     void (*irqResponseCallback)(void);
-} Pmic_CoreHandle_t;
+} Pmic_Handle_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -225,7 +225,7 @@ bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t 
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
-void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
+void Pmic_criticalSectionStart(const Pmic_Handle_t *handle);
 
 /**
  * @brief Stop a critical section after the usage of a shared resource such as an
@@ -238,7 +238,7 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
-void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
+void Pmic_criticalSectionStop(const Pmic_Handle_t *handle);
 
 /**
  * @brief Indicate via callback function that an INT event has been detected on
@@ -250,7 +250,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
-void Pmic_irqResponseCallback(const Pmic_CoreHandle_t *handle);
+void Pmic_irqResponseCallback(const Pmic_Handle_t *handle);
 
 /**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired value.

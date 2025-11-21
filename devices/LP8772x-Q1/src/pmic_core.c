@@ -92,7 +92,7 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
     return (uint16_t)(calculatedCrc & 0xFFFFU);
 }
 
-int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -112,7 +112,7 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
     return status;
 }
 
-int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -143,7 +143,7 @@ int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
     return status;
 }
 
-int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState)
+int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState)
 {
     int32_t status = Pmic_checkHandle(handle);
     const uint8_t key = (lockState == PMIC_LOCK_ENABLE) ? PMIC_REG_LOCK : PMIC_REG_UNLOCK;
@@ -159,7 +159,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState)
     return status;
 }
 
-int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState)
+int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -186,7 +186,7 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState)
     return status;
 }
 
-int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate)
+int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -213,7 +213,7 @@ int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate)
     return status;
 }
 
-int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
+int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -233,7 +233,7 @@ int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
+int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -268,7 +268,7 @@ int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t 
     return status;
 }
 
-static int32_t CORE_configCrcValidate(Pmic_CoreHandle_t *handle)
+static int32_t CORE_configCrcValidate(Pmic_Handle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -318,7 +318,7 @@ static int32_t CORE_configCrcValidate(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle)
+int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -360,7 +360,7 @@ int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc)
+int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t crcMsb = 0U;

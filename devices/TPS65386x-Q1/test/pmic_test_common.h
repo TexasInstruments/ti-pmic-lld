@@ -85,23 +85,23 @@ void mcspi_mux_pmic(void);
 void delay(uint32_t milliseconds);
 void test_pmic_criticalSectionStartFn(void);
 void test_pmic_criticalSectionStopFn(void);
-int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
+int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
                           Pmic_CoreCfg_t     *pmicConfigData);
 static void test_pmic_SemaphoreDeInit(void);
-int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
+int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
                           uint8_t             instType,
                           uint16_t            regAddr,
                           uint8_t            *pBuf,
                           uint8_t             bufLen);
-int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
+int32_t test_pmic_regWrite(Pmic_Handle_t  *pmicCorehandle,
                            uint8_t             instType,
                            uint16_t            regAddr,
                            uint8_t            *pBuf,
                            uint8_t             bufLen);
-void test_check_lock_config_reg(Pmic_CoreHandle_t  *pmicCorehandle);
-void test_check_tmr_cnt_config_reg(Pmic_CoreHandle_t  *pmicCorehandle);
-void test_pmic_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock);
-void test_pmic_CNT_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock);
+void test_check_lock_config_reg(Pmic_Handle_t  *pmicCorehandle);
+void test_check_tmr_cnt_config_reg(Pmic_Handle_t  *pmicCorehandle);
+void test_pmic_LockUnlock(Pmic_Handle_t  *pmicCorehandle, int unlock);
+void test_pmic_CNT_LockUnlock(Pmic_Handle_t  *pmicCorehandle, int unlock);
 
 #ifdef __cplusplus
 }

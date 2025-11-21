@@ -46,18 +46,18 @@
 #include "regmap/core.h"
 
 // Forward declarations for helper functions used by static setters
-static int32_t PWR_setBuckVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckActiveVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuck2_3Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
 
-static int32_t PWR_getSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -86,7 +86,7 @@ static int32_t PWR_getSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, Pmi
     return status;
 }
 
-static int32_t PWR_getBuckVSET(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -106,7 +106,7 @@ static int32_t PWR_getBuckVSET(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuck
     return status;
 }
 
-static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -164,7 +164,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, Pm
     return status;
 }
 
-static int32_t PWR_getBuckVout(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckVout(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -196,7 +196,7 @@ static int32_t PWR_getBuckVout(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuck
     return status;
 }
 
-static int32_t PWR_getBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -252,7 +252,7 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
     return status;
 }
 
-static int32_t PWR_getBuck2_3Ctrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -309,7 +309,7 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
     return status;
 }
 
-static int32_t PWR_getBuckCtrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -341,7 +341,7 @@ static int32_t PWR_getBuckCtrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuck
     return status;
 }
 
-static int32_t PWR_getBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -403,7 +403,7 @@ static int32_t PWR_getBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
     return status;
 }
 
-static int32_t PWR_getBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -439,7 +439,7 @@ static int32_t PWR_getBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_
     return status;
 }
 
-static int32_t PWR_getBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -475,7 +475,7 @@ static int32_t PWR_getBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_P
     return status;
 }
 
-static int32_t PWR_getBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -511,7 +511,7 @@ static int32_t PWR_getBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_P
     return status;
 }
 
-static int32_t PWR_getBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -547,7 +547,7 @@ static int32_t PWR_getBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_P
     return status;
 }
 
-static int32_t PWR_getBuckFaultResponses(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckFaultResponses(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     // Get buck OVP fault response
     int32_t status = PWR_getBuckOvpResponse(pmicHandle, buckCfg);
@@ -573,7 +573,7 @@ static int32_t PWR_getBuckFaultResponses(const Pmic_CoreHandle_t *pmicHandle, Pm
     return status;
 }
 
-static int32_t PWR_getBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -611,7 +611,7 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
     return status;
 }
 
-static int32_t PWR_setSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -652,7 +652,7 @@ static int32_t PWR_setSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, con
     return status;
 }
 
-static int32_t PWR_setBuckVout(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckVout(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -684,7 +684,7 @@ static int32_t PWR_setBuckVout(const Pmic_CoreHandle_t *pmicHandle, const Pmic_P
     return status;
 }
 
-static int32_t PWR_setBuckCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -716,7 +716,7 @@ static int32_t PWR_setBuckCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_P
     return status;
 }
 
-static int32_t PWR_setBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -820,7 +820,7 @@ static int32_t PWR_setBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, const Pmi
     return status;
 }
 
-static int32_t PWR_setBuckFaultResponses(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckFaultResponses(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     // Set buck OVP fault response
      int32_t status = PWR_setBuckOvpResponse(pmicHandle, buckCfg);
@@ -846,7 +846,7 @@ static int32_t PWR_setBuckFaultResponses(const Pmic_CoreHandle_t *pmicHandle, co
     return status;
 }
 
-static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -902,7 +902,7 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
     return status;
 }
 
-int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -955,7 +955,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBu
     return status;
 }
 
-int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -1008,7 +1008,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_
     return status;
 }
 
-static int32_t PWR_setBuckVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1041,7 +1041,7 @@ static int32_t PWR_setBuckVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_P
     return status;
 }
 
-static int32_t PWR_setBuckActiveVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
@@ -1086,7 +1086,7 @@ static int32_t PWR_setBuckActiveVSET(const Pmic_CoreHandle_t *pmicHandle, const 
     return status;
 }
 
-static int32_t PWR_setBuckLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
@@ -1131,7 +1131,7 @@ static int32_t PWR_setBuckLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, const Pm
     return status;
 }
 
-static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1148,7 +1148,7 @@ static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_CoreHandle_t *pmicHandle, co
     return status;
 }
 
-static int32_t PWR_setBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1231,7 +1231,7 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
     return status;
 }
 
-static int32_t PWR_setBuck2_3Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -1312,7 +1312,7 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_CoreHandle_t *pmicHandle, const Pmi
     return status;
 }
 
-static int32_t PWR_setBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1365,7 +1365,7 @@ static int32_t PWR_setBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const
     return status;
 }
 
-static int32_t PWR_setBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1418,7 +1418,7 @@ static int32_t PWR_setBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, const 
     return status;
 }
 
-static int32_t PWR_setBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1471,7 +1471,7 @@ static int32_t PWR_setBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, const 
     return status;
 }
 
-static int32_t PWR_setBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1524,7 +1524,7 @@ static int32_t PWR_setBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, const 
     return status;
 }
 
-static int32_t PWR_getLdoConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1553,7 +1553,7 @@ static int32_t PWR_getLdoConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCf
     return status;
 }
 
-static int32_t PWR_getLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1595,7 +1595,7 @@ static int32_t PWR_getLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCf
     return status;
 }
 
-static int32_t PWR_getLdoMonConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1644,7 +1644,7 @@ static int32_t PWR_getLdoMonConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLd
     return status;
 }
 
-static int32_t PWR_getLdoOvpResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1664,7 +1664,7 @@ static int32_t PWR_getLdoOvpResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_P
     return status;
 }
 
-static int32_t PWR_getLdoOvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1684,7 +1684,7 @@ static int32_t PWR_getLdoOvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_Pw
     return status;
 }
 
-static int32_t PWR_getLdoUvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1704,7 +1704,7 @@ static int32_t PWR_getLdoUvResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_Pw
     return status;
 }
 
-static int32_t PWR_getLdoScResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1724,7 +1724,7 @@ static int32_t PWR_getLdoScResponse(const Pmic_CoreHandle_t *pmicHandle, Pmic_Pw
     return status;
 }
 
-static int32_t PWR_getLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoFaultResponses(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     // Get LDO OVP response
     int32_t status = PWR_getLdoOvpResponse(pmicHandle, ldoCfg);
@@ -1750,7 +1750,7 @@ static int32_t PWR_getLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, Pmi
     return status;
 }
 
-int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -1791,7 +1791,7 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t 
     return status;
 }
 
-static int32_t PWR_setLdoConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1840,7 +1840,7 @@ static int32_t PWR_setLdoConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Pw
     return status;
 }
 
-static int32_t PWR_setLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1894,7 +1894,7 @@ static int32_t PWR_setLdoCtrl(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Pw
     return status;
 }
 
-static int32_t PWR_setLdoMonConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1983,7 +1983,7 @@ static int32_t PWR_setLdoMonConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic
     return status;
 }
 
-static int32_t PWR_setLdoOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2018,7 +2018,7 @@ static int32_t PWR_setLdoOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const 
     return status;
 }
 
-static int32_t PWR_setLdoOvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2053,7 +2053,7 @@ static int32_t PWR_setLdoOvResponse(const Pmic_CoreHandle_t *pmicHandle, const P
     return status;
 }
 
-static int32_t PWR_setLdoUvResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2088,7 +2088,7 @@ static int32_t PWR_setLdoUvResponse(const Pmic_CoreHandle_t *pmicHandle, const P
     return status;
 }
 
-static int32_t PWR_setLdoScResponse(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2123,7 +2123,7 @@ static int32_t PWR_setLdoScResponse(const Pmic_CoreHandle_t *pmicHandle, const P
     return status;
 }
 
-static int32_t PWR_setLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoFaultResponses(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     // Set LDO OVP response
     int32_t status = PWR_setLdoOvpResponse(pmicHandle, ldoCfg);
@@ -2149,7 +2149,7 @@ static int32_t PWR_setLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, con
     return status;
 }
 
-int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -2190,7 +2190,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdo
     return status;
 }
 
-static int32_t PWR_getStatStartup(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatStartup(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2224,7 +2224,7 @@ static int32_t PWR_getStatStartup(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrR
     return status;
 }
 
-static int32_t PWR_getStatBuck1_2(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2261,7 +2261,7 @@ static int32_t PWR_getStatBuck1_2(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrR
     return status;
 }
 
-static int32_t PWR_getStatBuck3Ldo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2298,7 +2298,7 @@ static int32_t PWR_getStatBuck3Ldo(const Pmic_CoreHandle_t *pmicHandle, Pmic_Pwr
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -2335,7 +2335,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcS
     return status;
 }
 
-int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg)
+int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -2401,7 +2401,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsd
     return status;
 }
 
-int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg)
+int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -2448,7 +2448,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t 
     return status;
 }
 
-int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat)
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -2510,7 +2510,7 @@ static inline void PWR_getSeqTrigReg(uint8_t pwrRsrc, uint8_t *regAddr)
     }
 }
 
-int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
+int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
@@ -2571,7 +2571,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
     return status;
 }
 
-int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
+int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
@@ -2665,7 +2665,7 @@ static inline void PWR_getSeqDlyReg(uint8_t pwrRsrc, uint8_t *regAddr)
     }
 }
 
-int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
+int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -2721,7 +2721,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBu
     return status;
 }
 
-int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
+int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

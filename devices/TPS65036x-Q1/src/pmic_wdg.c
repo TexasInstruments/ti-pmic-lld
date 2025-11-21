@@ -105,7 +105,7 @@ static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaF
     return qaAns;
 }
 
-static int32_t WDG_setOtherCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_setOtherCfg(const Pmic_Handle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -168,7 +168,7 @@ static int32_t WDG_setOtherCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_W
     return status;
 }
 
-static int32_t WDG_setQaCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_setQaCfg(const Pmic_Handle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -229,7 +229,7 @@ static int32_t WDG_setQaCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgC
     return status;
 }
 
-static int32_t WDG_setThresholds(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_setThresholds(const Pmic_Handle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -277,7 +277,7 @@ static int32_t WDG_setThresholds(const Pmic_CoreHandle_t *pmicHandle, const Pmic
     return status;
 }
 
-static int32_t WDG_setWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_setWindowTimeIntervals(const Pmic_Handle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -345,7 +345,7 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, c
     return status;
 }
 
-static int32_t WDG_getOtherCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_getOtherCfg(const Pmic_Handle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -386,7 +386,7 @@ static int32_t WDG_getOtherCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_
     return status;
 }
 
-static int32_t WDG_getQaCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_getQaCfg(const Pmic_Handle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -421,7 +421,7 @@ static int32_t WDG_getQaCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *
     return status;
 }
 
-static int32_t WDG_getThresholds(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_getThresholds(const Pmic_Handle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -450,7 +450,7 @@ static int32_t WDG_getThresholds(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCf
     return status;
 }
 
-static int32_t WDG_getWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_getWindowTimeIntervals(const Pmic_Handle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -501,7 +501,7 @@ static int32_t WDG_getWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, P
 /*                         Public API Functions                             */
 /*==========================================================================*/
 
-int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
+int32_t Pmic_wdgSetEnableState(const Pmic_Handle_t *pmicHandle, bool enable)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -525,17 +525,17 @@ int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
     return status;
 }
 
-int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgEnable(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_wdgSetEnableState(pmicHandle, PMIC_ENABLE);
 }
 
-int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgDisable(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_wdgSetEnableState(pmicHandle, PMIC_DISABLE);
 }
 
-int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
+int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *pmicHandle, bool *wdgEnabled)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -560,7 +560,7 @@ int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEna
     return status;
 }
 
-int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
+int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -601,7 +601,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t 
     return status;
 }
 
-int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
+int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -642,7 +642,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCf
     return status;
 }
 
-int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
+int32_t Pmic_wdgSetPowerHold(const Pmic_Handle_t *pmicHandle, bool pwrHold)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -666,7 +666,7 @@ int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
     return status;
 }
 
-int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat)
+int32_t Pmic_wdgGetPowerHold(const Pmic_Handle_t *pmicHandle, bool *pwrHoldStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -691,7 +691,7 @@ int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldS
     return status;
 }
 
-int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin)
+int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_Handle_t *pmicHandle, bool retLongWin)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -715,7 +715,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool 
     return status;
 }
 
-int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat)
+int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *pmicHandle, bool *retLongWinStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -740,7 +740,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool 
     return status;
 }
 
-int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgSendSwTrigger(const Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -764,7 +764,7 @@ int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U, intTopStatus = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -810,7 +810,7 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -877,7 +877,7 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Wdg
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -890,7 +890,7 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_wdgGetErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -959,7 +959,7 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrSta
     return status;
 }
 
-int32_t Pmic_wdgGetFailCntStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat)
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

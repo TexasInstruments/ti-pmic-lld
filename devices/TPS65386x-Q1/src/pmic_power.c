@@ -118,7 +118,7 @@ static inline uint8_t PWR_getRsrcId(uint16_t pwrRsrc)
 }
 
 // Set Buck Boost spread spectrum enable, voltage level, standby voltage level, and PGOOD CFG
-static int32_t PWR_setBbSsEnLvlPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_setBbSsEnLvlPGoodCfg(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -176,7 +176,7 @@ static int32_t PWR_setBbSsEnLvlPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_Pw
 }
 
 // Set Buck Boost VMON threshold and boost timeout
-static int32_t PWR_setBbVmonThrBstTmo(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_setBbVmonThrBstTmo(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -222,7 +222,7 @@ static int32_t PWR_setBbVmonThrBstTmo(Pmic_CoreHandle_t *handle, const Pmic_PwrB
 }
 
 // Set Buck Boost VMON deglitch
-static int32_t PWR_setBbVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_setBbVmonDgl(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -249,7 +249,7 @@ static int32_t PWR_setBbVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoo
     return status;
 }
 
-int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+int32_t Pmic_pwrSetBuckBoostCfg(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -291,7 +291,7 @@ int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoo
 }
 
 // Get Buck Boost spread spectrum enable, voltage level, standby voltage level, and PGOOD CFG
-static int32_t PWR_getBbSsEnLvlPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_getBbSsEnLvlPGoodCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -330,7 +330,7 @@ static int32_t PWR_getBbSsEnLvlPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckB
 }
 
 // Get Buck Boost VMON threshold and boost timeout
-static int32_t PWR_getBbVmonThrBstTmo(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_getBbVmonThrBstTmo(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -357,7 +357,7 @@ static int32_t PWR_getBbVmonThrBstTmo(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoo
 }
 
 // Get Buck Boost VMON deglitch
-static int32_t PWR_getBbVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+static int32_t PWR_getBbVmonDgl(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -374,7 +374,7 @@ static int32_t PWR_getBbVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_
     return status;
 }
 
-int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
+int32_t Pmic_pwrGetBuckBoostCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -415,7 +415,7 @@ int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_
 }
 
 // Set LDO ramp time, voltage level, and current limit level
-static int32_t PWR_setLdoRtLvlIlimLvl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoRtLvlIlimLvl(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -477,7 +477,7 @@ static int32_t PWR_setLdoRtLvlIlimLvl(Pmic_CoreHandle_t *handle, const Pmic_PwrL
 }
 
 // Set LDO mode
-static int32_t PWR_setLdoMode(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoMode(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -509,7 +509,7 @@ static int32_t PWR_setLdoMode(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t 
 }
 
 // Set LDO PGOOD CFG
-static int32_t PWR_setLdoPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoPGoodCfg(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -533,7 +533,7 @@ static int32_t PWR_setLdoPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCf
 }
 
 // Set LDO VMON threshold
-static int32_t PWR_setLdoVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoVmonThr(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -565,7 +565,7 @@ static int32_t PWR_setLdoVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg
 }
 
 // Set LDO VMON deglitch
-static int32_t PWR_setLdoVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoVmonDgl(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -597,7 +597,7 @@ static int32_t PWR_setLdoVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg
 }
 
 // Set LDO discharge
-static int32_t PWR_setLdoDischargeDisable(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoDischargeDisable(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -621,7 +621,7 @@ static int32_t PWR_setLdoDischargeDisable(Pmic_CoreHandle_t *handle, const Pmic_
 }
 
 // Set LDO ILIM deglitch
-static int32_t PWR_setLdoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoIlimDgl(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -652,7 +652,7 @@ static int32_t PWR_setLdoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg
     return status;
 }
 
-int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrSetLdoCfg(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -715,7 +715,7 @@ int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldo
 }
 
 // Get LDO ramp time, voltage level, and current limit level
-static int32_t PWR_getLdoRtLvlIlimLvl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoRtLvlIlimLvl(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -751,7 +751,7 @@ static int32_t PWR_getLdoRtLvlIlimLvl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_
 }
 
 // Get LDO mode
-static int32_t PWR_getLdoMode(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoMode(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -773,7 +773,7 @@ static int32_t PWR_getLdoMode(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCf
 }
 
 // Get LDO PGOOD CFG
-static int32_t PWR_getLdoPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoPGoodCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -794,7 +794,7 @@ static int32_t PWR_getLdoPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *l
 }
 
 // Get LDO VMON threshold
-static int32_t PWR_getLdoVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoVmonThr(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -816,7 +816,7 @@ static int32_t PWR_getLdoVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ld
 }
 
 // Get LDO VMON deglitch
-static int32_t PWR_getLdoVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoVmonDgl(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -838,7 +838,7 @@ static int32_t PWR_getLdoVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ld
 }
 
 // Get LDO discharge
-static int32_t PWR_getLdoDischargeDisable(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoDischargeDisable(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -859,7 +859,7 @@ static int32_t PWR_getLdoDischargeDisable(Pmic_CoreHandle_t *handle, Pmic_PwrLdo
 }
 
 // Get LDO ILIM deglitch
-static int32_t PWR_getLdoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoIlimDgl(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -880,7 +880,7 @@ static int32_t PWR_getLdoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ld
     return status;
 }
 
-int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrGetLdoCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -943,7 +943,7 @@ int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 }
 
 // Set PLDO tracking mode configuration, voltage level, and ILIM level
-static int32_t PWR_setPldoTrackingModeLvlIlimLvl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoTrackingModeLvlIlimLvl(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -996,7 +996,7 @@ static int32_t PWR_setPldoTrackingModeLvlIlimLvl(Pmic_CoreHandle_t *handle, cons
 }
 
 // Set PLDO ramp time and VTRACK range
-static int32_t PWR_setPldoRtVTrackRange(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoRtVTrackRange(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1054,7 +1054,7 @@ static int32_t PWR_setPldoRtVTrackRange(Pmic_CoreHandle_t *handle, const Pmic_Pw
 }
 
 // Set PLDO PGOOD CFG
-static int32_t PWR_setPldoPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoPGoodCfg(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -1077,7 +1077,7 @@ static int32_t PWR_setPldoPGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldo
 }
 
 // Set PLDO mode
-static int32_t PWR_setPldoMode(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoMode(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1129,7 +1129,7 @@ static int32_t PWR_setPldoMode(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_
 }
 
 // set PLDO discharge
-static int32_t PWR_setPldoDischarge(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoDischarge(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -1152,7 +1152,7 @@ static int32_t PWR_setPldoDischarge(Pmic_CoreHandle_t *handle, const Pmic_PwrPld
 }
 
 // Set PLDO VMON threshold
-static int32_t PWR_setPldoVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoVmonThr(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1197,7 +1197,7 @@ static int32_t PWR_setPldoVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoC
 }
 
 // Set PLDO VMON deglitch
-static int32_t PWR_setPldoVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoVmonDgl(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1242,7 +1242,7 @@ static int32_t PWR_setPldoVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoC
 }
 
 // Set PLDO ILIM deglitch
-static int32_t PWR_setPldoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_setPldoIlimDgl(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1286,7 +1286,7 @@ static int32_t PWR_setPldoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoC
     return status;
 }
 
-int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+int32_t Pmic_pwrSetPldoCfg(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1357,7 +1357,7 @@ int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *p
 }
 
 // Get PLDO tracking mode configuration, voltage level, and ILIM level
-static int32_t PWR_getPldoTrackingModeLvlIlimLvl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoTrackingModeLvlIlimLvl(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1391,7 +1391,7 @@ static int32_t PWR_getPldoTrackingModeLvlIlimLvl(Pmic_CoreHandle_t *handle, Pmic
 }
 
 // Get PLDO ramp time and VTRACK range
-static int32_t PWR_getPldoRtVTrackRange(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoRtVTrackRange(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1428,7 +1428,7 @@ static int32_t PWR_getPldoRtVTrackRange(Pmic_CoreHandle_t *handle, Pmic_PwrPldoC
 }
 
 // Get PLDO PGOOD CFG
-static int32_t PWR_getPldoPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoPGoodCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -1447,7 +1447,7 @@ static int32_t PWR_getPldoPGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t 
 }
 
 // Get PLDO mode
-static int32_t PWR_getPldoMode(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoMode(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1481,7 +1481,7 @@ static int32_t PWR_getPldoMode(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pld
 }
 
 // Get PLDO discharge
-static int32_t PWR_getPldoDischarge(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoDischarge(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -1500,7 +1500,7 @@ static int32_t PWR_getPldoDischarge(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t
 }
 
 // Get PLDO VMON threshold
-static int32_t PWR_getPldoVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoVmonThr(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1528,7 +1528,7 @@ static int32_t PWR_getPldoVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *
 }
 
 // Get PLDO VMON deglitch
-static int32_t PWR_getPldoVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoVmonDgl(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1556,7 +1556,7 @@ static int32_t PWR_getPldoVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *
 }
 
 // Get PLDO ILIM deglitch
-static int32_t PWR_getPldoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_getPldoIlimDgl(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1583,7 +1583,7 @@ static int32_t PWR_getPldoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *
     return status;
 }
 
-int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
+int32_t Pmic_pwrGetPldoCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1654,7 +1654,7 @@ int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg
 }
 
 // Set external VMON mode and PGOOD CFG
-static int32_t PWR_setExtVmonModePGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_setExtVmonModePGoodCfg(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1708,7 +1708,7 @@ static int32_t PWR_setExtVmonModePGoodCfg(Pmic_CoreHandle_t *handle, const Pmic_
 }
 
 // Set external VMON threshold
-static int32_t PWR_setExtVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_setExtVmonThr(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, vmonThCfgReg = 0U, shift = 0U, mask = 0U;
@@ -1751,7 +1751,7 @@ static int32_t PWR_setExtVmonThr(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmo
 }
 
 // Set external VMON deglitch
-static int32_t PWR_setExtVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_setExtVmonDgl(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1791,7 +1791,7 @@ static int32_t PWR_setExtVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmo
     return status;
 }
 
-int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
+int32_t Pmic_pwrSetExtVmonCfg(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1829,7 +1829,7 @@ int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCf
 }
 
 // Get external VMON mode and PGOOD CFG
-static int32_t PWR_getExtVmonModePGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_getExtVmonModePGoodCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1869,7 +1869,7 @@ static int32_t PWR_getExtVmonModePGoodCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExt
 }
 
 // Get external VMON threshold
-static int32_t PWR_getExtVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_getExtVmonThr(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, vmonThrCfgReg = 0U, shift = 0U, mask = 0U;
@@ -1901,7 +1901,7 @@ static int32_t PWR_getExtVmonThr(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t
 }
 
 // Get external VMON deglitch
-static int32_t PWR_getExtVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
+static int32_t PWR_getExtVmonDgl(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
@@ -1930,7 +1930,7 @@ static int32_t PWR_getExtVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t
     return status;
 }
 
-int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
+int32_t Pmic_pwrGetExtVmonCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1966,7 +1966,7 @@ int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *e
     return status;
 }
 
-static int32_t PWR_getBbStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getBbStat(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -2059,7 +2059,7 @@ static int32_t PWR_getBbStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrR
     return status;
 }
 
-static int32_t PWR_getLdoStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getLdoStat(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2144,7 +2144,7 @@ static int32_t PWR_getLdoStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwr
     return status;
 }
 
-static int32_t PWR_getPldoStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getPldoStat(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2229,7 +2229,7 @@ static int32_t PWR_getPldoStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pw
     return status;
 }
 
-static int32_t PWR_getExtVmonStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getExtVmonStat(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2279,7 +2279,7 @@ static int32_t PWR_getExtVmonStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t 
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -2323,7 +2323,7 @@ int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwr
     return status;
 }
 
-static int32_t PWR_clrBbStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrBbStat(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -2395,7 +2395,7 @@ static int32_t PWR_clrBbStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t
     return status;
 }
 
-static int32_t PWR_clrLdoStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrLdoStat(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2475,7 +2475,7 @@ static int32_t PWR_clrLdoStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_
     return status;
 }
 
-static int32_t PWR_clrPldoStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrPldoStat(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2544,7 +2544,7 @@ static int32_t PWR_clrPldoStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat
     return status;
 }
 
-static int32_t PWR_clrExtVmonStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrExtVmonStat(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2592,7 +2592,7 @@ static int32_t PWR_clrExtVmonStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcS
     return status;
 }
 
-int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrClrRsrcStatus(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -2636,7 +2636,7 @@ int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_
     return status;
 }
 
-int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle)
+int32_t Pmic_pwrClrRsrcStatusAll(Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -2654,7 +2654,7 @@ int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable)
+int32_t Pmic_pwrSetPGoodInStby(Pmic_Handle_t *handle, bool enable)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -2677,7 +2677,7 @@ int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable)
     return status;
 }
 
-int32_t Pmic_pwrGetPGoodInStby(Pmic_CoreHandle_t *handle, bool *isEnabled)
+int32_t Pmic_pwrGetPGoodInStby(Pmic_Handle_t *handle, bool *isEnabled)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;

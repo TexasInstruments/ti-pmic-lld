@@ -286,7 +286,7 @@ int32_t platform_txByte(
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicCorehandle == NULL) || (pmicCorehandle->pCommHandle == NULL) || (pTxBuf == NULL))
+    if ((pmicCorehandle == NULL) || (pmicCorehandle->commHandle0 == NULL) || (pTxBuf == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -298,13 +298,13 @@ int32_t platform_txByte(
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = I2CStartWrite((I2cHandle_t*)(pmicCorehandle->pCommHandle), regAddr);
+        status = I2CStartWrite((I2cHandle_t*)(pmicCorehandle->commHandle0), regAddr);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = (bufLen == 1U) ? I2CSingleWrite((I2cHandle_t*)(pmicCorehandle->pCommHandle), pTxBuf) :
-                                  I2CBurstWrite((I2cHandle_t*)(pmicCorehandle->pCommHandle), bufLen, pTxBuf);
+        status = (bufLen == 1U) ? I2CSingleWrite((I2cHandle_t*)(pmicCorehandle->commHandle0), pTxBuf) :
+                                  I2CBurstWrite((I2cHandle_t*)(pmicCorehandle->commHandle0), bufLen, pTxBuf);
     }
 
     // The return code of the API I2CMasterErr() is positive when there is an I2C-related error
@@ -322,7 +322,7 @@ int32_t platform_rxByte(
     // Variable declaration/initialization
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicCorehandle == NULL) || (pmicCorehandle->pCommHandle == NULL) || (pRxBuf == NULL))
+    if ((pmicCorehandle == NULL) || (pmicCorehandle->commHandle0 == NULL) || (pRxBuf == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -334,13 +334,13 @@ int32_t platform_rxByte(
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = I2CStartRead((I2cHandle_t*)(pmicCorehandle->pCommHandle), regAddr);
+        status = I2CStartRead((I2cHandle_t*)(pmicCorehandle->commHandle0), regAddr);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = (bufLen == 1U) ? I2CSingleRead((I2cHandle_t*)(pmicCorehandle->pCommHandle), pRxBuf) :
-                                  I2CBurstRead((I2cHandle_t*)(pmicCorehandle->pCommHandle), bufLen, pRxBuf);
+        status = (bufLen == 1U) ? I2CSingleRead((I2cHandle_t*)(pmicCorehandle->commHandle0), pRxBuf) :
+                                  I2CBurstRead((I2cHandle_t*)(pmicCorehandle->commHandle0), bufLen, pRxBuf);
     }
 
     // The return code of the API I2CMasterErr() is positive when there is an I2C-related error

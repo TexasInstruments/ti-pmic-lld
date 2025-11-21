@@ -48,7 +48,7 @@
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
+static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {
     int32_t status = Pmic_checkHandle(handle);
 
     /* Check the watch dog sub-system supported by pmic device */
@@ -59,7 +59,7 @@ static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-static int32_t WDG_setWindowsTimeIntervals(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
+static int32_t WDG_setWindowsTimeIntervals(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Set wdg long window time interval */
@@ -94,7 +94,7 @@ static int32_t WDG_setWindowsTimeIntervals(Pmic_CoreHandle_t *handle, const Pmic
     return status;
 }
 
-static int32_t WDG_getLongWindowTimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getLongWindowTimeInterval(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -111,7 +111,7 @@ static int32_t WDG_getLongWindowTimeInterval(Pmic_CoreHandle_t *handle, Pmic_Wdg
     return status;
 }
 
-static int32_t WDG_getWindow1TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getWindow1TimeInterval(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -128,7 +128,7 @@ static int32_t WDG_getWindow1TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
     return status;
 }
 
-static int32_t WDG_getWindow2TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getWindow2TimeInterval(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -145,7 +145,7 @@ static int32_t WDG_getWindow2TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
     return status;
 }
 
-static int32_t WDG_getWindowsTimeIntervals(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getWindowsTimeIntervals(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Get wdg long window time interval */
@@ -164,7 +164,7 @@ static int32_t WDG_getWindowsTimeIntervals(Pmic_CoreHandle_t *handle, Pmic_WdgCf
     return status;
 }
 
-static int32_t WDG_setThresholds(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
+static int32_t WDG_setThresholds(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -201,7 +201,7 @@ static int32_t WDG_setThresholds(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t 
     return status;
 }
 
-static int32_t WDG_getThresholds(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getThresholds(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -223,7 +223,7 @@ static int32_t WDG_getThresholds(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *confi
 }
 
 /*! \brief  Function to set watchdog QA configurations */
-static int32_t WDG_setQAConfigurations(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
+static int32_t WDG_setQAConfigurations(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -269,7 +269,7 @@ static int32_t WDG_setQAConfigurations(Pmic_CoreHandle_t *handle, const Pmic_Wdg
     return status;
 }
 
-static int32_t WDG_getQAConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+static int32_t WDG_getQAConfigurations(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -295,7 +295,7 @@ static int32_t WDG_getQAConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t 
     return status;
 }
 
-static int32_t WDG_setOtherConfigurations(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config)
+static int32_t WDG_setOtherConfigurations(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -316,7 +316,7 @@ static int32_t WDG_setOtherConfigurations(Pmic_CoreHandle_t *handle, const Pmic_
     return status;
 }
 
-static int32_t WDG_getOtherConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config)
+static int32_t WDG_getOtherConfigurations(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -335,7 +335,7 @@ static int32_t WDG_getOtherConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
 /*!
  * \brief  Function to get watchdog QA answer count and question value
  */
-static int32_t WDG_getQuestionAndAnswer(Pmic_CoreHandle_t *handle, uint8_t *ansCnt, uint8_t *quesVal) {
+static int32_t WDG_getQuestionAndAnswer(Pmic_Handle_t *handle, uint8_t *ansCnt, uint8_t *quesVal) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -420,7 +420,7 @@ static uint8_t WDG_evalAnswerByte(uint8_t qaQuesCnt, uint8_t qaAnsCnt, uint8_t q
  * qaAnsCnt and qaQuesCnt Value
  */
 static int32_t WDG_qaEvalAndWriteAnswer(
-    Pmic_CoreHandle_t *handle,
+    Pmic_Handle_t *handle,
     uint8_t qaAnsCnt,
     uint8_t qaQuesCnt,
     uint8_t qaFbk)
@@ -439,15 +439,15 @@ static int32_t WDG_qaEvalAndWriteAnswer(
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgEnable(Pmic_Handle_t *handle) {
     return Pmic_wdgSetEnableState(handle, PMIC_ENABLE);
 }
 
-int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgDisable(Pmic_Handle_t *handle) {
     return Pmic_wdgSetEnableState(handle, PMIC_DISABLE);
 }
 
-int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
+int32_t Pmic_wdgSetEnableState(Pmic_Handle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
@@ -467,7 +467,7 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
     return status;
 }
 
-int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+int32_t Pmic_wdgGetEnableState(Pmic_Handle_t *handle, bool *isEnabled) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regData = 0;
 
@@ -489,7 +489,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     return status;
 }
 
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
+int32_t Pmic_wdgSetCfg(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
@@ -516,7 +516,7 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
     return status;
 }
 
-int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+int32_t Pmic_wdgGetCfg(Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
@@ -543,7 +543,7 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
     return status;
 }
 
-int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
+int32_t Pmic_wdgSetPowerHold(Pmic_Handle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
@@ -563,7 +563,7 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
     return status;
 }
 
-int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+int32_t Pmic_wdgGetPowerHold(Pmic_Handle_t *handle, bool *isEnabled) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regData = 0U;
 
@@ -587,7 +587,7 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     return status;
 }
 
-int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable) {
+int32_t Pmic_wdgSetReturnToLongWindow(Pmic_Handle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
 
@@ -607,7 +607,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable) {
     return status;
 }
 
-int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+int32_t Pmic_wdgGetReturnToLongWindow(Pmic_Handle_t *handle, bool *isEnabled) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regData = 0U;
 
@@ -629,7 +629,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
     return status;
 }
 
-int32_t Pmic_wdgGetErrStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors) {
+int32_t Pmic_wdgGetErrStatus(Pmic_Handle_t *handle, Pmic_WdgError_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
 
@@ -678,7 +678,7 @@ int32_t Pmic_wdgGetErrStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors)
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *errors) {
+int32_t Pmic_wdgClrErrStatus(Pmic_Handle_t *handle, const Pmic_WdgError_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
 
@@ -726,7 +726,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *e
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgClrErrStatusAll(Pmic_Handle_t *handle) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     // WD_ERR_STAT register is write 1 to clear, write all bits as 1 to clear.
@@ -739,7 +739,7 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
+int32_t Pmic_wdgGetFailCntStatus(Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x00U;
 
@@ -772,7 +772,7 @@ int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_
     return status;
 }
 
-int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgQaWriteAnswer(Pmic_Handle_t *handle) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     uint8_t qaAnsCnt = 0U;
@@ -800,7 +800,7 @@ int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
+int32_t Pmic_wdgGetFdbkRegData(Pmic_Handle_t *handle, uint8_t *regData) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
@@ -828,7 +828,7 @@ int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
     return status;
 }
 
-int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
+int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_Handle_t *handle, uint8_t *regData) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
@@ -842,7 +842,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
     return status;
 }
 
-int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_Handle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
@@ -862,7 +862,7 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
     return status;
 }
 
-int32_t Pmic_wdgWriteAnswer(Pmic_CoreHandle_t *handle, const Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+int32_t Pmic_wdgWriteAnswer(Pmic_Handle_t *handle, const Pmic_WdgAnsInfo_t *wdgAnsInfo) {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 

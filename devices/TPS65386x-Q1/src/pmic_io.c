@@ -118,7 +118,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t len) {
     return crc;
 }
 
-int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
+int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
@@ -148,7 +148,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
         bufLen = 4U;
 
         // User-implemented hook transmits spiBuf then overwrites spiBuf with received data
-        status = handle->pFnPmicCommIoRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+        status = handle->ioRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
 
         // Validate PCRC
         if (status == PMIC_ST_SUCCESS) {
@@ -166,7 +166,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
     return status;
 }
 
-int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
+int32_t Pmic_ioRxByte_CS(Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Validate handle before critical section
@@ -188,7 +188,7 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
     return status;
 }
 
-int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint8_t bufLen = 0U;
@@ -216,13 +216,13 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
         bufLen = 4U;
 
         // User-implemented hook transmits spiBuf
-        status = handle->pFnPmicCommIoWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+        status = handle->ioWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
     }
 
     return status;
 }
 
-int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+int32_t Pmic_ioTxByte_CS(Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData) {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Validate handle before critical section
@@ -239,7 +239,7 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
     return status;
 }
 
-int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
@@ -254,7 +254,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, 
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -265,12 +265,12 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAdd
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
     return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
-int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -281,7 +281,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAd
     return status;
 }
 
-int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {
+int32_t Pmic_ioTxWordSeq(Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Validate that `count` is within bounds of the storage type
@@ -301,7 +301,7 @@ int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t 
     return status;
 }
 
-int32_t Pmic_ioRxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count) {
+int32_t Pmic_ioRxWordSeq(Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count) {
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t value = 0U;
     uint8_t regData = 0U;

@@ -105,7 +105,7 @@ extern "C" {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t cmd);
+int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t cmd);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -127,7 +127,7 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t cmd);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr);
+int32_t Pmic_fsmSetResetCntThr(Pmic_Handle_t *handle, uint8_t resetCntThr);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -145,7 +145,7 @@ int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr);
+int32_t Pmic_fsmGetResetCntThr(Pmic_Handle_t *handle, uint8_t *resetCntThr);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -165,7 +165,7 @@ int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt);
+int32_t Pmic_fsmGetResetCnt(Pmic_Handle_t *handle, uint8_t *resetCnt);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -180,7 +180,7 @@ int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle);
+int32_t Pmic_fsmClrResetCnt(Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -203,7 +203,7 @@ int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr);
+int32_t Pmic_fsmSetRecovCntThr(Pmic_Handle_t *handle, uint8_t recovCntThr);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -221,7 +221,7 @@ int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr);
+int32_t Pmic_fsmGetRecovCntThr(Pmic_Handle_t *handle, uint8_t *recovCntThr);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -241,7 +241,7 @@ int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt);
+int32_t Pmic_fsmGetRecovCnt(Pmic_Handle_t *handle, uint8_t *recovCnt);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
@@ -256,7 +256,7 @@ int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmClrRecovCnt(Pmic_CoreHandle_t *handle);
+int32_t Pmic_fsmClrRecovCnt(Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

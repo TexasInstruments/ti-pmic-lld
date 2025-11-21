@@ -94,7 +94,7 @@ extern "C" {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData);
+int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
@@ -114,7 +114,7 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData);
+int32_t Pmic_ioTxByte_CS(Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
@@ -133,7 +133,7 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
+int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
@@ -153,7 +153,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
+int32_t Pmic_ioRxByte_CS(Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
 
 /**
  * @brief Executes a read-modify-write routine such that the target bit field is
@@ -177,7 +177,7 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
  * @brief Identical to `Pmic_ioUpdateByte()` API but starts a critical
@@ -202,7 +202,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, 
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
@@ -224,7 +224,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAdd
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Identical to `Pmic_ioUpdateByte_b()` API but starts a critical
@@ -248,7 +248,7 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
@@ -269,7 +269,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAd
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count);
+int32_t Pmic_ioTxWordSeq(Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
@@ -291,7 +291,7 @@ int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t 
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioRxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count);
+int32_t Pmic_ioRxWordSeq(Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count);
 
 #ifdef __cplusplus
 }

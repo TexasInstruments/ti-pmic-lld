@@ -518,7 +518,7 @@ typedef struct Pmic_PowerSequenceCfg_s {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool enable);
+int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool enable);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -536,7 +536,7 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool *isEnabled);
+int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -553,7 +553,7 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config);
+int32_t Pmic_pwrSetResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -570,7 +570,7 @@ int32_t Pmic_pwrSetResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResour
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config);
+int32_t Pmic_pwrGetResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -588,7 +588,7 @@ int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[]);
+int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -610,7 +610,7 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[]);
+int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -630,7 +630,7 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetSequenceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerSequenceCfg_t *config);
+int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -650,7 +650,7 @@ int32_t Pmic_pwrSetSequenceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerSequen
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_t *config);
+int32_t Pmic_pwrGetSequenceCfg(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -670,7 +670,7 @@ int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[]);
+int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -690,7 +690,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[]);
+int32_t Pmic_pwrGetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[]);
 
 #ifdef __cplusplus
 }

@@ -48,7 +48,7 @@
 /* ========================================================================== */
 
 /* Pointer to Pmic Core Handle */
-Pmic_CoreHandle_t *pPmicCoreHandle_wdg = NULL;
+Pmic_Handle_t *pPmicCoreHandle_wdg = NULL;
 
 /*!
  * @brief   Initialize the PMIC WDG configuration for testing.

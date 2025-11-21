@@ -218,12 +218,12 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-static Pmic_CoreHandle_t pmicHandle;
+static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t irqTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle);
+static int32_t irqTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 static void irqTest_setGetMaskError(uint8_t irqNum);
 static int32_t irqTest_setGetMask(uint8_t irqNum, bool shouldMask);
 
@@ -295,7 +295,7 @@ void irq_test(void *args)
     platform_deinit();
 }
 
-static int32_t irqTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle)
+static int32_t irqTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0x9BU;
     const uint8_t bufLen = 1U;

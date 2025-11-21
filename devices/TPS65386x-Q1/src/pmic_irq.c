@@ -606,7 +606,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat) {
     return (bitPos + (PMIC_NUM_BITS_IN_INTR_ELEM * index));
 }
 
-static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMask) {
+static int32_t IRQ_setMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t maskReg = 0U;
@@ -641,7 +641,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     return status;
 }
 
-static int32_t IRQ_setConfig(Pmic_CoreHandle_t *handle, uint8_t irqNum, uint8_t config) {
+static int32_t IRQ_setConfig(Pmic_Handle_t *handle, uint8_t irqNum, uint8_t config) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t configReg = 0U;
@@ -702,7 +702,7 @@ static inline int32_t IRQ_checkConfigParam(const Pmic_IrqCfg_t *irqCfg)
     return status;
 }
 
-int32_t Pmic_irqSetCfg(Pmic_CoreHandle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
+int32_t Pmic_irqSetCfg(Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
     int32_t status = Pmic_checkHandle(handle);
 
     // Parameter validation
@@ -760,7 +760,7 @@ static inline int32_t IRQ_anyConfigsForReg(uint8_t numCfgs, const Pmic_IrqCfg_t 
     return status;
 }
 
-static int32_t IRQ_handleRecordsForRegMask(Pmic_CoreHandle_t *handle,
+static int32_t IRQ_handleRecordsForRegMask(Pmic_Handle_t *handle,
                                            uint8_t numCfgs,
                                            const Pmic_IrqCfg_t *cfgs,
                                            uint16_t regAddr,
@@ -816,7 +816,7 @@ static int32_t IRQ_handleRecordsForRegMask(Pmic_CoreHandle_t *handle,
     return status;
 }
 
-static int32_t IRQ_handleRecordsForRegConfig(Pmic_CoreHandle_t *handle,
+static int32_t IRQ_handleRecordsForRegConfig(Pmic_Handle_t *handle,
                                              uint8_t numCfgs,
                                              const Pmic_IrqCfg_t *cfgs,
                                              uint16_t regAddr,
@@ -867,7 +867,7 @@ static int32_t IRQ_handleRecordsForRegConfig(Pmic_CoreHandle_t *handle,
     return status;
 }
 
-int32_t Pmic_irqSetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {
+int32_t Pmic_irqSetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t lastProcessed = 0U, totalProcessed = 0U;
 
@@ -915,7 +915,7 @@ int32_t Pmic_irqSetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, const Pmic_I
     return status;
 }
 
-static int32_t IRQ_getMaskOrConfig(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg, bool getMask)
+static int32_t IRQ_getMaskOrConfig(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg, bool getMask)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -966,7 +966,7 @@ static int32_t IRQ_getMaskOrConfig(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irq
     return status;
 }
 
-static inline int32_t IRQ_getCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
+static inline int32_t IRQ_getCfg(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     const bool getMask = (bool)true;
     const bool getConfig = (bool)false;
@@ -982,7 +982,7 @@ static inline int32_t IRQ_getCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCf
     return status;
 }
 
-int32_t Pmic_irqGetCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
+int32_t Pmic_irqGetCfg(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqCfg == NULL)) {
@@ -996,7 +996,7 @@ int32_t Pmic_irqGetCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
     return status;
 }
 
-int32_t Pmic_irqGetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *irqCfgs) {
+int32_t Pmic_irqGetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *irqCfgs) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqCfgs == NULL)) {
@@ -1014,7 +1014,7 @@ int32_t Pmic_irqGetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_
     return status;
 }
 
-static int32_t IRQ_getIrqStatForReg(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat, uint16_t regAddr) {
+static int32_t IRQ_getIrqStatForReg(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat, uint16_t regAddr) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
@@ -1043,7 +1043,7 @@ static int32_t IRQ_getIrqStatForReg(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *i
     return status;
 }
 
-int32_t Pmic_irqGetStatus(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat) {
+int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat) {
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL)) {
@@ -1088,7 +1088,7 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum) {
     return status;
 }
 
-int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag) {
+int32_t Pmic_irqGetFlag(Pmic_Handle_t *handle, uint8_t irqNum, bool *flag) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -1115,7 +1115,7 @@ int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag) {
     return status;
 }
 
-int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
+int32_t Pmic_irqClrFlag(Pmic_Handle_t *handle, uint8_t irqNum) {
     int32_t status = Pmic_checkHandle(handle);
 
     uint8_t regData = 0U;
@@ -1151,7 +1151,7 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
     return status;
 }
 
-int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_irqClrAllFlags(Pmic_Handle_t *handle) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
     uint16_t reg = 0U;

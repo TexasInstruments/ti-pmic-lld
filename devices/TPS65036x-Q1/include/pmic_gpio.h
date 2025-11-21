@@ -216,7 +216,7 @@ typedef struct Pmic_GpioCfg_s {
  * @return Success code if PMIC GPIO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioSetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Get PMIC GPIO configurations. This API supports getting the same
@@ -236,7 +236,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, co
  * @return Success code if PMIC GPIO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Activate or deactivate PMIC GPIO. This API is a superset of
@@ -258,7 +258,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pm
  * @return Success code if GPIO is activated/deactivated, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool activate);
+int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *pmicHandle, bool activate);
 
 /**
  * @brief Activate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
@@ -278,7 +278,7 @@ int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool ac
  * @return Success code if GPIO is activated, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioActivate(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_gpioActivate(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Deactivate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
@@ -298,7 +298,7 @@ int32_t Pmic_gpioActivate(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if GPIO is deactivated, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioDeactivate(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Get PMIC GPIO activation state.
@@ -318,7 +318,7 @@ int32_t Pmic_gpioDeactivate(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if GPIO activation status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioGetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool *activated);
+int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *pmicHandle, bool *activated);
 
 #ifdef __cplusplus
 }

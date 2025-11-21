@@ -72,7 +72,7 @@ in a web browser. To view the documentation, open the file at
 
 #### Driver Initialization
 
-All APIs provided by this driver expect to receive a `Pmic_CoreHandle_t` in
+All APIs provided by this driver expect to receive a `Pmic_Handle_t` in
 order to handle communication with the device. This handle should be created
 through the use of the `Pmic_CoreCfg_t` structure in `pmic.h` and the
 `Pmic_init()` API.
@@ -125,7 +125,7 @@ Within the `Pmic_CoreCfg_t` structure, these two functions are:
 
 Once the `Pmic_CoreCfg_t` structure has been initialized with the necessary
 information, the user should call `Pmic_init()` in order to convert the
-`Pmic_CoreCfg_t` into a `Pmic_CoreHandle_t` which will be used with the rest of
+`Pmic_CoreCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
 the driver APIs.
 
 A full example of what this may look like for LP8772X-Q1 is shown below:
@@ -136,7 +136,7 @@ int32_t status;
 // The handle should either be declared globally, or stored in a structure that
 // can manage access throughout the application, it will need to be re-used
 // often.
-Pmic_CoreHandle_t PmicHandle;
+Pmic_Handle_t PmicHandle;
 
 Pmic_CoreCfg_t coreCfg = {
     .validParams = (

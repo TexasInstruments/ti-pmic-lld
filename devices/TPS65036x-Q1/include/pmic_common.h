@@ -167,7 +167,7 @@ typedef struct Pmic_CoreHandle_s
     void (*critSecStart)(void);
     void (*critSecStop)(void);
     void (*irqResponse)(void);
-} Pmic_CoreHandle_t;
+} Pmic_Handle_t;
 
 /*==========================================================================  */
 /*                             Function Declarations                          */
@@ -223,7 +223,7 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-static inline void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pmicHandle)
+static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *pmicHandle)
 {
     if ((pmicHandle != NULL) && (pmicHandle->critSecStart != NULL))
     {
@@ -242,7 +242,7 @@ static inline void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pmicHandle
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-static inline void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pmicHandle)
+static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *pmicHandle)
 {
     if ((pmicHandle != NULL) && (pmicHandle->critSecStop != NULL))
     {
@@ -260,7 +260,7 @@ static inline void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pmicHandle)
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-static inline void Pmic_irqResponseCallback(const Pmic_CoreHandle_t *pmicHandle)
+static inline void Pmic_irqResponseCallback(const Pmic_Handle_t *pmicHandle)
 {
     if ((pmicHandle != NULL) && (pmicHandle->irqResponse != NULL))
     {

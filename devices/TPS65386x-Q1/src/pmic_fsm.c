@@ -60,7 +60,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
-int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state)
+int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -88,7 +88,7 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state)
     return status;
 }
 
-int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state)
+int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -130,7 +130,7 @@ int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state)
 // 2. Pmic_FsmCfg_t.stbyEn
 // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
 // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
-static int32_t FSM_setStbyCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setStbyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -186,7 +186,7 @@ static int32_t FSM_setStbyCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fs
 // Set FSM-related configurations in SAFETY_CFG register:
 // 1. Pmic_FsmCfg_t.autoBistEn
 // 2. Pmic_FsmCfg_t.pwdThr
-static int32_t FSM_setSafetyCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setSafetyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -230,7 +230,7 @@ static int32_t FSM_setSafetyCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *
 // Set FSM-related configurations in RST_MCU_CFG register:
 // 1. Pmic_FsmCfg_t.rstMcuTmo
 // 2. Pmic_FsmCfg_t.nrstExt
-static int32_t FSM_setRstMcuCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setRstMcuCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -278,7 +278,7 @@ static int32_t FSM_setRstMcuCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *
 // Set FSM-related configurations in SAFE_TMO_CFG register:
 // 1. Pmic_FsmCfg_t.safeTmo
 // 2. Pmic_FsmCfg_t.safeLockThr
-static int32_t FSM_setSafeTmoCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setSafeTmoCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -323,7 +323,7 @@ static int32_t FSM_setSafeTmoCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t 
     return status;
 }
 
-int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+int32_t Pmic_fsmSetCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -389,7 +389,7 @@ int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 // 2. Pmic_FsmCfg_t.stbyEn
 // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
 // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
-static int32_t FSM_getStbyCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getStbyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -432,7 +432,7 @@ static int32_t FSM_getStbyCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 // Get FSM-related configurations in SAFETY_CFG register:
 // 1. Pmic_FsmCfg_t.autoBistEn
 // 2. Pmic_FsmCfg_t.pwdThr
-static int32_t FSM_getSafetyCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getSafetyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -463,7 +463,7 @@ static int32_t FSM_getSafetyCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg
 // Get FSM-related configurations in RST_MCU_CFG register:
 // 1. Pmic_FsmCfg_t.rstMcuTmo
 // 2. Pmic_FsmCfg_t.nrstExt
-static int32_t FSM_getRstMcuCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getRstMcuCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -494,7 +494,7 @@ static int32_t FSM_getRstMcuCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg
 // Get FSM-related configurations in SAFE_TMO_CFG register:
 // 1. Pmic_FsmCfg_t.safeTmo
 // 2. Pmic_FsmCfg_t.safeLockThr
-static int32_t FSM_getSafeTmoCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getSafeTmoCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -522,7 +522,7 @@ static int32_t FSM_getSafeTmoCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCf
     return status;
 }
 
-int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+int32_t Pmic_fsmGetCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -583,7 +583,7 @@ int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     return status;
 }
 
-int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt)
+int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -611,7 +611,7 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt)
     return status;
 }
 
-int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt)
+int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -638,7 +638,7 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt)
     return status;
 }
 
-static int32_t FSM_setWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
+static int32_t FSM_setWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -709,7 +709,7 @@ static int32_t FSM_setWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupC
     return status;
 }
 
-int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
+int32_t Pmic_fsmSetWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -735,7 +735,7 @@ int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_
     return status;
 }
 
-static int32_t FSM_getWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
+static int32_t FSM_getWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -775,7 +775,7 @@ static int32_t FSM_getWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *
     return status;
 }
 
-int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
+int32_t Pmic_fsmGetWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -801,7 +801,7 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wak
     return status;
 }
 
-int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
+int32_t Pmic_fsmGetWakeStatus(Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -830,7 +830,7 @@ int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *w
     return status;
 }
 
-static int32_t FSM_setPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+static int32_t FSM_setPwrLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -883,7 +883,7 @@ static int32_t FSM_setPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLa
     return status;
 }
 
-int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmSetPowerLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -909,7 +909,7 @@ int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLat
     return status;
 }
 
-static int32_t FSM_getPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+static int32_t FSM_getPwrLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -949,7 +949,7 @@ static int32_t FSM_getPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg
     return status;
 }
 
-int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -975,7 +975,7 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_
     return status;
 }
 
-int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -1040,7 +1040,7 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_
     return status;
 }
 
-int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -1099,7 +1099,7 @@ int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwr
     return status;
 }
 
-int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration)
+int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *duration)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);

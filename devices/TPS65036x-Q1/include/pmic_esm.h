@@ -246,7 +246,7 @@ typedef struct Pmic_EsmStat_s
  * @return Success code if PMIC ESM configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg);
+int32_t Pmic_esmSetCfg(const Pmic_Handle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg);
 
 /**
  * @brief Get PMIC ESM configurations. This API supports obtaining the same
@@ -263,7 +263,7 @@ int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t 
  * @return Success code if PMIC ESM configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg);
+int32_t Pmic_esmGetCfg(const Pmic_Handle_t *pmicHandle, Pmic_EsmCfg_t *esmCfg);
 
 /**
  * @brief Start/stop the PMIC ESM.
@@ -283,7 +283,7 @@ int32_t Pmic_esmGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmCfg_t *esmCf
  * @return Success code if PMIC ESM_MCU_START bit has been configured, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start);
+int32_t Pmic_esmSetStartState(const Pmic_Handle_t *pmicHandle, bool start);
 
 /**
  * @brief Start the PMIC ESM.
@@ -300,7 +300,7 @@ int32_t Pmic_esmSetStartState(const Pmic_CoreHandle_t *pmicHandle, bool start);
  * @return Success code if PMIC ESM_MCU_START bit has been set to 1, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_esmStart(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Stop the PMIC ESM.
@@ -314,7 +314,7 @@ int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if PMIC ESM_MCU_START bit has been set to 0, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_esmStop(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Get the PMIC ESM start/stop status.
@@ -332,7 +332,7 @@ int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if PMIC ESM start/stop status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start);
+int32_t Pmic_esmGetStartState(const Pmic_Handle_t *pmicHandle, bool *start);
 
 /**
  * @brief Get PMIC ESM status.
@@ -354,7 +354,7 @@ int32_t Pmic_esmGetStartState(const Pmic_CoreHandle_t *pmicHandle, bool *start);
  * @return Success code if PMIC ESM statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *pmicHandle, Pmic_EsmStat_t *esmStat);
 
 /**
  * @brief Clear PMIC ESM statuses.
@@ -378,7 +378,7 @@ int32_t Pmic_esmGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *e
  * @return Success code if PMIC ESM statues have been cleared, error code
  * otherwise. for valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *pmicHandle, const Pmic_EsmStat_t *esmStat);
 
 /**
  * @brief Get PMIC ESM error count.
@@ -394,7 +394,7 @@ int32_t Pmic_esmClrStatus(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmSta
  * @return Success code if PMIC ESM error count has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_esmGetErrCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *errCnt);
+int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *pmicHandle, uint8_t *errCnt);
 
 #ifdef __cplusplus
 }

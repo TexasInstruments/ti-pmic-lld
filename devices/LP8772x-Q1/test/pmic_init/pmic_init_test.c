@@ -105,7 +105,7 @@ static inline void pmicInitTest_initCoreCfg(Pmic_CoreCfg_t *coreCfg);
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-static Pmic_CoreHandle_t pmicHandle = {0};
+static Pmic_Handle_t pmicHandle = {0};
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -142,7 +142,7 @@ void test_negative_Pmic_init_nullParam_handle(void)
 void test_negative_Pmic_init_nullParam_coreCfg(void)
 {
     // Pass NULL coreCfg into Pmic_init()
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
     int32_t status = Pmic_init(&handle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -187,7 +187,7 @@ static inline void pmicInitTest_initCoreCfg(Pmic_CoreCfg_t *coreCfg)
 void test_negative_Pmic_init_nullParam_coreCfg_pCommHandle(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -200,7 +200,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pCommHandle(void)
 void test_negative_Pmic_init_nullParam_coreCfg_pQACommHandle(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -213,7 +213,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pQACommHandle(void)
 void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoRd(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -226,7 +226,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoRd(void)
 void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoWr(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -239,7 +239,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoWr(void)
 void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStart(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -252,7 +252,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStart(void)
 void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -265,7 +265,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop(void)
 void test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -278,7 +278,7 @@ void test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback(void)
 void test_negative_Pmic_init_incorrect_coreCfg_instType(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -291,7 +291,7 @@ void test_negative_Pmic_init_incorrect_coreCfg_instType(void)
 void test_negative_Pmic_init_incorrect__coreCfg_pmicDeviceType(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -304,7 +304,7 @@ void test_negative_Pmic_init_incorrect__coreCfg_pmicDeviceType(void)
 void test_negative_Pmic_init_incorrect_coreCfg_commMode(void)
 {
     Pmic_CoreCfg_t coreCfg = {0};
-    Pmic_CoreHandle_t handle = {0};
+    Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
@@ -330,7 +330,7 @@ void test_negative_Pmic_checkPmicCoreHandle_nullParam_handle(void)
 
 void test_negative_Pmic_checkPmicCoreHandle_nullParam_pCommHandle(void)
 {
-    Pmic_CoreHandle_t handle = {
+    Pmic_Handle_t handle = {
         .drvInitStatus = (uint32_t)(PMIC_INIT_TEST_DRV_INIT_STATUS | (uint8_t)PMIC_MAIN_INST),
         .pmicDeviceType = PMIC_DEV_COACH_LP8772X,
         .commMode = PMIC_INTF_I2C_SINGLE,
@@ -352,7 +352,7 @@ void test_negative_Pmic_checkPmicCoreHandle_nullParam_pCommHandle(void)
 
 void test_negative_Pmic_checkPmicCoreHandle_nullParam_pFnPmicCommIoRd(void)
 {
-    Pmic_CoreHandle_t handle = {
+    Pmic_Handle_t handle = {
         .drvInitStatus = (uint32_t)(PMIC_INIT_TEST_DRV_INIT_STATUS | (uint8_t)PMIC_MAIN_INST),
         .pmicDeviceType = PMIC_DEV_COACH_LP8772X,
         .commMode = PMIC_INTF_I2C_SINGLE,
@@ -375,7 +375,7 @@ void test_negative_Pmic_checkPmicCoreHandle_nullParam_pFnPmicCommIoRd(void)
 void test_negative_Pmic_checkPmicCoreHandle_incorrect_drvInitStatus(void)
 {
     // Pass incorrect/corrupted drvInitStatus into Pmic_checkPmicCoreHandle()
-    Pmic_CoreHandle_t handle = {
+    Pmic_Handle_t handle = {
         .drvInitStatus = 0x00U,
         .pmicDeviceType = PMIC_DEV_COACH_LP8772X,
         .commMode = PMIC_INTF_I2C_SINGLE,

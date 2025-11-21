@@ -169,7 +169,7 @@
 /*                             Global Variables                               */
 /* ========================================================================== */
 
-static Pmic_CoreHandle_t pmicHandle = {0U};
+static Pmic_Handle_t pmicHandle = {0U};
 
 /* ========================================================================== */
 /*                           Function Declarations                            */

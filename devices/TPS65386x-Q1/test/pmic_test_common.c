@@ -112,11 +112,11 @@ void test_pmic_criticalSectionStopFn(void)
  *          - #PMIC_ST_SUCCESS if initialization is successful.
  *          - An error code if initialization fails.
  */
-int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
+int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
                           Pmic_CoreCfg_t     *pmicConfigData)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t *pmicHandle = NULL;
+    Pmic_Handle_t *pmicHandle = NULL;
 
     /* Initialize Pmic Semaphore */
     pmicStatus = SemaphoreP_constructMutex(&gpmicCoreObj);
@@ -141,7 +141,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
     }
 
     /* Allocate memory for PMIC core Handle */
-    pmicHandle = malloc(sizeof(Pmic_CoreHandle_t));
+    pmicHandle = malloc(sizeof(Pmic_Handle_t));
 
     if (pmicHandle == NULL)
     {
@@ -150,7 +150,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         return PMIC_ST_ERR_INV_HANDLE;
     }
 
-    memset(pmicHandle, 0, sizeof(Pmic_CoreHandle_t));
+    memset(pmicHandle, 0, sizeof(Pmic_Handle_t));
 
     /* For SPI Instance */
     if (PMIC_INTF_SPI  == pmicConfigData->commMode)
@@ -222,7 +222,7 @@ static void test_pmic_SemaphoreDeInit(void)
  *          - #SystemP_SUCCESS if the read operation is successful.
  *          - #SystemP_FAILURE if the read operation fails.
  */
-int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
+int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
                           uint8_t             instType,
                           uint16_t            regAddr,
                           uint8_t            *pBuf,
@@ -267,7 +267,7 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
  *          - #SystemP_SUCCESS if the write operation is successful.
  *          - #SystemP_FAILURE if the write operation fails.
  */
-int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
+int32_t test_pmic_regWrite(Pmic_Handle_t  *pmicCorehandle,
                            uint8_t             instType,
                            uint16_t            regAddr,
                            uint8_t            *pBuf,
@@ -304,7 +304,7 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
  * @param pmicCorehandle Pointer to the PMIC core handle.
  * @return  NULL
  */
-void test_check_lock_config_reg(Pmic_CoreHandle_t  *pmicCorehandle)
+void test_check_lock_config_reg(Pmic_Handle_t  *pmicCorehandle)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlStat_t   *pCommonCtrlStat = NULL;
@@ -331,7 +331,7 @@ void test_check_lock_config_reg(Pmic_CoreHandle_t  *pmicCorehandle)
  * @param pmicCorehandle Pointer to the PMIC core handle.
  * @return  NULL
  */
-void test_check_tmr_cnt_config_reg(Pmic_CoreHandle_t  *pmicCorehandle)
+void test_check_tmr_cnt_config_reg(Pmic_Handle_t  *pmicCorehandle)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlStat_t   *pCommonCtrlStat = NULL;
@@ -359,7 +359,7 @@ void test_check_tmr_cnt_config_reg(Pmic_CoreHandle_t  *pmicCorehandle)
  * @param unlock Flag indicating whether to unlock (1) or lock (0) the configuration registers.
  * @return  NULL
  */
-void test_pmic_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock)
+void test_pmic_LockUnlock(Pmic_Handle_t  *pmicCorehandle, int unlock)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t  commonCtrlCfg;
@@ -394,7 +394,7 @@ void test_pmic_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock)
  * @param   unlock [IN] unlock Flag indicating whether to unlock (1) or lock (0) Timer and Rotational Counter registers.
  * @retun   NULL
  */
-void test_pmic_CNT_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock)
+void test_pmic_CNT_LockUnlock(Pmic_Handle_t  *pmicCorehandle, int unlock)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t  commonCtrlCfg;

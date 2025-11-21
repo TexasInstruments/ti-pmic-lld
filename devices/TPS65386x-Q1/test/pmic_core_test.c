@@ -53,7 +53,7 @@
 /* ========================================================================== */
 
 /* Pointer to Pmic Core Handle */
-Pmic_CoreHandle_t *pPmicCoreHandle_core = NULL;
+Pmic_Handle_t *pPmicCoreHandle_core = NULL;
 
 /**
  * @brief Initializes PMIC Core configuration.

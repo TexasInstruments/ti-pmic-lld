@@ -35,7 +35,7 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle device type */
@@ -45,7 +45,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
         }
 
         if (status == PMIC_ST_SUCCESS) {
-            handle->pmicDeviceType = config->pmicDeviceType;
+            handle->devId = config->pmicDeviceType;
         }
     }
 
@@ -63,14 +63,14 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
         if (config->pCommHandle == NULL) {
             status = PMIC_ST_ERR_NULL_PARAM;
         } else {
-            handle->pCommHandle = config->pCommHandle;
+            handle->commHandle0 = config->pCommHandle;
         }
     }
 
     return status;
 }
 
-static int32_t initCommsFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initCommsFunctions(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
@@ -78,7 +78,7 @@ static int32_t initCommsFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_
         if (config->pFnPmicCommIoRead == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
-            handle->pFnPmicCommIoRead = config->pFnPmicCommIoRead;
+            handle->ioRead = config->pFnPmicCommIoRead;
         }
     }
 
@@ -87,21 +87,21 @@ static int32_t initCommsFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_
         if (config->pFnPmicCommIoWrite == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
-            handle->pFnPmicCommIoWrite = config->pFnPmicCommIoWrite;
+            handle->ioWrite = config->pFnPmicCommIoWrite;
         }
     }
 
     return status;
 }
 
-static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CRITSEC_START_VALID, status)) {
         if (config->pFnPmicCritSecStart == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
-            handle->pFnPmicCritSecStart = config->pFnPmicCritSecStart;
+            handle->criticalSectionStart = config->pFnPmicCritSecStart;
         }
     }
 
@@ -110,19 +110,19 @@ static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandl
         if (config->pFnPmicCritSecStop == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
-            handle->pFnPmicCritSecStop = config->pFnPmicCritSecStop;
+            handle->criticalSectionStop = config->pFnPmicCritSecStop;
         }
     }
 
     return status;
 }
 
-static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Update PMIC subsystem info to PMIC handle */
-    handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->pmicDeviceType];
+    handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->devId];
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(handle);
@@ -130,7 +130,7 @@ static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pm
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStatus |= config->instType;
+        handle->drvInitStat |= config->instType;
     }
 
     return status;
@@ -139,7 +139,7 @@ static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pm
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((handle == NULL) || (config == NULL)) {
@@ -170,22 +170,22 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
 
     /* Check for required members for I2C/SPI Main handle comm */
     if ((status == PMIC_ST_SUCCESS) &&
-         ((handle->pFnPmicCritSecStart == NULL) ||
-          (handle->pFnPmicCritSecStop == NULL) ||
-          (handle->pFnPmicCommIoRead == NULL) ||
-          (handle->pFnPmicCommIoWrite == NULL))) {
+         ((handle->criticalSectionStart == NULL) ||
+          (handle->criticalSectionStop == NULL) ||
+          (handle->ioRead == NULL) ||
+          (handle->ioWrite == NULL))) {
         status = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
     // Initialization is complete, mark it with magic.
     if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStatus |= DRV_INIT_SUCCESS;
+        handle->drvInitStat |= DRV_INIT_SUCCESS;
     }
 
     return status;
 }
 
-int32_t Pmic_deinit(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_deinit(Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if (handle == NULL) {
@@ -193,28 +193,28 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *handle) {
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        handle->pCommHandle = NULL;
-        handle->pQACommHandle = NULL;
-        handle->pFnPmicCritSecStart = NULL;
-        handle->pFnPmicCritSecStop = NULL;
-        handle->pFnPmicCommIoRead = NULL;
-        handle->pFnPmicCommIoWrite = NULL;
+        handle->commHandle0 = NULL;
+        handle->commHandle1 = NULL;
+        handle->criticalSectionStart = NULL;
+        handle->criticalSectionStop = NULL;
+        handle->ioRead = NULL;
+        handle->ioWrite = NULL;
         handle->pPmic_SubSysInfo = NULL;
-        handle->drvInitStatus = 0x00U;
+        handle->drvInitStat = 0x00U;
     }
 
     return status;
 }
 
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *handle) {
+int32_t Pmic_checkHandle(const Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t expectedInitStatus = 0U;
 
-    if ((handle == NULL) || (handle->pCommHandle == NULL)) {
+    if ((handle == NULL) || (handle->commHandle0 == NULL)) {
         status = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (handle->pFnPmicCommIoRead == NULL)) {
+    if ((status == PMIC_ST_SUCCESS) && (handle->ioRead == NULL)) {
         status = PMIC_ST_ERR_NULL_FPTR;
     }
 
@@ -230,7 +230,7 @@ int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *handle) {
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (expectedInitStatus != handle->drvInitStatus)) {
+    if ((status == PMIC_ST_SUCCESS) && (expectedInitStatus != handle->drvInitStat)) {
         status = PMIC_ST_ERR_INV_HANDLE;
     }
 

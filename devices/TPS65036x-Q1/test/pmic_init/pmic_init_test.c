@@ -82,7 +82,7 @@ static void pmicInitTest_nullParamPmicInit(const char *param);
 /*                             Global Variables                               */
 /* ========================================================================== */
 
-static Pmic_CoreHandle_t pmicHandle = {0U};
+static Pmic_Handle_t pmicHandle = {0U};
 
 /* ========================================================================== */
 /*                           Function Definitions                             */

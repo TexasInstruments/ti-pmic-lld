@@ -50,7 +50,7 @@
 #define PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT_REPEATED ((uint8_t)3U)
 
 /** @brief Set PMIC GPIO configuration (the GPIO pin that's not nINT_GPI) */
-static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_setGPIOCfg(const Pmic_Handle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status;
@@ -96,7 +96,7 @@ static int32_t GPIO_setGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_G
 }
 
 /** @brief Set NINT_GPI configuration */
-static int32_t GPIO_setNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *pmicHandle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status;
@@ -167,7 +167,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, const Pmi
     return status;
 }
 
-int32_t Pmic_gpioSetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg)
+int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     const uint32_t gpioValidParams = (PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID);
@@ -208,7 +208,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, co
 }
 
 /** @brief Get PMIC GPIO configuration (the GPIO pin that's not nINT_GPI) */
-static int32_t GPIO_getGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_getGPIOCfg(const Pmic_Handle_t *pmicHandle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
 
@@ -234,7 +234,7 @@ static int32_t GPIO_getGPIOCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_GpioCfg
 }
 
 /** @brief Get NINT_GPI configuration */
-static int32_t GPIO_getNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_getNINTGPICfg(const Pmic_Handle_t *pmicHandle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
 
@@ -275,7 +275,7 @@ static int32_t GPIO_getNINTGPICfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_Gpio
     return status;
 }
 
-int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg)
+int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     const uint32_t gpioValidParams = (PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID);
@@ -315,7 +315,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_CoreHandle_t *pmicHandle, uint8_t gpioPin, Pm
     return status;
 }
 
-int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool activate)
+int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *pmicHandle, bool activate)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -338,17 +338,17 @@ int32_t Pmic_gpioSetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool ac
     return status;
 }
 
-int32_t Pmic_gpioActivate(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_gpioActivate(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_gpioSetActivationState(pmicHandle, (bool)true);
 }
 
-int32_t Pmic_gpioDeactivate(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *pmicHandle)
 {
     return Pmic_gpioSetActivationState(pmicHandle, (bool)false);
 }
 
-int32_t Pmic_gpioGetActivationState(const Pmic_CoreHandle_t *pmicHandle, bool *activated)
+int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *pmicHandle, bool *activated)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

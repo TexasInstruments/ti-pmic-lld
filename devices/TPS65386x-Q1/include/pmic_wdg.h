@@ -478,7 +478,7 @@ typedef struct Pmic_WdgFailCntStat_s {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle);
+int32_t Pmic_wdgEnable(Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -493,7 +493,7 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
+int32_t Pmic_wdgDisable(Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -511,7 +511,7 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
  * @return Success code if Watchdog Enable state is set, error code otherwise.
  * For possible success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
+int32_t Pmic_wdgSetEnableState(Pmic_Handle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -528,7 +528,7 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
  * @return Success code if Watchdog Enable state is obtained, error code
  * otherwise. For possible success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
+int32_t Pmic_wdgGetEnableState(Pmic_Handle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -546,7 +546,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
+int32_t Pmic_wdgSetCfg(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -566,7 +566,7 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
+int32_t Pmic_wdgGetCfg(Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -584,7 +584,7 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgSetMode(Pmic_CoreHandle_t *handle, uint8_t mode);
+int32_t Pmic_wdgSetMode(Pmic_Handle_t *handle, uint8_t mode);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -601,7 +601,7 @@ int32_t Pmic_wdgSetMode(Pmic_CoreHandle_t *handle, uint8_t mode);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetMode(Pmic_CoreHandle_t *handle, uint8_t *mode);
+int32_t Pmic_wdgGetMode(Pmic_Handle_t *handle, uint8_t *mode);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -620,7 +620,7 @@ int32_t Pmic_wdgGetMode(Pmic_CoreHandle_t *handle, uint8_t *mode);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
+int32_t Pmic_wdgSetPowerHold(Pmic_Handle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -640,7 +640,7 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
+int32_t Pmic_wdgGetPowerHold(Pmic_Handle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -659,7 +659,7 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
+int32_t Pmic_wdgSetReturnToLongWindow(Pmic_Handle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
@@ -678,7 +678,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled);
+int32_t Pmic_wdgGetReturnToLongWindow(Pmic_Handle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -697,7 +697,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors);
+int32_t Pmic_wdgGetErrorStatus(Pmic_Handle_t *handle, Pmic_WdgError_t *errors);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -717,7 +717,7 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *error
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *errors);
+int32_t Pmic_wdgClrErrStatus(Pmic_Handle_t *handle, const Pmic_WdgError_t *errors);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -734,7 +734,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *e
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
+int32_t Pmic_wdgClrErrStatusAll(Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -753,7 +753,7 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount);
+int32_t Pmic_wdgGetFailCntStatus(Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *failCount);
 
 /**
  * @ingroup DRV_PMIC_WDG_APP_GROUP
@@ -786,7 +786,7 @@ int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle);
+int32_t Pmic_wdgQaWriteAnswer(Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

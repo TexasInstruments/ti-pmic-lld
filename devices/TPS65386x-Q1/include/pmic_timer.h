@@ -192,7 +192,7 @@ typedef struct Pmic_timerCfg_e {
  * @return Success code if timer configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg);
 
 /**
  * @brief Get PMIC timer configuration. This API supports getting the same
@@ -210,7 +210,7 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg);
 
 /**
  * @brief Alternative routine to stop the PMIC timer. That is to say, this API can
@@ -225,7 +225,7 @@ int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg);
  * @return Success code if timer is stopped, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle);
+int32_t Pmic_timerStop(Pmic_Handle_t *handle);
 
 /**
  * @brief Clear PMIC timer counter.
@@ -239,7 +239,7 @@ int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle);
  * @return Success code if PMIC timer counter is cleared, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle);
+int32_t Pmic_timerClr(Pmic_Handle_t *handle);
 
 /**
  * @brief Set the value of the PMIC timer counter.
@@ -256,7 +256,7 @@ int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle);
  * @return Success code if PMIC timer counter value has been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetCnt(Pmic_CoreHandle_t *handle, uint32_t tmrCnt);
+int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt);
 
 /**
  * @brief Get the value of the PMIC timer counter.
@@ -273,7 +273,7 @@ int32_t Pmic_timerSetCnt(Pmic_CoreHandle_t *handle, uint32_t tmrCnt);
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt);
+int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt);
 
 /**
  * @brief Set PMIC wakeup value.
@@ -294,7 +294,7 @@ int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt);
  * @return Success code if PMIC wakeup value has been set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
+int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal);
 
 /**
  * @brief Get PMIC wakeup value.
@@ -310,7 +310,7 @@ int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
  * @return Success code if PMIC wakeup value has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t *wakeupVal);
+int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal);
 
 #ifdef __cplusplus
 }

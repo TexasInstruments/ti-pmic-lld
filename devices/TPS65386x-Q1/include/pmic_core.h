@@ -171,7 +171,7 @@ typedef struct Pmic_Lock_s {
  * @return PMIC_ST_SUCCESS if PMIC device identifier has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDevId(Pmic_CoreHandle_t *handle, uint8_t *devId);
+int32_t Pmic_getDevId(Pmic_Handle_t *handle, uint8_t *devId);
 
 /**
  * @brief Get PMIC device revision.
@@ -188,7 +188,7 @@ int32_t Pmic_getDevId(Pmic_CoreHandle_t *handle, uint8_t *devId);
  * @return PMIC_ST_SUCCESS if PMIC device revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
+int32_t Pmic_getDevRev(Pmic_Handle_t *handle, uint8_t *devRev);
 
 /**
  * @brief Get PMIC NVM code.
@@ -205,7 +205,7 @@ int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
  * @return PMIC_ST_SUCCESS if PMIC NVM code has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
+int32_t Pmic_getNvmCode(Pmic_Handle_t *handle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.
@@ -222,7 +222,7 @@ int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
  * @return PMIC_ST_SUCCESS if PMIC NVM revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
+int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -242,7 +242,7 @@ int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config);
+int32_t Pmic_setLockCfg(Pmic_Handle_t *handle, const Pmic_Lock_t *config);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -262,7 +262,7 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config);
+int32_t Pmic_getLockCfg(Pmic_Handle_t *handle, Pmic_Lock_t *config);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -282,7 +282,7 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
+int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, uint8_t lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -302,7 +302,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
+int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, uint8_t *lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -322,7 +322,7 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
+int32_t Pmic_setCntLockState(Pmic_Handle_t *handle, uint8_t lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
@@ -342,7 +342,7 @@ int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getCntLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
+int32_t Pmic_getCntLockState(Pmic_Handle_t *handle, uint8_t *lockState);
 
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
@@ -359,7 +359,7 @@ int32_t Pmic_getCntLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -377,7 +377,7 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

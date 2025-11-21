@@ -60,7 +60,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
-static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_setCfgGpi1_4(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -105,7 +105,7 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     return status;
 }
 
-static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_setCfgGpo1_2(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -150,7 +150,7 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     return status;
 }
 
-static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_setCfgGpo3_4(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -195,7 +195,7 @@ static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     return status;
 }
 
-int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+int32_t Pmic_gpioSetCfg(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -236,7 +236,7 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
     return status;
 }
 
-static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_getCfgGpi1_4(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -264,7 +264,7 @@ static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
     return status;
 }
 
-static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_getCfgGpo1_2(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -298,7 +298,7 @@ static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
     return status;
 }
 
-static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_getCfgGpo3_4(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -326,7 +326,7 @@ static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
     return status;
 }
 
-int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
+int32_t Pmic_gpioGetCfg(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -367,7 +367,7 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
     return status;
 }
 
-int32_t Pmic_gpioGetOutputValue(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high)
+int32_t Pmic_gpioGetOutputValue(Pmic_Handle_t *handle, uint8_t gpo, bool *high)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);

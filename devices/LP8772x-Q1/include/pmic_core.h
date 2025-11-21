@@ -137,7 +137,7 @@ typedef struct Pmic_ConfigCrcStat_s {
  * @return PMIC_ST_SUCCESS if PMIC device revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
+int32_t Pmic_getDevRev(Pmic_Handle_t *handle, uint8_t *devRev);
 
 /**
  * @brief Get PMIC NVM code.
@@ -154,7 +154,7 @@ int32_t Pmic_getDevRev(Pmic_CoreHandle_t *handle, uint8_t *devRev);
  * @return PMIC_ST_SUCCESS if PMIC NVM code has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
+int32_t Pmic_getNvmCode(Pmic_Handle_t *handle, uint8_t *nvmCode);
 
 /**
  * @brief Get PMIC NVM revision.
@@ -171,7 +171,7 @@ int32_t Pmic_getNvmCode(Pmic_CoreHandle_t *handle, uint8_t *nvmCode);
  * @return PMIC_ST_SUCCESS if PMIC NVM revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
+int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev);
 
 /**
  * @brief Get PMIC silicon revision.
@@ -187,7 +187,7 @@ int32_t Pmic_getNvmRev(Pmic_CoreHandle_t *handle, uint8_t *nvmRev);
  * @return PMIC_ST_SUCCESS if PMIC silicon revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_getSiliconRev(Pmic_CoreHandle_t *handle, uint8_t *siliconRev);
+int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev);
 
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
@@ -204,7 +204,7 @@ int32_t Pmic_getSiliconRev(Pmic_CoreHandle_t *handle, uint8_t *siliconRev);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -222,7 +222,7 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 /**
  * @brief Set lock state for registers locked by REGISTER_LOCK.
@@ -240,7 +240,7 @@ int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadReg
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState);
+int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState);
 
 /**
  * @brief Get lock state for registers locked by REGISTER_LOCK.
@@ -258,7 +258,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState);
+int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState);
 
 /**
  * @brief Enables config register CRC.
@@ -277,7 +277,7 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate);
+int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate);
 
 /**
  * @brief Disables config register CRC.
@@ -292,7 +292,7 @@ int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
+int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle);
 
 /**
  * @brief Get configuration register CRC status.
@@ -308,7 +308,7 @@ int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
+int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
 
 /**
  * @brief Calculate config register CRC, writes value to PMIC, and verifies
@@ -325,7 +325,7 @@ int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t 
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle);
+int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle);
 
 /**
  * @brief Retrieve the config register CRC value currently stored on the PMIC as
@@ -343,7 +343,7 @@ int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc);
+int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc);
 
 #ifdef __cplusplus
 }

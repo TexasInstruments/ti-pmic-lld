@@ -22,7 +22,7 @@ static int32_t FSM_checkFsmCmd(uint8_t fsmCmd)
     return status;
 }
 
-int32_t Pmic_fsmSetDevState(const Pmic_CoreHandle_t *pmicHandle, uint8_t fsmCmd)
+int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *pmicHandle, uint8_t fsmCmd)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
 
@@ -40,7 +40,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_CoreHandle_t *pmicHandle, uint8_t fsmCmd)
     return status;
 }
 
-int32_t Pmic_fsmSetRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
+int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshold)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -68,7 +68,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t thre
     return status;
 }
 
-int32_t Pmic_fsmGetRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
+int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *threshold)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -88,7 +88,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *thr
     return status;
 }
 
-int32_t Pmic_fsmGetRecovCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *recovCnt)
+int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *pmicHandle, uint8_t *recovCnt)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -108,7 +108,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *recovC
     return status;
 }
 
-int32_t Pmic_fsmClrRecovCnt(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -123,7 +123,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_fsmSetResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
+int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshold)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -151,7 +151,7 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t thre
     return status;
 }
 
-int32_t Pmic_fsmGetResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
+int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *threshold)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -171,7 +171,7 @@ int32_t Pmic_fsmGetResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *thr
     return status;
 }
 
-int32_t Pmic_fsmGetResetCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *resetCnt)
+int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *pmicHandle, uint8_t *resetCnt)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;
@@ -191,7 +191,7 @@ int32_t Pmic_fsmGetResetCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *resetC
     return status;
 }
 
-int32_t Pmic_fsmClrResetCnt(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);
     uint8_t regData = 0U;

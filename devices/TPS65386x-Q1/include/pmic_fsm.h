@@ -570,7 +570,7 @@ typedef struct Pmic_FsmPwrLatch_s {
  * @return Success code if state change request has been sent, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state);
+int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state);
 
 /**
  * @brief Get PMIC device state.
@@ -602,7 +602,7 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state);
  * @return Success code if PMIC device state is returned, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state);
+int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state);
 
 /**
  * @brief Set PMIC FSM configurations.
@@ -630,7 +630,7 @@ int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state);
  * @return Success code if PMIC FSM configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg);
+int32_t Pmic_fsmSetCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg);
 
 /**
  * @brief Get PMIC FSM configurations. This API supports getting the same
@@ -647,7 +647,7 @@ int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg);
  * @return Success code if PMIC FSM configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg);
+int32_t Pmic_fsmGetCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg);
 
 /**
  * @brief Set PMIC device error count (DEV_ERR_CNT).
@@ -663,7 +663,7 @@ int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg);
  * @return Success code if the DEV_ERR_CNT has been set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt);
+int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt);
 
 /**
  * @brief Get PMIC device error count (DEV_ERR_CNT).
@@ -680,7 +680,7 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt);
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt);
+int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt);
 
 /**
  * @brief Set PMIC Wakeup configurations.
@@ -702,7 +702,7 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt);
  * @return Success code if PMIC Wakeup configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg);
+int32_t Pmic_fsmSetWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg);
 
 /**
  * @brief Get PMIC Wakeup configurations. This API supports getting the same
@@ -719,7 +719,7 @@ int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_
  * @return Success code if PMIC Wakeup configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg);
+int32_t Pmic_fsmGetWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg);
 
 /**
  * @brief Get PMIC Wakeup statuses.
@@ -741,7 +741,7 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wak
  * @return Success code if PMIC Wakeup statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat);
+int32_t Pmic_fsmGetWakeStatus(Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat);
 
 /**
  * @brief Set PMIC power latch configurations.
@@ -763,7 +763,7 @@ int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *w
  * @return Success code if PMIC power latch configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
+int32_t Pmic_fsmSetPowerLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
 
 /**
  * @brief Get PMIC power latch configurations. This API supports getting the same
@@ -782,7 +782,7 @@ int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLat
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
+int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
 
 /**
  * @brief Set PMIC power latches.
@@ -805,7 +805,7 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_
  * @return Success code if PMIC power latches have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch);
+int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch);
 
 /**
  * @brief Get PMIC power latches. This API supports getting the same power latches
@@ -822,7 +822,7 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_
  * @return Success code if PMIC power latches have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch);
+int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch);
 
 /**
  * @brief Get the duration of the last RESET-MCU event.
@@ -841,7 +841,7 @@ int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwr
  * @return Success code if the duration has been obtained from the PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration);
+int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *duration);
 
 #ifdef __cplusplus
 }

@@ -61,7 +61,7 @@ extern "C" {
  * @return Success code if all PMIC interrupt flags have been cleared, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes
  */
-int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle);
+int32_t testCommon_clrAllPmicIrq(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Unlock all PMIC user space registers.
@@ -72,14 +72,14 @@ int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle);
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes
  */
-int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle);
+int32_t testCommon_unlockPmicRegs(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Print silicon revision of the PMIC device to the console.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle);
+void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Disable configuration CRC on the PMIC.
@@ -89,7 +89,7 @@ void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if PMIC configuration CRC has been disabled, error code
  * otherwise. For valid success/error codes refer to @ref Pmic_errorCodes
  */
-int32_t testCommon_disableConfigCrc(const Pmic_CoreHandle_t *pmicHandle);
+int32_t testCommon_disableConfigCrc(const Pmic_Handle_t *pmicHandle);
 
 #ifdef __cplusplus
 }

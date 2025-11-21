@@ -98,12 +98,12 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-static Pmic_CoreHandle_t pmicHandle;
+static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t fsmTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle);
+static int32_t fsmTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 static inline void fsmTest_assertPmicRegsLocked(bool lock);
 
 /* ========================================================================== */
@@ -174,7 +174,7 @@ void fsm_test(void *args)
     platform_deinit();
 }
 
-static int32_t fsmTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle)
+static int32_t fsmTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0x9BU;
     const uint8_t bufLen = 1U;

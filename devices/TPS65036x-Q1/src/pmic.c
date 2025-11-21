@@ -52,7 +52,7 @@
 // Used to lock PMIC registers
 #define REG_LOCK_VALUE (0xAAU)
 
-static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
+static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
 {
     pmicHandle->i2cAddr = pmicCfg->i2cAddr;
     pmicHandle->commHandle = pmicCfg->commHandle;
@@ -63,7 +63,7 @@ static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_Core
     pmicHandle->irqResponse = pmicCfg->irqResponse;
 }
 
-static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
+static int32_t getPmicInfo(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -110,7 +110,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
+static int32_t decipherWhetherA0(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0U;
     bool regsLocked = (bool)false;
@@ -161,7 +161,7 @@ static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -200,7 +200,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -230,7 +230,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 

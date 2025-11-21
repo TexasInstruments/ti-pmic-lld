@@ -122,7 +122,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
     return crc;
 }
 
-int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
+int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
 {
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
@@ -163,7 +163,7 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
     return status;
 }
 
-int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
+int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -174,7 +174,7 @@ int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
     return status;
 }
 
-int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
+int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
 {
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
@@ -228,7 +228,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
     return status;
 }
 
-int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
+int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -239,7 +239,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
     return status;
 }
 
-int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
@@ -254,7 +254,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, 
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -265,12 +265,12 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAdd
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
     return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
-int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -281,7 +281,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAd
     return status;
 }
 
-int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
+int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *pmicHandle, bool crc8Enable)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
@@ -311,17 +311,17 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool crc8Enable)
     return status;
 }
 
-int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_ioCrcEnable(Pmic_Handle_t *pmicHandle)
 {
     return Pmic_ioSetCrcEnableState(pmicHandle, PMIC_ENABLE);
 }
 
-int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_ioCrcDisable(Pmic_Handle_t *pmicHandle)
 {
     return Pmic_ioSetCrcEnableState(pmicHandle, PMIC_DISABLE);
 }
 
-int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *pmicHandle, bool *crcEnabled)
+int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *pmicHandle, bool *crcEnabled)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);

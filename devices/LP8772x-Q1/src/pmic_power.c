@@ -72,12 +72,12 @@
 
 typedef struct SetResourceProcessor_s {
     uint8_t validParam;
-    int32_t (*fptr)(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config);
+    int32_t (*fptr)(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
 } SetResourceProcessor_t;
 
 typedef struct GetResourceProcessor_s {
     uint8_t validParam;
-    int32_t (*fptr)(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config);
+    int32_t (*fptr)(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
 } GetResourceProcessor_t;
 
 static const uint8_t PwrResourceAll[] = {
@@ -187,7 +187,7 @@ static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourc
     return status;
 }
 
-static int32_t PWR_readModifyWrite(Pmic_CoreHandle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+static int32_t PWR_readModifyWrite(Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -205,7 +205,7 @@ static int32_t PWR_readModifyWrite(Pmic_CoreHandle_t *handle, uint8_t regAddr, u
     return status;
 }
 
-int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool enable)
+int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool enable)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -237,7 +237,7 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
     return status;
 }
 
-int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool *isEnabled)
+int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -268,7 +268,7 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
     return status;
 }
 
-static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -325,7 +325,7 @@ static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, const Pmic_P
     return status;
 }
 
-static int32_t PWR_setModeCfgLs2Vmon2(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfgLs2Vmon2(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -350,7 +350,7 @@ static int32_t PWR_setModeCfgLs2Vmon2(Pmic_CoreHandle_t *handle, const Pmic_Powe
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setModeCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     const uint8_t mode = config->mode;
@@ -407,7 +407,7 @@ static int32_t PWR_setModeCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourc
     return status;
 }
 
-static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t pgLevelReg = 0U;
@@ -458,7 +458,7 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, Pmic_PowerRe
     return status;
 }
 
-static int32_t PWR_getModeCfgLs2Vmon2(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfgLs2Vmon2(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -483,7 +483,7 @@ static int32_t PWR_getModeCfgLs2Vmon2(Pmic_CoreHandle_t *handle, Pmic_PowerResou
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getModeCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -516,7 +516,7 @@ static int32_t PWR_getModeCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setIlimCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setIlimCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -546,7 +546,7 @@ static int32_t PWR_setIlimCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourc
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getIlimCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getIlimCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -610,7 +610,7 @@ static int32_t PWR_getDeglitchParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setDeglitchCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setDeglitchCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -639,7 +639,7 @@ static int32_t PWR_setDeglitchCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerRes
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getDeglitchCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getDeglitchCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -713,7 +713,7 @@ static int32_t PWR_getUvThreshParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setUvThreshCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setUvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -742,7 +742,7 @@ static int32_t PWR_setUvThreshCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerRes
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getUvThreshCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getUvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -808,7 +808,7 @@ static int32_t PWR_getUvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setUvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setUvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -837,7 +837,7 @@ static int32_t PWR_setUvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerR
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getUvReactionCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getUvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -910,7 +910,7 @@ static int32_t PWR_getOvThreshParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setOvThreshCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setOvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -937,7 +937,7 @@ static int32_t PWR_setOvThreshCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerRes
     return status;
 }
 
-static int32_t PWR_getOvThreshCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getOvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1003,7 +1003,7 @@ static int32_t PWR_getOvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setOvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setOvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1032,7 +1032,7 @@ static int32_t PWR_setOvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerR
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getOvReactionCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getOvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1099,7 +1099,7 @@ static int32_t PWR_getRvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setRvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setRvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1128,7 +1128,7 @@ static int32_t PWR_setRvReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerR
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getRvReactionCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getRvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1190,7 +1190,7 @@ static int32_t PWR_getScReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setScReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setScReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1219,7 +1219,7 @@ static int32_t PWR_setScReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerR
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getScReactionCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getScReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1302,7 +1302,7 @@ static inline int32_t PWR_convertVoltageMvToCodeVmon(uint16_t voltage_mV, uint8_
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setVoltageCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setVoltageCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1378,7 +1378,7 @@ static inline int32_t PWR_convertCodeToVoltageMvVmon(uint16_t *voltage_mV, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_getVoltageCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getVoltageCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t mask = 0U;
@@ -1434,7 +1434,7 @@ static int32_t PWR_getVoltageCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCf
     return status;
 }
 
-static int32_t PWR_setSingleResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config) {
+static int32_t PWR_setSingleResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Define linkage between user provided valid params and the functions which
@@ -1484,12 +1484,12 @@ static int32_t PWR_setSingleResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_Po
     return status;
 }
 
-int32_t Pmic_pwrSetResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResourceCfg_t *config)
+int32_t Pmic_pwrSetResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     return Pmic_pwrSetResourceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[])
+int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[])
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1511,7 +1511,7 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getEnableCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getEnableCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     bool isEnabled = false;
     int32_t status = Pmic_pwrGetResourceEnable(handle, config->resource, &isEnabled);
@@ -1523,7 +1523,7 @@ static int32_t PWR_getEnableCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg
     return status;
 }
 
-static int32_t PWR_getSingleResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getSingleResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1559,12 +1559,12 @@ static int32_t PWR_getSingleResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerRes
     return status;
 }
 
-int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_t *config)
+int32_t Pmic_pwrGetResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     return Pmic_pwrGetResourceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[])
+int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[])
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1584,12 +1584,12 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
     return status;
 }
 
-int32_t Pmic_pwrSetSequenceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerSequenceCfg_t *config)
+int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
 {
     return Pmic_pwrSetSequenceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_t *config)
+int32_t Pmic_pwrGetSequenceCfg(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
 {
     return Pmic_pwrGetSequenceCfgs(handle, 1U, config);
 }
@@ -1621,7 +1621,7 @@ static int32_t PWR_getSeqRegister(uint8_t resource, uint16_t *regAddr)
     return status;
 }
 
-static int32_t PWR_getSingleSequence(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_t *config)
+static int32_t PWR_getSingleSequence(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint16_t regAddr = 0U;
@@ -1648,7 +1648,7 @@ static int32_t PWR_getSingleSequence(Pmic_CoreHandle_t *handle, Pmic_PowerSequen
     return status;
 }
 
-static int32_t PWR_setSingleSequence(Pmic_CoreHandle_t *handle, const Pmic_PowerSequenceCfg_t *config)
+static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint16_t regAddr = 0U;
@@ -1686,7 +1686,7 @@ static int32_t PWR_setSingleSequence(Pmic_CoreHandle_t *handle, const Pmic_Power
     return status;
 }
 
-int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[])
+int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[])
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1706,7 +1706,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
     return status;
 }
 
-int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[])
+int32_t Pmic_pwrGetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[])
 {
     int32_t status = Pmic_checkHandle(handle);
 

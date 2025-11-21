@@ -196,7 +196,7 @@ typedef struct Pmic_IrqStat_s
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMask);
+int32_t Pmic_irqSetMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask);
 
 /**
  * @brief Set the mask configuration for multiple PMIC IRQs.
@@ -212,7 +212,7 @@ int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMa
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqSetMasks(Pmic_Handle_t *handle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the mask configuration for PMIC IRQs.
@@ -228,7 +228,7 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, const P
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqGetMask(Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the status of all PMIC IRQs.
@@ -246,7 +246,7 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
  * @return Success code if all PMIC IRQ statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat);
+int32_t Pmic_irqGetStatus(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat);
 
 /**
  * @brief Get the next PMIC IRQ that has its flag set (status bit set to 1).
@@ -290,7 +290,7 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
  * @return Success code if the PMIC IRQ flag has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, bool *flag);
+int32_t Pmic_irqGetFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum, bool *flag);
 
 /**
  * @brief Clear a specific PMIC IRQ flag.
@@ -310,7 +310,7 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
  * @return Success code if the PMIC IRQ flag has been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum);
+int32_t Pmic_irqClrFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum);
 
 /**
  * @brief Clear all PMIC IRQ flags.
@@ -324,7 +324,7 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum);
  * @return Success code if all PMIC IRQ flags have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle);
+int32_t Pmic_irqClrAllFlags(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

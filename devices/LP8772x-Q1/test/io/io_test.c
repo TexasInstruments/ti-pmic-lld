@@ -93,12 +93,12 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-Pmic_CoreHandle_t pmicHandle;
+Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t ioTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle);
+static int32_t ioTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -168,7 +168,7 @@ void io_test(void *args)
     platform_deinit();
 }
 
-static int32_t ioTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle)
+static int32_t ioTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0x9BU;
     const uint8_t bufLen = 1U;

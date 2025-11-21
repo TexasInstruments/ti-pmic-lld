@@ -56,7 +56,7 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
+int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, uint8_t lockState) {
     int32_t status = Pmic_checkHandle(handle);
 
     // Holds the sequence used for register lock/unlock. For locking, writing
@@ -87,7 +87,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
     return status;
 }
 
-int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
+int32_t Pmic_setCntLockState(Pmic_Handle_t *handle, uint8_t lockState) {
     int32_t status = Pmic_checkHandle(handle);
 
     // Holds the sequence used for register lock/unlock. For locking, writing
@@ -118,7 +118,7 @@ int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
     return status;
 }
 
-int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config) {
+int32_t Pmic_setLockCfg(Pmic_Handle_t *handle, const Pmic_Lock_t *config) {
     // Skip core handle check, this function uses other user facing APIs to do
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
@@ -136,7 +136,7 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config) {
     return status;
 }
 
-int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
+int32_t Pmic_getLockCfg(Pmic_Handle_t *handle, Pmic_Lock_t *config) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -159,7 +159,7 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
     return status;
 }
 
-int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState) {
+int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
     // Skip core handle check, this function uses other user facing APIs to do
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
@@ -174,7 +174,7 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState) {
     return status;
 }
 
-int32_t Pmic_getCntLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState) {
+int32_t Pmic_getCntLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
     // Skip core handle check, this function uses other user facing APIs to do
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;

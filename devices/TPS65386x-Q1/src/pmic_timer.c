@@ -55,7 +55,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
-int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -114,7 +114,7 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
     return status;
 }
 
-int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -154,7 +154,7 @@ int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg)
     return status;
 }
 
-int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle)
+int32_t Pmic_timerStop(Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -179,7 +179,7 @@ int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle)
+int32_t Pmic_timerClr(Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -203,7 +203,7 @@ int32_t Pmic_timerClr(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_timerSetCnt(Pmic_CoreHandle_t *handle, uint32_t tmrCnt)
+int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -224,7 +224,7 @@ int32_t Pmic_timerSetCnt(Pmic_CoreHandle_t *handle, uint32_t tmrCnt)
     return status;
 }
 
-int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt)
+int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint32_t value = 0U;
@@ -245,7 +245,7 @@ int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt)
     return status;
 }
 
-int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal)
+int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -266,7 +266,7 @@ int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal)
     return status;
 }
 
-int32_t Pmic_timerGetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t *wakeupVal)
+int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint32_t value = 0U;

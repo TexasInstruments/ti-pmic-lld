@@ -962,7 +962,7 @@ typedef struct Pmic_PwrRsrcStat_s {
  * @return Success code if PMIC Buck/Boost configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+int32_t Pmic_pwrSetBuckBoostCfg(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
 
 /**
  * @brief Get PMIC Buck/Boost configurations. This API supports getting the same
@@ -980,7 +980,7 @@ int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoo
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+int32_t Pmic_pwrGetBuckBoostCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
 
 /**
  * @brief Set PMIC LDO configurations.
@@ -1008,7 +1008,7 @@ int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_
  * @return Success code if PMIC LDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrSetLdoCfg(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get PMIC LDO configurations. This API supports getting the same
@@ -1026,7 +1026,7 @@ int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldo
  * @return Success code if PMIC LDO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrGetLdoCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Set PMIC PLDO configurations.
@@ -1056,7 +1056,7 @@ int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
  * @return Success code if PLDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg);
+int32_t Pmic_pwrSetPldoCfg(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg);
 
 /**
  * @brief Get PMIC PLDO configurations. This API supports getting the same
@@ -1074,7 +1074,7 @@ int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *p
  * @return Success code if PLDO configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
+int32_t Pmic_pwrGetPldoCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
 
 /**
  * @brief Set PMIC external VMON configurations.
@@ -1097,7 +1097,7 @@ int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg
  * @return Success code if external VMON configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
+int32_t Pmic_pwrSetExtVmonCfg(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
 
 /**
  * @brief Get PMIC external VMON configurations. This API supports getting the same
@@ -1115,7 +1115,7 @@ int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCf
  * @return Success code if external VMON configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg);
+int32_t Pmic_pwrGetExtVmonCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg);
 
 /**
  * @brief Get PMIC power resource statuses.
@@ -1146,7 +1146,7 @@ int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *e
  * @return Success code if power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear PMIC power resource statuses.
@@ -1174,7 +1174,7 @@ int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwr
  * @return Success code if power resource statuses have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrClrRsrcStatus(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses
@@ -1189,7 +1189,7 @@ int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_
  * @return Success code if all power resources have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle);
+int32_t Pmic_pwrClrRsrcStatusAll(Pmic_Handle_t *handle);
 
 /**
  * @brief Enable or disable PGOOD from being active in STANDBY state.
@@ -1207,7 +1207,7 @@ int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle);
  * @return Success code if PGOOD is configured, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable);
+int32_t Pmic_pwrSetPGoodInStby(Pmic_Handle_t *handle, bool enable);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses that
@@ -1227,7 +1227,7 @@ int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable);
  * obtained, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetPGoodInStby(Pmic_CoreHandle_t *handle, bool *isEnabled);
+int32_t Pmic_pwrGetPGoodInStby(Pmic_Handle_t *handle, bool *isEnabled);
 
 #ifdef __cplusplus
 }

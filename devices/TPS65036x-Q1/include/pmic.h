@@ -153,7 +153,7 @@ typedef struct Pmic_CoreCfg_s
  * @return Success code if PMIC handle is initialized without issue, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief De-initialize a PMIC handle instance.
@@ -167,7 +167,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if PMIC handle is de-initialized, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle);
 
 /**
  * @brief Validate a PMIC handle instance for proper initialization and
@@ -185,7 +185,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the PMIC handle is valid, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle);
 
 #ifdef __cplusplus
 }

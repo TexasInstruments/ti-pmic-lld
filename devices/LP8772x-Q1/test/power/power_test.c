@@ -621,12 +621,12 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-Pmic_CoreHandle_t pmicHandle;
+Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t powerTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle);
+static int32_t powerTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 static void powerTest_enableDisableResource(uint8_t rsrc);
 static void powerTest_Pmic_pwrSetResourceCfg_invalidParam_buckMode(uint8_t buck);
 static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckIlim(uint8_t buck);
@@ -746,7 +746,7 @@ void power_test(void *args)
     platform_deinit();
 }
 
-static int32_t powerTest_unlockPmicRegs(Pmic_CoreHandle_t *pmicHandle)
+static int32_t powerTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
 {
     uint8_t regData = 0x9BU;
     const uint8_t bufLen = 1U;

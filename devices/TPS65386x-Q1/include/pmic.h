@@ -85,7 +85,7 @@ extern "C" {
  * The following status codes indicate an error in the expected input to an API
  * call and typically indicate a change is required in application code:
  *
- * - **PMIC_ST_ERR_INV_HANDLE**: Indicates that the `Pmic_CoreHandle_t` passed
+ * - **PMIC_ST_ERR_INV_HANDLE**: Indicates that the `Pmic_Handle_t` passed
  *   to the API call is not valid. Ensure that the `Pmic_CoreCfg_t` has been
  *   properly configured and that `Pmic_init()` has been called.
  *
@@ -402,7 +402,7 @@ typedef struct Pmic_CoreCfg_s {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_init(const Pmic_CoreCfg_t *coreCfg, Pmic_CoreHandle_t *handle);
+int32_t Pmic_init(const Pmic_CoreCfg_t *coreCfg, Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_MODULE
@@ -417,7 +417,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *coreCfg, Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_deinit(Pmic_CoreHandle_t *handle);
+int32_t Pmic_deinit(Pmic_Handle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_MODULE
@@ -436,7 +436,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *handle);
+int32_t Pmic_checkHandle(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }
