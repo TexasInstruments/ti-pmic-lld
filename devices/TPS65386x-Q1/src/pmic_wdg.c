@@ -174,7 +174,7 @@ static int32_t WDG_setThresholds(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t 
     }
 
     /* Set wdg threshold-2 value */
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_2_VALID)) {
         if (config->threshold2 > PMIC_WDG_THRESHOLD_COUNT_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
