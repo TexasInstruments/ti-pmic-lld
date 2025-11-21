@@ -151,7 +151,19 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
                 frameLen++;
             }
 
-            status = handle->ioWrite(handle, page, spiFrame[0U], spiFrame, frameLen);
+            // SPI transfer
+            if (handle->asyncEnable)
+            {
+                status = handle->asyncTxStart(handle, page, spiFrame[0U], spiFrame, frameLen);
+                if (status == PMIC_ST_SUCCESS)
+                {
+                    status = handle->asyncTxAwait(handle);
+                }
+            }
+            else
+            {
+                status = handle->ioWrite(handle, page, spiFrame[0U], spiFrame, frameLen);
+            }
         }
         // I2C MODE
         else
@@ -172,8 +184,19 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
                 i2cFrameLen++;
             }
 
-            // Begin write exchange. TX buffer starts at i2cFrame[2U]
-            status = handle->ioWrite(handle, page, i2cFrame[1U], &i2cFrame[2U], i2cFrameLen - 2U);
+            // I2C transfer
+            if (handle->asyncEnable)
+            {
+                status = handle->asyncTxStart(handle, page, i2cFrame[1U], &i2cFrame[2U], i2cFrameLen - 2U);
+                if (status == PMIC_ST_SUCCESS)
+                {
+                    status = handle->asyncTxAwait(handle);
+                }
+            }
+            else
+            {
+                status = handle->ioWrite(handle, page, i2cFrame[1U], &i2cFrame[2U], i2cFrameLen - 2U);
+            }
         }
     }
 
@@ -223,7 +246,18 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             }
 
             // Perform SPI transfer (TX and RX simultaneously)
-            status = handle->ioRead(handle, page, spiFrame[0U], spiFrame, frameLen);
+            if (handle->asyncEnable)
+            {
+                status = handle->asyncRxStart(handle, page, spiFrame[0U], spiFrame, frameLen);
+                if (status == PMIC_ST_SUCCESS)
+                {
+                    status = handle->asyncRxAwait(handle);
+                }
+            }
+            else
+            {
+                status = handle->ioRead(handle, page, spiFrame[0U], spiFrame, frameLen);
+            }
 
             // Verify received CRC
             if ((status == PMIC_ST_SUCCESS) && handle->crcEnable)
@@ -254,7 +288,18 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
             // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
-            status = handle->ioRead(handle, page, i2cFrame[1U], &i2cFrame[3U], i2cFrameLen - 3U);
+            if (handle->asyncEnable)
+            {
+                status = handle->asyncRxStart(handle, page, i2cFrame[1U], &i2cFrame[3U], i2cFrameLen - 3U);
+                if (status == PMIC_ST_SUCCESS)
+                {
+                    status = handle->asyncRxAwait(handle);
+                }
+            }
+            else
+            {
+                status = handle->ioRead(handle, page, i2cFrame[1U], &i2cFrame[3U], i2cFrameLen - 3U);
+            }
 
             // If read exchange was successful and PMIC CRC is enabled, compare SCRC to expected CRC
             if ((status == PMIC_ST_SUCCESS) && handle->crcEnable)
