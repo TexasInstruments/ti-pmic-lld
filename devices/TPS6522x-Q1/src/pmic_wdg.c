@@ -48,23 +48,80 @@
 /* ========================================================================== */
 
 /**
- * @brief Calculate CRC4 for WDG Q&A answer calculation
+ * @brief 4-to-1 multiplexer for WDG Q&A answer calculation
+ *
+ * @param x0 Input bit 0
+ * @param x1 Input bit 1
+ * @param x2 Input bit 2
+ * @param x3 Input bit 3
+ * @param qaFdbk Selector (0-3) to choose which input to return
+ *
+ * @return Selected input bit
  */
-static uint8_t calculateCrc4(uint8_t data)
+static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t qaFdbk)
 {
-    uint8_t crc = 0U;
+    uint8_t y = 0U;
 
-    for (uint8_t i = 0U; i < 4U; i++)
+    switch (qaFdbk)
     {
-        uint8_t bit = ((data >> i) & 0x01U) ^ ((crc >> 3U) & 0x01U);
-        crc = (uint8_t)((crc << 1U) | bit);
-        if (bit != 0U)
-        {
-            crc ^= 0x03U;  // CRC4 polynomial
-        }
+        case 0U:
+            y = x0;
+            break;
+        case 1U:
+            y = x1;
+            break;
+        case 2U:
+            y = x2;
+            break;
+        default:
+            y = x3;
+            break;
     }
 
-    return crc & 0x0FU;
+    return y;
+}
+
+/**
+ * @brief Calculate WDG Q&A answer byte using Markov chain combinational logic
+ *
+ * @param question 4-bit question value from WD_QUESTION register
+ * @param qaAnsCnt 2-bit answer count from WD_ANSW_CNT register
+ * @param qaFdbk 2-bit feedback configuration from WD_QA_FDBK register
+ *
+ * @return 8-bit answer byte to write to WD_ANSWER register
+ */
+static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaFdbk)
+{
+    uint8_t q0 = 0U, q1 = 0U, q2 = 0U, q3 = 0U;
+    uint8_t a0 = 0U, a1 = 0U;
+    uint8_t qaAns = 0U;
+
+    q0 = ((question >> 0U) & 1U);
+    q1 = ((question >> 1U) & 1U);
+    q2 = ((question >> 2U) & 1U);
+    q3 = ((question >> 3U) & 1U);
+
+    a0 = ((qaAnsCnt >> 0U) & 1U);
+    a1 = ((qaAnsCnt >> 1U) & 1U);
+
+    /* Reference-Answer-X[0] */
+    qaAns = (mux_4x1(q0, q1, q2, q3, qaFdbk) ^ (mux_4x1(q3, q2, q1, q0, qaFdbk) ^ a1));
+    /* Reference-Answer-X[1] */
+    qaAns |= ((mux_4x1(q0, q1, q2, q3, qaFdbk) ^ (mux_4x1(q2, q1, q0, q3, qaFdbk) ^ q1) ^ a1) << 1U);
+    /* Reference-Answer-X[2] */
+    qaAns |= ((mux_4x1(q0, q3, q1, q1, qaFdbk) ^ (mux_4x1(q3, q2, q1, q0, qaFdbk) ^ q1) ^ a1) << 2U);
+    /* Reference-Answer-X[3] */
+    qaAns |= ((mux_4x1(q2, q1, q0, q3, qaFdbk) ^ (mux_4x1(q0, q3, q2, q1, qaFdbk) ^ q3) ^ a1) << 3U);
+    /* Reference-Answer-X[4] */
+    qaAns |= ((mux_4x1(q1, q0, q2, q3, qaFdbk) ^ a0) << 4U);
+    /* Reference-Answer-X[5] */
+    qaAns |= ((mux_4x1(q3, q2, q1, q0, qaFdbk) ^ a0) << 5U);
+    /* Reference-Answer-X[6] */
+    qaAns |= ((mux_4x1(q0, q3, q2, q1, qaFdbk) ^ a0) << 6U);
+    /* Reference-Answer-X[7] */
+    qaAns |= ((mux_4x1(q2, q1, q0, q3, qaFdbk) ^ a0) << 7U);
+
+    return qaAns;
 }
 
 /**
@@ -582,28 +639,40 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *isEnabl
 int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t questionReg = 0U;
+    uint8_t regData = 0U;
+    uint8_t qaFdbk = 0U;
+    uint8_t qaAnsCnt = 0U;
     uint8_t question = 0U;
-    uint8_t answer = 0U;
 
-    // Read question from WD_QUESTION_ANSW_CNT register
+    // Read Q&A feedback configuration from WD_QA_CFG register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, WD_QUESTION_ANSW_CNT_REG, &questionReg);
+        status = Pmic_ioRxByte_CS(handle, WD_QA_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            qaFdbk = Pmic_getBitField(regData, WD_QA_FDBK_SHIFT, WD_QA_FDBK_MASK);
+        }
     }
 
+    // Read question and answer count from WD_QUESTION_ANSW_CNT register
     if (status == PMIC_ST_SUCCESS)
     {
-        uint8_t answerData;
+        status = Pmic_ioRxByte_CS(handle, WD_QUESTION_ANSW_CNT_REG, &regData);
 
-        question = Pmic_getBitField(questionReg, WD_QUESTION_SHIFT, WD_QUESTION_MASK);
+        if (status == PMIC_ST_SUCCESS)
+        {
+            qaAnsCnt = Pmic_getBitField(regData, WD_ANSW_CNT_SHIFT, WD_ANSW_CNT_MASK);
+            question = Pmic_getBitField(regData, WD_QUESTION_SHIFT, WD_QUESTION_MASK);
+        }
+    }
 
-        // Calculate answer using CRC4
-        answerData = calculateCrc4(question);
-        answer = (uint8_t)((question << 4U) | answerData);
+    // Calculate Q&A answer byte and write to WD_ANSWER register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        regData = WDG_getAnswerByte(question, qaAnsCnt, qaFdbk);
 
-        // Write answer to WD_ANSWER_REG
-        status = Pmic_ioTxByte_CS(handle, WD_ANSWER_REG_REG, answer);
+        status = Pmic_ioTxByte_CS(handle, WD_ANSWER_REG_REG, regData);
     }
 
     return status;
