@@ -45,6 +45,62 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                              Macros & Typedefs                             */
+/* ========================================================================== */
+
+/**
+ * @anchor Pmic_ErrorCodes
+ * @name PMIC LLD Error Codes
+ *
+ * @brief Error codes returned by PMIC LLD APIs
+ *
+ * Error codes are defined in pmic_status.h
+ *
+ * @{
+ */
+#include "pmic_status.h"
+/** @} */
+
+#include "pmic_common.h"
+
+/**
+ * @anchor Pmic_HandleCfgValidParams
+ * @name PMIC Handle Configuration Structure Valid Parameters
+ *
+ * @brief Definitions used to indicate valid parameters of `Pmic_HandleCfg_t`.
+ * Set the `validParams` member of `Pmic_HandleCfg_t` equal to a combination
+ * of these defines by using the `OR` operator.
+ *
+ * @{
+ */
+#define PMIC_CFG_I2C_ADDR0_VALID              (1U << 0U)
+#define PMIC_CFG_COMM_HANDLE_0_VALID          (1U << 1U)
+#define PMIC_CFG_IO_READ_VALID                (1U << 2U)
+#define PMIC_CFG_IO_WRITE_VALID               (1U << 3U)
+#define PMIC_CFG_CRITICAL_SECTION_START_VALID (1U << 4U)
+#define PMIC_CFG_CRITICAL_SECTION_STOP_VALID  (1U << 5U)
+#define PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID  (1U << 6U)
+/** @} */
+
+/**
+ * @anchor Pmic_HandleCfgAllValid
+ * @name PMIC Handle Configuration All Valid Parameters
+ *
+ * @brief Convenience macro for setting all valid parameters at once.
+ *
+ * @{
+ */
+#define PMIC_CFG_ALL_VALID (\
+    PMIC_CFG_I2C_ADDR0_VALID |\
+    PMIC_CFG_COMM_HANDLE_0_VALID |\
+    PMIC_CFG_IO_READ_VALID |\
+    PMIC_CFG_IO_WRITE_VALID |\
+    PMIC_CFG_CRITICAL_SECTION_START_VALID |\
+    PMIC_CFG_CRITICAL_SECTION_STOP_VALID |\
+    PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID)
+/** @} */
+
+/* ========================================================================== */
 /*                                Include Files                               */
 /* ========================================================================== */
 #include "pmic_common.h"
@@ -57,32 +113,6 @@ extern "C" {
 #include "pmic_io.h"
 
 /* ========================================================================== */
-/*                              Macros & Typedefs                             */
-/* ========================================================================== */
-
-/**
- * @anchor Pmic_errorCodes
- * @name PMIC LLD Error Codes
- *
- * @brief Error codes returned by PMIC LLD APIs
- *
- * @{
- */
-#define PMIC_ST_SUCCESS                     (-((int32_t)0))
-#define PMIC_ST_ERR_I2C_COMM_FAIL           (-((int32_t)1))
-#define PMIC_ST_ERR_INV_PARAM               (-((int32_t)2))
-#define PMIC_ST_ERR_NULL_PARAM              (-((int32_t)3))
-#define PMIC_ST_ERR_DATA_IO_CRC             (-((int32_t)4))
-#define PMIC_ST_ERR_NULL_FPTR               (-((int32_t)5))
-#define PMIC_ST_ERR_REG_LOCKED              (-((int32_t)6))
-#define PMIC_ST_ERR_INV_HANDLE              (-((int32_t)7))
-#define PMIC_ST_ERR_FAIL                    (-((int32_t)8))
-#define PMIC_ST_ERR_NOT_SUPPORTED           (-((int32_t)9))
-#define PMIC_ST_WARN_NO_IRQ_REMAINING       (-((int32_t)41))
-#define PMIC_ST_WARN_NON_MASKABLE_INT       (-((int32_t)10))
-/** @} */
-
-/* ========================================================================== */
 /*                             Structures and Enums                           */
 /* ========================================================================== */
 
@@ -93,30 +123,45 @@ extern "C" {
  * @brief Configuration struct holding end-user settings/parameters relating to
  * the PMIC handle.
  *
- * @attention All parameters of the struct except `irqResponseCallback` must be set by the
- * end-user. Otherwise, an error may occur during the Pmic_init() API call.
+ * @attention The `validParams` field must be set to indicate which parameters are valid.
+ * For required parameters (i2cAddr0, commHandle0, ioRead, ioWrite, criticalSectionStart,
+ * criticalSectionStop), the corresponding valid bit must be set. The `irqResponseCallback`
+ * parameter is optional and only processed if PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID is set.
  *
  * @note Once the user sets all struct members, the struct should be passed into
  * Pmic_init() so that the PMIC driver handle can be initialized with the user's
  * desired configurations.
  *
- * @param i2cAddr0 TPS65036x PMIC I2C address.
+ * @param validParams Each bit in this variable corresponds to a member in this structure.
+ * Specifically, if a bit is set to 1 in this variable, the corresponding structure member
+ * is valid and will be considered by the driver API that is using this data structure.
+ * Otherwise, if a bit is set to 0, the corresponding structure member is invalid and will
+ * not be considered by the driver API that is using this data structure. For possible
+ * valid parameter values, refer to @ref Pmic_HandleCfgValidParams.
+ *
+ * @param i2cAddr0 TPS65036x PMIC I2C address. Valid only when PMIC_CFG_I2C_ADDR0_VALID is set.
  *
  * @param commHandle0 Pointer to platform-specific transport layer communication handle.
+ * Valid only when PMIC_CFG_COMM_HANDLE_0_VALID is set.
  *
  * @param ioRead Function pointer to platform-specific transport layer read API.
+ * Valid only when PMIC_CFG_IO_READ_VALID is set.
  *
  * @param ioWrite Function pointer to platform-specific transport layer write API.
+ * Valid only when PMIC_CFG_IO_WRITE_VALID is set.
  *
  * @param criticalSectionStart Function pointer to platform-specific critical section start API.
+ * Valid only when PMIC_CFG_CRITICAL_SECTION_START_VALID is set.
  *
  * @param criticalSectionStop Function pointer to platform-specific critical section stop API.
+ * Valid only when PMIC_CFG_CRITICAL_SECTION_STOP_VALID is set.
  *
  * @param irqResponseCallback Function pointer to application IRQ response. Valid only when
- * servicing the PMIC WDG in Q&A mode.
+ * PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID is set and when servicing the PMIC WDG in Q&A mode.
  */
 typedef struct Pmic_CoreCfg_s
 {
+    uint32_t validParams;
     uint8_t i2cAddr0;
     void *commHandle0;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,

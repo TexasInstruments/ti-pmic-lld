@@ -50,6 +50,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "pmic_status.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

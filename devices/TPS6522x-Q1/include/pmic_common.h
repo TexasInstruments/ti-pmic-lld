@@ -49,6 +49,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "pmic_status.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
