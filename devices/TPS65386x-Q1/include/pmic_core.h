@@ -117,6 +117,28 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_MAX (PMIC_SCRATCH_PAD_REG_2)
 /** @} */
 
+/**
+ * @anchor Pmic_CommonCtrlCfgValidParam
+ * @name PMIC Common Control Configuration Valid Params
+ *
+ * @{
+ */
+#define PMIC_COMMON_CTRL_SPREAD_SPECTRUM_EN_VALID (1U << 0U)
+#define PMIC_COMMON_CTRL_ENSAFEOUT1_VALID         (1U << 1U)
+#define PMIC_COMMON_CTRL_ENSAFEOUT2_VALID         (1U << 2U)
+/** @} */
+
+/**
+ * @anchor Pmic_DiagOutCfgCtrlValidParam
+ * @name PMIC Diagnostic Output Control Configuration Valid Params
+ *
+ * @{
+ */
+#define PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID (1U << 0U)
+#define PMIC_DIAG_OUT_CTRL_DMUX_EN_VALID (1U << 1U)
+#define PMIC_DIAG_OUT_CTRL_VALID         (1U << 2U)
+/** @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -163,6 +185,58 @@ typedef struct Pmic_Lock_s {
     bool cfgLock;
     bool cntLock;
 } Pmic_Lock_t;
+
+/**
+ * @brief PMIC common control configuration structure
+ *
+ * Used for spread spectrum and SAFEOUT pin configuration
+ *
+ * @param validParams Selection of structure parameters to be set, from
+ * @ref Pmic_CommonCtrlCfgValidParam
+ * @param spreadSpectrumEn Spread spectrum enable (0=disable, 1=enable).
+ * Valid when PMIC_COMMON_CTRL_SPREAD_SPECTRUM_EN_VALID is set
+ * @param enSafeOut1 SAFEOUT1 enable (0=disable, 1=enable).
+ * Valid when PMIC_COMMON_CTRL_ENSAFEOUT1_VALID is set
+ * @param enSafeOut2 SAFEOUT2 enable (0=disable, 1=enable).
+ * Valid when PMIC_COMMON_CTRL_ENSAFEOUT2_VALID is set
+ */
+typedef struct Pmic_CommonCtrlCfg_s {
+    uint32_t validParams;
+    uint8_t spreadSpectrumEn;
+    uint8_t enSafeOut1;
+    uint8_t enSafeOut2;
+} Pmic_CommonCtrlCfg_t;
+
+/**
+ * @brief PMIC common control status structure
+ *
+ * Used to read back pin states and register lock status
+ */
+typedef struct Pmic_CommonCtrlStat_s {
+    uint8_t nRstPin;          /**< NRST pin status (readback from STAT_READBACK_ERR reg bit 0) */
+    uint8_t safeOut1Pin;      /**< SAFE_OUT1 pin status (readback from STAT_READBACK_ERR reg bit 1) */
+    uint8_t enOutPin;         /**< EN_OUT pin status (readback from STAT_READBACK_ERR reg bit 2) */
+    uint8_t cfgregLockStat;   /**< Configuration register lock status (from REG_STAT_REG bit 0) */
+} Pmic_CommonCtrlStat_t;
+
+/**
+ * @brief PMIC diagnostic output control configuration structure
+ *
+ * @param validParams Selection of structure parameters to be set, from
+ * @ref Pmic_DiagOutCfgCtrlValidParam
+ * @param diagOutCtrl_AMUXEn AMUX enable (0=disable, 1=enable).
+ * Valid when PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID is set
+ * @param diagOutCtrl_DMUXEn DMUX enable (0=disable, 1=enable).
+ * Valid when PMIC_DIAG_OUT_CTRL_DMUX_EN_VALID is set
+ * @param diagOutCtrl Diagnostic output control state (0=disabled, 1=AMUX, 2=DMUX).
+ * Valid when PMIC_DIAG_OUT_CTRL_VALID is set
+ */
+typedef struct Pmic_DiagOutCfgCtrl_s {
+    uint32_t validParams;
+    uint8_t diagOutCtrl_AMUXEn;
+    uint8_t diagOutCtrl_DMUXEn;
+    uint8_t diagOutCtrl;
+} Pmic_DiagOutCfgCtrl_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -356,6 +430,116 @@ int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
  * @ref Pmic_errorCodes.
  */
 int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+
+/**
+ * @brief Enable or disable spread spectrum modulation.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN] Common control configuration with spreadSpectrumEn set.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_spreadSpectrumEnable(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t config);
+
+/**
+ * @brief Get spread spectrum enable status.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [OUT] Common control configuration to store spread spectrum status.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getSpreadSpectrumEnable(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t *config);
+
+/**
+ * @brief Enable or disable SAFEOUT pins.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN] Common control configuration with enSafeOut1/enSafeOut2 set.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_setEnableSafeOutCfg(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t config);
+
+/**
+ * @brief Get SAFEOUT pin configuration status.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [OUT] Common control configuration to store SAFEOUT status.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getSafeOutPinCfg(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t *config);
+
+/**
+ * @brief Get common control status (pin states and lock status).
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param stat [OUT] Common control status structure.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getCommonStat(Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *stat);
+
+/**
+ * @brief Set diagnostic output control configuration (AMUX/DMUX enable).
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN] Diagnostic output control configuration.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_setDiagOutCtrlConfig(Pmic_Handle_t *handle, Pmic_DiagOutCfgCtrl_t config);
+
+/**
+ * @brief Get diagnostic output control configuration.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [OUT] Diagnostic output control configuration.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getDiagOutCtrlConfig(Pmic_Handle_t *handle, Pmic_DiagOutCfgCtrl_t *config);
+
+/**
+ * @brief Set AMUX channel configuration.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param channel [IN] AMUX channel to select (0-31).
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_setDiagAMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t channel);
+
+/**
+ * @brief Get AMUX channel configuration.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param channel [OUT] Current AMUX channel (0-31).
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t *channel);
+
+/**
+ * @brief Set DMUX group configuration.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param group [IN] DMUX group to select (0-31).
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_setDiagDMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t group);
+
+/**
+ * @brief Get DMUX group configuration.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param group [OUT] Current DMUX group (0-31).
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ */
+int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t *group);
 
 #ifdef __cplusplus
 }

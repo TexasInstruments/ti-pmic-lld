@@ -97,15 +97,22 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    /* Read DEV_REV register */
+    /* Read DEV_ID register for device revision */
     Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
+    status = Pmic_ioRxByte(handle, PMIC_DEV_ID_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {
-        /* Extract DEV_REV bit field - serves as both device and silicon revision */
-        handle->devRev = Pmic_getBitField(regData, PMIC_DEV_REV_SHIFT, PMIC_DEV_REV_MASK);
-        handle->devSiRev = handle->devRev;
+        handle->devRev = Pmic_getBitField(regData, PMIC_DEV_ID_SHIFT, PMIC_DEV_ID_MASK);
+
+        /* Read DEV_REV register for silicon revision */
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        handle->devSiRev = Pmic_getBitField(regData, PMIC_DEV_REV_SHIFT, PMIC_DEV_REV_MASK);
     }
 
     /* Read NVM_CODE register */

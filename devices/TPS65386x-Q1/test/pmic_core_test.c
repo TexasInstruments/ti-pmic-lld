@@ -181,6 +181,7 @@ void test_pmic_get_scratchpad() {
 void test_pmic_set_spreadSpectrum() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t commonCtrlCfg;
+    commonCtrlCfg.validParams = PMIC_COMMON_CTRL_SPREAD_SPECTRUM_EN_VALID;
     commonCtrlCfg.spreadSpectrumEn = 1;
     DebugP_log("Enabling DRSS...\r\n");
     pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle_core, commonCtrlCfg);
@@ -202,6 +203,7 @@ void test_pmic_set_spreadSpectrum() {
 void test_pmic_clear_spreadSpectrum() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t commonCtrlCfg;
+    commonCtrlCfg.validParams = PMIC_COMMON_CTRL_SPREAD_SPECTRUM_EN_VALID;
     commonCtrlCfg.spreadSpectrumEn = 0;
     DebugP_log("Disabling DRSS...\r\n");
     pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle_core, commonCtrlCfg);
@@ -334,6 +336,7 @@ void test_pmic_get_diagout() {
 void test_pmic_enable_diagout() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_DiagOutCfgCtrl_t DiagOutCfgCtrl;
+    DiagOutCfgCtrl.validParams = PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID;
     DiagOutCfgCtrl.diagOutCtrl_AMUXEn = 1;
     DiagOutCfgCtrl.diagOutCtrl_DMUXEn = 0;
     DebugP_log("Enabling AMUX...\r\n");
@@ -364,10 +367,10 @@ void test_pmic_get_safeout_cfg() {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__,
                    pmicStatus);
     }
-    if (pCommonCtrlCfg->eNsafeOut1 == 1) {
+    if (pCommonCtrlCfg->enSafeOut1 == 1) {
         DebugP_log("SAFEOUT1 Enabled!\r\n");
     }
-    if (pCommonCtrlCfg->eNsafeOut2 == 1) {
+    if (pCommonCtrlCfg->enSafeOut2 == 1) {
         DebugP_log("SAFEOUT2 Enabled!\r\n\n");
     }
 }
@@ -385,8 +388,9 @@ void test_pmic_get_safeout_cfg() {
 void test_pmic_enable_safeout_cfg() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t commonCtrlCfg;
-    commonCtrlCfg.eNsafeOut1 = 1;
-    commonCtrlCfg.eNsafeOut2 = 1;
+    commonCtrlCfg.validParams = PMIC_COMMON_CTRL_ENSAFEOUT1_VALID | PMIC_COMMON_CTRL_ENSAFEOUT2_VALID;
+    commonCtrlCfg.enSafeOut1 = 1;
+    commonCtrlCfg.enSafeOut2 = 1;
     DebugP_log("Enabling SAFEOUT1 and SAFEOUT2...\r\n");
     pmicStatus = Pmic_setEnableSafeOutCfg(pPmicCoreHandle_core, commonCtrlCfg);
     if (PMIC_ST_SUCCESS != pmicStatus) {
@@ -398,118 +402,118 @@ void test_pmic_enable_safeout_cfg() {
 
 void test_pmicDiagControl_AMUX() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_AMUXFeatures setfeature, getFeature;
+    uint8_t setChannel, getChannel;
 
     DebugP_log("Testing Diagnostic Control AMUX...\r\n");
 
-    /* Testing AMUX configuration - 1 */
-    setfeature = FEATURE_LDO3_OUTPUT_VOLTAGE;
-    pmicStatus = Pmic_setDiagAMUXFeatureCfg(pPmicCoreHandle_core, setfeature);
+    /* Testing AMUX configuration - channel 0 */
+    setChannel = 0U;
+    pmicStatus = Pmic_setDiagAMUXFeatureCfg(pPmicCoreHandle_core, setChannel);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Set Diagnostic Control AMUX Feature %d\r\n", setfeature);
+        DebugP_log("Set Diagnostic Control AMUX Channel %d\r\n", setChannel);
     }
-    pmicStatus = Pmic_getDiagAMUXFeatureCfg(pPmicCoreHandle_core, &getFeature);
+    pmicStatus = Pmic_getDiagAMUXFeatureCfg(pPmicCoreHandle_core, &getChannel);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Retrieved Diagnostic Control AMUX Feature %d\r\n", getFeature);
-        if(getFeature == setfeature) {
-            DebugP_log("Test Passed: Diagnostic Control AMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+        DebugP_log("Retrieved Diagnostic Control AMUX Channel %d\r\n", getChannel);
+        if(getChannel == setChannel) {
+            DebugP_log("Test Passed: Diagnostic Control AMUX -> Expected channel: %d,\r\n Actual channel: %d\r\n", setChannel, getChannel);
         }
         else
         {
-            DebugP_log("Test Failed: Diagnostic Control AMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+            DebugP_log("Test Failed: Diagnostic Control AMUX -> Expected channel: %d,\r\n Actual channel: %d\r\n", setChannel, getChannel);
         }
     }
 
-    /* Testing AMUX configuration - 2 */
-    setfeature = FEATURE_TEMP_SENSOR_LDO2;
-    pmicStatus = Pmic_setDiagAMUXFeatureCfg(pPmicCoreHandle_core, setfeature);
+    /* Testing AMUX configuration - channel 1 */
+    setChannel = 1U;
+    pmicStatus = Pmic_setDiagAMUXFeatureCfg(pPmicCoreHandle_core, setChannel);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Set Diagnostic Control AMUX Feature %d\r\n", setfeature);
+        DebugP_log("Set Diagnostic Control AMUX Channel %d\r\n", setChannel);
     }
-    pmicStatus = Pmic_getDiagAMUXFeatureCfg(pPmicCoreHandle_core, &getFeature);
+    pmicStatus = Pmic_getDiagAMUXFeatureCfg(pPmicCoreHandle_core, &getChannel);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Retrieved Diagnostic Control AMUX Feature %d\r\n", getFeature);
-        if(getFeature == setfeature) {
-            DebugP_log("Test Passed: Diagnostic Control AMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+        DebugP_log("Retrieved Diagnostic Control AMUX Channel %d\r\n", getChannel);
+        if(getChannel == setChannel) {
+            DebugP_log("Test Passed: Diagnostic Control AMUX -> Expected channel: %d,\r\n Actual channel: %d\r\n", setChannel, getChannel);
         }
         else
         {
-            DebugP_log("Test Failed: Diagnostic Control AMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+            DebugP_log("Test Failed: Diagnostic Control AMUX -> Expected channel: %d,\r\n Actual channel: %d\r\n", setChannel, getChannel);
         }
     }
 }
 
 void test_pmicDiagControl_DMUX() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_DMUXFeatures setfeature, getFeature;
+    uint8_t setGroup, getGroup;
 
     DebugP_log("Testing Diagnostic Control DMUX...\r\n");
 
-    /* Testing DMUX configuration - 1 */
-    setfeature = FEATURE_LDO1_DEGLITCHED_UV;
-    pmicStatus = Pmic_setDiagDMUXFeatureCfg(pPmicCoreHandle_core, setfeature);
+    /* Testing DMUX configuration - group 0 */
+    setGroup = 0U;
+    pmicStatus = Pmic_setDiagDMUXFeatureCfg(pPmicCoreHandle_core, setGroup);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Set Diagnostic Control DMUX Feature %d\r\n", setfeature);
+        DebugP_log("Set Diagnostic Control DMUX Group %d\r\n", setGroup);
     }
-    pmicStatus = Pmic_getDiagDMUXFeatureCfg(pPmicCoreHandle_core, &getFeature);
+    pmicStatus = Pmic_getDiagDMUXFeatureCfg(pPmicCoreHandle_core, &getGroup);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Retrieved Diagnostic Control DMUX Feature %d\r\n", getFeature);
-        if(getFeature == setfeature) {
-            DebugP_log("Test Passed: Diagnostic Control DMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+        DebugP_log("Retrieved Diagnostic Control DMUX Group %d\r\n", getGroup);
+        if(getGroup == setGroup) {
+            DebugP_log("Test Passed: Diagnostic Control DMUX -> Expected group: %d,\r\n Actual group: %d\r\n", setGroup, getGroup);
         }
         else
         {
-            DebugP_log("Test Failed: Diagnostic Control DMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+            DebugP_log("Test Failed: Diagnostic Control DMUX -> Expected group: %d,\r\n Actual group: %d\r\n", setGroup, getGroup);
         }
     }
 
-    /* Testing DMUX configuration - 2 */
-    setfeature = FEATURE_LDO1_BYPASS_ENABLE;
-    pmicStatus = Pmic_setDiagDMUXFeatureCfg(pPmicCoreHandle_core, setfeature);
+    /* Testing DMUX configuration - group 1 */
+    setGroup = 1U;
+    pmicStatus = Pmic_setDiagDMUXFeatureCfg(pPmicCoreHandle_core, setGroup);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Set Diagnostic Control DMUX Feature %d\r\n", setfeature);
+        DebugP_log("Set Diagnostic Control DMUX Group %d\r\n", setGroup);
     }
-    pmicStatus = Pmic_getDiagDMUXFeatureCfg(pPmicCoreHandle_core, &getFeature);
+    pmicStatus = Pmic_getDiagDMUXFeatureCfg(pPmicCoreHandle_core, &getGroup);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__, pmicStatus);
     }
     else
     {
-        DebugP_log("Retrieved Diagnostic Control DMUX Feature %d\r\n", getFeature);
-        if(getFeature == setfeature) {
-            DebugP_log("Test Passed: Diagnostic Control DMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+        DebugP_log("Retrieved Diagnostic Control DMUX Group %d\r\n", getGroup);
+        if(getGroup == setGroup) {
+            DebugP_log("Test Passed: Diagnostic Control DMUX -> Expected group: %d,\r\n Actual group: %d\r\n", setGroup, getGroup);
         }
         else
         {
-            DebugP_log("Test Failed: Diagnostic Control DMUX -> Expected feature: %d,\r\n Actual feature: %d\r\n", setfeature, getFeature);
+            DebugP_log("Test Failed: Diagnostic Control DMUX -> Expected group: %d,\r\n Actual group: %d\r\n", setGroup, getGroup);
         }
     }
 }

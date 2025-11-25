@@ -258,3 +258,258 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
 
     return status;
 }
+
+int32_t Pmic_spreadSpectrumEnable(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_BUCK_BST_CFG_REG, &regData);
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_COMMON_CTRL_SPREAD_SPECTRUM_EN_VALID, status)) {
+            Pmic_setBitField_b(&regData, PMIC_DRSS_SS_EN_SHIFT, config.spreadSpectrumEn);
+        }
+
+        if (status == PMIC_ST_SUCCESS) {
+            status = Pmic_ioTxByte(handle, PMIC_BUCK_BST_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getSpreadSpectrumEnable(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t *config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_BUCK_BST_CFG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        config->spreadSpectrumEn = Pmic_getBitField_b(regData, PMIC_DRSS_SS_EN_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_setEnableSafeOutCfg(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, &regData);
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_COMMON_CTRL_ENSAFEOUT1_VALID, status)) {
+            Pmic_setBitField_b(&regData, PMIC_SAFE_OUT1_EN_SHIFT, config.enSafeOut1);
+        }
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_COMMON_CTRL_ENSAFEOUT2_VALID, status)) {
+            Pmic_setBitField_b(&regData, PMIC_SAFE_OUT2_EN_SHIFT, config.enSafeOut2);
+        }
+
+        if (status == PMIC_ST_SUCCESS) {
+            status = Pmic_ioTxByte(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getSafeOutPinCfg(Pmic_Handle_t *handle, Pmic_CommonCtrlCfg_t *config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        config->enSafeOut1 = Pmic_getBitField_b(regData, PMIC_SAFE_OUT1_EN_SHIFT);
+        config->enSafeOut2 = Pmic_getBitField_b(regData, PMIC_SAFE_OUT2_EN_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getCommonStat(Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *stat) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData1 = 0U;
+    uint8_t regData2 = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (stat == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read pin status from STAT_READBACK_ERR register
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_RDBK_ERR_STAT_REG, &regData1);
+    }
+
+    // Read lock status from REG_STAT register
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, REG_STAT_REG, &regData2);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        stat->nRstPin = Pmic_getBitField_b(regData1, PMIC_NRST_RDBK_LVL_SHIFT);
+        stat->safeOut1Pin = Pmic_getBitField_b(regData1, PMIC_SAFE_OUT1_RDBK_LVL_SHIFT);
+        stat->enOutPin = Pmic_getBitField_b(regData1, PMIC_EN_OUT_RDBK_LVL_SHIFT);
+        stat->cfgregLockStat = Pmic_getBitField_b(regData2, CFG_REG_LOCKED_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_setDiagOutCtrlConfig(Pmic_Handle_t *handle, Pmic_DiagOutCfgCtrl_t config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+    uint8_t ctrlValue = 0U;
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regData);
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID, status)) {
+            if (config.diagOutCtrl_AMUXEn) {
+                ctrlValue = PMIC_DIAG_OUT_CTRL_AMUX_VALUE;
+            }
+        }
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_DIAG_OUT_CTRL_DMUX_EN_VALID, status)) {
+            if (config.diagOutCtrl_DMUXEn) {
+                ctrlValue = PMIC_DIAG_OUT_CTRL_DMUX_VALUE;
+            }
+        }
+
+        if (Pmic_validParamStatusCheck(config.validParams, PMIC_DIAG_OUT_CTRL_VALID, status)) {
+            ctrlValue = config.diagOutCtrl;
+        }
+
+        if ((status == PMIC_ST_SUCCESS) &&
+            ((config.validParams & (PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID |
+                                    PMIC_DIAG_OUT_CTRL_DMUX_EN_VALID |
+                                    PMIC_DIAG_OUT_CTRL_VALID)) != 0U)) {
+            Pmic_setBitField(&regData, PMIC_DIAG_OUT_CTRL_SHIFT, PMIC_DIAG_OUT_CTRL_MASK, ctrlValue);
+            status = Pmic_ioTxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getDiagOutCtrlConfig(Pmic_Handle_t *handle, Pmic_DiagOutCfgCtrl_t *config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        config->diagOutCtrl = Pmic_getBitField(regData, PMIC_DIAG_OUT_CTRL_SHIFT, PMIC_DIAG_OUT_CTRL_MASK);
+        config->diagOutCtrl_AMUXEn = (config->diagOutCtrl == PMIC_DIAG_OUT_CTRL_AMUX_VALUE) ? 1U : 0U;
+        config->diagOutCtrl_DMUXEn = (config->diagOutCtrl == PMIC_DIAG_OUT_CTRL_DMUX_VALUE) ? 1U : 0U;
+    }
+
+    return status;
+}
+
+int32_t Pmic_setDiagAMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t channel) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (channel > 0x1FU)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField(&regData, PMIC_DIAG_CH_SEL_SHIFT, PMIC_DIAG_CH_SEL_MASK, channel);
+            status = Pmic_ioTxByte(handle, PMIC_DIAG_OUT_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t *channel) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (channel == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_DIAG_OUT_CFG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *channel = Pmic_getBitField(regData, PMIC_DIAG_CH_SEL_SHIFT, PMIC_DIAG_CH_SEL_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_setDiagDMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t group) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (group > 0x1FU)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField(&regData, PMIC_DIAG_GRP_SEL_SHIFT, PMIC_DIAG_GRP_SEL_MASK, group);
+            status = Pmic_ioTxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_Handle_t *handle, uint8_t *group) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (group == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *group = Pmic_getBitField(regData, PMIC_DIAG_GRP_SEL_SHIFT, PMIC_DIAG_GRP_SEL_MASK);
+    }
+
+    return status;
+}
