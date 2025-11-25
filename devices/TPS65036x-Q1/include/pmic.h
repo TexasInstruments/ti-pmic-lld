@@ -40,6 +40,24 @@
 #ifndef PMIC_H
 #define PMIC_H
 
+/* ========================================================================== */
+/*                              Include Files                                 */
+/* ========================================================================== */
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include "pmic_common.h"
+#include "pmic_core.h"
+#include "pmic_esm.h"
+#include "pmic_gpio.h"
+#include "pmic_io.h"
+#include "pmic_irq.h"
+#include "pmic_power.h"
+#include "pmic_status.h"
+#include "pmic_wdg.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,21 +65,6 @@ extern "C" {
 /* ========================================================================== */
 /*                              Macros & Typedefs                             */
 /* ========================================================================== */
-
-/**
- * @anchor Pmic_ErrorCodes
- * @name PMIC LLD Error Codes
- *
- * @brief Error codes returned by PMIC LLD APIs
- *
- * Error codes are defined in pmic_status.h
- *
- * @{
- */
-#include "pmic_status.h"
-/** @} */
-
-#include "pmic_common.h"
 
 /**
  * @anchor Pmic_HandleCfgValidParams
@@ -99,18 +102,6 @@ extern "C" {
     PMIC_CRITICAL_SECTION_STOP_VALID |\
     PMIC_IRQ_RESPONSE_CALLBACK_VALID)
 /** @} */
-
-/* ========================================================================== */
-/*                                Include Files                               */
-/* ========================================================================== */
-#include "pmic_common.h"
-#include "pmic_core.h"
-#include "pmic_power.h"
-#include "pmic_irq.h"
-#include "pmic_wdg.h"
-#include "pmic_esm.h"
-#include "pmic_gpio.h"
-#include "pmic_io.h"
 
 /* ========================================================================== */
 /*                             Structures and Enums                           */

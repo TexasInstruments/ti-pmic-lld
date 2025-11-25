@@ -50,8 +50,22 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
+
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
+
+#include "pmic_common.h"
+#include "pmic_core.h"
+#include "pmic_esm.h"
+#include "pmic_fsm.h"
+#include "pmic_gpio.h"
+#include "pmic_io.h"
+#include "pmic_irq.h"
+#include "pmic_power.h"
+#include "pmic_status.h"
+#include "pmic_timer.h"
+#include "pmic_wdg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,18 +74,6 @@ extern "C" {
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
-
-#include "pmic_status.h"
-#include "pmic_common.h"
-#include "pmic_core.h"
-#include "pmic_io.h"
-#include "pmic_irq.h"
-#include "pmic_fsm.h"
-#include "pmic_wdg.h"
-#include "pmic_gpio.h"
-#include "pmic_esm.h"
-#include "pmic_timer.h"
-#include "pmic_power.h"
 
 /**
  * @anchor Pmic_EnableDisable
