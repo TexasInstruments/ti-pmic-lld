@@ -147,8 +147,7 @@ typedef struct Pmic_DevSubSysInfo_s {
 typedef struct Pmic_CoreHandle_s {
     const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
     uint32_t drvInitStat;
-    uint8_t devId;
-    uint8_t pmicDevRev;
+    uint8_t devRev;
     uint8_t devSiRev;
     uint8_t commMode;
     uint8_t i2cAddr0;

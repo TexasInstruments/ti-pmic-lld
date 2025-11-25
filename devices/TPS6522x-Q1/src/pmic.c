@@ -68,8 +68,8 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
-        handle->devId = Pmic_getBitField(regData, TI_DEVICE_ID_SHIFT, TI_DEVICE_ID_MASK);
+        // Store device revision and read NVM_CODE_1 register
+        handle->devRev = regData;
         status = Pmic_ioRxByte_CS(handle, NVM_CODE_1_REG, &regData);
     }
 
@@ -498,7 +498,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         handle->drvInitStat = 0U;
-        handle->devId = 0U;
+        handle->devRev = 0U;
         handle->devSiRev = 0U;
         handle->nvmCode = 0U;
         handle->nvmRev = 0U;

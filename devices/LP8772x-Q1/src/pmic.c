@@ -42,10 +42,6 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_Handle_t
         if (config->pmicDeviceType != PMIC_DEV_COACH_LP8772X) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-
-        if (status == PMIC_ST_SUCCESS) {
-            handle->devId = config->pmicDeviceType;
-        }
     }
 
     /* Check and update PMIC Handle Comm Mode */
@@ -164,16 +160,43 @@ static int32_t initCallbackFunctions(const Pmic_CoreCfg_t *config, Pmic_Handle_t
     return status;
 }
 
+static int32_t getPmicInfo(Pmic_Handle_t *handle) {
+    uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    /* Read DEV_REV register */
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
+    Pmic_criticalSectionStop(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        /* Store device revision */
+        handle->devRev = regData;
+
+        /* Read MANUFACTURING_VER register */
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_MANUFACTURING_VER_REG, &regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        /* Store silicon revision */
+        handle->devSiRev = regData;
+    }
+
+    return status;
+}
+
 static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Update PMIC subsystem info to PMIC handle */
-    handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->devId];
+    handle->pPmic_SubSysInfo = &pmicSubSysInfo[PMIC_DEV_COACH_LP8772X];
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_ID_REG, &regVal);
+    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regVal);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -255,6 +278,11 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_CoreCfg_t *config) {
         status = initCritSecFunctions(config, handle);
     }
 
+    // Get PMIC info, store info in pmic handle
+    if (status == PMIC_ST_SUCCESS) {
+        status = getPmicInfo(handle);
+    }
+
     // Initialize any other user provided callback functions
     if (status == PMIC_ST_SUCCESS) {
         status = initCallbackFunctions(config, handle);
@@ -298,8 +326,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
     if (status == PMIC_ST_SUCCESS) {
         handle->pPmic_SubSysInfo = NULL;
         handle->drvInitStat = 0U;
-        handle->devId = 0U;
-        handle->pmicDevRev = 0U;
+        handle->devRev = 0U;
         handle->devSiRev = 0U;
         handle->commMode = 0U;
         handle->i2cAddr0 = 0U;

@@ -198,7 +198,7 @@ extern "C" {
  */
 typedef struct Pmic_Handle_s {
     uint32_t drvInitStat;
-    uint8_t devId;
+    uint8_t devRev;
     uint8_t devSiRev;
     uint8_t nvmCode;
     uint8_t nvmRev;

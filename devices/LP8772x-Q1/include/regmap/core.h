@@ -40,9 +40,14 @@ extern "C" {
 #endif
 
 /* PMIC Module Device Revision Infos */
-#define PMIC_DEV_ID_REG   (0x01U)
-#define PMIC_DEV_ID_SHIFT (0U)
-#define PMIC_DEV_ID_MASK  ((uint8_t)(0xFFU << PMIC_DEV_ID_SHIFT))
+#define PMIC_DEV_REV_REG        (0x01U)
+#define PMIC_DEV_REV_SHIFT      (0U)
+#define PMIC_DEV_REV_MASK       ((uint8_t)(0xFFU << PMIC_DEV_REV_SHIFT))
+
+/* PMIC Silicon Revision Info */
+#define PMIC_MANUFACTURING_VER_REG (0x04U)
+#define PMIC_SILICON_REV_SHIFT     (0U)
+#define PMIC_SILICON_REV_MASK      ((uint8_t)(0xFFU << PMIC_SILICON_REV_SHIFT))
 
 /* PMIC Scratchpad register Addresses */
 #define PMIC_SCRATCH_PAD_REG_1_REG ((uint8_t)0x0AU)

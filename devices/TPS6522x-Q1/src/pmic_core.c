@@ -79,24 +79,18 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
     return status;
 }
 
-int32_t Pmic_getDevId(const Pmic_Handle_t *pmicHandle, uint8_t *devId)
+int32_t Pmic_getDevRev(const Pmic_Handle_t *pmicHandle, uint8_t *devRev)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(pmicHandle);
 
-    if ((status == PMIC_ST_SUCCESS) && (devId == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (devRev == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, DEV_REV_REG, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *devId = Pmic_getBitField(regData, TI_DEVICE_ID_SHIFT, TI_DEVICE_ID_MASK);
+        status = Pmic_ioRxByte_CS(pmicHandle, DEV_REV_REG, devRev);
     }
 
     return status;

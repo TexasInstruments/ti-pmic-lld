@@ -43,10 +43,6 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_Handle_t
         if (config->pmicDeviceType != PMIC_DEV_BB_TPS65386X) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-
-        if (status == PMIC_ST_SUCCESS) {
-            handle->devId = config->pmicDeviceType;
-        }
     }
 
     /* Check and update PMIC Handle Comm Mode */
@@ -117,12 +113,29 @@ static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_Handle_t 
     return status;
 }
 
+static int32_t getPmicInfo(Pmic_Handle_t *handle) {
+    uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    /* Read DEV_REV register */
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
+    Pmic_criticalSectionStop(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        /* Extract DEV_REV bit field */
+        handle->devRev = Pmic_getBitField(regData, PMIC_DEV_REV_SHIFT, PMIC_DEV_REV_MASK);
+    }
+
+    return status;
+}
+
 static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Update PMIC subsystem info to PMIC handle */
-    handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->devId];
+    handle->pPmic_SubSysInfo = &pmicSubSysInfo[PMIC_DEV_BB_TPS65386X];
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(handle);
@@ -160,6 +173,11 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_Handle_t *handle) {
     /* Check and update PMIC handle for Critical section Start/Stop */
     if (status == PMIC_ST_SUCCESS) {
         status = initCritSecFunctions(config, handle);
+    }
+
+    // Get PMIC info, store info in pmic handle
+    if (status == PMIC_ST_SUCCESS) {
+        status = getPmicInfo(handle);
     }
 
     // Set up the valid subsystems for this device and ensure that we can
