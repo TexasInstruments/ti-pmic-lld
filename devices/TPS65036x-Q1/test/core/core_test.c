@@ -206,7 +206,14 @@ void core_test(void *args)
 {
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicCfg = {
+    Pmic_HandleCfg_t pmicCfg = {
+        .validParams = (PMIC_I2C_ADDR0_VALID |
+                        PMIC_COMM_HANDLE_0_VALID |
+                        PMIC_IO_READ_VALID |
+                        PMIC_IO_WRITE_VALID |
+                        PMIC_CRITICAL_SECTION_START_VALID |
+                        PMIC_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -222,7 +229,7 @@ void core_test(void *args)
     platform_printString("CORE_TEST\r\n");
     platform_printString("-------\r\n\r\n");
 
-    status = Pmic_init(&pmicCfg, &pmicHandle);
+    status = Pmic_init(&pmicHandle, &pmicCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {

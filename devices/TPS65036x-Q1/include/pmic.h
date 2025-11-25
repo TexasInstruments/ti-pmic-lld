@@ -73,13 +73,13 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_I2C_ADDR0_VALID              (1U << 0U)
-#define PMIC_CFG_COMM_HANDLE_0_VALID          (1U << 1U)
-#define PMIC_CFG_IO_READ_VALID                (1U << 2U)
-#define PMIC_CFG_IO_WRITE_VALID               (1U << 3U)
-#define PMIC_CFG_CRITICAL_SECTION_START_VALID (1U << 4U)
-#define PMIC_CFG_CRITICAL_SECTION_STOP_VALID  (1U << 5U)
-#define PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID  (1U << 6U)
+#define PMIC_I2C_ADDR0_VALID              (1U << 0U)
+#define PMIC_COMM_HANDLE_0_VALID          (1U << 1U)
+#define PMIC_IO_READ_VALID                (1U << 2U)
+#define PMIC_IO_WRITE_VALID               (1U << 3U)
+#define PMIC_CRITICAL_SECTION_START_VALID (1U << 4U)
+#define PMIC_CRITICAL_SECTION_STOP_VALID  (1U << 5U)
+#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1U << 6U)
 /** @} */
 
 /**
@@ -90,14 +90,14 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_ALL_VALID (\
-    PMIC_CFG_I2C_ADDR0_VALID |\
-    PMIC_CFG_COMM_HANDLE_0_VALID |\
-    PMIC_CFG_IO_READ_VALID |\
-    PMIC_CFG_IO_WRITE_VALID |\
-    PMIC_CFG_CRITICAL_SECTION_START_VALID |\
-    PMIC_CFG_CRITICAL_SECTION_STOP_VALID |\
-    PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID)
+#define PMIC_ALL_VALID (\
+    PMIC_I2C_ADDR0_VALID |\
+    PMIC_COMM_HANDLE_0_VALID |\
+    PMIC_IO_READ_VALID |\
+    PMIC_IO_WRITE_VALID |\
+    PMIC_CRITICAL_SECTION_START_VALID |\
+    PMIC_CRITICAL_SECTION_STOP_VALID |\
+    PMIC_IRQ_RESPONSE_CALLBACK_VALID)
 /** @} */
 
 /* ========================================================================== */
@@ -117,7 +117,7 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- * @anchor Pmic_CoreCfg
+ * @anchor Pmic_HandleCfg
  * @name PMIC LLD Configuration
  *
  * @brief Configuration struct holding end-user settings/parameters relating to
@@ -159,7 +159,7 @@ extern "C" {
  * @param irqResponseCallback Function pointer to application IRQ response. Valid only when
  * PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID is set and when servicing the PMIC WDG in Q&A mode.
  */
-typedef struct Pmic_CoreCfg_s
+typedef struct Pmic_HandleCfg_s
 {
     uint32_t validParams;
     uint8_t i2cAddr0;
@@ -175,7 +175,7 @@ typedef struct Pmic_CoreCfg_s
     void (*criticalSectionStart)(void);
     void (*criticalSectionStop)(void);
     void (*irqResponseCallback)(void);
-} Pmic_CoreCfg_t;
+} Pmic_HandleCfg_t;
 
 /* ========================================================================== */
 /*                             Function Declarations                          */
@@ -199,7 +199,7 @@ typedef struct Pmic_CoreCfg_s
  * @return Success code if PMIC handle is initialized without issue, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_Handle_t *pmicHandle);
+int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
 
 /**
  * @brief De-initialize a PMIC handle instance.

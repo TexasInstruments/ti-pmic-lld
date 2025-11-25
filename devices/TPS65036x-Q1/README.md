@@ -58,7 +58,7 @@ in a web browser. To view the documentation, open the file at
 
 Most APIs provided by this driver expect to receive a `Pmic_Handle_t` in
 order to handle communication with the device. This handle should be created
-through the use of the `Pmic_CoreCfg_t` structure in `pmic.h` and the
+through the use of the `Pmic_HandleCfg_t` structure in `pmic.h` and the
 `Pmic_init()` API. Once created, it is recommended that the handle should not
 be modified directly; otherwise the end-user will risk potential driver errors.
 
@@ -68,7 +68,7 @@ operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to obtain a critical section. These functions are called by the
 driver before and after I2C/SPI communications. It is up to the user to
 determine what is an appropriate implementation of these APIs as considerations
@@ -80,37 +80,37 @@ and on platforms which support it, a proper shared mutex should be
 claimed/released as appropriate to ensure no other device drivers are
 attempting to use the I2C/SPI bus at the same time.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCritSecStart = <your CS start function>,
-    .pFnPmicCritSecStop = <your CS stop function>,
+    .criticalSectionStart = <your CS start function>,
+    .criticalSectionStop = <your CS stop function>,
 }
 ```
 
 ##### PMIC Handle User Functions: Communications I/O Read/Write
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to know how to read and write over the desired communications
 channel (I2C or SPI, typically). The specific implementation of these functions
 is platform dependent, the chosen processor likely has an SDK which provides
 functions that match relatively closely.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCommIoRead = <your I/O read function>,
-    .pFnPmicCommIoWrite = <your I/O write function>,
+    .ioRead = <your I/O read function>,
+    .ioWrite = <your I/O write function>,
 }
 ```
 
 ##### Finalizing Initialization
 
-Once the `Pmic_CoreCfg_t` structure has been initialized with the necessary
+Once the `Pmic_HandleCfg_t` structure has been initialized with the necessary
 information, the user should call `Pmic_init()` in order to convert the
-`Pmic_CoreCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
+`Pmic_HandleCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
 the driver APIs.
 
 A full example of what this may look like for TPS65036X-Q1 is shown below:
@@ -123,13 +123,21 @@ int32_t status;
 // often.
 Pmic_Handle_t pmicHandle;
 
-Pmic_CoreCfg_t coreCfg = {
-    .i2cAddr = 0x60U,
-    .commHandle = &app_commHandle,
+Pmic_HandleCfg_t coreCfg = {
+    .validParams = (
+        PMIC_I2C_ADDR0_VALID |
+        PMIC_COMM_HANDLE_0_VALID |
+        PMIC_IO_READ_VALID |
+        PMIC_IO_WRITE_VALID |
+        PMIC_CRITICAL_SECTION_START_VALID |
+        PMIC_CRITICAL_SECTION_STOP_VALID
+    ),
+    .i2cAddr0 = 0x60U,
+    .commHandle0 = &app_commHandle,
     .ioRead = &app_ioRead,
     .ioWrite = &app_ioWrite,
-    .critSecStart = &app_critSecStart,
-    .critSecStop = &app_critSecStop
+    .criticalSectionStart = &app_critSecStart,
+    .criticalSectionStop = &app_critSecStop
 };
 
 status = Pmic_init(&pmicHandle, &coreCfg);
@@ -140,6 +148,28 @@ if (status == PMIC_ST_SUCCESS) {
     // other application code...
 }
 ```
+
+#### Using validParams
+
+The `validParams` field in `Pmic_HandleCfg_t` allows selective initialization
+of handle configuration parameters. Each bit in this field corresponds to a
+structure member:
+
+- Set a bit to 1 to indicate the corresponding parameter is valid and should be processed
+- Set a bit to 0 to indicate the corresponding parameter is invalid and should be ignored
+
+For TPS65036x-Q1, the following parameters are typically required:
+- `PMIC_I2C_ADDR0_VALID`
+- `PMIC_COMM_HANDLE_0_VALID`
+- `PMIC_IO_READ_VALID`
+- `PMIC_IO_WRITE_VALID`
+- `PMIC_CRITICAL_SECTION_START_VALID`
+- `PMIC_CRITICAL_SECTION_STOP_VALID`
+
+The `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are
+implementing WDG Q&A mode functionality.
+
+Alternatively, use the convenience macro `PMIC_ALL_VALID` to enable all parameters.
 
 ### CRC Enabled I/O
 

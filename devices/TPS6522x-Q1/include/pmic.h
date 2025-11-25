@@ -123,22 +123,6 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_I2CSpeedSel
- * @name PMIC Select I2C Speed
- *
- * @note Set I2C Master before switching the I2C speed to HS/Standard Mode, I2C
- * Master has to set/reset I2C1_HS/I2C2_HS bit field accordingly then only I2C
- * Master can communicate with PMIC in HS/Standard Mode
- *
- * @{
- */
-#define PMIC_I2C_STANDARD_MODE  (0U)
-#define PMIC_I2C_FORCED_HS_MODE (1U)
-#define PMIC_I2C_SPEED_SEL_MIN  (PMIC_I2C_STANDARD_MODE)
-#define PMIC_I2C_SPEED_SEL_MAX  (PMIC_I2C_FORCED_HS_MODE)
-/** @} */
-
-/**
  * @anchor Pmic_HandleCfgValidParams
  * @name PMIC Handle Configuration Structure Valid Parameters
  *
@@ -157,28 +141,24 @@ extern "C" {
 #define PMIC_I2C_ADDR0_VALID              (1U << 1U)
 #define PMIC_I2C_ADDR1_VALID              (1U << 2U)
 #define PMIC_I2C_ADDR2_VALID              (1U << 3U)
-#define PMIC_I2C1_SPEED_VALID             (1U << 4U)
-#define PMIC_I2C2_SPEED_VALID             (1U << 5U)
-#define PMIC_MAX_LOOP_CNT_VALID           (1U << 6U)
-#define PMIC_CRC_ENABLE_VALID             (1U << 7U)
-#define PMIC_ASYNC_ENABLE_VALID           (1U << 8U)
-#define PMIC_COMM_HANDLE_0_VALID          (1U << 9U)
-#define PMIC_COMM_HANDLE_1_VALID          (1U << 10U)
-#define PMIC_TASK_HANDLE_VALID            (1U << 11U)
-#define PMIC_IO_READ_VALID                (1U << 12U)
-#define PMIC_IO_WRITE_VALID               (1U << 13U)
-#define PMIC_ASYNC_RX_START_VALID         (1U << 14U)
-#define PMIC_ASYNC_TX_START_VALID         (1U << 15U)
-#define PMIC_ASYNC_RX_AWAIT_VALID         (1U << 16U)
-#define PMIC_ASYNC_TX_AWAIT_VALID         (1U << 17U)
-#define PMIC_CRITICAL_SECTION_START_VALID (1U << 18U)
-#define PMIC_CRITICAL_SECTION_STOP_VALID  (1U << 19U)
-#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1U << 20U)
+#define PMIC_MAX_LOOP_CNT_VALID           (1U << 4U)
+#define PMIC_CRC_ENABLE_VALID             (1U << 5U)
+#define PMIC_ASYNC_ENABLE_VALID           (1U << 6U)
+#define PMIC_COMM_HANDLE_0_VALID          (1U << 7U)
+#define PMIC_TASK_HANDLE_VALID            (1U << 8U)
+#define PMIC_IO_READ_VALID                (1U << 9U)
+#define PMIC_IO_WRITE_VALID               (1U << 10U)
+#define PMIC_ASYNC_RX_START_VALID         (1U << 11U)
+#define PMIC_ASYNC_TX_START_VALID         (1U << 12U)
+#define PMIC_ASYNC_RX_AWAIT_VALID         (1U << 13U)
+#define PMIC_ASYNC_TX_AWAIT_VALID         (1U << 14U)
+#define PMIC_CRITICAL_SECTION_START_VALID (1U << 15U)
+#define PMIC_CRITICAL_SECTION_STOP_VALID  (1U << 16U)
+#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1U << 17U)
 #define PMIC_SINGLE_I2C_OPERATION_VALID   (\
     PMIC_COMM_MODE_VALID |\
     PMIC_I2C_ADDR0_VALID |\
     PMIC_I2C_ADDR1_VALID |\
-    PMIC_I2C1_SPEED_VALID |\
     PMIC_CRC_ENABLE_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
     PMIC_IO_READ_VALID |\
@@ -190,11 +170,8 @@ extern "C" {
     PMIC_COMM_MODE_VALID |\
     PMIC_I2C_ADDR0_VALID |\
     PMIC_I2C_ADDR1_VALID |\
-    PMIC_I2C1_SPEED_VALID |\
-    PMIC_I2C2_SPEED_VALID |\
     PMIC_CRC_ENABLE_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
-    PMIC_COMM_HANDLE_1_VALID |\
     PMIC_IO_READ_VALID |\
     PMIC_IO_WRITE_VALID |\
     PMIC_CRITICAL_SECTION_START_VALID |\
@@ -256,10 +233,6 @@ extern "C" {
  *
  * @param i2cAddr2 Tertiary I2C address. Used to access NVM-space registeres on
  * the PMIC.
- *
- * @param i2c1Speed I2C1 speed. For valid values, refer to @ref Pmic_I2CSpeedSel.
- *
- * @param i2c2Speed I2C2 speed. For valid values, refer to @ref Pmic_I2CSpeedSel.
  *
  * @param maxLoopCnt Maximum number of iterations for loops in PMIC LLD.
  *
@@ -328,13 +301,10 @@ typedef struct Pmic_HandleCfg_s {
     uint8_t i2cAddr0;
     uint8_t i2cAddr1;
     uint8_t i2cAddr2;
-    uint8_t i2c1Speed;
-    uint8_t i2c2Speed;
     uint32_t maxLoopCnt;
     bool crcEnable;
     bool asyncEnable;
     void *commHandle0;
-    void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
         const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);

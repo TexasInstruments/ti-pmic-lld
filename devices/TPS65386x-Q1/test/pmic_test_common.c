@@ -157,8 +157,6 @@ int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
     {
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Update MAIN instance type to pmicConfigData for SPI */
-            pmicConfigData->instType = PMIC_MAIN_INST;
             if (PMIC_ST_SUCCESS != pmicStatus)
             {
                 DebugP_log("%s(): %d: FAILED with status: %d\r\n",
@@ -214,7 +212,7 @@ static void test_pmic_SemaphoreDeInit(void)
  * received data in the provided buffer.
  *
  * @param pmicCorehandle  Pointer to the PMIC core handle.
- * @param instType        PMIC instance type.
+ * @param page            Page number for register access.
  * @param regAddr         Register address to read.
  * @param pBuf            Pointer to the buffer to store the read data.
  * @param bufLen          Length of the buffer.
@@ -259,7 +257,7 @@ int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
  * MCSPI driver to execute the write transaction with the provided data.
  *
  * @param pmicCorehandle Pointer to the PMIC core handle.
- * @param instType       PMIC instance type.
+ * @param page           Page number for register access.
  * @param regAddr        Register address to write.
  * @param pBuf           Pointer to the buffer containing the data to write.
  * @param bufLen         Length of the buffer.

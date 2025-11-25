@@ -121,7 +121,6 @@ extern "C" {
 #define PMIC_ST_ERR_INV_PARAM                                 (-((int32_t)3))
 #define PMIC_ST_ERR_INV_DEVICE                                (-((int32_t)4))
 #define PMIC_ST_ERR_NULL_FPTR                                 (-((int32_t)5))
-#define PMIC_ST_ERR_INV_SUBSYSTEM                             (-((int32_t)6))
 #define PMIC_ST_ERR_INSUFFICIENT_CFG                          (-((int32_t)7))
 #define PMIC_ST_ERR_I2C_COMM_FAIL                             (-((int32_t)8))
 #define PMIC_ST_ERR_SPI_COMM_FAIL                             (-((int32_t)9))

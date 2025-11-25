@@ -93,7 +93,6 @@ extern "C" {
  * @brief PMIC-related information.
  */
 #define PLATFORM_TARGET_I2C_ADDR    (0x60U)
-#define PLATFORM_TARGET_DEV_TYPE    (PMIC_DEV_COACH_LP8772X)
 
 /**
  * @brief Generic "invalid value" define used in test source codebase.
@@ -185,8 +184,7 @@ void *platform_getCommHandle(void);
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Page number for register access.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
@@ -209,8 +207,7 @@ int32_t platform_txByte(struct Pmic_CoreHandle_s *pmicCorehandle,
  *
  * @param pmicCorehandle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Page number for register access.
  *
  * @param regAddr [IN] Target PMIC register address.
  *

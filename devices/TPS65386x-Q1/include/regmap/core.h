@@ -41,6 +41,8 @@ extern "C" {
 
 /** @brief: PMIC Module Device Revision Infos */
 #define PMIC_DEV_REV_REG (0x01U)
+#define PMIC_NVM_CODE_REG (0x02U)
+#define PMIC_NVM_REV_REG  (0x0BU)
 
 /** @brief  PMIC STAT_READBACK_ERR register Addresses */
 #define PMIC_RDBK_ERR_STAT_REG (0xAU)
@@ -124,6 +126,8 @@ extern "C" {
 
 /** @brief   PMIC DEV_REV Register Shift Values */
 #define PMIC_DEV_REV_SHIFT (0x0U)
+#define PMIC_NVM_CODE_SHIFT (0x0U)
+#define PMIC_NVM_REV_SHIFT (0x0U)
 
 #define PMIC_STATE_CTRL_STATE_REQ_SHIFT 0
 #define PMIC_STATE_CTRL_STATE_REQ_MASK ((uint8_t)(0x03U << PMIC_STATE_CTRL_STATE_REQ_SHIFT))
@@ -171,6 +175,8 @@ extern "C" {
 
 /** @brief   PMIC DEV_REV Register Mask Values */
 #define PMIC_DEV_REV_MASK ((uint8_t)(0x3FU << PMIC_DEV_REV_SHIFT))
+#define PMIC_NVM_CODE_MASK ((uint8_t)(0xFFU << PMIC_NVM_CODE_SHIFT))
+#define PMIC_NVM_REV_MASK ((uint8_t)(0xFFU << PMIC_NVM_REV_SHIFT))
 
 /** @brief   PMIC REG_STAT Mask Values */
 #define PMIC_CFG_REG_LOCK_MASK (0x01) /* Bit mask for CFG_REG_LOCK */

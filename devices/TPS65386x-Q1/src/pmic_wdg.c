@@ -50,18 +50,13 @@
 static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {
     int32_t status = Pmic_checkHandle(handle);
 
-    /* Check the watch dog sub-system supported by pmic device */
-    if ((status == PMIC_ST_SUCCESS) && !handle->pPmic_SubSysInfo->wdgEnable) {
-        status = PMIC_ST_ERR_INV_SUBSYSTEM;
-    }
-
     return status;
 }
 
 static int32_t WDG_setWindowsTimeIntervals(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    /* Set wdg long window time interval - each window write is independent and atomic */
+    /* Set wdg long window time interval */
     if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
         status = Pmic_ioTxByte_CS(handle, PMIC_WD_LONGWIN_CFG_REG, config->longWinCode);
     }
@@ -153,7 +148,6 @@ static int32_t WDG_setThresholds(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *con
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    // Single critical section for atomic read-modify-write
     Pmic_criticalSectionStart(handle);
 
     // Read WD_TH_CFG register
@@ -224,7 +218,6 @@ static int32_t WDG_setCfgParams(Pmic_Handle_t *handle, const Pmic_WdgCfg_t *conf
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Single critical section for atomic read-modify-write
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle);
 
@@ -279,7 +272,6 @@ static int32_t WDG_setQAConfigurations(Pmic_Handle_t *handle, const Pmic_WdgCfg_
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    // Single critical section for atomic read-modify-write
     Pmic_criticalSectionStart(handle);
 
     // Read the WD_QA_CFG register
@@ -356,7 +348,6 @@ static int32_t WDG_setThrIntBehavior(Pmic_Handle_t *handle, const Pmic_WdgCfg_t 
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    // Single critical section for atomic read-modify-write
     Pmic_criticalSectionStart(handle);
 
     // Read WD_INT_CFG register

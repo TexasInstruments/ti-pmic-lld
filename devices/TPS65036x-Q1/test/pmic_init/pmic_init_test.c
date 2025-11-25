@@ -105,6 +105,13 @@ void pmic_init_test(void *args)
 
 static void pmicInitTest_initPmicCfg(Pmic_CoreCfg_t *pmicCfg)
 {
+    pmicCfg->validParams = PMIC_I2C_ADDR0_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_IRQ_RESPONSE_CALLBACK_VALID;
     pmicCfg->i2cAddr0 = 0x60U;
     pmicCfg->commHandle0 = platform_getCommHandle();
     pmicCfg->ioRead = &platform_rxByte;

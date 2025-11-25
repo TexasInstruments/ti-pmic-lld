@@ -133,10 +133,6 @@ extern "C" {
  * @param i2cAddr2 Tertiary I2C address. Used to access NVM-space registeres on
  * the PMIC.
  *
- * @param i2c1Speed I2C1 speed. For valid values, refer to @ref Pmic_I2CSpeedSel.
- *
- * @param i2c2Speed I2C2 speed. For valid values, refer to @ref Pmic_I2CSpeedSel.
- *
  * @param maxLoopCnt Maximum number of iterations for loops in PMIC LLD.
  *
  * @param crcEnable Enable or disable serial communication CRC.
@@ -208,13 +204,10 @@ typedef struct Pmic_Handle_s {
     uint8_t i2cAddr0;
     uint8_t i2cAddr1;
     uint8_t i2cAddr2;
-    uint8_t i2c1Speed;
-    uint8_t i2c2Speed;
     uint32_t maxLoopCnt;
     bool crcEnable;
     bool asyncEnable;
     void *commHandle0;
-    void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
         const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);

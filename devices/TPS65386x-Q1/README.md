@@ -98,8 +98,8 @@ Within the `Pmic_CoreCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCritSecStart = <your CS start function>,
-    .pFnPmicCritSecStop = <your CS stop function>,
+    .criticalSectionStart = <your CS start function>,
+    .criticalSectionStop = <your CS stop function>,
 }
 ```
 
@@ -115,8 +115,8 @@ Within the `Pmic_CoreCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCommIoRead = <your I/O read function>,
-    .pFnPmicCommIoWrite = <your I/O write function>,
+    .ioRead = <your I/O read function>,
+    .ioWrite = <your I/O write function>,
 }
 ```
 
@@ -139,22 +139,19 @@ Pmic_Handle_t PmicHandle;
 
 Pmic_CoreCfg_t coreCfg = {
     .validParams = (
-        PMIC_CFG_DEVICE_TYPE_VALID_SHIFT   |
-        PMIC_CFG_COMM_MODE_VALID_SHIFT     |
-        PMIC_CFG_COMM_HANDLE_VALID_SHIFT   |
-        PMIC_CFG_COMM_IO_RD_VALID_SHIFT    |
-        PMIC_CFG_COMM_IO_WR_VALID_SHIFT    |
-        PMIC_CFG_CRITSEC_START_VALID_SHIFT |
-        PMIC_CFG_CRITSEC_STOP_VALID_SHIFT
+        PMIC_COMM_MODE_VALID     |
+        PMIC_COMM_HANDLE_0_VALID   |
+        PMIC_IO_READ_VALID    |
+        PMIC_IO_WRITE_VALID    |
+        PMIC_CRITICAL_SECTION_START_VALID |
+        PMIC_CRITICAL_SECTION_STOP_VALID
     ),
-    .instType = PMIC_MAIN_INST,
-    .pmicDeviceType = PMIC_DEV_BB_TPS65386X,
     .commMode = PMIC_INTF_SPI,
-    .pCommHandle = &commHandle,
-    .pFnPmicCommIoRead = PmicCommIoRead,
-    .pFnPmicCommIoWrite = PmicCommIoWrite,
-    .pFnPmicCritSecStart = CritSecStart,
-    .pFnPmicCritSecStop = CritSecStop,
+    .commHandle0 = &commHandle,
+    .ioRead = PmicCommIoRead,
+    .ioWrite = PmicCommIoWrite,
+    .criticalSectionStart = CritSecStart,
+    .criticalSectionStop = CritSecStop,
 };
 
 status = Pmic_init(&PmicHandle, &coreCfg);

@@ -154,7 +154,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
         bufLen = 4U;
 
         // User-implemented hook transmits spiBuf then overwrites spiBuf with received data
-        status = handle->ioRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+        status = handle->ioRead(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
 
         // Validate PCRC
         if (status == PMIC_ST_SUCCESS) {
@@ -222,7 +222,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
         bufLen = 4U;
 
         // User-implemented hook transmits spiBuf
-        status = handle->ioWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, spiBuf, bufLen);
+        status = handle->ioWrite(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
     }
 
     return status;

@@ -70,33 +70,6 @@ extern "C" {
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
-/**
- * @anchor Pmic_DevSubSysInfo
- * @name PMIC Device Subsystem Information
- *
- * @brief Used by LLD to figure out which subsystems are enabled for the PMIC
- * device.
- *
- * @param gpioEnable GPIO subsystem enabled/disabled status.
- *
- * @param rtcEnable RTC subsystem enabled/disabled status.
- *
- * @param wdgEnable WDG subsystem enabled/disabled status.
- *
- * @param buckEnable Buck converter subsystem enabled/disabled status.
- *
- * @param ldoEnable LDO regulator subsystem enabled/disabled status.
- *
- * @param esmEnable ESM subsystem enabled/disabled status.
- */
-typedef struct Pmic_DevSubSysInfo_s {
-    bool gpioEnable;
-    bool rtcEnable;
-    bool wdgEnable;
-    bool buckEnable;
-    bool ldoEnable;
-    bool esmEnable;
-} Pmic_DevSubSysInfo_t;
 
 /**
  * @anchor Pmic_CoreHandle
@@ -109,8 +82,6 @@ typedef struct Pmic_DevSubSysInfo_s {
  * and must be initialized via 'Pmic_init()' before it can be used by other LLD
  * APIs. End-users should not modify the contents of this structure after it has
  * been initialized.
- *
- * @param pPmic_SubSysInfo Structure used to indicate enabled/disabled subsystems.
  *
  * @param drvInitStat Driver initialization status. Used by LLD as a measure to
  * prevent corrupted handle usage.
@@ -130,10 +101,6 @@ typedef struct Pmic_DevSubSysInfo_s {
  * @param i2cAddr1 Address for interacting with PMIC WDG Q&A.
  *
  * @param i2cAddr2 Address for interacting with PMIC NVM space.
- *
- * @param i2c1Speed I2C1 speed.
- *
- * @param i2c2Speed I2C2 speed.
  *
  * @param crcEnable Status of whether serial communication CRC is enabled. Set to true
  * if enabled, false otherwise.
@@ -159,19 +126,18 @@ typedef struct Pmic_DevSubSysInfo_s {
  * when an IRQ is detected during WDG servicing.
  */
 typedef struct Pmic_CoreHandle_s {
-    const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
     uint32_t drvInitStat;
     uint8_t devRev;
+    uint8_t devSiRev;
+    uint8_t nvmCode;
+    uint8_t nvmRev;
     uint8_t commMode;
     uint8_t i2cAddr0;
     uint8_t i2cAddr1;
     uint8_t i2cAddr2;
-    uint8_t i2c1Speed;
-    uint8_t i2c2Speed;
     bool crcEnable;
     bool configCrcEnable;
     void *commHandle0;
-    void *commHandle1;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicCorehandle,
                       uint8_t instType, uint16_t regAddr,
                       uint8_t *pRxBuf, uint8_t bufLen);

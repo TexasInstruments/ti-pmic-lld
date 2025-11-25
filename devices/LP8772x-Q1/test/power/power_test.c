@@ -686,29 +686,26 @@ void power_test(void *args)
 {
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t coreCfg = {
-        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID |
-                        PMIC_CFG_COMM_MODE_VALID |
-                        PMIC_CFG_SLAVEADDR_VALID |
-                        PMIC_CFG_COMM_HANDLE_VALID |
-                        PMIC_CFG_COMM_IO_RD_VALID |
-                        PMIC_CFG_COMM_IO_WR_VALID |
-                        PMIC_CFG_CRITSEC_START_VALID |
-                        PMIC_CFG_CRITSEC_STOP_VALID |
-                        PMIC_CFG_CRC_ENABLE_VALID |
-                        PMIC_CFG_CFG_CRC_ENABLE_VALID |
-                        PMIC_CFG_PSEUDO_IRQ_VALID),
-        .instType = PMIC_MAIN_INST,
-        .pmicDeviceType = PLATFORM_TARGET_DEV_TYPE,
+    Pmic_HandleCfg_t coreCfg = {
+        .validParams = (PMIC_COMM_MODE_VALID |
+                        PMIC_I2C_ADDR0_VALID |
+                        PMIC_COMM_HANDLE_0_VALID |
+                        PMIC_IO_READ_VALID |
+                        PMIC_IO_WRITE_VALID |
+                        PMIC_CRITICAL_SECTION_START_VALID |
+                        PMIC_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CRC_ENABLE_VALID |
+                        PMIC_CONFIG_CRC_ENABLE_VALID |
+                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
-        .slaveAddr = PLATFORM_TARGET_I2C_ADDR,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .crcEnable = PMIC_DISABLE,
         .configCrcEnable = PMIC_DISABLE,
-        .pCommHandle = platform_getCommHandle(),
-        .pFnPmicCommIoRd = &platform_rxByte,
-        .pFnPmicCommIoWr = &platform_txByte,
-        .pFnPmicCritSecStart = &platform_critSecStart,
-        .pFnPmicCritSecStop = &platform_critSecStop,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse
     };
 

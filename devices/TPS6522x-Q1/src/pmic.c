@@ -96,312 +96,273 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
     return status;
 }
 
-static int32_t validateAndSetI2CCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetI2CCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // i2cAddr0
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR0_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR0_VALID))
     {
-        handle->i2cAddr0 = handleCfg->i2cAddr0;
+        handle->i2cAddr0 = config->i2cAddr0;
     }
 
     // i2cAddr1
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR1_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR1_VALID))
     {
-        handle->i2cAddr1 = handleCfg->i2cAddr1;
+        handle->i2cAddr1 = config->i2cAddr1;
     }
 
     // i2cAddr2
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C_ADDR2_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR2_VALID))
     {
-        handle->i2cAddr2 = handleCfg->i2cAddr2;
-    }
-
-    // i2c1Speed
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_I2C1_SPEED_VALID))
-    {
-        if (handleCfg->i2c1Speed > PMIC_I2C_SPEED_SEL_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            handle->i2c1Speed = handleCfg->i2c1Speed;
-        }
-    }
-
-    // i2c2Speed
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_I2C2_SPEED_VALID, status))
-    {
-        if (handleCfg->i2c2Speed > PMIC_I2C_SPEED_SEL_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            handle->i2c2Speed = handleCfg->i2c2Speed;
-        }
+        handle->i2cAddr2 = config->i2cAddr2;
     }
 
     return status;
 }
 
-static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // commHandle0
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_COMM_HANDLE_0_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_COMM_HANDLE_0_VALID))
     {
-        if (handleCfg->commHandle0 == NULL)
+        if (config->commHandle0 == NULL)
         {
             status = PMIC_ST_ERR_NULL_PARAM;
         }
         else
         {
-            handle->commHandle0 = handleCfg->commHandle0;
-        }
-    }
-
-    // commHandle1
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_COMM_HANDLE_1_VALID, status))
-    {
-        if (handleCfg->commHandle1 == NULL)
-        {
-            status = PMIC_ST_ERR_NULL_PARAM;
-        }
-        else
-        {
-            handle->commHandle1 = handleCfg->commHandle1;
+            handle->commHandle0 = config->commHandle0;
         }
     }
 
     // taskHandle
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_TASK_HANDLE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TASK_HANDLE_VALID, status))
     {
-        if (handleCfg->taskHandle == NULL)
+        if (config->taskHandle == NULL)
         {
             status = PMIC_ST_ERR_NULL_PARAM;
         }
         else
         {
-            handle->taskHandle = handleCfg->taskHandle;
+            handle->taskHandle = config->taskHandle;
         }
     }
 
     return status;
 }
 
-static int32_t validateAndSetSyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetSyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // ioRead
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_IO_READ_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_IO_READ_VALID))
     {
-        if (handleCfg->ioRead == NULL)
+        if (config->ioRead == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->ioRead = handleCfg->ioRead;
+            handle->ioRead = config->ioRead;
         }
     }
 
     // ioWrite
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_IO_WRITE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_IO_WRITE_VALID, status))
     {
-        if (handleCfg->ioWrite == NULL)
+        if (config->ioWrite == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->ioWrite = handleCfg->ioWrite;
+            handle->ioWrite = config->ioWrite;
         }
     }
 
     return status;
 }
 
-static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // asyncRxStart
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_RX_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_START_VALID, status))
     {
-        if (handleCfg->asyncRxStart == NULL)
+        if (config->asyncRxStart == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->asyncRxStart = handleCfg->asyncRxStart;
+            handle->asyncRxStart = config->asyncRxStart;
         }
     }
 
     // asyncTxStart
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_TX_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_START_VALID, status))
     {
-        if (handleCfg->asyncTxStart == NULL)
+        if (config->asyncTxStart == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->asyncTxStart = handleCfg->asyncTxStart;
+            handle->asyncTxStart = config->asyncTxStart;
         }
     }
 
     // asyncRxAwait
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status))
     {
-        if (handleCfg->asyncRxAwait == NULL)
+        if (config->asyncRxAwait == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->asyncRxAwait = handleCfg->asyncRxAwait;
+            handle->asyncRxAwait = config->asyncRxAwait;
         }
     }
 
     // asyncTxAwait
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status))
     {
-        if (handleCfg->asyncTxAwait == NULL)
+        if (config->asyncTxAwait == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->asyncTxAwait = handleCfg->asyncTxAwait;
+            handle->asyncTxAwait = config->asyncTxAwait;
         }
     }
 
     return status;
 }
 
-static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // criticalSectionStart
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
     {
-        if (handleCfg->criticalSectionStart == NULL)
+        if (config->criticalSectionStart == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->criticalSectionStart = handleCfg->criticalSectionStart;
+            handle->criticalSectionStart = config->criticalSectionStart;
         }
     }
 
     // criticalSectionStop
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRITICAL_SECTION_STOP_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_STOP_VALID, status))
     {
-        if (handleCfg->criticalSectionStop == NULL)
+        if (config->criticalSectionStop == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->criticalSectionStop = handleCfg->criticalSectionStop;
+            handle->criticalSectionStop = config->criticalSectionStop;
         }
     }
 
     // irqResponseCallback
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_IRQ_RESPONSE_CALLBACK_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_IRQ_RESPONSE_CALLBACK_VALID, status))
     {
-        if (handleCfg->irqResponseCallback == NULL)
+        if (config->irqResponseCallback == NULL)
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
         else
         {
-            handle->irqResponseCallback = handleCfg->irqResponseCallback;
+            handle->irqResponseCallback = config->irqResponseCallback;
         }
     }
 
     return status;
 }
 
-static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     // Synchronous hooks
-    int32_t status = validateAndSetSyncHooks(handle, handleCfg);
+    int32_t status = validateAndSetSyncHooks(handle, config);
 
     // Asynchronous hooks
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetAsyncHooks(handle, handleCfg);
+        status = validateAndSetAsyncHooks(handle, config);
     }
 
     // Other hooks (critical section, IRQ response callback)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetOtherHooks(handle, handleCfg);
+        status = validateAndSetOtherHooks(handle, config);
     }
 
     return status;
 }
 
-static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // commMode
-    if (Pmic_validParamCheck(handleCfg->validParams, PMIC_COMM_MODE_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_COMM_MODE_VALID))
     {
-        if (handleCfg->commMode > PMIC_INTF_MAX)
+        if (config->commMode > PMIC_INTF_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            handle->commMode = handleCfg->commMode;
+            handle->commMode = config->commMode;
         }
     }
 
     // maxLoopCnt
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_MAX_LOOP_CNT_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_MAX_LOOP_CNT_VALID, status))
     {
-        handle->maxLoopCnt = handleCfg->maxLoopCnt;
+        handle->maxLoopCnt = config->maxLoopCnt;
     }
 
     // crcEnable
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_CRC_ENABLE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRC_ENABLE_VALID, status))
     {
-        handle->crcEnable = handleCfg->crcEnable;
+        handle->crcEnable = config->crcEnable;
     }
 
     // asyncEnable
-    if (Pmic_validParamStatusCheck(handleCfg->validParams, PMIC_ASYNC_ENABLE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID, status))
     {
-        handle->asyncEnable = handleCfg->asyncEnable;
+        handle->asyncEnable = config->asyncEnable;
     }
 
     // Validate I2C configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetI2CCfg(handle, handleCfg);
+        status = validateAndSetI2CCfg(handle, config);
     }
 
     // Validate communication/task handles
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetUserHandles(handle, handleCfg);
+        status = validateAndSetUserHandles(handle, config);
     }
 
     // Validate user-implemented hooks
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetUserHooks(handle, handleCfg);
+        status = validateAndSetUserHooks(handle, config);
     }
 
     return status;
@@ -452,12 +413,12 @@ static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
+int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Check whether parameters are valid
-    if ((handle == NULL) || (handleCfg == NULL))
+    if ((handle == NULL) || (config == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -465,7 +426,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *handleCfg)
     // Validate and set configuration parameters
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetHandleCfg(handle, handleCfg);
+        status = validateAndSetHandleCfg(handle, config);
     }
 
     // Validate PMIC handle once configurations have been set
@@ -506,12 +467,9 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
         handle->i2cAddr0 = 0U;
         handle->i2cAddr1 = 0U;
         handle->i2cAddr2 = 0U;
-        handle->i2c1Speed = 0U;
-        handle->i2c2Speed = 0U;
         handle->crcEnable = PMIC_DISABLE;
         handle->asyncEnable = PMIC_DISABLE;
         handle->commHandle0 = NULL;
-        handle->commHandle1 = NULL;
         handle->taskHandle = NULL;
         handle->ioRead = NULL;
         handle->ioWrite = NULL;
