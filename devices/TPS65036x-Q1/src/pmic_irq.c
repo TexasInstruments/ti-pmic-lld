@@ -398,13 +398,13 @@ static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, con
     }
 }
 
-static int32_t IRQ_readL2IntCommErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL2IntCommErr(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_COMM_ERR register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_COMM_ERR_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_COMM_ERR_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -420,13 +420,13 @@ static int32_t IRQ_readL2IntCommErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqSta
     return status;
 }
 
-static int32_t IRQ_readL2IntEsm(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL2IntEsm(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_ESM register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_ESM_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_ESM_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -442,13 +442,13 @@ static int32_t IRQ_readL2IntEsm(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t 
     return status;
 }
 
-static int32_t IRQ_readL2WdErrStatus(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL2WdErrStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read WD_ERR_STATUS register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_WD_ERR_STATUS_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_WD_ERR_STATUS_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -464,30 +464,30 @@ static int32_t IRQ_readL2WdErrStatus(const Pmic_Handle_t *pmicHandle, Pmic_IrqSt
     return status;
 }
 
-static int32_t IRQ_readL1IntFsmErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL1IntFsmErr(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_FSM_ERR register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_FSM_ERR_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_FSM_ERR_REG, &regData);
 
     // If WD_INT bit is set, read WD_ERR_STATUS register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_WD_INT_SHIFT))
     {
-        status = IRQ_readL2WdErrStatus(pmicHandle, irqStat);
+        status = IRQ_readL2WdErrStatus(handle, irqStat);
     }
 
     // If COMM_ERR_INT bit is set, read INT_COMM_ERR register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_COMM_ERR_INT_SHIFT))
     {
-        status = IRQ_readL2IntCommErr(pmicHandle, irqStat);
+        status = IRQ_readL2IntCommErr(handle, irqStat);
     }
 
     // If ESM_MCU_INT bit is set, read INT_ESM register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_ESM_MCU_INT_SHIFT))
     {
-        status = IRQ_readL2IntEsm(pmicHandle, irqStat);
+        status = IRQ_readL2IntEsm(handle, irqStat);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -506,13 +506,13 @@ static int32_t IRQ_readL1IntFsmErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat
     return status;
 }
 
-static int32_t IRQ_readL1IntSevereErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL1IntSevereErr(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_SEVERE_ERR register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_SEVERE_ERR_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_SEVERE_ERR_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -526,13 +526,13 @@ static int32_t IRQ_readL1IntSevereErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqS
     return status;
 }
 
-static int32_t IRQ_readL1IntModerateErr(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL1IntModerateErr(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_MODERATE_ERR register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_MODERATE_ERR_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_MODERATE_ERR_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -550,13 +550,13 @@ static int32_t IRQ_readL1IntModerateErr(const Pmic_Handle_t *pmicHandle, Pmic_Ir
     return status;
 }
 
-static int32_t IRQ_readL1IntMisc(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL1IntMisc(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_MISC register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_MISC_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_MISC_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -577,13 +577,13 @@ static int32_t IRQ_readL1IntMisc(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t
     return status;
 }
 
-static int32_t IRQ_readL2IntBuck3Ldo(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL2IntBuck3Ldo(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_BUCK3_LDO register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_BUCK3_LDO_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_BUCK3_LDO_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -602,13 +602,13 @@ static int32_t IRQ_readL2IntBuck3Ldo(const Pmic_Handle_t *pmicHandle, Pmic_IrqSt
     return status;
 }
 
-static int32_t IRQ_readL2IntBuck1_2(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL2IntBuck1_2(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_BUCK1_2 register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_BUCK1_2_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_BUCK1_2_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -627,13 +627,13 @@ static int32_t IRQ_readL2IntBuck1_2(const Pmic_Handle_t *pmicHandle, Pmic_IrqSta
     return status;
 }
 
-static int32_t IRQ_readL1IntBuckLdo(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL1IntBuckLdo(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_BUCK_LDO register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_BUCK_LDO_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_BUCK_LDO_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -649,64 +649,64 @@ static int32_t IRQ_readL1IntBuckLdo(const Pmic_Handle_t *pmicHandle, Pmic_IrqSta
         // If LDO_INT bit or BUCK3_INT bit is set, read INT_BUCK3_LDO register
         if (Pmic_getBitField_b(regData, PMIC_LDO_INT_SHIFT) || Pmic_getBitField_b(regData, PMIC_BUCK3_INT_SHIFT))
         {
-            status = IRQ_readL2IntBuck3Ldo(pmicHandle, irqStat);
+            status = IRQ_readL2IntBuck3Ldo(handle, irqStat);
         }
 
         // If BUCK2_INT bit or BUCK1_INT bit is set is set, read INT_BUCK1_2 register
         if ((status == PMIC_ST_SUCCESS) &&
             (Pmic_getBitField_b(regData, PMIC_BUCK2_INT_SHIFT) || Pmic_getBitField_b(regData, PMIC_BUCK1_INT_SHIFT)))
         {
-            status = IRQ_readL2IntBuck1_2(pmicHandle, irqStat);
+            status = IRQ_readL2IntBuck1_2(handle, irqStat);
         }
     }
 
     return status;
 }
 
-static int32_t IRQ_readL0(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+static int32_t IRQ_readL0(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INT_TOP register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_INT_TOP_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_INT_TOP_REG, &regData);
 
     // If FSM_ERR_INT bit is set, read INT_FSM_ERR register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_FSM_ERR_INT_SHIFT))
     {
-        status = IRQ_readL1IntFsmErr(pmicHandle, irqStat);
+        status = IRQ_readL1IntFsmErr(handle, irqStat);
     }
 
     // If SEVERE_ERR_INT bit is set, read INT_SEVERE_ERR register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_SEVERE_ERR_INT_SHIFT))
     {
-        status = IRQ_readL1IntSevereErr(pmicHandle, irqStat);
+        status = IRQ_readL1IntSevereErr(handle, irqStat);
     }
 
     // If MODERATE_ERR_INT bit is set, read INT_MODERATE_ERR register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_MODERATE_ERR_INT_SHIFT))
     {
-        status = IRQ_readL1IntModerateErr(pmicHandle, irqStat);
+        status = IRQ_readL1IntModerateErr(handle, irqStat);
     }
 
     // If MISC_INT bit is set, read INT_MISC register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_MISC_INT_SHIFT))
     {
-        status = IRQ_readL1IntMisc(pmicHandle, irqStat);
+        status = IRQ_readL1IntMisc(handle, irqStat);
     }
 
     // If BUCK_LDO_INT bit is set, read INT_BUCK_LDO register
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_BUCK_LDO_INT_SHIFT))
     {
-        status = IRQ_readL1IntBuckLdo(pmicHandle, irqStat);
+        status = IRQ_readL1IntBuckLdo(handle, irqStat);
     }
 
     return status;
 }
 
-int32_t Pmic_irqGetStatus(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
+int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL))
     {
@@ -717,7 +717,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *pmicHandle, Pmic_IrqStat_t *irqSt
     {
         memset(irqStat->intrStat, 0U, PMIC_NUM_ELEM_IN_INTR_STAT);
 
-        status = IRQ_readL0(pmicHandle, irqStat);
+        status = IRQ_readL0(handle, irqStat);
     }
 
     return status;
@@ -788,10 +788,10 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
     return status;
 }
 
-int32_t Pmic_irqGetFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum, bool *flag)
+int32_t Pmic_irqGetFlag(const Pmic_Handle_t *handle, uint8_t irqNum, bool *flag)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX))
     {
@@ -806,7 +806,7 @@ int32_t Pmic_irqGetFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum, bool *f
     // Read IRQ status register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, pmicIRQs[irqNum].statRegAddr, &regData);
+        status = Pmic_ioRxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, &regData);
     }
 
     // Extract IRQ status
@@ -818,10 +818,10 @@ int32_t Pmic_irqGetFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum, bool *f
     return status;
 }
 
-int32_t Pmic_irqClrFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum)
+int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX))
     {
@@ -834,7 +834,7 @@ int32_t Pmic_irqClrFlag(const Pmic_Handle_t *pmicHandle, uint8_t irqNum)
         Pmic_setBitField(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1U << pmicIRQs[irqNum].bitShift), 1U);
 
         // Write data to PMIC
-        status = Pmic_ioTxByte_CS(pmicHandle, pmicIRQs[irqNum].statRegAddr, regData);
+        status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);
     }
 
     return status;

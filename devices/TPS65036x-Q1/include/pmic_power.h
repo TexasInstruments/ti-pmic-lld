@@ -886,22 +886,22 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * API call.
  *
  * @details The following options are configurable via this API
- * 1. Enable (validParam: PMIC_BUCK_ENABLE_VALID)
- * 2. Pulldown enable (validParam: PMIC_BUCK_PLDN_EN_VALID)
- * 3. Forced PWM option (validParam: PMIC_BUCK_FPWM_EN_VALID)
- * 4. Undervoltage threshold (validParam: PMIC_BUCK_UV_THR_VALID)
- * 5. Overvoltage threshold (validParam: PMIC_BUCK_OV_THR_VALID)
- * 6. Current limit selection (validParam: PMIC_BUCK_ILIM_SEL_VALID)
- * 7. Overvoltage protection fault response (validParam: PMIC_BUCK_OVP_SEL_VALID)
- * 8. Overvoltage fault response (validParam: PMIC_BUCK_OV_SEL_VALID)
- * 9. Undervoltage fault response (validParam: PMIC_BUCK_UV_SEL_VALID)
- * 10. Short circuit fault response (validParam: PMIC_BUCK_SC_SEL_VALID)
- * 11. Residual voltage configuration (validParam: PMIC_BUCK_RV_CONF_VALID)
- * 12. Slew rate (validParam: PMIC_BUCK_SLEW_RATE_VALID)
- * 13. Deglitch selection (validParam: PMIC_BUCK_DEGLITCH_SEL_VALID)
- * 14. Discharge selection (validParam: PMIC_BUCK_DISCHARGE_SEL_VALID)
- * 15. Spread spectrum enable (validParam: PMIC_BUCK_SS_EN_VALID)
- * 16. Spread spectrum modulation selection (validParam: PMIC_BUCK_SSM_SEL_VALID)
+ * 1. Enable (validParams: PMIC_BUCK_ENABLE_VALID)
+ * 2. Pulldown enable (validParams: PMIC_BUCK_PLDN_EN_VALID)
+ * 3. Forced PWM option (validParams: PMIC_BUCK_FPWM_EN_VALID)
+ * 4. Undervoltage threshold (validParams: PMIC_BUCK_UV_THR_VALID)
+ * 5. Overvoltage threshold (validParams: PMIC_BUCK_OV_THR_VALID)
+ * 6. Current limit selection (validParams: PMIC_BUCK_ILIM_SEL_VALID)
+ * 7. Overvoltage protection fault response (validParams: PMIC_BUCK_OVP_SEL_VALID)
+ * 8. Overvoltage fault response (validParams: PMIC_BUCK_OV_SEL_VALID)
+ * 9. Undervoltage fault response (validParams: PMIC_BUCK_UV_SEL_VALID)
+ * 10. Short circuit fault response (validParams: PMIC_BUCK_SC_SEL_VALID)
+ * 11. Residual voltage configuration (validParams: PMIC_BUCK_RV_CONF_VALID)
+ * 12. Slew rate (validParams: PMIC_BUCK_SLEW_RATE_VALID)
+ * 13. Deglitch selection (validParams: PMIC_BUCK_DEGLITCH_SEL_VALID)
+ * 14. Discharge selection (validParams: PMIC_BUCK_DISCHARGE_SEL_VALID)
+ * 15. Spread spectrum enable (validParams: PMIC_BUCK_SS_EN_VALID)
+ * 16. Spread spectrum modulation selection (validParams: PMIC_BUCK_SSM_SEL_VALID)
  * 17. VSET (BUCK1 only; validParam: PMIC_BUCK_VSET_VALID)
  * 18. Undervoltage lockout rising (BUCK1 only; validParam: PMIC_BUCK_UVLO_RISING_VALID)
  * 19. Undervoltage lockout falling (BUCK1 only; validParam: PMIC_BUCK_UVLO_FALLING_VALID)
@@ -911,13 +911,13 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * 23. VMON only option (BUCK2 and BUCK3 only; validParam: PMIC_BUCK_VMON_ONLY_VALID)
  * For more information on the buck configurations, refer to @ref Pmic_PwrBuckCfg.
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param buckCfg    [OUT] Buck configurations to write to PMIC.
  *
  * @return Success code if PMIC buck configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Get PMIC buck configuration. This "get" API supports obtaining the same
@@ -927,13 +927,13 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCf
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param buckCfg    [OUT] Buck configurations obtained from the PMIC.
  *
  * @return Success code if PMIC buck configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg);
+int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg);
 
 /**
  * @brief Set PMIC LDO configurations.
@@ -948,30 +948,30 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *b
  * API call.
  *
  * @details The following options are configurable via this API
- * 1. Enable (validParam: PMIC_LDO_ENABLE_VALID)
- * 2. Mode of operation (validParam: PMIC_LDO_MODE_VALID)
- * 3. VSET (validParam: PMIC_LDO_VSET_VALID)
- * 4. VMON only option (validParam: PMIC_LDO_VMON_ONLY_VALID)
- * 5. Discharge enable (validParam: PMIC_LDO_DISCHARGE_EN_VALID)
- * 6. discharge selection (validParam: PMIC_LDO_DISCHARGE_SEL_VALID)
- * 7. Deglitch selection (validParam: PMIC_LDO_DEGLITCH_SEL_VALID)
- * 8. Undervoltage threshold (validParam: PMIC_LDO_UV_THR_VALID)
- * 9. Overvoltage threshold (validParam: PMIC_LDO_OV_THR_VALID)
- * 10. Current limit selection (validParam: PMIC_LDO_ILIM_SEL_VALID)
- * 11. Overvoltage protection fault response (validParam: PMIC_LDO_OVP_SEL_VALID)
- * 12. Overvoltage fault response (validParam: PMIC_LDO_OV_SEL_VALID)
- * 13. Undervoltage fault response (validParam: PMIC_LDO_UV_SEL_VALID)
- * 14. Short circuit fault response (validParam: PMIC_LDO_SC_SEL_VALID)
- * 15. Residual voltage configuration (validParam: PMIC_LDO_RV_CONF_VALID)
+ * 1. Enable (validParams: PMIC_LDO_ENABLE_VALID)
+ * 2. Mode of operation (validParams: PMIC_LDO_MODE_VALID)
+ * 3. VSET (validParams: PMIC_LDO_VSET_VALID)
+ * 4. VMON only option (validParams: PMIC_LDO_VMON_ONLY_VALID)
+ * 5. Discharge enable (validParams: PMIC_LDO_DISCHARGE_EN_VALID)
+ * 6. discharge selection (validParams: PMIC_LDO_DISCHARGE_SEL_VALID)
+ * 7. Deglitch selection (validParams: PMIC_LDO_DEGLITCH_SEL_VALID)
+ * 8. Undervoltage threshold (validParams: PMIC_LDO_UV_THR_VALID)
+ * 9. Overvoltage threshold (validParams: PMIC_LDO_OV_THR_VALID)
+ * 10. Current limit selection (validParams: PMIC_LDO_ILIM_SEL_VALID)
+ * 11. Overvoltage protection fault response (validParams: PMIC_LDO_OVP_SEL_VALID)
+ * 12. Overvoltage fault response (validParams: PMIC_LDO_OV_SEL_VALID)
+ * 13. Undervoltage fault response (validParams: PMIC_LDO_UV_SEL_VALID)
+ * 14. Short circuit fault response (validParams: PMIC_LDO_SC_SEL_VALID)
+ * 15. Residual voltage configuration (validParams: PMIC_LDO_RV_CONF_VALID)
  * For more information on the LDO configurations, refer to @ref Pmic_PwrLdoCfg.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  * @param ldoCfg     [IN] LDO configurations to write to PMIC.
  *
  * @return Success code if PMIC LDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get PMIC LDO configurations. This API supports getting the same
@@ -981,13 +981,13 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param ldoCfg     [OUT] LDO configurations obtained from the PMIC.
  *
  * @return Success code if PMIC LDO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get the statuses of a power resource (buck/LDO).
@@ -1004,13 +1004,13 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldo
  * For more information on the power resource statuses, refer to
  * @ref Pmic_PwrRsrcStat.
  *
- * @param pmicHandle  [IN]  PMIC interface handle.
+ * @param handle  [IN]  PMIC interface handle.
  * @param pwrRsrcStat [OUT] Power resource statuses obtained from the PMIC.
  *
  * @return Success code if PMIC power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Set PMIC thermal shutdown configurations.
@@ -1025,13 +1025,13 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_
  * 3. TWARN level
  * For more information on the TSD configurations, refer to @ref Pmic_PwrTsdCfg.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  * @param tsdCfg     [IN] TSD configurations to write to PMIC.
  *
  * @return Success code if PMIC TSD configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg);
+int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *tsdCfg);
 
 /**
  * @brief Get PMIC thermal shutdown configurations. This API supports getting the
@@ -1041,13 +1041,13 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param tsdCfg     [OUT] TSD configurations obtained from the PMIC.
  *
  * @return Success code if PMIC TSD configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg);
+int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg);
 
 /**
  * @brief Get the PMIC immediate thermal shutdown status.
@@ -1056,7 +1056,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsd
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  * @param tsdImmStat [OUT] When set to true, the die junction temperature is
  * above the thermal level causing an immediate shutdown. Otherwise, the die
  * junction temperature is below the thermal level.
@@ -1064,7 +1064,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsd
  * @return Success code if the PMIC immediate TSD status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmStat);
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *handle, bool *tsdImmStat);
 
 /**
  * @brief Set PMIC buck and LDO sequence triggers.
@@ -1077,14 +1077,14 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmSta
  * the API sets sequence trigger configurations of the regulators (whether or not
  * the sequence trigger is excluded/included in the power ON/OFF sequence logic).
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  * @param seqTrigCfg [IN] Array of regulator sequence trigger configurations.
  * @param len        [IN] Length of `seqTrigCfg` array.
  *
  * @return Success code if sequence trigger configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
+int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
 /**
  * @brief Get PMIC buck and LDO sequence triggers.
@@ -1097,14 +1097,14 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
  * the API gets sequence trigger configurations of the regulators (whether or not
  * the sequence trigger is excluded/included in the power ON/OFF sequence logic).
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param seqTrigCfg [OUT] Array of regulator sequence trigger configurations.
  * @param len        [IN]  Length of `seqTrigCfg` array.
  *
  * @return Success code if sequence trigger configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
+int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
 /**
  * @brief Set buck and LDO sequence delays.
@@ -1116,14 +1116,14 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckL
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API sets sequence delay configurations of the regulators.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  * @param seqDlyCfg  [IN] Array of regulator sequence delay configurations.
  * @param len        [IN] Length of `seqDlyCfg` array.
  *
  * @return Success code if sequence delay configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
+int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 
 /**
  * @brief Get buck and LDO sequence delays.
@@ -1135,14 +1135,14 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_Pwr
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API gets sequence delay configurations of the regulators.
  *
- * @param pmicHandle [IN]  PMIC interface handle.
+ * @param handle [IN]  PMIC interface handle.
  * @param seqDlyCfg  [OUT] Array of regulator sequence delay configurations.
  * @param len        [IN]  Length of `seqDlyCfg` array.
  *
  * @return Success code if sequence delay configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
+int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 
 #ifdef __cplusplus
 }

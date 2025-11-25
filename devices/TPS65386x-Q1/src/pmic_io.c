@@ -245,44 +245,44 @@ int32_t Pmic_ioTxByte_CS(Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData
     return status;
 }
 
-int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+    int32_t status = Pmic_ioRxByte(handle, regAddr, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData, shift, mask, value);
 
-        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
 
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioUpdateByte(pmicHandle, regAddr, shift, mask, value);
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioUpdateByte(handle, regAddr, shift, mask, value);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value)
 {
-    return Pmic_ioUpdateByte(pmicHandle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
+    return Pmic_ioUpdateByte(handle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
-int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioUpdateByte_b(pmicHandle, regAddr, shift, value);
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioUpdateByte_b(handle, regAddr, shift, value);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }

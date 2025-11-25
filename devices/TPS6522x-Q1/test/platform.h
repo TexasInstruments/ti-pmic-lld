@@ -211,7 +211,7 @@ void *platform_getCommHandle(void);
  * @return Success code if `bufLen` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle,
+int32_t platform_txByte(const struct Pmic_Handle_s *handle,
                         uint16_t regAddr,
                         const uint8_t *buffer,
                         uint8_t bufLen);
@@ -219,7 +219,7 @@ int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle,
 /**
  * @brief Platform-specific API to read one or multiple bytes from PMIC.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param instType [IN] Instance type. For valid values, refer to
  * @ref Pmic_InstType.
@@ -236,7 +236,7 @@ int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle,
+int32_t platform_rxByte(const struct Pmic_Handle_s *handle,
                         uint16_t regAddr,
                         uint8_t *buffer,
                         uint8_t bufLen);
@@ -249,7 +249,7 @@ int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle,
  * all handled asychronously by the DMA while the CPU can execute other
  * instructions or routines.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
@@ -262,7 +262,7 @@ int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle,
  * @return PMIC_ST_SUCCESS if asynchronous transfer has been initiated, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_asyncRxStart(const struct Pmic_Handle_s *pmicHandle,
+int32_t platform_asyncRxStart(const struct Pmic_Handle_s *handle,
                               uint16_t regAddr,
                               uint8_t *buffer,
                               uint8_t bufLen);
@@ -275,7 +275,7 @@ int32_t platform_asyncRxStart(const struct Pmic_Handle_s *pmicHandle,
  * all handled asychronously by the DMA while the CPU can execute other
  * instructions or routines.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
@@ -286,7 +286,7 @@ int32_t platform_asyncRxStart(const struct Pmic_Handle_s *pmicHandle,
  * @return PMIC_ST_SUCCESS if asynchronous transfer has been initiated, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_asyncTxStart(const struct Pmic_Handle_s *pmicHandle,
+int32_t platform_asyncTxStart(const struct Pmic_Handle_s *handle,
                               uint16_t regAddr,
                               const uint8_t *buffer,
                               uint8_t bufLen);
@@ -299,12 +299,12 @@ int32_t platform_asyncTxStart(const struct Pmic_Handle_s *pmicHandle,
  * by platform_asyncRxStart() to complete. The CPU will wake once the transfer is
  * complete.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return PMIC_ST_SUCCESS if the asynchronous transfer has been awaited, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *pmicHandle);
+int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *handle);
 
 /**
  * @brief Await write transfer to be complete.
@@ -313,12 +313,12 @@ int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *pmicHandle);
  * by platform_asyncTxStart() to complete. The CPU will wake once the transfer is
  * complete.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return PMIC_ST_SUCCESS if the asynchronous transfer has been awaited, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_asyncTxAwait(const struct Pmic_Handle_s *pmicHandle);
+int32_t platform_asyncTxAwait(const struct Pmic_Handle_s *handle);
 
 /**
  * @brief Initiates platform monitoring.

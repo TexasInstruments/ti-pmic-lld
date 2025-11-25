@@ -62,7 +62,7 @@ extern "C" {
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
  *
@@ -71,7 +71,7 @@ extern "C" {
  * @return Success code if byte has been successfully transmitted to PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
+int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txData);
 
 /**
  * @brief Write a byte to the given PMIC `regAddr`, performing CRC on communications
@@ -83,7 +83,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
  *
@@ -92,7 +92,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
  * @return Success code if byte has been successfully transmitted to PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
+int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txData);
 
 /**
  * @brief Read a single byte from a target register of the PMIC. This function
@@ -104,7 +104,7 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8
  *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
  *
@@ -114,7 +114,7 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8
  * @return Success code if byte has been successfully obtained from PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
+int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxData);
 
 /**
  * @brief Read a byte from the given PMIC `regAddr`, extracting the desired register
@@ -126,7 +126,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
  *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
  *
@@ -136,7 +136,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
  * @return Success code if byte has been successfully obtained from PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
+int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxData);
 
 /**
  * @brief Executes a read-modify-write routine such that the target bit field is
@@ -147,7 +147,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target register address.
  *
@@ -160,7 +160,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
  * @brief Identical to `Pmic_ioUpdateByte()` API but starts a critical
@@ -172,7 +172,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target register address.
  *
@@ -185,7 +185,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
@@ -195,7 +195,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, u
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target register address.
  *
@@ -207,7 +207,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, u
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Identical to `Pmic_ioUpdateByte_b()` API but starts a critical
@@ -219,7 +219,7 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, ui
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
  *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] Target register address.
  *
@@ -231,7 +231,7 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, ui
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Control whether serial communication CRC is enabled or disabled. This API
@@ -242,7 +242,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, 
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
  *               PMICDRV-512
  *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set equal to parameter `crcEnable` upon API call success.
  *
  * @param crc8Enable [IN] CRC8 enable/disable. When set to equal to PMIC_ENABLE,
@@ -251,7 +251,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, 
  * @return Success code if CRC8 has been enabled or disabled, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *pmicHandle, bool crc8Enable);
+int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable);
 
 /**
  * @brief Enable serial communication CRC. This API is a subset of
@@ -262,13 +262,13 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *pmicHandle, bool crc8Enable);
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
  *               PMICDRV-512
  *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set to true upon API call success.
  *
  * @return Success code if CRC8 has been enabled, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioCrcEnable(Pmic_Handle_t *pmicHandle);
+int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle);
 
 /**
  * @brief Disable serial communication CRC. This API is a subset of
@@ -279,13 +279,13 @@ int32_t Pmic_ioCrcEnable(Pmic_Handle_t *pmicHandle);
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
  *               PMICDRV-512
  *
- * @param pmicHandle [IN/OUT] PMIC interface handle. The crcEnable struct member
+ * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set to false upon API call success.
  *
  * @return Success code if CRC8 has been disabled, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioCrcDisable(Pmic_Handle_t *pmicHandle);
+int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
 
 /**
  * @brief Get serial communication CRC enable/disable state.
@@ -295,7 +295,7 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *pmicHandle);
  *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-521
  *               PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param crcEnabled [OUT] CRC8 enable status. True if CRC8 is enabled,
  * otherwise false.
@@ -303,7 +303,7 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *pmicHandle);
  * @return Success code if CRC8 enable status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *pmicHandle, bool *crcEnabled);
+int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *crcEnabled);
 
 #ifdef __cplusplus
 }

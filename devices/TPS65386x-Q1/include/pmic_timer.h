@@ -166,7 +166,7 @@ typedef struct Pmic_timerCfg_e {
  *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
  *
  * @details Timer configurations that are able to be set via this API are
- * 1. Prescale (validParam: PMIC_CFG_TMR_PRESCALE_VALID_SHIFT)
+ * 1. Prescale (validParams: PMIC_CFG_TMR_PRESCALE_VALID_SHIFT)
  * 2. Mode (PMIC_CFG_TMR_MODE_VALID_SHIFT)
  *
  * @attention The timer prescale configuration must not be changed when the

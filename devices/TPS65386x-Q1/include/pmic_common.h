@@ -172,9 +172,9 @@ typedef struct Pmic_CoreHandle_s {
  * function. Else, if a bit is 1, the corresponding parameter is valid and will be
  * processed by the calling function.
  *
- * @param bitMask [IN] validParam to check for.
+ * @param bitMask [IN] validParams to check for.
  *
- * @return True if validParam is set, false if validParam is not set.
+ * @return True if validParams is set, false if validParams is not set.
  */
 static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
     return ((validParams & bitMask) != 0U);

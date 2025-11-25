@@ -122,14 +122,14 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked);
  *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
  *               PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param nvmRev [OUT] PMIC NVM revision obtained from the device register.
  *
  * @return PMIC_ST_SUCCESS if the PMIC NVM revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev);
+int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev);
 
 /**
  * @brief Get PMIC silicon revision from hardware register.
@@ -139,14 +139,14 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev);
  *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
  *               PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param siliconRev [OUT] PMIC silicon revision obtained from the device register.
  *
  * @return PMIC_ST_SUCCESS if the PMIC silicon revision has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev);
+int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev);
 
 /**
  * @brief Set the value of a PMIC scratchpad register.
@@ -156,7 +156,7 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev)
  *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param scratchpadRegNum [IN] Scratchpad register number. For valid
  * scratchpad register numbers, refer to @ref Pmic_ScratchpadRegs.
@@ -167,7 +167,7 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev)
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t value);
 
 /**
  * @brief Get the value of a PMIC scratchpad register.
@@ -177,7 +177,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
  *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
  *               PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param scratchpadRegNum [IN] Scratchpad register number. For valid
  * scratchpad register numbers, refer to @ref Pmic_ScratchpadRegs.
@@ -188,7 +188,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchpadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

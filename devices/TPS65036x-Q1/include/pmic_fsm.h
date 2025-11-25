@@ -79,7 +79,7 @@ extern "C" {
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param fsmCmd [IN] MCU command for FSM state transition. For valid values,
  * refer to @ref Pmic_fsmCommands.
@@ -87,7 +87,7 @@ extern "C" {
  * @return Success code if the FSM command has been sent to the PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *pmicHandle, uint8_t fsmCmd);
+int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t fsmCmd);
 
 /**
  * @brief Set PMIC recovery counter threshold.
@@ -101,7 +101,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *pmicHandle, uint8_t fsmCmd);
  * meets or exceeds the recovery counter threshold (RECOV_CNT >= RECOV_CNT_THR),
  * the PMIC stays in SAFE state until a power cycle occours.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param threshold [IN] Desired recovery counter threshold to be set. See
  * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
@@ -109,7 +109,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *pmicHandle, uint8_t fsmCmd);
  * @return Success code if PMIC recovery counter threshold has been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshold);
+int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
 
 /**
  * @brief Get PMIC recovery counter threshold.
@@ -118,7 +118,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshol
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param threshold [OUT] Recovery counter threshold value obtained from PMIC.
  *
@@ -126,7 +126,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshol
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *threshold);
+int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
 
 /**
  * @brief Get value of the PMIC recovery counter.
@@ -135,14 +135,14 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *thresho
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param recovCnt [OUT] PMIC recovery counter value obtained from PMIC.
  *
  * @return Success code if PMIC recovery counter value has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *pmicHandle, uint8_t *recovCnt);
+int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt);
 
 /**
  * @brief Clear PMIC recovery counter.
@@ -151,13 +151,13 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *pmicHandle, uint8_t *recovCnt);
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC recovery counter has been cleared without issues,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *pmicHandle);
+int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle);
 
 /**
  * @brief Set PMIC reset counter threshold.
@@ -172,7 +172,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *pmicHandle);
  * executes an orderly shutdown, enters SAFE state, clears RESET_CNT, and
  * RESET_CNT_INT is asserted.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param threshold [IN] Desired PMIC reset counter threshold to be set. See
  * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
@@ -180,7 +180,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *pmicHandle);
  * @return Success code if PMIC reset counter threshold has been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshold);
+int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
 
 /**
  * @brief Get PMIC reset counter threshold.
@@ -189,7 +189,7 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshol
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param threshold [OUT] PMIC reset counter threshold value obtained from the
  * PMIC.
@@ -197,7 +197,7 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t threshol
  * @return Success code if PMIC reset counter threshold has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *threshold);
+int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
 
 /**
  * @brief Get value of the PMIC reset counter.
@@ -206,14 +206,14 @@ int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *pmicHandle, uint8_t *thresho
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param resetCnt [OUT] PMIC reset counter value obtained from PMIC.
  *
  * @return Success code if PMIC reset counter value has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *pmicHandle, uint8_t *resetCnt);
+int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *handle, uint8_t *resetCnt);
 
 /**
  * @brief Clear PMIC reset counter.
@@ -222,13 +222,13 @@ int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *pmicHandle, uint8_t *resetCnt);
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC reset counter has been cleared without issues,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *pmicHandle);
+int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

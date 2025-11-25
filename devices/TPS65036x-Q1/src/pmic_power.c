@@ -46,18 +46,18 @@
 #include "regmap/core.h"
 
 // Forward declarations for helper functions used by static setters
-static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
-static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
+static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
 
-static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -65,7 +65,7 @@ static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, Pmic_Pw
     // Read CLK_CONF register
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID))
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_CLK_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_CLK_CONF_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -86,7 +86,7 @@ static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, Pmic_Pw
     return status;
 }
 
-static int32_t PWR_getBuckVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckVSET(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -94,7 +94,7 @@ static int32_t PWR_getBuckVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
     {
         // Read BUCK1_VOUT register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_BUCK1_VOUT_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_BUCK1_VOUT_REG, &regData);
 
         // Extract BUCK1_VSET bit field
         if (status == PMIC_ST_SUCCESS)
@@ -106,7 +106,7 @@ static int32_t PWR_getBuckVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_
     return status;
 }
 
-static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -127,7 +127,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, Pmic_P
         }
 
         // Read BUCKx_VOUT_ACTIVE register
-        status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
 
         // Extract BUCKx_VSET_ACT bit field
         if (status == PMIC_ST_SUCCESS)
@@ -152,7 +152,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, Pmic_P
         }
 
         // Read BUCKx_VOUT_LOWPWR register
-        status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
 
         // Extract BUCKx_VSET_LPWR bit field
         if (status == PMIC_ST_SUCCESS)
@@ -164,7 +164,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, Pmic_P
     return status;
 }
 
-static int32_t PWR_getBuckVout(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckVout(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -185,18 +185,18 @@ static int32_t PWR_getBuckVout(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = PWR_getBuckVSET(pmicHandle, buckCfg);
+            status = PWR_getBuckVSET(handle, buckCfg);
         }
         else
         {
-            status = PWR_getBuckActiveLPwrVSET(pmicHandle, buckCfg);
+            status = PWR_getBuckActiveLPwrVSET(handle, buckCfg);
         }
     }
 
     return status;
 }
 
-static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -205,7 +205,7 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg
     if (Pmic_validParamCheck(buckCfg->validParams, buck1CtrlValidParams))
     {
         // Read BUCK1_CTRL register
-        status = Pmic_ioRxByte_CS(pmicHandle ,PMIC_BUCK1_CTRL_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle ,PMIC_BUCK1_CTRL_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -252,7 +252,7 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg
     return status;
 }
 
-static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -264,7 +264,7 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckC
     {
         const uint8_t regAddr = (buckCfg->resource == PMIC_BUCK2) ? PMIC_BUCK2_CTRL_REG : PMIC_BUCK3_CTRL_REG;
 
-        status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -309,7 +309,7 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckC
     return status;
 }
 
-static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -330,18 +330,18 @@ static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = PWR_getBuck1Ctrl(pmicHandle, buckCfg);
+            status = PWR_getBuck1Ctrl(handle, buckCfg);
         }
         else
         {
-            status = PWR_getBuck2_3Ctrl(pmicHandle, buckCfg);
+            status = PWR_getBuck2_3Ctrl(handle, buckCfg);
         }
     }
 
     return status;
 }
 
-static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -364,7 +364,7 @@ static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckC
             regAddr = PMIC_BUCK3_MON_CONF_REG;
         }
 
-        status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -403,7 +403,7 @@ static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckC
     return status;
 }
 
-static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -427,7 +427,7 @@ static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrB
         }
 
         // Read REG_OVP_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_OVP_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_OVP_CONF_REG, &regData);
 
         // Extract buck OVP response
         if (status == PMIC_ST_SUCCESS)
@@ -439,7 +439,7 @@ static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrB
     return status;
 }
 
-static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -463,7 +463,7 @@ static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
         }
 
         // Read REG_OV_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_OV_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_OV_CONF_REG, &regData);
 
         // Extract buck OV response
         if (status == PMIC_ST_SUCCESS)
@@ -475,7 +475,7 @@ static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
     return status;
 }
 
-static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -499,7 +499,7 @@ static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
         }
 
         // Read REG_UV_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_UV_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_UV_CONF_REG, &regData);
 
         // Extract buck UV response
         if (status == PMIC_ST_SUCCESS)
@@ -511,7 +511,7 @@ static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
     return status;
 }
 
-static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, bitShift = 0U, bitMask = 0U;
@@ -535,7 +535,7 @@ static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
         }
 
         // Read REG_SC_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_SC_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_SC_CONF_REG, &regData);
 
         // Extract buck SC response
         if (status == PMIC_ST_SUCCESS)
@@ -547,33 +547,33 @@ static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrBu
     return status;
 }
 
-static int32_t PWR_getBuckFaultResponses(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuckFaultResponses(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     // Get buck OVP fault response
-    int32_t status = PWR_getBuckOvpResponse(pmicHandle, buckCfg);
+    int32_t status = PWR_getBuckOvpResponse(handle, buckCfg);
 
     // Get buck OV fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckOvResponse(pmicHandle, buckCfg);
+        status = PWR_getBuckOvResponse(handle, buckCfg);
     }
 
     // Get buck UV fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckUvResponse(pmicHandle, buckCfg);
+        status = PWR_getBuckUvResponse(handle, buckCfg);
     }
 
     // Get buck SC fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckScResponse(pmicHandle, buckCfg);
+        status = PWR_getBuckScResponse(handle, buckCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -583,7 +583,7 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = Pmic_ioRxByte_CS(pmicHandle, PMIC_BUCK1_UVLO_REG, &regData);
+            status = Pmic_ioRxByte_CS(handle, PMIC_BUCK1_UVLO_REG, &regData);
         }
         else
         {
@@ -611,16 +611,16 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg
     return status;
 }
 
-static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read CLK_CONF register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_CLK_CONF_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_CLK_CONF_REG, &regData);
     }
 
     // Modify SSM_SEL bit field
@@ -645,14 +645,14 @@ static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *pmicHandle, const P
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_CLK_CONF_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_CLK_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuckVout(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckVout(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -673,18 +673,18 @@ static int32_t PWR_setBuckVout(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBu
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = PWR_setBuckVSET(pmicHandle, buckCfg);
+            status = PWR_setBuckVSET(handle, buckCfg);
         }
         else
         {
-            status = PWR_setBuckActiveLPwrVSET(pmicHandle, buckCfg);
+            status = PWR_setBuckActiveLPwrVSET(handle, buckCfg);
         }
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -705,18 +705,18 @@ static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBu
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = PWR_setBuck1Ctrl(pmicHandle, buckCfg);
+            status = PWR_setBuck1Ctrl(handle, buckCfg);
         }
         else
         {
-            status = PWR_setBuck2_3Ctrl(pmicHandle, buckCfg);
+            status = PWR_setBuck2_3Ctrl(handle, buckCfg);
         }
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -724,7 +724,7 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
         PMIC_BUCK_RV_CONF_VALID | PMIC_BUCK_ILIM_SEL_VALID | PMIC_BUCK_DEGLITCH_SEL_VALID;
 
     // Read BUCKx_MON_CONF register (x=1, x=2, or x=3)
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(buckCfg->validParams, buckMonConfValidParam))
     {
         if (buckCfg->resource == PMIC_BUCK1)
@@ -740,7 +740,7 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
             regAddr = PMIC_BUCK3_MON_CONF_REG;
         }
 
-        status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
     // Modify BUCKx_UV_THR bit field (x=1, x=2, or x=3)
@@ -813,52 +813,52 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(buckCfg->validParams, buckMonConfValidParam, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuckFaultResponses(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckFaultResponses(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     // Set buck OVP fault response
-     int32_t status = PWR_setBuckOvpResponse(pmicHandle, buckCfg);
+     int32_t status = PWR_setBuckOvpResponse(handle, buckCfg);
 
     // Set buck OV fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckOvResponse(pmicHandle, buckCfg);
+        status = PWR_setBuckOvResponse(handle, buckCfg);
     }
 
     // Set buck UV fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckUvResponse(pmicHandle, buckCfg);
+        status = PWR_setBuckUvResponse(handle, buckCfg);
     }
 
     // Set buck SC fault response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckScResponse(pmicHandle, buckCfg);
+        status = PWR_setBuckScResponse(handle, buckCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     const uint32_t buck1UvloValidParams = PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID;
 
     // Read BUCK1_UVLO register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(buckCfg->validParams, buck1UvloValidParams))
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
-            status = Pmic_ioRxByte(pmicHandle, PMIC_BUCK1_UVLO_REG, &regData);
+            status = Pmic_ioRxByte(handle, PMIC_BUCK1_UVLO_REG, &regData);
         }
         else
         {
@@ -895,16 +895,16 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *pmicHandle, const Pmic_PwrB
     // Write new register value
     if (Pmic_validParamStatusCheck(buckCfg->validParams, buck1UvloValidParams, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_BUCK1_UVLO_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_BUCK1_UVLO_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
     {
@@ -919,45 +919,45 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCf
     // Set spread spectrum configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setSpreadSpectrumCfg(pmicHandle, buckCfg);
+        status = PWR_setSpreadSpectrumCfg(handle, buckCfg);
     }
 
     // Set buck VOUT register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckVout(pmicHandle, buckCfg);
+        status = PWR_setBuckVout(handle, buckCfg);
     }
 
     // Set BUCKx_MON_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckMonConf(pmicHandle, buckCfg);
+        status = PWR_setBuckMonConf(handle, buckCfg);
     }
 
     // Set buck fault responses
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckFaultResponses(pmicHandle, buckCfg);
+        status = PWR_setBuckFaultResponses(handle, buckCfg);
     }
 
     // Set BUCK1_UVLO
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuck1Uvlo(pmicHandle, buckCfg);
+        status = PWR_setBuck1Uvlo(handle, buckCfg);
     }
 
     // Set BUCKx_CTRL register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setBuckCtrl(pmicHandle, buckCfg);
+        status = PWR_setBuckCtrl(handle, buckCfg);
     }
 
     return status;
 }
 
-int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
+int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
     {
@@ -972,43 +972,43 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckCfg_t *b
     // Get spread spectrum configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getSpreadSpectrumCfg(pmicHandle, buckCfg);
+        status = PWR_getSpreadSpectrumCfg(handle, buckCfg);
     }
 
     // Read buck VOUT register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckVout(pmicHandle, buckCfg);
+        status = PWR_getBuckVout(handle, buckCfg);
     }
 
     // Read BUCKx_CTRL register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckCtrl(pmicHandle, buckCfg);
+        status = PWR_getBuckCtrl(handle, buckCfg);
     }
 
     // Read BUCKx_MON_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckMonConf(pmicHandle, buckCfg);
+        status = PWR_getBuckMonConf(handle, buckCfg);
     }
 
     // Get buck fault responses
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuckFaultResponses(pmicHandle, buckCfg);
+        status = PWR_getBuckFaultResponses(handle, buckCfg);
     }
 
     // Get BUCK1_UVLO
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getBuck1Uvlo(pmicHandle, buckCfg);
+        status = PWR_getBuck1Uvlo(handle, buckCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1021,10 +1021,10 @@ static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBu
         }
 
         // Read BUCK1_VOUT register
-        Pmic_criticalSectionStart(pmicHandle);
+        Pmic_criticalSectionStart(handle);
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioRxByte(pmicHandle, PMIC_BUCK1_VOUT_REG, &regData);
+            status = Pmic_ioRxByte(handle, PMIC_BUCK1_VOUT_REG, &regData);
         }
 
         if (status == PMIC_ST_SUCCESS)
@@ -1033,15 +1033,15 @@ static int32_t PWR_setBuckVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBu
             Pmic_setBitField(&regData, PMIC_BUCK1_VSET_SHIFT, PMIC_BUCK1_VSET_MASK, buckCfg->vset);
 
             // Write new register value back to PMIC
-            status = Pmic_ioTxByte(pmicHandle, PMIC_BUCK1_VOUT_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_BUCK1_VOUT_REG, regData);
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
@@ -1060,8 +1060,8 @@ static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic
     }
 
     // read BUCKx_VOUT_ACTIVE register (x=2 or x=3)
-    Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, regAddr, &regData);
 
     // Modify BUCKx_VSET_ACT bit field (x=2 or x=3)
     if (status == PMIC_ST_SUCCESS)
@@ -1079,14 +1079,14 @@ static int32_t PWR_setBuckActiveVSET(const Pmic_Handle_t *pmicHandle, const Pmic
     // Write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U, bitShift = 0U, bitMask = 0U;
@@ -1105,8 +1105,8 @@ static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_P
     }
 
     // read BUCKx_VOUT_LOWPWR register (x=2 or x=3)
-    Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, regAddr, &regData);
 
     // Modify BUCKx_VSET_LPWR bit field (x=2 or x=3)
     if (status == PMIC_ST_SUCCESS)
@@ -1124,41 +1124,41 @@ static int32_t PWR_setBuckLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_P
     // Write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID))
     {
-        status = PWR_setBuckActiveVSET(pmicHandle, buckCfg);
+        status = PWR_setBuckActiveVSET(handle, buckCfg);
     }
 
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_VSET_LPWR_VALID, status))
     {
-        status = PWR_setBuckLPwrVSET(pmicHandle, buckCfg);
+        status = PWR_setBuckLPwrVSET(handle, buckCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     const uint32_t buck1CtrlValidParams = PMIC_BUCK_CTRL_ALL_VALID;
 
     // Read BUCK1_CTRL register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(buckCfg->validParams, buck1CtrlValidParams))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_BUCK1_CTRL_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_BUCK1_CTRL_REG, &regData);
     }
 
     // Modify BUCK1_EN_HS_ON_SR bit field
@@ -1224,14 +1224,14 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrB
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(buckCfg->validParams, buck1CtrlValidParams, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_BUCK1_CTRL_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_BUCK1_CTRL_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, regAddr = 0U;
@@ -1239,11 +1239,11 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
         PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID;
 
     // Read BUCKx_CTRL register (x=2 or x=3)
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(buckCfg->validParams, buck2_3CtrlValidParams))
     {
         regAddr = (buckCfg->resource == PMIC_BUCK2) ? PMIC_BUCK2_CTRL_REG : PMIC_BUCK3_CTRL_REG;
-        status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -1305,14 +1305,14 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(buckCfg->validParams, buck2_3CtrlValidParams, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1320,8 +1320,8 @@ static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmi
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OVP_SEL_VALID))
     {
         // Read REG_OVP_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_OVP_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_OVP_CONF_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1356,16 +1356,16 @@ static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmi
             // Write new register value back to PMIC
             if (status == PMIC_ST_SUCCESS)
             {
-                status = Pmic_ioTxByte(pmicHandle, PMIC_REG_OVP_CONF_REG, regData);
+                status = Pmic_ioTxByte(handle, PMIC_REG_OVP_CONF_REG, regData);
             }
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1373,8 +1373,8 @@ static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OV_SEL_VALID))
     {
         // Read REG_OV_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_OV_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_OV_CONF_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1409,16 +1409,16 @@ static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic
             // Write new register value back to PMIC
             if (status == PMIC_ST_SUCCESS)
             {
-                status = Pmic_ioTxByte(pmicHandle, PMIC_REG_OV_CONF_REG, regData);
+                status = Pmic_ioTxByte(handle, PMIC_REG_OV_CONF_REG, regData);
             }
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1426,8 +1426,8 @@ static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UV_SEL_VALID))
     {
         // Read REG_UV_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_UV_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_UV_CONF_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1462,16 +1462,16 @@ static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic
             // Write new register value back to PMIC
             if (status == PMIC_ST_SUCCESS)
             {
-                status = Pmic_ioTxByte(pmicHandle, PMIC_REG_UV_CONF_REG, regData);
+                status = Pmic_ioTxByte(handle, PMIC_REG_UV_CONF_REG, regData);
             }
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1479,8 +1479,8 @@ static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SC_SEL_VALID))
     {
         // Read REG_SC_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_SC_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_SC_CONF_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1515,16 +1515,16 @@ static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *pmicHandle, const Pmic
             // Write new register value back to PMIC
             if (status == PMIC_ST_SUCCESS)
             {
-                status = Pmic_ioTxByte(pmicHandle, PMIC_REG_SC_CONF_REG, regData);
+                status = Pmic_ioTxByte(handle, PMIC_REG_SC_CONF_REG, regData);
             }
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_getLdoConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoConf(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1532,7 +1532,7 @@ static int32_t PWR_getLdoConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t 
     // Read LDO_CONF register
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_MODE_VALID | PMIC_LDO_VSET_VALID))
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_LDO_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_LDO_CONF_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -1553,7 +1553,7 @@ static int32_t PWR_getLdoConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t 
     return status;
 }
 
-static int32_t PWR_getLdoCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoCtrl(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1562,7 +1562,7 @@ static int32_t PWR_getLdoCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t 
     // Read LDO_CTRL register
     if (Pmic_validParamCheck(ldoCfg->validParams, ldoCtrlValidParams))
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_LDO_CTRL_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_LDO_CTRL_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -1595,7 +1595,7 @@ static int32_t PWR_getLdoCtrl(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t 
     return status;
 }
 
-static int32_t PWR_getLdoMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoMonConf(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1605,7 +1605,7 @@ static int32_t PWR_getLdoMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg
     // Read LDO_MON_CONF register
     if (Pmic_validParamCheck(ldoCfg->validParams, ldoMonConfValidParams))
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_LDO_MON_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_LDO_MON_CONF_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -1644,7 +1644,7 @@ static int32_t PWR_getLdoMonConf(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg
     return status;
 }
 
-static int32_t PWR_getLdoOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoOvpResponse(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1652,7 +1652,7 @@ static int32_t PWR_getLdoOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLd
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_OVP_SEL_VALID))
     {
         // Read REG_OVP_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_OVP_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_OVP_CONF_REG, &regData);
 
         // Extract LDO_OVP_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -1664,7 +1664,7 @@ static int32_t PWR_getLdoOvpResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLd
     return status;
 }
 
-static int32_t PWR_getLdoOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoOvResponse(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1672,7 +1672,7 @@ static int32_t PWR_getLdoOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_OV_SEL_VALID))
     {
         // Read REG_OV_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_OV_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_OV_CONF_REG, &regData);
 
         // Extract LDO_OV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -1684,7 +1684,7 @@ static int32_t PWR_getLdoOvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     return status;
 }
 
-static int32_t PWR_getLdoUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoUvResponse(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1692,7 +1692,7 @@ static int32_t PWR_getLdoUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_UV_SEL_VALID))
     {
         // Read REG_UV_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_UV_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_UV_CONF_REG, &regData);
 
         // Extract LDO_UV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -1704,7 +1704,7 @@ static int32_t PWR_getLdoUvResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     return status;
 }
 
-static int32_t PWR_getLdoScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoScResponse(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1712,7 +1712,7 @@ static int32_t PWR_getLdoScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_SC_SEL_VALID))
     {
         // Read REG_SC_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REG_SC_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REG_SC_CONF_REG, &regData);
 
         // Extract LDO_SC_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -1724,35 +1724,35 @@ static int32_t PWR_getLdoScResponse(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdo
     return status;
 }
 
-static int32_t PWR_getLdoFaultResponses(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_getLdoFaultResponses(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     // Get LDO OVP response
-    int32_t status = PWR_getLdoOvpResponse(pmicHandle, ldoCfg);
+    int32_t status = PWR_getLdoOvpResponse(handle, ldoCfg);
 
     // Get LDO OV response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoOvResponse(pmicHandle, ldoCfg);
+        status = PWR_getLdoOvResponse(handle, ldoCfg);
     }
 
     // Get LDO UV response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoUvResponse(pmicHandle, ldoCfg);
+        status = PWR_getLdoUvResponse(handle, ldoCfg);
     }
 
     // Get LDO SC response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoScResponse(pmicHandle, ldoCfg);
+        status = PWR_getLdoScResponse(handle, ldoCfg);
     }
 
     return status;
 }
 
-int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -1767,40 +1767,40 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldo
     // Read LDO_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoConf(pmicHandle, ldoCfg);
+        status = PWR_getLdoConf(handle, ldoCfg);
     }
 
     // read LDO_CTRL register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoCtrl(pmicHandle, ldoCfg);
+        status = PWR_getLdoCtrl(handle, ldoCfg);
     }
 
     // Read LDO_MON_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoMonConf(pmicHandle, ldoCfg);
+        status = PWR_getLdoMonConf(handle, ldoCfg);
     }
 
     // Get LDO fault responses
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoFaultResponses(pmicHandle, ldoCfg);
+        status = PWR_getLdoFaultResponses(handle, ldoCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_setLdoConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoConf(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read LDO_CONF register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_MODE_VALID | PMIC_LDO_VSET_VALID))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_LDO_CONF_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_LDO_CONF_REG, &regData);
     }
 
 
@@ -1833,24 +1833,24 @@ static int32_t PWR_setLdoConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdo
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_MODE_VALID | PMIC_LDO_VSET_VALID, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_LDO_CONF_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_LDO_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     const uint32_t ldoCtrlValidParams = PMIC_LDO_CTRL_ALL_VALID;
 
     // Read LDO_CTRL register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(ldoCfg->validParams, ldoCtrlValidParams))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_LDO_CTRL_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_LDO_CTRL_REG, &regData);
     }
 
     // Modify LDO_VMON_ONLY bit field
@@ -1887,14 +1887,14 @@ static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdo
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, ldoCtrlValidParams, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_LDO_CTRL_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_LDO_CTRL_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setLdoMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoMonConf(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1902,10 +1902,10 @@ static int32_t PWR_setLdoMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_Pwr
         PMIC_LDO_RV_CONF_VALID | PMIC_LDO_ILIM_SEL_VALID | PMIC_LDO_DEGLITCH_SEL_VALID;
 
     // Read LDO_MON_CONF register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(ldoCfg->validParams, ldoMonConfValidParams))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_LDO_MON_CONF_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_LDO_MON_CONF_REG, &regData);
     }
 
     // Modify LDO_UV_THR bit field
@@ -1976,14 +1976,14 @@ static int32_t PWR_setLdoMonConf(const Pmic_Handle_t *pmicHandle, const Pmic_Pwr
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, ldoMonConfValidParams, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_LDO_MON_CONF_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_LDO_MON_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t PWR_setLdoOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoOvpResponse(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1991,8 +1991,8 @@ static int32_t PWR_setLdoOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_OVP_SEL_VALID))
     {
         // Read REG_OVP_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_OVP_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_OVP_CONF_REG, &regData);
 
         // Modify LDO_OVP_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -2010,15 +2010,15 @@ static int32_t PWR_setLdoOvpResponse(const Pmic_Handle_t *pmicHandle, const Pmic
         // Write new register value back to PMIC
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REG_OVP_CONF_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_REG_OVP_CONF_REG, regData);
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setLdoOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoOvResponse(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2026,8 +2026,8 @@ static int32_t PWR_setLdoOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_OV_SEL_VALID))
     {
         // Read REG_OV_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_OV_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_OV_CONF_REG, &regData);
 
         // Modify LDO_OV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -2045,15 +2045,15 @@ static int32_t PWR_setLdoOvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
         // Write new register value back to PMIC
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REG_OV_CONF_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_REG_OV_CONF_REG, regData);
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setLdoUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoUvResponse(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2061,8 +2061,8 @@ static int32_t PWR_setLdoUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_UV_SEL_VALID))
     {
         // Read REG_UV_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_UV_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_UV_CONF_REG, &regData);
 
         // Modify LDO_UV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -2080,15 +2080,15 @@ static int32_t PWR_setLdoUvResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
         // Write new register value back to PMIC
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REG_UV_CONF_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_REG_UV_CONF_REG, regData);
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setLdoScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoScResponse(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2096,8 +2096,8 @@ static int32_t PWR_setLdoScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
     if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_LDO_SC_SEL_VALID))
     {
         // Read REG_SC_CONF register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_REG_SC_CONF_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_REG_SC_CONF_REG, &regData);
 
         // Modify LDO_SC_SEL bit field
         if (status == PMIC_ST_SUCCESS)
@@ -2115,43 +2115,43 @@ static int32_t PWR_setLdoScResponse(const Pmic_Handle_t *pmicHandle, const Pmic_
         // Write new register value back to PMIC
         if (status == PMIC_ST_SUCCESS)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REG_SC_CONF_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_REG_SC_CONF_REG, regData);
         }
-        Pmic_criticalSectionStop(pmicHandle);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
 }
 
-static int32_t PWR_setLdoFaultResponses(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_setLdoFaultResponses(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     // Set LDO OVP response
-    int32_t status = PWR_setLdoOvpResponse(pmicHandle, ldoCfg);
+    int32_t status = PWR_setLdoOvpResponse(handle, ldoCfg);
 
     // Set LDO OV response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoOvResponse(pmicHandle, ldoCfg);
+        status = PWR_setLdoOvResponse(handle, ldoCfg);
     }
 
     // Set LDO UV response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoUvResponse(pmicHandle, ldoCfg);
+        status = PWR_setLdoUvResponse(handle, ldoCfg);
     }
 
     // Set LDO SC response
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoScResponse(pmicHandle, ldoCfg);
+        status = PWR_setLdoScResponse(handle, ldoCfg);
     }
 
     return status;
 }
 
-int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -2166,37 +2166,37 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrLdoCfg_
     // Set LDO_CONF register configurations
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoConf(pmicHandle, ldoCfg);
+        status = PWR_setLdoConf(handle, ldoCfg);
     }
 
     // Set LDO_MON_CONF register configurations
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoMonConf(pmicHandle, ldoCfg);
+        status = PWR_setLdoMonConf(handle, ldoCfg);
     }
 
     // Set LDO fault responses
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoFaultResponses(pmicHandle, ldoCfg);
+        status = PWR_setLdoFaultResponses(handle, ldoCfg);
     }
 
     // Set LDO_CTRL register configurations
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoCtrl(pmicHandle, ldoCfg);
+        status = PWR_setLdoCtrl(handle, ldoCfg);
     }
 
     return status;
 }
 
-static int32_t PWR_getStatStartup(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatStartup(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read STAT_STARTUP register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_STAT_STARTUP_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_STAT_STARTUP_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -2224,13 +2224,13 @@ static int32_t PWR_getStatStartup(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcS
     return status;
 }
 
-static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read STAT_BUCK1_2 register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_STAT_BUCK1_2_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_STAT_BUCK1_2_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -2261,13 +2261,13 @@ static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcS
     return status;
 }
 
-static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // read STAT_BUCK3_LDO register
-    status = Pmic_ioRxByte_CS(pmicHandle, PMIC_STAT_BUCK3_LDO_REG, &regData);
+    status = Pmic_ioRxByte_CS(handle, PMIC_STAT_BUCK3_LDO_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -2298,9 +2298,9 @@ static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrc
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {
@@ -2315,7 +2315,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_
     // Get resource active status bit from STAT_STARTUP register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getStatStartup(pmicHandle, pwrRsrcStat);
+        status = PWR_getStatStartup(handle, pwrRsrcStat);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -2323,22 +2323,22 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *pmicHandle, Pmic_PwrRsrcStat_
         // If power resource is BUCK1 or BUCK2, get status bits from STAT_BUCK1_2 register
         if ((pwrRsrcStat->resource == PMIC_BUCK1) || (pwrRsrcStat->resource == PMIC_BUCK2))
         {
-            status = PWR_getStatBuck1_2(pmicHandle, pwrRsrcStat);
+            status = PWR_getStatBuck1_2(handle, pwrRsrcStat);
         }
         // If power resource is BUCK3 or LDO, get status bits from STAT_BUCK3_LDO register
         else
         {
-            status = PWR_getStatBuck3Ldo(pmicHandle, pwrRsrcStat);
+            status = PWR_getStatBuck3Ldo(handle, pwrRsrcStat);
         }
     }
 
     return status;
 }
 
-int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg)
+int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 
@@ -2353,10 +2353,10 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_
     }
 
     // Read CONFIG_1 register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamStatusCheck(tsdCfg->validParams, config1ValidParam, status))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_CONFIG_1_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_CONFIG_1_REG, &regData);
     }
 
     // Modify TWARN_CONFIG bit field
@@ -2394,17 +2394,17 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *pmicHandle, const Pmic_PwrTsdCfg_
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(tsdCfg->validParams, config1ValidParam, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_CONFIG_1_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_CONFIG_1_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg)
+int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 
@@ -2421,7 +2421,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsd
     // Read CONFIG_1 register
     if (Pmic_validParamStatusCheck(tsdCfg->validParams, config1ValidParam, status))
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_CONFIG_1_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_CONFIG_1_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -2448,10 +2448,10 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsd
     return status;
 }
 
-int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmStat)
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *handle, bool *tsdImmStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (tsdImmStat == NULL))
     {
@@ -2461,7 +2461,7 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *pmicHandle, bool *tsdImmSta
     // Read STAT_SEVERE_ERR register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_STAT_SEVERE_ERR_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_STAT_SEVERE_ERR_REG, &regData);
     }
 
     // Extract TSD_IMM_STAT bit field
@@ -2510,11 +2510,11 @@ static inline void PWR_getSeqTrigReg(uint8_t pwrRsrc, uint8_t *regAddr)
     }
 }
 
-int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
+int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqTrigCfg == NULL))
     {
@@ -2553,7 +2553,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckL
             {
                 PWR_getSeqTrigReg(pwrRsrc, &regAddr);
 
-                status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+                status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
             }
 
             // Extract sequence trigger exclude/include bit
@@ -2571,11 +2571,11 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckL
     return status;
 }
 
-int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
+int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqTrigCfg == NULL))
     {
@@ -2610,12 +2610,12 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
             }
 
             // Read the associated sequence trigger register
-            Pmic_criticalSectionStart(pmicHandle);
+            Pmic_criticalSectionStart(handle);
             if (status == PMIC_ST_SUCCESS)
             {
                 PWR_getSeqTrigReg(pwrRsrc, &regAddr);
 
-                status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+                status = Pmic_ioRxByte(handle, regAddr, &regData);
             }
 
             if (status == PMIC_ST_SUCCESS)
@@ -2624,9 +2624,9 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *pmicHandle, const Pmic_Pw
                 Pmic_setBitField_b(&regData, bitPos, (uint8_t)(1U << bitPos), seqTrigCfg[i].exclude);
 
                 // Write new register value back to PMIC
-                status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+                status = Pmic_ioTxByte(handle, regAddr, regData);
             }
-            Pmic_criticalSectionStop(pmicHandle);
+            Pmic_criticalSectionStop(handle);
 
             if (status != PMIC_ST_SUCCESS)
             {
@@ -2665,10 +2665,10 @@ static inline void PWR_getSeqDlyReg(uint8_t pwrRsrc, uint8_t *regAddr)
     }
 }
 
-int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
+int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqDlyCfg == NULL))
     {
@@ -2696,7 +2696,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLd
             {
                 PWR_getSeqDlyReg(seqDlyCfg->resource, &regAddr);
 
-                status = Pmic_ioRxByte_CS(pmicHandle, regAddr, &regData);
+                status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
             }
 
             if (status == PMIC_ST_SUCCESS)
@@ -2721,10 +2721,10 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLd
     return status;
 }
 
-int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
+int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqDlyCfg == NULL))
     {
@@ -2748,12 +2748,12 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_Pwr
             }
 
             // Read from associated sequence delay register
-            Pmic_criticalSectionStart(pmicHandle);
+            Pmic_criticalSectionStart(handle);
             if (status == PMIC_ST_SUCCESS)
             {
                 PWR_getSeqDlyReg(seqDlyCfg->resource, &regAddr);
 
-                status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+                status = Pmic_ioRxByte(handle, regAddr, &regData);
             }
 
             // Modify SEQ_DLY_OFF bit field
@@ -2787,9 +2787,9 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, const Pmic_Pwr
             // Write new register value back to PMIC
             if (status == PMIC_ST_SUCCESS)
             {
-                status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+                status = Pmic_ioTxByte(handle, regAddr, regData);
             }
-            Pmic_criticalSectionStop(pmicHandle);
+            Pmic_criticalSectionStop(handle);
 
             if (status != PMIC_ST_SUCCESS)
             {

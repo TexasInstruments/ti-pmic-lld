@@ -189,7 +189,7 @@ typedef struct Pmic_CoreHandle_s
  *
  * @param bitMask [IN] validParam to check for.
  *
- * @return True if validParam is set, false if validParam is not set.
+ * @return True if validParams is set, false if validParam is not set.
  */
 static bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask)
 {
@@ -227,13 +227,13 @@ static inline bool Pmic_validParamStatusCheck(uint32_t vpv, uint32_t bMask, int3
  *               PMICDRV-502, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *               PMICDRV-517, PMICDRV-505, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  */
-static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *pmicHandle)
+static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *handle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->criticalSectionStart != NULL))
+    if ((handle != NULL) && (handle->criticalSectionStart != NULL))
     {
-        pmicHandle->criticalSectionStart();
+        handle->criticalSectionStart();
     }
 }
 
@@ -246,13 +246,13 @@ static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *pmicHandle)
  *               PMICDRV-502, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *               PMICDRV-517, PMICDRV-505, PMICDRV-509
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  */
-static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *pmicHandle)
+static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *handle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->criticalSectionStop != NULL))
+    if ((handle != NULL) && (handle->criticalSectionStop != NULL))
     {
-        pmicHandle->criticalSectionStop();
+        handle->criticalSectionStop();
     }
 }
 
@@ -264,13 +264,13 @@ static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *pmicHandle)
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-517
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  */
-static inline void Pmic_irqResponseCallback(const Pmic_Handle_t *pmicHandle)
+static inline void Pmic_irqResponseCallback(const Pmic_Handle_t *handle)
 {
-    if ((pmicHandle != NULL) && (pmicHandle->irqResponseCallback != NULL))
+    if ((handle != NULL) && (handle->irqResponseCallback != NULL))
     {
-        pmicHandle->irqResponseCallback();
+        handle->irqResponseCallback();
     }
 }
 

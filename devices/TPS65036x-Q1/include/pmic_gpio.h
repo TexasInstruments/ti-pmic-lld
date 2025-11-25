@@ -198,15 +198,15 @@ typedef struct Pmic_GpioCfg_s {
  *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable using this API are listed below.
- * 1. Functionality (validParam: PMIC_FUNCTIONALITY_VALID)
- * 2. Polarity (validParam: PMIC_POLARITY_VALID)
- * 3. Pulldown resistor (validParam: PMIC_PU_PD_CFG_VALID)
- * 4. Open-drain/push-pull operation (validParam: PMIC_OD_PP_CFG_VALID)
+ * 1. Functionality (validParams: PMIC_FUNCTIONALITY_VALID)
+ * 2. Polarity (validParams: PMIC_POLARITY_VALID)
+ * 3. Pulldown resistor (validParams: PMIC_PU_PD_CFG_VALID)
+ * 4. Open-drain/push-pull operation (validParams: PMIC_OD_PP_CFG_VALID)
  *
  * @note NINT_GPI has two configurations that GPIO does not: pullup/pulldown
  * resistor configuration and push-pull/open-drain configuration.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param gpioPin [IN] PMIC GPIO pin identifier. For valid values, see
  * @ref Pmic_gpioPin.
@@ -216,7 +216,7 @@ typedef struct Pmic_GpioCfg_s {
  * @return Success code if PMIC GPIO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Get PMIC GPIO configurations. This API supports getting the same
@@ -226,7 +226,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, const 
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
  *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param gpioPin [IN] PMIC GPIO pin identifier. For valid values, see
  * @ref Pmic_gpioPin.
@@ -236,7 +236,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, const 
  * @return Success code if PMIC GPIO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Activate or deactivate PMIC GPIO. This API is a superset of
@@ -249,7 +249,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, Pmic_G
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param activate [IN] When set to true, GPIO is activated and its output state
  * is high (depending on configured polarity). When set to false, GPIO is
@@ -258,7 +258,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *pmicHandle, uint8_t gpioPin, Pmic_G
  * @return Success code if GPIO is activated/deactivated, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *pmicHandle, bool activate);
+int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *handle, bool activate);
 
 /**
  * @brief Activate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
@@ -273,12 +273,12 @@ int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *pmicHandle, bool activa
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if GPIO is activated, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioActivate(const Pmic_Handle_t *pmicHandle);
+int32_t Pmic_gpioActivate(const Pmic_Handle_t *handle);
 
 /**
  * @brief Deactivate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
@@ -293,12 +293,12 @@ int32_t Pmic_gpioActivate(const Pmic_Handle_t *pmicHandle);
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if GPIO is deactivated, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *pmicHandle);
+int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *handle);
 
 /**
  * @brief Get PMIC GPIO activation state.
@@ -310,7 +310,7 @@ int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *pmicHandle);
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param activated [OUT] Activation state. When set to true, GPIO is activated.
  * When set to false, GPIO is deactivated.
@@ -318,7 +318,7 @@ int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *pmicHandle);
  * @return Success code if GPIO activation status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *pmicHandle, bool *activated);
+int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *handle, bool *activated);
 
 #ifdef __cplusplus
 }

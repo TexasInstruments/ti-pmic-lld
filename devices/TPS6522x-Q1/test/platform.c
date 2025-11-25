@@ -271,7 +271,7 @@ void sysTickIntHandler(void);
  * @brief Miscellaneous APIs.
  */
 static inline void waitForUserResponse(bool wait);
-static int32_t asyncAwait(const struct Pmic_Handle_s *pmicHandle);
+static int32_t asyncAwait(const struct Pmic_Handle_s *handle);
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -543,11 +543,11 @@ void *platform_getCommHandle(void)
     #endif
 }
 
-int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen)
+int32_t platform_txByte(const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL) || (buffer == NULL))
+    if ((handle == NULL) || (handle->commHandle == NULL) || (buffer == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -558,17 +558,17 @@ int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr
     }
 
 #ifdef USE_SPI
-    status = spiWrite((SpiHandle_t*)(pmicHandle->commHandle), regAddr, buffer, bufLen);
+    status = spiWrite((SpiHandle_t*)(handle->commHandle), regAddr, buffer, bufLen);
 #else
     if (status == PMIC_ST_SUCCESS)
     {
-        status = i2cStartWrite((I2cHandle_t*)(pmicHandle->commHandle), regAddr);
+        status = i2cStartWrite((I2cHandle_t*)(handle->commHandle), regAddr);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = (bufLen == 1U) ? i2cSingleWrite((I2cHandle_t*)(pmicHandle->commHandle), buffer) :
-                                  i2cBurstWrite((I2cHandle_t*)(pmicHandle->commHandle), bufLen, buffer);
+        status = (bufLen == 1U) ? i2cSingleWrite((I2cHandle_t*)(handle->commHandle), buffer) :
+                                  i2cBurstWrite((I2cHandle_t*)(handle->commHandle), bufLen, buffer);
     }
 #endif
 
@@ -581,12 +581,12 @@ int32_t platform_txByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr
     return status;
 }
 
-int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen)
+int32_t platform_rxByte(const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen)
 {
     // Variable declaration/initialization
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((pmicHandle == NULL) || (pmicHandle->commHandle == NULL) || (buffer == NULL))
+    if ((handle == NULL) || (handle->commHandle == NULL) || (buffer == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -597,19 +597,19 @@ int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr
     }
 
 #ifdef USE_SPI
-    status = spiRead((SpiHandle_t*)(pmicHandle->commHandle), regAddr, buffer, bufLen);
+    status = spiRead((SpiHandle_t*)(handle->commHandle), regAddr, buffer, bufLen);
 #else
     if (status == PMIC_ST_SUCCESS)
     {
-        status = i2cStartRead((I2cHandle_t*)(pmicHandle->commHandle), regAddr);
+        status = i2cStartRead((I2cHandle_t*)(handle->commHandle), regAddr);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         const bool useSecondaryAddr =
-            decipherAddr((I2cHandle_t*)(pmicHandle->commHandle), regAddr) == PLATFORM_I2C_ADDR_SECONDARY ? (bool)true : (bool)false;
-        status = (bufLen == 1U) ? i2cSingleRead((I2cHandle_t*)(pmicHandle->commHandle), useSecondaryAddr, buffer) :
-                                  i2cBurstRead((I2cHandle_t*)(pmicHandle->commHandle), useSecondaryAddr, bufLen, buffer);
+            decipherAddr((I2cHandle_t*)(handle->commHandle), regAddr) == PLATFORM_I2C_ADDR_SECONDARY ? (bool)true : (bool)false;
+        status = (bufLen == 1U) ? i2cSingleRead((I2cHandle_t*)(handle->commHandle), useSecondaryAddr, buffer) :
+                                  i2cBurstRead((I2cHandle_t*)(handle->commHandle), useSecondaryAddr, bufLen, buffer);
     }
 #endif
 
@@ -622,9 +622,9 @@ int32_t platform_rxByte(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr
     return status;
 }
 
-int32_t platform_asyncTxStart(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen)
+int32_t platform_asyncTxStart(const struct Pmic_Handle_s *handle, uint16_t regAddr, const uint8_t *buffer, uint8_t bufLen)
 {
-    const SpiHandle_t *spiHandle = (SpiHandle_t *)pmicHandle->commHandle;
+    const SpiHandle_t *spiHandle = (SpiHandle_t *)handle->commHandle;
 
     // buffer shall not be NULL and shall contain at least 24 bits
     if ((buffer == NULL) || (bufLen <= 2U))
@@ -651,9 +651,9 @@ int32_t platform_asyncTxStart(const struct Pmic_Handle_s *pmicHandle, uint16_t r
     return PMIC_ST_SUCCESS;
 }
 
-int32_t platform_asyncRxStart(const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen)
+int32_t platform_asyncRxStart(const struct Pmic_Handle_s *handle, uint16_t regAddr, uint8_t *buffer, uint8_t bufLen)
 {
-    const SpiHandle_t *spiHandle = (SpiHandle_t *)pmicHandle->commHandle;
+    const SpiHandle_t *spiHandle = (SpiHandle_t *)handle->commHandle;
 
     // buffer shall not be NULL and shall contain at least 24 bits
     if ((buffer == NULL) || (bufLen <= 2U))
@@ -683,9 +683,9 @@ int32_t platform_asyncRxStart(const struct Pmic_Handle_s *pmicHandle, uint16_t r
     return PMIC_ST_SUCCESS;
 }
 
-static int32_t asyncAwait(const struct Pmic_Handle_s *pmicHandle)
+static int32_t asyncAwait(const struct Pmic_Handle_s *handle)
 {
-    if (pmicHandle == NULL)
+    if (handle == NULL)
     {
         return PMIC_ST_ERR_NULL_PARAM;
     }
@@ -704,14 +704,14 @@ static int32_t asyncAwait(const struct Pmic_Handle_s *pmicHandle)
     return PMIC_ST_SUCCESS;
 }
 
-int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *pmicHandle)
+int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *handle)
 {
-    return asyncAwait(pmicHandle);
+    return asyncAwait(handle);
 }
 
-int32_t platform_asyncTxAwait(const struct Pmic_Handle_s *pmicHandle)
+int32_t platform_asyncTxAwait(const struct Pmic_Handle_s *handle)
 {
-    return asyncAwait(pmicHandle);
+    return asyncAwait(handle);
 }
 
 void platform_startSysMonitor(void)

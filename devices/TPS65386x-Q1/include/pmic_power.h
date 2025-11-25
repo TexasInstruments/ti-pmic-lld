@@ -908,13 +908,13 @@ typedef struct Pmic_PwrRsrcStat_s {
  *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details The following options are configurable via this API
- * 1. Voltage level (validParam: PMIC_PWR_CFG_BB_LVL_VALID_SHIFT)
- * 2. Standby voltage level (validParam: PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT)
- * 3. VMON threshold (validParam: PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT)
- * 4. VMON deglitch (validParam: PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT)
- * 5. Boost timeout (validParam: PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT)
- * 6. Spread spectrum enable (validParam: PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT)
- * 7. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ * 1. Voltage level (validParams: PMIC_PWR_CFG_BB_LVL_VALID_SHIFT)
+ * 2. Standby voltage level (validParams: PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT)
+ * 3. VMON threshold (validParams: PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT)
+ * 4. VMON deglitch (validParams: PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT)
+ * 5. Boost timeout (validParams: PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT)
+ * 6. Spread spectrum enable (validParams: PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT)
+ * 7. Include OV/UV status in PGOOD (validParams: PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -951,15 +951,15 @@ int32_t Pmic_pwrGetBuckBoostCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *b
  *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details The following options are configurable via this API
- * 1. LDO mode (validParam: PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT)
- * 2. Voltage level (validParam: PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT)
- * 3. Current limit level (validParam: PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT)
- * 4. Current limit deglitch (validParam: PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT)
- * 5. VMON threshold (validParam: PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT)
- * 6. VMON deglitch (validParam: PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT)
- * 7. Ramp time (validParam: PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT)
- * 8. Disable discharge (validParam: PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT)
- * 9. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ * 1. LDO mode (validParams: PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT)
+ * 2. Voltage level (validParams: PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT)
+ * 3. Current limit level (validParams: PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT)
+ * 4. Current limit deglitch (validParams: PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT)
+ * 5. VMON threshold (validParams: PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT)
+ * 6. VMON deglitch (validParams: PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT)
+ * 7. Ramp time (validParams: PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT)
+ * 8. Disable discharge (validParams: PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT)
+ * 9. Include OV/UV status in PGOOD (validParams: PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -997,17 +997,17 @@ int32_t Pmic_pwrGetLdoCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
  *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details The following options are configurable via this API
- * 1. PLDO mode (validParam: PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT)
- * 2. PLDO tracking mode (validParam: PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT)
- * 3. Voltage level (validParam: PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT)
- * 4. Current limit level (validParam: PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT)
- * 5. Current limit deglitch (validParam: PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT)
- * 6. VMON threshold (validParam: PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT)
- * 7. VMON deglitch (validParam: PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT)
- * 8. VTRACK range (validParam: PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT)
- * 9. Ramp time (validParam: PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT)
- * 10. Disable discharge (validParam: PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT)
- * 11. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ * 1. PLDO mode (validParams: PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT)
+ * 2. PLDO tracking mode (validParams: PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT)
+ * 3. Voltage level (validParams: PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT)
+ * 4. Current limit level (validParams: PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT)
+ * 5. Current limit deglitch (validParams: PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT)
+ * 6. VMON threshold (validParams: PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT)
+ * 7. VMON deglitch (validParams: PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT)
+ * 8. VTRACK range (validParams: PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT)
+ * 9. Ramp time (validParams: PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT)
+ * 10. Disable discharge (validParams: PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT)
+ * 11. Include OV/UV status in PGOOD (validParams: PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1045,10 +1045,10 @@ int32_t Pmic_pwrGetPldoCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
  *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
  *
  * @details The following options are configurable via this API
- * 1. External VMON mode (validParam: PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT)
- * 2. VMON threshold (validParam: PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT)
- * 3. VMON deglitch (validParam: PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT)
- * 4. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ * 1. External VMON mode (validParams: PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT)
+ * 2. VMON threshold (validParams: PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT)
+ * 3. VMON deglitch (validParams: PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT)
+ * 4. Include OV/UV status in PGOOD (validParams: PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1090,14 +1090,14 @@ int32_t Pmic_pwrGetExtVmonCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVm
  *
  * @details Depending on the power resource specified, the following statuses
  * can be obtained via this API
- * 1. Over-voltage error (validParam: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
- * 2. Under-voltage error (validParam: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
- * 3. Current limit error (validParam: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
- * 4. Buck/Boost lite (validParam: PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT)
- * 5. Buck/Boost current limit level (validParam: PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT)
- * 6. Buck/Boost mode (validParam: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
- * 7. Thermal shutdown error (validParam: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
- * 8. Thermal shutdown warning (validParam: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+ * 1. Over-voltage error (validParams: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
+ * 2. Under-voltage error (validParams: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+ * 3. Current limit error (validParams: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
+ * 4. Buck/Boost lite (validParams: PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT)
+ * 5. Buck/Boost current limit level (validParams: PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT)
+ * 6. Buck/Boost mode (validParams: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
+ * 7. Thermal shutdown error (validParams: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
+ * 8. Thermal shutdown warning (validParams: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1118,12 +1118,12 @@ int32_t Pmic_pwrGetRsrcStatus(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrc
  *
  * @details The following statuses can be cleared via this API depending on the
  * specified power resource
- * 1. Over-voltage error (validParam: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
- * 2. Under-voltage error (validParam: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
- * 3. Current limit error (validParam: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
- * 4. Buck/Boost mode (validParam: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
- * 5. Thermal shutdown error (validParam: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
- * 6. Thermal shutdown warning (validParam: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+ * 1. Over-voltage error (validParams: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
+ * 2. Under-voltage error (validParams: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+ * 3. Current limit error (validParams: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
+ * 4. Buck/Boost mode (validParams: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
+ * 5. Thermal shutdown error (validParams: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
+ * 6. Thermal shutdown warning (validParams: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *

@@ -289,12 +289,12 @@ typedef struct Pmic_GpioCfg_s {
  *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
  *
  * @details The following GPIOs are configurable by this API
- * 1. GPI1 (validParam: PMIC_CFG_GPI1_VALID_SHIFT)
- * 2. GPI4 (validParam: PMIC_CFG_GPI4_VALID_SHIFT)
- * 3. GPO1 (validParam: PMIC_CFG_GPO1_VALID_SHIFT)
- * 4. GPO2 (validParam: PMIC_CFG_GPO2_VALID_SHIFT)
- * 5. GPO3 (validParam: PMIC_CFG_GPO3_VALID_SHIFT)
- * 6. GPO4 (validParam: PMIC_CFG_GPO4_VALID_SHIFT)
+ * 1. GPI1 (validParams: PMIC_CFG_GPI1_VALID_SHIFT)
+ * 2. GPI4 (validParams: PMIC_CFG_GPI4_VALID_SHIFT)
+ * 3. GPO1 (validParams: PMIC_CFG_GPO1_VALID_SHIFT)
+ * 4. GPO2 (validParams: PMIC_CFG_GPO2_VALID_SHIFT)
+ * 5. GPO3 (validParams: PMIC_CFG_GPO3_VALID_SHIFT)
+ * 6. GPO4 (validParams: PMIC_CFG_GPO4_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *

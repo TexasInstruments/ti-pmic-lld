@@ -44,8 +44,6 @@ extern "C" {
 
 /** @brief: PMIC Module Device Revision Infos */
 #define PMIC_DEV_REV_REG (0x01U)
-#define PMIC_NVM_CODE_REG (0x02U)
-#define PMIC_NVM_REV_REG  (0x0BU)
 
 /** @brief: PMIC NVM Code and Revision register Addresses */
 #define PMIC_NVM_CODE_REG (0x02U)
@@ -136,8 +134,6 @@ extern "C" {
 
 /** @brief   PMIC DEV_REV Register Shift Values */
 #define PMIC_DEV_REV_SHIFT (0x0U)
-#define PMIC_NVM_CODE_SHIFT (0x0U)
-#define PMIC_NVM_REV_SHIFT (0x0U)
 
 /** @brief   PMIC NVM_CODE Register Shift Values */
 #define PMIC_NVM_CODE_SHIFT (0x0U)
@@ -194,8 +190,6 @@ extern "C" {
 
 /** @brief   PMIC DEV_REV Register Mask Values */
 #define PMIC_DEV_REV_MASK ((uint8_t)(0x3FU << PMIC_DEV_REV_SHIFT))
-#define PMIC_NVM_CODE_MASK ((uint8_t)(0xFFU << PMIC_NVM_CODE_SHIFT))
-#define PMIC_NVM_REV_MASK ((uint8_t)(0xFFU << PMIC_NVM_REV_SHIFT))
 
 /** @brief   PMIC NVM_CODE Register Mask Values */
 #define PMIC_NVM_CODE_MASK ((uint8_t)(0xFFU << PMIC_NVM_CODE_SHIFT))

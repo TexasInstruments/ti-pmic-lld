@@ -550,16 +550,16 @@ int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state);
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable via this API are listed below.
- * 1. Standby enable (validParam: Pmic_CFG_STDBY_EN_VALID_SHIFT)
- * 2. AUTO_BIST enable (validParam: PMIC_CFG_AUTO_BIST_EN_VALID_SHIFT)
- * 3. Enable nRST to be active in STANDBY and sequencing states (validParam: PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID_SHIFT)
- * 4. Enable higher VBAT exit threshold for STANDBY state (validParam: PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID_SHIFT)
- * 5. Power-down threshold (validParam: PMIC_CFG_PWD_THR_VALID_SHIFT)
- * 6. nRST Extension (validParam: PMIC_CFG_NRST_EXT_VALID_SHIFT)
- * 7. RESET-MCU state timeout (validParam: PMIC_CFG_RST_MCU_TMO_VALID_SHIFT)
- * 8. SAFE state timeout (validParam: PMIC_CFG_SAFE_TMO_VALID_SHIFT)
- * 9. SAFE state lock threshold (validParam: PMIC_CFG_SAFE_LOCK_THR_VALID_SHIFT)
- * 10. VBAT STANDBY state entry threshold (validParam: PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID_SHIFT)
+ * 1. Standby enable (validParams: Pmic_CFG_STDBY_EN_VALID_SHIFT)
+ * 2. AUTO_BIST enable (validParams: PMIC_CFG_AUTO_BIST_EN_VALID_SHIFT)
+ * 3. Enable nRST to be active in STANDBY and sequencing states (validParams: PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID_SHIFT)
+ * 4. Enable higher VBAT exit threshold for STANDBY state (validParams: PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID_SHIFT)
+ * 5. Power-down threshold (validParams: PMIC_CFG_PWD_THR_VALID_SHIFT)
+ * 6. nRST Extension (validParams: PMIC_CFG_NRST_EXT_VALID_SHIFT)
+ * 7. RESET-MCU state timeout (validParams: PMIC_CFG_RST_MCU_TMO_VALID_SHIFT)
+ * 8. SAFE state timeout (validParams: PMIC_CFG_SAFE_TMO_VALID_SHIFT)
+ * 9. SAFE state lock threshold (validParams: PMIC_CFG_SAFE_LOCK_THR_VALID_SHIFT)
+ * 10. VBAT STANDBY state entry threshold (validParams: PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -628,10 +628,10 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt);
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable through this API are listed below.
- * 1. Power-down delay (validParam: PMIC_CFG_PWD_DLY_VALID_SHIFT)
- * 2. Standby error wakeup event power latch enable (validParam: PMIC_CFG_STBY_ERR_WK_EVENT_PWRL_EN_VALID_SHIFT)
- * 3. WAKE1 event power latch enable (validParam: PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID_SHIFT)
- * 4. WAKE2 event power latch enable (validParam: PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID_SHIFT)
+ * 1. Power-down delay (validParams: PMIC_CFG_PWD_DLY_VALID_SHIFT)
+ * 2. Standby error wakeup event power latch enable (validParams: PMIC_CFG_STBY_ERR_WK_EVENT_PWRL_EN_VALID_SHIFT)
+ * 3. WAKE1 event power latch enable (validParams: PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID_SHIFT)
+ * 4. WAKE2 event power latch enable (validParams: PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -689,10 +689,10 @@ int32_t Pmic_fsmGetWakeStatus(Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeu
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The options that are configurable through this API are listed below.
- * 1. Power-down delay (validParam: PMIC_CFG_PWD_DLY_VALID_SHIFT)
- * 2. Standby error wakeup event power latch enable (validParam: PMIC_CFG_STBY_ERR_WK_EVENT_PWRL_EN_VALID_SHIFT)
- * 3. WAKE1 event power latch enable (validParam: PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID_SHIFT)
- * 4. WAKE2 event power latch enable (validParam: PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID_SHIFT)
+ * 1. Power-down delay (validParams: PMIC_CFG_PWD_DLY_VALID_SHIFT)
+ * 2. Standby error wakeup event power latch enable (validParams: PMIC_CFG_STBY_ERR_WK_EVENT_PWRL_EN_VALID_SHIFT)
+ * 3. WAKE1 event power latch enable (validParams: PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID_SHIFT)
+ * 4. WAKE2 event power latch enable (validParams: PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -730,11 +730,11 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *p
  *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
  *
  * @details The power latches that can be set using this API are listed below.
- * 1. Standby error wakeup latch (validParam: PMIC_CFG_STBY_ERR_WK_LATCH_VALID_SHIFT)
- * 2. Standby timer wakeup latch (validParam: PMIC_CFG_STBY_TMR_WK_LATCH_VALID_SHIFT)
- * 3. Multiple PMIC wakeup latch (validParam: PMIC_CFG_M_PMIC_WK_LATCH_VALID_SHIFT)
- * 4. WAKE1 pin latch (validParam: PMIC_CFG_WAKE1_LATCH_VALID_SHIFT)
- * 5. WAKE2 pin latch (validParam: PMIC_CFG_WAKE2_LATCH_VALID_SHIFT)
+ * 1. Standby error wakeup latch (validParams: PMIC_CFG_STBY_ERR_WK_LATCH_VALID_SHIFT)
+ * 2. Standby timer wakeup latch (validParams: PMIC_CFG_STBY_TMR_WK_LATCH_VALID_SHIFT)
+ * 3. Multiple PMIC wakeup latch (validParams: PMIC_CFG_M_PMIC_WK_LATCH_VALID_SHIFT)
+ * 4. WAKE1 pin latch (validParams: PMIC_CFG_WAKE1_LATCH_VALID_SHIFT)
+ * 5. WAKE2 pin latch (validParams: PMIC_CFG_WAKE2_LATCH_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *

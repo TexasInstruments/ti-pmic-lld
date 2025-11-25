@@ -41,9 +41,9 @@
 #include "pmic_core.h"
 #include "regmap/core.h"
 
-int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev)
+int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (nvmRev == NULL))
     {
@@ -52,15 +52,15 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_NVM_CODE_2_REG, nvmRev);
+        status = Pmic_ioRxByte_CS(handle, PMIC_NVM_CODE_2_REG, nvmRev);
     }
 
     return status;
 }
 
-int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev)
+int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (siliconRev == NULL))
     {
@@ -69,17 +69,17 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *pmicHandle, uint8_t *siliconRev)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_MANUFACTURING_VER_REG, siliconRev);
+        status = Pmic_ioRxByte_CS(handle, PMIC_MANUFACTURING_VER_REG, siliconRev);
     }
 
     return status;
 }
 
 
-int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreCrc16Cfg_t *crc16Cfg)
+int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *handle, const Pmic_CoreCrc16Cfg_t *crc16Cfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (crc16Cfg == NULL))
     {
@@ -92,10 +92,10 @@ int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreCrc16Cf
     }
 
     // Read CONFIG_CRC_CONFIG register
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -113,17 +113,17 @@ int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreCrc16Cf
         }
 
         // Write new register value back to PMIC
-        status = Pmic_ioTxByte(pmicHandle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreCrc16Cfg_t *crc16Cfg)
+int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *handle, Pmic_CoreCrc16Cfg_t *crc16Cfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (crc16Cfg == NULL))
     {
@@ -138,7 +138,7 @@ int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreCrc16Cfg_t *c
     // Read CONFIG_CRC_CONFIG register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -159,16 +159,16 @@ int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreCrc16Cfg_t *c
     return status;
 }
 
-static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg)
+static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read LOW_PWR_CONFIG
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID))
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_LOW_PWR_CONFIG_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_LOW_PWR_CONFIG_REG, &regData);
     }
 
     // Modify LOWPWR_SEL bit field
@@ -200,17 +200,17 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *pmicHandle, const Pm
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_LOW_PWR_CONFIG_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_LOW_PWR_CONFIG_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_setLpmCfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg)
+int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpmCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (lpmCfg == NULL))
     {
@@ -224,15 +224,15 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreLpmCfg_t 
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = CORE_setLpmDetectionCfg(pmicHandle, lpmCfg);
+        status = CORE_setLpmDetectionCfg(handle, lpmCfg);
     }
 
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (Pmic_validParamStatusCheck(
             lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
         // Read LPM_CONF register
-        status = Pmic_ioRxByte(pmicHandle, PMIC_LPM_CONF_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_LPM_CONF_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -260,14 +260,14 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *pmicHandle, const Pmic_CoreLpmCfg_t 
     if (Pmic_validParamStatusCheck(
         lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
-        status = Pmic_ioTxByte(pmicHandle, PMIC_LPM_CONF_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_LPM_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCfg)
+static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -275,7 +275,7 @@ static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *pmicHandle, Pmic_Cor
     if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID))
     {
         // Read LOW_PWR_CONFIG
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_LOW_PWR_CONFIG_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_LOW_PWR_CONFIG_REG, &regData);
 
         // Extract LOWPWR_SEL bit field
         if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID, status))
@@ -293,10 +293,10 @@ static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *pmicHandle, Pmic_Cor
     return status;
 }
 
-int32_t Pmic_getLpmCfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCfg)
+int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (lpmCfg == NULL))
     {
@@ -310,13 +310,13 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCf
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = CORE_getLpmDetectionCfg(pmicHandle, lpmCfg);
+        status = CORE_getLpmDetectionCfg(handle, lpmCfg);
     }
 
     if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
     {
         // Read LPM_CONF register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_LPM_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_LPM_CONF_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -343,10 +343,10 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *pmicHandle, Pmic_CoreLpmCfg_t *lpmCf
     return status;
 }
 
-int32_t Pmic_getABISTStat(const Pmic_Handle_t *pmicHandle, bool *isActive)
+int32_t Pmic_getABISTStat(const Pmic_Handle_t *handle, bool *isActive)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (isActive == NULL))
     {
@@ -356,7 +356,7 @@ int32_t Pmic_getABISTStat(const Pmic_Handle_t *pmicHandle, bool *isActive)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read STAT_MISC register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_STAT_MISC_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_STAT_MISC_REG, &regData);
 
         // Extract ABIST_ACTIVE_STAT bit field
         if (status == PMIC_ST_SUCCESS)
@@ -368,22 +368,22 @@ int32_t Pmic_getABISTStat(const Pmic_Handle_t *pmicHandle, bool *isActive)
     return status;
 }
 
-int32_t Pmic_runABIST(const Pmic_Handle_t *pmicHandle)
+int32_t Pmic_runABIST(const Pmic_Handle_t *handle)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_ABIST_RUN_CMD_REG, PMIC_RUN_ABIST_COMMAND);
+        status = Pmic_ioTxByte_CS(handle, PMIC_ABIST_RUN_CMD_REG, PMIC_RUN_ABIST_COMMAND);
     }
 
     return status;
 }
 
-int32_t Pmic_getPwrOn(const Pmic_Handle_t *pmicHandle, bool *pwrOnStat)
+int32_t Pmic_getPwrOn(const Pmic_Handle_t *handle, bool *pwrOnStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrOnStat == NULL))
     {
@@ -393,7 +393,7 @@ int32_t Pmic_getPwrOn(const Pmic_Handle_t *pmicHandle, bool *pwrOnStat)
     // Read FUNC_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_FUNC_CONF_REG, &regData);
     }
 
     // Extract PWR_ON bit field
@@ -405,16 +405,16 @@ int32_t Pmic_getPwrOn(const Pmic_Handle_t *pmicHandle, bool *pwrOnStat)
     return status;
 }
 
-int32_t Pmic_setPwrOn(const Pmic_Handle_t *pmicHandle, bool pwrOn)
+int32_t Pmic_setPwrOn(const Pmic_Handle_t *handle, bool pwrOn)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
-    Pmic_criticalSectionStart(pmicHandle);
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
         // Read FUNC_CONF register
-        status = Pmic_ioRxByte(pmicHandle, PMIC_FUNC_CONF_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_FUNC_CONF_REG, &regData);
     }
 
     // Modify PWR_ON bit field and write new register value back to PMIC
@@ -422,16 +422,16 @@ int32_t Pmic_setPwrOn(const Pmic_Handle_t *pmicHandle, bool pwrOn)
     {
         Pmic_setBitField_b(&regData, PMIC_PWR_ON_SHIFT, PMIC_PWR_ON_MASK, pwrOn);
 
-        status = Pmic_ioTxByte(pmicHandle, PMIC_FUNC_CONF_REG, regData);
+        status = Pmic_ioTxByte(handle, PMIC_FUNC_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
 {
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
@@ -441,16 +441,16 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
     // Set scratchpad value
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
+        status = Pmic_ioTxByte_CS(handle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
     }
 
     return status;
 }
 
-int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
@@ -465,7 +465,7 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
     // Get scratchpad value
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -476,10 +476,10 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
     return status;
 }
 
-int32_t Pmic_getRegLockState(const Pmic_Handle_t *pmicHandle, bool *regLockStat)
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *regLockStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (regLockStat == NULL))
     {
@@ -489,7 +489,7 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *pmicHandle, bool *regLockStat)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read REGISTER_LOCK
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_REGISTER_LOCK_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REGISTER_LOCK_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -501,26 +501,26 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *pmicHandle, bool *regLockStat)
     return status;
 }
 
-int32_t Pmic_setRegLockState(const Pmic_Handle_t *pmicHandle, bool lock)
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock)
 {
     const uint8_t key = lock ? PMIC_REG_LOCK : PMIC_REG_UNLOCK;
-    int32_t status = Pmic_checkHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Write the key to REGISTER_LOCK
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_REGISTER_LOCK_REG, key);
+        status = Pmic_ioTxByte_CS(handle, PMIC_REGISTER_LOCK_REG, key);
     }
 
     return status;
 }
 
-int32_t Pmic_enableRegLock(const Pmic_Handle_t *pmicHandle)
+int32_t Pmic_enableRegLock(const Pmic_Handle_t *handle)
 {
-    return Pmic_setRegLockState(pmicHandle, PMIC_LOCK);
+    return Pmic_setRegLockState(handle, PMIC_LOCK);
 }
 
-int32_t Pmic_disableRegLock(const Pmic_Handle_t *pmicHandle)
+int32_t Pmic_disableRegLock(const Pmic_Handle_t *handle)
 {
-    return Pmic_setRegLockState(pmicHandle, PMIC_UNLOCK);
+    return Pmic_setRegLockState(handle, PMIC_UNLOCK);
 }

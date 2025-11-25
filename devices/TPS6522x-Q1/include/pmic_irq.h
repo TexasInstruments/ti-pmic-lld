@@ -175,7 +175,7 @@ typedef struct Pmic_IrqStat_s {
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
  *               PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param irqNum [IN] Number of IRQ mask configurations to set.
  *
@@ -194,7 +194,7 @@ int32_t Pmic_irqSetMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask);
  * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
  *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param numIrqMasks [IN] Number of IRQ mask configurations to set.
  *
@@ -212,7 +212,7 @@ int32_t Pmic_irqSetMasks(Pmic_Handle_t *handle, uint8_t numIrqMasks, const Pmic_
  * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
  *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param numIrqMasks [IN] Number of IRQ mask configurations to obtain.
  *
@@ -232,7 +232,7 @@ int32_t Pmic_irqGetMask(Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask
  *
  * @attention End-user must call this API first before calling `Pmic_irqGetNextFlag()`.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @param irqStat [OUT] Status of all PMIC IRQs.
  *

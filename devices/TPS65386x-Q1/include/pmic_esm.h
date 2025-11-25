@@ -328,18 +328,18 @@ int32_t Pmic_esmGetStartState(Pmic_Handle_t *handle, bool *start);
  *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @details The following options are configurable via this API
- * 1. Enable (validParam: PMIC_CFG_ESM_ENABLE_VALID_SHIFT)
- * 2. Mode (validParam: PMIC_CFG_ESM_MODE_VALID_SHIFT)
- * 3. Error Threshold (validParam: PMIC_CFG_ESM_ERR_THR_VALID_SHIFT)
- * 4. Polarity (validParam: PMIC_CFG_ESM_POLARITY_VALID_SHIFT)
- * 5. Deglitch (validParam: PMIC_CFG_ESM_DEGLITCH_VALID_SHIFT)
- * 6. Time base (validParam: PMIC_CFG_ESM_TIME_BASE_VALID_SHIFT)
- * 7. Delay 1 (validParam: PMIC_CFG_ESM_DELAY1_VALID_SHIFT)
- * 8. Delay 2 (validParam: PMIC_CFG_ESM_DELAY2_VALID_SHIFT)
- * 9. HMAX (validParam: PMIC_CFG_ESM_HMAX_VALID_SHIFT)
- * 10. HMIN (validParam: PMIC_CFG_ESM_HMIN_VALID_SHIFT)
- * 11. LMAX (validParam: PMIC_CFG_ESM_LMAX_VALID_SHIFT)
- * 12. LMIN (validParam: PMIC_CFG_ESM_LMIN_VALID_SHIFT)
+ * 1. Enable (validParams: PMIC_CFG_ESM_ENABLE_VALID_SHIFT)
+ * 2. Mode (validParams: PMIC_CFG_ESM_MODE_VALID_SHIFT)
+ * 3. Error Threshold (validParams: PMIC_CFG_ESM_ERR_THR_VALID_SHIFT)
+ * 4. Polarity (validParams: PMIC_CFG_ESM_POLARITY_VALID_SHIFT)
+ * 5. Deglitch (validParams: PMIC_CFG_ESM_DEGLITCH_VALID_SHIFT)
+ * 6. Time base (validParams: PMIC_CFG_ESM_TIME_BASE_VALID_SHIFT)
+ * 7. Delay 1 (validParams: PMIC_CFG_ESM_DELAY1_VALID_SHIFT)
+ * 8. Delay 2 (validParams: PMIC_CFG_ESM_DELAY2_VALID_SHIFT)
+ * 9. HMAX (validParams: PMIC_CFG_ESM_HMAX_VALID_SHIFT)
+ * 10. HMIN (validParams: PMIC_CFG_ESM_HMIN_VALID_SHIFT)
+ * 11. LMAX (validParams: PMIC_CFG_ESM_LMAX_VALID_SHIFT)
+ * 12. LMIN (validParams: PMIC_CFG_ESM_LMIN_VALID_SHIFT)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -375,10 +375,10 @@ int32_t Pmic_esmGetCfg(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg);
  *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
  *
  * @details The following ESM statuses are obtainable via this API
- * 1. ESM Error (validParam: PMIC_ESM_ERR_VALID)
- * 2. Delay 1 Error (validParam: PMIC_DELAY1_ERR_VALID)
- * 3. Delay 2 Error (validParam: PMIC_DELAY2_ERR_VALID)
- * 4. ESM Error Count (validParam: PMIC_ERR_CNT_VALID)
+ * 1. ESM Error (validParams: PMIC_ESM_ERR_VALID)
+ * 2. Delay 1 Error (validParams: PMIC_DELAY1_ERR_VALID)
+ * 3. Delay 2 Error (validParams: PMIC_DELAY2_ERR_VALID)
+ * 4. ESM Error Count (validParams: PMIC_ERR_CNT_VALID)
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -397,9 +397,9 @@ int32_t Pmic_esmGetStatus(Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat);
  *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
  *
  * @details The following ESM statuses can be cleared via this API
- * 1. ESM Error (validParam: PMIC_ESM_ERR_VALID)
- * 2. Delay 1 Error (validParam: PMIC_DELAY1_ERR_VALID)
- * 3. Delay 2 Error (validParam: PMIC_DELAY2_ERR_VALID)
+ * 1. ESM Error (validParams: PMIC_ESM_ERR_VALID)
+ * 2. Delay 1 Error (validParams: PMIC_DELAY1_ERR_VALID)
+ * 3. Delay 2 Error (validParams: PMIC_DELAY2_ERR_VALID)
  *
  * @param handle [IN] PMIC interface handle.
  *

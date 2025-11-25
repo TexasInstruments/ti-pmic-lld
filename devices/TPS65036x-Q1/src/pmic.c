@@ -179,61 +179,61 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
     return status;
 }
 
-static int32_t getPmicInfo(Pmic_Handle_t *pmicHandle)
+static int32_t getPmicInfo(Pmic_Handle_t *handle)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INTERFACE_CONF register
-    Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REG, &regData);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, PMIC_INTERFACE_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract I2C_CRC_EN bit field and read DEV_REV register
-        pmicHandle->crcEnable = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-        status = Pmic_ioRxByte(pmicHandle, PMIC_DEV_REV_REG, &regData);
+        handle->crcEnable = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
+        status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
-        pmicHandle->devRev = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_1_REG, &regData);
+        handle->devRev = regData;
+        status = Pmic_ioRxByte(handle, PMIC_NVM_CODE_1_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
-        pmicHandle->nvmCode = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REG, &regData);
+        handle->nvmCode = regData;
+        status = Pmic_ioRxByte(handle, PMIC_NVM_CODE_2_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TI_NVM_REV bit field and read MANUFACTURING_VER register
-        pmicHandle->nvmRev = regData;
-        status = Pmic_ioRxByte(pmicHandle, PMIC_MANUFACTURING_VER_REG, &regData);
+        handle->nvmRev = regData;
+        status = Pmic_ioRxByte(handle, PMIC_MANUFACTURING_VER_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract SILICON_REV bit field
-        pmicHandle->devSiRev = regData;
+        handle->devSiRev = regData;
     }
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-static int32_t decipherWhetherA0(Pmic_Handle_t *pmicHandle)
+static int32_t decipherWhetherA0(Pmic_Handle_t *handle)
 {
     uint8_t regData = 0U;
     bool regsLocked = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Get register lock status
-    status = Pmic_ioRxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, &regData);
+    status = Pmic_ioRxByte(handle, PMIC_REGISTER_LOCK_REG, &regData);
 
     // Unlock registers if they are locked
     if (status == PMIC_ST_SUCCESS)
@@ -242,7 +242,7 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *pmicHandle)
 
         if (regsLocked)
         {
-            status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, REG_LOCK_KEY);
+            status = Pmic_ioTxByte(handle, PMIC_REGISTER_LOCK_REG, REG_LOCK_KEY);
         }
     }
 
@@ -250,13 +250,13 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *pmicHandle)
     // So if NRSTOUT_READBACK_MASK is writable, the device is A0
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioUpdateByte_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REG, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
+        status = Pmic_ioUpdateByte_b(handle, PMIC_MASK_MODERATE_ERR_REG, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
     }
 
     // Get actual NRSTOUT_READBACK_MASK value
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(pmicHandle, PMIC_MASK_MODERATE_ERR_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_MASK_MODERATE_ERR_REG, &regData);
     }
 
     // Device is A0 if NRSTOUT_READBACK_MASK is 1. Otherwise, device is B0.
@@ -264,14 +264,14 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *pmicHandle)
     // necessary to revert it back to 0 if it was previously 0
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_NRSTOUT_READBACK_MASK_SHIFT))
     {
-        pmicHandle->isA0 = (bool)true;
+        handle->isA0 = (bool)true;
     }
 
     // Re-lock PMIC registers if they were previously locked
     if ((status == PMIC_ST_SUCCESS) && regsLocked)
     {
 
-        status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REG, REG_LOCK_VALUE);
+        status = Pmic_ioTxByte(handle, PMIC_REGISTER_LOCK_REG, REG_LOCK_VALUE);
     }
 
     return status;
@@ -317,57 +317,57 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
     return status;
 }
 
-int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle)
+int32_t Pmic_deinit(Pmic_Handle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (pmicHandle == NULL)
+    if (handle == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        pmicHandle->drvInitStat = 0U;
-        pmicHandle->i2cAddr0 = 0U;
-        pmicHandle->devRev = 0U;
-        pmicHandle->nvmCode = 0U;
-        pmicHandle->nvmRev = 0U;
-        pmicHandle->devSiRev = 0U;
-        pmicHandle->isA0 = (bool)false;
-        pmicHandle->crcEnable = PMIC_DISABLE;
-        pmicHandle->commHandle0 = NULL;
-        pmicHandle->ioRead = NULL;
-        pmicHandle->ioWrite = NULL;
-        pmicHandle->criticalSectionStart = NULL;
-        pmicHandle->criticalSectionStop = NULL;
-        pmicHandle->irqResponseCallback = NULL;
+        handle->drvInitStat = 0U;
+        handle->i2cAddr0 = 0U;
+        handle->devRev = 0U;
+        handle->nvmCode = 0U;
+        handle->nvmRev = 0U;
+        handle->devSiRev = 0U;
+        handle->isA0 = (bool)false;
+        handle->crcEnable = PMIC_DISABLE;
+        handle->commHandle0 = NULL;
+        handle->ioRead = NULL;
+        handle->ioWrite = NULL;
+        handle->criticalSectionStart = NULL;
+        handle->criticalSectionStop = NULL;
+        handle->irqResponseCallback = NULL;
     }
 
     return status;
 }
 
-int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle)
+int32_t Pmic_checkHandle(const Pmic_Handle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (pmicHandle == NULL)
+    if (handle == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (pmicHandle->commHandle0 == NULL)
+        if (handle->commHandle0 == NULL)
         {
             status = PMIC_ST_ERR_NULL_PARAM;
         }
-        else if ((pmicHandle->ioRead == NULL) || (pmicHandle->ioWrite == NULL) ||
-                 (pmicHandle->criticalSectionStart == NULL) || (pmicHandle->criticalSectionStop == NULL))
+        else if ((handle->ioRead == NULL) || (handle->ioWrite == NULL) ||
+                 (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
         {
             status = PMIC_ST_ERR_NULL_FPTR;
         }
-        else if (pmicHandle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
+        else if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
         {
             status = PMIC_ST_ERR_INV_HANDLE;
         }
