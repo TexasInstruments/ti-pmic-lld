@@ -189,8 +189,8 @@ static int32_t IRQ_setMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMas
     }
 
     // Read IRQ mask register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, irqMaskRegAddr, &regData);
     }
 
@@ -243,9 +243,9 @@ static int32_t IRQ_handleRecordsForReg(Pmic_Handle_t *handle,
 
     status = IRQ_anyMasksForReg(numMasks, masks, regAddr, &anyMasks);
 
+    Pmic_criticalSectionStart(handle);
     if ((status == PMIC_ST_SUCCESS) && anyMasks) {
         // Get the current value of this IRQ mask register
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 

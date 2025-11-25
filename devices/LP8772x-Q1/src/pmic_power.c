@@ -1660,8 +1660,8 @@ static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequ
     status = PWR_getSeqRegister(config->resource, &regAddr);
 
     // Read the relevant sequencing register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 

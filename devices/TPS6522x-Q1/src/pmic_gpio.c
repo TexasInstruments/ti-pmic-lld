@@ -281,9 +281,9 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
     }
 
     // Start critical section and read current register value
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
@@ -370,9 +370,9 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
     }
 
     // Start critical section and read current GPIO_OUT register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, GPIO_OUT_1_REG, &regData);
     }
 
@@ -445,9 +445,9 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
     }
 
     // Start critical section and read POWER_ON_CONFIG register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
     }
 
@@ -567,9 +567,9 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
     }
 
     // Start critical section and read POWER_ON_CONFIG register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
     }
 

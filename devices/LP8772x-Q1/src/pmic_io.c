@@ -298,8 +298,8 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable) {
     uint8_t regData = 0U;
 
     // Read the INTERFACE_CONF register
+    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, PMIC_IO_INTERFACE_CONF, &regData);
     }
 

@@ -366,7 +366,6 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Obtain critical section
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_1_REG, &crcLsb);
     }
@@ -374,8 +373,6 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_2_REG, &crcMsb);
     }
-
-    // Release critical section
 
     if (status == PMIC_ST_SUCCESS) {
         *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);
