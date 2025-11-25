@@ -235,17 +235,15 @@ int32_t Pmic_adcGetResultCode(const Pmic_Handle_t *handle, uint16_t *adcResult)
     }
 
     // Read ADC result registers
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, ADC_RESULT_REG_1_REG, &regData1);
+        status = Pmic_ioRxByte_CS(handle, ADC_RESULT_REG_1_REG, &regData1);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, ADC_RESULT_REG_2_REG, &regData2);
+        status = Pmic_ioRxByte_CS(handle, ADC_RESULT_REG_2_REG, &regData2);
     }
-    Pmic_criticalSectionStop(handle);
 
     // Combine the two registers to form 12-bit result
     // ADC_RESULT_REG_1 contains bits [11:4]

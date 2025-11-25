@@ -142,9 +142,7 @@ int32_t Pmic_getLockCfg(Pmic_Handle_t *handle, Pmic_Lock_t *config) {
 
     // Read from REG_STAT_REG with critical section
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, REG_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, REG_STAT_REG, &regData);
     }
 
     // Extract requested bitfields from register data

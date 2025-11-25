@@ -626,17 +626,17 @@ static int32_t IRQ_setMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMas
     }
 
     // Read IRQ mask register
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, maskReg, &regData);
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        // Modify IRQ mask bit field and write new register value
-        Pmic_setBitField_b(&regData, maskShift, shouldMask);
-        status = Pmic_ioTxByte(handle, maskReg, regData);
+        if (status == PMIC_ST_SUCCESS) {
+            // Modify IRQ mask bit field and write new register value
+            Pmic_setBitField_b(&regData, maskShift, shouldMask);
+            status = Pmic_ioTxByte(handle, maskReg, regData);
+        }
+        Pmic_criticalSectionStop(handle);
     }
-    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -949,9 +949,7 @@ static int32_t IRQ_getMaskOrConfig(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg,
 
     // Read mask/config register
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, reg, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, reg, &regData);
     }
 
     // Extract IRQ mask/config bit field
@@ -1019,9 +1017,7 @@ static int32_t IRQ_getIrqStatForReg(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqSt
     uint8_t regData = 0U;
 
     // Read from the status register
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, regAddr, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
         for (uint8_t i = 0U; i < PMIC_IRQ_NUM; i++) {

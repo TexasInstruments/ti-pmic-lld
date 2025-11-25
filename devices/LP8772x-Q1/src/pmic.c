@@ -127,18 +127,14 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Read DEV_REV register */
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, PMIC_DEV_REV_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
         /* Store device revision */
         handle->devRev = regData;
 
         /* Read MANUFACTURING_VER register */
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_MANUFACTURING_VER_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_MANUFACTURING_VER_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -154,9 +150,7 @@ static int32_t validateComms(Pmic_Handle_t *handle) {
     uint8_t regVal = 0U;
 
     /* Start Critical Section */
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regVal);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, PMIC_DEV_REV_REG, &regVal);
 
     if (status == PMIC_ST_SUCCESS) {
         handle->drvInitStat = PMIC_DRV_INIT_SUCCESS;

@@ -1661,7 +1661,8 @@ static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequ
 
     // Read the relevant sequencing register
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
     // Modify requested fields
@@ -1683,8 +1684,9 @@ static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequ
 
     // Write the modifed register contents back
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioTxByte_CS(handle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }

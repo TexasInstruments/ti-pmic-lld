@@ -130,9 +130,7 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
     // Get scratchpad value
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -172,9 +170,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read REGISTER_LOCK
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_REGISTER_LOCK_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_REGISTER_LOCK_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -371,17 +367,15 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
     }
 
     // Obtain critical section
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte(handle, CALCUL_CONFIG_CRC_1_REG, &crcLsb);
+        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_1_REG, &crcLsb);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte(handle, CALCUL_CONFIG_CRC_2_REG, &crcMsb);
+        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_2_REG, &crcMsb);
     }
 
     // Release critical section
-    Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {
         *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);

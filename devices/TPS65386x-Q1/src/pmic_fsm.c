@@ -101,9 +101,7 @@ int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
     // Read STATE_STAT
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, STATE_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, STATE_STAT_REG, &regData);
     }
 
     // Extract STATE; account for repeated device states
@@ -395,9 +393,7 @@ static int32_t FSM_getStbyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     uint8_t regData = 0U;
 
     // Read STBY_CFG
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, STBY_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, STBY_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -438,9 +434,7 @@ static int32_t FSM_getSafetyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     uint8_t regData = 0U;
 
     // Read SAFETY_CFG
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, SAFETY_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, SAFETY_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -469,9 +463,7 @@ static int32_t FSM_getRstMcuCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     uint8_t regData = 0U;
 
     // Read RST_MCU_CFG
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, RST_MCU_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, RST_MCU_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -500,9 +492,7 @@ static int32_t FSM_getSafeTmoCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     uint8_t regData = 0U;
 
     // Read SAFE_TMO_CFG_REG
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, SAFE_TMO_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, SAFE_TMO_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -624,9 +614,7 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read DEV_ERR_STAT
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, DEV_ERR_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, DEV_ERR_STAT_REG, &regData);
 
         // Extract DEV_ERR_CNT
         if (status == PMIC_ST_SUCCESS)

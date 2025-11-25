@@ -98,17 +98,13 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Read DEV_ID register for device revision */
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_ID_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, PMIC_DEV_ID_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
         handle->devRev = Pmic_getBitField(regData, PMIC_DEV_ID_SHIFT, PMIC_DEV_ID_MASK);
 
         /* Read DEV_REV register for silicon revision */
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_DEV_REV_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_DEV_REV_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -117,9 +113,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
 
     /* Read NVM_CODE register */
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_NVM_CODE_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_NVM_CODE_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -129,9 +123,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
 
     /* Read NVM_REV register */
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_NVM_REV_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_NVM_REV_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -147,9 +139,7 @@ static int32_t validateComms(Pmic_Handle_t *handle) {
     uint8_t regVal = 0U;
 
     /* Start Critical Section */
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
-    Pmic_criticalSectionStop(handle);
+    status = Pmic_ioRxByte_CS(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
 
     if (status == PMIC_ST_SUCCESS) {
         handle->drvInitStat = PMIC_DRV_INIT_SUCCESS;

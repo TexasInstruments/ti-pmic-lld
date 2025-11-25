@@ -337,9 +337,7 @@ int32_t Pmic_gpioGetPinCfg(const Pmic_Handle_t *handle, Pmic_GpioPinCfg_t *gpioP
     // Read register value
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
     }
 
     // Extract configuration fields from register data
@@ -418,9 +416,7 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
     // Read GPIO_IN register
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, GPIO_IN_1_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, GPIO_IN_1_REG, &regData);
     }
 
     // Extract pin value
@@ -506,9 +502,7 @@ int32_t Pmic_gpioGetNIntEnDrvCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrv
     // Read POWER_ON_CONFIG register
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
     }
 
     // Extract configuration fields
@@ -544,9 +538,7 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high)
     // Read ENABLE_DRV_STAT register
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, ENABLE_DRV_STAT_REG, &regData);
     }
 
     // Extract nINT/EN_DRV pin value
@@ -657,9 +649,7 @@ int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDr
     // Read POWER_ON_CONFIG register
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
     }
 
     // Extract configuration fields
@@ -700,9 +690,7 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
     // Read STAT_STARTUP register for EN/PB/VSENSE status
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, STAT_STARTUP_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, STAT_STARTUP_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -740,9 +728,7 @@ int32_t Pmic_gpioGetNRstOutVal(const Pmic_Handle_t *handle, bool *high)
     // Read ENABLE_DRV_STAT register
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, ENABLE_DRV_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, ENABLE_DRV_STAT_REG, &regData);
     }
 
     // Extract nRSTOUT pin value

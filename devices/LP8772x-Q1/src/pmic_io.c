@@ -282,9 +282,7 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *isEnabled) {
 
     // Read the INTERFACE_CONF register
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_IO_INTERFACE_CONF, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_IO_INTERFACE_CONF, &regData);
     }
 
     // Extract the relevant bit
@@ -300,8 +298,8 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable) {
     uint8_t regData = 0U;
 
     // Read the INTERFACE_CONF register
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, PMIC_IO_INTERFACE_CONF, &regData);
     }
 

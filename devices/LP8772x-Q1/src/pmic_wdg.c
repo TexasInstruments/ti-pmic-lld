@@ -601,9 +601,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_Handle_t *handle, bool *isEnabled) {
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_WD_MODE_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_MODE_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -623,9 +621,7 @@ int32_t Pmic_wdgGetErrStatus(Pmic_Handle_t *handle, Pmic_WdgError_t *errors) {
 
     /* Reading error status register */
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_WD_ERR_STAT_REG, &regVal);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_ERR_STAT_REG, &regVal);
     }
 
     /* Extract watchdog error status fields */
@@ -733,9 +729,7 @@ int32_t Pmic_wdgGetFailCntStatus(Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *f
 
     /* Reading error status register */
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_WD_FAIL_CNT_REG, &regVal);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_FAIL_CNT_REG, &regVal);
     }
 
     /* Get watchdog Bad Event status */
@@ -765,9 +759,7 @@ int32_t Pmic_wdgQaWriteAnswer(Pmic_Handle_t *handle) {
 
     /* Get wdg QA Feedback value */
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_WD_QA_CFG_REG, &qaFbk);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_QA_CFG_REG, &qaFbk);
         qaFbk = Pmic_getBitField(qaFbk, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK);
     }
 
