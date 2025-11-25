@@ -296,8 +296,8 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint
 
 int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS)
@@ -336,8 +336,8 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle)
 
 int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *crcEnabled)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (crcEnabled == NULL))
     {

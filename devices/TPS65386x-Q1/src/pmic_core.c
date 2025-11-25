@@ -188,8 +188,8 @@ int32_t Pmic_getCntLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
 }
 
 int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev) {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (siliconRev == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -207,8 +207,8 @@ int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev) {
 }
 
 int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev) {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (nvmRev == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;

@@ -45,8 +45,8 @@
 
 int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
 {
-    const uint8_t key = lock ? PMIC_REG_LOCK_KEY : PMIC_REG_UNLOCK_KEY;
     int32_t status = Pmic_checkHandle(handle);
+    const uint8_t key = lock ? PMIC_REG_LOCK_KEY : PMIC_REG_UNLOCK_KEY;
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -58,8 +58,8 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
 
 int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (isLocked == NULL))
     {
@@ -81,8 +81,8 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
 
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (nvmRev == NULL))
     {
@@ -104,8 +104,8 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
 
 int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (siliconRev == NULL))
     {

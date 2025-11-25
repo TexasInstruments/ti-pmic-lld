@@ -114,8 +114,8 @@ int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
 
 int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {

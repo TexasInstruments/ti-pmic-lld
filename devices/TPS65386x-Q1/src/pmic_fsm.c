@@ -62,8 +62,8 @@
 
 int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (state > PMIC_STATE_REQUEST_MAX))
     {
@@ -90,8 +90,8 @@ int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
 
 int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (state == NULL))
     {
@@ -575,8 +575,8 @@ int32_t Pmic_fsmGetCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 
 int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (devErrCnt > PMIC_DEV_ERR_CNT_MAX))
     {
@@ -603,8 +603,8 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
 
 int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (devErrCnt == NULL))
     {
@@ -791,8 +791,8 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupC
 
 int32_t Pmic_fsmGetWakeStatus(Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupStat == NULL))
     {
@@ -965,8 +965,8 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *p
 
 int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -1030,8 +1030,8 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *p
 
 int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -1089,8 +1089,8 @@ int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatc
 
 int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *duration)
 {
-    uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (duration == NULL))
     {
