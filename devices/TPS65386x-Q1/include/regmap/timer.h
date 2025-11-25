@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_REGMAP_TIMER_H__
-#define __PMIC_REGMAP_TIMER_H__
+#ifndef PMIC_REGMAP_TIMER_H
+#define PMIC_REGMAP_TIMER_H
 
 #include <stdint.h>
 
@@ -87,4 +87,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* __PMIC_REGMAP_TIMER_H__ */
+#endif /* PMIC_REGMAP_TIMER_H */

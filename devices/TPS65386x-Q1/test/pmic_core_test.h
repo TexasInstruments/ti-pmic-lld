@@ -38,8 +38,8 @@
  *      test cases
  */
 
-#ifndef __PMIC_CORE_TEST_H__
-#define __PMIC_CORE_TEST_H__
+#ifndef PMIC_TEST_CORE_H
+#define PMIC_TEST_CORE_H
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -78,4 +78,4 @@ void *test_pmic_core(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* __PMIC_CORE_TEST_H__ */
+#endif /* PMIC_TEST_CORE_H */

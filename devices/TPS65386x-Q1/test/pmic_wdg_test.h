@@ -38,8 +38,8 @@
  *          Watchdog timer servicing tests.
  */
 
-#ifndef __PMIC_WDG_TEST_H__
-#define __PMIC_WDG_TEST_H__
+#ifndef PMIC_TEST_WDG_H
+#define PMIC_TEST_WDG_H
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -79,4 +79,4 @@ void *test_pmic_WDG(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* __PMIC_WDG_TEST_H__ */
+#endif /* PMIC_TEST_WDG_H */

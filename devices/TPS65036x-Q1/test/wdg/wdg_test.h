@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __WDG_TEST_H__
-#define __WDG_TEST_H__
+#ifndef PMIC_TEST_WDG_H
+#define PMIC_TEST_WDG_H
 
 /**
  * @file wdg_test.h
@@ -116,4 +116,4 @@ void test_positive_wdgQaSequence_detect_RstInt(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__WDG_TEST_H__*/
+#endif /* PMIC_TEST_WDG_H */

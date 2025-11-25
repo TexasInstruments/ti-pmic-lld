@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_WDG_H__
-#define __PMIC_WDG_H__
+#ifndef PMIC_WDG_H
+#define PMIC_WDG_H
 
 /**
  * @file pmic_wdg.h
@@ -791,4 +791,4 @@ int32_t Pmic_wdgQaWriteAnswer(Pmic_Handle_t *handle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_WDG_H__ */
+#endif /* PMIC_WDG_H */

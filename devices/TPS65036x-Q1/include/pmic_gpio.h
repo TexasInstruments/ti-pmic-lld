@@ -40,8 +40,8 @@
  * components of the PMIC GPIO module are as follows: set/get GPIO
  * configurations and activation/deactivation of GPIOs.
  */
-#ifndef __PMIC_GPIO_H__
-#define __PMIC_GPIO_H__
+#ifndef PMIC_GPIO_H
+#define PMIC_GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -324,4 +324,4 @@ int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *pmicHandle, bool *activ
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_GPIO_H__ */
+#endif /* PMIC_GPIO_H */

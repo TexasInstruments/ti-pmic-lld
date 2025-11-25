@@ -41,8 +41,8 @@
  * setting/getting regulator configurations, setting/getting thermal
  * shutdown configurations, and getting regulator and TSD statuses.
  */
-#ifndef __PMIC_POWER_H__
-#define __PMIC_POWER_H__
+#ifndef PMIC_POWER_H
+#define PMIC_POWER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -1148,4 +1148,4 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *pmicHandle, Pmic_PwrBuckLd
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_POWER_H__ */
+#endif /* PMIC_POWER_H */

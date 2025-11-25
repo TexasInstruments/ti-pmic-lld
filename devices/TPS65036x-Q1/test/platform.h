@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PLATFORM_H__
-#define __PLATFORM_H__
+#ifndef PMIC_TEST_PLATFORM_H
+#define PMIC_TEST_PLATFORM_H
 
 /**
  * @file platform.h
@@ -229,4 +229,4 @@ int32_t platform_rxByte(const struct Pmic_CoreHandle_s *pmicCorehandle,
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PLATFORM_H__ */
+#endif /* PMIC_TEST_PLATFORM_H */

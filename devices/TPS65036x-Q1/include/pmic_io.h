@@ -36,8 +36,8 @@
  * @brief LLD-Communication header file containing I2C read/write APIs used
  * internally by PMIC LLD.
  */
-#ifndef __PMIC_IO_H__
-#define __PMIC_IO_H__
+#ifndef PMIC_IO_H
+#define PMIC_IO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -309,4 +309,4 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *pmicHandle, bool *crcEnabled);
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_IO_H__ */
+#endif /* PMIC_IO_H */

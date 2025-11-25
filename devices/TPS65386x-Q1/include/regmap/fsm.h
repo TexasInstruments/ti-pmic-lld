@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_REGMAP_FSM_H__
-#define __PMIC_REGMAP_FSM_H__
+#ifndef PMIC_REGMAP_FSM_H
+#define PMIC_REGMAP_FSM_H
 
 #include <stdint.h>
 
@@ -56,14 +56,12 @@ extern "C" {
 #define DEV_ERR_STAT_REG       (0x66U)
 
 /** @brief SAFETY_CFG - Safety Configuration */
-#ifndef __PMIC_REGMAP_IRQ_H__
 #define PWD_TH_SHIFT               (0U)
 #define AUTO_BIST_EN_SHIFT         (5U)
 #define CFG_REG_CRC_INT_CFG_SHIFT  (6U)
 #define PWD_TH_MASK                (0x1FU << PWD_TH_SHIFT)
 #define AUTO_BIST_EN_MASK          (1U << AUTO_BIST_EN_SHIFT)
 #define CFG_REG_CRC_INT_CFG_MASK   (1U << CFG_REG_CRC_INT_CFG_SHIFT)
-#endif
 
 /** @brief WAKE_CFG - Wake Configuration */
 #define WAKE1_DGL_CFG_SHIFT    (0U)
@@ -152,4 +150,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_REGMAP_FSM_H__ */
+#endif /* PMIC_REGMAP_FSM_H */

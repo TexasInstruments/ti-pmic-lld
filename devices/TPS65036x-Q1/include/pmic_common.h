@@ -36,8 +36,8 @@
  * @brief This file contains declarations/definitions of common macros/defines,
  * data structures, and APIs used throughout PMIC LLD.
  */
-#ifndef __PMIC_COMMON_H__
-#define __PMIC_COMMON_H__
+#ifndef PMIC_COMMON_H
+#define PMIC_COMMON_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -359,4 +359,4 @@ static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_COMMON_H__ */
+#endif /* PMIC_COMMON_H */

@@ -36,8 +36,8 @@
  * @brief PMIC LLD register addresses and bit fields pertaining to the
  * GPIO module.
  */
-#ifndef __GPIO_H__
-#define __GPIO_H__
+#ifndef PMIC_REGMAP_GPIO_H
+#define PMIC_REGMAP_GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,4 +54,4 @@ extern "C" {
 }
 
 #endif /* __cplusplus */
-#endif /* __GPIO_H__ */
+#endif /* PMIC_REGMAP_GPIO_H */

@@ -36,8 +36,8 @@
  * @brief PMIC LLD register addresses and bit fields pertaining to the Power
  * module.
  */
-#ifndef __POWER_H__
-#define __POWER_H__
+#ifndef PMIC_REGMAP_POWER_H
+#define PMIC_REGMAP_POWER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -501,4 +501,4 @@ extern "C" {
 }
 
 #endif /* __cplusplus */
-#endif /* __POWER_H__ */
+#endif /* PMIC_REGMAP_POWER_H */

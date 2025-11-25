@@ -41,8 +41,8 @@
  * @brief APIs used to configure and interact with PMIC interrupts.
  */
 
-#ifndef __PMIC_IRQ_H__
-#define __PMIC_IRQ_H__
+#ifndef PMIC_IRQ_H
+#define PMIC_IRQ_H
 
 
 /* ==========================================================================*/
@@ -448,4 +448,4 @@ int32_t Pmic_irqClrAllFlags(Pmic_Handle_t *handle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_IRQ_H__ */
+#endif /* PMIC_IRQ_H */

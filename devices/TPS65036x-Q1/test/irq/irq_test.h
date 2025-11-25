@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __IRQ_TEST_H__
-#define __IRQ_TEST_H__
+#ifndef PMIC_TEST_IRQ_H
+#define PMIC_TEST_IRQ_H
 
 /**
  * @file irq_test.h
@@ -123,4 +123,4 @@ void test_positive_irqSetGetMask_all(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__IRQ_TEST_H__*/
+#endif /* PMIC_TEST_IRQ_H */

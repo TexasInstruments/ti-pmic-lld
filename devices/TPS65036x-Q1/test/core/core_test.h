@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __CORE_TEST_H__
-#define __CORE_TEST_H__
+#ifndef PMIC_TEST_CORE_H
+#define PMIC_TEST_CORE_H
 
 /**
  * @file core_test.h
@@ -128,4 +128,4 @@ void test_positive_getClrResetCnt(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__CORE_TEST_H__*/
+#endif /* PMIC_TEST_CORE_H */

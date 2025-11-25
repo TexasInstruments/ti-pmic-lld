@@ -41,8 +41,8 @@
  * watchdog configurations, getting watchdog error status, getting watchdog
  * fail counter status, and sending Q&A answers.
  */
-#ifndef __PMIC_WDG_H__
-#define __PMIC_WDG_H__
+#ifndef PMIC_WDG_H
+#define PMIC_WDG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -703,4 +703,4 @@ int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *pmicHandle, Pmic_WdgFailCn
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_WDG_H__ */
+#endif /* PMIC_WDG_H */

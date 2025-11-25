@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_TIMER_H__
-#define __PMIC_TIMER_H__
+#ifndef PMIC_TIMER_H
+#define PMIC_TIMER_H
 
 /**
  * @file pmic_timer.h
@@ -315,4 +315,4 @@ int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_TIMER_H__ */
+#endif /* PMIC_TIMER_H */

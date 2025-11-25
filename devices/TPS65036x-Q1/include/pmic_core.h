@@ -41,8 +41,8 @@
  * configuration, getting device recovery counter status, and lock/unlock PMIC
  * registers.
  */
-#ifndef __PMIC_CORE_H__
-#define __PMIC_CORE_H__
+#ifndef PMIC_CORE_H
+#define PMIC_CORE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -588,4 +588,4 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *pmicHandle, uint8_t scratch
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_CORE_H__ */
+#endif /* PMIC_CORE_H */

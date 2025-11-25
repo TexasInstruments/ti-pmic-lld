@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_INIT_TEST_H__
-#define __PMIC_INIT_TEST_H__
+#ifndef PMIC_TEST_INIT_H
+#define PMIC_TEST_INIT_H
 
 /**
  * @file pmic_init_test.h
@@ -69,4 +69,4 @@ void test_positive_Pmic_deinit(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__PMIC_INIT_TEST_H__*/
+#endif /* PMIC_TEST_INIT_H */

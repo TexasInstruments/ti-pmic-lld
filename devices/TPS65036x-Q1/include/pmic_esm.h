@@ -41,8 +41,8 @@
  * getting ESM configurations, starting and stopping the ESM, getting ESM
  * status, clearing ESM status, and getting ESM error count.
  */
-#ifndef __PMIC_ESM_H__
-#define __PMIC_ESM_H__
+#ifndef PMIC_ESM_H
+#define PMIC_ESM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -400,4 +400,4 @@ int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *pmicHandle, uint8_t *errCnt);
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_ESM_H__ */
+#endif /* PMIC_ESM_H */

@@ -37,8 +37,8 @@
  *
  * @brief Top level include file for PMIC LLD.
  */
-#ifndef __PMIC_H__
-#define __PMIC_H__
+#ifndef PMIC_H
+#define PMIC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -192,4 +192,4 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle);
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_H__ */
+#endif /* PMIC_H */

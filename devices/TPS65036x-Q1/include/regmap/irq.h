@@ -36,8 +36,8 @@
  * @brief PMIC LLD register addresses and bit fields pertaining to the IRQ
  * module.
  */
-#ifndef __IRQ_H__
-#define __IRQ_H__
+#ifndef PMIC_REGMAP_IRQ_H
+#define PMIC_REGMAP_IRQ_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -310,4 +310,4 @@ extern "C" {
 }
 
 #endif /* __cplusplus */
-#endif /* __IRQ_H__ */
+#endif /* PMIC_REGMAP_IRQ_H */

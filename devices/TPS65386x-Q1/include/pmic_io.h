@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_IO_H__
-#define __PMIC_IO_H__
+#ifndef PMIC_IO_H
+#define PMIC_IO_H
 
 /**
  * @file pmic_io.h
@@ -296,4 +296,4 @@ int32_t Pmic_ioRxWordSeq(Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t *rxD
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__PMIC_IO_H__*/
+#endif /* PMIC_IO_H */

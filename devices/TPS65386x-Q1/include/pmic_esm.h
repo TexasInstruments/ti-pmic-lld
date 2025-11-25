@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_ESM_H__
-#define __PMIC_ESM_H__
+#ifndef PMIC_ESM_H
+#define PMIC_ESM_H
 
 /**
  * @file pmic_esm.h
@@ -452,4 +452,4 @@ int32_t Pmic_esmClrStatus(Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_ESM_H__ */
+#endif /* PMIC_ESM_H */

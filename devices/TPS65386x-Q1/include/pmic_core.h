@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_CORE_H__
-#define __PMIC_CORE_H__
+#ifndef PMIC_CORE_H
+#define PMIC_CORE_H
 
 /**
  * @file pmic_core.h
@@ -382,4 +382,4 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_CORE_H__ */
+#endif /* PMIC_CORE_H */

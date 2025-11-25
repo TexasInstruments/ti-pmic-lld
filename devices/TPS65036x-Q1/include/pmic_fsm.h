@@ -37,8 +37,8 @@
  *
  * @details User-facing FSM APIs.
  */
-#ifndef __PMIC_GPIO_H__
-#define __PMIC_GPIO_H__
+#ifndef PMIC_FSM_H
+#define PMIC_FSM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -234,4 +234,4 @@ int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *pmicHandle);
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_FSM_H__ */
+#endif /* PMIC_FSM_H */

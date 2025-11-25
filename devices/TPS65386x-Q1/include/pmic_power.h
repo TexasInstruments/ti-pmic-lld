@@ -43,8 +43,8 @@
  * Includes thermal configuration and status management.
  */
 
-#ifndef __PMIC_POWER_H__
-#define __PMIC_POWER_H__
+#ifndef PMIC_POWER_H
+#define PMIC_POWER_H
 
 #include <stdint.h>
 
@@ -1233,4 +1233,4 @@ int32_t Pmic_pwrGetPGoodInStby(Pmic_Handle_t *handle, bool *isEnabled);
 }
 #endif /* __cplusplus */
 
-#endif /* __PMIC_POWER_H__ */
+#endif /* PMIC_POWER_H */

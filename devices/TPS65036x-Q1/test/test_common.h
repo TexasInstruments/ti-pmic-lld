@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __TEST_COMMON_H__
-#define __TEST_COMMON_H__
+#ifndef PMIC_TEST_COMMON_H
+#define PMIC_TEST_COMMON_H
 
 /**
  * @file test_common.h
@@ -94,4 +94,4 @@ int32_t testCommon_disableConfigCrc(const Pmic_Handle_t *pmicHandle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __TEST_COMMON_H__ */
+#endif /* PMIC_TEST_COMMON_H */

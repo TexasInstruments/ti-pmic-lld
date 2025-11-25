@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_GPIO_H__
-#define __PMIC_GPIO_H__
+#ifndef PMIC_GPIO_H
+#define PMIC_GPIO_H
 
 /**
  * @file pmic_gpio.h
@@ -363,4 +363,4 @@ int32_t Pmic_gpioGetOutputValue(Pmic_Handle_t *handle, uint8_t gpo, bool *high);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_GPIO_H__ */
+#endif /* PMIC_GPIO_H */
