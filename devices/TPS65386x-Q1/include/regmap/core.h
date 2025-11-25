@@ -159,6 +159,11 @@ extern "C" {
 #define PMIC_DIAG_OUT_CTRL_MASK ((uint8_t)(0x03U << PMIC_DIAG_OUT_CTRL_SHIFT))
 #define PMIC_DIAG_CH_SEL_MASK   ((uint8_t)(0x1FU << PMIC_DIAG_CH_SEL_SHIFT))
 
+/** @brief PMIC DIAG_OUT_CTRL field values */
+#define PMIC_DIAG_OUT_CTRL_DISABLED      (0x00U)
+#define PMIC_DIAG_OUT_CTRL_AMUX_VALUE    (0x01U)
+#define PMIC_DIAG_OUT_CTRL_DMUX_VALUE    (0x02U)
+
 /** @brief  BB_PMIC STAT_READBACK_ERR register Mask Values */
 #define PMIC_NRST_RDBK_LVL_MASK      ((uint8_t)(0x01U << PMIC_NRST_RDBK_LVL_SHIFT))
 #define PMIC_SAFE_OUT1_RDBK_LVL_MASK ((uint8_t)(0x01U << PMIC_SAFE_OUT1_RDBK_LVL_SHIFT))

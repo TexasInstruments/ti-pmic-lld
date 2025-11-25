@@ -51,6 +51,17 @@
 #define SPI_WRITE_BIT    ((uint8_t)0U)
 #define SPI_READ_BIT     ((uint8_t)1U)
 
+// I2C protocol constants
+#define I2C_ADDR_7BIT_MASK    ((uint8_t)0x7FU)  /* Extract 7-bit I2C address */
+#define I2C_ADDR_SHIFT        ((uint8_t)1U)     /* Shift for R/W bit position */
+#define I2C_READ_BIT          ((uint8_t)1U)     /* Set for read operation */
+
+// SPI protocol constants
+#define SPI_PAGE_MASK         ((uint8_t)0x07U)  /* 3-bit page number extraction */
+#define SPI_ADDR_MASK         ((uint8_t)0xFFU)  /* 8-bit register address mask */
+#define SPI_PAGE_SHIFT        ((uint8_t)5U)     /* Page field position in command byte */
+#define SPI_ADDR_BYTE_SHIFT   ((uint8_t)8U)     /* Extract page from 16-bit address */
+
 /**
  *  Used CRC Polynomial:  x^8 + x^2 + x + 1
  *   Evalution of CRC Polynomial value from equation:
@@ -132,7 +143,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 
     if (status == PMIC_ST_SUCCESS)
     {
-        uint8_t page = (regAddr >> 8U) & 0x07U;
+        uint8_t page = (regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK;
 
         // SPI MODE
         if (handle->commMode == PMIC_INTF_SPI)
@@ -140,10 +151,10 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
             uint8_t spiFrame[SPI_TX_FRAME_LEN] = {0U};
             uint8_t frameLen = 3U;
 
-            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU); // ADDR[7:0]
-            spiFrame[1U] = (uint8_t)(page << 5U) |     // PAGE[2:0]
-                           (SPI_WRITE_BIT << 4U);      // R/W = 0
-            spiFrame[2U] = txData;                     // DATA
+            spiFrame[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK); // ADDR[7:0]
+            spiFrame[1U] = (uint8_t)(page << SPI_PAGE_SHIFT) | // PAGE[2:0]
+                           (SPI_WRITE_BIT << 4U);              // R/W = 0
+            spiFrame[2U] = txData;                             // DATA
 
             if (handle->crcEnable)
             {
@@ -172,7 +183,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
             uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
 
             // Index 0 is most significant byte, last index is the least significant byte
-            i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & 0x7FU) << 1U);
+            i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
             i2cFrame[1U] = (uint8_t)regAddr;  // Only lower 8 bits on wire
             i2cFrame[2U] = txData;
             i2cFrameLen = 3U;
@@ -225,7 +236,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
 
     if (status == PMIC_ST_SUCCESS)
     {
-        uint8_t page = (regAddr >> 8U) & 0x07U;
+        uint8_t page = (regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK;
 
         // SPI MODE
         if (handle->commMode == PMIC_INTF_SPI)
@@ -234,10 +245,10 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             uint8_t frameLen = 3U;
 
             // Build TX frame for SPI read
-            spiFrame[0U] = (uint8_t)(regAddr & 0xFFU); // ADDR[7:0]
-            spiFrame[1U] = (uint8_t)(page << 5U) |     // PAGE[2:0]
-                           (SPI_READ_BIT << 4U);       // R/W = 1
-            spiFrame[2U] = 0x00U;                      // Dummy byte
+            spiFrame[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK); // ADDR[7:0]
+            spiFrame[1U] = (uint8_t)(page << SPI_PAGE_SHIFT) | // PAGE[2:0]
+                           (SPI_READ_BIT << 4U);               // R/W = 1
+            spiFrame[2U] = 0x00U;                              // Dummy byte
 
             if (handle->crcEnable)
             {
@@ -282,9 +293,9 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
 
             // Index 0 is most significant byte, last index is the least significant byte
-            i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & 0x7FU) << 1U);
+            i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
             i2cFrame[1U] = (uint8_t)regAddr;  // Only lower 8 bits on wire
-            i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & 0x7FU) << 1U) | 1U);
+            i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
             i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
             // Begin read exchange. Data will be stored beginning at i2cFrame[3U]

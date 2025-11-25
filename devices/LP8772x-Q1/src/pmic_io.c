@@ -49,6 +49,11 @@
 #define PMIC_I2C_RX_FRAME_LEN ((uint8_t)5U)
 #define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
 
+/* I2C protocol constants */
+#define I2C_ADDR_7BIT_MASK    ((uint8_t)0x7FU)  /* Extract 7-bit I2C address */
+#define I2C_ADDR_SHIFT        ((uint8_t)1U)     /* Shift for R/W bit position */
+#define I2C_READ_BIT          ((uint8_t)1U)     /* Set for read operation */
+
 /*========================================================================== */
 /*                         Function Definitions                              */
 /*========================================================================== */
@@ -140,9 +145,9 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *pR
     // Read from PMIC
     if (status == PMIC_ST_SUCCESS) {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & 0x7FU) << 1U);
+        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
         i2cFrame[1U] = (uint8_t)regAddr;
-        i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & 0x7FU) << 1U) | 1U);
+        i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
         i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
@@ -197,7 +202,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
     // Write to PMIC
     if (status == PMIC_ST_SUCCESS) {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & 0x7FU) << 1U);
+        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
         i2cFrame[1U] = (uint8_t)regAddr;
         i2cFrame[2U] = txData;
         i2cFrameLen = 3U;

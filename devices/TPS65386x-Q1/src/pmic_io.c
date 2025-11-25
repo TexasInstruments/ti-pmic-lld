@@ -47,6 +47,12 @@
 #define PMIC_IO_REQ_RW   (uint8_t)(1U << 4U)
 #define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
 
+/* SPI protocol constants */
+#define SPI_PAGE_MASK         ((uint8_t)0x07U)  /* 3-bit page number extraction */
+#define SPI_ADDR_MASK         ((uint8_t)0xFFU)  /* 8-bit register address mask */
+#define SPI_PAGE_SHIFT        ((uint8_t)5U)     /* Page field position in command byte */
+#define SPI_ADDR_BYTE_SHIFT   ((uint8_t)8U)     /* Extract page from 16-bit address */
+
 /*========================================================================== */
 /*                         Function Definitions                              */
 /*========================================================================== */
@@ -135,11 +141,11 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
 
     if (status == PMIC_ST_SUCCESS) {
         // spiBuf[0] = Target register address
-        spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
+        spiBuf[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK);
 
         // spiBuf[1] = page, R/W, reserved bits
         // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
+        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK) << SPI_PAGE_SHIFT);
         spiBuf[1U] |= PMIC_IO_REQ_RW;
         bufLen = 3U;
 
@@ -200,11 +206,11 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 
     if (status == PMIC_ST_SUCCESS) {
         // spiBuf[0] = Target register address
-        spiBuf[0U] = (uint8_t)(regAddr & 0xFFU);
+        spiBuf[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK);
 
         // spiBuf[1] = page, R/W, reserved bits
         // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
+        spiBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK) << SPI_PAGE_SHIFT);
         spiBuf[1U] &= (uint8_t)(~PMIC_IO_REQ_RW);
 
         // spiBuf[2] = WDATA[7:0]

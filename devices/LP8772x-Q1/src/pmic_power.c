@@ -70,6 +70,9 @@
 #define BUCK_VSET_MASK        (0xFFU)
 #define VMON_PGSET_MASK       (0x7FU)
 
+/* Power resource field width - each resource uses 2-bit field in registers */
+#define PWR_RSRC_FIELD_WIDTH_BITS  ((uint8_t)2U)
+
 typedef struct SetResourceProcessor_s {
     uint8_t validParam;
     int32_t (*fptr)(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
@@ -587,7 +590,7 @@ static int32_t PWR_getDeglitchParamLoc(uint8_t resource, uint8_t *regAddr, uint8
         case PMIC_PWR_RSRC_BUCK3:
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
             *regAddr = BUCK_LDO_LS1_VMON1_DEGLIT_REG;
-            *shift = (uint8_t)(resource << 1U);
+            *shift = (uint8_t)(resource * PWR_RSRC_FIELD_WIDTH_BITS);
             break;
         case PMIC_PWR_RSRC_LS2_VMON2:
             *regAddr = VCCA_MON_CONF_REG;
@@ -785,7 +788,7 @@ static int32_t PWR_getUvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
         case PMIC_PWR_RSRC_BUCK3:
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
             *regAddr = REG_UV_CONF_REG;
-            *shift = (uint8_t)(resource << 1U);
+            *shift = (uint8_t)(resource * PWR_RSRC_FIELD_WIDTH_BITS);
             break;
         case PMIC_PWR_RSRC_LS2_VMON2:
             *regAddr = VCCA_LS2_VMON2_UV_CONF_REG;
@@ -980,7 +983,7 @@ static int32_t PWR_getOvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
         case PMIC_PWR_RSRC_BUCK3:
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
             *regAddr = REG_OV_CONF_REG;
-            *shift = (uint8_t)(resource << 1U);
+            *shift = (uint8_t)(resource * PWR_RSRC_FIELD_WIDTH_BITS);
             break;
         case PMIC_PWR_RSRC_LS2_VMON2:
             *regAddr = VCCA_LS2_VMON2_OV_CONF_REG;
@@ -1171,7 +1174,7 @@ static int32_t PWR_getScReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
         case PMIC_PWR_RSRC_BUCK3:
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
             *regAddr = REG_SC_CONF_REG;
-            *shift = (uint8_t)(resource << 1U);
+            *shift = (uint8_t)(resource * PWR_RSRC_FIELD_WIDTH_BITS);
             break;
         case PMIC_PWR_RSRC_LS2_VMON2:
             *regAddr = VCCA_LS2_VMON2_UV_CONF_REG;
