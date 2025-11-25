@@ -86,17 +86,17 @@ void delay(uint32_t milliseconds);
 void test_pmic_criticalSectionStartFn(void);
 void test_pmic_criticalSectionStopFn(void);
 int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
-                          Pmic_CoreCfg_t     *pmicConfigData);
+                          Pmic_HandleCfg_t     *pmicConfigData);
 static void test_pmic_SemaphoreDeInit(void);
-int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
-                          uint8_t             instType,
-                          uint16_t            regAddr,
-                          uint8_t            *pBuf,
+int32_t test_pmic_regRead(Pmic_Handle_t  *handle,
+                          uint8_t             page,
+                          uint8_t             regAddr,
+                          uint8_t            *buffer,
                           uint8_t             bufLen);
-int32_t test_pmic_regWrite(Pmic_Handle_t  *pmicCorehandle,
-                           uint8_t             instType,
-                           uint16_t            regAddr,
-                           uint8_t            *pBuf,
+int32_t test_pmic_regWrite(Pmic_Handle_t  *handle,
+                           uint8_t             page,
+                           uint8_t             regAddr,
+                           const uint8_t      *buffer,
                            uint8_t             bufLen);
 void test_check_lock_config_reg(Pmic_Handle_t  *pmicCorehandle);
 void test_check_tmr_cnt_config_reg(Pmic_Handle_t  *pmicCorehandle);

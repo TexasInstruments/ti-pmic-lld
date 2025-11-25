@@ -75,7 +75,7 @@
 /*                           Function Declarations                            */
 /* ========================================================================== */
 
-static void pmicInitTest_initPmicCfg(Pmic_CoreCfg_t *pmicCfg);
+static void pmicInitTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg);
 static void pmicInitTest_nullParamPmicInit(const char *param);
 
 /* ========================================================================== */
@@ -103,7 +103,7 @@ void pmic_init_test(void *args)
     platform_deinit();
 }
 
-static void pmicInitTest_initPmicCfg(Pmic_CoreCfg_t *pmicCfg)
+static void pmicInitTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
 {
     pmicCfg->validParams = PMIC_I2C_ADDR0_VALID |
                            PMIC_COMM_HANDLE_0_VALID |
@@ -124,22 +124,22 @@ static void pmicInitTest_initPmicCfg(Pmic_CoreCfg_t *pmicCfg)
 void test_negative_Pmic_init_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_init()
-    Pmic_CoreCfg_t pmicCfg = {0U};
+    Pmic_HandleCfg_t pmicCfg = {0U};
     pmicInitTest_initPmicCfg(&pmicCfg);
-    int32_t status = Pmic_init(&pmicCfg, NULL);
+    int32_t status = Pmic_init(NULL, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_init_nullParam_pmicCfg(void)
 {
     // Pass NULL pmicCfg into Pmic_init()
-    int32_t status = Pmic_init(NULL, &pmicHandle);
+    int32_t status = Pmic_init(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 static void pmicInitTest_nullParamPmicInit(const char *param)
 {
-    Pmic_CoreCfg_t pmicCfg = {0U};
+    Pmic_HandleCfg_t pmicCfg = {0U};
     pmicInitTest_initPmicCfg(&pmicCfg);
 
     if (strcmp(param, "commHandle0") == 0U) {
@@ -156,7 +156,7 @@ static void pmicInitTest_nullParamPmicInit(const char *param)
         PLATFORM_ASSERT(0U);
     }
 
-    int32_t status = Pmic_init(&pmicCfg, &pmicHandle);
+    int32_t status = Pmic_init(&pmicHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -200,9 +200,9 @@ void test_negative_Pmic_deinit_nullParam_pmicHandle(void)
 void test_positive_Pmic_init(void)
 {
     // Initialize PMIC LLD
-    Pmic_CoreCfg_t pmicCfg = {0U};
+    Pmic_HandleCfg_t pmicCfg = {0U};
     pmicInitTest_initPmicCfg(&pmicCfg);
-    int32_t status = Pmic_init(&pmicCfg, &pmicHandle);
+    int32_t status = Pmic_init(&pmicHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 

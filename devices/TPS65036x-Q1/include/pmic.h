@@ -164,14 +164,16 @@ typedef struct Pmic_HandleCfg_s
     uint32_t validParams;
     uint8_t i2cAddr0;
     void *commHandle0;
-    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,
+    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *handle,
+                      uint8_t page,
                       uint8_t regAddr,
-                      uint8_t bufLen,
-                      uint8_t *rxBuf);
-    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *pmicHandle,
+                      uint8_t *buffer,
+                      uint8_t bufLen);
+    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *handle,
+                       uint8_t page,
                        uint8_t regAddr,
-                       uint8_t bufLen,
-                       const uint8_t *txBuf);
+                       const uint8_t *buffer,
+                       uint8_t bufLen);
     void (*criticalSectionStart)(void);
     void (*criticalSectionStop)(void);
     void (*irqResponseCallback)(void);
@@ -191,10 +193,10 @@ typedef struct Pmic_HandleCfg_s
  *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-500
  *               PMICDRV-512, PMICDRV-501, PMICDRV-525
  *
- * @param pmicCfg [IN] PMIC handle configuration struct. End-user will input
- * their settings/parameters in this struct to initialize the PMIC handle.
+ * @param handle [OUT] PMIC interface handle.
  *
- * @param pmicHandle [OUT] PMIC interface handle.
+ * @param config [IN] PMIC handle configuration struct. End-user will input
+ * their settings/parameters in this struct to initialize the PMIC handle.
  *
  * @return Success code if PMIC handle is initialized without issue, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
@@ -208,12 +210,12 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-545
  *               PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC handle is de-initialized, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle);
+int32_t Pmic_deinit(Pmic_Handle_t *handle);
 
 /**
  * @brief Validate a PMIC handle instance for proper initialization and
@@ -226,12 +228,12 @@ int32_t Pmic_deinit(Pmic_Handle_t *pmicHandle);
  *               PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522
  *               PMICDRV-534, PMICDRV-521, PMICDRV-520
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC handle is valid, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_checkHandle(const Pmic_Handle_t *pmicHandle);
+int32_t Pmic_checkHandle(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

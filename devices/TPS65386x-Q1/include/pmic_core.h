@@ -103,6 +103,20 @@ extern "C" {
 #define PMIC_LOCK_ENABLE  (1U)
 /** @} */
 
+/**
+ * @anchor Pmic_ScratchPadRegNum
+ * @name PMIC Scratch Pad Register Numbers
+ *
+ * @brief Scratch pad register numbers used by the `Pmic_setScratchPadValue()`
+ * and `Pmic_getScratchPadValue()` APIs.
+ *
+ * @{
+ */
+#define PMIC_SCRATCH_PAD_REG_1   ((uint8_t)0U)
+#define PMIC_SCRATCH_PAD_REG_2   ((uint8_t)1U)
+#define PMIC_SCRATCH_PAD_REG_MAX (PMIC_SCRATCH_PAD_REG_2)
+/** @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -155,57 +169,6 @@ typedef struct Pmic_Lock_s {
 /*==========================================================================*/
 
 /**
- * @brief Get PMIC device identifier.
- *
- * Design: PMICDRV-581
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param devId [OUT] Device identifier.
- *
- * @return PMIC_ST_SUCCESS if PMIC device identifier has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getDevId(Pmic_Handle_t *handle, uint8_t *devId);
-
-/**
- * @brief Get PMIC device revision.
- *
- * Design: PMICDRV-582
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param devRev [OUT] PMIC device revision.
- *
- * @return PMIC_ST_SUCCESS if PMIC device revision has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getDevRev(Pmic_Handle_t *handle, uint8_t *devRev);
-
-/**
- * @brief Get PMIC NVM code.
- *
- * Design: PMICDRV-733
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param nvmCode [OUT] PMIC NVM code.
- *
- * @return PMIC_ST_SUCCESS if PMIC NVM code has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getNvmCode(Pmic_Handle_t *handle, uint8_t *nvmCode);
-
-/**
  * @brief Get PMIC NVM revision.
  *
  * Design: PMICDRV-584
@@ -221,6 +184,23 @@ int32_t Pmic_getNvmCode(Pmic_Handle_t *handle, uint8_t *nvmCode);
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev);
+
+/**
+ * @brief Get PMIC silicon revision.
+ *
+ * Design: PMICDRV-583
+ * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
+ *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-521, PMICDRV-512
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param siliconRev [OUT] PMIC silicon revision.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC silicon revision has been obtained, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP

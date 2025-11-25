@@ -188,3 +188,73 @@ int32_t Pmic_getCntLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
 
     return status;
 }
+
+int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev) {
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (siliconRev == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_DEV_REV_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *siliconRev = Pmic_getBitField(regData, PMIC_DEV_REV_SHIFT, PMIC_DEV_REV_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev) {
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (nvmRev == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_NVM_REV_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *nvmRev = Pmic_getBitField(regData, PMIC_NVM_REV_SHIFT, PMIC_NVM_REV_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value) {
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioTxByte_CS(handle, PMIC_CUSTOMER_SCRATCH1_REG + scratchPadRegNum, value);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value) {
+    int32_t status = Pmic_checkHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (value == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_CUSTOMER_SCRATCH1_REG + scratchPadRegNum, value);
+    }
+
+    return status;
+}

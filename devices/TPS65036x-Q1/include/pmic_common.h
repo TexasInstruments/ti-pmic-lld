@@ -158,14 +158,16 @@ typedef struct Pmic_CoreHandle_s
     bool isA0;
     bool crcEnable;
     void *commHandle0;
-    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,
+    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *handle,
+                      uint8_t page,
                       uint8_t regAddr,
-                      uint8_t bufLen,
-                      uint8_t *rxBuf);
-    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *pmicHandle,
+                      uint8_t *buffer,
+                      uint8_t bufLen);
+    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *handle,
+                       uint8_t page,
                        uint8_t regAddr,
-                       uint8_t bufLen,
-                       const uint8_t *txBuf);
+                       const uint8_t *buffer,
+                       uint8_t bufLen);
     void (*criticalSectionStart)(void);
     void (*criticalSectionStop)(void);
     void (*irqResponseCallback)(void);

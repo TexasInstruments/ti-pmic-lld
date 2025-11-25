@@ -44,6 +44,10 @@ extern "C" {
 #define PMIC_NVM_CODE_REG (0x02U)
 #define PMIC_NVM_REV_REG  (0x0BU)
 
+/** @brief: PMIC NVM Code and Revision register Addresses */
+#define PMIC_NVM_CODE_REG (0x02U)
+#define PMIC_NVM_REV_REG  (0x0BU)
+
 /** @brief  PMIC STAT_READBACK_ERR register Addresses */
 #define PMIC_RDBK_ERR_STAT_REG (0xAU)
 
@@ -129,6 +133,12 @@ extern "C" {
 #define PMIC_NVM_CODE_SHIFT (0x0U)
 #define PMIC_NVM_REV_SHIFT (0x0U)
 
+/** @brief   PMIC NVM_CODE Register Shift Values */
+#define PMIC_NVM_CODE_SHIFT (0x0U)
+
+/** @brief   PMIC NVM_REV Register Shift Values */
+#define PMIC_NVM_REV_SHIFT (0x0U)
+
 #define PMIC_STATE_CTRL_STATE_REQ_SHIFT 0
 #define PMIC_STATE_CTRL_STATE_REQ_MASK ((uint8_t)(0x03U << PMIC_STATE_CTRL_STATE_REQ_SHIFT))
 
@@ -176,6 +186,12 @@ extern "C" {
 /** @brief   PMIC DEV_REV Register Mask Values */
 #define PMIC_DEV_REV_MASK ((uint8_t)(0x3FU << PMIC_DEV_REV_SHIFT))
 #define PMIC_NVM_CODE_MASK ((uint8_t)(0xFFU << PMIC_NVM_CODE_SHIFT))
+#define PMIC_NVM_REV_MASK ((uint8_t)(0xFFU << PMIC_NVM_REV_SHIFT))
+
+/** @brief   PMIC NVM_CODE Register Mask Values */
+#define PMIC_NVM_CODE_MASK ((uint8_t)(0xFFU << PMIC_NVM_CODE_SHIFT))
+
+/** @brief   PMIC NVM_REV Register Mask Values */
 #define PMIC_NVM_REV_MASK ((uint8_t)(0xFFU << PMIC_NVM_REV_SHIFT))
 
 /** @brief   PMIC REG_STAT Mask Values */
@@ -255,9 +271,6 @@ extern "C" {
 #define RW_SHIFT 			(16U)
 #define DAT_SHIFT 			(8U)
 #define CRC_SHIFT 			(0U)
-
-#define CMD_DEVICE_ID		(0x00U)
-#define CMD_REV_ID 			(0x01U)
 
 #define CMD_REG_UNLOCK		(0x03U)
 #define CNT_REG_UNLOCK 		(0x04U)

@@ -166,7 +166,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
         }
 
         // Begin write exchange. TX buffer starts at i2cFrame[2U]
-        status = pmicHandle->ioWrite(pmicHandle, regAddr, i2cFrameLen - 2U, &i2cFrame[2U]);
+        status = pmicHandle->ioWrite(pmicHandle, 0, regAddr, &i2cFrame[2U], i2cFrameLen - 2U);
     }
 
     return status;
@@ -215,7 +215,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *pmicHandle, uint8_t regAddr, uint8_t 
         i2cFrameLen = (pmicHandle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
-        status = pmicHandle->ioRead(pmicHandle, regAddr, i2cFrameLen - 3U, &i2cFrame[3U]);
+        status = pmicHandle->ioRead(pmicHandle, 0, regAddr, &i2cFrame[3U], i2cFrameLen - 3U);
     }
 
     // If read exchange was successful and PMIC CRC is enabled, compare SCRC to expected CRC

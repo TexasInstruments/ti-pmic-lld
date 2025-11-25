@@ -68,7 +68,7 @@ Pmic_Handle_t *pPmicCoreHandle_core = NULL;
  */
 int32_t test_pmic_core_config_init(void) {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
+    Pmic_HandleCfg_t pmicConfigData = {0U};
 
     /* Fill parameters to pmicConfigData */
     pmicConfigData.commMode = PMIC_INTF_SPI;

@@ -197,10 +197,11 @@ void *platform_getCommHandle(void);
  * @return Success code if `bufLen` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_txByte(const struct Pmic_CoreHandle_s *pmicCorehandle,
+int32_t platform_txByte(const struct Pmic_CoreHandle_s *handle,
+                        uint8_t page,
                         uint8_t regAddr,
-                        uint8_t bufLen,
-                        const uint8_t *pTxBuf);
+                        const uint8_t *buffer,
+                        uint8_t bufLen);
 
 /**
  * @brief Platform-specific API to read one or multiple bytes from PMIC.
@@ -221,10 +222,11 @@ int32_t platform_txByte(const struct Pmic_CoreHandle_s *pmicCorehandle,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t platform_rxByte(const struct Pmic_CoreHandle_s *pmicCorehandle,
+int32_t platform_rxByte(const struct Pmic_CoreHandle_s *handle,
+                        uint8_t page,
                         uint8_t regAddr,
-                        uint8_t bufLen,
-                        uint8_t *pRxBuf);
+                        uint8_t *buffer,
+                        uint8_t bufLen);
 
 #ifdef __cplusplus
 }

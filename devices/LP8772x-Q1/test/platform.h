@@ -196,10 +196,10 @@ void *platform_getCommHandle(void);
  * @return Success code if `txBuf` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_txByte(struct Pmic_CoreHandle_s *pmicCorehandle,
-                        uint8_t instType,
-                        uint16_t regAddr,
-                        uint8_t *pTxBuf,
+int32_t platform_txByte(struct Pmic_CoreHandle_s *handle,
+                        uint8_t page,
+                        uint8_t regAddr,
+                        const uint8_t *buffer,
                         uint8_t bufLen);
 
 /**
@@ -220,10 +220,10 @@ int32_t platform_txByte(struct Pmic_CoreHandle_s *pmicCorehandle,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t platform_rxByte(struct Pmic_CoreHandle_s *pmicCorehandle,
-                        uint8_t instType,
-                        uint16_t regAddr,
-                        uint8_t *pRxBuf,
+int32_t platform_rxByte(struct Pmic_CoreHandle_s *handle,
+                        uint8_t page,
+                        uint8_t regAddr,
+                        uint8_t *buffer,
                         uint8_t bufLen);
 
 #ifdef __cplusplus

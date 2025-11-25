@@ -242,7 +242,7 @@ extern "C" {
  * can be used to support Pseudo-nINT functionality when servicing WD QA sequences.
  * While performing a WD QA sequence, the PMIC LLD will check the INT_TOP_STATUS
  * field, and if set will call this function to notify the user that an
- * interrupt is pending. Valid only when `PMIC_CFG_PSEUDO_IRQ_VALID` bit of
+ * interrupt is pending. Valid only when `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit of
  * `validParams` is set.
  */
 typedef struct Pmic_HandleCfg_s {
@@ -255,14 +255,14 @@ typedef struct Pmic_HandleCfg_s {
     bool configCrcEnable;
     void *commHandle0;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *handle,
-                      uint8_t instType,
-                      uint16_t regAddr,
-                      uint8_t *pRxBuf,
+                      uint8_t page,
+                      uint8_t regAddr,
+                      uint8_t *buffer,
                       uint8_t bufLen);
     int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *handle,
-                       uint8_t instType,
-                       uint16_t regAddr,
-                       uint8_t *pTxBuf,
+                       uint8_t page,
+                       uint8_t regAddr,
+                       const uint8_t *buffer,
                        uint8_t bufLen);
     void (*criticalSectionStart)(void);
     void (*criticalSectionStop)(void);
@@ -283,8 +283,8 @@ typedef struct Pmic_HandleCfg_s {
  *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-500
  *               PMICDRV-512, PMICDRV-501, PMICDRV-525
  *
- * @param handle  [OUT] PMIC Interface Handle
- * @param coreCfg [IN]  PMIC Configuration Data
+ * @param handle [OUT] PMIC Interface Handle
+ * @param config [IN]  PMIC Configuration Data
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.

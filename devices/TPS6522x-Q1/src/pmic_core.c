@@ -79,46 +79,6 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
     return status;
 }
 
-int32_t Pmic_getDevRev(const Pmic_Handle_t *pmicHandle, uint8_t *devRev)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (devRev == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, DEV_REV_REG, devRev);
-    }
-
-    return status;
-}
-
-int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (nvmCode == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, NVM_CODE_1_REG, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *nvmCode = Pmic_getBitField(regData, TI_NVM_ID_SHIFT, TI_NVM_ID_MASK);
-    }
-
-    return status;
-}
-
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev)
 {
     uint8_t regData = 0U;

@@ -115,40 +115,6 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock);
 int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked);
 
 /**
- * @brief Get PMIC device revision from hardware register.
- *
- * Design: PMICDRV-581
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param devRev [OUT] PMIC device revision obtained from the device register.
- *
- * @return PMIC_ST_SUCCESS if the PMIC device revision has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getDevRev(const Pmic_Handle_t *pmicHandle, uint8_t *devRev);
-
-/**
- * @brief Get PMIC NVM code from hardware register.
- *
- * Design: PMICDRV-733
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param nvmCode [OUT] PMIC NVM code obtained from the device register.
- *
- * @return PMIC_ST_SUCCESS if the PMIC NVM code has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode);
-
-/**
  * @brief Get PMIC NVM revision from hardware register.
  *
  * Design: PMICDRV-584

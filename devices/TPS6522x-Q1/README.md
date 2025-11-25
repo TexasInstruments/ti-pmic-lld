@@ -71,9 +71,9 @@ in a web browser. To view the documentation, open the file at
 
 #### Driver Initialization
 
-All APIs provided by this driver expect to receive a `Pmic_CoreHandle_t` in
+All APIs provided by this driver expect to receive a `Pmic_Handle_t` in
 order to handle communication with the device. This handle should be created
-through the use of the `Pmic_CoreCfg_t` structure in `pmic.h` and the
+through the use of the `Pmic_HandleCfg_t` structure in `pmic.h` and the
 `Pmic_init()` API.
 
 In order to successfully create a handle, the user will need to provide an
@@ -82,7 +82,7 @@ operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to obtain a critical section. These functions are called by the
 driver before and after I2C/SPI communications. It is up to the user to
 determine what is an appropriate implementation of these APIs as considerations
@@ -94,37 +94,37 @@ and on platforms which support it, a proper shared mutex should be
 claimed/released as appropriate to ensure no other device drivers are
 attempting to use the I2C/SPI bus at the same time.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCritSecStart = <your CS start function>,
-    .pFnPmicCritSecStop = <your CS stop function>,
+    .criticalSectionStart = <your CS start function>,
+    .criticalSectionStop = <your CS stop function>,
 }
 ```
 
 ##### PMIC Handle User Functions: Communications I/O Read/Write
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to know how to read and write over the desired communications
 channel (I2C or SPI, typically). The specific implementation of these functions
 is platform dependent, the chosen processor likely has an SDK which provides
 functions that match relatively closely.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCommIoRead = <your I/O read function>,
-    .pFnPmicCommIoWrite = <your I/O write function>,
+    .ioRead = <your I/O read function>,
+    .ioWrite = <your I/O write function>,
 }
 ```
 
 ##### Finalizing Initialization
 
-Once the `Pmic_CoreCfg_t` structure has been initialized with the necessary
+Once the `Pmic_HandleCfg_t` structure has been initialized with the necessary
 information, the user should call `Pmic_init()` in order to convert the
-`Pmic_CoreCfg_t` into a `Pmic_CoreHandle_t` which will be used with the rest of
+`Pmic_HandleCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
 the driver APIs.
 
 A full example of what this may look like for TPS6522x-Q1 is shown below:
@@ -135,32 +135,29 @@ int32_t status;
 // The handle should either be declared globally, or stored in a structure that
 // can manage access throughout the application, it will need to be re-used
 // often.
-Pmic_CoreHandle_t PmicHandle;
+Pmic_Handle_t pmicHandle;
 
-Pmic_CoreCfg_t coreCfg = {
+Pmic_HandleCfg_t config = {
     .validParams = (
-        PMIC_CFG_DEVICE_TYPE_VALID_SHIFT   |
-        PMIC_CFG_COMM_MODE_VALID_SHIFT     |
-        PMIC_CFG_COMM_HANDLE_VALID_SHIFT   |
-        PMIC_CFG_COMM_IO_RD_VALID_SHIFT    |
-        PMIC_CFG_COMM_IO_WR_VALID_SHIFT    |
-        PMIC_CFG_CRITSEC_START_VALID_SHIFT |
-        PMIC_CFG_CRITSEC_STOP_VALID_SHIFT
+        PMIC_COMM_MODE_VALID |
+        PMIC_COMM_HANDLE_0_VALID |
+        PMIC_IO_READ_VALID |
+        PMIC_IO_WRITE_VALID |
+        PMIC_CRITICAL_SECTION_START_VALID |
+        PMIC_CRITICAL_SECTION_STOP_VALID
     ),
-    .instType = PMIC_MAIN_INST,
-    .pmicDeviceType = PMIC_DEV_TPS6522X_Q1,
     .commMode = PMIC_INTF_SPI,
-    .pCommHandle = &commHandle,
-    .pFnPmicCommIoRead = PmicCommIoRead,
-    .pFnPmicCommIoWrite = PmicCommIoWrite,
-    .pFnPmicCritSecStart = CritSecStart,
-    .pFnPmicCritSecStop = CritSecStop,
+    .commHandle0 = &commHandle,
+    .ioRead = PmicCommIoRead,
+    .ioWrite = PmicCommIoWrite,
+    .criticalSectionStart = CritSecStart,
+    .criticalSectionStop = CritSecStop,
 };
 
-status = Pmic_init(&PmicHandle, &coreCfg);
+status = Pmic_init(&pmicHandle, &config);
 
 // Check the return code of Pmic_init(), if it is PMIC_ST_SUCCESS, the
-// PmicHandle is now valid for use throughout the rest of the application
+// pmicHandle is now valid for use throughout the rest of the application
 if (status == PMIC_ST_SUCCESS) {
     // other application code...
 }

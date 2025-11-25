@@ -123,40 +123,6 @@ typedef struct Pmic_ConfigCrcStat_s {
 /* ========================================================================== */
 
 /**
- * @brief Get PMIC device revision.
- *
- * Design: PMICDRV-582
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param devRev [OUT] Device revision.
- *
- * @return PMIC_ST_SUCCESS if PMIC device revision has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getDevRev(Pmic_Handle_t *handle, uint8_t *devRev);
-
-/**
- * @brief Get PMIC NVM code.
- *
- * Design: PMICDRV-733
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param nvmCode [OUT] NVM code.
- *
- * @return PMIC_ST_SUCCESS if PMIC NVM code has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getNvmCode(Pmic_Handle_t *handle, uint8_t *nvmCode);
-
-/**
  * @brief Get PMIC NVM revision.
  *
  * Design: PMICDRV-584

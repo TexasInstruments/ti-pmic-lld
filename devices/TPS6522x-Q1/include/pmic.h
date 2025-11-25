@@ -337,13 +337,13 @@ typedef struct Pmic_HandleCfg_s {
  *
  * @param handle [OUT] PMIC interface handle.
  *
- * @param handleCfg [IN] Used to set desired PMIC handle configurations. For
+ * @param config [IN] Used to set desired PMIC handle configurations. For
  * more information on handle configurations, refer to @ref Pmic_HandleCfg.
  *
  * @return PMIC_ST_SUCCESS if PMIC handle instance has been initialized. Error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *coreCfg);
+int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
 
 /**
  * @brief De-initialize the PMIC interface handle when the end-user wants to

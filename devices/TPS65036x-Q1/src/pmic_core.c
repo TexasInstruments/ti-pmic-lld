@@ -41,40 +41,6 @@
 #include "pmic_core.h"
 #include "regmap/core.h"
 
-int32_t Pmic_getDevId(const Pmic_Handle_t *pmicHandle, uint8_t *devId)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (devId == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_DEV_REV_REG, devId);
-    }
-
-    return status;
-}
-
-int32_t Pmic_getNvmCode(const Pmic_Handle_t *pmicHandle, uint8_t *nvmCode)
-{
-    int32_t status = Pmic_checkHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (nvmCode == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_NVM_CODE_1_REG, nvmCode);
-    }
-
-    return status;
-}
-
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *pmicHandle, uint8_t *nvmRev)
 {
     int32_t status = Pmic_checkHandle(pmicHandle);

@@ -113,7 +113,7 @@ void test_pmic_criticalSectionStopFn(void)
  *          - An error code if initialization fails.
  */
 int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
-                          Pmic_CoreCfg_t     *pmicConfigData)
+                          Pmic_HandleCfg_t     *pmicConfigData)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_Handle_t *pmicHandle = NULL;
@@ -162,7 +162,7 @@ int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
                 DebugP_log("%s(): %d: FAILED with status: %d\r\n",
                          __func__, __LINE__,  pmicStatus);
             }
-            pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            pmicStatus = Pmic_init(pmicHandle, pmicConfigData);
             if (PMIC_ST_SUCCESS != pmicStatus)
             {
                 DebugP_log("%s(): %d: FAILED with status: %d\r\n",
@@ -220,14 +220,15 @@ static void test_pmic_SemaphoreDeInit(void)
  *          - #SystemP_SUCCESS if the read operation is successful.
  *          - #SystemP_FAILURE if the read operation fails.
  */
-int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
-                          uint8_t             instType,
-                          uint16_t            regAddr,
-                          uint8_t            *pBuf,
+int32_t test_pmic_regRead(Pmic_Handle_t  *handle,
+                          uint8_t             page,
+                          uint8_t             regAddr,
+                          uint8_t            *buffer,
                           uint8_t             bufLen)
 {
     int32_t status = SystemP_SUCCESS;
-    uint8_t pBuf_cmd      = *(pBuf);
+    (void)page;  // TPS65386x-Q1: Page mapping MAIN=0, QA=1, NVM=2 (currently only uses page 0)
+    uint8_t pBuf_cmd      = *(buffer);
     uint8_t pBuf_data     = 0;
 
     MCSPI_Transaction   spiTransaction;
@@ -246,7 +247,7 @@ int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
         status = SystemP_FAILURE;
         return status;
     }
-    *(pBuf + 2) = pBuf_data;
+    *(buffer + 2) = pBuf_data;
     return status;
 }
 
@@ -265,15 +266,16 @@ int32_t test_pmic_regRead(Pmic_Handle_t  *pmicCorehandle,
  *          - #SystemP_SUCCESS if the write operation is successful.
  *          - #SystemP_FAILURE if the write operation fails.
  */
-int32_t test_pmic_regWrite(Pmic_Handle_t  *pmicCorehandle,
-                           uint8_t             instType,
-                           uint16_t            regAddr,
-                           uint8_t            *pBuf,
+int32_t test_pmic_regWrite(Pmic_Handle_t  *handle,
+                           uint8_t             page,
+                           uint8_t             regAddr,
+                           const uint8_t      *buffer,
                            uint8_t             bufLen)
 {
     int32_t status = SystemP_SUCCESS;
-    uint8_t pBuf_cmd     = *(pBuf);
-    uint8_t pBuf_data     = *(pBuf + 2);
+    (void)page;  // TPS65386x-Q1: Page mapping MAIN=0, QA=1, NVM=2 (currently only uses page 0)
+    uint8_t pBuf_cmd     = *(buffer);
+    uint8_t pBuf_data     = *(buffer + 2);
 
     MCSPI_Transaction   spiTransaction;
     MCSPI_Transaction_init(&spiTransaction);

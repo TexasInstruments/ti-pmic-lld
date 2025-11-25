@@ -382,7 +382,7 @@ static inline void fsmTest_assertPmicRegsLocked(bool lock)
     const uint16_t registerLockAddr = 0x09U;
 
     // Read REGISTER_LOCK
-    int32_t status = platform_rxByte(&pmicHandle, PMIC_MAIN_INST, registerLockAddr, &regData, bufLen);
+    int32_t status = platform_rxByte(&pmicHandle, 0, registerLockAddr, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Assert PMIC registers are locked
