@@ -124,13 +124,13 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_BB_LVL_VALID                           (0U)
-#define PMIC_PWR_CFG_BB_STBY_LVL_VALID                      (1U)
-#define PMIC_PWR_CFG_BB_VMON_THR_VALID                      (2U)
-#define PMIC_PWR_CFG_BB_VMON_DGL_VALID                      (3U)
-#define PMIC_PWR_CFG_BB_BOOST_TMO_VALID                     (4U)
-#define PMIC_PWR_CFG_BB_SS_EN_VALID                         (5U)
-#define PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID   (6U)
+#define PMIC_PWR_CFG_BB_LVL_VALID                           (1U << 0U)
+#define PMIC_PWR_CFG_BB_STBY_LVL_VALID                      (1U << 1U)
+#define PMIC_PWR_CFG_BB_VMON_THR_VALID                      (1U << 2U)
+#define PMIC_PWR_CFG_BB_VMON_DGL_VALID                      (1U << 3U)
+#define PMIC_PWR_CFG_BB_BOOST_TMO_VALID                     (1U << 4U)
+#define PMIC_PWR_CFG_BB_SS_EN_VALID                         (1U << 5U)
+#define PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID   (1U << 6U)
 /** @} */
 
 /**
@@ -143,20 +143,13 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_BB_LVL_VALID_SHIFT                         (1U << PMIC_PWR_CFG_BB_LVL_VALID)
-#define PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_STBY_LVL_VALID)
-#define PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_VMON_THR_VALID)
-#define PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_VMON_DGL_VALID)
-#define PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT                   (1U << PMIC_PWR_CFG_BB_BOOST_TMO_VALID)
-#define PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT                       (1U << PMIC_PWR_CFG_BB_SS_EN_VALID)
-#define PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT (1U << PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
-#define PMIC_PWR_CFG_BB_ALL                                     (PMIC_PWR_CFG_BB_LVL_VALID_SHIFT  | \
-                                                                 PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT | \
-                                                                 PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT | \
-                                                                 PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT | \
-                                                                 PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT | \
-                                                                 PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT | \
-                                                                 PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+#define PMIC_PWR_CFG_BB_ALL                                     (PMIC_PWR_CFG_BB_LVL_VALID  | \
+                                                                 PMIC_PWR_CFG_BB_STBY_LVL_VALID | \
+                                                                 PMIC_PWR_CFG_BB_VMON_THR_VALID | \
+                                                                 PMIC_PWR_CFG_BB_VMON_DGL_VALID | \
+                                                                 PMIC_PWR_CFG_BB_BOOST_TMO_VALID | \
+                                                                 PMIC_PWR_CFG_BB_SS_EN_VALID | \
+                                                                 PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
 /** @} */
 
 /**
@@ -167,15 +160,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_LDO_MODE_VALID                         (0U)
-#define PMIC_PWR_CFG_LDO_LVL_VALID                          (1U)
-#define PMIC_PWR_CFG_LDO_ILIM_LVL_VALID                     (2U)
-#define PMIC_PWR_CFG_LDO_ILIM_DGL_VALID                     (3U)
-#define PMIC_PWR_CFG_LDO_VMON_THR_VALID                     (4U)
-#define PMIC_PWR_CFG_LDO_VMON_DGL_VALID                     (5U)
-#define PMIC_PWR_CFG_LDO_RAMP_TIME_VALID                    (6U)
-#define PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID            (7U)
-#define PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID  (8U)
+#define PMIC_PWR_CFG_LDO_MODE_VALID                         (1U << 0U)
+#define PMIC_PWR_CFG_LDO_LVL_VALID                          (1U << 1U)
+#define PMIC_PWR_CFG_LDO_ILIM_LVL_VALID                     (1U << 2U)
+#define PMIC_PWR_CFG_LDO_ILIM_DGL_VALID                     (1U << 3U)
+#define PMIC_PWR_CFG_LDO_VMON_THR_VALID                     (1U << 4U)
+#define PMIC_PWR_CFG_LDO_VMON_DGL_VALID                     (1U << 5U)
+#define PMIC_PWR_CFG_LDO_RAMP_TIME_VALID                    (1U << 6U)
+#define PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID            (1U << 7U)
+#define PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID  (1U << 8U)
 /** @} */
 
 /**
@@ -188,24 +181,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT                           (1U << PMIC_PWR_CFG_LDO_MODE_VALID)
-#define PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT                            (1U << PMIC_PWR_CFG_LDO_LVL_VALID)
-#define PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_ILIM_LVL_VALID)
-#define PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_ILIM_DGL_VALID)
-#define PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_VMON_THR_VALID)
-#define PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_VMON_DGL_VALID)
-#define PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT                      (1U << PMIC_PWR_CFG_LDO_RAMP_TIME_VALID)
-#define PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT              (1U << PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID)
-#define PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT    (1U << PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
-#define PMIC_PWR_CFG_LDO_ALL                                        (PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+#define PMIC_PWR_CFG_LDO_ALL                                        (PMIC_PWR_CFG_LDO_MODE_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_LVL_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_ILIM_LVL_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_ILIM_DGL_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_VMON_THR_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_VMON_DGL_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_RAMP_TIME_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID | \
+                                                                     PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
 /** @} */
 
 /**
@@ -216,17 +200,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_PLDO_MODE_VALID                        (0U)
-#define PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID               (1U)
-#define PMIC_PWR_CFG_PLDO_LVL_VALID                         (2U)
-#define PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID                    (3U)
-#define PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID                    (4U)
-#define PMIC_PWR_CFG_PLDO_VMON_THR_VALID                    (5U)
-#define PMIC_PWR_CFG_PLDO_VMON_DGL_VALID                    (6U)
-#define PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID                (7U)
-#define PMIC_PWR_CFG_PLDO_RT_VALID                          (8U)
-#define PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID           (9U)
-#define PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (10U)
+#define PMIC_PWR_CFG_PLDO_MODE_VALID                        (1U << 0U)
+#define PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID               (1U << 1U)
+#define PMIC_PWR_CFG_PLDO_LVL_VALID                         (1U << 2U)
+#define PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID                    (1U << 3U)
+#define PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID                    (1U << 4U)
+#define PMIC_PWR_CFG_PLDO_VMON_THR_VALID                    (1U << 5U)
+#define PMIC_PWR_CFG_PLDO_VMON_DGL_VALID                    (1U << 6U)
+#define PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID                (1U << 7U)
+#define PMIC_PWR_CFG_PLDO_RT_VALID                          (1U << 8U)
+#define PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID           (1U << 9U)
+#define PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (1U << 10U)
 /** @} */
 
 /**
@@ -239,28 +223,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT                          (1U << PMIC_PWR_CFG_PLDO_MODE_VALID)
-#define PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT                 (1U << PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID)
-#define PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT                           (1U << PMIC_PWR_CFG_PLDO_LVL_VALID)
-#define PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID)
-#define PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID)
-#define PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_VMON_THR_VALID)
-#define PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_VMON_DGL_VALID)
-#define PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT                  (1U << PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID)
-#define PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT                            (1U << PMIC_PWR_CFG_PLDO_RT_VALID)
-#define PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT             (1U << PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID)
-#define PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT   (1U << PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
-#define PMIC_PWR_CFG_PLDO_ALL                                       (PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT  | \
-                                                                     PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT | \
-                                                                     PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+#define PMIC_PWR_CFG_PLDO_ALL                                       (PMIC_PWR_CFG_PLDO_MODE_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_LVL_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID  | \
+                                                                     PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_VMON_THR_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_VMON_DGL_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_RT_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID | \
+                                                                     PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
 /** @} */
 
 /**
@@ -271,10 +244,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_EXT_VMON_MODE_VALID                        (0U)
-#define PMIC_PWR_CFG_EXT_VMON_THR_VALID                         (1U)
-#define PMIC_PWR_CFG_EXT_VMON_DGL_VALID                         (2U)
-#define PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (3U)
+#define PMIC_PWR_CFG_EXT_VMON_MODE_VALID                        (1U << 0U)
+#define PMIC_PWR_CFG_EXT_VMON_THR_VALID                         (1U << 1U)
+#define PMIC_PWR_CFG_EXT_VMON_DGL_VALID                         (1U << 2U)
+#define PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (1U << 3U)
 /** @} */
 
 /**
@@ -287,14 +260,10 @@ extern "C" {
  * operator.
  *
  */
-#define PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT                          (1U << PMIC_PWR_CFG_EXT_VMON_MODE_VALID)
-#define PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT                           (1U << PMIC_PWR_CFG_EXT_VMON_THR_VALID)
-#define PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT                           (1U << PMIC_PWR_CFG_EXT_VMON_DGL_VALID)
-#define PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT   (1U << PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
-#define PMIC_PWR_CFG_EXT_VMON_ALL                                       (PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT | \
-                                                                         PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT | \
-                                                                         PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT | \
-                                                                         PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+#define PMIC_PWR_CFG_EXT_VMON_ALL                                       (PMIC_PWR_CFG_EXT_VMON_MODE_VALID | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_THR_VALID | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_DGL_VALID | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
 /** @} */
 
 /**
@@ -305,14 +274,14 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_RSRC_STAT_OV_ERR_VALID         (0U)
-#define PMIC_PWR_RSRC_STAT_UV_ERR_VALID         (1U)
-#define PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID       (2U)
-#define PMIC_PWR_RSRC_STAT_TSD_ERR_VALID        (3U)
-#define PMIC_PWR_RSRC_STAT_TSD_WARN_VALID       (4U)
-#define PMIC_PWR_RSRC_STAT_BB_LITE_VALID        (5U)
-#define PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID    (6U)
-#define PMIC_PWR_RSRC_STAT_BB_MODE_VALID        (7U)
+#define PMIC_PWR_RSRC_STAT_OV_ERR_VALID         (1U << 0U)
+#define PMIC_PWR_RSRC_STAT_UV_ERR_VALID         (1U << 1U)
+#define PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID       (1U << 2U)
+#define PMIC_PWR_RSRC_STAT_TSD_ERR_VALID        (1U << 3U)
+#define PMIC_PWR_RSRC_STAT_TSD_WARN_VALID       (1U << 4U)
+#define PMIC_PWR_RSRC_STAT_BB_LITE_VALID        (1U << 5U)
+#define PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID    (1U << 6U)
+#define PMIC_PWR_RSRC_STAT_BB_MODE_VALID        (1U << 7U)
 /** @} */
 
 /**
@@ -325,34 +294,26 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT       (1U << PMIC_PWR_RSRC_STAT_OV_ERR_VALID)
-#define PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT       (1U << PMIC_PWR_RSRC_STAT_UV_ERR_VALID)
-#define PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT     (1U << PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID)
-#define PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_TSD_ERR_VALID)
-#define PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT     (1U << PMIC_PWR_RSRC_STAT_TSD_WARN_VALID)
-#define PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_BB_LITE_VALID)
-#define PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT  (1U << PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID)
-#define PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_BB_MODE_VALID)
-#define PMIC_PWR_RSRC_STAT_BB_ALL                   (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
-#define PMIC_PWR_RSRC_STAT_LDO_ALL                  (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
-#define PMIC_PWR_RSRC_STAT_PLDO_ALL                 (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
-#define PMIC_PWR_RSRC_STAT_EXT_VMON_ALL             (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
-                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+#define PMIC_PWR_RSRC_STAT_BB_ALL                   (PMIC_PWR_RSRC_STAT_OV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_BB_LITE_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_BB_MODE_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID)
+#define PMIC_PWR_RSRC_STAT_LDO_ALL                  (PMIC_PWR_RSRC_STAT_OV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID)
+#define PMIC_PWR_RSRC_STAT_PLDO_ALL                 (PMIC_PWR_RSRC_STAT_OV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID)
+#define PMIC_PWR_RSRC_STAT_EXT_VMON_ALL             (PMIC_PWR_RSRC_STAT_OV_ERR_VALID | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID)
 /** @} */
 
 /**

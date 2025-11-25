@@ -724,7 +724,7 @@ int32_t Pmic_irqSetCfg(Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
     }
 
     // Set IRQ config if requested
-    if (Pmic_validParamStatusCheck(irqCfg->validParams, PMIC_IRQ_CFG_CONFIG_VALID_SHIFT, status)) {
+    if (Pmic_validParamStatusCheck(irqCfg->validParams, PMIC_IRQ_CFG_CONFIG_VALID, status)) {
         status = IRQ_setConfig(handle, irqCfg->irqNum, irqCfg->config);
     }
 

@@ -65,22 +65,22 @@ int32_t test_pmic_wdg_config_init(void) {
 
     /* Fill parameters to pmicConfigData */
     pmicConfigData.pmicDeviceType = PMIC_DEV_BB_TPS65386X;
-    pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID;
 
     pmicConfigData.commMode = PMIC_INTF_SPI;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID;
 
     pmicConfigData.pFnPmicCommIoRead = test_pmic_regRead;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID;
 
     pmicConfigData.pFnPmicCommIoWrite = test_pmic_regWrite;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID;
 
     pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID;
 
     pmicConfigData.pFnPmicCritSecStop = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID;
 
     status = test_pmic_appInit(&pPmicCoreHandle_wdg, &pmicConfigData);
     if (PMIC_ST_SUCCESS != status) {
@@ -193,8 +193,8 @@ void test_wdg_setCfg_longWindowDuration(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
 
     /* Set Watchdog Long Window duration to be maximum duration */
     wdgCfg_expected.longWinCode = 772000;
@@ -226,8 +226,8 @@ void test_wdg_setCfg_window1Duration(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
 
     /* Set Watchdog Window-1 duration to be maximum duration */
     wdgCfg_expected.win1Code = 70400;
@@ -259,8 +259,8 @@ void test_wdg_setCfg_window2Duration(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID;
 
     /* Set Watchdog Window-2 duration to be maximum duration */
     wdgCfg_expected.win2Code = 70400;
@@ -291,8 +291,8 @@ void test_wdg_setCfg_failThreshold(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_FAILTHRESHOLD_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_FAILTHRESHOLD_VALID;
 
     /* Set fail threshold to maximum value */
     wdgCfg_expected.failThreshold = 7;
@@ -323,8 +323,8 @@ void test_wdg_setCfg_resetThreshold(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_RSTTHRESHOLD_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_RSTTHRESHOLD_VALID;
 
     /* Set fail threshold to maximum value */
     wdgCfg_expected.rstThreshold = 7;
@@ -355,8 +355,8 @@ void test_wdg_setCfg_wdgMode(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_MODE_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_MODE_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_MODE_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_MODE_VALID;
 
     /* Set Watchdog mode to be Q&A mode */
     wdgCfg_expected.mode = PMIC_WDG_QA_MODE;
@@ -399,8 +399,8 @@ void test_wdg_setCfg_QA_feedback(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_FDBK_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_FDBK_VALID;
 
     /* For each possible feedback value */
     for (i = PMIC_WDG_QA_FEEDBACK_VALUE_3; i != PMIC_WDG_QA_FEEDBACK_VALUE_0;
@@ -439,8 +439,8 @@ void test_wdg_setCfg_QA_LFSR(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_LFSR_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_LFSR_VALID;
 
     /* For each possible LFSR value */
     for (i = PMIC_WDG_QA_LFSR_VALUE_3; i != PMIC_WDG_QA_LFSR_VALUE_0; i--) {
@@ -478,8 +478,8 @@ void test_wdg_setCfg_QA_questionSeed(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID;
 
     /* For each possible question seed value */
     for (i = PMIC_WDG_QA_QUES_SEED_VALUE_15; i != PMIC_WDG_QA_QUES_SEED_VALUE_0;
@@ -507,11 +507,11 @@ void test_wdg_QaMode_noErrors(void) {
     uint16_t numSeqeunces = 0;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {.validParams =
-                                (PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT | PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                                 PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT | PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT |
-                                 PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT | PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT |
-                                 PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT | PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                                 PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT | PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+                                (PMIC_CFG_WDG_LONGWINDURATION_VALID | PMIC_CFG_WDG_WIN1DURATION_VALID |
+                                 PMIC_CFG_WDG_WIN2DURATION_VALID | PMIC_CFG_WDG_FAILTHRESHOLD_VALID |
+                                 PMIC_CFG_WDG_RSTTHRESHOLD_VALID | PMIC_CFG_WDG_PWRHOLD_VALID |
+                                 PMIC_CFG_WDG_RETLONGWIN_VALID | PMIC_CFG_WDG_QA_FDBK_VALID |
+                                 PMIC_CFG_WDG_QA_LFSR_VALID | PMIC_CFG_WDG_QA_QUES_SEED_VALID),
                             .longWinCode = 5000,
                             .win1Code = 70400,
                             .win2Code = 70400,
@@ -543,7 +543,7 @@ void test_wdg_QaMode_noErrors(void) {
             {
                 if (numSeqeunces == 1)
                 {
-                    wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+                    wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID;
                     wdgCfg.retLongWin = true;
                     status += Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg);
                 }
@@ -571,7 +571,7 @@ void test_wdg_QaMode_noErrors(void) {
                 }
             }
             /* WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window */
-            wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
+            wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID;
             wdgCfg.pwrHold = true;
             if (PMIC_ST_SUCCESS == Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg)) {
                 if(PMIC_ST_SUCCESS == Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg)) {

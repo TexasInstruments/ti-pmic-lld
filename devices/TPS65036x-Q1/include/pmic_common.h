@@ -189,7 +189,7 @@ typedef struct Pmic_CoreHandle_s
  *
  * @return True if validParam is set, false if validParam is not set.
  */
-static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask)
+static bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask)
 {
     return ((validParamVal & bitMask) != 0U);
 }
@@ -211,8 +211,10 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
  *
  * @return True if valid parameter is set and status is equal to LLD success code, false otherwise.
  */
-#define Pmic_validParamStatusCheck(vpv, bMask, status) \
-    (((int32_t)status == PMIC_ST_SUCCESS) && Pmic_validParamCheck((uint32_t)vpv, (uint32_t)bMask))
+static inline bool Pmic_validParamStatusCheck(uint32_t vpv, uint32_t bMask, int32_t status)
+{
+    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bMask));
+}
 
 /**
  * @brief Start a critical section when usage of a shared resource such as an I2C or

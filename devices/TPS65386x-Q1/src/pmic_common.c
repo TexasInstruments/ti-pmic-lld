@@ -43,10 +43,6 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-inline bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
-    return (((validParamVal >> bitPos) & 0x01U) != 0U);
-}
-
 void Pmic_criticalSectionStart(const Pmic_Handle_t *handle) {
     if ((handle != NULL) && (handle->criticalSectionStart != NULL)) {
         handle->criticalSectionStart();

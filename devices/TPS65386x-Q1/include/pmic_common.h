@@ -188,21 +188,27 @@ typedef struct Pmic_CoreHandle_s {
 /*==========================================================================*/
 
 /**
- * @brief Checks whether a parameter is valid.
+ * @brief Checks whether a bit in `validParams` is set. Used by driver APIs to
+ * decipher whether a parameter will be processed in their routines.
  *
  * Design: PMICDRV-571
  * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
  *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-519
  *               PMICDRV-520
  *
- * @param validParamVal [IN] Valid parameter value. Each bit represents whether a
- * parameter is valid.
+ * @param validParams [IN] Indication of parameters that are valid. Each bit in
+ * the variable corresponds to a structure member. If a bit is 0 in `validParams`,
+ * the corresponding parameter is invalid and will not be processed by the calling
+ * function. Else, if a bit is 1, the corresponding parameter is valid and will be
+ * processed by the calling function.
  *
- * @param bitPos [IN] Valid parameter to check for.
+ * @param bitMask [IN] validParam to check for.
  *
- * @return True if parameter is valid, false otherwise.
+ * @return True if validParam is set, false if validParam is not set.
  */
-bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
+static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
+    return ((validParams & bitMask) != 0U);
+}
 
 /**
  * @brief Checks whether a parameter is valid and whether the status code is
@@ -216,7 +222,7 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  * @param vpv [IN] Valid parameter value. Each bit represents whether a parameter
  * is valid.
  *
- * @param bPos [IN] valid parameter to check for.
+ * @param bMask [IN] valid parameter to check for.
  *
  * @param status [IN] The API checks whether the value of this parameter is
  * equal to the PMIC LLD success code.
@@ -224,7 +230,9 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  * @return True if the status code is equal to the LLD success code and the
  * parameter is valid.
  */
-#define Pmic_validParamStatusCheck(vpv, bPos, status) ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bPos))
+static inline bool Pmic_validParamStatusCheck(uint32_t vpv, uint32_t bMask, int32_t status) {
+    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bMask));
+}
 
 /**
  * @brief Start a critical section when usage of a shared resource such as an I2C or

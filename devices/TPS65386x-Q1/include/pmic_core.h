@@ -78,8 +78,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_REG_LOCK_VALID (0U)
-#define PMIC_CFG_CNT_LOCK_VALID (1U)
+#define PMIC_CFG_REG_LOCK_VALID (1U << 0U)
+#define PMIC_CFG_CNT_LOCK_VALID (1U << 1U)
 /** @} */
 
 /**
@@ -88,11 +88,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_REG_LOCK_VALID_SHIFT (1U << PMIC_CFG_REG_LOCK_VALID)
-#define PMIC_CFG_CNT_LOCK_VALID_SHIFT (1U << PMIC_CFG_CNT_LOCK_VALID)
 #define PMIC_CFG_LOCK_ALL_VALID_SHIFT (\
-    PMIC_CFG_REG_LOCK_VALID_SHIFT |\
-    PMIC_CFG_CNT_LOCK_VALID_SHIFT)
+    PMIC_CFG_REG_LOCK_VALID |\
+    PMIC_CFG_CNT_LOCK_VALID)
 /** @} */
 
 /**

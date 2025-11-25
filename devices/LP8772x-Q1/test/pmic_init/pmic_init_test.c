@@ -149,22 +149,22 @@ void test_negative_Pmic_init_nullParam_coreCfg(void)
 
 static inline void pmicInitTest_initCoreCfg(Pmic_CoreCfg_t *coreCfg)
 {
-    coreCfg->validParams = PMIC_CFG_DEVICE_TYPE_VALID_SHIFT |
-                           PMIC_CFG_COMM_MODE_VALID_SHIFT |
-                           PMIC_CFG_SLAVEADDR_VALID_SHIFT |
-                           PMIC_CFG_QASLAVEADDR_VALID_SHIFT |
-                           PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT |
-                           PMIC_CFG_I2C1_SPEED_VALID_SHIFT |
-                           PMIC_CFG_I2C2_SPEED_VALID_SHIFT |
-                           PMIC_CFG_CRC_ENABLE_VALID_SHIFT |
-                           PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |
-                           PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
-                           PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT |
-                           PMIC_CFG_COMM_IO_RD_VALID_SHIFT |
-                           PMIC_CFG_COMM_IO_WR_VALID_SHIFT |
-                           PMIC_CFG_CRITSEC_START_VALID_SHIFT |
-                           PMIC_CFG_CRITSEC_STOP_VALID_SHIFT |
-                           PMIC_CFG_PSEUDO_IRQ_VALID_SHIFT;
+    coreCfg->validParams = PMIC_CFG_DEVICE_TYPE_VALID |
+                           PMIC_CFG_COMM_MODE_VALID |
+                           PMIC_CFG_SLAVEADDR_VALID |
+                           PMIC_CFG_QASLAVEADDR_VALID |
+                           PMIC_CFG_NVMSLAVEADDR_VALID |
+                           PMIC_CFG_I2C1_SPEED_VALID |
+                           PMIC_CFG_I2C2_SPEED_VALID |
+                           PMIC_CFG_CRC_ENABLE_VALID |
+                           PMIC_CFG_CFG_CRC_ENABLE_VALID |
+                           PMIC_CFG_COMM_HANDLE_VALID |
+                           PMIC_CFG_QACOMM_HANDLE_VALID |
+                           PMIC_CFG_COMM_IO_RD_VALID |
+                           PMIC_CFG_COMM_IO_WR_VALID |
+                           PMIC_CFG_CRITSEC_START_VALID |
+                           PMIC_CFG_CRITSEC_STOP_VALID |
+                           PMIC_CFG_PSEUDO_IRQ_VALID;
     coreCfg->instType = PMIC_MAIN_INST;
     coreCfg->pmicDeviceType = PMIC_DEV_COACH_LP8772X;
     coreCfg->commMode = PMIC_INTF_I2C_SINGLE;

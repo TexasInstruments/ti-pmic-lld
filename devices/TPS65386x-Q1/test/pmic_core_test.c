@@ -72,22 +72,22 @@ int32_t test_pmic_core_config_init(void) {
 
     /* Fill parameters to pmicConfigData */
     pmicConfigData.pmicDeviceType = PMIC_DEV_BB_TPS65386X;
-    pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID;
 
     pmicConfigData.commMode = PMIC_INTF_SPI;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID;
 
     pmicConfigData.pFnPmicCommIoRead = test_pmic_regRead;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID;
 
     pmicConfigData.pFnPmicCommIoWrite = test_pmic_regWrite;
-    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID;
 
     pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID;
 
     pmicConfigData.pFnPmicCritSecStop = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID;
 
     status = test_pmic_appInit(&pPmicCoreHandle_core, &pmicConfigData);
     if (PMIC_ST_SUCCESS != status) {

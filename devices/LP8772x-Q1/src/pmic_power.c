@@ -74,12 +74,12 @@
 #define PWR_RSRC_FIELD_WIDTH_BITS  ((uint8_t)2U)
 
 typedef struct SetResourceProcessor_s {
-    uint8_t validParam;
+    uint16_t validParam;
     int32_t (*fptr)(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
 } SetResourceProcessor_t;
 
 typedef struct GetResourceProcessor_s {
-    uint8_t validParam;
+    uint16_t validParam;
     int32_t (*fptr)(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
 } GetResourceProcessor_t;
 
@@ -1465,7 +1465,7 @@ static int32_t PWR_setSingleResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerR
 
     // Handle all other potential field modifications
     for (uint8_t i = 0U; i < COUNT(resourceProcessors); i++) {
-        const uint8_t validParam = resourceProcessors[i].validParam;
+        const uint16_t validParam = resourceProcessors[i].validParam;
 
         if (status != PMIC_ST_SUCCESS) {
             break;
@@ -1548,7 +1548,7 @@ static int32_t PWR_getSingleResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourc
 
     // Read all fields requested by the user
     for (uint8_t i = 0U; i < COUNT(resourceProcessors); i++) {
-        const uint8_t validParam = resourceProcessors[i].validParam;
+        const uint16_t validParam = resourceProcessors[i].validParam;
 
         if (status != PMIC_ST_SUCCESS) {
             break;

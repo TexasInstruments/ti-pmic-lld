@@ -164,7 +164,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_REG_LOCK_VALID_SHIFT };
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_REG_LOCK_VALID };
     status = Pmic_getLockCfg(handle, &lockStatus);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -179,7 +179,7 @@ int32_t Pmic_getCntLockState(Pmic_Handle_t *handle, uint8_t *lockState) {
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CNT_LOCK_VALID_SHIFT };
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CNT_LOCK_VALID };
     status = Pmic_getLockCfg(handle, &lockStatus);
 
     if (status == PMIC_ST_SUCCESS) {

@@ -68,38 +68,18 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_STBY_EN_VALID                      (0U)
-#define PMIC_CFG_AUTO_BIST_EN_VALID                 (1U)
-#define PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID      (2U)
-#define PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID    (3U)
-#define PMIC_CFG_PWD_THR_VALID                      (4U)
-#define PMIC_CFG_NRST_EXT_VALID                     (5U)
-#define PMIC_CFG_RST_MCU_TMO_VALID                  (6U)
-#define PMIC_CFG_SAFE_TMO_VALID                     (7U)
-#define PMIC_CFG_SAFE_LOCK_THR_VALID                (8U)
-#define PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID          (9U)
+#define PMIC_CFG_STBY_EN_VALID                      (1U << 0U)
+#define PMIC_CFG_AUTO_BIST_EN_VALID                 (1U << 1U)
+#define PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID      (1U << 2U)
+#define PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID    (1U << 3U)
+#define PMIC_CFG_PWD_THR_VALID                      (1U << 4U)
+#define PMIC_CFG_NRST_EXT_VALID                     (1U << 5U)
+#define PMIC_CFG_RST_MCU_TMO_VALID                  (1U << 6U)
+#define PMIC_CFG_SAFE_TMO_VALID                     (1U << 7U)
+#define PMIC_CFG_SAFE_LOCK_THR_VALID                (1U << 8U)
+#define PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID          (1U << 9U)
 /** @} */
 
-/**
- * @anchor Pmic_FsmCfgValidParamShifts
- * @name PMIC FSM Configuration Valid Parameter Shifts
- *
- * @brief Valid Parameter shift values of the FSM configuration struct
- * (Pmic_FsmCfg_t).
- *
- * @{
- */
-#define PMIC_CFG_STBY_EN_VALID_SHIFT                    (1U << PMIC_CFG_STBY_EN_VALID)
-#define PMIC_CFG_AUTO_BIST_EN_VALID_SHIFT               (1U << PMIC_CFG_AUTO_BIST_EN_VALID)
-#define PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID_SHIFT    (1U << PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID)
-#define PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID_SHIFT  (1U << PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID)
-#define PMIC_CFG_PWD_THR_VALID_SHIFT                    (1U << PMIC_CFG_PWD_THR_VALID)
-#define PMIC_CFG_NRST_EXT_VALID_SHIFT                   (1U << PMIC_CFG_NRST_EXT_VALID)
-#define PMIC_CFG_RST_MCU_TMO_VALID_SHIFT                (1U << PMIC_CFG_RST_MCU_TMO_VALID)
-#define PMIC_CFG_SAFE_TMO_VALID_SHIFT                   (1U << PMIC_CFG_SAFE_TMO_VALID)
-#define PMIC_CFG_SAFE_LOCK_THR_VALID_SHIFT              (1U << PMIC_CFG_SAFE_LOCK_THR_VALID)
-#define PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID_SHIFT        (1U << PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_FsmWakeupCfgValidParams
@@ -110,26 +90,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WAKE1_EVENT_VALID  (0U)
-#define PMIC_CFG_WAKE2_EVENT_VALID  (1U)
-#define PMIC_CFG_WAKE1_DGL_VALID    (2U)
-#define PMIC_CFG_WAKE2_DGL_VALID    (3U)
+#define PMIC_CFG_WAKE1_EVENT_VALID  (1U << 0U)
+#define PMIC_CFG_WAKE2_EVENT_VALID  (1U << 1U)
+#define PMIC_CFG_WAKE1_DGL_VALID    (1U << 2U)
+#define PMIC_CFG_WAKE2_DGL_VALID    (1U << 3U)
 /** @} */
 
-/**
- * @anchor Pmic_FsmWakeupCfgValidParamShifts
- * @name PMIC FSM Wakeup Configuration Valid Parameter Shifts
- *
- * @brief Valid parameter shift values of the FSM wakeup configuration struct
- * (Pmic_FsmWakeupCfg_t).
- *
- * @{
- */
-#define PMIC_CFG_WAKE1_EVENT_VALID_SHIFT    (1U << PMIC_CFG_WAKE1_EVENT_VALID)
-#define PMIC_CFG_WAKE2_EVENT_VALID_SHIFT    (1U << PMIC_CFG_WAKE2_EVENT_VALID)
-#define PMIC_CFG_WAKE1_DGL_VALID_SHIFT      (1U << PMIC_CFG_WAKE1_DGL_VALID)
-#define PMIC_CFG_WAKE2_DGL_VALID_SHIFT      (1U << PMIC_CFG_WAKE2_DGL_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_FsmPwrLatchCfgValidParams
@@ -140,26 +106,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_PWD_DLY_VALID                      (0U)
-#define PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID  (1U)
-#define PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID          (2U)
-#define PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID          (3U)
+#define PMIC_CFG_PWD_DLY_VALID                      (1U << 0U)
+#define PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID  (1U << 1U)
+#define PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID          (1U << 2U)
+#define PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID          (1U << 3U)
 /** @} */
 
-/**
- * @anchor Pmic_FsmPwrLatchCfgValidParamShifts
- * @name PMIC FSM Power Latch Configuration Valid Parameter Shifts
- *
- * @brief Valid parameter shift values of the FSM power latch configuration
- * struct (Pmic_FsmPwrLatchCfg_t).
- *
- * @{
- */
-#define PMIC_CFG_PWD_DLY_VALID_SHIFT                        (1U << PMIC_CFG_PWD_DLY_VALID)
-#define PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID_SHIFT    (1U << PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID)
-#define PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID_SHIFT            (1U << PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID)
-#define PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID_SHIFT            (1U << PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_FsmPwrLatchValidParams
@@ -169,27 +121,13 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID  (0U)
-#define PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID  (1U)
-#define PMIC_CFG_M_PMIC_WAKE_LATCH_VALID    (2U)
-#define PMIC_CFG_WAKE1_LATCH_VALID          (3U)
-#define PMIC_CFG_WAKE2_LATCH_VALID          (4U)
+#define PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID  (1U << 0U)
+#define PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID  (1U << 1U)
+#define PMIC_CFG_M_PMIC_WAKE_LATCH_VALID    (1U << 2U)
+#define PMIC_CFG_WAKE1_LATCH_VALID          (1U << 3U)
+#define PMIC_CFG_WAKE2_LATCH_VALID          (1U << 4U)
 /** @} */
 
-/**
- * @anchor Pmic_FsmPwrLatchValidParamShifts
- * @name PMIC FSM Power Latch Valid Parameter Shifts
- *
- * @brief Valid parameter shift values of the FSM power latch struct.
- *
- * @{
- */
-#define PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID_SHIFT    (1U << PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID)
-#define PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID_SHIFT    (1U << PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID)
-#define PMIC_CFG_M_PMIC_WAKE_LATCH_VALID_SHIFT      (1U << PMIC_CFG_M_PMIC_WAKE_LATCH_VALID)
-#define PMIC_CFG_WAKE1_LATCH_VALID_SHIFT            (1U << PMIC_CFG_WAKE1_LATCH_VALID)
-#define PMIC_CFG_WAKE2_LATCH_VALID_SHIFT            (1U << PMIC_CFG_WAKE2_LATCH_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_PwdThrMaxVal

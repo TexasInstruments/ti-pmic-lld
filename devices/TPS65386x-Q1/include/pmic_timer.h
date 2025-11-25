@@ -67,23 +67,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_TMR_PRESCALE_VALID (0U)
-#define PMIC_CFG_TMR_MODE_VALID     (1U)
+#define PMIC_CFG_TMR_PRESCALE_VALID (1U << 0U)
+#define PMIC_CFG_TMR_MODE_VALID     (1U << 1U)
 /** @} */
 
-/**
- * @anchor Pmic_TimerCfgValidParamShift
- * @name PMIC Timer Configuration Valid Param Shifts
- *
- * @brief Valid parameter shifts of the timer configuration structure
- * (Pmic_TimerCfg_t). End-user can set validParams to be equal to a combination
- * of the defines listed below to indicate which parameters are valid.
- *
- * @{
- */
-#define PMIC_CFG_TMR_PRESCALE_VALID_SHIFT (1U << PMIC_CFG_TMR_PRESCALE_VALID)
-#define PMIC_CFG_TMR_MODE_VALID_SHIFT     (1U << PMIC_CFG_TMR_MODE_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_TimerPrescale

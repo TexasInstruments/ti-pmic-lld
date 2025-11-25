@@ -192,17 +192,17 @@ void wdg_test(void *args)
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t coreCfg = {
-        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT |
-                        PMIC_CFG_COMM_MODE_VALID_SHIFT |
-                        PMIC_CFG_SLAVEADDR_VALID_SHIFT |
-                        PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
-                        PMIC_CFG_COMM_IO_RD_VALID_SHIFT |
-                        PMIC_CFG_COMM_IO_WR_VALID_SHIFT |
-                        PMIC_CFG_CRITSEC_START_VALID_SHIFT |
-                        PMIC_CFG_CRITSEC_STOP_VALID_SHIFT |
-                        PMIC_CFG_CRC_ENABLE_VALID_SHIFT |
-                        PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |
-                        PMIC_CFG_PSEUDO_IRQ_VALID_SHIFT),
+        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID |
+                        PMIC_CFG_COMM_MODE_VALID |
+                        PMIC_CFG_SLAVEADDR_VALID |
+                        PMIC_CFG_COMM_HANDLE_VALID |
+                        PMIC_CFG_COMM_IO_RD_VALID |
+                        PMIC_CFG_COMM_IO_WR_VALID |
+                        PMIC_CFG_CRITSEC_START_VALID |
+                        PMIC_CFG_CRITSEC_STOP_VALID |
+                        PMIC_CFG_CRC_ENABLE_VALID |
+                        PMIC_CFG_CFG_CRC_ENABLE_VALID |
+                        PMIC_CFG_PSEUDO_IRQ_VALID),
         .instType = PMIC_MAIN_INST,
         .pmicDeviceType = PLATFORM_TARGET_DEV_TYPE,
         .commMode = PMIC_INTF_I2C_SINGLE,
@@ -365,7 +365,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset(void)
 {
     // Pass out of bounds thresholdReset value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID,
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -376,7 +376,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail(void)
 {
     // Pass out of bounds thresholdFail value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -387,7 +387,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code(void)
 {
     // Pass out of bounds win1Code value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_WIN1DURATION_VALID,
         .win1Code = PMIC_WDG_WIN_CODE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -398,7 +398,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code(void)
 {
     // Pass out of bounds win2Code value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_WIN2DURATION_VALID,
         .win2Code = PMIC_WDG_WIN_CODE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -409,7 +409,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk(void)
 {
     // Pass out of bounds qaFdbk value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID,
         .qaFdbk = PMIC_WDG_QA_FEEDBACK_VALUE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -420,7 +420,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr(void)
 {
     // Pass out of bounds qaLfsr value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_QA_LFSR_VALID,
         .qaLfsr = PMIC_WDG_QA_LFSR_VALUE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -431,7 +431,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed(void)
 {
     // Pass out of bounds qaQuesSeed value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT,
+        .validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID,
         .qaQuesSeed = PMIC_WDG_QA_QUES_SEED_VALUE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -699,8 +699,8 @@ void test_positive_wdgEnableDisableReturnToLongWindow(void)
 void test_positive_wdgSetGetCfg_rstEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
 
     // Set watchdog reset enable to true
     expWdgCfg.rstEn = PMIC_ENABLE;
@@ -726,8 +726,8 @@ void test_positive_wdgSetGetCfg_rstEn(void)
 void test_positive_wdgSetGetCfg_thresholdReset(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID};
 
     // For each thresholdReset value...
     for (uint8_t expVal = PMIC_WDG_THRESHOLD_COUNT_0; expVal <= PMIC_WDG_THRESHOLD_COUNT_MAX; expVal++)
@@ -747,8 +747,8 @@ void test_positive_wdgSetGetCfg_thresholdReset(void)
 void test_positive_wdgSetGetCfg_thresholdFail(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID};
 
     // For each thresholdFail value...
     for (uint8_t expVal = PMIC_WDG_THRESHOLD_COUNT_0; expVal <= PMIC_WDG_THRESHOLD_COUNT_MAX; expVal++)
@@ -768,8 +768,8 @@ void test_positive_wdgSetGetCfg_thresholdFail(void)
 void test_positive_wdgSetGetCfg_longWinCode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
 
     // For each longWinCode value...
     for (uint16_t expVal = 0U; expVal <= WDG_TEST_LONG_WINDOW_CODE_MAX; expVal++)
@@ -789,8 +789,8 @@ void test_positive_wdgSetGetCfg_longWinCode(void)
 void test_positive_wdgSetGetCfg_win1Code(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID};
 
     // For each win1Code value...
     for (uint16_t expVal = 0U; expVal <= PMIC_WDG_WIN_CODE_MAX; expVal++)
@@ -810,8 +810,8 @@ void test_positive_wdgSetGetCfg_win1Code(void)
 void test_positive_wdgSetGetCfg_win2Code(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID};
 
     // For each win2Code value...
     for (uint16_t expVal = 0U; expVal <= PMIC_WDG_WIN_CODE_MAX; expVal++)
@@ -831,8 +831,8 @@ void test_positive_wdgSetGetCfg_win2Code(void)
 void test_positive_wdgSetGetCfg_qaFdbk(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
 
     // For each qaFdbk value...
     for (uint16_t expVal = 0U; expVal <= PMIC_WDG_QA_FEEDBACK_VALUE_MAX; expVal++)
@@ -852,8 +852,8 @@ void test_positive_wdgSetGetCfg_qaFdbk(void)
 void test_positive_wdgSetGetCfg_qaLfsr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
 
     // For each qaLfsr value...
     for (uint16_t expVal = 0U; expVal <= PMIC_WDG_QA_LFSR_VALUE_MAX; expVal++)
@@ -873,8 +873,8 @@ void test_positive_wdgSetGetCfg_qaLfsr(void)
 void test_positive_wdgSetGetCfg_qaQuesSeed(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT};
-    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT};
+    Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID};
+    Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID};
 
     // For each qaQuesSeed value...
     for (uint16_t expVal = 0U; expVal <= PMIC_WDG_QA_QUES_SEED_VALUE_MAX; expVal++)
@@ -907,14 +907,14 @@ void test_positive_wdgQaSequence_detectNoErrors(void)
     uint8_t answerCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = 0U,
         .thresholdFail = 0U,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -990,14 +990,14 @@ void test_positive_wdgQaSequence_detectTimeout(void)
     uint8_t answerCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -1008,12 +1008,12 @@ void test_positive_wdgQaSequence_detectTimeout(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgFailCntStat_t wdgFailCntStat = {
-        .validParams = (PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT | PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WD_BAD_EVENT_STAT_VALID | PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .badEvent = (bool)false,
         .wdFailCnt = 0U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID,
         .timeout = (bool)false
     };
 
@@ -1078,14 +1078,14 @@ void test_positive_wdgQaSequence_detectLongWindowTimeout(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .longWinCode = 2U, // 252 ms
@@ -1096,7 +1096,7 @@ void test_positive_wdgQaSequence_detectLongWindowTimeout(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID,
         .longWindowTimeout = (bool)false
     };
 
@@ -1144,14 +1144,14 @@ void test_positive_wdgQaSequence_detectAnswerEarlyError(void)
     uint8_t answerCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -1162,7 +1162,7 @@ void test_positive_wdgQaSequence_detectAnswerEarlyError(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_ANSW_EARLY_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_ANSW_EARLY_ERR_VALID,
         .answerEarlyError = (bool)false
     };
 
@@ -1224,14 +1224,14 @@ void test_positive_wdgQaSequence_detectSequenceError(void)
     uint8_t answerCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -1242,7 +1242,7 @@ void test_positive_wdgQaSequence_detectSequenceError(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_SEQ_ERR_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_SEQ_ERR_ERR_VALID,
         .sequenceError = (bool)false
     };
 
@@ -1308,14 +1308,14 @@ void test_positive_wdgQaSequence_detectAnswerError(void)
     uint8_t answerCnt = 0U, regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -1326,7 +1326,7 @@ void test_positive_wdgQaSequence_detectAnswerError(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_ANSW_ERR_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_ANSW_ERR_ERR_VALID,
         .answerError = (bool)false
     };
 
@@ -1390,14 +1390,14 @@ void test_positive_wdgQaSequence_detectFailInt(void)
     uint8_t answerCnt = 0U, expFailCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .thresholdReset = PMIC_WDG_THRESHOLD_COUNT_MAX,
         .thresholdFail = 3U,
         .longWinCode = 0xFFU, // ~13 minutes
@@ -1408,11 +1408,11 @@ void test_positive_wdgQaSequence_detectFailInt(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgFailCntStat_t wdgFailCntStat = {
-        .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .wdFailCnt = 0U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_FAIL_INT_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_FAIL_INT_ERR_VALID,
         .failInt = (bool)false
     };
 
@@ -1491,15 +1491,15 @@ void test_positive_wdgQaSequence_detectResetInt(void)
     uint8_t answerCnt = 0U, expFailCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = (PMIC_CFG_WDG_RST_EN_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_RESET_VALID_SHIFT |
-                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID_SHIFT |
-                        PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
-                        PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WDG_RST_EN_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_RESET_VALID |
+                        PMIC_CFG_WDG_THRESHOLD_FAIL_VALID |
+                        PMIC_CFG_WDG_LONGWINDURATION_VALID |
+                        PMIC_CFG_WDG_WIN1DURATION_VALID |
+                        PMIC_CFG_WDG_WIN2DURATION_VALID |
+                        PMIC_CFG_WDG_QA_FDBK_VALID |
+                        PMIC_CFG_WDG_QA_LFSR_VALID |
+                        PMIC_CFG_WDG_QA_QUES_SEED_VALID),
         .rstEn = PMIC_ENABLE,
         .thresholdReset = 3U,
         .thresholdFail = 3U,
@@ -1511,11 +1511,11 @@ void test_positive_wdgQaSequence_detectResetInt(void)
         .qaQuesSeed = 2U
     };
     Pmic_WdgFailCntStat_t wdgFailCntStat = {
-        .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT),
+        .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .wdFailCnt = 0U
     };
     Pmic_WdgError_t wdgErrStat = {
-        .validParams = PMIC_CFG_WD_RST_INT_ERR_VALID_SHIFT,
+        .validParams = PMIC_CFG_WD_RST_INT_ERR_VALID,
         .resetInt = (bool)false
     };
 

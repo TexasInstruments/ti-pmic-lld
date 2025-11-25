@@ -2241,8 +2241,8 @@ static int32_t PWR_getExtVmonStat(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwr
         Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_BB_LITE_VALID) ||
         Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID) ||
         Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_BB_MODE_VALID) ||
-        Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT) ||
-        Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT));
+        Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_ERR_VALID) ||
+        Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_WARN_VALID));
 
     if (!PWR_isExtVmon(pwrRsrcStat->pwrRsrc))
     {

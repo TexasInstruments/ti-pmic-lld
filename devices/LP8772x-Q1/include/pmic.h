@@ -151,22 +151,22 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_DEVICE_TYPE_VALID    (0U)
-#define PMIC_CFG_COMM_MODE_VALID      (1U)
-#define PMIC_CFG_SLAVEADDR_VALID      (2U)
-#define PMIC_CFG_QASLAVEADDR_VALID    (3U)
-#define PMIC_CFG_NVMSLAVEADDR_VALID   (4U)
-#define PMIC_CFG_COMM_HANDLE_VALID    (5U)
-#define PMIC_CFG_QACOMM_HANDLE_VALID  (6U)
-#define PMIC_CFG_COMM_IO_RD_VALID     (7U)
-#define PMIC_CFG_COMM_IO_WR_VALID     (8U)
-#define PMIC_CFG_CRITSEC_START_VALID  (9U)
-#define PMIC_CFG_CRITSEC_STOP_VALID   (10U)
-#define PMIC_CFG_I2C1_SPEED_VALID     (11U)
-#define PMIC_CFG_I2C2_SPEED_VALID     (12U)
-#define PMIC_CFG_CRC_ENABLE_VALID     (13U)
-#define PMIC_CFG_CFG_CRC_ENABLE_VALID (14U)
-#define PMIC_CFG_PSEUDO_IRQ_VALID     (15U)
+#define PMIC_CFG_DEVICE_TYPE_VALID    (1U << 0U)
+#define PMIC_CFG_COMM_MODE_VALID      (1U << 1U)
+#define PMIC_CFG_SLAVEADDR_VALID      (1U << 2U)
+#define PMIC_CFG_QASLAVEADDR_VALID    (1U << 3U)
+#define PMIC_CFG_NVMSLAVEADDR_VALID   (1U << 4U)
+#define PMIC_CFG_COMM_HANDLE_VALID    (1U << 5U)
+#define PMIC_CFG_QACOMM_HANDLE_VALID  (1U << 6U)
+#define PMIC_CFG_COMM_IO_RD_VALID     (1U << 7U)
+#define PMIC_CFG_COMM_IO_WR_VALID     (1U << 8U)
+#define PMIC_CFG_CRITSEC_START_VALID  (1U << 9U)
+#define PMIC_CFG_CRITSEC_STOP_VALID   (1U << 10U)
+#define PMIC_CFG_I2C1_SPEED_VALID     (1U << 11U)
+#define PMIC_CFG_I2C2_SPEED_VALID     (1U << 12U)
+#define PMIC_CFG_CRC_ENABLE_VALID     (1U << 13U)
+#define PMIC_CFG_CFG_CRC_ENABLE_VALID (1U << 14U)
+#define PMIC_CFG_PSEUDO_IRQ_VALID     (1U << 15U)
 /** @} */
 
 /**
@@ -178,22 +178,6 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    (1U << PMIC_CFG_DEVICE_TYPE_VALID)
-#define PMIC_CFG_COMM_MODE_VALID_SHIFT      (1U << PMIC_CFG_COMM_MODE_VALID)
-#define PMIC_CFG_SLAVEADDR_VALID_SHIFT      (1U << PMIC_CFG_SLAVEADDR_VALID)
-#define PMIC_CFG_QASLAVEADDR_VALID_SHIFT    (1U << PMIC_CFG_QASLAVEADDR_VALID)
-#define PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT   (1U << PMIC_CFG_NVMSLAVEADDR_VALID)
-#define PMIC_CFG_COMM_HANDLE_VALID_SHIFT    (1U << PMIC_CFG_COMM_HANDLE_VALID)
-#define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT  (1U << PMIC_CFG_QACOMM_HANDLE_VALID)
-#define PMIC_CFG_COMM_IO_RD_VALID_SHIFT     (1U << PMIC_CFG_COMM_IO_RD_VALID)
-#define PMIC_CFG_COMM_IO_WR_VALID_SHIFT     (1U << PMIC_CFG_COMM_IO_WR_VALID)
-#define PMIC_CFG_CRITSEC_START_VALID_SHIFT  (1U << PMIC_CFG_CRITSEC_START_VALID)
-#define PMIC_CFG_CRITSEC_STOP_VALID_SHIFT   (1U << PMIC_CFG_CRITSEC_STOP_VALID)
-#define PMIC_CFG_I2C1_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C1_SPEED_VALID)
-#define PMIC_CFG_I2C2_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C2_SPEED_VALID)
-#define PMIC_CFG_CRC_ENABLE_VALID_SHIFT     (1U << PMIC_CFG_CRC_ENABLE_VALID)
-#define PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT (1U << PMIC_CFG_CFG_CRC_ENABLE_VALID)
-#define PMIC_CFG_PSEUDO_IRQ_VALID_SHIFT     (1U << PMIC_CFG_PSEUDO_IRQ_VALID)
 /** @brief Helper macro to set all `validParams` necessary for configuring I2C
  * based driver.
  *
@@ -201,28 +185,28 @@ extern "C" {
  * necessary for the driver to function. If this is needed in user application,
  * ensure that it is set accordingly.
  * */
-#define PMIC_CFG_ALL_I2C_VALID_SHIFT        (\
-    PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |\
-    PMIC_CFG_COMM_MODE_VALID_SHIFT      |\
-    PMIC_CFG_SLAVEADDR_VALID_SHIFT      |\
-    PMIC_CFG_I2C1_SPEED_VALID_SHIFT     |\
-    PMIC_CFG_CRC_ENABLE_VALID_SHIFT     |\
-    PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |\
-    PMIC_CFG_COMM_IO_RD_VALID_SHIFT     |\
-    PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |\
-    PMIC_CFG_COMM_HANDLE_VALID_SHIFT    |\
-    PMIC_CFG_CRITSEC_START_VALID_SHIFT  |\
-    PMIC_CFG_CRITSEC_STOP_VALID_SHIFT)
+#define PMIC_CFG_ALL_I2C_VALID        (\
+    PMIC_CFG_DEVICE_TYPE_VALID    |\
+    PMIC_CFG_COMM_MODE_VALID      |\
+    PMIC_CFG_SLAVEADDR_VALID      |\
+    PMIC_CFG_I2C1_SPEED_VALID     |\
+    PMIC_CFG_CRC_ENABLE_VALID     |\
+    PMIC_CFG_CFG_CRC_ENABLE_VALID |\
+    PMIC_CFG_COMM_IO_RD_VALID     |\
+    PMIC_CFG_COMM_IO_WR_VALID     |\
+    PMIC_CFG_COMM_HANDLE_VALID    |\
+    PMIC_CFG_CRITSEC_START_VALID  |\
+    PMIC_CFG_CRITSEC_STOP_VALID)
 /** @brief Helper macro to set all `validParams` necessary for configuring SPI
  * based driver. */
-#define PMIC_CFG_ALL_SPI_VALID_SHIFT        (\
-    PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |\
-    PMIC_CFG_COMM_MODE_VALID_SHIFT      |\
-    PMIC_CFG_COMM_IO_RD_VALID_SHIFT     |\
-    PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |\
-    PMIC_CFG_COMM_HANDLE_VALID_SHIFT    |\
-    PMIC_CFG_CRITSEC_START_VALID_SHIFT  |\
-    PMIC_CFG_CRITSEC_STOP_VALID_SHIFT)
+#define PMIC_CFG_ALL_SPI_VALID        (\
+    PMIC_CFG_DEVICE_TYPE_VALID    |\
+    PMIC_CFG_COMM_MODE_VALID      |\
+    PMIC_CFG_COMM_IO_RD_VALID     |\
+    PMIC_CFG_COMM_IO_WR_VALID     |\
+    PMIC_CFG_COMM_HANDLE_VALID    |\
+    PMIC_CFG_CRITSEC_START_VALID  |\
+    PMIC_CFG_CRITSEC_STOP_VALID)
 /** @} */
 
 /*==========================================================================*/
@@ -241,7 +225,7 @@ extern "C" {
  *
  * For Example, If the Application needs to configure the PMIC driver
  * `pmicDeviceType` member of the structure, then application has to set
- * `PMIC_CFG_DEVICE_TYPE_VALID_SHIFT` bit of `validParams` struct and then call
+ * `PMIC_CFG_DEVICE_TYPE_VALID` bit of `validParams` struct and then call
  * `Pmic_init()`.
  *
  * @note The below parameters are not necessary to be specified for Coach PMIC.

@@ -68,43 +68,20 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_ESM_ENABLE_VALID       (0U)
-#define PMIC_CFG_ESM_MODE_VALID         (1U)
-#define PMIC_CFG_ESM_ERR_THR_VALID      (2U)
-#define PMIC_CFG_ESM_POLARITY_VALID     (3U)
-#define PMIC_CFG_ESM_DEGLITCH_VALID     (4U)
-#define PMIC_CFG_ESM_TIME_BASE_VALID    (5U)
-#define PMIC_CFG_ESM_DELAY1_VALID       (6U)
-#define PMIC_CFG_ESM_DELAY2_VALID       (7U)
-#define PMIC_CFG_ESM_HMAX_VALID         (8U)
-#define PMIC_CFG_ESM_HMIN_VALID         (9U)
-#define PMIC_CFG_ESM_LMAX_VALID         (10U)
-#define PMIC_CFG_ESM_LMIN_VALID         (11U)
+#define PMIC_CFG_ESM_ENABLE_VALID       (1U << 0U)
+#define PMIC_CFG_ESM_MODE_VALID         (1U << 1U)
+#define PMIC_CFG_ESM_ERR_THR_VALID      (1U << 2U)
+#define PMIC_CFG_ESM_POLARITY_VALID     (1U << 3U)
+#define PMIC_CFG_ESM_DEGLITCH_VALID     (1U << 4U)
+#define PMIC_CFG_ESM_TIME_BASE_VALID    (1U << 5U)
+#define PMIC_CFG_ESM_DELAY1_VALID       (1U << 6U)
+#define PMIC_CFG_ESM_DELAY2_VALID       (1U << 7U)
+#define PMIC_CFG_ESM_HMAX_VALID         (1U << 8U)
+#define PMIC_CFG_ESM_HMIN_VALID         (1U << 9U)
+#define PMIC_CFG_ESM_LMAX_VALID         (1U << 10U)
+#define PMIC_CFG_ESM_LMIN_VALID         (1U << 11U)
 /** @} */
 
-/**
- * @anchor Pmic_EsmCfgValidParamShift
- * @name PMIC ESM Configuration Valid Param Shifts
- *
- * @brief Valid parameter shifts of the ESM configuration structure
- * (Pmic_EsmCfg_t). End-user can set validParams to be equal to a combination
- * of the defines listed below to indicate which parameters are valid.
- *
- * @{
- */
-#define PMIC_CFG_ESM_ENABLE_VALID_SHIFT     (1U << PMIC_CFG_ESM_ENABLE_VALID)
-#define PMIC_CFG_ESM_MODE_VALID_SHIFT       (1U << PMIC_CFG_ESM_MODE_VALID)
-#define PMIC_CFG_ESM_ERR_THR_VALID_SHIFT    (1U << PMIC_CFG_ESM_ERR_THR_VALID)
-#define PMIC_CFG_ESM_POLARITY_VALID_SHIFT   (1U << PMIC_CFG_ESM_POLARITY_VALID)
-#define PMIC_CFG_ESM_DEGLITCH_VALID_SHIFT   (1U << PMIC_CFG_ESM_DEGLITCH_VALID)
-#define PMIC_CFG_ESM_TIME_BASE_VALID_SHIFT  (1U << PMIC_CFG_ESM_TIME_BASE_VALID)
-#define PMIC_CFG_ESM_DELAY1_VALID_SHIFT     (1U << PMIC_CFG_ESM_DELAY1_VALID)
-#define PMIC_CFG_ESM_DELAY2_VALID_SHIFT     (1U << PMIC_CFG_ESM_DELAY2_VALID)
-#define PMIC_CFG_ESM_HMAX_VALID_SHIFT       (1U << PMIC_CFG_ESM_HMAX_VALID)
-#define PMIC_CFG_ESM_HMIN_VALID_SHIFT       (1U << PMIC_CFG_ESM_HMIN_VALID)
-#define PMIC_CFG_ESM_LMAX_VALID_SHIFT       (1U << PMIC_CFG_ESM_LMAX_VALID)
-#define PMIC_CFG_ESM_LMIN_VALID_SHIFT       (1U << PMIC_CFG_ESM_LMIN_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_EsmStatusValidParam
@@ -114,27 +91,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_ERR_VALID          (0U)
-#define PMIC_ESM_DELAY1_ERR_VALID   (1U)
-#define PMIC_ESM_DELAY2_ERR_VALID   (2U)
-#define PMIC_ESM_ERR_CNT_VALID      (3U)
+#define PMIC_ESM_ERR_VALID          (1U << 0U)
+#define PMIC_ESM_DELAY1_ERR_VALID   (1U << 1U)
+#define PMIC_ESM_DELAY2_ERR_VALID   (1U << 2U)
+#define PMIC_ESM_ERR_CNT_VALID      (1U << 3U)
 /** @} */
 
-/**
- * @anchor Pmic_EsmStatusValidParamShift
- * @name PMIC ESM Status Valid Param Shifts
- *
- * @brief Valid Parameter shifts of the ESM status structure (Pmic_EsmStatus_t).
- * End-user can set validParams to be equal to a combination of the defines
- * listed below to indicate which parameters are valid.
- *
- * @{
- */
-#define PMIC_ESM_ERR_VALID_SHIFT        (1U << PMIC_ESM_ERR_VALID)
-#define PMIC_ESM_DELAY1_ERR_VALID_SHIFT (1U << PMIC_ESM_DELAY1_ERR_VALID)
-#define PMIC_ESM_DELAY2_ERR_VALID_SHIFT (1U << PMIC_ESM_DELAY2_ERR_VALID)
-#define PMIC_ESM_ERR_CNT_VALID_SHIFT    (1U << PMIC_ESM_ERR_CNT_VALID)
-/** @} */
 
 /**
  * @anchor Pmic_EsmMode

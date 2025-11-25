@@ -108,17 +108,17 @@ void core_test(void *args)
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t coreCfg = {
-        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT |
-                        PMIC_CFG_COMM_MODE_VALID_SHIFT |
-                        PMIC_CFG_SLAVEADDR_VALID_SHIFT |
-                        PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
-                        PMIC_CFG_COMM_IO_RD_VALID_SHIFT |
-                        PMIC_CFG_COMM_IO_WR_VALID_SHIFT |
-                        PMIC_CFG_CRITSEC_START_VALID_SHIFT |
-                        PMIC_CFG_CRITSEC_STOP_VALID_SHIFT |
-                        PMIC_CFG_CRC_ENABLE_VALID_SHIFT |
-                        PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |
-                        PMIC_CFG_PSEUDO_IRQ_VALID_SHIFT),
+        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID |
+                        PMIC_CFG_COMM_MODE_VALID |
+                        PMIC_CFG_SLAVEADDR_VALID |
+                        PMIC_CFG_COMM_HANDLE_VALID |
+                        PMIC_CFG_COMM_IO_RD_VALID |
+                        PMIC_CFG_COMM_IO_WR_VALID |
+                        PMIC_CFG_CRITSEC_START_VALID |
+                        PMIC_CFG_CRITSEC_STOP_VALID |
+                        PMIC_CFG_CRC_ENABLE_VALID |
+                        PMIC_CFG_CFG_CRC_ENABLE_VALID |
+                        PMIC_CFG_PSEUDO_IRQ_VALID),
         .instType = PMIC_MAIN_INST,
         .pmicDeviceType = PLATFORM_TARGET_DEV_TYPE,
         .commMode = PMIC_INTF_I2C_SINGLE,
