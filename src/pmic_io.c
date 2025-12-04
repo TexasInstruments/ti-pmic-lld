@@ -48,23 +48,17 @@
 /*                            Macros & Typedefs                               */
 /* ========================================================================== */
 
-// Number of bytes to be transmitted/received.
-#define SPI_FRAME_LEN (4U)
+// Used in composing the SPI transmit/receive frame.
+#define SPI_TX_FRAME_LEN ((uint8_t)4U)
+#define SPI_RX_FRAME_LEN ((uint8_t)4U)
+#define SPI_WRITE_BIT    ((uint8_t)0U)
+#define SPI_READ_BIT     ((uint8_t)1U)
 
-// Parts of a SPI frame - includes reading and writing
-#define SPI_FRAME_ADDR     (0U)
-#define SPI_FRAME_PAGE_RW  (1U)
-#define SPI_FRAME_STATUS_1 (0U)
-#define SPI_FRAME_STATUS_2 (1U)
-#define SPI_FRAME_WDATA    (2U)
-#define SPI_FRAME_WCRC     (3U)
-#define SPI_FRAME_RDATA    (2U)
-#define SPI_FRAME_RCRC     (3U)
-
-// Bit positions of SPI_FRAME_PAGE_RW
-#define SPI_BITPOS_RESERVED (0U)
-#define SPI_BITPOS_RW       (4U)
-#define SPI_BITPOS_PAGE     (5U)
+// SPI protocol constants
+#define SPI_PAGE_MASK       ((uint8_t)0x07U) /* 3-bit page number extraction */
+#define SPI_ADDR_MASK       ((uint8_t)0xFFU) /* 8-bit register address mask */
+#define SPI_PAGE_SHIFT      ((uint8_t)5U)    /* Page field position in command byte */
+#define SPI_PAGE_BYTE_SHIFT ((uint8_t)8U)    /* Extract page from 16-bit address */
 
 // Initial value for serial communication CRC.
 #define COMM_CRC_INITIAL_VALUE ((uint32_t)(0xFFU))
@@ -131,7 +125,7 @@ const static uint8_t CRC8_TABLE[] = {
  *
  * @retval CRC value for data
  */
-static uint8_t getCRC8Val(const uint8_t *data, uint8_t len) {
+static uint8_t IO_getCRC8Val(const uint8_t *data, uint8_t len) {
     uint8_t crc = COMM_CRC_INITIAL_VALUE;
 
     for (uint8_t i = 0U; i < len; i++) {
@@ -141,91 +135,131 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t len) {
     return crc;
 }
 
-int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData) {
-    uint8_t frame[SPI_FRAME_LEN] = {0U};
+static inline int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle) {
+    const bool invalidHandleCondition_sync = \
+        ((handle->ioRead == NULL) || (handle->ioWrite == NULL));
+    const bool invalidHandleCondition_async = \
+        ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) ||
+         (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL));
 
-    int32_t status = Pmic_checkPmicHandle(handle);
+    if ((handle == NULL) || (handle->commHandle0 == NULL)) {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if (handle->asyncEnable && invalidHandleCondition_async) {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if ((handle->asyncEnable == (bool)false) && invalidHandleCondition_sync) {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    return PMIC_ST_SUCCESS;
+}
+
+int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData) {
+    uint8_t page = (regAddr >> SPI_PAGE_BYTE_SHIFT) & SPI_PAGE_MASK;
+    uint8_t spiFrame[SPI_TX_FRAME_LEN] = {0U};
+    uint8_t frameLen = 3U;
+
+    // Check handle
+    int32_t status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    if (regAddr > UINT8_MAX) {
-        return PMIC_ST_ERR_INV_PARAM;
-    }
+    // Create SPI frame
+    spiFrame[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK); // ADDR[7:0]
+    spiFrame[1U] = (uint8_t)(page << SPI_PAGE_SHIFT) | // PAGE[2:0]
+                   (SPI_WRITE_BIT << 4U);              // R/W = 0
+    spiFrame[2U] = txData;                             // DATA
 
-    // Big-endian
-    frame[SPI_FRAME_ADDR] = regAddr;
-    frame[SPI_FRAME_PAGE_RW] = (0U << SPI_BITPOS_PAGE) | (0U << SPI_BITPOS_RW) | (0U << SPI_BITPOS_RESERVED);
-    frame[SPI_FRAME_WDATA] = txData;
-
+    // Calculate and append CRC if enabled
     if (handle->crcEnable) {
-        frame[SPI_FRAME_WCRC] = getCRC8Val(frame, 3U);
+        spiFrame[3U] = IO_getCRC8Val(spiFrame, frameLen);
+        frameLen++;
     }
 
-    return handle->ioWrite(handle, regAddr, &frame[SPI_FRAME_WDATA], (handle->crcEnable) ? 2U : 1U);
+    // Perform SPI transfer (contents of spiFrame is written to the PMIC)
+    if (handle->asyncEnable) {
+        status = handle->asyncTxStart(handle, page, spiFrame[0U], spiFrame, frameLen);
+        if (status == PMIC_ST_SUCCESS) {
+            status = handle->asyncTxAwait(handle);
+        }
+    } else {
+        status = handle->ioWrite(handle, page, spiFrame[0U], spiFrame, frameLen);
+    }
+
+    return status;
 }
 
 int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_critSecStart(handle);
+    Pmic_criticalSectionStart(handle);
     status = Pmic_ioTxByte(handle, regAddr, txData);
-    Pmic_critSecStop(handle);
-
-    return status;
-}
-
-int32_t Pmic_ioTxByte_endCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData)
-{
-    int32_t status = Pmic_ioTxByte(handle, regAddr, txData);
-    Pmic_critSecStop(handle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData) {
-    uint8_t frame[SPI_FRAME_LEN] = {0U};
+    uint8_t page = (regAddr >> SPI_PAGE_BYTE_SHIFT) & SPI_PAGE_MASK;
+    uint8_t spiFrame[SPI_RX_FRAME_LEN] = {0U};
+    uint8_t frameLen = 3U;
 
-    int32_t status = Pmic_checkPmicHandle(handle);
+    // Check handle
+    int32_t status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    if (regAddr > UINT8_MAX) {
-        return PMIC_ST_ERR_INV_PARAM;
+    // Create SPI frame
+    spiFrame[0U] = (uint8_t)(regAddr & SPI_ADDR_MASK); // ADDR[7:0]
+    spiFrame[1U] = (uint8_t)(page << SPI_PAGE_SHIFT) | // PAGE[2:0]
+                   (SPI_READ_BIT << 4U);               // R/W = 1
+    spiFrame[2U] = 0x00U;                              // Dummy byte
+
+    // Increase frame length if CRC is enabled. The fourth byte
+    // is also a dummy byte that is to be replaced by the PMIC
+    if (handle->crcEnable) {
+        spiFrame[3U] = 0x00U;
+        frameLen++;
     }
 
-    // Big-endian
-    frame[SPI_FRAME_ADDR] = regAddr;
-    frame[SPI_FRAME_PAGE_RW] = (0U << SPI_BITPOS_PAGE) | (1U << SPI_BITPOS_RW) | (0U << SPI_BITPOS_RESERVED);
-
-    status = handle->ioRead(handle, regAddr, &frame[SPI_FRAME_RDATA], (handle->crcEnable) ? 2U : 1U);
-    if (status != PMIC_ST_SUCCESS) {
-        return status;
+    // Perform SPI transfer (contents of spiFrame is simultaneously written and overwritten)
+    if (handle->asyncEnable) {
+        status = handle->asyncRxStart(handle, page, spiFrame[0U], spiFrame, frameLen);
+        if (status == PMIC_ST_SUCCESS) {
+            status = handle->asyncRxAwait(handle);
+        }
+    } else {
+        status = handle->ioRead(handle, page, spiFrame[0U], spiFrame, frameLen);
     }
 
-    if (handle->crcEnable & (getCRC8Val(frame, 3U) != frame[SPI_FRAME_RCRC])) {
-        return PMIC_ST_ERR_INV_COMM_CRC;
+    // Verify received CRC
+    if ((status == PMIC_ST_SUCCESS) && handle->crcEnable) {
+        if (spiFrame[3U] != IO_getCRC8Val(spiFrame, 3U)) {
+            status = PMIC_ST_ERR_DATA_IO_CRC;
+        }
     }
 
-    *rxData = frame[SPI_FRAME_RDATA];
-    return PMIC_ST_SUCCESS;
+    // Save data
+    if (status == PMIC_ST_SUCCESS) {
+        *rxData = spiFrame[2U];
+    }
+
+    return status;
 }
 
 int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_critSecStart(handle);
+    Pmic_criticalSectionStart(handle);
     status = Pmic_ioRxByte(handle, regAddr, rxData);
-    Pmic_critSecStop(handle);
+    Pmic_criticalSectionStop(handle);
 
     return status;
-}
-
-int32_t Pmic_ioRxByte_startCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData)
-{
-    Pmic_critSecStart(handle);
-    return Pmic_ioRxByte(handle, regAddr, rxData);
 }
 
 int32_t Pmic_ioTxWordSeq(const Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {
@@ -272,7 +306,7 @@ int32_t Pmic_ioRxWordSeq(const Pmic_Handle_t *handle, uint16_t baseAddr, uint32_
     return PMIC_ST_SUCCESS;
 }
 
-int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value) {
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value) {
     uint8_t regData = 0U;
 
     int32_t status = Pmic_ioRxByte(handle, regAddr, &regData);
@@ -284,26 +318,26 @@ int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uin
     return Pmic_ioTxByte(handle, regAddr, regData);
 }
 
-int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value) {
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_critSecStart(handle);
-    status = Pmic_ioReadModifyWrite(handle, regAddr, shift, mask, value);
-    Pmic_critSecStop(handle);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioUpdateByte(handle, regAddr, shift, mask, value);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
-int32_t Pmic_ioReadModifyWrite_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value) {
-    return Pmic_ioReadModifyWrite(handle, regAddr, shift, 1U << shift, value ? 1U : 0U);
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value) {
+    return Pmic_ioUpdateByte(handle, regAddr, shift, 1U << shift, value ? 1U : 0U);
 }
 
-int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value) {
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_critSecStart(handle);
-    status = Pmic_ioReadModifyWrite_b(handle, regAddr, shift, value);
-    Pmic_critSecStop(handle);
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioUpdateByte_b(handle, regAddr, shift, value);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -311,7 +345,7 @@ int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_Handle_t *handle, uint8_t regAddr,
 int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *isEnabled) {
     uint8_t regData = 0U;
 
-    int32_t status = Pmic_checkPmicHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
@@ -320,7 +354,7 @@ int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *isEnabled) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    status = Pmic_ioRxByte_CS(handle, INTERFACE_CONF_REGADDR, &regData);
+    status = Pmic_ioRxByte_CS(handle, INTERFACE_CONF_REG, &regData);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
@@ -330,10 +364,10 @@ int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *isEnabled) {
 }
 
 int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    return Pmic_ioReadModifyWrite_bCS(handle, INTERFACE_CONF_REGADDR, SPI_CRC_EN_SHIFT, enable);
+    return Pmic_ioUpdateByte_bCS(handle, INTERFACE_CONF_REG, SPI_CRC_EN_SHIFT, enable);
 }

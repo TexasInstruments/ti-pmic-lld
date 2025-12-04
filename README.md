@@ -10,8 +10,8 @@ Modules.
 
 Supported PMIC Devices are:
 
-1. LP8774X-Q1: Three Buck Converters, one Linear Regulator and one Load Switch
-   for AWR and IWR Radar Sensors
+1. LP8774X-Q1: Three Buck Regulators, one Boost Regulator, and one Linear Regulator
+for AWR and IWR Radar Sensors
 
 ## Driver Usage
 
@@ -37,7 +37,7 @@ Once the repository has been cloned, check-out the LP8774X-Q1 support branch
 (to track future changes) or check out a relevant release tag (to freeze
 changes). The development branch for this device can be checked out with:
 
-    git checkout device/coach
+    git checkout device/chariot
 
 #### Including in a Project
 
@@ -72,9 +72,9 @@ in a web browser. To view the documentation, open the file at
 
 #### Driver Initialization
 
-All APIs provided by this driver expect to receive a `Pmic_CoreHandle_t` in
+All APIs provided by this driver expect to receive a `Pmic_Handle_t` in
 order to handle communication with the device. This handle should be created
-through the use of the `Pmic_CoreCfg_t` structure in `pmic.h` and the
+through the use of the `Pmic_HandleCfg_t` structure in `pmic.h` and the
 `Pmic_init()` API.
 
 In order to successfully create a handle, the user will need to provide an
@@ -83,7 +83,7 @@ operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to obtain a critical section. These functions are called by the
 driver before and after I2C/SPI communications. It is up to the user to
 determine what is an appropriate implementation of these APIs as considerations
@@ -95,37 +95,37 @@ and on platforms which support it, a proper shared mutex should be
 claimed/released as appropriate to ensure no other device drivers are
 attempting to use the I2C/SPI bus at the same time.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCritSecStart = <your CS start function>,
-    .pFnPmicCritSecStop = <your CS stop function>,
+    .criticalSectionStart = <your CS start function>,
+    .criticalSectionStop = <your CS stop function>,
 }
 ```
 
 ##### PMIC Handle User Functions: Communications I/O Read/Write
 
-When constructing `Pmic_CoreCfg_t`, two functions need to be provided in order
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
 for the PMIC to know how to read and write over the desired communications
 channel (I2C or SPI, typically). The specific implementation of these functions
 is platform dependent, the chosen processor likely has an SDK which provides
 functions that match relatively closely.
 
-Within the `Pmic_CoreCfg_t` structure, these two functions are:
+Within the `Pmic_HandleCfg_t` structure, these two functions are:
 
 ```c
 {
-    .pFnPmicCommIoRead = <your I/O read function>,
-    .pFnPmicCommIoWrite = <your I/O write function>,
+    .ioRead = <your I/O read function>,
+    .ioWrite = <your I/O write function>,
 }
 ```
 
 ##### Finalizing Initialization
 
-Once the `Pmic_CoreCfg_t` structure has been initialized with the necessary
+Once the `Pmic_HandleCfg_t` structure has been initialized with the necessary
 information, the user should call `Pmic_init()` in order to convert the
-`Pmic_CoreCfg_t` into a `Pmic_CoreHandle_t` which will be used with the rest of
+`Pmic_HandleCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
 the driver APIs.
 
 A full example of what this may look like for LP8774X-Q1 is shown below:
@@ -136,35 +136,19 @@ int32_t status;
 // The handle should either be declared globally, or stored in a structure that
 // can manage access throughout the application, it will need to be re-used
 // often.
-Pmic_CoreHandle_t PmicHandle;
+Pmic_Handle_t pmicHandle = {0U};
 
-Pmic_CoreCfg_t coreCfg = {
-    .validParams = (
-        PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |
-        PMIC_CFG_COMM_MODE_VALID_SHIFT      |
-        PMIC_CFG_CRC_ENABLE_VALID_SHIFT     |
-        PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |
-        PMIC_CFG_SLAVEADDR_VALID_SHIFT      |
-        PMIC_CFG_COMM_HANDLE_VALID_SHIFT    |
-        PMIC_CFG_COMM_IO_RD_VALID_SHIFT     |
-        PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |
-        PMIC_CFG_CRITSEC_START_VALID_SHIFT  |
-        PMIC_CFG_CRITSEC_STOP_VALID_SHIFT
-    ),
-    .instType = PMIC_MAIN_INST,
-    .pmicDeviceType = PMIC_DEV_CHARIOT_LP8774X,
-    .commMode = PMIC_INTF_SPI,
-    .crcEnable = PMIC_ENABLE,
-    .configCrcEnable = PMIC_ENABLE,
-    .slaveAddr = <Device I2C Address>,
-    .pCommHandle = &commHandle,
-    .pFnPmicCommIoRd = PmicCommIoRead,
-    .pFnPmicCommIoWr = PmicCommIoWrite,
-    .pFnPmicCritSecStart = CritSecStart,
-    .pFnPmicCritSecStop = CritSecStop,
+Pmic_HandleCfg_t pmicHandleCfg = {
+    .validParams = PMIC_SYNC_OPERATION_VALID,
+    .crcEnable = (bool)false,
+    .commHandle0 = platform_getCommHandle(),
+    .ioRead = &platform_rxByte,
+    .ioWrite = &platform_txByte,
+    .criticalSectionStart = &platform_critSecStart,
+    .criticalSectionStop = &platform_critSecStop
 };
 
-status = Pmic_init(&PmicHandle, &coreCfg);
+status = Pmic_init(&PmicHandle, &pmicHandleCfg);
 
 // Check the return code of Pmic_init(), if it is PMIC_ST_SUCCESS, the
 // PmicHandle is now valid for use throughout the rest of the application
@@ -192,47 +176,3 @@ reporting for PMIC watchdog features, and supports calculation and response for
 Q&A watchdog mode.
 
 See `include/pmic_wdg.h` for more information on these APIs.
-
-### IRQ Mask Control, Status Read, and Clear
-
-The IRQ module for the PMIC driver supports masking (disable) and un-masking
-(enable) of individual interrupt sources on the PMIC, supports reading the
-status of all interrupts using an optimal algorithm based on the heirarchical
-structure of the IRQs, and supports clearing individual IRQs as handled or all
-at once.
-
-See `include/pmic_irq.h` for more information on these APIs.
-
-#### IRQ Status Read and Clear Example
-
-A common pattern for end-user is to recieve an nINT interrupt on the MCU, check
-IRQ status on the PMIC, handle relevant interrupts, and then clear these IRQ
-sources. An example of how this can be done using the pmic-lld APIs is shown
-below:
-
-``` c
-// Create IRQ status structure
-Pmic_IrqStat_t irqStat;
-
-// Reads all IRQ status registers (optimally, only if relevant), and populates
-// `irqStat` with information necessary for further processing
-pmicStatus = Pmic_irqGetStat(&pmicHandle, &irqStat);
-
-void HandleIrqNum(uint8 irqNum) {
-    // User implemented function to handle IRQs as desired
-}
-
-if (pmicStatus == PMIC_ST_SUCCESS) {
-    uint8_t irqFlagStat;
-    uint8_t irqNum;
-
-    do {
-        irqFlagStat = Pmic_irqGetNextFlag(&irqStat, &irqNum);
-
-        if (irqFlagStat == PMIC_ST_SUCCESS) {
-            HandleIrqNum(irqNum);
-            Pmic_irqClrFlag(&pmicHandle, irqNum);
-        }
-    } while (irqFlagStat == PMIC_ST_SUCCESS);
-}
-```

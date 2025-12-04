@@ -35,15 +35,9 @@
 
 /**
  * @file pmic_io.h
- * @brief PMIC LLD serial communication I/O module.
- */
-
-/**
- * @defgroup DRV_PMIC_IO_MODULE PMIC Driver I/O Module
  *
- * @brief This module contains serial communication related functionalities,
- * including reading and writing to/from the PMIC, as well as disabling/enabling
- * communication CRC.
+ * @brief PMIC LLD transport layer interface. Contains APIs, macros/defines,
+ * and data structures used to communicate with the PMIC device.
  */
 
 /* ========================================================================== */
@@ -66,7 +60,7 @@ extern "C" {
 
 /**
  * @brief Write a byte to the given PMIC `regAddr`, performing CRC on
- * communications if necessary and enabled.
+ * communications if enabled.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -80,7 +74,7 @@ extern "C" {
 int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
 /**
- * @brief Identical to Pmic_ioTxByte() in terms of functionality, but a critical
+ * @brief Identical to `Pmic_ioTxByte()` in terms of functionality, but a critical
  * section is started before the write. After the write, the critical section is
  * stopped.
  *
@@ -94,21 +88,6 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
-
-/**
- * @brief Identical to Pmic_ioTxByte() in terms of functionality, but invokes
- * the critical section stop hook after the write routine.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Register address to write to.
- *
- * @param txData [IN] Data to send to `regAddr`.
- *
- * @return PMIC_ST_SUCCESS if data was successfully transmitted, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_ioTxByte_endCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
 /**
  * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
@@ -126,7 +105,7 @@ int32_t Pmic_ioTxByte_endCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
 
 /**
- * @brief Identical to Pmic_ioRxByte() in terms of functionality, but a critical
+ * @brief Identical to `Pmic_ioRxByte()` in terms of functionality, but a critical
  * section is started before the read. After the read, the critical section is
  * stopped.
  *
@@ -140,21 +119,6 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
-
-/**
- * @brief Identical to Pmic_ioRxByte() in terms of functionality, but invokes
- * the critical section start hook before the read routine.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Register address to read from.
- *
- * @param rxData [IN] Data received from the PMIC.
- *
- * @return PMIC_ST_SUCCESS if data was successfully obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_ioRxByte_startCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
 
 /**
  * @brief Write up to 4 bytes to a linear sequence of registers starting at
@@ -210,10 +174,10 @@ int32_t Pmic_ioRxWordSeq(const Pmic_Handle_t *handle, uint16_t baseAddr, uint32_
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite() API but starts a critical
+ * @brief Identical to `Pmic_ioUpdateByte()` API but starts a critical
  * section before the read, modify, and write operations. Afterwards, the
  * critical section is stopped.
  *
@@ -230,10 +194,10 @@ int32_t Pmic_ioReadModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uin
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite() API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param handle [IN] PMIC interface handle.
@@ -247,11 +211,11 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName(handle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName(handle, regAddr, name, value) \
+    Pmic_ioUpdateByte((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite_CS() API, but only the name of the
+ * @brief Identical to `Pmic_ioUpdateByte_CS()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param handle [IN] PMIC interface handle.
@@ -265,8 +229,8 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-#define Pmic_ioReadModifyWriteByName_CS(handle, regAddr, name, value) \
-    Pmic_ioReadModifyWrite_CS((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+#define Pmic_ioUpdateByteByName_CS(handle, regAddr, name, value) \
+    Pmic_ioUpdateByte_CS((Pmic_Handle_t*)handle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
@@ -283,10 +247,10 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_Handle_t *handle, uint8_t regAddr, 
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite_b() API but starts a critical
+ * @brief Identical to `Pmic_ioUpdateByte_b()` API but starts a critical
  * section before the read, modify, and write operations. Afterwards, the
  * critical section is stopped.
  *
@@ -302,7 +266,7 @@ int32_t Pmic_ioReadModifyWrite_b(const Pmic_Handle_t *handle, uint8_t regAddr, u
  * @return Success code if read-modify-write operation was successful, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
+int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
  * @brief Get serial communication CRC enable/disable status.

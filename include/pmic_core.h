@@ -35,12 +35,10 @@
 
 /**
  * @file pmic_core.h
- * @brief PMIC LLD Core module header file.
- */
-
-/**
- * @defgroup DRV_CORE_MODULE PMIC Driver Core Module
- * @brief Core functionality of the PMIC driver.
+ *
+ * @brief PMIC Core interface. Contains APIs, macros/defines, and data structures
+ * used to configure, control, and interact with PMIC core and miscellaneous
+ * features.
  */
 
 /* ========================================================================= */
@@ -69,6 +67,7 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_2   ((uint8_t)1U)
 #define PMIC_SCRATCH_PAD_REG_3   ((uint8_t)2U)
 #define PMIC_SCRATCH_PAD_REG_4   ((uint8_t)3U)
+#define PMIC_SCRATCH_PAD_REG_MIN (PMIC_SCRATCH_PAD_REG_1)
 #define PMIC_SCRATCH_PAD_REG_MAX (PMIC_SCRATCH_PAD_REG_4)
 /** @} */
 
@@ -89,7 +88,7 @@ extern "C" {
 /* ========================================================================= */
 
 /* ========================================================================= */
-/*                          Function Declarations                            */
+/*                           Function Declarations                           */
 /* ========================================================================= */
 
 /**
@@ -97,48 +96,48 @@ extern "C" {
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param deviceId [OUT] PMIC device ID.
+ * @param devId [OUT] PMIC device ID.
  *
  * @return Success code if PMIC device ID has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDeviceId(const Pmic_Handle_t *handle, uint8_t *deviceId);
+int32_t Pmic_getDeviceId(const Pmic_Handle_t *handle, uint8_t *devId);
 
 /**
  * @brief Get PMIC device silicon revision.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param deviceSiRev [OUT] PMIC device silicon revision.
+ * @param siRev [OUT] PMIC device silicon revision.
  *
  * @return Success code if PMIC device silicon revision has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDeviceSiRev(const Pmic_Handle_t *handle, uint8_t *deviceSiRev);
+int32_t Pmic_getDeviceSiRev(const Pmic_Handle_t *handle, uint8_t *siRev);
 
 /**
  * @brief Get PMIC device NVM ID.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param deviceNvmId [OUT] PMIC device NVM ID.
+ * @param nvmId [OUT] PMIC device NVM ID.
  *
  * @return Success code if PMIC device NVM ID has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDeviceNvmId(const Pmic_Handle_t *handle, uint8_t *deviceNvmId);
+int32_t Pmic_getDeviceNvmId(const Pmic_Handle_t *handle, uint8_t *nvmId);
 
 /**
  * @brief Get PMIC device NVM revision.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param deviceNvmRev [OUT] PMIC device NVM revision.
+ * @param nvmRev [OUT] PMIC device NVM revision.
  *
  * @return Success code if PMIC device NVM revision has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getDeviceNvmRev(const Pmic_Handle_t *handle, uint8_t *deviceNvmRev);
+int32_t Pmic_getDeviceNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev);
 
 /**
  * @brief Enable/disable PMIC user-space register lock.
@@ -189,7 +188,7 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -205,7 +204,7 @@ int32_t Pmic_setScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadReg
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

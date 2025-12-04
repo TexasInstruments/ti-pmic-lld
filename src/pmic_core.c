@@ -33,7 +33,7 @@
 /**
  * @file pmic_io.c
  *
- * @brief This file contains LLD-Communication wrappers with CRC8 support for SPI.
+ * @brief Core module API definitions.
  */
 
 /* ========================================================================== */
@@ -52,60 +52,60 @@
 /*                           Function Definitions                             */
 /* ========================================================================== */
 
-int32_t Pmic_getDeviceId(const Pmic_Handle_t *handle, uint8_t *deviceId) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_getDeviceId(const Pmic_Handle_t *handle, uint8_t *devId) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    *deviceId = handle->deviceId;
+    *devId = handle->devId;
     return PMIC_ST_SUCCESS;
 }
 
-int32_t Pmic_getDeviceSiRev(const Pmic_Handle_t *handle, uint8_t *deviceSiRev) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_getDeviceSiRev(const Pmic_Handle_t *handle, uint8_t *siRev) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    *deviceSiRev = handle->deviceSiRev;
+    *siRev = handle->siRev;
     return PMIC_ST_SUCCESS;
 }
 
-int32_t Pmic_getDeviceNvmId(const Pmic_Handle_t *handle, uint8_t *deviceNvmId) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_getDeviceNvmId(const Pmic_Handle_t *handle, uint8_t *nvmId) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    *deviceNvmId = handle->deviceNvmId;
+    *nvmId = handle->nvmId;
     return PMIC_ST_SUCCESS;
 }
 
-int32_t Pmic_getDeviceNvmRev(const Pmic_Handle_t *handle, uint8_t *deviceNvmRev) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_getDeviceNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    *deviceNvmRev = handle->deviceNvmRev;
+    *nvmRev = handle->nvmRev;
     return PMIC_ST_SUCCESS;
 }
 
 int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock) {
     const uint8_t unlockVal = 0x9BU;
     const uint8_t lockVal = 0xAAU;
-    int32_t status = Pmic_checkPmicHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    return Pmic_ioTxByte_CS(handle, REGISTER_LOCK_REGADDR, lock ? lockVal : unlockVal);
+    return Pmic_ioTxByte_CS(handle, REGISTER_LOCK_REG, lock ? lockVal : unlockVal);
 }
 
 int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked) {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
@@ -114,7 +114,7 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    status = Pmic_ioRxByte_CS(handle, REGISTER_LOCK_REGADDR, &regData);
+    status = Pmic_ioRxByte_CS(handle, REGISTER_LOCK_REG, &regData);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
@@ -123,17 +123,17 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked) {
     return PMIC_ST_SUCCESS;
 }
 
-int32_t Pmic_setScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
 
-    return Pmic_ioTxByte_CS(handle, SCRATCH_PAD_REG_1_REGADDR + scratchPadRegNum, value);
+    return Pmic_ioTxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
 }
 
-int32_t Pmic_getScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value) {
-    int32_t status = Pmic_checkPmicHandle(handle);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value) {
+    int32_t status = Pmic_checkHandle(handle);
     if (status != PMIC_ST_SUCCESS) {
         return status;
     }
@@ -142,5 +142,5 @@ int32_t Pmic_getScratchPadVal(const Pmic_Handle_t *handle, uint8_t scratchPadReg
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    return Pmic_ioRxByte_CS(handle, SCRATCH_PAD_REG_1_REGADDR + scratchPadRegNum, value);
+    return Pmic_ioRxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
 }

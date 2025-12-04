@@ -35,11 +35,7 @@
 
 /**
  * @file pmic_common.h
- * @brief APIs and macros/typedefs commonly used across PMIC LLD.
- */
-
-/**
- * @defgroup DRV_PMIC_COMMON_MODULE PMIC Driver Common Module
+ *
  * @brief APIs and macros/typedefs commonly used across PMIC LLD.
  */
 
@@ -60,14 +56,48 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- * @anchor Pmic_ArraySizeMacro
- * @name PMIC Array Size Macro
+ * @anchor Pmic_ErrorCodes
+ * @name PMIC Error Codes
  *
- * @brief Macro used to find the size of an array.
+ * @brief Error codes returned by PMIC APIs. Application code should check the
+ * return code of PMIC LLD APIs (if any) and handle errors appropriately.
  *
  * @{
  */
-#define COUNT(x) (sizeof(x) / sizeof(x[0]))
+#define PMIC_ST_SUCCESS               (-((int32_t)0))
+#define PMIC_ST_ERR_INV_HANDLE        (-((int32_t)1))
+#define PMIC_ST_ERR_NULL_PARAM        (-((int32_t)2))
+#define PMIC_ST_ERR_INV_PARAM         (-((int32_t)3))
+#define PMIC_ST_ERR_NULL_FPTR         (-((int32_t)4))
+#define PMIC_ST_ERR_INSUFFICIENT_CFG  (-((int32_t)5))
+#define PMIC_ST_ERR_SPI_COMM_FAIL     (-((int32_t)6))
+#define PMIC_ST_ERR_I2C_COMM_FAIL     (-((int32_t)7))
+#define PMIC_ST_ERR_DATA_IO_CRC       (-((int32_t)8))
+#define PMIC_ST_ERR_NOT_SUPPORTED     (-((int32_t)9))
+#define PMIC_ST_WARN_NO_IRQ_REMAINING (-((int32_t)100))
+/** @} */
+
+/**
+ * @anchor Pmic_ArraySizeMacro
+ * @name PMIC Array Size Macro
+ *
+ * @brief Macro used to find the size of a static array.
+ *
+ * @{
+ */
+#define COUNT(x) (sizeof(x)/sizeof(x[0]))
+/** @} */
+
+/**
+ * @anchor Pmic_EnableDisable
+ * @name PMIC Enable/Disable
+ *
+ * @brief Broadly used to enable or disable a feature.
+ *
+ * @{
+ */
+#define PMIC_ENABLE  ((bool)true)
+#define PMIC_DISABLE ((bool)false)
 /** @} */
 
 /* ========================================================================== */
@@ -89,69 +119,91 @@ extern "C" {
  * @param drvInitStat Driver initialization status. Used by LLD as a measure to
  * prevent corrupted handle usage.
  *
- * @param deviceType PMIC device type.
+ * @param devId PMIC device identifier.
  *
- * @param deviceId PMIC device identifier.
+ * @param nvmId PMIC NVM identifier.
  *
- * @param deviceSiRev PMIC device silicon revision.
+ * @param nvmRev PMIC NVM revision.
  *
- * @param commMode Communication mode of the PMIC. Some PMICs may only have one
- * communication mode while others could have multiple (e.g., single I2C, dual I2C,
- * SPI).
- *
- * @param slaveAddr Main PMIC device address.
- *
- * @param qaSlaveAddr Address for interacting with PMIC WDG Q&A.
- *
- * @param nvmSlaveAddr Address for interacting with PMIC NVM space.
- *
- * @param i2c1Speed I2C1 speed. Not applicable if PMIC device does not support
- *
- * @param i2c2Speed I2C2 speed.
+ * @param siRev PMIC silicon revision.
  *
  * @param crcEnable Status of whether serial communication CRC is enabled. Set to true
  * if enabled, false otherwise.
  *
- * @param commHandle Pointer to serial communication handle for the PMIC device.
+ * @param asyncEnable Enable asynchronous serial communication operation. If set
+ * to true, the driver shall use the asynchronous read/write hooks to transfer
+ * data from/to the PMIC instead of synchronous hooks.
  *
- * @param qaCommHandle Pointer to serial communication handle for PMIC WDG.
+ * @param commHandle0 Primary serial communication handle.
  *
- * @param ioRead Function pointer to platform-specific serial communication
- * read API.
+ * @param taskHandle Handle to the application layer task that is responsible
+ * for configuring, controlling, servicing, and/or interacting with the PMIC
+ * device.
  *
- * @param ioWrite Function pointer to platform-specific serial communication
- * write API.
+ * @param ioRead Function pointer to platform-specific synchronous serial
+ * communication read API.
  *
- * @param critSecStart Function pointer to OS-specific critical section start.
+ * @param ioWrite Function pointer to platform-specific synchronous serial
+ * communication write API.
  *
- * @param critSecStop Function pointer to OS-specific critical section stop.
+ * @param asyncRxStart Function pointer to platform-specific asynchronous read
+ * transfer start API. Typically initiates a DMA read transfer. The DMA typically
+ * handles the memory->peripheral and/or peripheral->memory transfer so that the
+ * CPU can enter LPM or so that the calling task can be suspended (put into a blocked
+ * state).
  *
- * @param irqResponse Function pointer to application-specific IRQ response
- * when an IRQ is detected during WDG servicing.
+ * @param asyncTxStart Function pointer to platform-specific asynchronous write
+ * transfer start API. Typically initiates a DMA write transfer. The DMA typically
+ * handles the memory->peripheral and/or peripheral->memory transfer so that the
+ * CPU can enter LPM or so that the calling task can be suspended (put into a blocked
+ * state).
+ *
+ * @param asyncRxAwait Function pointer to platform-specific asynchronous read
+ * transfer await API. Typically suspends the calling task so that other tasks
+ * can run. After call invocation (i.e., at the end of the API routine), data
+ * should be obtained from the PMIC and the task should resume.
+ *
+ * @param asyncTxAwait Function pointer to platform-specific asynchronous write
+ * transfer await API. Typically suspends the calling task so that other tasks
+ * can run. After call invocation (i.e., at the end of the API routine),
+ * transmission of data to the PMIC should be completed and the task should resume.
+ *
+ * @param criticalSectionStart Function pointer to OS-specific critical section
+ * start API. Typically takes a mutex/semaphore. Invoked by the driver when a
+ * shared resource such as a communication bus is required to be used.
+ *
+ * @param criticalSectionStop Function pointer to OS-specific critical section
+ * stop API. Typically releases a mutex/semaphore. Invoked by the driver once a
+ * shared resource such as a communication bus is done being used.
+ *
+ * @param irqResponseCallback Optional function pointer to application-specific
+ * response to an interrupt request during the servicing of the PMIC watchdog in
+ * Q&A mode. The driver invokes this hook if it detects a PMIC interrupt or fault
+ * when sending watchdog answer bytes to the PMIC.
  */
 typedef struct Pmic_Handle_s {
     uint32_t drvInitStat;
-    uint8_t deviceType;
-    uint8_t deviceId;
-    uint8_t deviceSiRev;
-    uint8_t deviceNvmId;
-    uint8_t deviceNvmRev;
-    uint8_t commMode;
-    uint8_t slaveAddr;
-    uint8_t qaSlaveAddr;
-    uint8_t nvmSlaveAddr;
-    uint8_t i2c1Speed;
-    uint8_t i2c2Speed;
+    uint8_t devId;
+    uint8_t nvmId;
+    uint8_t nvmRev;
+    uint8_t siRev;
     bool crcEnable;
-    void *commHandle;
-    void *qaCommHandle;
+    bool asyncEnable;
+    void *commHandle0;
+    void *taskHandle;
     int32_t (*ioRead)(
-        const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, uint8_t *rxBuf, uint8_t bufLen);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
     int32_t (*ioWrite)(
-        const struct Pmic_Handle_s *pmicHandle, uint16_t regAddr, const uint8_t *txBuf, uint8_t bufLen);
-    void (*critSecStart)(void);
-    void (*critSecStop)(void);
-    void (*irqResponse)(void);
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncRxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncTxStart)(
+        const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    int32_t (*asyncRxAwait)(const struct Pmic_Handle_s *handle);
+    int32_t (*asyncTxAwait)(const struct Pmic_Handle_s *handle);
+    void (*criticalSectionStart)(void);
+    void (*criticalSectionStop)(void);
+    void (*irqResponseCallback)(void);
 } Pmic_Handle_t;
 
 /* ========================================================================== */
@@ -195,9 +247,9 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
  * @param handle Pointer to the PMIC core handle structure.
  * @return void No return value.
  */
-static inline void Pmic_critSecStart(const Pmic_Handle_t *handle) {
-    if ((handle != NULL) && (handle->critSecStart != NULL)) {
-        handle->critSecStart();
+static inline void Pmic_criticalSectionStart(const Pmic_Handle_t *handle) {
+    if ((handle != NULL) && (handle->criticalSectionStart != NULL)) {
+        handle->criticalSectionStart();
     }
 }
 
@@ -209,9 +261,9 @@ static inline void Pmic_critSecStart(const Pmic_Handle_t *handle) {
  *
  * @return void No return value.
  */
-static inline void Pmic_critSecStop(const Pmic_Handle_t *handle) {
-    if ((handle != NULL) && (handle->critSecStop != NULL)) {
-        handle->critSecStop();
+static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *handle) {
+    if ((handle != NULL) && (handle->criticalSectionStop != NULL)) {
+        handle->criticalSectionStop();
     }
 }
 
