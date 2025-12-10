@@ -23,6 +23,9 @@ build_log.txt
 build/
 *.gcna
 
+# LDRA artifacts
+*.exh
+
 # Documentation
 *.pdf
 
