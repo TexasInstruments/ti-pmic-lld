@@ -47,6 +47,16 @@ CC := clang
 # Coverage flags
 COV_FLAGS = -fprofile-arcs -ftest-coverage
 
+# Coverage tool (standardized)
+GCOV = llvm-cov-14 gcov
+
+# LDRA instrumentation support - relax warnings for instrumented code
+ifdef LDRA_INSTRUMENT
+    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
+    CFLAGS := $(filter-out -Werror,$(CFLAGS))
+    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
+endif
+
 # Scripts directory
 SCRIPTS_DIR = ../../../scripts
 
