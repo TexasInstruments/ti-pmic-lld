@@ -50,13 +50,6 @@ COV_FLAGS = -fprofile-arcs -ftest-coverage
 # Coverage tool (standardized)
 GCOV = llvm-cov-14 gcov
 
-# LDRA instrumentation support - relax warnings for instrumented code
-ifdef LDRA_INSTRUMENT
-    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
-    CFLAGS := $(filter-out -Werror,$(CFLAGS))
-    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
-endif
-
 # Scripts directory
 SCRIPTS_DIR = ../../../scripts
 
@@ -180,6 +173,13 @@ CFLAGS = -Weverything \
          -Wno-bad-function-cast \
          -Werror \
          -std=c99 $(INCLUDES)
+
+# LDRA instrumentation support - relax warnings for instrumented code
+ifdef LDRA_INSTRUMENT
+    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
+    CFLAGS := $(filter-out -Werror,$(CFLAGS))
+    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
+endif
 
 # Build mode specific flags
 ifeq ($(BUILD),mock)

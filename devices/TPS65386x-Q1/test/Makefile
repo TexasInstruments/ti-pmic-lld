@@ -19,13 +19,6 @@ COV_FLAGS = -fprofile-arcs -ftest-coverage
 # Coverage tool (standardized)
 GCOV = llvm-cov-14 gcov
 
-# LDRA instrumentation support - relax warnings for instrumented code
-ifdef LDRA_INSTRUMENT
-    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
-    CFLAGS := $(filter-out -Werror,$(CFLAGS))
-    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
-endif
-
 # Unity source file
 UNITY_SRC = $(UNITY_DIR)/src/unity.c
 
@@ -70,6 +63,13 @@ CFLAGS = -Weverything \
          -Wno-missing-variable-declarations \
          -Werror \
          -std=c99 -I. -I$(INC_DIR)
+
+# LDRA instrumentation support - relax warnings for instrumented code
+ifdef LDRA_INSTRUMENT
+    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
+    CFLAGS := $(filter-out -Werror,$(CFLAGS))
+    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
+endif
 
 # PMIC driver source files (always needed)
 PMIC_SOURCES = \
