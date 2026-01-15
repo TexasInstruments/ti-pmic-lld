@@ -72,16 +72,19 @@ ifdef LDRA_INSTRUMENT
 endif
 
 # PMIC driver source files (always needed)
+# For LDRA instrumentation: Use inszt_*.c or ipmic_*.c files if they exist (created by Phase 21q)
+# Otherwise use original *.c files
+# Note: Jenkins uses inszt_* prefix, local dev may use ipmic_* prefix
 PMIC_SOURCES = \
-	$(SRC_DIR)/pmic.c \
-	$(SRC_DIR)/pmic_common.c \
-	$(SRC_DIR)/pmic_core.c \
-	$(SRC_DIR)/pmic_io.c \
-	$(SRC_DIR)/pmic_fsm.c \
-	$(SRC_DIR)/pmic_irq.c \
-	$(SRC_DIR)/pmic_power.c \
-	$(SRC_DIR)/pmic_wdg.c \
-	$(SRC_DIR)/pmic_esm.c
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic.c),inszt_pmic.c,$(if $(wildcard $(SRC_DIR)/ipmic.c),ipmic.c,pmic.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_common.c),inszt_pmic_common.c,$(if $(wildcard $(SRC_DIR)/ipmic_common.c),ipmic_common.c,pmic_common.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_core.c),inszt_pmic_core.c,$(if $(wildcard $(SRC_DIR)/ipmic_core.c),ipmic_core.c,pmic_core.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_io.c),inszt_pmic_io.c,$(if $(wildcard $(SRC_DIR)/ipmic_io.c),ipmic_io.c,pmic_io.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_fsm.c),inszt_pmic_fsm.c,$(if $(wildcard $(SRC_DIR)/ipmic_fsm.c),ipmic_fsm.c,pmic_fsm.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_irq.c),inszt_pmic_irq.c,$(if $(wildcard $(SRC_DIR)/ipmic_irq.c),ipmic_irq.c,pmic_irq.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_power.c),inszt_pmic_power.c,$(if $(wildcard $(SRC_DIR)/ipmic_power.c),ipmic_power.c,pmic_power.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_wdg.c),inszt_pmic_wdg.c,$(if $(wildcard $(SRC_DIR)/ipmic_wdg.c),ipmic_wdg.c,pmic_wdg.c)) \
+	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_esm.c),inszt_pmic_esm.c,$(if $(wildcard $(SRC_DIR)/ipmic_esm.c),ipmic_esm.c,pmic_esm.c))
 
 # Test source files
 TEST_SOURCES = \
