@@ -88,29 +88,29 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_ENABLE_VALID                      ((uint32_t)(1U << 0U))
-#define PMIC_BUCK_PLDN_EN_VALID                     ((uint32_t)(1U << 1U))
-#define PMIC_BUCK_FPWM_EN_VALID                     ((uint32_t)(1U << 2U))
-#define PMIC_BUCK_UV_THR_VALID                      ((uint32_t)(1U << 3U))
-#define PMIC_BUCK_OV_THR_VALID                      ((uint32_t)(1U << 4U))
-#define PMIC_BUCK_ILIM_SEL_VALID                    ((uint32_t)(1U << 5U))
-#define PMIC_BUCK_OVP_SEL_VALID                     ((uint32_t)(1U << 6U))
-#define PMIC_BUCK_OV_SEL_VALID                      ((uint32_t)(1U << 7U))
-#define PMIC_BUCK_UV_SEL_VALID                      ((uint32_t)(1U << 8U))
-#define PMIC_BUCK_SC_SEL_VALID                      ((uint32_t)(1U << 9U))
-#define PMIC_BUCK_RV_CONF_VALID                     ((uint32_t)(1U << 10U))
-#define PMIC_BUCK_SLEW_RATE_VALID                   ((uint32_t)(1U << 11U))
-#define PMIC_BUCK_DEGLITCH_SEL_VALID                ((uint32_t)(1U << 12U))
-#define PMIC_BUCK_DISCHARGE_SEL_VALID               ((uint32_t)(1U << 13U))
-#define PMIC_BUCK_SS_EN_VALID                       ((uint32_t)(1U << 14U))
-#define PMIC_BUCK_SSM_SEL_VALID                     ((uint32_t)(1U << 15U))
-#define PMIC_BUCK_VSET_VALID                        ((uint32_t)(1U << 16U))
-#define PMIC_BUCK_UVLO_RISING_VALID                 ((uint32_t)(1U << 17U))
-#define PMIC_BUCK_UVLO_FALLING_VALID                ((uint32_t)(1U << 18U))
-#define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         ((uint32_t)(1U << 19U))
-#define PMIC_BUCK_VSET_ACTIVE_VALID                 ((uint32_t)(1U << 20U))
-#define PMIC_BUCK_VSET_LPWR_VALID                   ((uint32_t)(1U << 21U))
-#define PMIC_BUCK_VMON_ONLY_VALID                   ((uint32_t)(1U << 22U))
+#define PMIC_BUCK_ENABLE_VALID                      (1U << 0U)
+#define PMIC_BUCK_PLDN_EN_VALID                     (1U << 1U)
+#define PMIC_BUCK_FPWM_EN_VALID                     (1U << 2U)
+#define PMIC_BUCK_UV_THR_VALID                      (1U << 3U)
+#define PMIC_BUCK_OV_THR_VALID                      (1U << 4U)
+#define PMIC_BUCK_ILIM_SEL_VALID                    (1U << 5U)
+#define PMIC_BUCK_OVP_SEL_VALID                     (1U << 6U)
+#define PMIC_BUCK_OV_SEL_VALID                      (1U << 7U)
+#define PMIC_BUCK_UV_SEL_VALID                      (1U << 8U)
+#define PMIC_BUCK_SC_SEL_VALID                      (1U << 9U)
+#define PMIC_BUCK_RV_CONF_VALID                     (1U << 10U)
+#define PMIC_BUCK_SLEW_RATE_VALID                   (1U << 11U)
+#define PMIC_BUCK_DEGLITCH_SEL_VALID                (1U << 12U)
+#define PMIC_BUCK_DISCHARGE_SEL_VALID               (1U << 13U)
+#define PMIC_BUCK_SS_EN_VALID                       (1U << 14U)
+#define PMIC_BUCK_SSM_SEL_VALID                     (1U << 15U)
+#define PMIC_BUCK_VSET_VALID                        (1U << 16U)
+#define PMIC_BUCK_UVLO_RISING_VALID                 (1U << 17U)
+#define PMIC_BUCK_UVLO_FALLING_VALID                (1U << 18U)
+#define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         (1U << 19U)
+#define PMIC_BUCK_VSET_ACTIVE_VALID                 (1U << 20U)
+#define PMIC_BUCK_VSET_LPWR_VALID                   (1U << 21U)
+#define PMIC_BUCK_VMON_ONLY_VALID                   (1U << 22U)
 #define PMIC_BUCK_CTRL_ALL_VALID                    (PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID | \
                                                      PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | \
                                                      PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID)
@@ -129,21 +129,21 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_LDO_ENABLE_VALID                       ((uint32_t)(1U << 0U))
-#define PMIC_LDO_MODE_VALID                         ((uint32_t)(1U << 1U))
-#define PMIC_LDO_VSET_VALID                         ((uint32_t)(1U << 2U))
-#define PMIC_LDO_VMON_ONLY_VALID                    ((uint32_t)(1U << 3U))
-#define PMIC_LDO_DISCHARGE_EN_VALID                 ((uint32_t)(1U << 4U))
-#define PMIC_LDO_DISCHARGE_SEL_VALID                ((uint32_t)(1U << 5U))
-#define PMIC_LDO_DEGLITCH_SEL_VALID                 ((uint32_t)(1U << 6U))
-#define PMIC_LDO_UV_THR_VALID                       ((uint32_t)(1U << 7U))
-#define PMIC_LDO_OV_THR_VALID                       ((uint32_t)(1U << 8U))
-#define PMIC_LDO_ILIM_SEL_VALID                     ((uint32_t)(1U << 9U))
-#define PMIC_LDO_OVP_SEL_VALID                      ((uint32_t)(1U << 10U))
-#define PMIC_LDO_OV_SEL_VALID                       ((uint32_t)(1U << 11U))
-#define PMIC_LDO_UV_SEL_VALID                       ((uint32_t)(1U << 12U))
-#define PMIC_LDO_SC_SEL_VALID                       ((uint32_t)(1U << 13U))
-#define PMIC_LDO_RV_CONF_VALID                      ((uint32_t)(1U << 14U))
+#define PMIC_LDO_ENABLE_VALID                       (1U << 0U)
+#define PMIC_LDO_MODE_VALID                         (1U << 1U)
+#define PMIC_LDO_VSET_VALID                         (1U << 2U)
+#define PMIC_LDO_VMON_ONLY_VALID                    (1U << 3U)
+#define PMIC_LDO_DISCHARGE_EN_VALID                 (1U << 4U)
+#define PMIC_LDO_DISCHARGE_SEL_VALID                (1U << 5U)
+#define PMIC_LDO_DEGLITCH_SEL_VALID                 (1U << 6U)
+#define PMIC_LDO_UV_THR_VALID                       (1U << 7U)
+#define PMIC_LDO_OV_THR_VALID                       (1U << 8U)
+#define PMIC_LDO_ILIM_SEL_VALID                     (1U << 9U)
+#define PMIC_LDO_OVP_SEL_VALID                      (1U << 10U)
+#define PMIC_LDO_OV_SEL_VALID                       (1U << 11U)
+#define PMIC_LDO_UV_SEL_VALID                       (1U << 12U)
+#define PMIC_LDO_SC_SEL_VALID                       (1U << 13U)
+#define PMIC_LDO_RV_CONF_VALID                      (1U << 14U)
 #define PMIC_LDO_CTRL_ALL_VALID                     (PMIC_LDO_VMON_ONLY_VALID | PMIC_LDO_DISCHARGE_SEL_VALID | \
                                                      PMIC_LDO_DISCHARGE_EN_VALID | PMIC_LDO_ENABLE_VALID)
 /** @} */
@@ -161,9 +161,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_TWARN_STAY_IN_SAFE_STATE_VALID         ((uint32_t)(1U << 0U))
-#define PMIC_TSD_IMM_LEVEL_VALID                    ((uint32_t)(1U << 1U))
-#define PMIC_TWARN_LEVEL_VALID                      ((uint32_t)(1U << 2U))
+#define PMIC_TWARN_STAY_IN_SAFE_STATE_VALID         (1U << 0U)
+#define PMIC_TSD_IMM_LEVEL_VALID                    (1U << 1U)
+#define PMIC_TWARN_LEVEL_VALID                      (1U << 2U)
 /** @} */
 
 /**
@@ -877,8 +877,7 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * @brief Set PMIC buck configuration.
  *
  * Design: PMICDRV-774
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @note Before setting a buck's configuration, it is recommended to ensure that
  * the resource is disabled first. This API configures the regulator enable last
@@ -924,8 +923,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
  * parameters that are settable by `Pmic_pwrSetBuckCfg()`.
  *
  * Design: PMICDRV-775
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN]  PMIC interface handle.
  * @param buckCfg    [OUT] Buck configurations obtained from the PMIC.
@@ -939,8 +937,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
  * @brief Set PMIC LDO configurations.
  *
  * Design: PMICDRV-641
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @note Before setting the LDO configuration, it is recommended to ensure that
  * the resource is disabled first. This API configures the regulator enable last
@@ -978,8 +975,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
  * configurations that are settable by `Pmic_pwrSetLdoCfg()`.
  *
  * Design: PMICDRV-642
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN]  PMIC interface handle.
  * @param ldoCfg     [OUT] LDO configurations obtained from the PMIC.
@@ -993,8 +989,8 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
  * @brief Get the statuses of a power resource (buck/LDO).
  *
  * Design: PMICDRV-730
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-535, PMICDRV-536
  *
  * @details The following power resource statuses are obtainable from this API
  * 1. active
@@ -1016,8 +1012,8 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *p
  * @brief Set PMIC thermal shutdown configurations.
  *
  * Design: PMICDRV-776
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
+ *               PMICDRV-536
  *
  * @details The following options are configurable via this API
  * 1. Option to stay in safe state as long as TWARN flag is active
@@ -1038,8 +1034,8 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
  * same configurations that are settable by `Pmic_pwrSetTsdCfg()`.
  *
  * Design: PMICDRV-777
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
+ *               PMICDRV-536
  *
  * @param handle [IN]  PMIC interface handle.
  * @param tsdCfg     [OUT] TSD configurations obtained from the PMIC.
@@ -1053,8 +1049,8 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
  * @brief Get the PMIC immediate thermal shutdown status.
  *
  * Design: PMICDRV-778
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
+ *               PMICDRV-536
  *
  * @param handle [IN] PMIC interface handle.
  * @param tsdImmStat [OUT] When set to true, the die junction temperature is
@@ -1070,8 +1066,8 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *handle, bool *tsdImmStat);
  * @brief Set PMIC buck and LDO sequence triggers.
  *
  * Design: PMICDRV-779
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-535
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqTrig_t` and length of array,
  * the API sets sequence trigger configurations of the regulators (whether or not
@@ -1090,8 +1086,8 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuc
  * @brief Get PMIC buck and LDO sequence triggers.
  *
  * Design: PMICDRV-780
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-535
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqTrig_t` and length of array,
  * the API gets sequence trigger configurations of the regulators (whether or not
@@ -1110,8 +1106,8 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSe
  * @brief Set buck and LDO sequence delays.
  *
  * Design: PMICDRV-781
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-535
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API sets sequence delay configurations of the regulators.
@@ -1129,8 +1125,8 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
  * @brief Get buck and LDO sequence delays.
  *
  * Design: PMICDRV-782
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-535
  *
  * @details Given an array of type `Pmic_PwrBuckLdoSeqDly_t` and length of array,
  * the API gets sequence delay configurations of the regulators.

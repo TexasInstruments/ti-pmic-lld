@@ -51,8 +51,9 @@ endif
 endif
 endif
 
-ifeq ($(CC),)
-CC := gcc
+# Compiler selection (override Make's built-in CC=cc default)
+ifeq ($(origin CC),default)
+CC := clang
 endif
 
 INC	= -I./include
@@ -61,7 +62,8 @@ CFLAGS = -fPIC $(INC) -Weverything \
 				 -Wno-documentation \
 				 -Wno-padded \
 				 -Wno-poison-system-directories \
-				 -Wno-covered-switch-default
+				 -Wno-covered-switch-default \
+				 -Werror
 LDFLAGS = -shared
 LIB_DIR = lib
 

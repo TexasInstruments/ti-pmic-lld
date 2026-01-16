@@ -43,13 +43,32 @@
 #include "pmic_io.h"
 #include "regmap/irq.h"
 
+#include <string.h>
+
 #define PMIC_IRQ_MASKABLE     ((bool)true)
 #define PMIC_IRQ_NON_MASKABLE ((bool)false)
+
+/**
+ * @brief Copy Pmic_IrqMask_t structure member-wise
+ */
+static inline void IRQ_copyIrqMask(const Pmic_IrqMask_t *src, Pmic_IrqMask_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqMask_t));
+}
+
+/**
+ * @brief Copy Pmic_IrqStat_t structure member-wise
+ */
+static inline void IRQ_copyIrqStat(const Pmic_IrqStat_t *src, Pmic_IrqStat_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStat_t));
+}
 
 typedef struct Pmic_IrqInfo_s
 {
     uint16_t statRegAddr;
     uint16_t maskRegAddr;
+    uint16_t maskRegAddr2;  /* Secondary mask register (0 if not used) */
     uint8_t bitShift;
     bool isMaskable;
 } Pmic_IrqInfo_t;
@@ -61,76 +80,76 @@ typedef struct Pmic_IrqInfo_s
 static const Pmic_IrqInfo_t pmicIRQs[PMIC_IRQ_INT_MAX + 1U] =
 {
     // WD_ERR_STATUS register (non-standard location at 0x408) - Non-Maskable Interrupts
-    [PMIC_IRQ_WD_RST_NMI]             = {WD_ERR_STATUS_REG, 0, WD_RST_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_WD_FAIL_NMI]            = {WD_ERR_STATUS_REG, 0, WD_FAIL_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_WD_LONGWIN_TIMEOUT_NMI] = {WD_ERR_STATUS_REG, 0, WD_LONGWIN_TIMEOUT_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_WD_RST_NMI]             = {WD_ERR_STATUS_REG, 0, 0, WD_RST_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_WD_FAIL_NMI]            = {WD_ERR_STATUS_REG, 0, 0, WD_FAIL_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_WD_LONGWIN_TIMEOUT_NMI] = {WD_ERR_STATUS_REG, 0, 0, WD_LONGWIN_TIMEOUT_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
 
     // INT_ESM register - Maskable
-    [PMIC_IRQ_ESM_MCU_RST_INT]  = {INT_ESM_REG, MASK_ESM_REG, ESM_MCU_RST_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_ESM_MCU_FAIL_INT] = {INT_ESM_REG, MASK_ESM_REG, ESM_MCU_FAIL_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_ESM_MCU_PIN_INT]  = {INT_ESM_REG, MASK_ESM_REG, ESM_MCU_PIN_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ESM_MCU_RST_INT]  = {INT_ESM_REG, MASK_ESM_REG, 0, ESM_MCU_RST_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ESM_MCU_FAIL_INT] = {INT_ESM_REG, MASK_ESM_REG, 0, ESM_MCU_FAIL_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ESM_MCU_PIN_INT]  = {INT_ESM_REG, MASK_ESM_REG, 0, ESM_MCU_PIN_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
     // INT_FSM_ERR register - Maskable
-    [PMIC_IRQ_I2C2_ERR_INT]      = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, I2C2_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_COMM_ERR_INT]      = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, COMM_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_SOC_PWR_ERR_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, SOC_PWR_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_MCU_PWR_ERR_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, MCU_PWR_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_ORD_SHUTDOWN_INT]  = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, ORD_SHUTDOWN_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_IMM_SHUTOWN_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, IMM_SHUTDOWN_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_I2C2_ERR_INT]      = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, I2C2_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_COMM_ERR_INT]      = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, COMM_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_SOC_PWR_ERR_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, SOC_PWR_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_MCU_PWR_ERR_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, MCU_PWR_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ORD_SHUTDOWN_INT]  = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, ORD_SHUTDOWN_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_IMM_SHUTOWN_INT]   = {INT_FSM_ERR_REG, MASK_FSM_ERR_REG, 0, IMM_SHUTDOWN_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
     // INT_SEVERE_ERR register - Non-Maskable Interrupts
-    [PMIC_IRQ_BG_XMON_INT]  = {INT_SEVERE_ERR_REG, 0, BG_XMON_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_PFSM_ERR_INT] = {INT_SEVERE_ERR_REG, 0, PFSM_ERR_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_VCCA_OVP_INT] = {INT_SEVERE_ERR_REG, 0, VCCA_OVP_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_TSD_IMM_INT]  = {INT_SEVERE_ERR_REG, 0, TSD_IMM_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_BG_XMON_INT]  = {INT_SEVERE_ERR_REG, 0, 0, BG_XMON_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_PFSM_ERR_INT] = {INT_SEVERE_ERR_REG, 0, 0, PFSM_ERR_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_VCCA_OVP_INT] = {INT_SEVERE_ERR_REG, 0, 0, VCCA_OVP_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_TSD_IMM_INT]  = {INT_SEVERE_ERR_REG, 0, 0, TSD_IMM_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
 
     // INT_MODERATE_ERR register - Mixed
-    [PMIC_IRQ_RECOV_CNT_INT]    = {INT_MODERATE_ERR_REG, 0, RECOV_CNT_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_REG_CRC_ERR_INT]  = {INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, REG_CRC_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_BIST_FAIL_INT]    = {INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, BIST_FAIL_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_TSD_ORD_INT]      = {INT_MODERATE_ERR_REG, 0, TSD_ORD_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_RECOV_CNT_INT]    = {INT_MODERATE_ERR_REG, 0, 0, RECOV_CNT_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    [PMIC_IRQ_REG_CRC_ERR_INT]  = {INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, 0, REG_CRC_ERR_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BIST_FAIL_INT]    = {INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, 0, BIST_FAIL_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_TSD_ORD_INT]      = {INT_MODERATE_ERR_REG, 0, 0, TSD_ORD_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
 
     // INT_MISC register - Maskable
-    [PMIC_IRQ_ADC_CONV_READY_INT] = {INT_MISC_REG, MASK_MISC_REG, ADC_CONV_READY_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_PB_RISE_INT]        = {INT_MISC_REG, MASK_MISC_REG, PB_RISE_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_PB_FALL_INT]        = {INT_MISC_REG, MASK_MISC_REG, PB_FALL_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_PB_LONG_INT]        = {INT_MISC_REG, MASK_MISC_REG, PB_LONG_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_TWARN_INT]          = {INT_MISC_REG, MASK_MISC_REG, TWARN_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_REG_UNLOCK_INT]     = {INT_MISC_REG, MASK_MISC_REG, REG_UNLOCK_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_EXT_CLK_INT]        = {INT_MISC_REG, MASK_MISC_REG, EXT_CLK_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_BIST_PASS_INT]      = {INT_MISC_REG, MASK_MISC_REG, BIST_PASS_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ADC_CONV_READY_INT] = {INT_MISC_REG, MASK_MISC_REG, 0, ADC_CONV_READY_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_PB_RISE_INT]        = {INT_MISC_REG, MASK_MISC_REG, 0, PB_RISE_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_PB_FALL_INT]        = {INT_MISC_REG, MASK_MISC_REG, 0, PB_FALL_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_PB_LONG_INT]        = {INT_MISC_REG, MASK_MISC_REG, 0, PB_LONG_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_TWARN_INT]          = {INT_MISC_REG, MASK_MISC_REG, 0, TWARN_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_REG_UNLOCK_INT]     = {INT_MISC_REG, MASK_MISC_REG, 0, REG_UNLOCK_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_EXT_CLK_INT]        = {INT_MISC_REG, MASK_MISC_REG, 0, EXT_CLK_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BIST_PASS_INT]      = {INT_MISC_REG, MASK_MISC_REG, 0, BIST_PASS_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
     // INT_STARTUP register - Maskable
-    [PMIC_IRQ_SOFT_REBOOT_INT] = {INT_STARTUP_REG, MASK_STARTUP_REG, SOFT_REBOOT_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_FSD_INT]         = {INT_STARTUP_REG, MASK_STARTUP_REG, FSD_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_PB_SHORT_INT]    = {INT_STARTUP_REG, MASK_STARTUP_REG, PB_SHORT_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_ENABLE_INT]      = {INT_STARTUP_REG, MASK_STARTUP_REG, ENABLE_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_VSENSE_INT]      = {INT_STARTUP_REG, MASK_STARTUP_REG, VSENSE_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_SOFT_REBOOT_INT] = {INT_STARTUP_REG, MASK_STARTUP_REG, 0, SOFT_REBOOT_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_FSD_INT]         = {INT_STARTUP_REG, MASK_STARTUP_REG, 0, FSD_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_PB_SHORT_INT]    = {INT_STARTUP_REG, MASK_STARTUP_REG, 0, PB_SHORT_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_ENABLE_INT]      = {INT_STARTUP_REG, MASK_STARTUP_REG, 0, ENABLE_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_VSENSE_INT]      = {INT_STARTUP_REG, MASK_STARTUP_REG, 0, VSENSE_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
-    // INT_GPIO register - Non-Maskable Interrupts
-    [PMIC_IRQ_GPIO6_INT] = {INT_GPIO_REG, 0, GPIO6_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_GPIO5_INT] = {INT_GPIO_REG, 0, GPIO5_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_GPIO4_INT] = {INT_GPIO_REG, 0, GPIO4_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_GPIO3_INT] = {INT_GPIO_REG, 0, GPIO3_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_GPIO2_INT] = {INT_GPIO_REG, 0, GPIO2_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
-    [PMIC_IRQ_GPIO1_INT] = {INT_GPIO_REG, 0, GPIO1_INT_SHIFT, PMIC_IRQ_NON_MASKABLE},
+    // INT_GPIO register - Maskable Interrupts (dual mask: FALL and RISE registers)
+    [PMIC_IRQ_GPIO6_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO6_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_GPIO5_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO5_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_GPIO4_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO4_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_GPIO3_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO3_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_GPIO2_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO2_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_GPIO1_INT] = {INT_GPIO_REG, MASK_GPIO_FALL_REG, MASK_GPIO_RISE_REG, GPIO1_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
     // INT_LDO_VMON register - Maskable
-    [PMIC_IRQ_VMON2_UVOV_INT] = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, VMON2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_VMON1_UVOV_INT] = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, VMON1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_VCCA_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, VCCA_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_LDO3_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, LDO3_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_LDO2_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, LDO2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_LDO1_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, LDO1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_VMON2_UVOV_INT] = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, VMON2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_VMON1_UVOV_INT] = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, VMON1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_VCCA_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, VCCA_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_LDO3_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, LDO3_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_LDO2_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, LDO2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_LDO1_UVOV_INT]  = {INT_LDO_VMON_REG, MASK_LDO_VMON_REG, 0, LDO1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
 
     // INT_BUCK register - Maskable
-    [PMIC_IRQ_BUCK4_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, BUCK4_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_BUCK3_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, BUCK3_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_BUCK2_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, BUCK2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
-    [PMIC_IRQ_BUCK1_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, BUCK1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BUCK4_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, 0, BUCK4_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BUCK3_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, 0, BUCK3_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BUCK2_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, 0, BUCK2_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
+    [PMIC_IRQ_BUCK1_UVOV_INT] = {INT_BUCK_REG, MASK_BUCK_REG, 0, BUCK1_UVOV_INT_SHIFT, PMIC_IRQ_MASKABLE},
 };
 
-int32_t Pmic_irqSetMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask)
+int32_t Pmic_irqSetMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -147,17 +166,28 @@ int32_t Pmic_irqSetMask(Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        /* Write to primary mask register */
         status = Pmic_ioUpdateByte_bCS(handle,
                                        pmicIRQs[irqNum].maskRegAddr,
                                        pmicIRQs[irqNum].bitShift,
                                        shouldMask);
+
+        /* If secondary mask register exists, write to it as well */
+        if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].maskRegAddr2 != 0U))
+        {
+            status = Pmic_ioUpdateByte_bCS(handle,
+                                           pmicIRQs[irqNum].maskRegAddr2,
+                                           pmicIRQs[irqNum].bitShift,
+                                           shouldMask);
+        }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqSetMasks(Pmic_Handle_t *handle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks)
+int32_t Pmic_irqSetMasks(const Pmic_Handle_t *handle, uint8_t numIrqMasks, const Pmic_IrqMask_t irqMasks[])
 {
+    Pmic_IrqMask_t irqMasksLocal[PMIC_IRQ_INT_MAX + 1U];
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL))
@@ -170,18 +200,28 @@ int32_t Pmic_irqSetMasks(Pmic_Handle_t *handle, uint8_t numIrqMasks, const Pmic_
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    for (uint8_t i = 0U; (i < numIrqMasks) && (status == PMIC_ST_SUCCESS); i++)
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_irqSetMask(handle, irqMasks[i].irqNum, irqMasks[i].mask);
+        for (uint8_t i = 0U; i < numIrqMasks; i++)
+        {
+            IRQ_copyIrqMask(&irqMasks[i], &irqMasksLocal[i]);
+        }
     }
 
-    return status;
+    for (uint8_t i = 0U; (i < numIrqMasks) && (status == PMIC_ST_SUCCESS); i++)
+    {
+        status = Pmic_irqSetMask(handle, irqMasksLocal[i].irqNum, irqMasksLocal[i].mask);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetMask(Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks)
+int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks)
 {
+    Pmic_IrqMask_t irqMasksLocal[PMIC_IRQ_INT_MAX + 1U];
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    uint8_t regData2 = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL))
     {
@@ -193,9 +233,17 @@ int32_t Pmic_irqGetMask(Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        for (uint8_t i = 0U; i < numIrqMasks; i++)
+        {
+            IRQ_copyIrqMask(&irqMasks[i], &irqMasksLocal[i]);
+        }
+    }
+
     for (uint8_t i = 0U; (i < numIrqMasks) && (status == PMIC_ST_SUCCESS); i++)
     {
-        uint8_t irqNum = irqMasks[i].irqNum;
+        uint8_t irqNum = irqMasksLocal[i].irqNum;
 
         if (irqNum > PMIC_IRQ_INT_MAX)
         {
@@ -206,23 +254,50 @@ int32_t Pmic_irqGetMask(Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask
         if (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)
         {
             // This IRQ is not maskable
-            irqMasks[i].mask = false;
+            irqMasksLocal[i].mask = false;
         }
         else
         {
+            /* Read primary mask register */
             status = Pmic_ioRxByte_CS(handle, pmicIRQs[irqNum].maskRegAddr, &regData);
             if (status == PMIC_ST_SUCCESS)
             {
-                irqMasks[i].mask = Pmic_getBitField_b(regData, pmicIRQs[irqNum].bitShift);
+                bool mask1 = Pmic_getBitField_b(regData, pmicIRQs[irqNum].bitShift);
+
+                /* If secondary mask register exists, read it too */
+                if (pmicIRQs[irqNum].maskRegAddr2 != 0U)
+                {
+                    status = Pmic_ioRxByte_CS(handle, pmicIRQs[irqNum].maskRegAddr2, &regData2);
+                    if (status == PMIC_ST_SUCCESS)
+                    {
+                        bool mask2 = Pmic_getBitField_b(regData2, pmicIRQs[irqNum].bitShift);
+                        /* Interrupt is masked only if BOTH registers have mask set */
+                        irqMasksLocal[i].mask = mask1 && mask2;
+                    }
+                }
+                else
+                {
+                    /* Single mask register - use its value directly */
+                    irqMasksLocal[i].mask = mask1;
+                }
             }
         }
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        for (uint8_t i = 0U; i < numIrqMasks; i++)
+        {
+            IRQ_copyIrqMask(&irqMasksLocal[i], &irqMasks[i]);
+        }
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
+int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
 {
+    Pmic_IrqStat_t irqStatLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -234,8 +309,8 @@ int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
     // Clear the status structure
     if (status == PMIC_ST_SUCCESS)
     {
-        irqStat->intrStat[0] = 0U;
-        irqStat->intrStat[1] = 0U;
+        irqStatLocal.intrStat[0] = 0U;
+        irqStatLocal.intrStat[1] = 0U;
     }
 
     // Read all interrupt status registers and build the status bitmap
@@ -252,15 +327,20 @@ int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
                 // Set the corresponding bit in the status array
                 uint8_t arrayIndex = irqNum / 32U;
                 uint8_t bitIndex = irqNum % 32U;
-                irqStat->intrStat[arrayIndex] |= (1U << bitIndex);
+                irqStatLocal.intrStat[arrayIndex] |= (1U << bitIndex);
             }
         }
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        IRQ_copyIrqStat(&irqStatLocal, irqStat);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
+int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -291,14 +371,14 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
 
         if (!foundFlag)
         {
-            status = PMIC_ST_ERR_INV_PARAM;
+            status = PMIC_ST_WARN_NO_IRQ_REMAINING;
         }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetFlag(Pmic_Handle_t *handle, uint8_t irqNum, bool *flag)
+int32_t Pmic_irqGetFlag(const Pmic_Handle_t *handle, uint8_t irqNum, bool *flag)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -323,10 +403,10 @@ int32_t Pmic_irqGetFlag(Pmic_Handle_t *handle, uint8_t irqNum, bool *flag)
         *flag = Pmic_getBitField_b(regData, pmicIRQs[irqNum].bitShift);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqClrFlag(Pmic_Handle_t *handle, uint8_t irqNum)
+int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -343,10 +423,10 @@ int32_t Pmic_irqClrFlag(Pmic_Handle_t *handle, uint8_t irqNum)
         status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqClrAllFlags(Pmic_Handle_t *handle)
+int32_t Pmic_irqClrAllFlags(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -401,5 +481,5 @@ int32_t Pmic_irqClrAllFlags(Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, 0xFFU);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

@@ -194,8 +194,7 @@ typedef struct Pmic_GpioCfg_s {
  * @brief Set PMIC GPIO configurations.
  *
  * Design: PMICDRV-615
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @details The options that are configurable using this API are listed below.
  * 1. Functionality (validParams: PMIC_FUNCTIONALITY_VALID)
@@ -223,8 +222,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic
  * configurations that are settable by `Pmic_gpioSetCfg()`.
  *
  * Design: PMICDRV-616
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -243,8 +241,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioC
  * `Pmic_gpioActivate()` and `Pmic_gpioDeactivate()`.
  *
  * Design: PMICDRV-770
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.
@@ -264,8 +261,8 @@ int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *handle, bool activate);
  * @brief Activate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
  *
  * Design: PMICDRV-771
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522
+ *               PMICDRV-523, PMICDRV-541
  *
  * @details When GPIO is activated, its output functionality is enabled and its
  * output state is high (depending on configured polarity).
@@ -284,8 +281,8 @@ int32_t Pmic_gpioActivate(const Pmic_Handle_t *handle);
  * @brief Deactivate PMIC GPIO. This API is a subset of `Pmic_gpioSetActiveState()`.
  *
  * Design: PMICDRV-772
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522
+ *               PMICDRV-523, PMICDRV-541
  *
  * @details When GPIO is deactivated, its output functionality is disabled and its
  * output state is low.
@@ -304,8 +301,7 @@ int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *handle);
  * @brief Get PMIC GPIO activation state.
  *
  * Design: PMICDRV-773
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @note The TPS65036x PMIC has two GPIO pins called nINT_GPI and GPIO. This API
  * is not valid for nINT_GPI.

@@ -1,3 +1,40 @@
+/******************************************************************************
+ * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *****************************************************************************/
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -10,6 +47,7 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+
 /* PMIC driver Core Handle INIT status Magic Number. Used to validate Handle to
    avoid corrupted PmicHandle usage. */
 #define PMIC_DRV_INIT_SUCCESS (uint32_t)(0x504D4943U) /* "PMIC" in ASCII */
@@ -22,6 +60,7 @@
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
+
 static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -40,6 +79,25 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
             status = PMIC_ST_ERR_NULL_PARAM;
         } else {
             handle->commHandle0 = config->commHandle0;
+        }
+    }
+
+    /* Update retry count */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_CNT_VALID, status)) {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    /* Update retry interval */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID, status)) {
+        handle->retryIntervalMs = config->retryIntervalMs;
+    }
+
+    /* Update timer hook */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TIMER_WAIT_MS_VALID, status)) {
+        if (config->timerWaitMs == NULL) {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        } else {
+            handle->timerWaitMs = config->timerWaitMs;
         }
     }
 
@@ -141,10 +199,6 @@ static int32_t validateComms(Pmic_Handle_t *handle) {
     /* Start Critical Section */
     status = Pmic_ioRxByte_CS(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
 
-    if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStat = PMIC_DRV_INIT_SUCCESS;
-    }
-
     return status;
 }
 
@@ -185,6 +239,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
     }
 
     /* Check for required members for I2C/SPI Main handle comm */
+    // LCOV_EXCL_START
     if ((status == PMIC_ST_SUCCESS) &&
          ((handle->criticalSectionStart == NULL) ||
           (handle->criticalSectionStop == NULL) ||
@@ -192,10 +247,11 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
           (handle->ioWrite == NULL))) {
         status = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
+    // LCOV_EXCL_STOP
 
-    // Initialization is complete, mark it with magic.
-    if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    // Set the driver initialization status (only if handle is valid)
+    if (handle != NULL) {
+        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
     }
 
     return status;
@@ -205,7 +261,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if (handle == NULL) {
-        status = PMIC_ST_ERR_INV_HANDLE;
+        status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -225,19 +281,33 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
 }
 
 int32_t Pmic_checkHandle(const Pmic_Handle_t *handle) {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if ((handle == NULL) || (handle->commHandle0 == NULL)) {
-        status = PMIC_ST_ERR_INV_HANDLE;
+    if (handle == NULL) {
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (handle->ioRead == NULL)) {
-        status = PMIC_ST_ERR_NULL_FPTR;
+    if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS) {
+        return PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (PMIC_DRV_INIT_SUCCESS != handle->drvInitStat)) {
-        status = PMIC_ST_ERR_INV_HANDLE;
+    if (handle->commMode != PMIC_INTF_SPI) {
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
-    return status;
+    if (handle->commHandle0 == NULL) {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((handle->ioRead == NULL) || (handle->ioWrite == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    if ((handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    return PMIC_ST_SUCCESS;
 }

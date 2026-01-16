@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __FSM_TEST_H__
-#define __FSM_TEST_H__
+#ifndef FSM_TEST_H
+#define FSM_TEST_H
 
-/**
- * @file fsm_test.h
- * @brief Contains macros/defines and test declarations specific to testing the
- * FSM module.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -55,8 +51,8 @@ extern "C" {
 
 void fsm_test(void *args);
 
-void test_negative_Pmic_fsmMcuCommand_nullParam_handle(void);
-void test_negative_Pmic_fsmMcuCommand_invalidParam_cmd(void);
+void test_negative_Pmic_fsmSetDevState_nullParam_handle(void);
+void test_negative_Pmic_fsmSetDevState_invalidParam_cmd(void);
 void test_negative_Pmic_fsmSetResetCntThr_nullParam_handle(void);
 void test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr(void);
 void test_negative_Pmic_fsmGetResetCntThr_nullParam_handle(void);
@@ -73,10 +69,10 @@ void test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt(void);
 void test_negative_Pmic_fsmClrRecovCnt_nullParam_handle(void);
 void test_positive_setGetResetCntThr(void);
 void test_positive_setGetRecovCntThr(void);
-void test_positive_Pmic_fsmMcuCommand_coldBootReq(void);
-void test_positive_Pmic_fsmMcuCommand_warmResetReq(void);
-void test_positive_Pmic_fsmMcuCommand_safeRecovReq(void);
-void test_positive_Pmic_fsmMcuCommand_offReq(void);
+void test_positive_Pmic_fsmSetDevState_coldBootReq(void);
+void test_positive_Pmic_fsmSetDevState_warmResetReq(void);
+void test_positive_Pmic_fsmSetDevState_safeRecovReq(void);
+void test_positive_Pmic_fsmSetDevState_offReq(void);
 
 #ifdef __cplusplus
 }

@@ -40,12 +40,12 @@ extern "C" {
 #endif
 
 /* PMIC Module Device Revision Infos */
-#define PMIC_DEV_REV_REG        (0x01U)
+#define PMIC_DEV_REV_REG        ((uint8_t)0x01U)
 #define PMIC_DEV_REV_SHIFT      (0U)
 #define PMIC_DEV_REV_MASK       ((uint8_t)(0xFFU << PMIC_DEV_REV_SHIFT))
 
 /* PMIC Silicon Revision Info */
-#define PMIC_MANUFACTURING_VER_REG (0x04U)
+#define PMIC_MANUFACTURING_VER_REG ((uint8_t)0x04U)
 #define PMIC_SILICON_REV_SHIFT     (0U)
 #define PMIC_SILICON_REV_MASK      ((uint8_t)(0xFFU << PMIC_SILICON_REV_SHIFT))
 
@@ -73,7 +73,7 @@ extern "C" {
 #define CONFIG_CRC_STATUS_SHIFT         (2U)
 
 /* STAT_MODERATE_ERR definitions */
-#define STAT_MODERATE_ERR_REG           (0x59U)
+#define STAT_MODERATE_ERR_REG           ((uint8_t)0x59U)
 #define TSD_ORD_STAT_SHIFT              (0U)
 #define EXT_CLK_HIS_SHIFT               (1U)
 #define TRIM_TEST_CRC_STAT_SHIFT        (2U)

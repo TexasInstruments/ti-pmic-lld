@@ -37,7 +37,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t fsmCmd)
         status = Pmic_ioTxByte_CS(handle, PMIC_FSM_COMMAND_REG_REG, fsmCmd);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
@@ -51,7 +51,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
     }
 
     // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, PMIC_RECOV_CNT_REG_2_REG, &regData);
@@ -63,9 +63,9 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
         Pmic_setBitField(&regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK, threshold);
         status = Pmic_ioTxByte(handle, PMIC_RECOV_CNT_REG_2_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *threshold)
@@ -85,7 +85,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *threshold)
         *threshold = Pmic_getBitField(regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
@@ -105,7 +105,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
         *recovCnt = Pmic_getBitField(regData, PMIC_RECOV_CNT_SHIFT, PMIC_RECOV_CNT_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
@@ -120,7 +120,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, PMIC_RECOV_CNT_CONTROL_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
@@ -134,7 +134,7 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
     }
 
     // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, PMIC_RECOV_CNT_REG_2_REG, &regData);
@@ -146,9 +146,9 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold)
         Pmic_setBitField(&regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK, threshold);
         status = Pmic_ioTxByte(handle, PMIC_RECOV_CNT_REG_2_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *handle, uint8_t *threshold)
@@ -168,7 +168,7 @@ int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *handle, uint8_t *threshold)
         *threshold = Pmic_getBitField(regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *handle, uint8_t *resetCnt)
@@ -188,7 +188,7 @@ int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *handle, uint8_t *resetCnt)
         *resetCnt = Pmic_getBitField(regData, PMIC_RESET_CNT_SHIFT, PMIC_RESET_CNT_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *handle)
@@ -203,5 +203,5 @@ int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, PMIC_RECOV_CNT_CONTROL_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

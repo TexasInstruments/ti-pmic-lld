@@ -30,22 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PLATFORM_H__
-#define __PLATFORM_H__
+#ifndef PMIC_TEST_PLATFORM_H
+#define PMIC_TEST_PLATFORM_H
 
-/**
- * @file platform.h
- *
- * @brief Platform-specific macros/defines and function declarations for testing
- * PMIC LLD.
- */
 
-/**
- * @brief Platform part number.
- */
-#ifndef PART_TM4C123GH6PM
-#define PART_TM4C123GH6PM
-#endif
 
 /* ========================================================================= */
 /*                              Include Files                                */
@@ -65,29 +53,52 @@
 #include "pmic.h"
 
 /**
- * @brief Platform-specific include(s).
- */
-#include "driverlib/fpu.h"
-#include "driverlib/gpio.h"
-#include "driverlib/i2c.h"
-#include "driverlib/ssi.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/timer.h"
-#include "driverlib/uart.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/systick.h"
-#include "driverlib/udma.h"
-#include "inc/hw_memmap.h"
-#include "inc/tm4c123gh6pm.h"
-#include "inc/hw_ssi.h"
-#include "utils/cpu_usage.h"
-
-/**
  * @brief Testing framework include(s).
  */
 #include "unity.h"
+
+/**
+ * @brief Conditional platform-specific includes.
+ *
+ * In mock mode, we don't need hardware-specific headers.
+ * In hardware mode, we need TM4C123 driver library headers.
+ */
+#ifdef BUILD_MOCK
+    /* Mock mode - no hardware headers needed */
+    /* Mock-specific function prototypes */
+    extern int32_t test_pmic_regRead(const Pmic_Handle_t *handle, uint8_t page,
+                                     uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_regWrite(const Pmic_Handle_t *handle, uint8_t page,
+                                      uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_asyncRxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                          uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_asyncTxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                          uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_asyncRxAwait(const Pmic_Handle_t *handle);
+    extern int32_t test_pmic_asyncTxAwait(const Pmic_Handle_t *handle);
+#else
+    /* Hardware mode - TM4C123 platform part number */
+    #ifndef PART_TM4C123GH6PM
+    #define PART_TM4C123GH6PM
+    #endif
+
+    /* Platform-specific include(s) */
+    #include "driverlib/fpu.h"
+    #include "driverlib/gpio.h"
+    #include "driverlib/i2c.h"
+    #include "driverlib/ssi.h"
+    #include "driverlib/pin_map.h"
+    #include "driverlib/sysctl.h"
+    #include "driverlib/timer.h"
+    #include "driverlib/uart.h"
+    #include "driverlib/interrupt.h"
+    #include "driverlib/systick.h"
+    #include "driverlib/udma.h"
+    #include "inc/hw_memmap.h"
+    #include "inc/tm4c123gh6pm.h"
+    #include "inc/hw_ssi.h"
+    #include "utils/cpu_usage.h"
+#endif /* BUILD_MOCK */
 
 #ifdef __cplusplus
 extern "C" {
@@ -172,12 +183,12 @@ void platform_timerWaitMs(uint16_t ms);
 /**
  * @brief Start platform-specific critical section.
  */
-void platform_critSecStart(void);
+void platform_critSecStart(uint8_t resource);
 
 /**
  * @brief Stop platform-specific critical section.
  */
-void platform_critSecStop(void);
+void platform_critSecStop(uint8_t resource);
 
 /**
  * @brief Platform-specific response to PMIC IRQ.
@@ -212,7 +223,8 @@ void *platform_getCommHandle(void);
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t platform_txByte(const struct Pmic_Handle_s *handle,
-                        uint16_t regAddr,
+                        uint8_t page,
+                        uint8_t regAddr,
                         const uint8_t *buffer,
                         uint8_t bufLen);
 
@@ -237,7 +249,8 @@ int32_t platform_txByte(const struct Pmic_Handle_s *handle,
  * @ref Pmic_ErrorCodes.
  */
 int32_t platform_rxByte(const struct Pmic_Handle_s *handle,
-                        uint16_t regAddr,
+                        uint8_t page,
+                        uint8_t regAddr,
                         uint8_t *buffer,
                         uint8_t bufLen);
 
@@ -246,7 +259,7 @@ int32_t platform_rxByte(const struct Pmic_Handle_s *handle,
  *
  * @details This API configures and triggers the DMA engine to execute a read
  * transfer. A single transfer can involve the transfer of more than one byte,
- * all handled asychronously by the DMA while the CPU can execute other
+ * all handled asynchronously by the DMA while the CPU can execute other
  * instructions or routines.
  *
  * @param handle [IN] PMIC interface handle.
@@ -272,7 +285,7 @@ int32_t platform_asyncRxStart(const struct Pmic_Handle_s *handle,
  *
  * @details This API configures and triggers the DMA engine to execute a write
  * transfer. A single transfer can involve the transfer of more than one byte,
- * all handled asychronously by the DMA while the CPU can execute other
+ * all handled asynchronously by the DMA while the CPU can execute other
  * instructions or routines.
  *
  * @param handle [IN] PMIC interface handle.
@@ -369,7 +382,29 @@ uint32_t platform_getCpuUsageInteger(void);
  */
 uint32_t platform_getCpuUsageRaw(void);
 
+/**
+ * @brief Unlock PMIC registers for testing.
+ *
+ * @details This function unlocks PMIC configuration registers to allow
+ * register modifications during testing. In hardware mode, this sends the
+ * unlock sequence to the PMIC. In mock mode, this is a no-op since the mock
+ * doesn't enforce register locking.
+ */
+void platform_unlockRegisters(void);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PLATFORM_H__ */
+
+/**
+ * @brief Include mock-specific overrides when BUILD_MOCK is defined
+ *
+ * platform_mock.h provides macro definitions that override function declarations
+ * with no-ops or redirects. This prevents double Unity initialization and other
+ * issues that occur when using the mock backend.
+ */
+#ifdef BUILD_MOCK
+    #include "platform_mock.h"
+#endif
+
+#endif /* PMIC_TEST_PLATFORM_H */

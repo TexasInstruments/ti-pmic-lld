@@ -52,6 +52,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_common.h"
+#include "pmic_core.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -904,8 +905,7 @@ typedef struct Pmic_PwrRsrcStat_s {
  * @brief Set PMIC Buck/Boost configurations.
  *
  * Design: PMICDRV-639
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @details The following options are configurable via this API
  * 1. Voltage level (validParams: PMIC_PWR_CFG_BB_LVL_VALID_SHIFT)
@@ -923,15 +923,14 @@ typedef struct Pmic_PwrRsrcStat_s {
  * @return Success code if PMIC Buck/Boost configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetBuckBoostCfg(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+int32_t Pmic_pwrSetBuckBoostCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
 
 /**
  * @brief Get PMIC Buck/Boost configurations. This API supports getting the same
  * configurations that are settable by `Pmic_pwrSetBuckBoostCfg()`.
  *
  * Design: PMICDRV-640
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -941,14 +940,13 @@ int32_t Pmic_pwrSetBuckBoostCfg(Pmic_Handle_t *handle, const Pmic_PwrBuckBoostCf
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetBuckBoostCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+int32_t Pmic_pwrGetBuckBoostCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
 
 /**
  * @brief Set PMIC LDO configurations.
  *
  * Design: PMICDRV-641
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @details The following options are configurable via this API
  * 1. LDO mode (validParams: PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT)
@@ -969,15 +967,14 @@ int32_t Pmic_pwrGetBuckBoostCfg(Pmic_Handle_t *handle, Pmic_PwrBuckBoostCfg_t *b
  * @return Success code if PMIC LDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetLdoCfg(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get PMIC LDO configurations. This API supports getting the same
  * configurations that are settable by `Pmic_pwrSetLdoCfg()`.
  *
  * Design: PMICDRV-642
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -987,14 +984,13 @@ int32_t Pmic_pwrSetLdoCfg(Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
  * @return Success code if PMIC LDO configurations have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetLdoCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
+int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Set PMIC PLDO configurations.
  *
  * Design: PMICDRV-643
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @details The following options are configurable via this API
  * 1. PLDO mode (validParams: PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT)
@@ -1017,15 +1013,14 @@ int32_t Pmic_pwrGetLdoCfg(Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
  * @return Success code if PLDO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetPldoCfg(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg);
+int32_t Pmic_pwrSetPldoCfg(const Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg);
 
 /**
  * @brief Get PMIC PLDO configurations. This API supports getting the same
  * configurations that are settable by `Pmic_pwrSetPldoCfg()`.
  *
  * Design: PMICDRV-644
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1035,14 +1030,13 @@ int32_t Pmic_pwrSetPldoCfg(Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoC
  * @return Success code if PLDO configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetPldoCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
+int32_t Pmic_pwrGetPldoCfg(const Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
 
 /**
  * @brief Set PMIC external VMON configurations.
  *
  * Design: PMICDRV-645
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @details The following options are configurable via this API
  * 1. External VMON mode (validParams: PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT)
@@ -1058,15 +1052,14 @@ int32_t Pmic_pwrGetPldoCfg(Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
  * @return Success code if external VMON configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetExtVmonCfg(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
+int32_t Pmic_pwrSetExtVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
 
 /**
  * @brief Get PMIC external VMON configurations. This API supports getting the same
  * configurations that are settable by `Pmic_pwrSetExtVmonCfg()`.
  *
  * Design: PMICDRV-646
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1076,14 +1069,14 @@ int32_t Pmic_pwrSetExtVmonCfg(Pmic_Handle_t *handle, const Pmic_PwrExtVmonCfg_t 
  * @return Success code if external VMON configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetExtVmonCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg);
+int32_t Pmic_pwrGetExtVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg);
 
 /**
  * @brief Get PMIC power resource statuses.
  *
  * Design: PMICDRV-730
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-535, PMICDRV-536
  *
  * @attention Certain power resources do not have certain statuses. Please see
  * @ref Pmic_PwrRsrcStat for more information.
@@ -1107,14 +1100,13 @@ int32_t Pmic_pwrGetExtVmonCfg(Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t *extVm
  * @return Success code if power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetRsrcStatus(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear PMIC power resource statuses.
  *
  * Design: PMICDRV-648
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @details The following statuses can be cleared via this API depending on the
  * specified power resource
@@ -1135,29 +1127,28 @@ int32_t Pmic_pwrGetRsrcStatus(Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrc
  * @return Success code if power resource statuses have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatus(Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses
  * that are clearable through Pmic_pwrClrRsrcStatus().
  *
  * Design: PMICDRV-649
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if all power resources have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatusAll(Pmic_Handle_t *handle);
+int32_t Pmic_pwrClrRsrcStatusAll(const Pmic_Handle_t *handle);
 
 /**
  * @brief Enable or disable PGOOD from being active in STANDBY state.
  *
  * Design: PMICDRV-650
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1168,15 +1159,14 @@ int32_t Pmic_pwrClrRsrcStatusAll(Pmic_Handle_t *handle);
  * @return Success code if PGOOD is configured, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrSetPGoodInStby(Pmic_Handle_t *handle, bool enable);
+int32_t Pmic_pwrSetPGoodInStby(const Pmic_Handle_t *handle, bool enable);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses that
  * are clearable by `Pmic_pwrClrRsrcStatus()`.
  *
  * Design: PMICDRV-651
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1188,7 +1178,7 @@ int32_t Pmic_pwrSetPGoodInStby(Pmic_Handle_t *handle, bool enable);
  * obtained, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetPGoodInStby(Pmic_Handle_t *handle, bool *isEnabled);
+int32_t Pmic_pwrGetPGoodInStby(const Pmic_Handle_t *handle, bool *isEnabled);
 
 #ifdef __cplusplus
 }

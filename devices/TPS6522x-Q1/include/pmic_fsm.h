@@ -68,8 +68,8 @@ extern "C" {
 #define PMIC_FSM_GPIO_PIN4    (4U)
 #define PMIC_FSM_GPIO_PIN5    (5U)
 #define PMIC_FSM_GPIO_PIN6    (6U)
-#define PMIC_FSM_GPIO_PIN_MIN (PMIC_FSM_GPIO_PIN1)
-#define PMIC_FSM_GPIO_PIN_MAX (PMIC_FSM_GPIO_PIN6)
+#define PMIC_FSM_GPIO_PIN_MIN ((uint8_t)PMIC_FSM_GPIO_PIN1)
+#define PMIC_FSM_GPIO_PIN_MAX ((uint8_t)PMIC_FSM_GPIO_PIN6)
 /** @} */
 
 /**
@@ -85,8 +85,8 @@ extern "C" {
 #define PMIC_FSM_TRIGGER_ORDERLY_SHUTDOWN   (1U)
 #define PMIC_FSM_TRIGGER_MCU_POWER_ERROR    (2U)
 #define PMIC_FSM_TRIGGER_SOC_POWER_ERROR    (3U)
-#define PMIC_FSM_TRIGGER_MIN                (PMIC_FSM_TRIGGER_IMMEDIATE_SHUTDOWN)
-#define PMIC_FSM_TRIGGER_MAX                (PMIC_FSM_TRIGGER_SOC_POWER_ERROR)
+#define PMIC_FSM_TRIGGER_MIN                ((uint8_t)PMIC_FSM_TRIGGER_IMMEDIATE_SHUTDOWN)
+#define PMIC_FSM_TRIGGER_MAX                ((uint8_t)PMIC_FSM_TRIGGER_SOC_POWER_ERROR)
 /** @} */
 
 /**
@@ -104,8 +104,8 @@ extern "C" {
  */
 #define PMIC_FSM_GPIO_MASK_POL_0   (0U)
 #define PMIC_FSM_GPIO_MASK_POL_1   (1U)
-#define PMIC_FSM_GPIO_MASK_POL_MIN (PMIC_FSM_GPIO_MASK_POL_0)
-#define PMIC_FSM_GPIO_MASK_POL_MAX (PMIC_FSM_GPIO_MASK_POL_1)
+#define PMIC_FSM_GPIO_MASK_POL_MIN ((uint8_t)PMIC_FSM_GPIO_MASK_POL_0)
+#define PMIC_FSM_GPIO_MASK_POL_MAX ((uint8_t)PMIC_FSM_GPIO_MASK_POL_1)
 /** @} */
 
 /**
@@ -116,8 +116,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_FSM_RECOV_CNT_THR_MIN (0x0U)
-#define PMIC_FSM_RECOV_CNT_THR_MAX (0xFU)
+#define PMIC_FSM_RECOV_CNT_THR_MIN ((uint8_t)0x0U)
+#define PMIC_FSM_RECOV_CNT_THR_MAX ((uint8_t)0xFU)
 /** @} */
 
 /**
@@ -132,8 +132,8 @@ extern "C" {
 #define PMIC_FSM_STARTUP_DEST_STANDBY  (0U)
 #define PMIC_FSM_STARTUP_DEST_MCU_ONLY (2U)
 #define PMIC_FSM_STARTUP_DEST_ACTIVE   (3U)
-#define PMIC_FSM_START_UP_DEST_MIN     (PMIC_FSM_STARTUP_DEST_STANDBY)
-#define PMIC_FSM_START_UP_DEST_MAX     (PMIC_FSM_STARTUP_DEST_ACTIVE)
+#define PMIC_FSM_START_UP_DEST_MIN     ((uint8_t)PMIC_FSM_STARTUP_DEST_STANDBY)
+#define PMIC_FSM_START_UP_DEST_MAX     ((uint8_t)PMIC_FSM_STARTUP_DEST_ACTIVE)
 /** @} */
 
 /**
@@ -259,8 +259,7 @@ typedef struct Pmic_FsmGpioTriggerCfg_s {
  * event in the PMIC state machine.
  *
  * Design: PMICDRV-689
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @note This API does not set the GPIO trigger configurations. Refer to
  * @ref `Pmic_fsmSetGpioTriggerCfg()` API for setting such configurations.
@@ -280,8 +279,7 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
  * event in the PMIC state machine.
  *
  * Design: PMICDRV-690
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-540
  *
  * @note This API does not get the GPIO trigger configurations. Refer to
  * @ref `Pmic_fsmGetGpioTriggerCfg()` API for getting such configurations.
@@ -301,8 +299,8 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
  * event in the PMIC state machine.
  *
  * Design: PMICDRV-691
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -320,8 +318,8 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
  * event in the PMIC state machine.
  *
  * Design: PMICDRV-692
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-528, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -340,8 +338,8 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
  * that increments each time the PMIC goes through warm reset.
  *
  * Design: PMICDRV-693
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-540, PMICDRV-548
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -357,8 +355,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt);
  * increments each time the PMIC goes through warm reset.
  *
  * Design: PMICDRV-694
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -373,8 +370,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle);
  * and immediate power-down of all supply rails occur.
  *
  * Design: PMICDRV-695
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -391,8 +387,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
  * and immediate power-down of all supply rails occur.
  *
  * Design: PMICDRV-696
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -409,8 +404,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr
  * @brief Send SOFT_REBOOT request to the PMIC.
  *
  * Design: PMICDRV-697
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @details Upon sending the SOFT_REBOOT request, the PMIC will undergo ORDERLY
  * SHUTDOWN and automatically re-start to its configured startup destination.
@@ -429,8 +423,8 @@ int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle);
  * @brief Set PMIC FSM startup destination.
  *
  * Design: PMICDRV-698
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-540, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -446,8 +440,7 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
  * @brief Get PMIC FSM startup destination.
  *
  * Design: PMICDRV-699
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-540, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-540
  *
  * @param handle [IN] PMIC interface handle.
  *

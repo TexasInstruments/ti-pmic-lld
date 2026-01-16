@@ -67,8 +67,8 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_2   ((uint8_t)1U)
 #define PMIC_SCRATCH_PAD_REG_3   ((uint8_t)2U)
 #define PMIC_SCRATCH_PAD_REG_4   ((uint8_t)3U)
-#define PMIC_SCRATCH_PAD_REG_MIN (PMIC_SCRATCH_PAD_REG_1)
-#define PMIC_SCRATCH_PAD_REG_MAX (PMIC_SCRATCH_PAD_REG_4)
+#define PMIC_SCRATCH_PAD_REG_MIN ((uint8_t)PMIC_SCRATCH_PAD_REG_1)
+#define PMIC_SCRATCH_PAD_REG_MAX ((uint8_t)PMIC_SCRATCH_PAD_REG_4)
 /** @} */
 
 /* ========================================================================== */
@@ -83,9 +83,8 @@ extern "C" {
  * @brief Enable or disable PMIC register lock.
  *
  * Design: PMICDRV-587
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
- *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-523, PMICDRV-545, PMICDRV-546
  *
  * @param handle Pointer to the PMIC handle.
  *
@@ -94,15 +93,14 @@ extern "C" {
  * @return PMIC_ST_SUCCESS if PMIC registers have been locked/unlocked, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock);
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock);
 
 /**
  * @brief Get PMIC register enable state.
  *
  * Design: PMICDRV-588
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-528, PMICDRV-545, PMICDRV-546
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -112,15 +110,14 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock);
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked);
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked);
 
 /**
  * @brief Get PMIC NVM revision from hardware register.
  *
  * Design: PMICDRV-584
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-524,
+ *               PMICDRV-528, PMICDRV-547
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -135,9 +132,8 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev);
  * @brief Get PMIC silicon revision from hardware register.
  *
  * Design: PMICDRV-759
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-524,
+ *               PMICDRV-528, PMICDRV-547
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -152,9 +148,8 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev);
  * @brief Set the value of a PMIC scratchpad register.
  *
  * Design: PMICDRV-684
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
- *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-545
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -173,9 +168,8 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadR
  * @brief Get the value of a PMIC scratchpad register.
  *
  * Design: PMICDRV-685
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-545
  *
  * @param handle [IN] PMIC interface handle.
  *

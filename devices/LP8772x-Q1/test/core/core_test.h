@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __CORE_TEST_H__
-#define __CORE_TEST_H__
+#ifndef CORE_TEST_H
+#define CORE_TEST_H
 
-/**
- * @file core_test.h
- * @brief Contains macros/defines and test declarations specific to testing the
- * Core module.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -55,26 +51,41 @@ extern "C" {
 
 void core_test(void *args);
 
-void test_negative_Pmic_setScratchPadVal_nullParam_handle(void);
-void test_negative_Pmic_setScratchPadVal_outOfBounds_scratchPadRegNum(void);
-void test_negative_Pmic_getScratchPadVal_nullParam_handle(void);
-void test_negative_Pmic_getScratchPadVal_nullParam_value(void);
-void test_negative_Pmic_getScratchPadVal_outOfBounds_scratchPadRegNum(void);
+void test_negative_Pmic_setScratchPadValue_nullParam_handle(void);
+void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void);
+void test_negative_Pmic_getScratchPadValue_nullParam_handle(void);
+void test_negative_Pmic_getScratchPadValue_nullParam_value(void);
+void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
 void test_negative_Pmic_setRegLockState_nullParam_handle(void);
 void test_negative_Pmic_getRegLockState_nullParam_handle(void);
 void test_negative_Pmic_getRegLockState_nullParam_lockState(void);
 void test_negative_Pmic_configCrcEnable_nullParam_handle(void);
 void test_negative_Pmic_configCrcDisable_nullParam_handle(void);
-void test_negative_Pmic_getConfigCrcStat_nullParam_handle(void);
-void test_negative_Pmic_getConfigCrcStat_nullParam_configCrcStat(void);
+void test_negative_Pmic_getConfigCrcStatus_nullParam_handle(void);
+void test_negative_Pmic_getConfigCrcStatus_nullParam_configCrcStat(void);
 void test_negative_Pmic_configCrcCalculate_nullParam_handle(void);
 void test_negative_Pmic_configCrcGetFromDevice_nullParam_handle(void);
 void test_negative_Pmic_configCrcGetFromDevice_nullParam_crc(void);
 void test_positive_setGetRegLockState(void);
 void test_positive_setGetScratchpadReg1to4(void);
 void test_positive_enableDisableConfigRegCrc(void);
-void test_positive_configCrcCalclate(void);
+void test_positive_configCrcCalculate(void);
 void test_positive_getConfigCrc(void);
+
+/* LP8772x-Q1 specific CRC configuration tests */
+void test_positive_core_disableConfigCrc(void);
+void test_negative_core_configCrcError(void);
+
+/* LP8772x-Q1 additional coverage tests for error handling */
+void test_negative_coreInit_invalidDeviceType(void);
+void test_positive_coreGetErrStatus_multipleErrors(void);
+void test_positive_coreClrErrStatus_specificError(void);
+
+/* LP8772x-Q1 tests for uncovered lines in pmic_core.c */
+void test_negative_core_configCrcAlreadyEnabled(void);
+void test_negative_core_configCrcCalcBitHigh(void);
+void test_negative_core_configCrcMismatch(void);
+void test_negative_core_crcLoopIoFailure(void);
 
 #ifdef __cplusplus
 }

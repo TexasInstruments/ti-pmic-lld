@@ -30,10 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- * @brief Source file containing definitions to PMIC FSM tests.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -46,8 +43,8 @@
 /* ========================================================================== */
 
 /* Run all FSM tests */
-#define FSM_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_fsmMcuCommand_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmMcuCommand_invalidParam_cmd); \
+#define FSM_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_handle); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalidParam_cmd); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_handle); \
@@ -64,14 +61,14 @@
                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrRecovCnt_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
                            PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_coldBootReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_warmResetReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_safeRecovReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_offReq)
+                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_coldBootReq); \
+                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_warmResetReq); \
+                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_safeRecovReq); \
+                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_offReq)
 
 /* Run all FSM negative tests */
-#define FSM_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_fsmMcuCommand_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmMcuCommand_invalidParam_cmd); \
+#define FSM_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_handle); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalidParam_cmd); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_handle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_handle); \
@@ -90,10 +87,10 @@
 /* Run all FSM positive tests */
 #define FSM_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
                                 PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_coldBootReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_warmResetReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_safeRecovReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmMcuCommand_offReq)
+                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_coldBootReq); \
+                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_warmResetReq); \
+                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_safeRecovReq); \
+                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_offReq)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -103,7 +100,6 @@ static Pmic_Handle_t pmicHandle;
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t fsmTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 static inline void fsmTest_assertPmicRegsLocked(bool lock);
 
 /* ========================================================================== */
@@ -112,6 +108,7 @@ static inline void fsmTest_assertPmicRegsLocked(bool lock);
 
 void fsm_test(void *args)
 {
+    (void)args;
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_HandleCfg_t coreCfg = {
@@ -147,19 +144,9 @@ void fsm_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = fsmTest_unlockPmicRegs(&pmicHandle);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            platform_setupTests();
-            FSM_TEST_RUN_ALL();
-            platform_tearDownTests();
-        }
-        else
-        {
-            (void)sprintf(msg, "Error in unlocking PMIC registers: %d\r\n", status);
-            platform_printString(msg);
-        }
+        platform_setupTests();
+        FSM_TEST_RUN_ALL();
+        platform_tearDownTests();
     }
     else
     {
@@ -171,46 +158,16 @@ void fsm_test(void *args)
     platform_deinit();
 }
 
-static int32_t fsmTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
+void test_negative_Pmic_fsmSetDevState_nullParam_handle(void)
 {
-    uint8_t regData = 0x9BU;
-    const uint8_t bufLen = 1U;
-    const uint16_t registerLockAddr = 0x09U;
-
-    // Check handle
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
-
-    // Write key to REGISTER_LOCK
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = platform_txByte(pmicHandle, PMIC_MAIN_INST, registerLockAddr, &regData, bufLen);
-    }
-
-    // Get register lock status
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = platform_rxByte(pmicHandle, PMIC_MAIN_INST, registerLockAddr, &regData, bufLen);
-    }
-
-    // Validate that registers are unlocked
-    if ((status == PMIC_ST_SUCCESS) && (regData != 0U))
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    return status;
+    // Pass null handle into Pmic_fsmSetDevState()
+    int32_t status = Pmic_fsmSetDevState(NULL, PMIC_FSM_COMMAND_WARM_RESET_REQ);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmMcuCommand_nullParam_handle(void)
+void test_negative_Pmic_fsmSetDevState_invalidParam_cmd(void)
 {
-    // Pass null handle into Pmic_fsmMcuCommand()
-    int32_t status = Pmic_fsmMcuCommand(NULL, PMIC_FSM_COMMAND_WARM_RESET_REQ);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
-}
-
-void test_negative_Pmic_fsmMcuCommand_invalidParam_cmd(void)
-{
-    // Pass invalid command into Pmic_fsmMcuCommand()
+    // Pass invalid command into Pmic_fsmSetDevState()
     for (uint16_t cmd = 0U; cmd <= UINT8_MAX; cmd++)
     {
         if ((cmd == PMIC_FSM_COMMAND_OFF_REQ) ||
@@ -222,7 +179,7 @@ void test_negative_Pmic_fsmMcuCommand_invalidParam_cmd(void)
             continue;
         }
 
-        int32_t status = Pmic_fsmMcuCommand(&pmicHandle, cmd);
+        int32_t status = Pmic_fsmSetDevState(&pmicHandle, cmd);
         PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
     }
 }
@@ -231,7 +188,7 @@ void test_negative_Pmic_fsmSetResetCntThr_nullParam_handle(void)
 {
     // Pass null handle into Pmic_fsmSetResetCntThr()
     int32_t status = Pmic_fsmSetResetCntThr(NULL, PMIC_FSM_RESET_RECOV_CNT_THR_MAX);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr(void)
@@ -246,7 +203,7 @@ void test_negative_Pmic_fsmGetResetCntThr_nullParam_handle(void)
     // Pass null handle into Pmic_fsmGetResetCntThr()
     uint8_t resetCntThr = 0U;
     int32_t status = Pmic_fsmGetResetCntThr(NULL, &resetCntThr);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmGetResetCntThr_nullParam_resetCntThr(void)
@@ -261,7 +218,7 @@ void test_negative_Pmic_fsmGetResetCnt_nullParam_handle(void)
     // Pass null handle into Pmic_fsmGetResetCnt()
     uint8_t resetCnt = 0U;
     int32_t status = Pmic_fsmGetResetCnt(NULL, &resetCnt);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt(void)
@@ -275,14 +232,14 @@ void test_negative_Pmic_fsmClrResetCnt_nullParam_handle(void)
 {
     // Pass null handle into Pmic_fsmClrResetCnt()
     int32_t status = Pmic_fsmClrResetCnt(NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmSetRecovCntThr_nullParam_handle(void)
 {
     // Pass null handle into Pmic_fsmSetRecovCntThr()
     int32_t status = Pmic_fsmSetRecovCntThr(NULL, PMIC_FSM_RESET_RECOV_CNT_THR_MAX);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_recovCntThr(void)
@@ -297,7 +254,7 @@ void test_negative_Pmic_fsmGetRecovCntThr_nullParam_handle(void)
     // Pass null handle into Pmic_fsmGetRecovCntThr()
     uint8_t recovCntThr = 0U;
     int32_t status = Pmic_fsmGetRecovCntThr(NULL, &recovCntThr);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmGetRecovCntThr_nullParam_recovCntThr(void)
@@ -312,7 +269,7 @@ void test_negative_Pmic_fsmGetRecovCnt_nullParam_handle(void)
     // Pass null handle into Pmic_fsmGetRecovCnt()
     uint8_t recovCnt = 0U;
     int32_t status = Pmic_fsmGetRecovCnt(NULL, &recovCnt);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt(void)
@@ -326,7 +283,7 @@ void test_negative_Pmic_fsmClrRecovCnt_nullParam_handle(void)
 {
     // Pass null handle into Pmic_fsmClrRecovCnt()
     int32_t status = Pmic_fsmClrRecovCnt(NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_positive_setGetResetCntThr(void)
@@ -397,14 +354,13 @@ static inline void fsmTest_assertPmicRegsLocked(bool lock)
     }
 }
 
-void test_positive_Pmic_fsmMcuCommand_coldBootReq(void)
+void test_positive_Pmic_fsmSetDevState_coldBootReq(void)
 {
-    // Assert PMIC registers are unlocked (PMIC registers should've be unlocked
-    // previously via fsmTest_unlockPmicRegs()).
+    // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);
 
     // Send Cold Boot request
-    int32_t status = Pmic_fsmMcuCommand(&pmicHandle, PMIC_FSM_COMMAND_COLD_BOOT_REQ);
+    int32_t status = Pmic_fsmSetDevState(&pmicHandle, PMIC_FSM_COMMAND_COLD_BOOT_REQ);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Wait some time for PMIC to go through Cold Boot
@@ -412,13 +368,9 @@ void test_positive_Pmic_fsmMcuCommand_coldBootReq(void)
 
     // After Cold Boot, registers are automatically locked; assert PMIC registers are locked
     fsmTest_assertPmicRegsLocked((bool)true);
-
-    // Unlock PMIC registers
-    status = fsmTest_unlockPmicRegs(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_Pmic_fsmMcuCommand_warmResetReq(void)
+void test_positive_Pmic_fsmSetDevState_warmResetReq(void)
 {
     uint8_t initResetCnt = 0U, actResetCnt = 0U;
 
@@ -428,7 +380,7 @@ void test_positive_Pmic_fsmMcuCommand_warmResetReq(void)
 
     // Send Warm Reset request. It is likely that API will return PMIC_ST_ERR_I2C_COMM_FAIL
     // because PMIC ceases communication upon entering Warm Reset, so ignore status code
-    status = Pmic_fsmMcuCommand(&pmicHandle, PMIC_FSM_COMMAND_WARM_RESET_REQ);
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_FSM_COMMAND_WARM_RESET_REQ);
 
     // Wait some time for PMIC to go through Warm Reset
     platform_timerWaitMs(5U);
@@ -438,13 +390,9 @@ void test_positive_Pmic_fsmMcuCommand_warmResetReq(void)
     status = Pmic_fsmGetResetCnt(&pmicHandle, &actResetCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((initResetCnt + 1U) == actResetCnt);
-
-    // Unlock PMIC registers
-    status = fsmTest_unlockPmicRegs(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_Pmic_fsmMcuCommand_safeRecovReq(void)
+void test_positive_Pmic_fsmSetDevState_safeRecovReq(void)
 {
     uint8_t initRecovCnt = 0U, actRecovCnt = 0U;
 
@@ -453,7 +401,7 @@ void test_positive_Pmic_fsmMcuCommand_safeRecovReq(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Send Safe Recovery request
-    status = Pmic_fsmMcuCommand(&pmicHandle, PMIC_FSM_COMMAND_SAFE_RECOV_REQ);
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_FSM_COMMAND_SAFE_RECOV_REQ);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Wait some time for PMIC to go through Safe Recovery
@@ -464,20 +412,15 @@ void test_positive_Pmic_fsmMcuCommand_safeRecovReq(void)
     status = Pmic_fsmGetRecovCnt(&pmicHandle, &actRecovCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((initRecovCnt + 1U) == actRecovCnt);
-
-    // Unlock PMIC registers
-    status = fsmTest_unlockPmicRegs(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_Pmic_fsmMcuCommand_offReq(void)
+void test_positive_Pmic_fsmSetDevState_offReq(void)
 {
-    // Assert PMIC registers are unlocked (PMIC registers should've be unlocked
-    // previously via fsmTest_unlockPmicRegs() or another test).
+    // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);
 
     // Send Off request
-    int32_t status = Pmic_fsmMcuCommand(&pmicHandle, PMIC_FSM_COMMAND_OFF_REQ);
+    int32_t status = Pmic_fsmSetDevState(&pmicHandle, PMIC_FSM_COMMAND_OFF_REQ);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Wait some time for PMIC to turn off (PMIC enters STANDBY state)
@@ -487,18 +430,3 @@ void test_positive_Pmic_fsmMcuCommand_offReq(void)
     fsmTest_assertPmicRegsLocked((bool)true);
 }
 
-/**
- * @brief Some testing frameworks require an API to setup tests. Rename/rewrite
- * as necessary.
- */
-void setUp(void)
-{
-}
-
-/**
- * @brief Some testing frameworks require an API to teardown tests.
- * Rename/rewrite as necessary.
- */
-void tearDown(void)
-{
-}

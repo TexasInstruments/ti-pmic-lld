@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,51 +31,19 @@
  *
  *****************************************************************************/
 
-/**
- *  @file pmic_core_test.h
- *
- *  @brief This file contains PMIC Core specific macros and definitions for the
- *      test cases
- */
 
-#ifndef PMIC_TEST_CORE_H
-#define PMIC_TEST_CORE_H
-
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
-
-#include "pmic_test_common.h"
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
+#ifndef ESM_TEST_H
+#define ESM_TEST_H
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-void test_pmic_set_scratchpad();
-void test_pmic_get_scratchpad();
-void test_pmic_set_spreadSpectrum();
-void test_pmic_clear_spreadSpectrum();
-void test_pmic_get_spreadSpectrum();
-void test_pmic_deviceonbus();
-void test_pmic_get_common_stat();
-void test_pmic_get_diagout();
-void test_pmic_enable_diagout();
-void test_pmic_get_safeout_cfg();
-void test_pmic_enable_safeout_cfg();
-void test_pmicDiagControl_AMUX();
-void test_pmicDiagControl_DMUX();
-void *test_pmic_core(void *args);
+/**
+ * @brief Entry point for ESM module tests.
+ *
+ * @param args [IN] Test arguments (unused).
+ */
+void esm_test(void *args);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif /* PMIC_TEST_CORE_H */
+#endif /* ESM_TEST_H */

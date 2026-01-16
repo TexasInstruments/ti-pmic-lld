@@ -51,14 +51,14 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define FSM_TRIG_SEL_1_REG (0x44U)
-#define FSM_TRIG_SEL_2_REG (0x45U)
-#define FSM_TRIG_MASK_1_REG (0x46U)
-#define FSM_TRIG_MASK_2_REG (0x47U)
-#define RECOV_CNT_REG_1_REG (0x83U)
-#define RECOV_CNT_REG_2_REG (0x84U)
-#define SOFT_REBOOT_REG_REG (0xABU)
-#define STARTUP_CTRL_REG    (0xC3U)
+#define FSM_TRIG_SEL_1_REG ((uint16_t)0x44U)
+#define FSM_TRIG_SEL_2_REG ((uint16_t)0x45U)
+#define FSM_TRIG_MASK_1_REG ((uint16_t)0x46U)
+#define FSM_TRIG_MASK_2_REG ((uint16_t)0x47U)
+#define RECOV_CNT_REG_1_REG ((uint16_t)0x83U)
+#define RECOV_CNT_REG_2_REG ((uint16_t)0x84U)
+#define SOFT_REBOOT_REG_REG ((uint16_t)0xABU)
+#define STARTUP_CTRL_REG    ((uint16_t)0xC3U)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */
@@ -79,14 +79,14 @@ extern "C" {
 #define MODERATE_ERR_TRIG_MASK  (0x03U << MODERATE_ERR_TRIG_SHIFT)
 
 // FSM_TRIG_MASK_1
-#define GPIO4_FSM_MASK_POL_SHIFT (7U)
-#define GPIO4_FSM_MASK_SHIFT     (6U)
-#define GPIO3_FSM_MASK_POL_SHIFT (5U)
-#define GPIO3_FSM_MASK_SHIFT     (4U)
-#define GPIO2_FSM_MASK_POL_SHIFT (3U)
-#define GPIO2_FSM_MASK_SHIFT     (2U)
-#define GPIO1_FSM_MASK_POL_SHIFT (1U)
-#define GPIO1_FSM_MASK_SHIFT     (0U)
+#define GPIO4_FSM_MASK_POL_SHIFT ((uint8_t)7U)
+#define GPIO4_FSM_MASK_SHIFT     ((uint8_t)6U)
+#define GPIO3_FSM_MASK_POL_SHIFT ((uint8_t)5U)
+#define GPIO3_FSM_MASK_SHIFT     ((uint8_t)4U)
+#define GPIO2_FSM_MASK_POL_SHIFT ((uint8_t)3U)
+#define GPIO2_FSM_MASK_SHIFT     ((uint8_t)2U)
+#define GPIO1_FSM_MASK_POL_SHIFT ((uint8_t)1U)
+#define GPIO1_FSM_MASK_SHIFT     ((uint8_t)0U)
 #define GPIO4_FSM_MASK_POL_MASK  (0x01U << GPIO4_FSM_MASK_POL_SHIFT)
 #define GPIO4_FSM_MASK_MASK      (0x01U << GPIO4_FSM_MASK_SHIFT)
 #define GPIO3_FSM_MASK_POL_MASK  (0x01U << GPIO3_FSM_MASK_POL_SHIFT)
@@ -97,10 +97,10 @@ extern "C" {
 #define GPIO1_FSM_MASK_MASK      (0x01U << GPIO1_FSM_MASK_SHIFT)
 
 // FSM_TRIG_MASK_2
-#define GPIO6_FSM_MASK_POL_SHIFT (3U)
-#define GPIO6_FSM_MASK_SHIFT     (2U)
-#define GPIO5_FSM_MASK_POL_SHIFT (1U)
-#define GPIO5_FSM_MASK_SHIFT     (0U)
+#define GPIO6_FSM_MASK_POL_SHIFT ((uint8_t)3U)
+#define GPIO6_FSM_MASK_SHIFT     ((uint8_t)2U)
+#define GPIO5_FSM_MASK_POL_SHIFT ((uint8_t)1U)
+#define GPIO5_FSM_MASK_SHIFT     ((uint8_t)0U)
 #define GPIO6_FSM_MASK_POL_MASK  (0x01U << GPIO6_FSM_MASK_POL_SHIFT)
 #define GPIO6_FSM_MASK_MASK      (0x01U << GPIO6_FSM_MASK_SHIFT)
 #define GPIO5_FSM_MASK_POL_MASK  (0x01U << GPIO5_FSM_MASK_POL_SHIFT)

@@ -41,19 +41,19 @@ extern "C" {
 
 /** @brief PMIC FSM module register addresses */
 #ifndef SAFETY_CFG_REG
-#define SAFETY_CFG_REG         (0x07U)
+#define SAFETY_CFG_REG         ((uint8_t)0x07U)
 #endif
-#define WAKE_CFG_REG           (0x12U)
-#define WAKE_STAT_REG          (0x13U)
-#define PWRL_CFG_REG           (0x14U)
-#define PWRL_CTRL_REG          (0x15U)
-#define STATE_CTRL_REG         (0x16U)
-#define STATE_STAT_REG         (0x17U)
-#define RST_MCU_TMR_REG_REG    (0x18U)
-#define STBY_CFG_REG           (0x19U)
-#define RST_MCU_CFG_REG        (0x1AU)
-#define SAFE_TMO_CFG_REG       (0x52U)
-#define DEV_ERR_STAT_REG       (0x66U)
+#define WAKE_CFG_REG           ((uint8_t)0x12U)
+#define WAKE_STAT_REG          ((uint8_t)0x13U)
+#define PWRL_CFG_REG           ((uint8_t)0x14U)
+#define PWRL_CTRL_REG          ((uint8_t)0x15U)
+#define STATE_CTRL_REG         ((uint8_t)0x16U)
+#define STATE_STAT_REG         ((uint8_t)0x17U)
+#define RST_MCU_TMR_REG_REG    ((uint8_t)0x18U)
+#define STBY_CFG_REG           ((uint8_t)0x19U)
+#define RST_MCU_CFG_REG        ((uint8_t)0x1AU)
+#define SAFE_TMO_CFG_REG       ((uint8_t)0x52U)
+#define DEV_ERR_STAT_REG       ((uint8_t)0x66U)
 
 /** @brief SAFETY_CFG - Safety Configuration */
 #define PWD_TH_SHIFT               (0U)

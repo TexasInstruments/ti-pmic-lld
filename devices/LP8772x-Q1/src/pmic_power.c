@@ -37,6 +37,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -50,8 +51,8 @@
 // While the UV/OV thresholds have different thresholds depending on whether it
 // is for Buck, LDO, LSW, or VCCA, the actual values that go in the register are
 // all 2-bit values and have the same range of supported values.
-#define UV_OV_THR_MIN_VALUE   (0U)
-#define UV_OV_THR_MAX_VALUE   (3U)
+#define UV_OV_THR_MIN_VALUE   ((uint8_t)0U)
+#define UV_OV_THR_MAX_VALUE   ((uint8_t)3U)
 
 // Min and max voltages supported for BUCK1/2/3 VSET
 #define BUCK_VSET_MIN_MV      ((uint16_t)900U)
@@ -75,49 +76,38 @@
 
 typedef struct SetResourceProcessor_s {
     uint16_t validParam;
-    int32_t (*fptr)(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
+    int32_t (*fptr)(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
 } SetResourceProcessor_t;
 
 typedef struct GetResourceProcessor_s {
     uint16_t validParam;
-    int32_t (*fptr)(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
+    int32_t (*fptr)(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
 } GetResourceProcessor_t;
 
-static const uint8_t PwrResourceAll[] = {
-    PMIC_PWR_RSRC_BUCK1,
-    PMIC_PWR_RSRC_BUCK2,
-    PMIC_PWR_RSRC_BUCK3,
-    PMIC_PWR_RSRC_LDO_LS1_VMON1,
-    PMIC_PWR_RSRC_LS2_VMON2,
-    PMIC_PWR_RSRC_GPO,
-    PMIC_PWR_RSRC_VCCA_VMON,
-};
-
 static const uint8_t PwrResourceBucks[] = {
-    PMIC_PWR_RSRC_BUCK1,
-    PMIC_PWR_RSRC_BUCK2,
-    PMIC_PWR_RSRC_BUCK3,
+    (uint8_t)PMIC_PWR_RSRC_BUCK1,
+    (uint8_t)PMIC_PWR_RSRC_BUCK2,
+    (uint8_t)PMIC_PWR_RSRC_BUCK3,
 };
 
 static const uint8_t PwrResourceVmonCapable[] = {
-    PMIC_PWR_RSRC_BUCK1,
-    PMIC_PWR_RSRC_BUCK2,
-    PMIC_PWR_RSRC_BUCK3,
-    PMIC_PWR_RSRC_LDO_LS1_VMON1,
-    PMIC_PWR_RSRC_LS2_VMON2,
-    PMIC_PWR_RSRC_VCCA_VMON,
+    (uint8_t)PMIC_PWR_RSRC_BUCK1,
+    (uint8_t)PMIC_PWR_RSRC_BUCK2,
+    (uint8_t)PMIC_PWR_RSRC_BUCK3,
+    (uint8_t)PMIC_PWR_RSRC_LDO_LS1_VMON1,
+    (uint8_t)PMIC_PWR_RSRC_LS2_VMON2,
+    (uint8_t)PMIC_PWR_RSRC_VCCA_VMON,
 };
 
 static const uint8_t PwrResourceImonCapable[] = {
-    PMIC_PWR_RSRC_BUCK1,
-    PMIC_PWR_RSRC_BUCK2,
-    PMIC_PWR_RSRC_BUCK3,
-    PMIC_PWR_RSRC_LDO_LS1_VMON1,
-    PMIC_PWR_RSRC_LS2_VMON2,
+    (uint8_t)PMIC_PWR_RSRC_BUCK1,
+    (uint8_t)PMIC_PWR_RSRC_BUCK2,
+    (uint8_t)PMIC_PWR_RSRC_BUCK3,
+    (uint8_t)PMIC_PWR_RSRC_LDO_LS1_VMON1,
+    (uint8_t)PMIC_PWR_RSRC_LS2_VMON2,
 };
 
 typedef enum {
-    PWR_RSRC_ALL,
     PWR_RSRC_BUCKS,
     PWR_RSRC_VMON_CAPABLE,
     PWR_RSRC_IMON_CAPABLE,
@@ -126,6 +116,14 @@ typedef enum {
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
+static inline void PWR_copyPowerSequenceCfg(const Pmic_PowerSequenceCfg_t *src, Pmic_PowerSequenceCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerSequenceCfg_t));
+}
+
+static inline void PWR_copyPowerResourceCfg(const Pmic_PowerResourceCfg_t *src, Pmic_PowerResourceCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerResourceCfg_t));
+}
+
 static bool PWR_isResourceValid(const uint8_t validResources[], uint8_t numValid, uint8_t resource)
 {
     bool isValid = false;
@@ -146,20 +144,16 @@ static inline bool PWR_isInRangeU16(uint16_t min, uint16_t max, uint16_t param)
 
 static inline bool PWR_isInRangeU8(uint8_t min, uint8_t max, uint8_t param)
 {
-    return PWR_isInRangeU16((uint16_t)min, (uint16_t)max, (uint16_t)param);
+    return (param >= min) && (param <= max);
 }
 
 static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourceTypes type, uint8_t min, uint8_t max)
 {
     int32_t status = PMIC_ST_SUCCESS;
     const uint8_t *validResources;
-    uint8_t numResources;
+    uint8_t numResources = 0U;
 
     switch (type) {
-        case PWR_RSRC_ALL:
-            validResources = (const uint8_t *)&PwrResourceAll;
-            numResources = COUNT(PwrResourceAll);
-            break;
         case PWR_RSRC_BUCKS:
             validResources = (const uint8_t *)&PwrResourceBucks;
             numResources = COUNT(PwrResourceBucks);
@@ -172,9 +166,9 @@ static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourc
             validResources = (const uint8_t *)&PwrResourceImonCapable;
             numResources = COUNT(PwrResourceImonCapable);
             break;
-        default:
+        default: /* LCOV_EXCL_START */
             status = PMIC_ST_ERR_INV_PARAM;
-            break;
+            break; /* LCOV_EXCL_STOP */
     }
 
     // Validate resource requested supports configuration of this parameter
@@ -190,12 +184,12 @@ static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourc
     return status;
 }
 
-static int32_t PWR_readModifyWrite(Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+static int32_t PWR_readModifyWrite(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, regAddr, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -203,12 +197,12 @@ static int32_t PWR_readModifyWrite(Pmic_Handle_t *handle, uint8_t regAddr, uint8
         status = Pmic_ioTxByte(handle, regAddr, regData);
     }
 
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool enable)
+int32_t Pmic_pwrSetResourceEnable(const Pmic_Handle_t *handle, uint8_t resource, bool enable)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -216,12 +210,11 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
     // Validate that the requested resource is within range and supports
     // enablement. All power resource support enable/disable, this is mostly
     // just parameter validation.
-    if ((status == PMIC_ST_SUCCESS) &&
-        (PWR_isResourceValid(PwrResourceAll, COUNT(PwrResourceAll), resource) == false)) {
+    if ((status == PMIC_ST_SUCCESS) && (resource > PMIC_PWR_RSRC_GPO)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
 
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte(handle, BLOCK_EN_CTRL_REG, &regData);
@@ -235,12 +228,12 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
         status = Pmic_ioTxByte(handle, BLOCK_EN_CTRL_REG, regData);
     }
 
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled)
+int32_t Pmic_pwrGetResourceEnable(const Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -252,8 +245,7 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
     // Validate that the requested resource is within range and supports
     // enablement. All power resource support enable/disable, this is mostly
     // just parameter validation.
-    if ((status == PMIC_ST_SUCCESS) &&
-        (PWR_isResourceValid(PwrResourceAll, COUNT(PwrResourceAll), resource) == false)) {
+    if ((status == PMIC_ST_SUCCESS) && (resource > PMIC_PWR_RSRC_GPO)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -268,10 +260,10 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
         *isEnabled = Pmic_getBitField_b(regData, resource);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfgLdoLs1Vmon1(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -305,7 +297,7 @@ static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, const Pmic_Power
     struct LdoLs1ModeConfig_s modeConfig = configurations[config->mode];
 
     // Handle LDO_LS1_VMON1_PG_LEVEL fields first, this is only LDO_LS1_BYP_CONFIG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, LDO_LS1_VMON1_PG_LEVEL_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -323,12 +315,12 @@ static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, const Pmic_Power
         Pmic_setBitField(&regData, LDO_LS1_LSW_CONFIG_SHIFT, LDO_LS1_LSW_CONFIG_MASK, modeConfig.lswConfig);
         status = Pmic_ioTxByte(handle, FUNC_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-static int32_t PWR_setModeCfgLs2Vmon2(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfgLs2Vmon2(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -339,21 +331,21 @@ static int32_t PWR_setModeCfgLs2Vmon2(Pmic_Handle_t *handle, const Pmic_PowerRes
     // 1 = VMON2 mode
     const uint8_t mode = (config->mode == PMIC_PWR_RSRC_MODE_LSW) ? 0U : 1U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, FUNC_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS) {
         Pmic_setBitField(&regData, LS2_VMON2_GPO_SEL_SHIFT, LS2_VMON2_GPO_SEL_MASK, mode);
         status = Pmic_ioTxByte(handle, FUNC_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setModeCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setModeCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     const uint8_t mode = config->mode;
@@ -373,7 +365,7 @@ static int32_t PWR_setModeCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
             // LDO_LS1_VMON1 supports all valid configurations, assert that the
             // user provided parameter is in range
-            if (PWR_isInRangeU8(PMIC_PWR_RSRC_MODE_MIN, PMIC_PWR_RSRC_MODE_MAX, mode) == false) {
+            if (PWR_isInRangeU8((uint8_t)PMIC_PWR_RSRC_MODE_MIN, (uint8_t)PMIC_PWR_RSRC_MODE_MAX, (uint8_t)mode) == false) {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
 
@@ -385,7 +377,7 @@ static int32_t PWR_setModeCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg
         case PMIC_PWR_RSRC_LS2_VMON2:
             // LS2_VMON2 supports selection between LSW or VMON, assert that the
             // user didn't select "REG" or "BYP" mode
-            if (PWR_isInRangeU8(PMIC_PWR_RSRC_MODE_REG, PMIC_PWR_RSRC_MODE_BYP, mode)) {
+            if (PWR_isInRangeU8((uint8_t)PMIC_PWR_RSRC_MODE_REG, (uint8_t)PMIC_PWR_RSRC_MODE_BYP, (uint8_t)mode) == true) {
                 status = PMIC_ST_ERR_NOT_SUPPORTED;
             }
 
@@ -410,7 +402,7 @@ static int32_t PWR_setModeCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg
     return status;
 }
 
-static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfgLdoLs1Vmon1(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t pgLevelReg = 0U;
@@ -421,13 +413,13 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, Pmic_PowerResour
     bool lswConfig;
 
     // Perform necessary register reads to decode current state
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, LDO_LS1_VMON1_PG_LEVEL_REG, &pgLevelReg);
 
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte(handle, FUNC_CONF_REG, &funcConfReg);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     // For LDO_LS1_VMON1
     //
@@ -441,13 +433,13 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, Pmic_PowerResour
     bypConfig = Pmic_getBitField_b(pgLevelReg, LDO_LS1_BYP_CONFIG_SHIFT);
     vmon1Sel = Pmic_getBitField_b(funcConfReg, LDO_LS1_VMON1_SEL_SHIFT);
     lswConfig = Pmic_getBitField_b(funcConfReg, LDO_LS1_LSW_CONFIG_SHIFT);
-    if (!bypConfig && !vmon1Sel && !lswConfig) {
+    if ((!bypConfig) && (!vmon1Sel) && (!lswConfig)) {
         resolvedMode = PMIC_PWR_RSRC_MODE_REG;
-    } else if (bypConfig && !vmon1Sel && !lswConfig) {
+    } else if ((bypConfig) && (!vmon1Sel) && (!lswConfig)) {
         resolvedMode = PMIC_PWR_RSRC_MODE_BYP;
-    } else if (bypConfig && !vmon1Sel && lswConfig) {
+    } else if ((bypConfig) && (!vmon1Sel) && (lswConfig)) {
         resolvedMode = PMIC_PWR_RSRC_MODE_LSW;
-    } else if (bypConfig && vmon1Sel && lswConfig) {
+    } else if ((bypConfig) && (vmon1Sel) && (lswConfig)) {
         resolvedMode = PMIC_PWR_RSRC_MODE_VMON;
     } else {
         // This is an invalid state, return failure
@@ -461,7 +453,7 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_Handle_t *handle, Pmic_PowerResour
     return status;
 }
 
-static int32_t PWR_getModeCfgLs2Vmon2(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfgLs2Vmon2(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -486,7 +478,7 @@ static int32_t PWR_getModeCfgLs2Vmon2(Pmic_Handle_t *handle, Pmic_PowerResourceC
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getModeCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getModeCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -519,11 +511,11 @@ static int32_t PWR_getModeCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *co
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setIlimCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setIlimCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regAddr = 0U;
     const uint8_t value = config->ilim;
+    uint8_t regAddr = 0U;
 
     if (config->resource > PMIC_PWR_RSRC_MAX) {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -534,14 +526,14 @@ static int32_t PWR_setIlimCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_BUCKS, PMIC_PWR_ILIM_MIN, PMIC_PWR_ILIM_MAX);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_BUCKS, (uint8_t)PMIC_PWR_ILIM_MIN, (uint8_t)PMIC_PWR_ILIM_MAX);
     }
 
     // Now read configuration register, modify control, and write back with
     // critical section
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_readModifyWrite(handle, regAddr, BUCKx_ILIM_SHIFT, BUCKx_ILIM_MASK, value);
+        status = PWR_readModifyWrite(handle, regAddr, (uint8_t)BUCKx_ILIM_SHIFT, (uint8_t)BUCKx_ILIM_MASK, value);
     }
 
     return status;
@@ -549,7 +541,7 @@ static int32_t PWR_setIlimCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getIlimCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getIlimCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -562,7 +554,8 @@ static int32_t PWR_getIlimCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *co
     }
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceBucks, COUNT(PwrResourceBucks), config->resource) == false) {
+    if ((status == PMIC_ST_SUCCESS) &&
+        (PWR_isResourceValid(PwrResourceBucks, (uint8_t)COUNT(PwrResourceBucks), (uint8_t)config->resource) == false)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -613,7 +606,7 @@ static int32_t PWR_getDeglitchParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setDeglitchCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setDeglitchCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -622,13 +615,13 @@ static int32_t PWR_setDeglitchCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
     const uint8_t value = config->deglitch;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getDeglitchParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getDeglitchParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_VMON_CAPABLE, PMIC_PWR_DEGLITCH_MIN, PMIC_PWR_DEGLITCH_MAX);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_VMON_CAPABLE, (uint8_t)PMIC_PWR_DEGLITCH_MIN, (uint8_t)PMIC_PWR_DEGLITCH_MAX);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -642,7 +635,7 @@ static int32_t PWR_setDeglitchCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getDeglitchCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getDeglitchCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -651,13 +644,13 @@ static int32_t PWR_getDeglitchCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceVmonCapable, COUNT(PwrResourceVmonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceVmonCapable, (uint8_t)COUNT(PwrResourceVmonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getDeglitchParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getDeglitchParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -716,7 +709,7 @@ static int32_t PWR_getUvThreshParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setUvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setUvThreshCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -725,13 +718,13 @@ static int32_t PWR_setUvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
     const uint8_t value = config->uvThresh;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getUvThreshParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getUvThreshParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_VMON_CAPABLE, UV_OV_THR_MIN_VALUE, UV_OV_THR_MAX_VALUE);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_VMON_CAPABLE, (uint8_t)UV_OV_THR_MIN_VALUE, (uint8_t)UV_OV_THR_MAX_VALUE);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -745,7 +738,7 @@ static int32_t PWR_setUvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getUvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getUvThreshCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -754,13 +747,13 @@ static int32_t PWR_getUvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceVmonCapable, COUNT(PwrResourceVmonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceVmonCapable, (uint8_t)COUNT(PwrResourceVmonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getUvThreshParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getUvThreshParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -811,7 +804,7 @@ static int32_t PWR_getUvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setUvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setUvReactionCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -820,13 +813,13 @@ static int32_t PWR_setUvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
     const uint8_t value = config->uvReaction;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getUvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getUvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_VMON_CAPABLE, PMIC_PWR_FAULT_REACT_MIN, PMIC_PWR_FAULT_REACT_MAX);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_VMON_CAPABLE, (uint8_t)PMIC_PWR_FAULT_REACT_MIN, (uint8_t)PMIC_PWR_FAULT_REACT_MAX);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -840,7 +833,7 @@ static int32_t PWR_setUvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getUvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getUvReactionCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -849,13 +842,13 @@ static int32_t PWR_getUvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceVmonCapable, COUNT(PwrResourceVmonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceVmonCapable, (uint8_t)COUNT(PwrResourceVmonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getUvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getUvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -913,7 +906,7 @@ static int32_t PWR_getOvThreshParamLoc(uint8_t resource, uint8_t *regAddr, uint8
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setOvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setOvThreshCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -922,13 +915,13 @@ static int32_t PWR_setOvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
     const uint8_t value = config->ovThresh;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getOvThreshParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getOvThreshParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_VMON_CAPABLE, UV_OV_THR_MIN_VALUE, UV_OV_THR_MAX_VALUE);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_VMON_CAPABLE, (uint8_t)UV_OV_THR_MIN_VALUE, (uint8_t)UV_OV_THR_MAX_VALUE);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -940,7 +933,7 @@ static int32_t PWR_setOvThreshCfg(Pmic_Handle_t *handle, const Pmic_PowerResourc
     return status;
 }
 
-static int32_t PWR_getOvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getOvThreshCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -949,13 +942,13 @@ static int32_t PWR_getOvThreshCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceVmonCapable, COUNT(PwrResourceVmonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceVmonCapable, (uint8_t)COUNT(PwrResourceVmonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getOvThreshParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getOvThreshParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -1006,7 +999,7 @@ static int32_t PWR_getOvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setOvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setOvReactionCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1015,13 +1008,13 @@ static int32_t PWR_setOvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
     const uint8_t value = config->ovReaction;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getOvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getOvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_VMON_CAPABLE, PMIC_PWR_FAULT_REACT_MIN, PMIC_PWR_FAULT_REACT_MAX);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_VMON_CAPABLE, (uint8_t)PMIC_PWR_FAULT_REACT_MIN, (uint8_t)PMIC_PWR_FAULT_REACT_MAX);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -1035,7 +1028,7 @@ static int32_t PWR_setOvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getOvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getOvReactionCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1044,13 +1037,13 @@ static int32_t PWR_getOvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceVmonCapable, COUNT(PwrResourceVmonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceVmonCapable, (uint8_t)COUNT(PwrResourceVmonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getOvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getOvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -1102,7 +1095,7 @@ static int32_t PWR_getRvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setRvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setRvReactionCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1111,13 +1104,13 @@ static int32_t PWR_setRvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
     const uint8_t value = config->rvReaction;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getRvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getRvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_IMON_CAPABLE, PMIC_PWR_RV_CONF_INT_ONLY, PMIC_PWR_RV_CONF_SHUT_DOWN);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_IMON_CAPABLE, (uint8_t)PMIC_PWR_RV_CONF_INT_ONLY, (uint8_t)PMIC_PWR_RV_CONF_SHUT_DOWN);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -1131,7 +1124,7 @@ static int32_t PWR_setRvReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getRvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getRvReactionCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1140,13 +1133,13 @@ static int32_t PWR_getRvReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceImonCapable, COUNT(PwrResourceImonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceImonCapable, (uint8_t)COUNT(PwrResourceImonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getRvReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getRvReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -1193,7 +1186,7 @@ static int32_t PWR_getScReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setScReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setScReactionCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1202,13 +1195,13 @@ static int32_t PWR_setScReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
     const uint8_t value = config->scReaction;
 
     // Get register address and bit shifts/masks to use for this resource
-    status = PWR_getScReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+    status = PWR_getScReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
 
     // Validate resource requested supports configuration and that parameter is
     // within allowed range
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_validateParams(config->resource, value,
-                                    PWR_RSRC_IMON_CAPABLE, PMIC_PWR_FAULT_REACT_MIN, PMIC_PWR_FAULT_REACT_MAX);
+        status = PWR_validateParams((uint8_t)config->resource, value,
+                                    PWR_RSRC_IMON_CAPABLE, (uint8_t)PMIC_PWR_FAULT_REACT_MIN, (uint8_t)PMIC_PWR_FAULT_REACT_MAX);
     }
 
     // Now read configuration register, modify control, and write back with
@@ -1222,7 +1215,7 @@ static int32_t PWR_setScReactionCfg(Pmic_Handle_t *handle, const Pmic_PowerResou
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getScReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getScReactionCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1231,13 +1224,13 @@ static int32_t PWR_getScReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg
     uint8_t regData = 0U;
 
     // Validate resource requested supports this parameter
-    if (PWR_isResourceValid(PwrResourceImonCapable, COUNT(PwrResourceImonCapable), config->resource) == false) {
+    if (PWR_isResourceValid(PwrResourceImonCapable, (uint8_t)COUNT(PwrResourceImonCapable), (uint8_t)config->resource) == false) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     // Get register address and bit shifts/masks to use for this resource
     if (status == PMIC_ST_SUCCESS) {
-        status = PWR_getScReactionParamLoc(config->resource, &regAddr, &shift, &mask);
+        status = PWR_getScReactionParamLoc((uint8_t)config->resource, &regAddr, &shift, &mask);
     }
 
     // Now read configuration register and update the config struct
@@ -1252,7 +1245,7 @@ static int32_t PWR_getScReactionCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg
     return status;
 }
 
-static inline int32_t PWR_convertVoltageMvToCodeBuck(uint16_t voltage_mV, uint8_t *voltageCode)
+static inline int32_t PWR_convertVoltageMvToCodeBuck(uint16_t voltageMv, uint8_t *voltageCode)
 {
     // Formula for code to Volt is 0.9+VSET*0.020
     //
@@ -1263,41 +1256,41 @@ static inline int32_t PWR_convertVoltageMvToCodeBuck(uint16_t voltage_mV, uint8_
     int32_t status = PMIC_ST_SUCCESS;
 
     // Assert that the voltage is within supported ranges
-    if (PWR_isInRangeU16(BUCK_VSET_MIN_MV, BUCK_VSET_MAX_MV, voltage_mV) == false) {
+    if (PWR_isInRangeU16(BUCK_VSET_MIN_MV, BUCK_VSET_MAX_MV, voltageMv) == false) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     // Assert that the voltage is in 20mV units
-    if ((voltage_mV % BUCK_VSET_STEP_MV) != 0U) {
+    if ((voltageMv % BUCK_VSET_STEP_MV) != 0U) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     // If all assertions passed, we can safely convert the voltage to VSET code
     if (status == PMIC_ST_SUCCESS) {
-        *voltageCode = (uint8_t)((voltage_mV - BUCK_VSET_MIN_MV) / BUCK_VSET_STEP_MV);
+        *voltageCode = (uint8_t)((voltageMv - BUCK_VSET_MIN_MV) / BUCK_VSET_STEP_MV);
     }
 
     return status;
 }
 
-static inline int32_t PWR_convertVoltageMvToCodeVmon(uint16_t voltage_mV, uint8_t *voltageCode)
+static inline int32_t PWR_convertVoltageMvToCodeVmon(uint16_t voltageMv, uint8_t *voltageCode)
 {
     // Formula for code to Volt is 0.5+PG_SET*0.025
     int32_t status = PMIC_ST_SUCCESS;
 
     // Assert that the voltage is within supported ranges
-    if (PWR_isInRangeU16(VMON_PG_LEVEL_MIN_MV, VMON_PG_LEVEL_MAX_MV, voltage_mV) == false) {
+    if (PWR_isInRangeU16(VMON_PG_LEVEL_MIN_MV, VMON_PG_LEVEL_MAX_MV, voltageMv) == false) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     // Assert that the voltage is in 25mV units
-    if ((voltage_mV % VMON_PG_LEVEL_STEP_MV) != 0U) {
+    if ((voltageMv % VMON_PG_LEVEL_STEP_MV) != 0U) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     // If all assertions passed, we can safely convert the voltage to VSET code
     if (status == PMIC_ST_SUCCESS) {
-        *voltageCode = (uint8_t)((voltage_mV - VMON_PG_LEVEL_MIN_MV) / VMON_PG_LEVEL_STEP_MV);
+        *voltageCode = (uint8_t)((voltageMv - VMON_PG_LEVEL_MIN_MV) / VMON_PG_LEVEL_STEP_MV);
     }
 
     return status;
@@ -1305,7 +1298,7 @@ static inline int32_t PWR_convertVoltageMvToCodeVmon(uint16_t voltage_mV, uint8_
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_setVoltageCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_setVoltageCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regAddr = 0U;
@@ -1327,7 +1320,7 @@ static int32_t PWR_setVoltageCfg(Pmic_Handle_t *handle, const Pmic_PowerResource
             mask = BUCK_VSET_MASK;
 
             if (status == PMIC_ST_SUCCESS) {
-                status = PWR_convertVoltageMvToCodeBuck(config->voltage_mV, &voltageCode);
+                status = PWR_convertVoltageMvToCodeBuck((uint16_t)config->voltage_mV, &voltageCode);
             }
 
             break;
@@ -1337,7 +1330,7 @@ static int32_t PWR_setVoltageCfg(Pmic_Handle_t *handle, const Pmic_PowerResource
             mask = VMON_PGSET_MASK;
 
             if (status == PMIC_ST_SUCCESS) {
-                status = PWR_convertVoltageMvToCodeVmon(config->voltage_mV, &voltageCode);
+                status = PWR_convertVoltageMvToCodeVmon((uint16_t)config->voltage_mV, &voltageCode);
             }
 
             break;
@@ -1358,7 +1351,7 @@ static int32_t PWR_setVoltageCfg(Pmic_Handle_t *handle, const Pmic_PowerResource
     return status;
 }
 
-static inline int32_t PWR_convertCodeToVoltageMvBuck(uint16_t *voltage_mV, uint8_t code)
+static inline int32_t PWR_convertCodeToVoltageMvBuck(uint16_t *voltageMv, uint8_t code)
 {
     // Formula for code to Volt is 0.9+VSET*0.020
     //
@@ -1368,28 +1361,26 @@ static inline int32_t PWR_convertCodeToVoltageMvBuck(uint16_t *voltage_mV, uint8
     // been configured via other means. For this reason, the value in the
     // register will be converted to a voltage faithfully and without
     // restriction.
-    *voltage_mV = BUCK_VSET_MIN_MV + (code * BUCK_VSET_STEP_MV);
+    *voltageMv = BUCK_VSET_MIN_MV + (code * BUCK_VSET_STEP_MV);
     return PMIC_ST_SUCCESS;
 }
 
-static inline int32_t PWR_convertCodeToVoltageMvVmon(uint16_t *voltage_mV, uint8_t code)
+static inline int32_t PWR_convertCodeToVoltageMvVmon(uint16_t *voltageMv, uint8_t code)
 {
     // Formula for code to Volt is 0.5+PG_SET*0.025
-    *voltage_mV = VMON_PG_LEVEL_MIN_MV + (code * VMON_PG_LEVEL_STEP_MV);
+    *voltageMv = VMON_PG_LEVEL_MIN_MV + (code * VMON_PG_LEVEL_STEP_MV);
     return PMIC_ST_SUCCESS;
 }
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested a change.
-static int32_t PWR_getVoltageCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getVoltageCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t mask = 0U;
     uint8_t regData = 0U;
     uint8_t regAddr = 0U;
-    uint8_t voltageCode = 0U;
     uint16_t voltageMv = 0U;
-    int32_t (*fptr)(uint16_t *, uint8_t) = (void *)0U;
 
     if (config->resource > PMIC_PWR_RSRC_MAX) {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -1397,20 +1388,17 @@ static int32_t PWR_getVoltageCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t 
         regAddr = BUCK1_VOUT_REG + config->resource;
     }
 
-    // Select the correct function to use to convert the code to voltage (mV)
-    // and the correct mask value
+    // Select the correct mask value
     switch (config->resource) {
         case PMIC_PWR_RSRC_BUCK1:
         case PMIC_PWR_RSRC_BUCK2:
         case PMIC_PWR_RSRC_BUCK3:
             mask = BUCK_VSET_MASK;
-            fptr = PWR_convertCodeToVoltageMvBuck;
             break;
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
         case PMIC_PWR_RSRC_LS2_VMON2:
         case PMIC_PWR_RSRC_VCCA_VMON:
             mask = VMON_PGSET_MASK;
-            fptr = PWR_convertCodeToVoltageMvVmon;
             break;
         default:
             // Only possible values of status at this point are SUCCESS or
@@ -1424,9 +1412,25 @@ static int32_t PWR_getVoltageCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t 
         status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && fptr) {
-        voltageCode = Pmic_getBitField(regData, VSET_PGSET_SHIFT, mask);
-        status = fptr(&voltageMv, voltageCode);
+    if (status == PMIC_ST_SUCCESS) {
+        uint8_t voltageCode = Pmic_getBitField(regData, VSET_PGSET_SHIFT, mask);
+
+        // Convert voltage code to mV based on resource type
+        switch (config->resource) {
+            case PMIC_PWR_RSRC_BUCK1:
+            case PMIC_PWR_RSRC_BUCK2:
+            case PMIC_PWR_RSRC_BUCK3:
+                status = PWR_convertCodeToVoltageMvBuck(&voltageMv, voltageCode);
+                break;
+            case PMIC_PWR_RSRC_LDO_LS1_VMON1:
+            case PMIC_PWR_RSRC_LS2_VMON2:
+            case PMIC_PWR_RSRC_VCCA_VMON:
+                status = PWR_convertCodeToVoltageMvVmon(&voltageMv, voltageCode);
+                break;
+            default: /* LCOV_EXCL_START */
+                status = PMIC_ST_ERR_INV_PARAM;
+                break; /* LCOV_EXCL_STOP */
+        }
     }
 
     // If the conversion was successful, update the config struct
@@ -1437,30 +1441,30 @@ static int32_t PWR_getVoltageCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t 
     return status;
 }
 
-static int32_t PWR_setSingleResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config) {
+static int32_t PWR_setSingleResourceCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Define linkage between user provided valid params and the functions which
     // handle setting those configurations
     const SetResourceProcessor_t resourceProcessors[] = {
-        { PMIC_PWR_CFG_MODE_VALID, PWR_setModeCfg },
-        { PMIC_PWR_CFG_ILIM_VALID, PWR_setIlimCfg },
-        { PMIC_PWR_CFG_VOLTAGE_VALID, PWR_setVoltageCfg },
-        { PMIC_PWR_CFG_DEGLITCH_VALID, PWR_setDeglitchCfg },
-        { PMIC_PWR_CFG_UV_THRESH_VALID, PWR_setUvThreshCfg },
-        { PMIC_PWR_CFG_UV_REACT_VALID, PWR_setUvReactionCfg },
-        { PMIC_PWR_CFG_OV_THRESH_VALID, PWR_setOvThreshCfg },
-        { PMIC_PWR_CFG_OV_REACT_VALID, PWR_setOvReactionCfg },
-        { PMIC_PWR_CFG_RV_REACT_VALID, PWR_setRvReactionCfg },
-        { PMIC_PWR_CFG_SC_REACT_VALID, PWR_setScReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_MODE_VALID, PWR_setModeCfg },
+        { (uint16_t)PMIC_PWR_CFG_ILIM_VALID, PWR_setIlimCfg },
+        { (uint16_t)PMIC_PWR_CFG_VOLTAGE_VALID, PWR_setVoltageCfg },
+        { (uint16_t)PMIC_PWR_CFG_DEGLITCH_VALID, PWR_setDeglitchCfg },
+        { (uint16_t)PMIC_PWR_CFG_UV_THRESH_VALID, PWR_setUvThreshCfg },
+        { (uint16_t)PMIC_PWR_CFG_UV_REACT_VALID, PWR_setUvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_OV_THRESH_VALID, PWR_setOvThreshCfg },
+        { (uint16_t)PMIC_PWR_CFG_OV_REACT_VALID, PWR_setOvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_RV_REACT_VALID, PWR_setRvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_SC_REACT_VALID, PWR_setScReactionCfg },
     };
 
     // First check for the enable bit, if this is valid and the user is
     // disabling the resource, set this first. If the user is enabling the power
     // resource, do that last.
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) &&
+    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) == true) &&
         (config->enable == PMIC_DISABLE)) {
-        status = Pmic_pwrSetResourceEnable(handle, config->resource, config->enable);
+        status = Pmic_pwrSetResourceEnable(handle, (uint8_t)config->resource, (bool)config->enable);
     }
 
     // Handle all other potential field modifications
@@ -1479,21 +1483,22 @@ static int32_t PWR_setSingleResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerR
     // Final check for the enable bit, if this is valid and the user is enabling
     // the resource, we skipped configuration at the start of this function and
     // need to enable it now.
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) &&
+    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) == true) &&
         (config->enable == PMIC_ENABLE)) {
-        status = Pmic_pwrSetResourceEnable(handle, config->resource, config->enable);
+        status = Pmic_pwrSetResourceEnable(handle, (uint8_t)config->resource, (bool)config->enable);
     }
 
     return status;
 }
 
-int32_t Pmic_pwrSetResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
+int32_t Pmic_pwrSetResourceCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config)
 {
     return Pmic_pwrSetResourceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[])
+int32_t Pmic_pwrSetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[])
 {
+    Pmic_PowerResourceCfg_t localConfigs[PMIC_PWR_RSRC_MAX];
     int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
@@ -1501,20 +1506,30 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    for (uint8_t i = 0; i < numConfigs; i++) {
-            if (status != PMIC_ST_SUCCESS) {
-                break;
-            }
-
-            status = PWR_setSingleResourceCfg(handle, &config[i]);
+    if ((status == PMIC_ST_SUCCESS) && ((numConfigs == 0U) || (numConfigs > PMIC_PWR_RSRC_MAX))) {
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerResourceCfg(&config[i], &localConfigs[i]);
+        }
+    }
+
+    for (uint8_t i = 0; i < numConfigs; i++) {
+        if (status != PMIC_ST_SUCCESS) {
+            break;
+        }
+
+        status = PWR_setSingleResourceCfg(handle, &localConfigs[i]);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 // NOTE: This function expects that the validParam value has already been
 // checked and the user requested this param be updated.
-static int32_t PWR_getEnableCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getEnableCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     bool isEnabled = false;
     int32_t status = Pmic_pwrGetResourceEnable(handle, config->resource, &isEnabled);
@@ -1526,24 +1541,24 @@ static int32_t PWR_getEnableCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *
     return status;
 }
 
-static int32_t PWR_getSingleResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+static int32_t PWR_getSingleResourceCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     // Define linkage between user provided valid params and the functions which
     // handle getting those configurations
     const GetResourceProcessor_t resourceProcessors[] = {
-        { PMIC_PWR_CFG_ENABLE_VALID, PWR_getEnableCfg },
-        { PMIC_PWR_CFG_MODE_VALID, PWR_getModeCfg },
-        { PMIC_PWR_CFG_ILIM_VALID, PWR_getIlimCfg },
-        { PMIC_PWR_CFG_VOLTAGE_VALID, PWR_getVoltageCfg },
-        { PMIC_PWR_CFG_DEGLITCH_VALID, PWR_getDeglitchCfg },
-        { PMIC_PWR_CFG_UV_THRESH_VALID, PWR_getUvThreshCfg },
-        { PMIC_PWR_CFG_UV_REACT_VALID, PWR_getUvReactionCfg },
-        { PMIC_PWR_CFG_OV_THRESH_VALID, PWR_getOvThreshCfg },
-        { PMIC_PWR_CFG_OV_REACT_VALID, PWR_getOvReactionCfg },
-        { PMIC_PWR_CFG_RV_REACT_VALID, PWR_getRvReactionCfg },
-        { PMIC_PWR_CFG_SC_REACT_VALID, PWR_getScReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_ENABLE_VALID, PWR_getEnableCfg },
+        { (uint16_t)PMIC_PWR_CFG_MODE_VALID, PWR_getModeCfg },
+        { (uint16_t)PMIC_PWR_CFG_ILIM_VALID, PWR_getIlimCfg },
+        { (uint16_t)PMIC_PWR_CFG_VOLTAGE_VALID, PWR_getVoltageCfg },
+        { (uint16_t)PMIC_PWR_CFG_DEGLITCH_VALID, PWR_getDeglitchCfg },
+        { (uint16_t)PMIC_PWR_CFG_UV_THRESH_VALID, PWR_getUvThreshCfg },
+        { (uint16_t)PMIC_PWR_CFG_UV_REACT_VALID, PWR_getUvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_OV_THRESH_VALID, PWR_getOvThreshCfg },
+        { (uint16_t)PMIC_PWR_CFG_OV_REACT_VALID, PWR_getOvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_RV_REACT_VALID, PWR_getRvReactionCfg },
+        { (uint16_t)PMIC_PWR_CFG_SC_REACT_VALID, PWR_getScReactionCfg },
     };
 
     // Read all fields requested by the user
@@ -1562,18 +1577,29 @@ static int32_t PWR_getSingleResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourc
     return status;
 }
 
-int32_t Pmic_pwrGetResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
+int32_t Pmic_pwrGetResourceCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config)
 {
     return Pmic_pwrGetResourceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[])
+int32_t Pmic_pwrGetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[])
 {
+    Pmic_PowerResourceCfg_t localConfigs[PMIC_PWR_RSRC_MAX];
     int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && ((numConfigs == 0U) || (numConfigs > PMIC_PWR_RSRC_MAX))) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerResourceCfg(&config[i], &localConfigs[i]);
+        }
     }
 
     for (uint8_t i = 0U; i < numConfigs; i++) {
@@ -1581,23 +1607,29 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_
             break;
         }
 
-        status = PWR_getSingleResourceCfg(handle, &config[i]);
+        status = PWR_getSingleResourceCfg(handle, &localConfigs[i]);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerResourceCfg(&localConfigs[i], &config[i]);
+        }
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
+int32_t Pmic_pwrSetSequenceCfg(const Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
 {
     return Pmic_pwrSetSequenceCfgs(handle, 1U, config);
 }
 
-int32_t Pmic_pwrGetSequenceCfg(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
+int32_t Pmic_pwrGetSequenceCfg(const Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
 {
     return Pmic_pwrGetSequenceCfgs(handle, 1U, config);
 }
 
-static int32_t PWR_getSeqRegister(uint8_t resource, uint16_t *regAddr)
+static int32_t PWR_getSeqRegister(uint8_t resource, uint8_t *regAddr)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1608,7 +1640,7 @@ static int32_t PWR_getSeqRegister(uint8_t resource, uint16_t *regAddr)
         case PMIC_PWR_RSRC_BUCK3:
         case PMIC_PWR_RSRC_LDO_LS1_VMON1:
         case PMIC_PWR_RSRC_LS2_VMON2:
-            *regAddr = BUCK1_SEQUENCE_REG + (uint16_t)resource;
+            *regAddr = BUCK1_SEQUENCE_REG + resource;
             break;
         case PMIC_PWR_RSRC_GPO:
             *regAddr = LDO_LS1_VMON1_SEQUENCE_REG;
@@ -1624,13 +1656,13 @@ static int32_t PWR_getSeqRegister(uint8_t resource, uint16_t *regAddr)
     return status;
 }
 
-static int32_t PWR_getSingleSequence(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
+static int32_t PWR_getSingleSequence(const Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint16_t regAddr = 0U;
+    uint8_t regAddr = 0U;
     uint8_t regData = 0U;
 
-    status = PWR_getSeqRegister(config->resource, &regAddr);
+    status = PWR_getSeqRegister((uint8_t)config->resource, &regAddr);
 
     // Read the relevant sequencing register
     if (status == PMIC_ST_SUCCESS) {
@@ -1651,16 +1683,16 @@ static int32_t PWR_getSingleSequence(Pmic_Handle_t *handle, Pmic_PowerSequenceCf
     return status;
 }
 
-static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
+static int32_t PWR_setSingleSequence(const Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint16_t regAddr = 0U;
+    uint8_t regAddr = 0U;
     uint8_t regData = 0U;
 
-    status = PWR_getSeqRegister(config->resource, &regAddr);
+    status = PWR_getSeqRegister((uint8_t)config->resource, &regAddr);
 
     // Read the relevant sequencing register
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
@@ -1686,18 +1718,29 @@ static int32_t PWR_setSingleSequence(Pmic_Handle_t *handle, const Pmic_PowerSequ
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[])
+int32_t Pmic_pwrSetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[])
 {
+    Pmic_PowerSequenceCfg_t localConfigs[8];
     int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && ((numConfigs == 0U) || (numConfigs > 8U))) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerSequenceCfg(&config[i], &localConfigs[i]);
+        }
     }
 
     for (uint8_t i = 0; i < numConfigs; i++) {
@@ -1705,19 +1748,30 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const
             break;
         }
 
-        status = PWR_setSingleSequence(handle, &config[i]);
+        status = PWR_setSingleSequence(handle, &localConfigs[i]);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_pwrGetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[])
+int32_t Pmic_pwrGetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[])
 {
+    Pmic_PowerSequenceCfg_t localConfigs[8];
     int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && ((numConfigs == 0U) || (numConfigs > 8U))) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerSequenceCfg(&config[i], &localConfigs[i]);
+        }
     }
 
     for (uint8_t i = 0; i < numConfigs; i++) {
@@ -1725,8 +1779,14 @@ int32_t Pmic_pwrGetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_
             break;
         }
 
-        status = PWR_getSingleSequence(handle, &config[i]);
+        status = PWR_getSingleSequence(handle, &localConfigs[i]);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; i < numConfigs; i++) {
+            PWR_copyPowerSequenceCfg(&localConfigs[i], &config[i]);
+        }
+    }
+
+    return Pmic_logStatus(handle, status);
 }

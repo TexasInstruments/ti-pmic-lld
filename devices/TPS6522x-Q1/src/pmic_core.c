@@ -43,7 +43,7 @@
 #define PMIC_REG_LOCK_KEY   (0xAAU)
 #define PMIC_REG_UNLOCK_KEY (0x9BU)
 
-int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock)
 {
     int32_t status = Pmic_checkHandle(handle);
     const uint8_t key = lock ? PMIC_REG_LOCK_KEY : PMIC_REG_UNLOCK_KEY;
@@ -53,10 +53,10 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lock)
         status = Pmic_ioTxByte_CS(handle, REGISTER_LOCK_REG, key);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *isLocked)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -76,7 +76,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *isLocked)
         *isLocked = Pmic_getBitField_b(regData, REGISTER_LOCK_STATUS_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
@@ -99,7 +99,7 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
         *nvmRev = Pmic_getBitField(regData, TI_NVM_REV_SHIFT, TI_NVM_REV_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
@@ -122,31 +122,31 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
         *siliconRev = Pmic_getBitField(regData, SILICON_REV_SHIFT, SILICON_REV_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(handle);
 
-    if ((status == PMIC_ST_SUCCESS) && (scratchpadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
+    if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchpadRegNum, value);
+        status = Pmic_ioTxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     int32_t status = Pmic_checkHandle(handle);
 
-    if ((status == PMIC_ST_SUCCESS) && (scratchpadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
+    if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -158,8 +158,8 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadR
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchpadRegNum, value);
+        status = Pmic_ioRxByte_CS(handle, SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

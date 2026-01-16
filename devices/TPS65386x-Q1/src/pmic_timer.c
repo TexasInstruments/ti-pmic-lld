@@ -37,6 +37,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -54,11 +55,15 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
+static inline void TIMER_copyTimerCfg(const Pmic_timerCfg_t *src, Pmic_timerCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_timerCfg_t));
+}
 
-int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_timerCfg_t localTimerCfg;
 
     // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
@@ -73,33 +78,38 @@ int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
         // Read TMR_CFG_REG
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
 
         // Modify timer prescale
-        if (Pmic_validParamStatusCheck(timerCfg->validParams, PMIC_CFG_TMR_PRESCALE_VALID, status))
+        if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID, status))
         {
-            if (timerCfg->prescale > PMIC_TMR_PRESCALE_MAX)
+            if (localTimerCfg.prescale > PMIC_TMR_PRESCALE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
             else
             {
-                Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, timerCfg->prescale);
+                Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, localTimerCfg.prescale);
             }
         }
 
         // Modify timer mode
-        if (Pmic_validParamStatusCheck(timerCfg->validParams, PMIC_CFG_TMR_MODE_VALID, status))
+        if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID, status))
         {
-            if (timerCfg->mode > PMIC_TMR_MODE_MAX)
+            if (localTimerCfg.mode > PMIC_TMR_MODE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
             else
             {
-                Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, timerCfg->mode);
+                Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, localTimerCfg.mode);
             }
         }
 
@@ -108,16 +118,17 @@ int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
         {
             status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_timerCfg_t localTimerCfg;
 
     // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
@@ -128,6 +139,11 @@ int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
     if ((status == PMIC_ST_SUCCESS) && (timerCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
     }
 
     // Read TMR_CFG_REG
@@ -139,22 +155,24 @@ int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
     if (status == PMIC_ST_SUCCESS)
     {
         // Get timer prescale
-        if (Pmic_validParamCheck(timerCfg->validParams, PMIC_CFG_TMR_PRESCALE_VALID))
+        if (Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
         {
-            timerCfg->prescale = Pmic_getBitField(regData, TMR_PS_SHIFT, TMR_PS_MASK);
+            localTimerCfg.prescale = Pmic_getBitField(regData, TMR_PS_SHIFT, TMR_PS_MASK);
         }
 
         // Get timer mode
-        if (Pmic_validParamCheck(timerCfg->validParams, PMIC_CFG_TMR_MODE_VALID))
+        if (Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID))
         {
-            timerCfg->mode = Pmic_getBitField(regData, TMR_CFG_SHIFT, TMR_CFG_MASK);
+            localTimerCfg.mode = Pmic_getBitField(regData, TMR_CFG_SHIFT, TMR_CFG_MASK);
         }
+
+        TIMER_copyTimerCfg(&localTimerCfg, timerCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerStop(Pmic_Handle_t *handle)
+int32_t Pmic_timerStop(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -162,7 +180,7 @@ int32_t Pmic_timerStop(Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read TMR_CFG_REG
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
@@ -173,13 +191,13 @@ int32_t Pmic_timerStop(Pmic_Handle_t *handle)
             // Write TMR_CFG_REG
             status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerClr(Pmic_Handle_t *handle)
+int32_t Pmic_timerClr(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -187,7 +205,7 @@ int32_t Pmic_timerClr(Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read TMR_CFG_REG
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
 
         // Set TMR_CLR bit field to 1 to clear the timer counter then write new
@@ -197,13 +215,13 @@ int32_t Pmic_timerClr(Pmic_Handle_t *handle)
             Pmic_setBitField(&regData, TMR_CLR_SHIFT, TMR_CLR_MASK, 1U);
             status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt)
+int32_t Pmic_timerSetCnt(const Pmic_Handle_t *handle, uint32_t tmrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -216,25 +234,31 @@ int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt)
     // Overwrite current timer count with new value (bytes 0-2)
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioTxWordSeq(handle, TMR_CNT0_REG, tmrCnt, TMR_CNT_REG_CNT);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt)
+int32_t Pmic_timerGetCnt(const Pmic_Handle_t *handle, uint32_t *tmrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint32_t value = 0U;
 
+    // Parameter check
+    if ((status == PMIC_ST_SUCCESS) && (tmrCnt == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     // Get current timer count (bytes 0-2)
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxWordSeq(handle, TMR_CNT0_REG, &value, TMR_CNT_REG_CNT);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -242,10 +266,10 @@ int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt)
         *tmrCnt = value;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal)
+int32_t Pmic_timerSetWakeupValue(const Pmic_Handle_t *handle, uint32_t wakeupVal)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -258,25 +282,31 @@ int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal)
     // Overwrite current wakeup value with new value (bytes 0-2)
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioTxWordSeq(handle, TMR_LP_WAKE0_REG, wakeupVal, TMR_LP_WAKE_REG_CNT);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal)
+int32_t Pmic_timerGetWakeupValue(const Pmic_Handle_t *handle, uint32_t *wakeupVal)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint32_t value = 0U;
 
+    // Parameter check
+    if ((status == PMIC_ST_SUCCESS) && (wakeupVal == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     // Get current wakeup value (bytes 0-2)
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxWordSeq(handle, TMR_LP_WAKE0_REG, &value, TMR_LP_WAKE_REG_CNT);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -284,5 +314,5 @@ int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal)
         *wakeupVal = value;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

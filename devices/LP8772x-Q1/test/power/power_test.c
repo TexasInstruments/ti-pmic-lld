@@ -30,300 +30,26 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- * @brief Source file containing definitions to PMIC Power tests.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
 #include "power_test.h"
+#include "test_inject.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Power tests */
-#define POWER_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceEnable_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceEnable_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceEnable_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceEnable_nullParam_isEnabled); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceEnable_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_invalidParam_buck1_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck1_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_invalidParam_buck2_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck2_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_invalidParam_buck3_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_buck3_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_ldoLs1Vmon1_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_invalidParam_ls2Vmon2_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_ls2Vmon2_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_ls2Vmon2_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_invalidParam_vccaVmon_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_vccaVmon_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_outOfBounds_vccaVmon_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_vccaVmon_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_vccaVmon_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfg_gpo_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfg_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfg_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfg_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_invalidParam_buck1_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck1_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_invalidParam_buck2_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck2_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_invalidParam_buck3_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_buck3_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_ldoLs1Vmon1_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_invalidParam_ls2Vmon2_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_ls2Vmon2_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_invalidParam_vccaVmon_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_vccaVmon_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_outOfBounds_vccaVmon_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_vccaVmon_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_vccaVmon_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_mode); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_ilim); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_deglitch); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_uvThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_uvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_ovThresh); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_ovReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_rvReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceCfgs_gpo_scReaction); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfgs_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfgs_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfgs_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck3_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_buck3_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_ldoLs1Vmon1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_ldoLs1Vmon1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_ls2Vmon2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_ls2Vmon2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_gpo_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_outOfBounds_gpo_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_vccaVmon_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfg_vccaVmon_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfg_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfg_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck3_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_buck3_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_ldoLs1Vmon1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_ldoLs1Vmon1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_ls2Vmon2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_ls2Vmon2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_gpo_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_outOfBounds_gpo_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_vccaVmon_startupDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_vccaVmon_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_nullParam_handle); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_nullParam_config); \
-                             PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_outOfBounds_resource); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_buck1); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_buck2); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_buck3); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_ldoLs1Vmon1); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_ls2Vmon2); \
-                             PLATFORM_RUN_TEST(test_positive_enableDisable_gpo); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_ilim); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck1_scReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_ilim); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck2_scReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_ilim); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_rvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_buck3_scReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_rvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ldoLs1Vmon1_scReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_rvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_ls2Vmon2_scReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_mode); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_voltage_mV); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_deglitch); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_uvThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_uvReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_ovThresh); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_vccaVmon_ovReaction); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_gpo_enable); \
-                             PLATFORM_RUN_TEST(test_positive_setGetResourceCfg_allRsrc_allCfg); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck3_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_buck3_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_ldoLs1Vmon1_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_ldoLs1Vmon1_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_ls2Vmon2_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_ls2Vmon2_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_gpo_startupDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_gpo_shutdownDelay); \
-                             PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_allRsrc_allCfg)
+
+/* Run all Power tests - hierarchical structure for better debugging */
+#define POWER_TEST_RUN_ALL() \
+    do { \
+        POWER_TEST_RUN_NEGATIVE(); \
+        POWER_TEST_RUN_POSITIVE(); \
+    } while(0)
 
 /* Run all Power negative tests */
 #define POWER_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetResourceEnable_nullParam_handle); \
@@ -521,7 +247,38 @@
                                   PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetSequenceCfgs_vccaVmon_shutdownDelay); \
                                   PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_nullParam_handle); \
                                   PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_nullParam_config); \
-                                  PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_outOfBounds_resource)
+                                  PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetSequenceCfgs_outOfBounds_resource); \
+                                  PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState); \
+                                  /* GPO resource GET unsupported params */ \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedIlim); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedDeglitch); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedUvThresh); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedUvReaction); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedOvThresh); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedOvReaction); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedRvReaction); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_gpo_unsupportedScReaction); \
+                                  /* VCCA_VMON resource GET unsupported params */ \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_vccaVmon_unsupportedIlim); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetResourceCfg_vccaVmon_unsupportedScReaction); \
+                                  /* Sequence config edge cases */ \
+                                  PLATFORM_RUN_TEST(test_negative_pwrSetSequenceCfgs_numConfigs_zero); \
+                                  PLATFORM_RUN_TEST(test_negative_pwrGetSequenceCfgs_numConfigs_zero); \
+                                  /* LP8772x-Q1 specific invalid resource tests */ \
+                                  PLATFORM_RUN_TEST(test_negative_power_setVoltage_invalidResource); \
+                                  PLATFORM_RUN_TEST(test_negative_power_setPgLevel_invalidResource); \
+                                  /* LP8772x-Q1 additional coverage tests */ \
+                                  PLATFORM_RUN_TEST(test_negative_powerGetVoutCfg_unsupportedRegulator); \
+                                  PLATFORM_RUN_TEST(test_negative_powerSetVoutCfg_unsupportedRegulator); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_setResourceCfg_zeroNumConfigs); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_setResourceCfg_excessiveNumConfigs); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_getResourceCfgs_zeroNumConfigs); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_getModeCfg_unsupportedResource); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_setIlimCfg_resourceOutOfBounds); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_getIlimCfg_resourceOutOfBounds); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_getVoltageCfg_resourceOutOfBounds); \
+                                  PLATFORM_RUN_TEST(test_negative_pwr_invalidModeCombination_ldoLs1Vmon1)
 
 /* Run all Power positive tests */
 #define POWER_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_enableDisable_buck1); \
@@ -606,7 +363,12 @@
                                   PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_ls2Vmon2_shutdownDelay); \
                                   PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_gpo_startupDelay); \
                                   PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_gpo_shutdownDelay); \
-                                  PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_allRsrc_allCfg)
+                                  PLATFORM_RUN_TEST(test_positive_setGetSequenceCfg_allRsrc_allCfg); \
+                                  /* LP8772x-Q1 specific NRSTOUT sequence test */ \
+                                  PLATFORM_RUN_TEST(test_positive_power_getNrstoutSequence); \
+                                  /* LP8772x-Q1 additional PGOOD level tests */ \
+                                  PLATFORM_RUN_TEST(test_positive_powerGetPgoodLevel_validBuck); \
+                                  PLATFORM_RUN_TEST(test_positive_powerSetPgoodLevel_validBuck)
 
 /* BUCK1 - BUCK3, LDO_LS1_VMON1, LS2_VMON2, VCCA_VMON, GPO */
 #define POWER_TEST_NUM_RESOURCES (7U)
@@ -621,12 +383,11 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
-Pmic_Handle_t pmicHandle;
+static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
-static int32_t powerTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle);
 static void powerTest_enableDisableResource(uint8_t rsrc);
 static void powerTest_Pmic_pwrSetResourceCfg_invalidParam_buckMode(uint8_t buck);
 static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckIlim(uint8_t buck);
@@ -684,6 +445,7 @@ static void powerTest_compareExpActSeqCfgs(Pmic_PowerSequenceCfg_t *expSequenceC
 
 void power_test(void *args)
 {
+    (void)args;
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_HandleCfg_t coreCfg = {
@@ -719,19 +481,9 @@ void power_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = powerTest_unlockPmicRegs(&pmicHandle);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            platform_setupTests();
-            POWER_TEST_RUN_ALL();
-            platform_tearDownTests();
-        }
-        else
-        {
-            (void)sprintf(msg, "Error in unlocking PMIC registers: %d\r\n", status);
-            platform_printString(msg);
-        }
+        platform_setupTests();
+        POWER_TEST_RUN_ALL();
+        platform_tearDownTests();
     }
     else
     {
@@ -743,41 +495,11 @@ void power_test(void *args)
     platform_deinit();
 }
 
-static int32_t powerTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
-{
-    uint8_t regData = 0x9BU;
-    const uint8_t bufLen = 1U;
-    const uint16_t registerLockAddr = 0x09U;
-
-    // Check handle
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
-
-    // Write key to REGISTER_LOCK
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = platform_txByte(pmicHandle, PMIC_MAIN_INST, registerLockAddr, &regData, bufLen);
-    }
-
-    // Get register lock status
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = platform_rxByte(pmicHandle, PMIC_MAIN_INST, registerLockAddr, &regData, bufLen);
-    }
-
-    // Validate that registers are unlocked
-    if ((status == PMIC_ST_SUCCESS) && (regData != 0U))
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    return status;
-}
-
 void test_negative_Pmic_pwrSetResourceEnable_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_pwrSetResourceEnable()
     int32_t status = Pmic_pwrSetResourceEnable(NULL, PMIC_PWR_RSRC_BUCK1, PMIC_ENABLE);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrSetResourceEnable_outOfBounds_resource(void)
@@ -792,7 +514,7 @@ void test_negative_Pmic_pwrGetResourceEnable_nullParam_handle(void)
     // Pass NULL handle into Pmic_pwrGetResourceEnable()
     bool isEnabled = (bool)false;
     int32_t status = Pmic_pwrGetResourceEnable(NULL, PMIC_PWR_RSRC_BUCK1, &isEnabled);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrGetResourceEnable_nullParam_isEnabled(void)
@@ -819,7 +541,7 @@ void test_negative_Pmic_pwrSetResourceCfg_nullParam_handle(void)
         .enable = PMIC_DISABLE
     };
     int32_t status = Pmic_pwrSetResourceCfg(NULL, &resourceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrSetResourceCfg_nullParam_config(void)
@@ -1678,7 +1400,7 @@ void test_negative_Pmic_pwrGetResourceCfg_nullParam_handle(void)
         .enable = PMIC_DISABLE
     };
     int32_t status = Pmic_pwrGetResourceCfg(NULL, &resourceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrGetResourceCfg_nullParam_config(void)
@@ -1710,7 +1432,7 @@ void test_negative_Pmic_pwrSetResourceCfgs_nullParam_handle(void)
         .enable = PMIC_DISABLE
     };
     int32_t status = Pmic_pwrSetResourceCfgs(NULL, numConfig, &resourceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrSetResourceCfgs_nullParam_config(void)
@@ -2618,7 +2340,7 @@ void test_negative_Pmic_pwrGetResourceCfgs_nullParam_handle(void)
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetResourceCfgs(NULL, numConfig, &resourceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrGetResourceCfgs_nullParam_config(void)
@@ -2650,7 +2372,7 @@ void test_negative_Pmic_pwrSetSequenceCfg_nullParam_handle(void)
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
     int32_t status = Pmic_pwrSetSequenceCfg(NULL, &sequenceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrSetSequenceCfg_nullParam_config(void)
@@ -2790,7 +2512,7 @@ void test_negative_Pmic_pwrGetSequenceCfg_nullParam_handle(void)
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetSequenceCfg(NULL, &sequenceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrGetSequenceCfg_nullParam_config(void)
@@ -2810,7 +2532,7 @@ void test_negative_Pmic_pwrSetSequenceCfgs_nullParam_handle(void)
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
     int32_t status = Pmic_pwrSetSequenceCfgs(NULL, numConfig, &sequenceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrSetSequenceCfgs_nullParam_config(void)
@@ -2957,7 +2679,7 @@ void test_negative_Pmic_pwrGetSequenceCfgs_nullParam_handle(void)
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetSequenceCfgs(NULL, numConfig, &sequenceCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_negative_Pmic_pwrGetSequenceCfgs_nullParam_config(void)
@@ -3002,6 +2724,39 @@ static void powerTest_enableDisableResource(uint8_t rsrc)
     status = Pmic_pwrGetResourceEnable(&pmicHandle, rsrc, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == PMIC_DISABLE);
+}
+
+/**
+ * @brief Test Pmic_pwrGetResourceCfg for LDO_LS1_VMON1 with invalid hardware state
+ *
+ * This test injects an invalid bit combination into FUNC_CONF_REG that doesn't
+ * match any valid mode (lines 461-464 in pmic_power.c). The function should
+ * return PMIC_ST_ERR_FAIL when the hardware state is invalid.
+ */
+void test_negative_Pmic_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState(void)
+{
+#ifdef BUILD_MOCK
+    extern PmicMockDevice_t* platform_getMockDevice(void);
+    extern int32_t PmicMock_WriteRegister(PmicMockDevice_t* mock, uint16_t addr, uint8_t value);
+
+    PmicMockDevice_t* mock = platform_getMockDevice();
+    int32_t status;
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    // Inject invalid hardware state: bypConfig=0, vmon1Sel=1, lswConfig=0
+    // This combination doesn't match any valid mode in PWR_getModeCfgLdoLs1Vmon1
+    // FUNC_CONF_REG bit 0 = VMON1_SEL, bit 1 = LSW_CONFIG
+    // Setting only bit 0 creates an invalid state
+    status = PmicMock_WriteRegister(mock, 0x1EU, 0x01U);  // FUNC_CONF_REG = 0x1E
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Attempt to get resource config - should fail due to invalid HW state
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+#endif
 }
 
 void test_positive_enableDisable_buck1(void)
@@ -4329,18 +4084,390 @@ void test_positive_setGetSequenceCfg_allRsrc_allCfg(void)
     powerTest_compareExpActSeqCfgs(expSequenceCfgs, actSequenceCfgs);
 }
 
-/**
- * @brief Some testing frameworks require an API to setup tests. Rename/rewrite
- * as necessary.
- */
-void setUp(void)
+
+/* ========================================================================== */
+/*              GPO Resource GET Unsupported Tests                            */
+/* ========================================================================== */
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedIlim(void)
 {
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedDeglitch(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedUvThresh(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedUvReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedOvThresh(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedOvReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedRvReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_gpo_unsupportedScReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_GPO
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+
+/* ========================================================================== */
+/*              VCCA_VMON Resource GET Unsupported Tests                      */
+/* ========================================================================== */
+
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedIlim(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .resource = PMIC_PWR_RSRC_VCCA_VMON
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_VCCA_VMON
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedScReaction(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .resource = PMIC_PWR_RSRC_VCCA_VMON
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/* ========================================================================== */
+/*              Sequence Config Edge Case Tests                               */
+/* ========================================================================== */
+
+void test_negative_pwrSetSequenceCfgs_numConfigs_zero(void)
+{
+    Pmic_PowerSequenceCfg_t cfg[1] = {{0}};
+    int32_t status = Pmic_pwrSetSequenceCfgs(&pmicHandle, 0, cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_negative_pwrGetSequenceCfgs_numConfigs_zero(void)
+{
+    Pmic_PowerSequenceCfg_t cfg[1] = {{0}};
+    int32_t status = Pmic_pwrGetSequenceCfgs(&pmicHandle, 0, cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/* ========================================================================== */
+/*              NRSTOUT Sequence Tests (LP8772x-Q1 specific)                 */
+/* ========================================================================== */
+
+void test_positive_power_getNrstoutSequence(void)
+{
+    // Test get sequence for NRSTOUT resource to cover NRSTOUT_SEQUENCE_REG case
+    Pmic_PowerSequenceCfg_t cfg = {
+        .validParams = PMIC_PWR_SEQ_STARTUP_VALID | PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .resource = PMIC_PWR_RSRC_NRSTOUT
+    };
+    int32_t status = Pmic_pwrGetSequenceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_negative_power_setVoltage_invalidResource(void)
+{
+    // Test invalid resource ID for voltage setting
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_MAX + 1U,
+        .voltage_mV = 1000U
+    };
+    int32_t status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_negative_power_setPgLevel_invalidResource(void)
+{
+    // Test invalid resource for power good level (voltage on VMON resources)
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_GPO,
+        .voltage_mV = 1000U
+    };
+    int32_t status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/* ========================================================================== */
+/*              Additional Coverage Tests for Unsupported Regulators         */
+/* ========================================================================== */
+
+void test_negative_powerGetVoutCfg_unsupportedRegulator(void)
+{
+    // Test getting voltage configuration for unsupported regulator type
+    // NRSTOUT doesn't support voltage configuration
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_NRSTOUT
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_negative_powerSetVoutCfg_unsupportedRegulator(void)
+{
+    // Test setting voltage configuration for unsupported regulator type
+    // NRSTOUT doesn't support voltage configuration
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_NRSTOUT,
+        .voltage_mV = 1000U
+    };
+    int32_t status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_positive_powerGetPgoodLevel_validBuck(void)
+{
+    // Test reading PGOOD level configuration for BUCK regulator
+    // This tests the voltage read path for BUCK resources
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_BUCK1
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    // Voltage should be within valid BUCK range
+    PLATFORM_ASSERT((cfg.voltage_mV >= 900U) && (cfg.voltage_mV <= 1900U));
+}
+
+void test_positive_powerSetPgoodLevel_validBuck(void)
+{
+    // Test setting PGOOD level configuration for BUCK regulator
+    // Set a valid voltage within BUCK range
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_BUCK2,
+        .voltage_mV = 1200U
+    };
+    int32_t status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify the voltage was set correctly
+    Pmic_PowerResourceCfg_t readCfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_BUCK2
+    };
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &readCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readCfg.voltage_mV == 1200U);
+}
+
+/* ========================================================================== */
+/*          LP8772x-Q1 Tests for Uncovered Lines in pmic_power.c             */
+/* ========================================================================== */
+
+void test_negative_pwr_setResourceCfg_zeroNumConfigs(void)
+{
+    // Test coverage for lines 1526-1527: numConfigs == 0
+    // Pmic_pwrSetResourceCfgs() should return error when numConfigs is 0
+
+    Pmic_PowerResourceCfg_t resourceCfgs[1] = {{0}};
+    uint8_t numConfigs = 0U;
+
+    // Call with numConfigs = 0, should return PMIC_ST_ERR_INV_PARAM
+    int32_t status = Pmic_pwrSetResourceCfgs(&pmicHandle, numConfigs, resourceCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_negative_pwr_setResourceCfg_excessiveNumConfigs(void)
+{
+    // Test coverage for lines 1526-1527: numConfigs > PMIC_PWR_RSRC_MAX
+    // Pmic_pwrSetResourceCfgs() should return error when numConfigs exceeds maximum
+
+    Pmic_PowerResourceCfg_t resourceCfgs[PMIC_PWR_RSRC_MAX + 1U];
+    uint8_t numConfigs = PMIC_PWR_RSRC_MAX + 1U;
+
+    // Initialize configurations
+    for (uint8_t i = 0U; i < numConfigs; i++)
+    {
+        resourceCfgs[i].resource = PMIC_PWR_RSRC_BUCK1;
+        resourceCfgs[i].validParams = PMIC_PWR_CFG_VOLTAGE_VALID;
+        resourceCfgs[i].voltage_mV = 1000U;
+    }
+
+    // Call with excessive numConfigs, should return PMIC_ST_ERR_INV_PARAM
+    int32_t status = Pmic_pwrSetResourceCfgs(&pmicHandle, numConfigs, resourceCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_negative_pwr_getResourceCfgs_zeroNumConfigs(void)
+{
+    // Test coverage for lines 1608-1609: numConfigs == 0
+    // Pmic_pwrGetResourceCfgs() should return error when numConfigs is 0
+
+    Pmic_PowerResourceCfg_t resourceCfgs[1] = {{0}};
+    uint8_t numConfigs = 0U;
+
+    // Call with numConfigs = 0, should return PMIC_ST_ERR_INV_PARAM
+    int32_t status = Pmic_pwrGetResourceCfgs(&pmicHandle, numConfigs, resourceCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
 /**
- * @brief Some testing frameworks require an API to teardown tests.
- * Rename/rewrite as necessary.
+ * @brief Test Pmic_pwrGetResourceCfg() with MODE valid for unsupported resource
+ * Covers PWR_getModeCfg() default case (pmic_power.c:522-523)
+ * NRSTOUT resource doesn't support mode configuration
  */
-void tearDown(void)
+void test_negative_pwr_getModeCfg_unsupportedResource(void)
 {
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_NRSTOUT
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_pwrSetResourceCfg() with ILIM valid and resource > MAX
+ * Covers PWR_setIlimCfg() resource bounds check (pmic_power.c:537-539)
+ */
+void test_negative_pwr_setIlimCfg_resourceOutOfBounds(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .resource = PMIC_PWR_RSRC_MAX + 1U,
+        .ilim = 10U
+    };
+    int32_t status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_pwrGetResourceCfg() with ILIM valid and resource > MAX
+ * Covers PWR_getIlimCfg() resource bounds check (pmic_power.c:567-569)
+ */
+void test_negative_pwr_getIlimCfg_resourceOutOfBounds(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .resource = PMIC_PWR_RSRC_MAX + 1U
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_pwrGetResourceCfg() with VOLTAGE valid and resource > MAX
+ * Covers PWR_getVoltageCfg() resource bounds check (pmic_power.c:1402-1403)
+ */
+void test_negative_pwr_getVoltageCfg_resourceOutOfBounds(void)
+{
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .resource = PMIC_PWR_RSRC_MAX + 1U
+    };
+    int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test PWR_getModeCfgLdoLs1Vmon1() with invalid mode bit combination
+ * Covers lines 461-463 in pmic_power.c (invalid hardware state detection)
+ *
+ * The LDO_LS1_VMON1 resource has 4 valid mode combinations:
+ * - (bypConfig=0, vmon1Sel=0, lswConfig=0) -> REG mode
+ * - (bypConfig=1, vmon1Sel=0, lswConfig=0) -> BYP mode
+ * - (bypConfig=1, vmon1Sel=0, lswConfig=1) -> LSW mode
+ * - (bypConfig=1, vmon1Sel=1, lswConfig=1) -> VMON mode
+ *
+ * Any other combination is invalid. This test injects an invalid combination.
+ */
+void test_negative_pwr_invalidModeCombination_ldoLs1Vmon1(void)
+{
+    int32_t status;
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x1DU;
+    const uint16_t FUNC_CONF_REG = 0x48U;
+
+    // Inject invalid combination: bypConfig=0, vmon1Sel=1, lswConfig=0
+    // LDO_LS1_BYP_CONFIG is bit 0 of LDO_LS1_VMON1_PG_LEVEL_REG
+    status = testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, 0x00U);  /* bypConfig=0 */
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // LDO_LS1_VMON1_SEL is bit 3, LDO_LS1_LSW_CONFIG is bit 2 of FUNC_CONF_REG
+    status = testInject_setRegister(FUNC_CONF_REG, (1U << 3U));  /* vmon1Sel=1, lswConfig=0 */
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Try to get resource config - should fail with invalid combination
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
 }

@@ -44,6 +44,7 @@
 // Used in composing the I2C transmit/receive frame.
 #define I2C_TX_FRAME_LEN ((uint8_t)4U)
 #define I2C_RX_FRAME_LEN ((uint8_t)5U)
+#define PMIC_IO_FRAME_LEN_MAX ((uint8_t)8U)  /* Max frame length for CRC loops */
 
 /* I2C protocol constants */
 #define I2C_ADDR_7BIT_MASK    ((uint8_t)0x7FU)  /* Extract 7-bit I2C address */
@@ -58,7 +59,7 @@
 
 /**
  *  Used CRC Polynomial:  x^8 + x^2 + x + 1
- *   Evalution of CRC Polynomial value from equation:
+ *   Evaluation of CRC Polynomial value from equation:
  *     1*x^8 + 0*x^7 + 0*x^6 + 0*x^5 + 0*x^4 + 0*x^3 + 1*x^2 + 1*x + 1
  *  =  1     + 0     + 0     + 0     + 0     + 0     + 1     + 1   + 1
  *  =  0x107(After discarding MSB bit) = 0x7
@@ -67,7 +68,7 @@
  *  link to generate custom CRC table from polynomial:
  *  http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
  */
-const static uint8_t CRC8_TABLE[] =
+static const uint8_t CRC8_TABLE[] =
 {
     0x00U, 0x07U, 0x0eU, 0x09U, 0x1cU, 0x1bU, 0x12U, 0x15U,
     0x38U, 0x3fU, 0x36U, 0x31U, 0x24U, 0x23U, 0x2aU, 0x2dU,
@@ -115,11 +116,11 @@ const static uint8_t CRC8_TABLE[] =
  *
  * @retval CRC value for data
  */
-static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
+static uint8_t getCRC8Val(const uint8_t data[], uint8_t length)
 {
     uint8_t crc = 0xFFU;
 
-    for (uint8_t i = 0U; i < length; i++)
+    for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < length); i++)
     {
         crc = CRC8_TABLE[data[i] ^ crc];
     }
@@ -129,45 +130,57 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
 
 int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txData)
 {
+    uint32_t attemptNum = 0U;
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
+    uint8_t localRegAddr = regAddr;
 
     if ((handle == NULL) || (handle->commHandle0 == NULL))
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
-    else if (handle->ioWrite == NULL)
+
+    if (handle->ioWrite == NULL)
     {
-        status = PMIC_ST_ERR_NULL_FPTR;
+        return PMIC_ST_ERR_NULL_FPTR;
     }
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
     // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
-    if ((status == PMIC_ST_SUCCESS) && handle->isA0 && (regAddr >= REGMAP_DIFF_START))
+    if (handle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
-        regAddr -= REGMAP_DIFF_FACTOR;
+        localRegAddr -= REGMAP_DIFF_FACTOR;
+    }
+
+    // The first byte in i2cFrame is sent first, the last byte is sent last
+    i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
+    i2cFrame[1U] = localRegAddr;
+    i2cFrame[2U] = txData;
+    i2cFrameLen = 3U;
+
+    // If PMIC CRC is enabled, calculate CRC and increment number of bytes in the I2C frame
+    if (handle->crcEnable == PMIC_ENABLE)
+    {
+        i2cFrame[3U] = getCRC8Val(i2cFrame, i2cFrameLen);
+        i2cFrameLen++;
     }
 
     // Write to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
-        i2cFrame[1U] = regAddr;
-        i2cFrame[2U] = txData;
-        i2cFrameLen = 3U;
-
-        // If PMIC CRC is enabled, calculate CRC and increment number of bytes in the I2C frame
-        if (handle->crcEnable == PMIC_ENABLE)
-        {
-            i2cFrame[3U] = getCRC8Val(i2cFrame, i2cFrameLen);
-            i2cFrameLen++;
-        }
+    do {
+        attemptNum++;
 
         // Begin write exchange. TX buffer starts at i2cFrame[2U]
         status = handle->ioWrite(handle, 0, regAddr, &i2cFrame[2U], i2cFrameLen - 2U);
-    }
+
+        if ((status == PMIC_ST_SUCCESS) || (attemptNum > handle->retryCnt))
+        {
+            break;
+        }
+
+        Pmic_incrementRetryCnt(handle);
+        Pmic_timerWaitMs(handle, handle->retryIntervalMs);
+    } while(status != PMIC_ST_SUCCESS);
 
     return status;
 }
@@ -176,61 +189,68 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t t
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioTxByte(handle, regAddr, txData);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxData)
 {
+    uint32_t attemptNum = 0U;
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
+    uint8_t localRegAddr = regAddr;
 
     if ((handle == NULL) || (handle->commHandle0 == NULL) || (rxData == NULL))
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
-    else if (handle->ioRead == NULL)
+
+    if (handle->ioRead == NULL)
     {
-        status = PMIC_ST_ERR_NULL_FPTR;
+        return PMIC_ST_ERR_NULL_FPTR;
     }
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
     // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
-    if ((status == PMIC_ST_SUCCESS) && handle->isA0 && (regAddr >= REGMAP_DIFF_START))
+    if (handle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
-        regAddr -= REGMAP_DIFF_FACTOR;
+        localRegAddr -= REGMAP_DIFF_FACTOR;
     }
 
+    // The first byte in i2cFrame is sent first, the last byte is sent last
+    i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
+    i2cFrame[1U] = localRegAddr;
+    i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
+    i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
+
     // Read from PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT);
-        i2cFrame[1U] = regAddr;
-        i2cFrame[2U] = (uint8_t)(((handle->i2cAddr0 & I2C_ADDR_7BIT_MASK) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
-        i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
+    do {
+        attemptNum++;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
         status = handle->ioRead(handle, 0, regAddr, &i2cFrame[3U], i2cFrameLen - 3U);
-    }
 
-    // If read exchange was successful and PMIC CRC is enabled, compare SCRC to expected CRC
-    if ((status == PMIC_ST_SUCCESS) && (handle->crcEnable == PMIC_ENABLE))
-    {
-        // i2cFrame[0U] - Target device I2C address with write bit
-        // i2cFrame[1U] - Target device internal register address
-        // i2cFrame[2U] - Target device I2C address with read bit
-        // i2cFrame[3U] - RDATA
-        // i2cFrame[4U] - SCRC
-        if (i2cFrame[4U] != getCRC8Val(i2cFrame, i2cFrameLen - 1U))
+        // If read exchange was successful and PMIC CRC is enabled, compare actual vs. expected CRC
+        if ((status == PMIC_ST_SUCCESS) && (handle->crcEnable == PMIC_ENABLE))
         {
-            status = PMIC_ST_ERR_DATA_IO_CRC;
+            if (i2cFrame[4U] != getCRC8Val(i2cFrame, i2cFrameLen - 1U))
+            {
+                status = PMIC_ST_ERR_DATA_IO_CRC;
+            }
         }
-    }
+
+        if ((status == PMIC_ST_SUCCESS) || (attemptNum > handle->retryCnt))
+        {
+            break;
+        }
+
+        Pmic_incrementRetryCnt(handle);
+        Pmic_timerWaitMs(handle, handle->retryIntervalMs);
+    } while (status != PMIC_ST_SUCCESS);
 
     // Store read data
     if (status == PMIC_ST_SUCCESS)
@@ -245,9 +265,9 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, regAddr, rxData);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -271,9 +291,9 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioUpdateByte(handle, regAddr, shift, mask, value);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -287,9 +307,9 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioUpdateByte_b(handle, regAddr, shift, value);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -299,7 +319,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable)
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         // Read INTERFACE_CONF register
@@ -313,7 +333,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable)
 
         status = Pmic_ioTxByte(handle, PMIC_INTERFACE_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     // Change crcEnable struct member of PMIC handle
     if (status == PMIC_ST_SUCCESS)
@@ -334,7 +354,7 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle)
     return Pmic_ioSetCrcEnableState(handle, PMIC_DISABLE);
 }
 
-int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *crcEnabled)
+int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *crcEnabled)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -354,7 +374,6 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *crcEnabled)
     if (status == PMIC_ST_SUCCESS)
     {
         *crcEnabled = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-        handle->crcEnable = *crcEnabled;
     }
 
     return status;

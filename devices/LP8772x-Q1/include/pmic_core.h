@@ -123,45 +123,11 @@ typedef struct Pmic_ConfigCrcStat_s {
 /* ========================================================================== */
 
 /**
- * @brief Get PMIC NVM revision.
- *
- * Design: PMICDRV-584
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-506, PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528
- *               PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param nvmRev [OUT] NVM revision.
- *
- * @return PMIC_ST_SUCCESS if PMIC NVM revision has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getNvmRev(Pmic_Handle_t *handle, uint8_t *nvmRev);
-
-/**
- * @brief Get PMIC silicon revision.
- *
- * Design: PMICDRV-759
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-551, PMICDRV-506
- *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param siliconRev [OUT] Silicon revision.
- *
- * @return PMIC_ST_SUCCESS if PMIC silicon revision has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev);
-
-/**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
  * Design: PMICDRV-684
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
- *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-545
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
@@ -170,15 +136,14 @@ int32_t Pmic_getSiliconRev(Pmic_Handle_t *handle, uint8_t *siliconRev);
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
  *
  * Design: PMICDRV-685
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-545
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
@@ -188,15 +153,14 @@ int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 /**
  * @brief Set lock state for registers locked by REGISTER_LOCK.
  *
  * Design: PMICDRV-587
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547, PMICDRV-549
- *               PMICDRV-550, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-523, PMICDRV-545, PMICDRV-546
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param lockState [IN] Lock registers with PMIC_LOCK_ENABLE, unlock with
@@ -206,15 +170,14 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState);
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lockState);
 
 /**
  * @brief Get lock state for registers locked by REGISTER_LOCK.
  *
  * Design: PMICDRV-588
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-547, PMICDRV-549, PMICDRV-550
- *               PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-528, PMICDRV-545, PMICDRV-546
  *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param lockState [OUT] If PMIC_LOCK_ENABLE, registers are locked. If
@@ -224,14 +187,13 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState);
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *lockState);
 
 /**
  * @brief Enables config register CRC.
  *
  * Design: PMICDRV-735
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-545
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param calculate [IN] If true (PMIC_CFG_CRC_RECALCULATE), this API will
@@ -249,8 +211,7 @@ int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate);
  * @brief Disables config register CRC.
  *
  * Design: PMICDRV-736
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-545
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  *
@@ -264,8 +225,7 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle);
  * @brief Get configuration register CRC status.
  *
  * Design: PMICDRV-737
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-545, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
  *
  * @param handle [IN] Pointer to the PMIC core handle structure.
  * @param configCrcStat [OUT] Configuration register CRC status obtained from PMIC.
@@ -274,16 +234,15 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
+int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
 
 /**
  * @brief Calculate config register CRC, writes value to PMIC, and verifies
  * correctness.
  *
  * Design: PMICDRV-738
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-545, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
- *               PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-544, PMICDRV-545
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  *
@@ -291,7 +250,7 @@ int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *con
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle);
+int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
 
 /**
  * @brief Retrieve the config register CRC value currently stored on the PMIC as
@@ -299,8 +258,7 @@ int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle);
  * calculation or affect the CRC value provided by the MCU.
  *
  * Design: PMICDRV-739
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-545, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
  *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param crc       [OUT] The current CRC value on device.
@@ -309,7 +267,7 @@ int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc);
+int32_t Pmic_configCrcGetFromDevice(const Pmic_Handle_t *handle, uint16_t *crc);
 
 #ifdef __cplusplus
 }

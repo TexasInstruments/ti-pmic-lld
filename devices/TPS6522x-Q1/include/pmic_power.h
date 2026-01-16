@@ -106,12 +106,12 @@ extern "C" {
 #define PMIC_POWER_RESOURCE_VMON1     ((uint16_t)((PMIC_POWER_RESOURCE_TYPE_VMON << 8U) | (PMIC_POWER_RESOURCE_ID_VMON1)))
 #define PMIC_POWER_RESOURCE_VMON2     ((uint16_t)((PMIC_POWER_RESOURCE_TYPE_VMON << 8U) | (PMIC_POWER_RESOURCE_ID_VMON2)))
 #define PMIC_POWER_RESOURCE_VCCA_VMON ((uint16_t)((PMIC_POWER_RESOURCE_TYPE_VMON << 8U) | (PMIC_POWER_RESOURCE_ID_VCCA_VMON)))
-#define PMIC_POWER_RESOURCE_BUCK_MIN  (PMIC_POWER_RESOURCE_BUCK1)
-#define PMIC_POWER_RESOURCE_BUCK_MAX  (PMIC_POWER_RESOURCE_BUCK4)
-#define PMIC_POWER_RESOURCE_LDO_MIN   (PMIC_POWER_RESOURCE_LDO1)
-#define PMIC_POWER_RESOURCE_LDO_MAX   (PMIC_POWER_RESOURCE_LDO3)
-#define PMIC_POWER_RESOURCE_VMON_MIN  (PMIC_POWER_RESOURCE_VMON1)
-#define PMIC_POWER_RESOURCE_VMON_MAX  (PMIC_POWER_RESOURCE_VCCA_VMON)
+#define PMIC_POWER_RESOURCE_BUCK_MIN  ((uint16_t)PMIC_POWER_RESOURCE_BUCK1)
+#define PMIC_POWER_RESOURCE_BUCK_MAX  ((uint16_t)PMIC_POWER_RESOURCE_BUCK4)
+#define PMIC_POWER_RESOURCE_LDO_MIN   ((uint16_t)PMIC_POWER_RESOURCE_LDO1)
+#define PMIC_POWER_RESOURCE_LDO_MAX   ((uint16_t)PMIC_POWER_RESOURCE_LDO3)
+#define PMIC_POWER_RESOURCE_VMON_MIN  ((uint16_t)PMIC_POWER_RESOURCE_VMON1)
+#define PMIC_POWER_RESOURCE_VMON_MAX  ((uint16_t)PMIC_POWER_RESOURCE_VCCA_VMON)
 /** @} */
 
 /**
@@ -122,8 +122,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_BUCK1_VSET_MIN (0x0AU)
-#define PMIC_POWER_BUCK1_VSET_MAX (0xFDU)
+#define PMIC_POWER_BUCK1_VSET_MIN ((uint8_t)0x0AU)
+#define PMIC_POWER_BUCK1_VSET_MAX ((uint8_t)0xFDU)
 /** @} */
 
 /**
@@ -134,8 +134,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_BUCK2_3_4_VSET_MIN (0x00U)
-#define PMIC_POWER_BUCK2_3_4_VSET_MAX (0x45U)
+#define PMIC_POWER_BUCK2_3_4_VSET_MIN ((uint8_t)0x00U)
+#define PMIC_POWER_BUCK2_3_4_VSET_MAX ((uint8_t)0x45U)
 /** @} */
 
 /**
@@ -150,8 +150,8 @@ extern "C" {
 #define PMIC_POWER_BUCK_SLEW_RATE_5_MV_PER_US    (1U)
 #define PMIC_POWER_BUCK_SLEW_RATE_2P5_MV_PER_US  (2U)
 #define PMIC_POWER_BUCK_SLEW_RATE_1P25_MV_PER_US (3U)
-#define PMIC_POWER_BUCK_SLEW_RATE_MIN            (PMIC_POWER_BUCK_SLEW_RATE_10_MV_PER_US)
-#define PMIC_POWER_BUCK_SLEW_RATE_MAX            (PMIC_POWER_BUCK_SLEW_RATE_1P25_MV_PER_US)
+#define PMIC_POWER_BUCK_SLEW_RATE_MIN            ((uint8_t)PMIC_POWER_BUCK_SLEW_RATE_10_MV_PER_US)
+#define PMIC_POWER_BUCK_SLEW_RATE_MAX            ((uint8_t)PMIC_POWER_BUCK_SLEW_RATE_1P25_MV_PER_US)
 /** @} */
 
 /**
@@ -162,8 +162,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_LDO1_VSET_MIN (0x00U)
-#define PMIC_POWER_LDO1_VSET_MAX (0x3FU)
+#define PMIC_POWER_LDO1_VSET_MIN ((uint8_t)0x00U)
+#define PMIC_POWER_LDO1_VSET_MAX ((uint8_t)0x3FU)
 /** @} */
 
 /**
@@ -174,8 +174,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_LDO2_3_VSET_MIN (0x00U)
-#define PMIC_POWER_LDO2_3_VSET_MAX (0x36U)
+#define PMIC_POWER_LDO2_3_VSET_MIN ((uint8_t)0x00U)
+#define PMIC_POWER_LDO2_3_VSET_MAX ((uint8_t)0x36U)
 /** @} */
 
 /**
@@ -188,8 +188,8 @@ extern "C" {
  */
 #define PMIC_POWER_VCCA_VMON_PG_SET_3P3_V (0U)
 #define PMIC_POWER_VCCA_VMON_PG_SET_5_V   (1U)
-#define PMIC_POWER_VCCA_VMON_PG_SET_MIN   (PMIC_POWER_VCCA_VMON_PG_SET_3P3_V)
-#define PMIC_POWER_VCCA_VMON_PG_SET_MAX   (PMIC_POWER_VCCA_VMON_PG_SET_5_V)
+#define PMIC_POWER_VCCA_VMON_PG_SET_MIN   ((uint8_t)PMIC_POWER_VCCA_VMON_PG_SET_3P3_V)
+#define PMIC_POWER_VCCA_VMON_PG_SET_MAX   ((uint8_t)PMIC_POWER_VCCA_VMON_PG_SET_5_V)
 /** @} */
 
 /**
@@ -204,8 +204,8 @@ extern "C" {
 #define PMIC_POWER_VCCA_VMON_THR_4_PCT  (1U)
 #define PMIC_POWER_VCCA_VMON_THR_6_PCT  (2U)
 #define PMIC_POWER_VCCA_VMON_THR_10_PCT (3U)
-#define PMIC_POWER_VCCA_VMON_THR_MIN    (PMIC_POWER_VCCA_VMON_THR_3_PCT)
-#define PMIC_POWER_VCCA_VMON_THR_MAX    (PMIC_POWER_VCCA_VMON_THR_10_PCT)
+#define PMIC_POWER_VCCA_VMON_THR_MIN    ((uint8_t)PMIC_POWER_VCCA_VMON_THR_3_PCT)
+#define PMIC_POWER_VCCA_VMON_THR_MAX    ((uint8_t)PMIC_POWER_VCCA_VMON_THR_10_PCT)
 /** @} */
 
 /**
@@ -216,8 +216,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_VMON1_PG_SET_MIN (0x0AU)
-#define PMIC_POWER_VMON1_PG_SET_MAX (0xFFU)
+#define PMIC_POWER_VMON1_PG_SET_MIN ((uint8_t)0x0AU)
+#define PMIC_POWER_VMON1_PG_SET_MAX ((uint8_t)0xFFU)
 /** @} */
 
 /**
@@ -228,8 +228,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_VMON2_PG_SET_MIN (0x00U)
-#define PMIC_POWER_VMON2_PG_SET_MAX (0x45U)
+#define PMIC_POWER_VMON2_PG_SET_MIN ((uint8_t)0x00U)
+#define PMIC_POWER_VMON2_PG_SET_MAX ((uint8_t)0x45U)
 /** @} */
 
 /**
@@ -246,8 +246,8 @@ extern "C" {
 #define PMIC_POWER_VMON_THR_4_PCT_40_MV (1U)
 #define PMIC_POWER_VMON_THR_6_PCT_60_MV (2U)
 #define PMIC_POWER_VMON_THR_8_PCT_80_MV (3U)
-#define PMIC_POWER_VMON_THR_MIN         (PMIC_POWER_VMON_THR_3_PCT_30_MV)
-#define PMIC_POWER_VMON_THR_MAX         (PMIC_POWER_VMON_THR_8_PCT_80_MV)
+#define PMIC_POWER_VMON_THR_MIN         ((uint8_t)PMIC_POWER_VMON_THR_3_PCT_30_MV)
+#define PMIC_POWER_VMON_THR_MAX         ((uint8_t)PMIC_POWER_VMON_THR_8_PCT_80_MV)
 /** @} */
 
 /**
@@ -269,8 +269,8 @@ extern "C" {
 #define PMIC_PWR_VMON_DEGL_4US_0P5US   (5U)
 #define PMIC_PWR_VMON_DEGL_4US_4US_ALT (6U)  /* Functionally identical to value 0 */
 #define PMIC_PWR_VMON_DEGL_4US_20US    (7U)
-#define PMIC_POWER_VMON_DEGL_SEL_MIN   (PMIC_PWR_VMON_DEGL_4US_4US)
-#define PMIC_POWER_VMON_DEGL_SEL_MAX   (PMIC_PWR_VMON_DEGL_4US_20US)
+#define PMIC_POWER_VMON_DEGL_SEL_MIN   ((uint8_t)PMIC_PWR_VMON_DEGL_4US_4US)
+#define PMIC_POWER_VMON_DEGL_SEL_MAX   ((uint8_t)PMIC_PWR_VMON_DEGL_4US_20US)
 /** @} */
 
 /**
@@ -285,8 +285,8 @@ extern "C" {
 #define PMIC_POWER_GRP_SEL_MCU   (1U)
 #define PMIC_POWER_GRP_SEL_SOC   (2U)
 #define PMIC_POWER_GRP_SEL_OTHER (3U)
-#define PMIC_POWER_GRP_SEL_MIN   (PMIC_POWER_GRP_SEL_NONE)
-#define PMIC_POWER_GRP_SEL_MAX   (PMIC_POWER_GRP_SEL_OTHER)
+#define PMIC_POWER_GRP_SEL_MIN   ((uint8_t)PMIC_POWER_GRP_SEL_NONE)
+#define PMIC_POWER_GRP_SEL_MAX   ((uint8_t)PMIC_POWER_GRP_SEL_OTHER)
 /** @} */
 
 /**
@@ -299,8 +299,8 @@ extern "C" {
  */
 #define PMIC_POWER_TWARN_LEVEL_130C (0U)
 #define PMIC_POWER_TWARN_LEVEL_140C (1U)
-#define PMIC_POWER_TWARN_LEVEL_MIN  (PMIC_POWER_TWARN_LEVEL_130C)
-#define PMIC_POWER_TWARN_LEVEL_MAX  (PMIC_POWER_TWARN_LEVEL_140C)
+#define PMIC_POWER_TWARN_LEVEL_MIN  ((uint8_t)PMIC_POWER_TWARN_LEVEL_130C)
+#define PMIC_POWER_TWARN_LEVEL_MAX  ((uint8_t)PMIC_POWER_TWARN_LEVEL_140C)
 /** @} */
 
 /**
@@ -313,8 +313,8 @@ extern "C" {
  */
 #define PMIC_POWER_TSD_ORD_LEVEL_140C (0U)
 #define PMIC_POWER_TSD_ORD_LEVEL_145C (1U)
-#define PMIC_POWER_TSD_ORD_LEVEL_MIN  (PMIC_POWER_TSD_ORD_LEVEL_140C)
-#define PMIC_POWER_TSD_ORD_LEVEL_MAX  (PMIC_POWER_TSD_ORD_LEVEL_145C)
+#define PMIC_POWER_TSD_ORD_LEVEL_MIN  ((uint8_t)PMIC_POWER_TSD_ORD_LEVEL_140C)
+#define PMIC_POWER_TSD_ORD_LEVEL_MAX  ((uint8_t)PMIC_POWER_TSD_ORD_LEVEL_145C)
 /** @} */
 
 /**
@@ -688,8 +688,7 @@ typedef struct Pmic_PwrSpreadSpectrumCfg_s {
  * @brief Set PMIC power buck configurations.
  *
  * Design: PMICDRV-719
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -705,8 +704,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
  * @brief Get PMIC power buck configurations.
  *
  * Design: PMICDRV-720
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -722,8 +720,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
  * @brief Set PMIC LDO configurations.
  *
  * Design: PMICDRV-721
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -739,8 +736,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
  * @brief Get PMIC LDO configurations.
  *
  * Design: PMICDRV-722
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -756,8 +752,7 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
  * @brief Set PMIC VCCA_VMON/VMONx configurations.
  *
  * Design: PMICDRV-723
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -774,8 +769,7 @@ int32_t Pmic_pwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVm
  * @brief Get PMIC VCCA_VMON/VMONx configurations.
  *
  * Design: PMICDRV-724
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -792,8 +786,7 @@ int32_t Pmic_pwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_
  * @brief Set deglitch configuration for all VMONs.
  *
  * Design: PMICDRV-725
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -809,8 +802,8 @@ int32_t Pmic_pwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl)
  * @brief Set PMIC thermal configurations.
  *
  * Design: PMICDRV-726
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
+ *               PMICDRV-536
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -826,8 +819,8 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
  * @brief Get PMIC thermal configurations.
  *
  * Design: PMICDRV-727
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-536, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
+ *               PMICDRV-536
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -843,8 +836,7 @@ int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
  * @brief Set PMIC spread spectrum configurations.
  *
  * Design: PMICDRV-728
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -861,8 +853,7 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
  * @brief Get PMIC spread spectrum configurations.
  *
  * Design: PMICDRV-729
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -879,8 +870,8 @@ int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
  * @brief Get PMIC resource status.
  *
  * Design: PMICDRV-730
- * Architecture: PMICDRV-507, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522
- *               PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-535, PMICDRV-536
  *
  * @param handle [IN] PMIC interface handle.
  *

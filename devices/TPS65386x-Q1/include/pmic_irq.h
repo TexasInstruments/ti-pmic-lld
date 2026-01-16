@@ -153,8 +153,8 @@ extern "C" {
 #define PMIC_COMP2P_OV_ERR_INT                   (75U) // STD_IRQ
 #define PMIC_COMP2N_UV_ERR_INT                   (76U) // STD_IRQ
 #define PMIC_COMP2N_OV_ERR_INT                   (77U) // STD_IRQ
-#define PMIC_IRQ_MAX                             (PMIC_COMP2N_OV_ERR_INT)
-#define PMIC_IRQ_NUM                             (PMIC_IRQ_MAX + 1U)
+#define PMIC_IRQ_MAX                             ((uint8_t)PMIC_COMP2N_OV_ERR_INT)
+#define PMIC_IRQ_NUM                             ((uint8_t)(PMIC_IRQ_MAX + 1U))
 #define PMIC_IRQ_ALL                             ((uint8_t)0xFFU)
 /** @} */
 
@@ -294,22 +294,21 @@ typedef struct Pmic_IrqStat_s {
  * @brief Set the configuration for a single PMIC IRQ.
  *
  * Design: PMICDRV-630
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-537
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetCfg(Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg);
+int32_t Pmic_irqSetCfg(const Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg);
 
 /**
  * @brief Set the mask configuration for multiple PMIC IRQs.
  *
  * Design: PMICDRV-631
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-537
  *
  * @param handle  [IN] PMIC interface handle.
  * @param numIrqs [IN] Number of IRQ configurations to set.
@@ -318,14 +317,13 @@ int32_t Pmic_irqSetCfg(Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg);
  * @return Success code if IRQ configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfg);
+int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfg);
 
 /**
  * @brief Get the mask configuration for a PMIC IRQ.
  *
  * Design: PMICDRV-632
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-537
  *
  * @param handle      [IN]     PMIC interface handle.
  * @param irqMask     [IN/OUT] Array of IRQ mask configurations.
@@ -333,14 +331,14 @@ int32_t Pmic_irqSetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCf
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetCfg(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg);
+int32_t Pmic_irqGetCfg(const Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg);
 
 /**
  * @brief Get the mask configuration for multiple PMIC IRQs.
  *
  * Design: PMICDRV-633
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-537
  *
  * @param handle      [IN]     PMIC interface handle.
  * @param numIrqMasks [IN]     Number of IRQ mask configurations to obtain.
@@ -349,14 +347,14 @@ int32_t Pmic_irqGetCfg(Pmic_Handle_t *handle, Pmic_IrqCfg_t *irqCfg);
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *irqCfgs);
+int32_t Pmic_irqGetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *irqCfgs);
 
 /**
  * @brief Get the status of all PMIC IRQs.
  *
  * Design: PMICDRV-718
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-537
  *
  * @attention End-user must call this API first before calling `Pmic_irqGetNextFlag()`.
  *
@@ -366,14 +364,14 @@ int32_t Pmic_irqGetCfgs(Pmic_Handle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *i
  * @return Success code if all PMIC IRQ statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat);
+int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat);
 
 /**
  * @brief Get the next PMIC IRQ that has its flag set (status bit set to 1).
  *
  * Design: PMICDRV-635
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-537
  *
  * @attention End-user must call `Pmic_irqGetStatus()` first to get all PMIC IRQ
  * statuses. Once the IRQ statuses have been obtained, it is passed as input to
@@ -390,14 +388,13 @@ int32_t Pmic_irqGetStatus(Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat);
  * @return Success code if the next IRQ that has its flag set has been obtained,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
+int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
 
 /**
  * @brief Get the flag status of a specific IRQ.
  *
  * Design: PMICDRV-636
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-537
  *
  * @param handle [IN] PMIC interface handle.
  * @param irqNum [IN] Target PMIC IRQ. For valid values, refer to @ref Pmic_IRQs.
@@ -408,14 +405,14 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
  * @return Success code if the PMIC IRQ flag has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetFlag(Pmic_Handle_t *handle, uint8_t irqNum, bool *flag);
+int32_t Pmic_irqGetFlag(const Pmic_Handle_t *handle, uint8_t irqNum, bool *flag);
 
 /**
  * @brief Clear a specific PMIC IRQ flag.
  *
  * Design: PMICDRV-637
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522
+ *               PMICDRV-523, PMICDRV-537
  *
  * @attention This API is meant to be called after getting the next flag status from
  * `Pmic_irqGetNextFlag()` or getting a specific flag status from `Pmic_irqGetFlag()`
@@ -427,21 +424,21 @@ int32_t Pmic_irqGetFlag(Pmic_Handle_t *handle, uint8_t irqNum, bool *flag);
  * @return Success code if the PMIC IRQ flag has been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqClrFlag(Pmic_Handle_t *handle, uint8_t irqNum);
+int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum);
 
 /**
  * @brief Clear all PMIC IRQ flags.
  *
  * Design: PMICDRV-638
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-537, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-537
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if all PMIC IRQ flags have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqClrAllFlags(Pmic_Handle_t *handle);
+int32_t Pmic_irqClrAllFlags(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

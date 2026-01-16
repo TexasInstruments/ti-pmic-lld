@@ -30,12 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- *
- * @brief Source file containing definitions to platform-specific APIs used in
- * testing PMIC LLD.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -519,13 +514,15 @@ void platform_timerWaitMs(uint16_t ms)
     TimerDisable(tHandle.timerBase, TIMER_BOTH);
 }
 
-void platform_critSecStart(void)
+void platform_critSecStart(uint8_t resource)
 {
+    (void)resource;
     /* Empty - No RTOS */
 }
 
-void platform_critSecStop(void)
+void platform_critSecStop(uint8_t resource)
 {
+    (void)resource;
     /* Empty - No RTOS */
 }
 
@@ -1631,4 +1628,13 @@ void sysTickIntHandler(void)
     // Compute the amount of cycles used by the CPU since the last call
     // and return the result in percent in fixed point 16.16 format
     cpuUsage = CPUUsageTick();
+}
+
+void platform_unlockRegisters(void)
+{
+    #ifndef BUILD_MOCK
+    // Hardware: Device-specific unlock sequence for TPS6522x-Q1
+    // NOTE: Register unlock not needed for mock testing; implement for hardware tests
+    #endif
+    // Mock: No-op (mock doesn't enforce register locking)
 }

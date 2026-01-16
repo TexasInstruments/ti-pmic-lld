@@ -44,13 +44,18 @@
 #include "regmap/irq.h"
 
 // BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
-#define DEVICE_PG_IDENTIFER (3U)
+#define DEVICE_PG_IDENTIFIER (3U)
 
 // Used to unlock PMIC registers
 #define REG_LOCK_KEY (0x9BU)
 
 // Used to lock PMIC registers
 #define REG_LOCK_VALUE (0xAAU)
+
+static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
+}
 
 static int32_t validateAndSetI2CConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
@@ -60,6 +65,25 @@ static int32_t validateAndSetI2CConfig(Pmic_Handle_t *handle, const Pmic_HandleC
     if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR0_VALID))
     {
         handle->i2cAddr0 = config->i2cAddr0;
+    }
+
+    return status;
+}
+
+static int32_t validateAndSetRetryConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // retryCnt
+    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_CNT_VALID))
+    {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    // retryIntervalMs
+    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID))
+    {
+        handle->retryIntervalMs = config->retryIntervalMs;
     }
 
     return status;
@@ -154,6 +178,19 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
         }
     }
 
+    // timerWaitMs
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TIMER_WAIT_MS_VALID, status))
+    {
+        if (config->timerWaitMs == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->timerWaitMs = config->timerWaitMs;
+        }
+    }
+
     return status;
 }
 
@@ -163,6 +200,12 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 
     // Validate I2C configuration
     status = validateAndSetI2CConfig(handle, config);
+
+    // Validate retry configuration
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetRetryConfig(handle, config);
+    }
 
     // Validate communication handles
     if (status == PMIC_ST_SUCCESS)
@@ -185,7 +228,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read INTERFACE_CONF register
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, PMIC_INTERFACE_CONF_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
@@ -221,7 +264,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle)
         // Extract SILICON_REV bit field
         handle->devSiRev = regData;
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -279,6 +322,7 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *handle)
 
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
+    Pmic_HandleCfg_t localCfg;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Check whether parameters are valid
@@ -287,10 +331,15 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        copyHandleCfg(config, &localCfg);
+    }
+
     // Validate and set configuration parameters
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetHandleCfg(handle, config);
+        status = validateAndSetHandleCfg(handle, &localCfg);
     }
 
     // Get PMIC info, store info in pmic handle
@@ -301,7 +350,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        const bool isB1 = Pmic_getBitField_b(handle->devSiRev, DEVICE_PG_IDENTIFER);
+        const bool isB1 = Pmic_getBitField_b(handle->devSiRev, DEVICE_PG_IDENTIFIER);
 
         handle->isA0 = (bool)false;
         if (!isB1)
@@ -311,8 +360,11 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
         }
     }
 
-    // Set the driver initialization status
-    handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+    // Set the driver initialization status (only if handle is valid)
+    if (handle != NULL)
+    {
+        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+    }
 
     return status;
 }
@@ -349,29 +401,31 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
 
 int32_t Pmic_checkHandle(const Pmic_Handle_t *handle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if (handle == NULL)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if (status == PMIC_ST_SUCCESS)
+    if (handle->commHandle0 == NULL)
     {
-        if (handle->commHandle0 == NULL)
-        {
-            status = PMIC_ST_ERR_NULL_PARAM;
-        }
-        else if ((handle->ioRead == NULL) || (handle->ioWrite == NULL) ||
-                 (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
-        {
-            status = PMIC_ST_ERR_NULL_FPTR;
-        }
-        else if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
-        {
-            status = PMIC_ST_ERR_INV_HANDLE;
-        }
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    return status;
+    if ((handle->ioRead == NULL) || (handle->ioWrite == NULL) ||
+        (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
+    {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    if ((handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL))
+    {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
+    {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    return PMIC_ST_SUCCESS;
 }

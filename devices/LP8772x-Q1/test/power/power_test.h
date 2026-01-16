@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __POWER_TEST_H__
-#define __POWER_TEST_H__
+#ifndef POWER_TEST_H
+#define POWER_TEST_H
 
-/**
- * @file power_test.h
- * @brief Contains macros/defines and test declarations specific to testing the
- * Power module.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -251,6 +247,7 @@ void test_negative_Pmic_pwrSetSequenceCfgs_vccaVmon_shutdownDelay(void);
 void test_negative_Pmic_pwrGetSequenceCfgs_nullParam_handle(void);
 void test_negative_Pmic_pwrGetSequenceCfgs_nullParam_config(void);
 void test_negative_Pmic_pwrGetSequenceCfgs_outOfBounds_resource(void);
+void test_negative_Pmic_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState(void);
 void test_positive_enableDisable_buck1(void);
 void test_positive_enableDisable_buck2(void);
 void test_positive_enableDisable_buck3(void);
@@ -334,6 +331,46 @@ void test_positive_setGetSequenceCfg_ls2Vmon2_shutdownDelay(void);
 void test_positive_setGetSequenceCfg_gpo_startupDelay(void);
 void test_positive_setGetSequenceCfg_gpo_shutdownDelay(void);
 void test_positive_setGetSequenceCfg_allRsrc_allCfg(void);
+
+/* Negative tests - GPO resource GET unsupported params */
+void test_negative_pwrGetResourceCfg_gpo_unsupportedIlim(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedDeglitch(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedUvThresh(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedUvReaction(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedOvThresh(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedOvReaction(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedRvReaction(void);
+void test_negative_pwrGetResourceCfg_gpo_unsupportedScReaction(void);
+
+/* Negative tests - VCCA_VMON resource GET unsupported params */
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedIlim(void);
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction(void);
+void test_negative_pwrGetResourceCfg_vccaVmon_unsupportedScReaction(void);
+
+/* Negative tests - Sequence config edge cases */
+void test_negative_pwrSetSequenceCfgs_numConfigs_zero(void);
+void test_negative_pwrGetSequenceCfgs_numConfigs_zero(void);
+
+/* LP8772x-Q1 specific tests for NRSTOUT and invalid resource handling */
+void test_positive_power_getNrstoutSequence(void);
+void test_negative_power_setVoltage_invalidResource(void);
+void test_negative_power_setPgLevel_invalidResource(void);
+
+/* LP8772x-Q1 additional coverage tests for unsupported regulator types */
+void test_negative_powerGetVoutCfg_unsupportedRegulator(void);
+void test_negative_powerSetVoutCfg_unsupportedRegulator(void);
+void test_positive_powerGetPgoodLevel_validBuck(void);
+void test_positive_powerSetPgoodLevel_validBuck(void);
+
+/* LP8772x-Q1 tests for uncovered lines in pmic_power.c */
+void test_negative_pwr_setResourceCfg_zeroNumConfigs(void);
+void test_negative_pwr_setResourceCfg_excessiveNumConfigs(void);
+void test_negative_pwr_getResourceCfgs_zeroNumConfigs(void);
+void test_negative_pwr_getModeCfg_unsupportedResource(void);
+void test_negative_pwr_setIlimCfg_resourceOutOfBounds(void);
+void test_negative_pwr_getIlimCfg_resourceOutOfBounds(void);
+void test_negative_pwr_getVoltageCfg_resourceOutOfBounds(void);
+void test_negative_pwr_invalidModeCombination_ldoLs1Vmon1(void);
 
 #ifdef __cplusplus
 }

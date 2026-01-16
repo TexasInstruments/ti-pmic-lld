@@ -162,8 +162,7 @@ typedef struct Pmic_timerCfg_e {
  * @brief Set PMIC timer configuration.
  *
  * Design: PMICDRV-652
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-542
  *
  * @details Timer configurations that are able to be set via this API are
  * 1. Prescale (validParams: PMIC_CFG_TMR_PRESCALE_VALID_SHIFT)
@@ -179,15 +178,14 @@ typedef struct Pmic_timerCfg_e {
  * @return Success code if timer configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg);
 
 /**
  * @brief Get PMIC timer configuration. This API supports getting the same
  * configurations that are settable by `Pmic_timerSetCfg()`.
  *
  * Design: PMICDRV-653
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -197,43 +195,40 @@ int32_t Pmic_timerSetCfg(Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetCfg(Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg);
 
 /**
  * @brief Alternative routine to stop the PMIC timer. That is to say, this API can
  * be used instead of `Pmic_timerSetCfg()` to stop the timer.
  *
  * Design: PMICDRV-654
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if timer is stopped, error code otherwise. For valid
  * success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerStop(Pmic_Handle_t *handle);
+int32_t Pmic_timerStop(const Pmic_Handle_t *handle);
 
 /**
  * @brief Clear PMIC timer counter.
  *
  * Design: PMICDRV-655
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC timer counter is cleared, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerClr(Pmic_Handle_t *handle);
+int32_t Pmic_timerClr(const Pmic_Handle_t *handle);
 
 /**
  * @brief Set the value of the PMIC timer counter.
  *
  * Design: PMICDRV-656
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -243,14 +238,13 @@ int32_t Pmic_timerClr(Pmic_Handle_t *handle);
  * @return Success code if PMIC timer counter value has been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt);
+int32_t Pmic_timerSetCnt(const Pmic_Handle_t *handle, uint32_t tmrCnt);
 
 /**
  * @brief Get the value of the PMIC timer counter.
  *
  * Design: PMICDRV-657
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -260,14 +254,13 @@ int32_t Pmic_timerSetCnt(Pmic_Handle_t *handle, uint32_t tmrCnt);
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt);
+int32_t Pmic_timerGetCnt(const Pmic_Handle_t *handle, uint32_t *tmrCnt);
 
 /**
  * @brief Set PMIC wakeup value.
  *
  * Design: PMICDRV-658
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-542
  *
  * @details The timer can be configured to generate a wakeup event based on a
  * configured time while the device is in STANDBY state - see Pmic_timerSetCfg()
@@ -281,14 +274,13 @@ int32_t Pmic_timerGetCnt(Pmic_Handle_t *handle, uint32_t *tmrCnt);
  * @return Success code if PMIC wakeup value has been set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal);
+int32_t Pmic_timerSetWakeupValue(const Pmic_Handle_t *handle, uint32_t wakeupVal);
 
 /**
  * @brief Get PMIC wakeup value.
  *
  * Design: PMICDRV-659
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-542
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-542
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -297,7 +289,7 @@ int32_t Pmic_timerSetWakeupValue(Pmic_Handle_t *handle, uint32_t wakeupVal);
  * @return Success code if PMIC wakeup value has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetWakeupValue(Pmic_Handle_t *handle, uint32_t *wakeupVal);
+int32_t Pmic_timerGetWakeupValue(const Pmic_Handle_t *handle, uint32_t *wakeupVal);
 
 #ifdef __cplusplus
 }

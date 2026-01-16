@@ -46,6 +46,8 @@
 
 #include "regmap/core.h"
 
+#include <string.h>
+
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -58,6 +60,15 @@
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
+
+/**
+ * @brief Copy Pmic_HandleCfg_t structure member-wise
+ */
+static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
+}
+
 static int32_t getPmicInfo(Pmic_Handle_t *handle)
 {
     uint8_t regData = 0U;
@@ -289,6 +300,19 @@ static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_Handle
         }
     }
 
+    // timerWaitMs
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TIMER_WAIT_MS_VALID, status))
+    {
+        if (config->timerWaitMs == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->timerWaitMs = config->timerWaitMs;
+        }
+    }
+
     return status;
 }
 
@@ -327,6 +351,18 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
         {
             handle->commMode = config->commMode;
         }
+    }
+
+    // retryCnt
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_CNT_VALID, status))
+    {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    // retryIntervalMs
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID, status))
+    {
+        handle->retryIntervalMs = config->retryIntervalMs;
     }
 
     // maxLoopCnt
@@ -370,32 +406,30 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 
 static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     // Check commMode
     if (handle->commMode > PMIC_INTF_MAX)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
     // Check commHandle0
     if (handle->commHandle0 == NULL)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
     // Check criticalSectionStart, criticalSectionStop
     if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
     {
-        status = PMIC_ST_ERR_NULL_FPTR;
+        return PMIC_ST_ERR_NULL_FPTR;
     }
 
     // Check asyncRxStart, asyncTxStart, asyncRxAwait, asyncTxAwait
-    if (handle->asyncEnable)
+    if (handle->asyncEnable != false)
     {
         if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) || (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL))
         {
-            status = PMIC_ST_ERR_NULL_FPTR;
+            return PMIC_ST_ERR_NULL_FPTR;
         }
     }
     // Check ioRead, ioWrite
@@ -403,18 +437,29 @@ static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
     {
         if ((handle->ioRead == NULL) || (handle->ioWrite == NULL))
         {
-            status = PMIC_ST_ERR_NULL_FPTR;
+            return PMIC_ST_ERR_NULL_FPTR;
         }
     }
 
-    return status;
+    // Check timerWaitMs if retry interval is non-zero
+    if (handle->retryIntervalMs != 0U)
+    {
+        if (handle->timerWaitMs == NULL)
+        {
+            return PMIC_ST_ERR_NULL_FPTR;
+        }
+    }
+
+    return PMIC_ST_SUCCESS;
 }
 
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
+
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
+    Pmic_HandleCfg_t configLocal;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Check whether parameters are valid
@@ -423,10 +468,10 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Validate and set configuration parameters
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetHandleCfg(handle, config);
+        copyHandleCfg(config, &configLocal);
+        status = validateAndSetHandleCfg(handle, &configLocal);
     }
 
     // Validate PMIC handle once configurations have been set
@@ -441,8 +486,11 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
         status = getPmicInfo(handle);
     }
 
-    // Set the driver initialization status
-    handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+    // Set the driver initialization status (only if handle is valid)
+    if (handle != NULL)
+    {
+        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+    }
 
     return status;
 }
@@ -467,6 +515,8 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
         handle->i2cAddr0 = 0U;
         handle->i2cAddr1 = 0U;
         handle->i2cAddr2 = 0U;
+        handle->retryCnt = 0U;
+        handle->retryIntervalMs = 0U;
         handle->crcEnable = PMIC_DISABLE;
         handle->asyncEnable = PMIC_DISABLE;
         handle->commHandle0 = NULL;
@@ -480,6 +530,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
         handle->criticalSectionStart = NULL;
         handle->criticalSectionStop = NULL;
         handle->irqResponseCallback = NULL;
+        handle->timerWaitMs = NULL;
     }
 
     return status;
@@ -487,22 +538,15 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
 
 int32_t Pmic_checkHandle(const Pmic_Handle_t *handle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if (handle == NULL)
     {
-        status = PMIC_ST_ERR_INV_HANDLE;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS))
+    if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS)
     {
-        status = PMIC_ST_ERR_INV_HANDLE;
+        return PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (validatePmicHandle(handle) != PMIC_ST_SUCCESS))
-    {
-        status = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    return status;
+    return validatePmicHandle(handle);
 }

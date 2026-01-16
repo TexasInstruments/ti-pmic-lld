@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __IRQ_TEST_H__
-#define __IRQ_TEST_H__
+#ifndef IRQ_TEST_H
+#define IRQ_TEST_H
 
-/**
- * @file irq_test.h
- * @brief Contains macros/defines and test declarations specific to testing the
- * IRQ module.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -65,8 +61,8 @@ void test_negative_Pmic_irqGetMask_nullParam_handle(void);
 void test_negative_Pmic_irqGetMask_nullParam_irqMasks(void);
 void test_negative_Pmic_irqGetMask_outOfBounds_numIrqMasks(void);
 void test_negative_Pmic_irqGetMask_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqGetStat_nullParam_handle(void);
-void test_negative_Pmic_irqGetStat_nullParam_irqStat(void);
+void test_negative_Pmic_irqGetStatus_nullParam_handle(void);
+void test_negative_Pmic_irqGetStatus_nullParam_irqStat(void);
 void test_negative_Pmic_irqGetNextFlag_nullParam_irqStat(void);
 void test_negative_Pmic_irqGetNextFlag_nullParam_irqNum(void);
 void test_negative_Pmic_irqGetFlag_nullParam_handle(void);
@@ -137,6 +133,48 @@ void test_positive_irqSetGetMask_ESM_MCU_FAIL_INT(void);
 void test_positive_irqSetGetMask_ESM_MCU_RST_INT(void);
 void test_positive_irqSetGetMask_all(void);
 void test_positive_irqGetClrFlag(void);
+void test_positive_irqGetStatus_noFlags(void);
+void test_positive_irqGetStatus_withFlags(void);
+void test_positive_irqGetNextFlag_noFlags(void);
+void test_positive_irqGetNextFlag_multipleFlags(void);
+void test_positive_irqGetFlag_variousIrqs(void);
+void test_positive_irqClrFlag_singleFlag(void);
+void test_positive_irqClrFlag_multipleSequence(void);
+void test_positive_irqWorkflow_completeHandling(void);
+void test_positive_irqMaskedBehavior(void);
+void test_positive_irqFlagPersistence(void);
+void test_positive_irqStatusReadMultipleTimes(void);
+void test_positive_irqGetFlag_allMaskableIrqs(void);
+void test_positive_irqClrFlag_verifyCleared(void);
+void test_positive_irqIterateAndClearAll(void);
+void test_positive_irqGetStatus_afterClearAll(void);
+
+/* IRQ Hierarchy Navigation Tests */
+void test_positive_irqGetStatus_trigger_L1_BUCK_LDO(void);
+void test_positive_irqGetStatus_trigger_L1_LS2_VMON2(void);
+void test_positive_irqGetStatus_trigger_L1_VCCA(void);
+void test_positive_irqGetStatus_trigger_L1_STARTUP(void);
+void test_positive_irqGetStatus_trigger_L1_MISC(void);
+void test_positive_irqGetStatus_trigger_L1_MODERATE_ERR(void);
+void test_positive_irqGetStatus_trigger_L1_SEVERE_ERR(void);
+void test_positive_irqGetStatus_trigger_L1_FSM_ERR(void);
+void test_positive_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void);
+void test_positive_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void);
+void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void);
+void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void);
+void test_positive_irqGetStatus_trigger_L2_ESM(void);
+void test_positive_irqGetStatus_trigger_L2_COMM_ERR(void);
+void test_positive_irqGetStatus_trigger_L2_WD_ERR_STAT(void);
+void test_positive_irqGetStatus_full_hierarchy_cascade(void);
+void test_positive_irqGetNextFlag_L2_populated_intrStat(void);
+void test_positive_irqGetNextFlag_mixed_L1_L2_flags(void);
+void test_positive_irqGetNextFlag_highIndex_IRQs(void);
+void test_positive_irqGetStatus_L1_set_but_L2_empty(void);
+void test_positive_irqGetStatus_all_L0_categories_set(void);
+void test_positive_irqGetStatus_multiple_L2_same_category(void);
+
+/* LP8772x-Q1 tests for uncovered lines in pmic_irq.c */
+void test_positive_irq_getNextFlag_noFlagsFound(void);
 
 #ifdef __cplusplus
 }

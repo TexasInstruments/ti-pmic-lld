@@ -30,12 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- *
- * @brief Source file containing definitions to platform-specific APIs used in
- * testing PMIC LLD.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -175,12 +170,10 @@ void platform_deinit(void)
 void platform_setupTests(void)
 {
     waitForUserResponse((bool)true);
-    UNITY_BEGIN();
 }
 
 void platform_tearDownTests(void)
 {
-    UNITY_END();
 }
 
 void platform_printChar(char c)
@@ -261,13 +254,15 @@ void platform_timerWaitMs(uint16_t ms)
     TimerDisable(tHandle.timerBase, TIMER_BOTH);
 }
 
-void platform_critSecStart(void)
+void platform_critSecStart(uint8_t resource)
 {
+    (void)resource;
     /* Empty - No RTOS */
 }
 
-void platform_critSecStop(void)
+void platform_critSecStop(uint8_t resource)
 {
+    (void)resource;
     /* Empty - No RTOS */
 }
 
@@ -282,7 +277,7 @@ void *platform_getCommHandle(void)
 }
 
 int32_t platform_txByte(
-    struct Pmic_CoreHandle_s *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen)
+    const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen)
 {
     int32_t status = PMIC_ST_SUCCESS;
     (void)page;  // LP8772x-Q1: Page mapping MAIN=0, QA=1, NVM=2 (currently only uses page 0)
@@ -318,7 +313,7 @@ int32_t platform_txByte(
 }
 
 int32_t platform_rxByte(
-    struct Pmic_CoreHandle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen)
+    const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen)
 {
     // Variable declaration/initialization
     int32_t status = PMIC_ST_SUCCESS;
@@ -742,4 +737,13 @@ static inline int32_t I2CSingleRead(const I2cHandle_t *i2cHandle, uint8_t *pRxBu
     }
 
     return status;
+}
+
+void platform_unlockRegisters(void)
+{
+    #ifndef BUILD_MOCK
+    // Hardware: Device-specific unlock sequence for LP8772x-Q1
+    // NOTE: Register unlock not needed for mock testing; implement for hardware tests
+    #endif
+    // Mock: No-op (mock doesn't enforce register locking)
 }

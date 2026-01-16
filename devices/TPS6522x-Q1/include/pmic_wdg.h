@@ -64,8 +64,8 @@ extern "C" {
  */
 #define PMIC_WDG_TRIGGER_MODE (0U)
 #define PMIC_WDG_QA_MODE      (1U)
-#define PMIC_WDG_MODE_MIN     (PMIC_WDG_TRIGGER_MODE)
-#define PMIC_WDG_MODE_MAX     (PMIC_WDG_QA_MODE)
+#define PMIC_WDG_MODE_MIN     ((uint8_t)PMIC_WDG_TRIGGER_MODE)
+#define PMIC_WDG_MODE_MAX     ((uint8_t)PMIC_WDG_QA_MODE)
 /** @} */
 
 /**
@@ -76,8 +76,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_WIN1_CODE_MIN (0x00U)
-#define PMIC_WDG_WIN1_CODE_MAX (0x7FU)
+#define PMIC_WDG_WIN1_CODE_MIN ((uint8_t)0x00U)
+#define PMIC_WDG_WIN1_CODE_MAX ((uint8_t)0x7FU)
 /** @} */
 
 /**
@@ -88,8 +88,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_WIN2_CODE_MIN (0x00U)
-#define PMIC_WDG_WIN2_CODE_MAX (0x7FU)
+#define PMIC_WDG_WIN2_CODE_MIN ((uint8_t)0x00U)
+#define PMIC_WDG_WIN2_CODE_MAX ((uint8_t)0x7FU)
 /** @} */
 
 /**
@@ -100,8 +100,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_LONG_WIN_MIN (0x00U)
-#define PMIC_WDG_LONG_WIN_MAX (0xFFU)
+#define PMIC_WDG_LONG_WIN_MIN ((uint8_t)0x00U)
+#define PMIC_WDG_LONG_WIN_MAX ((uint8_t)0xFFU)
 /** @} */
 
 /**
@@ -112,8 +112,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_QA_FDBK_MIN (0x0U)
-#define PMIC_WDG_QA_FDBK_MAX (0x3U)
+#define PMIC_WDG_QA_FDBK_MIN ((uint8_t)0x0U)
+#define PMIC_WDG_QA_FDBK_MAX ((uint8_t)0x3U)
 /** @} */
 
 /**
@@ -124,8 +124,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_QA_LFSR_MIN (0x0U)
-#define PMIC_WDG_QA_LFSR_MAX (0x3U)
+#define PMIC_WDG_QA_LFSR_MIN ((uint8_t)0x0U)
+#define PMIC_WDG_QA_LFSR_MAX ((uint8_t)0x3U)
 /** @} */
 
 /**
@@ -136,8 +136,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_QA_SEED_MIN (0x0U)
-#define PMIC_WDG_QA_SEED_MAX (0xFU)
+#define PMIC_WDG_QA_SEED_MIN ((uint8_t)0x0U)
+#define PMIC_WDG_QA_SEED_MAX ((uint8_t)0xFU)
 /** @} */
 
 /**
@@ -148,8 +148,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_FAIL_THR_MIN (0x0U)
-#define PMIC_WDG_FAIL_THR_MAX (0x7U)
+#define PMIC_WDG_FAIL_THR_MIN ((uint8_t)0x0U)
+#define PMIC_WDG_FAIL_THR_MAX ((uint8_t)0x7U)
 /** @} */
 
 /**
@@ -160,8 +160,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_RST_THR_MIN (0x0U)
-#define PMIC_WDG_RST_THR_MAX (0x7U)
+#define PMIC_WDG_RST_THR_MIN ((uint8_t)0x0U)
+#define PMIC_WDG_RST_THR_MAX ((uint8_t)0x7U)
 /** @} */
 
 /**
@@ -174,8 +174,8 @@ extern "C" {
  */
 #define PMIC_WDG_CNT_SEL_1_1 (0U)
 #define PMIC_WDG_CNT_SEL_2_1 (1U)
-#define PMIC_WDG_CNT_SEL_MIN (PMIC_WDG_CNT_SEL_1_1)
-#define PMIC_WDG_CNT_SEL_MAX (PMIC_WDG_CNT_SEL_2_1)
+#define PMIC_WDG_CNT_SEL_MIN ((uint8_t)PMIC_WDG_CNT_SEL_1_1)
+#define PMIC_WDG_CNT_SEL_MAX ((uint8_t)PMIC_WDG_CNT_SEL_2_1)
 /** @} */
 
 /**
@@ -426,8 +426,8 @@ typedef struct Pmic_WdgFailCntStatus_s {
  * @brief Enable or disable the PMIC watchdog.
  *
  * Design: PMICDRV-662
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-523, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -443,8 +443,7 @@ int32_t Pmic_wdgSetEnableState(const Pmic_Handle_t *handle, bool enable);
  * @brief Get the enable state of the PMIC watchdog.
  *
  * Design: PMICDRV-663
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -460,8 +459,7 @@ int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled);
  * @brief Set PMIC watchdog configurations.
  *
  * Design: PMICDRV-664
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @attention Watchdog must be in Long Window and enabled before configuration.
  * See `Pmic_wdgSetEnableState()` and `Pmic_wdgSetReturnToLongWindow()` for more
@@ -481,8 +479,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
  * @brief Get PMIC watchdog configurations.
  *
  * Design: PMICDRV-665
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -500,8 +497,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg);
  * whether WDG stays in Long Window.
  *
  * Design: PMICDRV-668
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -519,8 +515,7 @@ int32_t Pmic_wdgSetPowerHold(const Pmic_Handle_t *handle, bool enable);
  * whether WDG stays in Long Window.
  *
  * Design: PMICDRV-669
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -539,8 +534,8 @@ int32_t Pmic_wdgGetPowerHold(const Pmic_Handle_t *handle, bool *isEnabled);
  * current sequence.
  *
  * Design: PMICDRV-670
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522
+ *               PMICDRV-523, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -559,8 +554,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_Handle_t *handle, bool enable);
  * current sequence.
  *
  * Design: PMICDRV-671
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -578,8 +572,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *isEnabl
  * @brief Calculate and send a WDG Q&A answer byte to the PMIC.
  *
  * Design: PMICDRV-676
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @details When the watchdog is operating in Q&A mode, the API should be called
  * four times in Long Window to exit Long Window. For every Q&A sequence thereafter,
@@ -596,8 +589,7 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle);
  * @brief Clear PMIC watchdog error statuses.
  *
  * Design: PMICDRV-673
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @note To indicate the desired watchdog error status(es) to clear, the
  * validParams struct member of `wdgErrStatus` parameter must be set. All other
@@ -621,8 +613,7 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatu
  * `Pmic_wdgGetErrStatus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
  * Design: PMICDRV-674
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -636,8 +627,8 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle);
  * @brief Get PMIC watchdog error statuses.
  *
  * Design: PMICDRV-731
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -654,8 +645,7 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *w
  * @brief Get PMIC watchdog fail counter statuses.
  *
  * Design: PMICDRV-675
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512, PMICDRV-538
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @param handle [IN] PMIC interface handle.
  *

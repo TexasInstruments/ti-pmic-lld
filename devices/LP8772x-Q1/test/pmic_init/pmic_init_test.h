@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_INIT_TEST_H__
-#define __PMIC_INIT_TEST_H__
+#ifndef PMIC_INIT_TEST_H
+#define PMIC_INIT_TEST_H
 
-/**
- * @file pmic_init_test.h
- * @brief Contains macros/defines and test declarations specific to testing PMIC
- * Init.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -58,7 +54,6 @@ void pmic_init_test(void *args);
 void test_negative_Pmic_init_nullParam_handle(void);
 void test_negative_Pmic_init_nullParam_coreCfg(void);
 void test_negative_Pmic_init_nullParam_coreCfg_commHandle0(void);
-void test_negative_Pmic_init_nullParam_coreCfg_pQACommHandle(void);
 void test_negative_Pmic_init_nullParam_coreCfg_ioRead(void);
 void test_negative_Pmic_init_nullParam_coreCfg_ioWrite(void);
 void test_negative_Pmic_init_nullParam_coreCfg_criticalSectionStart(void);
@@ -73,6 +68,23 @@ void test_negative_Pmic_checkPmicCoreHandle_incorrect_drvInitStatus(void);
 void test_positive_Pmic_init(void);
 void test_positive_Pmic_checkPmicCoreHandle(void);
 void test_positive_Pmic_deinit(void);
+void test_positive_Pmic_init_with_crc_enabled(void);
+void test_positive_Pmic_init_with_config_crc_enabled(void);
+void test_positive_Pmic_init_with_both_crc_enabled(void);
+void test_positive_Pmic_init_crc_error_recovery(void);
+void test_positive_Pmic_init_complete_flow(void);
+void test_positive_Pmic_init_device_info_retrieval(void);
+void test_positive_Pmic_init_communication_validation(void);
+void test_positive_Pmic_deinit_complete_flow(void);
+void test_positive_Pmic_checkHandle_validations(void);
+void test_positive_init_withRetryCnt(void);
+void test_positive_init_withRetryInterval(void);
+void test_positive_init_withTimerWaitMs(void);
+void test_negative_init_timerWaitNull(void);
+
+/* LP8772x-Q1 tests for uncovered lines in pmic.c */
+void test_negative_pmic_checkHandle_invalidCommMode(void);
+void test_negative_pmic_checkHandle_nullTimerWithRetry(void);
 
 #ifdef __cplusplus
 }

@@ -40,16 +40,16 @@ extern "C" {
 #endif
 
 /** @brief PMIC ESM module register addresses */
-#define ESM_CTRL_REG       (0x47U)
-#define ESM_CFG1_REG       (0x48U)
-#define ESM_CFG2_REG       (0x49U)
-#define ESM_DELAY1_REG     (0x4BU)
-#define ESM_DELAY2_REG     (0x4CU)
-#define ESM_HMAX_CFG_REG   (0x4DU)
-#define ESM_HMIN_CFG_REG   (0x4EU)
-#define ESM_LMAX_CFG_REG   (0x4FU)
-#define ESM_LMIN_CFG_REG   (0x50U)
-#define ESM_ERR_STAT_REG   (0x51U)
+#define ESM_CTRL_REG       ((uint8_t)0x47U)
+#define ESM_CFG1_REG       ((uint8_t)0x48U)
+#define ESM_CFG2_REG       ((uint8_t)0x49U)
+#define ESM_DELAY1_REG     ((uint8_t)0x4BU)
+#define ESM_DELAY2_REG     ((uint8_t)0x4CU)
+#define ESM_HMAX_CFG_REG   ((uint8_t)0x4DU)
+#define ESM_HMIN_CFG_REG   ((uint8_t)0x4EU)
+#define ESM_LMAX_CFG_REG   ((uint8_t)0x4FU)
+#define ESM_LMIN_CFG_REG   ((uint8_t)0x50U)
+#define ESM_ERR_STAT_REG   ((uint8_t)0x51U)
 
 /** @brief ESM_CTRL - ESM Control */
 #define ESM_START_SHIFT    (0U)

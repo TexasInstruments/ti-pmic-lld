@@ -82,24 +82,93 @@ operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
 
-When constructing `Pmic_HandleCfg_t`, two functions need to be provided in order
-for the PMIC to obtain a critical section. These functions are called by the
-driver before and after I2C/SPI communications. It is up to the user to
-determine what is an appropriate implementation of these APIs as considerations
-vary based on platform support and application complexity.
+When constructing `Pmic_HandleCfg_t`, two functions need to be provided for
+critical section management. These functions are called by the driver before
+and after accessing shared resources.
 
-For very simple microcontroller applications, blocking other interrupts or
-claiming a simple global variable may be enough. For more complex applications
-and on platforms which support it, a proper shared mutex should be
-claimed/released as appropriate to ensure no other device drivers are
-attempting to use the I2C/SPI bus at the same time.
+The callbacks accept a `resource` parameter identifying which resource needs protection:
 
-Within the `Pmic_HandleCfg_t` structure, these two functions are:
+| Value | Macro | Description |
+|-------|-------|-------------|
+| 0 | `PMIC_COMMUNICATION` | Protects I2C/SPI bus access during register read/write |
+| 1 | `PMIC_DIAGNOSTIC` | Protects diagnostic counters and overflow flags |
+
+**Simple Implementation (Single Mutex)**
+
+For most applications, a single mutex is sufficient:
 
 ```c
+static pthread_mutex_t g_pmicMutex = PTHREAD_MUTEX_INITIALIZER;
+
+void App_CriticalSectionStart(uint8_t resource)
 {
-    .criticalSectionStart = <your CS start function>,
-    .criticalSectionStop = <your CS stop function>,
+    (void)resource;  // Single mutex for all resources
+    pthread_mutex_lock(&g_pmicMutex);
+}
+
+void App_CriticalSectionStop(uint8_t resource)
+{
+    (void)resource;
+    pthread_mutex_unlock(&g_pmicMutex);
+}
+```
+
+**Advanced Implementation (Per-Resource Mutexes)**
+
+For better concurrency in multi-threaded applications, use separate mutexes:
+
+```c
+static pthread_mutex_t g_commMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_diagMutex = PTHREAD_MUTEX_INITIALIZER;
+
+void App_CriticalSectionStart(uint8_t resource)
+{
+    switch (resource) {
+        case PMIC_COMMUNICATION:
+            pthread_mutex_lock(&g_commMutex);
+            break;
+        case PMIC_DIAGNOSTIC:
+            pthread_mutex_lock(&g_diagMutex);
+            break;
+        default:
+            // Unknown resource - handle error or use fallback
+            break;
+    }
+}
+
+void App_CriticalSectionStop(uint8_t resource)
+{
+    switch (resource) {
+        case PMIC_COMMUNICATION:
+            pthread_mutex_unlock(&g_commMutex);
+            break;
+        case PMIC_DIAGNOSTIC:
+            pthread_mutex_unlock(&g_diagMutex);
+            break;
+        default:
+            break;
+    }
+}
+```
+
+**Bare-Metal Implementation (Interrupt Disable)**
+
+For bare-metal systems without an RTOS:
+
+```c
+static uint32_t g_intState;
+
+void App_CriticalSectionStart(uint8_t resource)
+{
+    (void)resource;
+    g_intState = __get_PRIMASK();
+    __disable_irq();
+}
+
+void App_CriticalSectionStop(uint8_t resource)
+{
+    (void)resource;
+    __set_PRIMASK(g_intState);
 }
 ```
 
@@ -120,6 +189,90 @@ Within the `Pmic_HandleCfg_t` structure, these two functions are:
 }
 ```
 
+##### PMIC Handle User Functions: Timer Wait
+
+A timer wait function is required to support delays between retry attempts when
+communication errors occur. The driver calls this function to wait a specified
+number of milliseconds before retrying a failed operation.
+
+```c
+{
+    .timerWaitMs = App_TimerWaitMs,
+}
+```
+
+**RTOS Implementation**
+
+```c
+void App_TimerWaitMs(uint32_t ms)
+{
+    // FreeRTOS example
+    vTaskDelay(pdMS_TO_TICKS(ms));
+
+    // Or POSIX example
+    // usleep(ms * 1000U);
+}
+```
+
+**Bare-Metal Implementation**
+
+```c
+void App_TimerWaitMs(uint32_t ms)
+{
+    // Hardware timer-based delay (recommended)
+    Timer_delay_ms(ms);
+
+    // Or busy-wait (not recommended for long delays)
+    // volatile uint32_t count = ms * CYCLES_PER_MS;
+    // while (count-- > 0U) { }
+}
+```
+
+**Important:** The `timerWaitMs` function should be non-blocking with respect to
+other system tasks when using an RTOS. Avoid busy-wait implementations in
+multi-tasking environments.
+
+##### PMIC Handle Configuration: Retry Mechanism
+
+The driver supports automatic retry of failed I2C/SPI communications. When a
+communication error occurs (bus error or CRC failure), the driver waits
+`retryIntervalMs` milliseconds and retries the operation, up to `retryCnt` times.
+
+| Parameter | Description | Typical Value |
+|-----------|-------------|---------------|
+| `retryCnt` | Maximum retry attempts (0 = no retries) | 3 |
+| `retryIntervalMs` | Delay between attempts in milliseconds | 10 |
+
+```c
+{
+    .retryCnt = 3U,           // Retry up to 3 times on failure
+    .retryIntervalMs = 10U,   // Wait 10ms between attempts
+}
+```
+
+**When to Use Retries:**
+- Enable retries for systems with potentially noisy communication buses
+- Set `retryCnt = 0` for deterministic timing requirements
+- Increase `retryIntervalMs` if the bus requires recovery time after errors
+
+**Monitoring Retries:**
+
+Use the diagnostic APIs to monitor retry statistics:
+
+```c
+uint32_t retryCnt;
+bool overflow;
+
+Pmic_getRetryCnt(&pmicHandle, &retryCnt);
+Pmic_getRetryCntOverflow(&pmicHandle, &overflow);
+
+if (overflow) {
+    // Retry counter reached threshold - possible hardware issue
+    printf("Warning: %u retries occurred, threshold reached\n", retryCnt);
+    Pmic_clrRetryCntOverflow(&pmicHandle);
+}
+```
+
 ##### Finalizing Initialization
 
 Once the `Pmic_HandleCfg_t` structure has been initialized with the necessary
@@ -133,33 +286,36 @@ A full example of what this may look like for TPS6522x-Q1 is shown below:
 int32_t status;
 
 // The handle should either be declared globally, or stored in a structure that
-// can manage access throughout the application, it will need to be re-used
-// often.
+// can manage access throughout the application, it will need to be re-used often.
 Pmic_Handle_t pmicHandle;
 
 Pmic_HandleCfg_t config = {
     .validParams = (
-        PMIC_COMM_MODE_VALID |
-        PMIC_COMM_HANDLE_0_VALID |
-        PMIC_IO_READ_VALID |
-        PMIC_IO_WRITE_VALID |
+        PMIC_COMM_MODE_VALID              |
+        PMIC_COMM_HANDLE_0_VALID          |
+        PMIC_IO_READ_VALID                |
+        PMIC_IO_WRITE_VALID               |
         PMIC_CRITICAL_SECTION_START_VALID |
-        PMIC_CRITICAL_SECTION_STOP_VALID
+        PMIC_CRITICAL_SECTION_STOP_VALID  |
+        PMIC_TIMER_WAIT_MS_VALID          |
+        PMIC_RETRY_CNT_VALID              |
+        PMIC_RETRY_INTERVAL_MS_VALID
     ),
     .commMode = PMIC_INTF_SPI,
-    .commHandle0 = &commHandle,
-    .ioRead = PmicCommIoRead,
-    .ioWrite = PmicCommIoWrite,
-    .criticalSectionStart = CritSecStart,
-    .criticalSectionStop = CritSecStop,
+    .commHandle0 = &spiHandle,
+    .ioRead = App_PmicIoRead,
+    .ioWrite = App_PmicIoWrite,
+    .criticalSectionStart = App_CriticalSectionStart,
+    .criticalSectionStop = App_CriticalSectionStop,
+    .timerWaitMs = App_TimerWaitMs,
+    .retryCnt = 3U,
+    .retryIntervalMs = 10U,
 };
 
 status = Pmic_init(&pmicHandle, &config);
 
-// Check the return code of Pmic_init(), if it is PMIC_ST_SUCCESS, the
-// pmicHandle is now valid for use throughout the rest of the application
 if (status == PMIC_ST_SUCCESS) {
-    // other application code...
+    // pmicHandle is now valid for use with all PMIC APIs
 }
 ```
 
@@ -182,3 +338,92 @@ reporting for PMIC watchdog features, and supports calculation and response for
 Q&A watchdog mode.
 
 See `include/pmic_wdg.h` for more information on these APIs.
+
+### System Diagnostics
+
+The driver maintains diagnostic information to help monitor communication health
+and track error occurrences. This is useful for:
+
+- Detecting intermittent communication issues
+- Monitoring system reliability over time
+- Debugging field failures
+
+See `include/pmic_common.h` for complete API documentation.
+
+#### Diagnostic Structure
+
+Each diagnostic entry tracks:
+- `code`: The error/warning code being tracked
+- `cnt`: Number of times this error occurred
+- `flag`: Whether the counter reached its overflow threshold
+
+#### Querying Diagnostics
+
+```c
+// Query diagnostic info for a specific error
+Pmic_Diagnostic_t diag = {
+    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .code = PMIC_ST_ERR_I2C_COMM_FAIL
+};
+
+status = Pmic_getDiagnostic(&pmicHandle, &diag);
+
+if (status == PMIC_ST_SUCCESS) {
+    printf("I2C comm failures: %u (overflow: %s)\n",
+           diag.cnt, diag.flag ? "yes" : "no");
+}
+```
+
+#### Querying Multiple Diagnostics
+
+```c
+Pmic_Diagnostic_t diags[3] = {
+    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_I2C_COMM_FAIL },
+    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_DATA_IO_CRC },
+    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_INV_PARAM }
+};
+
+status = Pmic_getDiagnostics(&pmicHandle, diags, 3U);
+
+if (status == PMIC_ST_SUCCESS) {
+    for (uint8_t i = 0U; i < 3U; i++) {
+        printf("Error 0x%08X: count=%u, overflow=%s\n",
+               diags[i].code, diags[i].cnt, diags[i].flag ? "yes" : "no");
+    }
+}
+```
+
+#### Clearing Diagnostics
+
+```c
+// Clear a specific diagnostic
+Pmic_Diagnostic_t diag = {
+    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .code = PMIC_ST_ERR_I2C_COMM_FAIL
+};
+Pmic_clrDiagnostic(&pmicHandle, &diag);
+
+// Or clear all diagnostics
+Pmic_clrDiagnosticsAll(&pmicHandle);
+```
+
+#### Monitoring Retry Statistics
+
+```c
+uint32_t retryCnt;
+bool overflow;
+
+// Get total retry count
+Pmic_getRetryCnt(&pmicHandle, &retryCnt);
+printf("Total communication retries: %u\n", retryCnt);
+
+// Check if retry threshold was reached
+Pmic_getRetryCntOverflow(&pmicHandle, &overflow);
+if (overflow) {
+    printf("Warning: Retry threshold reached - check hardware\n");
+    Pmic_clrRetryCntOverflow(&pmicHandle);
+}
+
+// Reset retry counter after logging
+Pmic_clrRetryCnt(&pmicHandle);
+```

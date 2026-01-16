@@ -5,8 +5,23 @@ lib/
 *.so
 *.a
 
+# Coverage artifacts
+*.gcov
+*.gcda
+*.gcno
+coverage/
+**/coverage/
+coverage_*.txt
+**/coverage_report*.txt
+coverage_report/
+
 # Build logs
 *.log
+build_log.txt
+
+# Test artifacts
+build/
+*.gcna
 
 # Documentation
 *.pdf
@@ -32,3 +47,4 @@ docs/latex/
 # Tags files
 tags
 TAGS
+test_runner

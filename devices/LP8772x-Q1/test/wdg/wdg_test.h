@@ -30,14 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __WDG_TEST_H__
-#define __WDG_TEST_H__
+#ifndef WDG_TEST_H
+#define WDG_TEST_H
 
-/**
- * @file wdg_test.h
- * @brief Contains macros/defines and test declarations specific to testing the
- * WDG module.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -77,14 +73,14 @@ void test_negative_Pmic_wdgGetPowerHold_nullParam_isEnabled(void);
 void test_negative_Pmic_wdgSetReturnToLongWindow_nullParam_handle(void);
 void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle(void);
 void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_isEnabled(void);
-void test_negative_Pmic_wdgGetErrorStatus_nullParam_handle(void);
-void test_negative_Pmic_wdgGetErrorStatus_nullParam_errors(void);
+void test_negative_Pmic_wdgGetErrStatus_nullParam_handle(void);
+void test_negative_Pmic_wdgGetErrStatus_nullParam_errors(void);
 void test_negative_Pmic_wdgClrErrStatus_nullParam_handle(void);
 void test_negative_Pmic_wdgClrErrStatus_nullParam_errors(void);
 void test_negative_Pmic_wdgClrErrStatusAll_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFailCntStat_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFailCntStat_nullParam_failCount(void);
-void test_negative_Pmic_wdgQaSequenceWriteAnswer_nullParam_handle(void);
+void test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle(void);
+void test_negative_Pmic_wdgGetFailCntStatus_nullParam_failCount(void);
+void test_negative_Pmic_wdgQaWriteAnswer_nullParam_handle(void);
 void test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle(void);
 void test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData(void);
 void test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo(void);
@@ -114,6 +110,25 @@ void test_positive_wdgQaSequence_detectSequenceError(void);
 void test_positive_wdgQaSequence_detectAnswerError(void);
 void test_positive_wdgQaSequence_detectFailInt(void);
 void test_positive_wdgQaSequence_detectResetInt(void);
+void test_positive_wdg_qa_with_irq_callback(void);
+void test_positive_wdg_clear_error_optimization(void);
+void test_positive_wdgQaWriteAnswer_qaFdbk0(void);
+void test_positive_wdgQaWriteAnswer_qaFdbk1(void);
+void test_positive_wdgQaWriteAnswer_qaFdbk2(void);
+void test_positive_wdgQaWriteAnswer_qaFdbk3(void);
+void test_positive_wdgClrErrStatus_th1ErrorOnly(void);
+void test_positive_wdgClrErrStatus_th2ErrorOnly(void);
+void test_positive_wdgClrErrStatus_seqErrorOnly(void);
+void test_positive_wdgGetFailCntStatus_failCntOnly(void);
+void test_positive_wdgGetFailCntStatus_badCntOnly(void);
+
+/* LP8772x-Q1 tests for uncovered lines in pmic_wdg.c */
+void test_positive_wdg_qaWithIrqCallback(void);
+void test_positive_wdg_getErrStatus_longWindowTimeout(void);
+void test_positive_wdg_getErrStatus_answerEarly(void);
+void test_positive_wdg_getErrStatus_answerError(void);
+void test_positive_wdg_getFailCnt_goodEvent(void);
+void test_positive_wdg_writeAnswer_success(void);
 
 #ifdef __cplusplus
 }

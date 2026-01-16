@@ -30,11 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 
-/**
- *  @file  pmic_test_common.c
- *
- *  @brief  This file contains all the testing related files APIs for the common tests.
- */
+
 
 #ifndef PMIC_TEST_COMMON_H
 #define PMIC_TEST_COMMON_H
@@ -51,11 +47,17 @@
 #include "pmic_core.h"
 #include "pmic_io.h"
 
-/* DEVICE INCLUDES */
+/* DEVICE INCLUDES - hardware only */
+#ifndef BUILD_MOCK
 #include <kernel/dpl/DebugP.h>
 #include "ti_drivers_config.h"
 #include "ti_board_open_close.h"
 #include "ti_drivers_open_close.h"
+#else
+/* Mock build - use printf for debug output */
+#include <stdio.h>
+#define DebugP_log(...) printf(__VA_ARGS__)
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -63,6 +65,31 @@
 #define PMIC_MCSPI_MSGSIZE              (1U)
 #define SemaphoreP_OK                   (0U)
 #define SemaphoreP_WAIT_FOREVER         (~((uint32_t)0U))
+
+#ifdef BUILD_MOCK
+/* Mock semaphore for single-threaded testing */
+typedef struct {
+    uint32_t dummy;
+} SemaphoreP_Object;
+
+static inline int32_t SemaphoreP_constructMutex(SemaphoreP_Object *obj) {
+    (void)obj;
+    return SemaphoreP_OK;
+}
+
+static inline int32_t SemaphoreP_pend(SemaphoreP_Object *obj, uint32_t timeout) {
+    (void)obj; (void)timeout;
+    return SemaphoreP_OK;
+}
+
+static inline void SemaphoreP_post(SemaphoreP_Object *obj) {
+    (void)obj;
+}
+
+static inline void SemaphoreP_destruct(SemaphoreP_Object *obj) {
+    (void)obj;
+}
+#endif
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -78,22 +105,25 @@ uint32_t gPmicMcspiTxBuffer[PMIC_MCSPI_MSGSIZE];
 uint32_t gPmicMcspiRxBuffer[PMIC_MCSPI_MSGSIZE];
 
 uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
+
+#ifndef BUILD_MOCK
 int32_t PMIC_mcspiReadRegister(MCSPI_Handle handle, MCSPI_Transaction *spiTransaction, uint8_t cmd, uint8_t* data);
 int32_t PMIC_mcspiWriteRegister(MCSPI_Handle handle, MCSPI_Transaction *spiTransaction, uint8_t cmd, uint8_t data);
-
 void mcspi_mux_pmic(void);
 void delay(uint32_t milliseconds);
-void test_pmic_criticalSectionStartFn(void);
-void test_pmic_criticalSectionStopFn(void);
+#endif
+
+void test_pmic_criticalSectionStartFn(uint8_t resource);
+void test_pmic_criticalSectionStopFn(uint8_t resource);
 int32_t test_pmic_appInit(Pmic_Handle_t **pmicCoreHandle,
                           Pmic_HandleCfg_t     *pmicConfigData);
 static void test_pmic_SemaphoreDeInit(void);
-int32_t test_pmic_regRead(Pmic_Handle_t  *handle,
+int32_t test_pmic_regRead(const Pmic_Handle_t *handle,
                           uint8_t             page,
                           uint8_t             regAddr,
                           uint8_t            *buffer,
                           uint8_t             bufLen);
-int32_t test_pmic_regWrite(Pmic_Handle_t  *handle,
+int32_t test_pmic_regWrite(const Pmic_Handle_t *handle,
                            uint8_t             page,
                            uint8_t             regAddr,
                            const uint8_t      *buffer,

@@ -51,6 +51,7 @@
 #include <stdint.h>
 
 #include "pmic_common.h"
+#include "pmic_core.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -115,6 +116,15 @@ extern "C" {
 #define PMIC_CFG_GPO4_VALID (1U << 5U)
 /** @} */
 
+/**
+ * @anchor Pmic_GpioSafeOutCfgValidParam
+ * @name PMIC GPIO SAFEOUT Configuration Valid Params
+ *
+ * @{
+ */
+#define PMIC_GPIO_SAFEOUT1_EN_VALID (1UL << 0U)
+#define PMIC_GPIO_SAFEOUT2_EN_VALID (1UL << 1U)
+/** @} */
 
 /**
  * @anchor Pmic_gpi1Cfg
@@ -277,6 +287,25 @@ typedef struct Pmic_GpioCfg_s {
     uint8_t gpo4;
 } Pmic_GpioCfg_t;
 
+/**
+ * @anchor Pmic_GpioSafeOutCfg
+ * @name PMIC GPIO SAFEOUT Configuration Struct
+ *
+ * @brief Used to enable/disable SAFEOUT1 and SAFEOUT2 output pins
+ *
+ * @param validParams Selection of structure parameters to be set, from
+ * @ref Pmic_GpioSafeOutCfgValidParam
+ * @param safeOut1En SAFEOUT1 pin enable (false=disable, true=enable).
+ * Valid when PMIC_GPIO_SAFEOUT1_EN_VALID is set
+ * @param safeOut2En SAFEOUT2 pin enable (false=disable, true=enable).
+ * Valid when PMIC_GPIO_SAFEOUT2_EN_VALID is set
+ */
+typedef struct Pmic_GpioSafeOutCfg_s {
+    uint32_t validParams;
+    bool safeOut1En;
+    bool safeOut2En;
+} Pmic_GpioSafeOutCfg_t;
+
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
@@ -285,8 +314,7 @@ typedef struct Pmic_GpioCfg_s {
  * @brief Set PMIC GPIO configurations.
  *
  * Design: PMICDRV-615
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @details The following GPIOs are configurable by this API
  * 1. GPI1 (validParams: PMIC_CFG_GPI1_VALID_SHIFT)
@@ -304,15 +332,14 @@ typedef struct Pmic_GpioCfg_s {
  * @return Success code if GPIO configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetCfg(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Get PMIC GPIO configurations. This API supports getting the same
  * configurations that are settable by `Pmic_gpioSetCfg()`.
  *
  * Design: PMICDRV-616
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -322,14 +349,13 @@ int32_t Pmic_gpioSetCfg(Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg);
  * @return Success code if GPIO configurations have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetCfg(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg);
+int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg);
 
 /**
  * @brief Get the output value of a general purpose output pin on the PMIC.
  *
  * Design: PMICDRV-617
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -342,7 +368,35 @@ int32_t Pmic_gpioGetCfg(Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg);
  * @return Success code if GPO output value has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetOutputValue(Pmic_Handle_t *handle, uint8_t gpo, bool *high);
+int32_t Pmic_gpioGetOutputValue(const Pmic_Handle_t *handle, uint8_t gpo, bool *high);
+
+/**
+ * @brief Enable or disable SAFEOUT pins.
+ *
+ * Design: PMICDRV-615
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN] GPIO SAFEOUT configuration with safeOut1En/safeOut2En set.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_gpioSetSafeOutCfg(const Pmic_Handle_t *handle, const Pmic_GpioSafeOutCfg_t *config);
+
+/**
+ * @brief Get SAFEOUT pin configuration status.
+ *
+ * Design: PMICDRV-616
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
+ *
+ * @param handle [IN]  PMIC interface handle.
+ * @param config [OUT] GPIO SAFEOUT configuration to store SAFEOUT status.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_gpioGetSafeOutCfg(const Pmic_Handle_t *handle, Pmic_GpioSafeOutCfg_t *config);
 
 #ifdef __cplusplus
 }

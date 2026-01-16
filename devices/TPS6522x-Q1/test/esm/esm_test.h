@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,52 +31,19 @@
  *
  *****************************************************************************/
 
+
+#ifndef ESM_TEST_H
+#define ESM_TEST_H
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
 /**
- *  @file   pmic_wdg_test.h
+ * @brief Entry point for ESM module tests.
  *
- *  @brief: This file contains all the testing related files APIs for the PMIC
- *          Watchdog timer servicing tests.
+ * @param args [IN] Test arguments (unused).
  */
+void esm_test(void *args);
 
-#ifndef PMIC_TEST_WDG_H
-#define PMIC_TEST_WDG_H
-
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
-#include "pmic_test_common.h"
-#include "pmic_wdg.h"
-
-/* ========================================================================= */
-/*                             Macros & Typedefs                             */
-/* ========================================================================= */
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
-/* ========================================================================== */
-/*                            Function Declarations                           */
-/* ========================================================================== */
-
-void test_wdg_enableDisable(void);
-void test_wdg_setCfg_longWindowDuration(void);
-void test_wdg_setCfg_window1Duration(void);
-void test_wdg_setCfg_window2Duration(void);
-void test_wdg_setCfg_failThreshold(void);
-void test_wdg_setCfg_resetThreshold(void);
-void test_wdg_setCfg_resetEnable(void);
-void test_wdg_setCfg_wdgMode(void);
-void test_wdg_setCfg_powerHold(void);
-void test_wdg_setCfg_ReturnLongWindow(void);
-void test_wdg_setCfg_QA_feedback(void);
-void test_wdg_setCfg_QA_LFSR(void);
-void test_wdg_setCfg_QA_questionSeed(void);
-void test_wdg_QaMode_noErrors(void);
-void *test_pmic_WDG(void *args);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif /* PMIC_TEST_WDG_H */
+#endif /* ESM_TEST_H */

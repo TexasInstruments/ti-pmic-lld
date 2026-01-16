@@ -55,7 +55,6 @@
 #include "pmic_io.h"
 #include "pmic_irq.h"
 #include "pmic_power.h"
-#include "pmic_status.h"
 #include "pmic_wdg.h"
 
 #ifdef __cplusplus
@@ -83,6 +82,9 @@ extern "C" {
 #define PMIC_CRITICAL_SECTION_START_VALID (1U << 4U)
 #define PMIC_CRITICAL_SECTION_STOP_VALID  (1U << 5U)
 #define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1U << 6U)
+#define PMIC_RETRY_CNT_VALID              (1U << 7U)
+#define PMIC_RETRY_INTERVAL_MS_VALID      (1U << 8U)
+#define PMIC_TIMER_WAIT_MS_VALID          (1U << 9U)
 /** @} */
 
 /**
@@ -100,7 +102,10 @@ extern "C" {
     PMIC_IO_WRITE_VALID |\
     PMIC_CRITICAL_SECTION_START_VALID |\
     PMIC_CRITICAL_SECTION_STOP_VALID |\
-    PMIC_IRQ_RESPONSE_CALLBACK_VALID)
+    PMIC_IRQ_RESPONSE_CALLBACK_VALID |\
+    PMIC_RETRY_CNT_VALID |\
+    PMIC_RETRY_INTERVAL_MS_VALID |\
+    PMIC_TIMER_WAIT_MS_VALID)
 /** @} */
 
 /* ========================================================================== */
@@ -132,6 +137,13 @@ extern "C" {
  *
  * @param i2cAddr0 TPS65036x PMIC I2C address. Valid only when PMIC_CFG_I2C_ADDR0_VALID is set.
  *
+ * @param retryCnt Upon communication related errors (bus error or CRC error),
+ * PMIC LLD attempts to retry the failed transaction up to `retryCnt` times before
+ * returning an error code to the calling application.
+ *
+ * @param retryIntervalMs LLD waits this configured amount of time (milliseconds)
+ * between retry attempts using the `timerWaitMs()` hook.
+ *
  * @param commHandle0 Pointer to platform-specific transport layer communication handle.
  * Valid only when PMIC_CFG_COMM_HANDLE_0_VALID is set.
  *
@@ -149,25 +161,32 @@ extern "C" {
  *
  * @param irqResponseCallback Function pointer to application IRQ response. Valid only when
  * PMIC_CFG_IRQ_RESPONSE_CALLBACK_VALID is set and when servicing the PMIC WDG in Q&A mode.
+ *
+ * @param timerWaitMs Function pointer to platform-specific timer-based wait API.
+ * Upon invocation, the user-implemented hook waits a specified period of time
+ * (milliseconds) before returning control to the caller.
  */
 typedef struct Pmic_HandleCfg_s
 {
     uint32_t validParams;
     uint8_t i2cAddr0;
+    uint32_t retryCnt;
+    uint32_t retryIntervalMs;
     void *commHandle0;
-    int32_t (*ioRead)(const struct Pmic_CoreHandle_s *handle,
+    int32_t (*ioRead)(const struct Pmic_Handle_s *handle,
                       uint8_t page,
                       uint8_t regAddr,
                       uint8_t *buffer,
                       uint8_t bufLen);
-    int32_t (*ioWrite)(const struct Pmic_CoreHandle_s *handle,
+    int32_t (*ioWrite)(const struct Pmic_Handle_s *handle,
                        uint8_t page,
                        uint8_t regAddr,
                        const uint8_t *buffer,
                        uint8_t bufLen);
-    void (*criticalSectionStart)(void);
-    void (*criticalSectionStop)(void);
+    void (*criticalSectionStart)(uint8_t resource);
+    void (*criticalSectionStop)(uint8_t resource);
     void (*irqResponseCallback)(void);
+    void (*timerWaitMs)(uint32_t ms);
 } Pmic_HandleCfg_t;
 
 /* ========================================================================== */
@@ -179,10 +198,14 @@ typedef struct Pmic_HandleCfg_s
  * for information and stores obtained data in the handle instance.
  *
  * Design: PMICDRV-568
- * Architecture: PMICDRV-527, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-547
- *               PMICDRV-549, PMICDRV-551, PMICDRV-545, PMICDRV-546, PMICDRV-502, PMICDRV-506
- *               PMICDRV-524, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-500
- *               PMICDRV-512, PMICDRV-501, PMICDRV-525
+ * Architecture: PMICDRV-500, PMICDRV-501, PMICDRV-502, PMICDRV-504, PMICDRV-506,
+ *               PMICDRV-508, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-524,
+ *               PMICDRV-525, PMICDRV-527, PMICDRV-528, PMICDRV-545, PMICDRV-547,
+ *               PMICDRV-549, PMICDRV-551
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
  *
  * @param handle [OUT] PMIC interface handle.
  *
@@ -198,8 +221,12 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
  * @brief De-initialize a PMIC handle instance.
  *
  * Design: PMICDRV-569
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-545
- *               PMICDRV-546, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-551
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -215,9 +242,12 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle);
  * layer to check the handle independently.
  *
  * Design: PMICDRV-570
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-550, PMICDRV-551
- *               PMICDRV-545, PMICDRV-546, PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522
- *               PMICDRV-534, PMICDRV-521, PMICDRV-520
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-520, PMICDRV-521,
+ *               PMICDRV-522, PMICDRV-526, PMICDRV-545, PMICDRV-551
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
  *
  * @param handle [IN] PMIC interface handle.
  *

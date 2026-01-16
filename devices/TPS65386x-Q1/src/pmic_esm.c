@@ -37,6 +37,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -48,15 +49,22 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
+static inline void ESM_copyEsmCfg(const Pmic_EsmCfg_t *src, Pmic_EsmCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmCfg_t));
+}
 
-int32_t Pmic_esmSetStartState(Pmic_Handle_t *handle, bool start)
+static inline void ESM_copyEsmStatus(const Pmic_EsmStatus_t *src, Pmic_EsmStatus_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmStatus_t));
+}
+
+int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, ESM_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
@@ -64,23 +72,23 @@ int32_t Pmic_esmSetStartState(Pmic_Handle_t *handle, bool start)
             Pmic_setBitField_b(&regData, ESM_START_SHIFT, start);
             status = Pmic_ioTxByte(handle, ESM_CTRL_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_esmStart(Pmic_Handle_t *handle)
+int32_t Pmic_esmStart(const Pmic_Handle_t *handle)
 {
     return Pmic_esmSetStartState(handle, PMIC_ENABLE);
 }
 
-int32_t Pmic_esmStop(Pmic_Handle_t *handle)
+int32_t Pmic_esmStop(const Pmic_Handle_t *handle)
 {
     return Pmic_esmSetStartState(handle, PMIC_DISABLE);
 }
 
-int32_t Pmic_esmGetStartState(Pmic_Handle_t *handle, bool *start)
+int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *start)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -100,10 +108,10 @@ int32_t Pmic_esmGetStartState(Pmic_Handle_t *handle, bool *start)
         *start = Pmic_getBitField_b(regData, ESM_START_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t ESM_setDelays(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setDelays(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -120,7 +128,7 @@ static int32_t ESM_setDelays(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
     return status;
 }
 
-static int32_t ESM_setHMaxMinLMaxMin(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setHMaxMinLMaxMin(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -147,12 +155,12 @@ static int32_t ESM_setHMaxMinLMaxMin(Pmic_Handle_t *handle, const Pmic_EsmCfg_t 
     return status;
 }
 
-static int32_t ESM_setCfg1(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setCfg1(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, ESM_CFG1_REG, &regData);
 
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID, status))
@@ -188,17 +196,17 @@ static int32_t ESM_setCfg1(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
     {
         status = Pmic_ioTxByte(handle, ESM_CFG1_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-static int32_t ESM_setCfg2(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setCfg2(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, ESM_CFG2_REG, &regData);
 
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID, status))
@@ -241,12 +249,12 @@ static int32_t ESM_setCfg2(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
     {
         status = Pmic_ioTxByte(handle, ESM_CFG2_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-static int32_t ESM_setCtrlConfig(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_setCtrlConfig(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -256,9 +264,10 @@ static int32_t ESM_setCtrlConfig(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
         status = ESM_setCfg1(handle, esmCfg);
     }
 
-    if (Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID) ||
-        Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_DEGLITCH_VALID) ||
-        Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_TIME_BASE_VALID))
+    if ((status == PMIC_ST_SUCCESS) &&
+        (Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID) ||
+         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_DEGLITCH_VALID) ||
+         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_TIME_BASE_VALID)))
     {
         status = ESM_setCfg2(handle, esmCfg);
     }
@@ -266,9 +275,10 @@ static int32_t ESM_setCtrlConfig(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
     return status;
 }
 
-int32_t Pmic_esmSetCfg(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_EsmCfg_t localEsmCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
     {
@@ -282,24 +292,29 @@ int32_t Pmic_esmSetCfg(Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_setDelays(handle, esmCfg);
+        ESM_copyEsmCfg(esmCfg, &localEsmCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_setHMaxMinLMaxMin(handle, esmCfg);
+        status = ESM_setDelays(handle, &localEsmCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_setHMaxMinLMaxMin(handle, &localEsmCfg);
     }
 
     // Set mode, error threshold, polarity, deglitch, timebase
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_setCtrlConfig(handle, esmCfg);
+        status = ESM_setCtrlConfig(handle, &localEsmCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t ESM_getDelays(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_getDelays(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -327,7 +342,7 @@ static int32_t ESM_getDelays(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
     return status;
 }
 
-static int32_t ESM_getHMaxMinLMaxMin(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_getHMaxMinLMaxMin(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -375,7 +390,7 @@ static int32_t ESM_getHMaxMinLMaxMin(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCf
     return status;
 }
 
-static int32_t ESM_getCfg1(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_getCfg1(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -403,7 +418,7 @@ static int32_t ESM_getCfg1(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
     return status;
 }
 
-static int32_t ESM_getCfg2(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_getCfg2(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -431,7 +446,7 @@ static int32_t ESM_getCfg2(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
     return status;
 }
 
-static int32_t ESM_getCtrlConfig(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_getCtrlConfig(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -451,9 +466,10 @@ static int32_t ESM_getCtrlConfig(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
     return status;
 }
 
-int32_t Pmic_esmGetCfg(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_EsmCfg_t localEsmCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
     {
@@ -467,27 +483,38 @@ int32_t Pmic_esmGetCfg(Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_getDelays(handle, esmCfg);
+        ESM_copyEsmCfg(esmCfg, &localEsmCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_getHMaxMinLMaxMin(handle, esmCfg);
+        status = ESM_getDelays(handle, &localEsmCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_getHMaxMinLMaxMin(handle, &localEsmCfg);
     }
 
     // Get mode, error threshold, polarity, deglitch, timebase
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_getCtrlConfig(handle, esmCfg);
+        status = ESM_getCtrlConfig(handle, &localEsmCfg);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        ESM_copyEsmCfg(&localEsmCfg, esmCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_esmGetStatus(Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_EsmStatus_t localEsmStat;
 
     if ((status == PMIC_ST_SUCCESS) && (esmStat == NULL))
     {
@@ -497,6 +524,11 @@ int32_t Pmic_esmGetStatus(Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
     if ((status == PMIC_ST_SUCCESS) && (esmStat->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        ESM_copyEsmStatus(esmStat, &localEsmStat);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -506,34 +538,37 @@ int32_t Pmic_esmGetStatus(Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_DELAY2_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_DELAY2_ERR_VALID))
         {
-            esmStat->delay2Err = Pmic_getBitField_b(regData, ESM_DLY2_ERR_SHIFT);
+            localEsmStat.delay2Err = Pmic_getBitField_b(regData, ESM_DLY2_ERR_SHIFT);
         }
 
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_DELAY1_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_DELAY1_ERR_VALID))
         {
-            esmStat->delay1Err = Pmic_getBitField_b(regData, ESM_DLY1_ERR_SHIFT);
+            localEsmStat.delay1Err = Pmic_getBitField_b(regData, ESM_DLY1_ERR_SHIFT);
         }
 
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_ERR_VALID))
         {
-            esmStat->esmErr = Pmic_getBitField_b(regData, ESM_ERR_SHIFT);
+            localEsmStat.esmErr = Pmic_getBitField_b(regData, ESM_ERR_SHIFT);
         }
 
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_ERR_CNT_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_ERR_CNT_VALID))
         {
-            esmStat->errCnt = Pmic_getBitField(regData, ESM_ERR_CNT_SHIFT, ESM_ERR_CNT_MASK);
+            localEsmStat.errCnt = Pmic_getBitField(regData, ESM_ERR_CNT_SHIFT, ESM_ERR_CNT_MASK);
         }
+
+        ESM_copyEsmStatus(&localEsmStat, esmStat);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_esmClrStatus(Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat)
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_EsmStatus_t localEsmStat;
 
     if ((status == PMIC_ST_SUCCESS) && (esmStat == NULL))
     {
@@ -545,25 +580,30 @@ int32_t Pmic_esmClrStatus(Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if (Pmic_validParamStatusCheck(esmStat->validParams, PMIC_ESM_ERR_CNT_VALID, status))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamStatusCheck(esmStat->validParams, PMIC_ESM_ERR_CNT_VALID, status))
     {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        ESM_copyEsmStatus(esmStat, &localEsmStat);
     }
 
     // ESM statuses are W1C (write 1 to clear)
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_DELAY2_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_DELAY2_ERR_VALID))
         {
             Pmic_setBitField_b(&regData, ESM_DLY2_ERR_SHIFT, PMIC_CLEAR_STAT);
         }
 
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_DELAY1_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_DELAY1_ERR_VALID))
         {
             Pmic_setBitField_b(&regData, ESM_DLY1_ERR_SHIFT, PMIC_CLEAR_STAT);
         }
 
-        if (Pmic_validParamCheck(esmStat->validParams, PMIC_ESM_ERR_VALID))
+        if (Pmic_validParamCheck(localEsmStat.validParams, PMIC_ESM_ERR_VALID))
         {
             Pmic_setBitField_b(&regData, ESM_ERR_SHIFT, PMIC_CLEAR_STAT);
         }
@@ -571,5 +611,5 @@ int32_t Pmic_esmClrStatus(Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat
         status = Pmic_ioTxByte_CS(handle, ESM_ERR_STAT_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

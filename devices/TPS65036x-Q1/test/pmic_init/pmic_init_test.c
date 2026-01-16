@@ -30,10 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- * @brief Source file containing definitions to PMIC Init tests.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -54,8 +51,17 @@
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStart); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStop); \
                                  PLATFORM_RUN_TEST(test_negative_Pmic_deinit_nullParam_pmicHandle); \
+                                 PLATFORM_RUN_TEST(test_negative_init_timerWaitNull); \
+                                 PLATFORM_RUN_TEST(test_negative_init_nullIrqResponseCallback); \
+                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullCommHandle); \
+                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullFptrs); \
+                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullTimerWithRetry); \
+                                 PLATFORM_RUN_TEST(test_negative_checkHandle_invalidDrvInitStat); \
                                  PLATFORM_RUN_TEST(test_positive_Pmic_init); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_deinit)
+                                 PLATFORM_RUN_TEST(test_positive_Pmic_deinit); \
+                                 PLATFORM_RUN_TEST(test_positive_init_withRetryCnt); \
+                                 PLATFORM_RUN_TEST(test_positive_init_withRetryInterval); \
+                                 PLATFORM_RUN_TEST(test_positive_init_withTimerWaitMs)
 
 /* Run all PMIC_INIT negative tests */
 #define PMIC_INIT_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicHandle); \
@@ -65,7 +71,12 @@
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_ioWrite); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStart); \
                                       PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStop); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_deinit_nullParam_pmicHandle)
+                                      PLATFORM_RUN_TEST(test_negative_Pmic_deinit_nullParam_pmicHandle); \
+                                      PLATFORM_RUN_TEST(test_negative_init_nullIrqResponseCallback); \
+                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullCommHandle); \
+                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullFptrs); \
+                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullTimerWithRetry); \
+                                      PLATFORM_RUN_TEST(test_negative_checkHandle_invalidDrvInitStat)
 
 /* Run all PMIC_INIT positive tests */
 #define PMIC_INIT_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_Pmic_init); \
@@ -83,6 +94,13 @@ static void pmicInitTest_nullParamPmicInit(const char *param);
 /* ========================================================================== */
 
 static Pmic_Handle_t pmicHandle = {0U};
+
+/* Wrapper for platform timer wait to match PMIC API signature */
+static void testTimerWaitWrapper(uint32_t ms)
+{
+    /* Platform function takes uint16_t, truncate if needed */
+    platform_timerWaitMs((uint16_t)ms);
+}
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -157,7 +175,14 @@ static void pmicInitTest_nullParamPmicInit(const char *param)
     }
 
     int32_t status = Pmic_init(&pmicHandle, &pmicCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+    /* Function pointers return PMIC_ST_ERR_NULL_FPTR, other parameters return PMIC_ST_ERR_NULL_PARAM */
+    if (strcmp(param, "commHandle0") == 0U) {
+        PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+    } else {
+        /* ioRead, ioWrite, criticalSectionStart, criticalSectionStop are function pointers */
+        PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+    }
 }
 
 void test_negative_Pmic_init_nullParam_pmicCfg_commHandle(void)
@@ -226,18 +251,207 @@ void test_positive_Pmic_deinit(void)
     PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
-/**
- * @brief Some testing frameworks require an API to setup tests. Rename/rewrite
- * as necessary.
- */
-void setUp(void)
+void test_positive_init_withRetryCnt(void)
 {
+    // Initialize with PMIC_RETRY_CNT_VALID set
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    // Add retry count configuration
+    pmicCfg.validParams |= PMIC_RETRY_CNT_VALID;
+    pmicCfg.retryCnt = 5U;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify retry count is set in handle
+    PLATFORM_ASSERT(handle.retryCnt == 5U);
+
+    // Clean up
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-/**
- * @brief Some testing frameworks require an API to teardown tests.
- * Rename/rewrite as necessary.
- */
-void tearDown(void)
+void test_positive_init_withRetryInterval(void)
 {
+    // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    // Add retry interval configuration
+    // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
+    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.retryIntervalMs = 100U;
+    pmicCfg.timerWaitMs = &testTimerWaitWrapper;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify retry interval is set in handle
+    PLATFORM_ASSERT(handle.retryIntervalMs == 100U);
+
+    // Clean up
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
+
+void test_positive_init_withTimerWaitMs(void)
+{
+    // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    // Add timer wait callback configuration
+    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.timerWaitMs = &testTimerWaitWrapper;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify timer wait callback is set in handle
+    PLATFORM_ASSERT(handle.timerWaitMs == &testTimerWaitWrapper);
+
+    // Clean up
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_negative_init_timerWaitNull(void)
+{
+    // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    // Set valid param flag but provide NULL callback
+    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.timerWaitMs = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_negative_init_nullIrqResponseCallback(void)
+{
+    // Test NULL IRQ response callback with PMIC_IRQ_RESPONSE_CALLBACK_VALID set (lines 173-174)
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    // Set valid param flag but provide NULL callback
+    pmicCfg.validParams |= PMIC_IRQ_RESPONSE_CALLBACK_VALID;
+    pmicCfg.irqResponseCallback = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_negative_checkHandle_nullCommHandle(void)
+{
+    // Test corrupted commHandle0 to NULL (line 411)
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Corrupt commHandle0 to NULL
+    handle.commHandle0 = NULL;
+
+    // Try to use the corrupted handle - should fail
+    bool wdgEnabled = false;
+    status = Pmic_wdgGetEnableState(&handle, &wdgEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+    // Restore handle for deinit
+    handle.commHandle0 = platform_getCommHandle();
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_negative_checkHandle_nullFptrs(void)
+{
+    // Test corrupted function pointers to NULL (line 417)
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Corrupt ioRead to NULL
+    handle.ioRead = NULL;
+
+    // Try to use the corrupted handle - should fail
+    bool wdgEnabled = false;
+    status = Pmic_wdgGetEnableState(&handle, &wdgEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Restore handle for deinit
+    handle.ioRead = &platform_rxByte;
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_negative_checkHandle_nullTimerWithRetry(void)
+{
+    // Test non-zero retry with NULL timer (line 422)
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Set retryIntervalMs to non-zero but timerWaitMs to NULL
+    handle.retryIntervalMs = 100U;
+    handle.timerWaitMs = NULL;
+
+    // Try to use the corrupted handle - should fail
+    bool wdgEnabled = false;
+    status = Pmic_wdgGetEnableState(&handle, &wdgEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Restore handle for deinit
+    handle.retryIntervalMs = 0U;
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_negative_checkHandle_invalidDrvInitStat(void)
+{
+    // Test corrupted drvInitStat (line 427)
+    Pmic_HandleCfg_t pmicCfg = {0U};
+    Pmic_Handle_t handle = {0U};
+
+    pmicInitTest_initPmicCfg(&pmicCfg);
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Corrupt drvInitStat
+    handle.drvInitStat = 0U;
+
+    // Try to use the corrupted handle - should fail
+    bool wdgEnabled = false;
+    status = Pmic_wdgGetEnableState(&handle, &wdgEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+
+    // Restore handle for deinit
+    handle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    status = Pmic_deinit(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+

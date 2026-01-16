@@ -45,17 +45,43 @@
 #include "pmic_io.h"
 #include "regmap/gpio.h"
 
+#include <string.h>
+
 /* ========================================================================== */
 /*                         Static Function Declarations                       */
 /* ========================================================================== */
 
+/**
+ * @brief Copy Pmic_GpioPinCfg_t structure member-wise
+ */
+static inline void GPIO_copyGpioPinCfg(const Pmic_GpioPinCfg_t *src, Pmic_GpioPinCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioPinCfg_t));
+}
+
+/**
+ * @brief Copy Pmic_GpioNIntEnDrvCfg_t structure member-wise
+ */
+static inline void GPIO_copyGpioNIntEnDrvCfg(const Pmic_GpioNIntEnDrvCfg_t *src, Pmic_GpioNIntEnDrvCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioNIntEnDrvCfg_t));
+}
+
+/**
+ * @brief Copy Pmic_GpioEnPbVSenseStatus_t structure member-wise
+ */
+static inline void GPIO_copyGpioEnPbVSenseStatus(const Pmic_GpioEnPbVSenseStatus_t *src, Pmic_GpioEnPbVSenseStatus_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioEnPbVSenseStatus_t));
+}
+
 static int32_t GPIO_validatePinNum(uint8_t pinNum);
 static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t *regData);
 static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gpioPinCfg);
-static uint8_t GPIO_getConfRegAddr(uint8_t pinNum);
-static uint8_t GPIO_getOutShift(uint8_t pinNum);
-static uint8_t GPIO_getOutMask(uint8_t pinNum);
-static uint8_t GPIO_getInShift(uint8_t pinNum);
+static void GPIO_getConfRegAddr(uint8_t pinNum, uint8_t *regAddr);
+static void GPIO_getOutShift(uint8_t pinNum, uint8_t *bitShift);
+static void GPIO_getOutMask(uint8_t pinNum, uint8_t *bitMask);
+static void GPIO_getInShift(uint8_t pinNum, uint8_t *bitShift);
 
 /* ========================================================================== */
 /*                         Static Function Definitions                        */
@@ -76,27 +102,29 @@ static int32_t GPIO_validatePinNum(uint8_t pinNum)
 }
 
 /* Get GPIO configuration register address for a given pin (1-6). */
-static uint8_t GPIO_getConfRegAddr(uint8_t pinNum)
+static void GPIO_getConfRegAddr(uint8_t pinNum, uint8_t *regAddr)
 {
-    return (uint8_t)(GPIO1_CONF_REG + (pinNum - PMIC_GPIO_PIN1));
+    *regAddr = (uint8_t)(GPIO1_CONF_REG + (pinNum - PMIC_GPIO_PIN1));
 }
 
 /* Get GPIO output bit shift for a given pin (1-6). */
-static uint8_t GPIO_getOutShift(uint8_t pinNum)
+static void GPIO_getOutShift(uint8_t pinNum, uint8_t *bitShift)
 {
-    return (uint8_t)(GPIO1_OUT_SHIFT + (pinNum - PMIC_GPIO_PIN1));
+    *bitShift = (uint8_t)(GPIO1_OUT_SHIFT + (pinNum - PMIC_GPIO_PIN1));
 }
 
 /* Get GPIO output bit mask for a given pin (1-6). */
-static uint8_t GPIO_getOutMask(uint8_t pinNum)
+static void GPIO_getOutMask(uint8_t pinNum, uint8_t *bitMask)
 {
-    return (uint8_t)(0x01U << GPIO_getOutShift(pinNum));
+    uint8_t bitShift;
+    GPIO_getOutShift(pinNum, &bitShift);
+    *bitMask = (uint8_t)(0x01U << bitShift);
 }
 
 /* Get GPIO input bit shift for a given pin (1-6). */
-static uint8_t GPIO_getInShift(uint8_t pinNum)
+static void GPIO_getInShift(uint8_t pinNum, uint8_t *bitShift)
 {
-    return (uint8_t)(GPIO1_IN_SHIFT + (pinNum - PMIC_GPIO_PIN1));
+    *bitShift = (uint8_t)(GPIO1_IN_SHIFT + (pinNum - PMIC_GPIO_PIN1));
 }
 
 /* Set GPIO pin configuration fields in register data. Returns PMIC_ST_SUCCESS
@@ -131,9 +159,9 @@ static int32_t GPIO_setPinCfgFields(const Pmic_GpioPinCfg_t *gpioPinCfg, uint8_t
             case PMIC_GPIO_PIN6:
                 validFxn = (gpioPinCfg->fxnSel <= PMIC_GPIO_PIN6_FXN_SEL_MAX);
                 break;
-            default:
-                validFxn = false;
-                break;
+            default: /* LCOV_EXCL_LINE */
+                validFxn = false; /* LCOV_EXCL_LINE */
+                break; /* LCOV_EXCL_LINE */
         }
 
         if (!validFxn)
@@ -253,44 +281,47 @@ static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gp
 
 int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg)
 {
+    Pmic_GpioPinCfg_t gpioPinCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    uint8_t regAddr = 0U;
+    uint8_t regAddr;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (gpioPinCfg == NULL))
+    status = Pmic_checkHandle(handle);
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioPinCfg->validParams == 0U))
+    if (gpioPinCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
+    }
+
+    if (gpioPinCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
 
     // Validate pin number
-    if (status == PMIC_ST_SUCCESS)
+    status = GPIO_validatePinNum((uint8_t)((uint8_t)gpioPinCfg->pinNum));
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = GPIO_validatePinNum(gpioPinCfg->pinNum);
+        return Pmic_logStatus(handle, status);
     }
+
+    GPIO_copyGpioPinCfg(gpioPinCfg, &gpioPinCfgLocal);
 
     // Get register address for this GPIO pin
-    if (status == PMIC_ST_SUCCESS)
-    {
-        regAddr = GPIO_getConfRegAddr(gpioPinCfg->pinNum);
-    }
+    GPIO_getConfRegAddr(gpioPinCfgLocal.pinNum, &regAddr);
 
     // Start critical section and read current register value
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
-    }
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, regAddr, &regData);
 
     // Modify register data with new configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = GPIO_setPinCfgFields(gpioPinCfg, &regData);
+        status = GPIO_setPinCfgFields(&gpioPinCfgLocal, &regData);
     }
 
     // Write modified register data back to PMIC
@@ -300,61 +331,71 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
     }
 
     // End critical section
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetPinCfg(const Pmic_Handle_t *handle, Pmic_GpioPinCfg_t *gpioPinCfg)
 {
+    Pmic_GpioPinCfg_t gpioPinCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    uint8_t regAddr = 0U;
+    uint8_t regAddr;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (gpioPinCfg == NULL))
+    status = Pmic_checkHandle(handle);
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioPinCfg->validParams == 0U))
+    if (gpioPinCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
+    }
+
+    if (gpioPinCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
 
     // Validate pin number
-    if (status == PMIC_ST_SUCCESS)
+    status = GPIO_validatePinNum((uint8_t)((uint8_t)gpioPinCfg->pinNum));
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = GPIO_validatePinNum(gpioPinCfg->pinNum);
+        return Pmic_logStatus(handle, status);
     }
+
+    GPIO_copyGpioPinCfg(gpioPinCfg, &gpioPinCfgLocal);
 
     // Get register address for this GPIO pin
-    if (status == PMIC_ST_SUCCESS)
-    {
-        regAddr = GPIO_getConfRegAddr(gpioPinCfg->pinNum);
-    }
+    GPIO_getConfRegAddr(gpioPinCfgLocal.pinNum, &regAddr);
 
     // Read register value
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
-    }
+    status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
 
     // Extract configuration fields from register data
     if (status == PMIC_ST_SUCCESS)
     {
-        status = GPIO_getPinCfgFields(regData, gpioPinCfg);
+        status = GPIO_getPinCfgFields(regData, &gpioPinCfgLocal);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        GPIO_copyGpioPinCfg(&gpioPinCfgLocal, gpioPinCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool high)
 {
-    int32_t status = Pmic_checkHandle(handle);
+    int32_t status;
     uint8_t regData = 0U;
     uint8_t bitShift = 0U;
     uint8_t bitMask = 0U;
+
+    status = Pmic_checkHandle(handle);
 
     // Validate pin number
     if (status == PMIC_ST_SUCCESS)
@@ -365,12 +406,12 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
     // Get bit position for this GPIO pin
     if (status == PMIC_ST_SUCCESS)
     {
-        bitShift = GPIO_getOutShift(gpioPin);
-        bitMask = GPIO_getOutMask(gpioPin);
+        GPIO_getOutShift(gpioPin, &bitShift);
+        GPIO_getOutMask(gpioPin, &bitMask);
     }
 
     // Start critical section and read current GPIO_OUT register
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, GPIO_OUT_1_REG, &regData);
@@ -384,16 +425,18 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
     }
 
     // End critical section
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *high)
 {
-    int32_t status = Pmic_checkHandle(handle);
+    int32_t status;
     uint8_t regData = 0U;
     uint8_t bitShift = 0U;
+
+    status = Pmic_checkHandle(handle);
 
     // Validate input parameters
     if ((status == PMIC_ST_SUCCESS) && (high == NULL))
@@ -410,7 +453,7 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
     // Get bit position for this GPIO pin
     if (status == PMIC_ST_SUCCESS)
     {
-        bitShift = GPIO_getInShift(gpioPin);
+        GPIO_getInShift(gpioPin, &bitShift);
     }
 
     // Read GPIO_IN register
@@ -425,50 +468,54 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
         *high = Pmic_getBitField_b(regData, bitShift);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIntEnDrvCfg_t *nIntEnDrvCfg)
 {
+    Pmic_GpioNIntEnDrvCfg_t nIntEnDrvCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (nIntEnDrvCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (nIntEnDrvCfg->validParams == 0U))
+    if (nIntEnDrvCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (nIntEnDrvCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    GPIO_copyGpioNIntEnDrvCfg(nIntEnDrvCfg, &nIntEnDrvCfgLocal);
 
     // Start critical section and read POWER_ON_CONFIG register
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
-    }
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
 
     // Set function select
-    if (Pmic_validParamStatusCheck(nIntEnDrvCfg->validParams, PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(nIntEnDrvCfgLocal.validParams, PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID, status))
     {
-        if (nIntEnDrvCfg->fxnSel > PMIC_GPIO_NINT_ENDRV_FXN_SEL_MAX)
+        if (nIntEnDrvCfgLocal.fxnSel > PMIC_GPIO_NINT_ENDRV_FXN_SEL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            Pmic_setBitField(&regData, NINT_ENDRV_SEL_SHIFT, NINT_ENDRV_SEL_MASK, nIntEnDrvCfg->fxnSel);
+            Pmic_setBitField(&regData, NINT_ENDRV_SEL_SHIFT, NINT_ENDRV_SEL_MASK, nIntEnDrvCfgLocal.fxnSel);
         }
     }
 
     // Set pull-up resistor enable
-    if (Pmic_validParamStatusCheck(nIntEnDrvCfg->validParams, PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID, status))
+    if (Pmic_validParamStatusCheck(nIntEnDrvCfgLocal.validParams, PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID, status))
     {
         Pmic_setBitField(&regData, NINT_ENDRV_PU_SEL_SHIFT, NINT_ENDRV_PU_SEL_MASK,
-                        (uint8_t)(nIntEnDrvCfg->enPuResistor ? 1U : 0U));
+                        (uint8_t)(nIntEnDrvCfgLocal.enPuResistor ? 1U : 0U));
     }
 
     // Write modified register data back to PMIC
@@ -478,50 +525,56 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
     }
 
     // End critical section
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetNIntEnDrvCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrvCfg_t *nIntEnDrvCfg)
 {
+    Pmic_GpioNIntEnDrvCfg_t nIntEnDrvCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (nIntEnDrvCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (nIntEnDrvCfg->validParams == 0U))
+    if (nIntEnDrvCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (nIntEnDrvCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    GPIO_copyGpioNIntEnDrvCfg(nIntEnDrvCfg, &nIntEnDrvCfgLocal);
 
     // Read POWER_ON_CONFIG register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
-    }
+    status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
 
     // Extract configuration fields
     if (status == PMIC_ST_SUCCESS)
     {
         // Get function select
-        if (Pmic_validParamCheck(nIntEnDrvCfg->validParams, PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID))
+        if (Pmic_validParamCheck(nIntEnDrvCfgLocal.validParams, PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID))
         {
-            nIntEnDrvCfg->fxnSel = Pmic_getBitField(regData, NINT_ENDRV_SEL_SHIFT, NINT_ENDRV_SEL_MASK);
+            nIntEnDrvCfgLocal.fxnSel = Pmic_getBitField(regData, NINT_ENDRV_SEL_SHIFT, NINT_ENDRV_SEL_MASK);
         }
 
         // Get pull-up resistor enable
-        if (Pmic_validParamCheck(nIntEnDrvCfg->validParams, PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID))
+        if (Pmic_validParamCheck(nIntEnDrvCfgLocal.validParams, PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID))
         {
-            nIntEnDrvCfg->enPuResistor = Pmic_getBitField_b(regData, NINT_ENDRV_PU_SEL_SHIFT);
+            nIntEnDrvCfgLocal.enPuResistor = Pmic_getBitField_b(regData, NINT_ENDRV_PU_SEL_SHIFT);
         }
+
+        GPIO_copyGpioNIntEnDrvCfg(&nIntEnDrvCfgLocal, nIntEnDrvCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high)
@@ -547,65 +600,73 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high)
         *high = Pmic_getBitField_b(regData, NINT_EN_DRV_IN_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIntEnDrvCfg_t *enPbVSenseCfg)
 {
+    Pmic_GpioNIntEnDrvCfg_t enPbVSenseCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseCfg->validParams == 0U))
+    if (enPbVSenseCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (enPbVSenseCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    GPIO_copyGpioNIntEnDrvCfg(enPbVSenseCfg, &enPbVSenseCfgLocal);
 
     // Start critical section and read POWER_ON_CONFIG register
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
-    }
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
 
     // Set function select
-    if (Pmic_validParamStatusCheck(enPbVSenseCfg->validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID, status))
     {
-        if (enPbVSenseCfg->fxnSel > PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX)
+        if (enPbVSenseCfgLocal.fxnSel > PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            Pmic_setBitField(&regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK, enPbVSenseCfg->fxnSel);
+            Pmic_setBitField(&regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK, enPbVSenseCfgLocal.fxnSel);
         }
     }
 
     // Set EN/PB deglitch configuration
-    if (Pmic_validParamStatusCheck(enPbVSenseCfg->validParams, PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID, status))
+    if (Pmic_validParamStatusCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID, status))
     {
         // Validate deglitch value based on function
         bool validDegl = true;
 
         // Get current or new function selection to validate deglitch
         uint8_t fxnSel = Pmic_getBitField(regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK);
-        if (Pmic_validParamCheck(enPbVSenseCfg->validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
+        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
         {
-            fxnSel = enPbVSenseCfg->fxnSel;
+            fxnSel = enPbVSenseCfgLocal.fxnSel;
         }
 
         if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
         {
-            validDegl = (enPbVSenseCfg->enPbDegl <= PMIC_GPIO_EN_DEGL_MAX);
+            validDegl = (enPbVSenseCfgLocal.enPbDegl <= PMIC_GPIO_EN_DEGL_MAX);
         }
         else if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB)
         {
-            validDegl = (enPbVSenseCfg->enPbDegl <= PMIC_GPIO_PB_DEGL_MAX);
+            validDegl = (enPbVSenseCfgLocal.enPbDegl <= PMIC_GPIO_PB_DEGL_MAX);
+        }
+        else
+        {
+            /* Function selection not requiring validation */
         }
 
         if (!validDegl)
@@ -614,7 +675,7 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
         }
         else
         {
-            Pmic_setBitField(&regData, EN_PB_DEGL_SHIFT, EN_PB_DEGL_MASK, enPbVSenseCfg->enPbDegl);
+            Pmic_setBitField(&regData, EN_PB_DEGL_SHIFT, EN_PB_DEGL_MASK, enPbVSenseCfgLocal.enPbDegl);
         }
     }
 
@@ -625,67 +686,80 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
     }
 
     // End critical section
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrvCfg_t *enPbVSenseCfg)
 {
+    Pmic_GpioNIntEnDrvCfg_t enPbVSenseCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseCfg->validParams == 0U))
+    if (enPbVSenseCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (enPbVSenseCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    GPIO_copyGpioNIntEnDrvCfg(enPbVSenseCfg, &enPbVSenseCfgLocal);
 
     // Read POWER_ON_CONFIG register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
-    }
+    status = Pmic_ioRxByte_CS(handle, POWER_ON_CONFIG_REG, &regData);
 
     // Extract configuration fields
     if (status == PMIC_ST_SUCCESS)
     {
         // Get function select
-        if (Pmic_validParamCheck(enPbVSenseCfg->validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
+        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
         {
-            enPbVSenseCfg->fxnSel = Pmic_getBitField(regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK);
+            enPbVSenseCfgLocal.fxnSel = Pmic_getBitField(regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK);
         }
 
         // Get EN/PB deglitch
-        if (Pmic_validParamCheck(enPbVSenseCfg->validParams, PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID))
+        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID))
         {
-            enPbVSenseCfg->enPbDegl = Pmic_getBitField(regData, EN_PB_DEGL_SHIFT, EN_PB_DEGL_MASK);
+            enPbVSenseCfgLocal.enPbDegl = Pmic_getBitField(regData, EN_PB_DEGL_SHIFT, EN_PB_DEGL_MASK);
         }
+
+        GPIO_copyGpioNIntEnDrvCfg(&enPbVSenseCfgLocal, enPbVSenseCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbVSenseStatus_t *enPbVSenseStatus)
 {
+    Pmic_GpioEnPbVSenseStatus_t enPbVSenseStatusLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    // Validate input parameters
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseStatus == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (enPbVSenseStatus->validParams == 0U))
+    if (enPbVSenseStatus == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (enPbVSenseStatus->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    GPIO_copyGpioEnPbVSenseStatus(enPbVSenseStatus, &enPbVSenseStatusLocal);
 
     // Read STAT_STARTUP register for EN/PB/VSENSE status
     if (status == PMIC_ST_SUCCESS)
@@ -695,23 +769,25 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_PB_LVL_HIGH_VALID))
+        if (Pmic_validParamCheck(enPbVSenseStatusLocal.validParams, PMIC_GPIO_PB_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->pbLvlHigh = ((regData & PB_LEVEL_STAT_MASK) != 0U);
+            enPbVSenseStatusLocal.pbLvlHigh = ((regData & PB_LEVEL_STAT_MASK) != 0U);
         }
 
-        if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_EN_LVL_HIGH_VALID))
+        if (Pmic_validParamCheck(enPbVSenseStatusLocal.validParams, PMIC_GPIO_EN_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->enLvlHigh = ((regData & ENABLE_STAT_MASK) != 0U);
+            enPbVSenseStatusLocal.enLvlHigh = ((regData & ENABLE_STAT_MASK) != 0U);
         }
 
-        if (Pmic_validParamCheck(enPbVSenseStatus->validParams, PMIC_GPIO_VSENSE_LVL_HIGH_VALID))
+        if (Pmic_validParamCheck(enPbVSenseStatusLocal.validParams, PMIC_GPIO_VSENSE_LVL_HIGH_VALID))
         {
-            enPbVSenseStatus->vsenseLvlHigh = ((regData & VSENSE_STAT_MASK) != 0U);
+            enPbVSenseStatusLocal.vsenseLvlHigh = ((regData & VSENSE_STAT_MASK) != 0U);
         }
+
+        GPIO_copyGpioEnPbVSenseStatus(&enPbVSenseStatusLocal, enPbVSenseStatus);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_gpioGetNRstOutVal(const Pmic_Handle_t *handle, bool *high)
@@ -737,5 +813,5 @@ int32_t Pmic_gpioGetNRstOutVal(const Pmic_Handle_t *handle, bool *high)
         *high = Pmic_getBitField_b(regData, NRSTOUT_IN_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

@@ -40,13 +40,13 @@ extern "C" {
 #endif
 
 /** @brief PMIC Timer module register addresses */
-#define TMR_CFG_REG        (0x6AU)
-#define TMR_LP_WAKE0_REG   (0x6BU)
-#define TMR_LP_WAKE1_REG   (0x6CU)
-#define TMR_LP_WAKE2_REG   (0x6DU)
-#define TMR_CNT0_REG       (0x6EU)
-#define TMR_CNT1_REG       (0x6FU)
-#define TMR_CNT2_REG       (0x70U)
+#define TMR_CFG_REG        ((uint8_t)0x6AU)
+#define TMR_LP_WAKE0_REG   ((uint8_t)0x6BU)
+#define TMR_LP_WAKE1_REG   ((uint8_t)0x6CU)
+#define TMR_LP_WAKE2_REG   ((uint8_t)0x6DU)
+#define TMR_CNT0_REG       ((uint8_t)0x6EU)
+#define TMR_CNT1_REG       ((uint8_t)0x6FU)
+#define TMR_CNT2_REG       ((uint8_t)0x70U)
 
 /** @brief Macros for sequential register lengths */
 #define TMR_LP_WAKE_REG_CNT (3U)

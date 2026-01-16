@@ -33,11 +33,7 @@
 #ifndef PMIC_TEST_INIT_H
 #define PMIC_TEST_INIT_H
 
-/**
- * @file pmic_init_test.h
- * @brief Contains macros/defines and test declarations specific to testing PMIC
- * Init.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
@@ -65,6 +61,15 @@ void test_negative_Pmic_init_nullParam_pmicCfg_critSecStop(void);
 void test_negative_Pmic_deinit_nullParam_pmicHandle(void);
 void test_positive_Pmic_init(void);
 void test_positive_Pmic_deinit(void);
+void test_positive_init_withRetryCnt(void);
+void test_positive_init_withRetryInterval(void);
+void test_positive_init_withTimerWaitMs(void);
+void test_negative_init_timerWaitNull(void);
+void test_negative_init_nullIrqResponseCallback(void);
+void test_negative_checkHandle_nullCommHandle(void);
+void test_negative_checkHandle_nullFptrs(void);
+void test_negative_checkHandle_nullTimerWithRetry(void);
+void test_negative_checkHandle_invalidDrvInitStat(void);
 
 #ifdef __cplusplus
 }

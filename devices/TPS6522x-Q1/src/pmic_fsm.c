@@ -45,32 +45,50 @@
 #include "pmic_io.h"
 #include "regmap/fsm.h"
 
+#include <string.h>
+
 /* ========================================================================== */
 /*                           Internal Helper Functions                        */
 /* ========================================================================== */
 
+/**
+ * @brief Copy Pmic_FsmTriggerCfg_t structure member-wise
+ */
+static inline void FSM_copyFsmTriggerCfg(const Pmic_FsmTriggerCfg_t *src, Pmic_FsmTriggerCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmTriggerCfg_t));
+}
+
+/**
+ * @brief Copy Pmic_FsmGpioTriggerCfg_t structure member-wise
+ */
+static inline void FSM_copyFsmGpioTriggerCfg(const Pmic_FsmGpioTriggerCfg_t *src, Pmic_FsmGpioTriggerCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmGpioTriggerCfg_t));
+}
+
 /* GPIO pin mapping table entry */
 typedef struct
 {
-    uint8_t regAddr;
+    uint16_t regAddr;
     uint8_t maskShift;
     uint8_t maskPolShift;
 } Pmic_FsmGpioPinMap_t;
-
-/* GPIO pin to register mapping table */
-static const Pmic_FsmGpioPinMap_t gpioPinMap[] = {
-    { FSM_TRIG_MASK_1_REG, GPIO1_FSM_MASK_SHIFT, GPIO1_FSM_MASK_POL_SHIFT },  /* GPIO1 */
-    { FSM_TRIG_MASK_1_REG, GPIO2_FSM_MASK_SHIFT, GPIO2_FSM_MASK_POL_SHIFT },  /* GPIO2 */
-    { FSM_TRIG_MASK_1_REG, GPIO3_FSM_MASK_SHIFT, GPIO3_FSM_MASK_POL_SHIFT },  /* GPIO3 */
-    { FSM_TRIG_MASK_1_REG, GPIO4_FSM_MASK_SHIFT, GPIO4_FSM_MASK_POL_SHIFT },  /* GPIO4 */
-    { FSM_TRIG_MASK_2_REG, GPIO5_FSM_MASK_SHIFT, GPIO5_FSM_MASK_POL_SHIFT },  /* GPIO5 */
-    { FSM_TRIG_MASK_2_REG, GPIO6_FSM_MASK_SHIFT, GPIO6_FSM_MASK_POL_SHIFT }   /* GPIO6 */
-};
 
 /* Get GPIO pin mapping from table. */
 static int32_t Pmic_fsmGetGpioPinMapping(uint8_t pinNum, const Pmic_FsmGpioPinMap_t **mapping)
 {
     int32_t status = PMIC_ST_SUCCESS;
+
+    /* GPIO pin to register mapping table */
+    static const Pmic_FsmGpioPinMap_t gpioPinMap[] = {
+        { (uint16_t)FSM_TRIG_MASK_1_REG, (uint8_t)GPIO1_FSM_MASK_SHIFT, (uint8_t)GPIO1_FSM_MASK_POL_SHIFT },  /* GPIO1 */
+        { (uint16_t)FSM_TRIG_MASK_1_REG, (uint8_t)GPIO2_FSM_MASK_SHIFT, (uint8_t)GPIO2_FSM_MASK_POL_SHIFT },  /* GPIO2 */
+        { (uint16_t)FSM_TRIG_MASK_1_REG, (uint8_t)GPIO3_FSM_MASK_SHIFT, (uint8_t)GPIO3_FSM_MASK_POL_SHIFT },  /* GPIO3 */
+        { (uint16_t)FSM_TRIG_MASK_1_REG, (uint8_t)GPIO4_FSM_MASK_SHIFT, (uint8_t)GPIO4_FSM_MASK_POL_SHIFT },  /* GPIO4 */
+        { (uint16_t)FSM_TRIG_MASK_2_REG, (uint8_t)GPIO5_FSM_MASK_SHIFT, (uint8_t)GPIO5_FSM_MASK_POL_SHIFT },  /* GPIO5 */
+        { (uint16_t)FSM_TRIG_MASK_2_REG, (uint8_t)GPIO6_FSM_MASK_SHIFT, (uint8_t)GPIO6_FSM_MASK_POL_SHIFT }   /* GPIO6 */
+    };
 
     if ((pinNum < PMIC_FSM_GPIO_PIN_MIN) || (pinNum > PMIC_FSM_GPIO_PIN_MAX))
     {
@@ -239,164 +257,208 @@ static int32_t Pmic_fsmGetTrigSel2(const Pmic_Handle_t *handle, Pmic_FsmTriggerC
 
 int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
+    Pmic_FsmTriggerCfg_t triggerCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
+    if (triggerCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
+    }
+
+    if (triggerCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    FSM_copyFsmTriggerCfg(triggerCfg, &triggerCfgLocal);
+    status = Pmic_fsmValidateTriggerCfg(&triggerCfgLocal);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_fsmSetTrigSel1(handle, &triggerCfgLocal);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_fsmValidateTriggerCfg(triggerCfg);
+        status = Pmic_fsmSetTrigSel2(handle, &triggerCfgLocal);
     }
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_fsmSetTrigSel1(handle, triggerCfg);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_fsmSetTrigSel2(handle, triggerCfg);
-    }
-
-    Pmic_criticalSectionStop(handle);
-
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
+    Pmic_FsmTriggerCfg_t triggerCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (triggerCfg->validParams == 0U))
+    if (triggerCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    Pmic_criticalSectionStart(handle);
+    if (triggerCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    FSM_copyFsmTriggerCfg(triggerCfg, &triggerCfgLocal);
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_fsmGetTrigSel1(handle, triggerCfg);
+        status = Pmic_fsmGetTrigSel1(handle, &triggerCfgLocal);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_fsmGetTrigSel2(handle, triggerCfg);
+        status = Pmic_fsmGetTrigSel2(handle, &triggerCfgLocal);
     }
 
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmTriggerCfg(&triggerCfgLocal, triggerCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg->validParams == 0U))
+    if (gpioTriggerCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID) &&
-        (gpioTriggerCfg->maskPol > PMIC_FSM_GPIO_MASK_POL_MAX))
+    if (gpioTriggerCfg->validParams == 0U)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
+
+    FSM_copyFsmGpioTriggerCfg(gpioTriggerCfg, &gpioTriggerCfgLocal);
+
+    if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_POL_VALID) &&
+        (gpioTriggerCfgLocal.maskPol > PMIC_FSM_GPIO_MASK_POL_MAX))
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfgLocal.pinNum, &pinMap);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (pinMap == NULL) /* LCOV_EXCL_LINE */
+    { /* LCOV_EXCL_LINE */
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* LCOV_EXCL_LINE */
+    } /* LCOV_EXCL_LINE */
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, pinMap->regAddr, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfg->pinNum, &pinMap);
-    }
-
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(handle, pinMap->regAddr, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_VALID))
+        if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_VALID))
         {
-            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1U << pinMap->maskShift), gpioTriggerCfg->mask);
+            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1U << pinMap->maskShift), gpioTriggerCfgLocal.mask);
         }
 
-        if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
+        if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            Pmic_setBitField(&regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift), gpioTriggerCfg->maskPol);
+            Pmic_setBitField(&regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift), gpioTriggerCfgLocal.maskPol);
         }
 
         status = Pmic_ioTxByte(handle, pinMap->regAddr, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (gpioTriggerCfg->validParams == 0U))
+    if (gpioTriggerCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (gpioTriggerCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    FSM_copyFsmGpioTriggerCfg(gpioTriggerCfg, &gpioTriggerCfgLocal);
+
+    status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfgLocal.pinNum, &pinMap);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (pinMap == NULL) /* LCOV_EXCL_LINE */
+    { /* LCOV_EXCL_LINE */
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* LCOV_EXCL_LINE */
+    } /* LCOV_EXCL_LINE */
+
+    status = Pmic_ioRxByte_CS(handle, pinMap->regAddr, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_fsmGetGpioPinMapping(gpioTriggerCfg->pinNum, &pinMap);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, pinMap->regAddr, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_VALID))
+        if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_VALID))
         {
-            gpioTriggerCfg->mask = Pmic_getBitField_b(regData, pinMap->maskShift);
+            gpioTriggerCfgLocal.mask = Pmic_getBitField_b(regData, pinMap->maskShift);
         }
 
-        if (Pmic_validParamCheck(gpioTriggerCfg->validParams, PMIC_FSM_MASK_POL_VALID))
+        if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            gpioTriggerCfg->maskPol = Pmic_getBitField(regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift));
+            gpioTriggerCfgLocal.maskPol = Pmic_getBitField(regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift));
         }
+
+        FSM_copyFsmGpioTriggerCfg(&gpioTriggerCfgLocal, gpioTriggerCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
@@ -416,7 +478,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
         *recovCnt = Pmic_getBitField(regData, RECOV_CNT_SHIFT, RECOV_CNT_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
@@ -431,7 +493,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
@@ -445,7 +507,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
     }
 
     // Read RECOV_CNT_REG_2
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, RECOV_CNT_REG_2_REG, &regData);
@@ -457,9 +519,9 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t recovCntThr)
         Pmic_setBitField(&regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK, recovCntThr);
         status = Pmic_ioTxByte(handle, RECOV_CNT_REG_2_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr)
@@ -479,7 +541,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *recovCntThr
         *recovCntThr = Pmic_getBitField(regData, RECOV_CNT_THR_SHIFT, RECOV_CNT_THR_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle)
@@ -494,7 +556,7 @@ int32_t Pmic_fsmSendSoftRebootReq(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, SOFT_REBOOT_REG_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
@@ -508,7 +570,7 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
     }
 
     // Read STARTUP_CTRL
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, STARTUP_CTRL_REG, &regData);
@@ -520,9 +582,9 @@ int32_t Pmic_fsmSetStartupDest(const Pmic_Handle_t *handle, uint8_t destination)
         Pmic_setBitField(&regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK, destination);
         status = Pmic_ioTxByte(handle, STARTUP_CTRL_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_fsmGetStartupDest(const Pmic_Handle_t *handle, uint8_t *destination)
@@ -542,5 +604,5 @@ int32_t Pmic_fsmGetStartupDest(const Pmic_Handle_t *handle, uint8_t *destination
         *destination = Pmic_getBitField(regData, STARTUP_DEST_SHIFT, STARTUP_DEST_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

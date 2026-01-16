@@ -66,16 +66,16 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_RSRC_BUCK1                   (0U)
-#define PMIC_PWR_RSRC_BUCK2                   (1U)
-#define PMIC_PWR_RSRC_BUCK3                   (2U)
-#define PMIC_PWR_RSRC_LDO_LS1_VMON1           (3U)
-#define PMIC_PWR_RSRC_LS2_VMON2               (4U)
-#define PMIC_PWR_RSRC_VCCA_VMON               (5U)
-#define PMIC_PWR_RSRC_GPO                     (6U)
-#define PMIC_PWR_RSRC_NRSTOUT                 (7U)
-#define PMIC_PWR_RSRC_MIN                     (PMIC_PWR_RSRC_BUCK1)
-#define PMIC_PWR_RSRC_MAX                     (PMIC_PWR_RSRC_NRSTOUT)
+#define PMIC_PWR_RSRC_BUCK1                   ((uint8_t)0U)
+#define PMIC_PWR_RSRC_BUCK2                   ((uint8_t)1U)
+#define PMIC_PWR_RSRC_BUCK3                   ((uint8_t)2U)
+#define PMIC_PWR_RSRC_LDO_LS1_VMON1           ((uint8_t)3U)
+#define PMIC_PWR_RSRC_LS2_VMON2               ((uint8_t)4U)
+#define PMIC_PWR_RSRC_VCCA_VMON               ((uint8_t)5U)
+#define PMIC_PWR_RSRC_GPO                     ((uint8_t)6U)
+#define PMIC_PWR_RSRC_NRSTOUT                 ((uint8_t)7U)
+#define PMIC_PWR_RSRC_MIN                     ((uint8_t)PMIC_PWR_RSRC_BUCK1)
+#define PMIC_PWR_RSRC_MAX                     ((uint8_t)PMIC_PWR_RSRC_NRSTOUT)
 /** @} */
 
 /**
@@ -84,12 +84,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_RSRC_MODE_REG                (0U)
-#define PMIC_PWR_RSRC_MODE_BYP                (1U)
-#define PMIC_PWR_RSRC_MODE_LSW                (2U)
-#define PMIC_PWR_RSRC_MODE_VMON               (3U)
-#define PMIC_PWR_RSRC_MODE_MIN                (PMIC_PWR_RSRC_MODE_REG)
-#define PMIC_PWR_RSRC_MODE_MAX                (PMIC_PWR_RSRC_MODE_VMON)
+#define PMIC_PWR_RSRC_MODE_REG                ((uint8_t)0U)
+#define PMIC_PWR_RSRC_MODE_BYP                ((uint8_t)1U)
+#define PMIC_PWR_RSRC_MODE_LSW                ((uint8_t)2U)
+#define PMIC_PWR_RSRC_MODE_VMON               ((uint8_t)3U)
+#define PMIC_PWR_RSRC_MODE_MIN                ((uint8_t)PMIC_PWR_RSRC_MODE_REG)
+#define PMIC_PWR_RSRC_MODE_MAX                ((uint8_t)PMIC_PWR_RSRC_MODE_VMON)
 /** @} */
 
 /**
@@ -128,8 +128,8 @@ extern "C" {
 #define PMIC_PWR_FAULT_REACT_WARM_RESET       (1U)
 #define PMIC_PWR_FAULT_REACT_POWER_ERROR      (2U)
 #define PMIC_PWR_FAULT_REACT_REGULATOR_ERROR  (3U)
-#define PMIC_PWR_FAULT_REACT_MIN              (PMIC_PWR_FAULT_REACT_INT_ONLY)
-#define PMIC_PWR_FAULT_REACT_MAX              (PMIC_PWR_FAULT_REACT_REGULATOR_ERROR)
+#define PMIC_PWR_FAULT_REACT_MIN              ((uint8_t)PMIC_PWR_FAULT_REACT_INT_ONLY)
+#define PMIC_PWR_FAULT_REACT_MAX              ((uint8_t)PMIC_PWR_FAULT_REACT_REGULATOR_ERROR)
 /** @} */
 
 /**
@@ -183,8 +183,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_RV_CONF_INT_ONLY             (0U)
-#define PMIC_PWR_RV_CONF_SHUT_DOWN            (1U)
+#define PMIC_PWR_RV_CONF_INT_ONLY             ((uint8_t)0U)
+#define PMIC_PWR_RV_CONF_SHUT_DOWN            ((uint8_t)1U)
 #define PMIC_PWR_RV_REACT_MIN                 (PMIC_PWR_RV_CONF_INT_ONLY)
 #define PMIC_PWR_RV_REACT_MAX                 (PMIC_PWR_RV_CONF_SHUT_DOWN)
 /** @} */
@@ -204,8 +204,8 @@ extern "C" {
 // NOTE: While 2P5A is the lowest recommended ILIM setting, the values for 0 and
 // 1 are also supported but are intended for TI use only. The MIN macro is
 // defined to support these, though no named macro will be provided.
-#define PMIC_PWR_ILIM_MIN                      (0U)
-#define PMIC_PWR_ILIM_MAX                      (PMIC_PWR_ILIM_5P0A)
+#define PMIC_PWR_ILIM_MIN                      ((uint8_t)0U)
+#define PMIC_PWR_ILIM_MAX                      ((uint8_t)PMIC_PWR_ILIM_5P0A)
 /** @} */
 
 /**
@@ -218,8 +218,8 @@ extern "C" {
 #define PMIC_PWR_DEGLITCH_5US                  (1U)
 #define PMIC_PWR_DEGLITCH_10US                 (2U)
 #define PMIC_PWR_DEGLITCH_20US                 (3U)
-#define PMIC_PWR_DEGLITCH_MIN                  (PMIC_PWR_DEGLITCH_0P5US)
-#define PMIC_PWR_DEGLITCH_MAX                  (PMIC_PWR_DEGLITCH_20US)
+#define PMIC_PWR_DEGLITCH_MIN                  ((uint8_t)PMIC_PWR_DEGLITCH_0P5US)
+#define PMIC_PWR_DEGLITCH_MAX                  ((uint8_t)PMIC_PWR_DEGLITCH_20US)
 /** @} */
 
 /**
@@ -493,8 +493,7 @@ typedef struct Pmic_PowerSequenceCfg_s {
  * @brief Enable or disable a PMIC power resource.
  *
  * Design: PMICDRV-744
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle   [IN] PMIC Interface Handle
  * @param resource [IN] Power resource to control, see @ref Pmic_PwrResource.
@@ -505,15 +504,14 @@ typedef struct Pmic_PowerSequenceCfg_s {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool enable);
+int32_t Pmic_pwrSetResourceEnable(const Pmic_Handle_t *handle, uint8_t resource, bool enable);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get the enable/disable state of a PMIC power resource.
  *
  * Design: PMICDRV-745
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle   [IN]  PMIC Interface Handle
  * @param resource [IN]  Power resource to get status of, see @ref Pmic_PwrResource.
@@ -523,15 +521,14 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled);
+int32_t Pmic_pwrGetResourceEnable(const Pmic_Handle_t *handle, uint8_t resource, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to set the configuration of a PMIC power resources.
  *
  * Design: PMICDRV-746
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @param handle [IN] PMIC Interface Handle
  * @param config [IN] Configuration options for this power resource. See @ref
@@ -540,15 +537,14 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_Handle_t *handle, uint8_t resource, bool 
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
+int32_t Pmic_pwrSetResourceCfg(const Pmic_Handle_t *handle, const Pmic_PowerResourceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to get the configuration of a PMIC power resources.
  *
  * Design: PMICDRV-747
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @param handle [IN]     PMIC Interface Handle
  * @param config [IN/OUT] Configuration options for this power resource. See @ref
@@ -557,15 +553,15 @@ int32_t Pmic_pwrSetResourceCfg(Pmic_Handle_t *handle, const Pmic_PowerResourceCf
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
+int32_t Pmic_pwrGetResourceCfg(const Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Set configurations of multiple PMIC power resources.
  *
  * Design: PMICDRV-748
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-535
  *
  * @param handle     [IN] PMIC Interface Handle
  * @param numConfigs [IN] The number of configurations in the `config` array.
@@ -575,15 +571,15 @@ int32_t Pmic_pwrGetResourceCfg(Pmic_Handle_t *handle, Pmic_PowerResourceCfg_t *c
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[]);
+int32_t Pmic_pwrSetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get configurations of multiple PMIC power resources.
  *
  * Design: PMICDRV-749
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-535
  *
  * @param handle     [IN]     PMIC Interface Handle
 
@@ -597,7 +593,7 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[]);
+int32_t Pmic_pwrGetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -605,8 +601,7 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_
  * resource.
  *
  * Design: PMICDRV-750
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-535
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -617,7 +612,7 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config);
+int32_t Pmic_pwrSetSequenceCfg(const Pmic_Handle_t *handle, const Pmic_PowerSequenceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
@@ -625,8 +620,7 @@ int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCf
  * resource.
  *
  * Design: PMICDRV-751
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-535
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -637,15 +631,15 @@ int32_t Pmic_pwrSetSequenceCfg(Pmic_Handle_t *handle, const Pmic_PowerSequenceCf
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetSequenceCfg(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config);
+int32_t Pmic_pwrGetSequenceCfg(const Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *config);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Set the power sequencing configuration of multiple PMIC power resources.
  *
  * Design: PMICDRV-752
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-535
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -657,15 +651,15 @@ int32_t Pmic_pwrGetSequenceCfg(Pmic_Handle_t *handle, Pmic_PowerSequenceCfg_t *c
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[]);
+int32_t Pmic_pwrSetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[]);
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief Get the power sequencing configuration of multiple PMIC power resources.
  *
  * Design: PMICDRV-753
- * Architecture: PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-535, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-528
+ *               PMICDRV-535
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -677,7 +671,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, const
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetSequenceCfgs(Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[]);
+int32_t Pmic_pwrGetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[]);
 
 #ifdef __cplusplus
 }

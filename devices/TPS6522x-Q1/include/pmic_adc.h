@@ -65,8 +65,8 @@ extern "C" {
  */
 #define PMIC_ADC_SRC_SEL_INPUT          (0U)
 #define PMIC_ADC_SRC_SEL_THERMAL_SENSOR (1U)
-#define PMIC_ADC_SRC_SEL_MIN            (PMIC_ADC_SRC_SEL_INPUT)
-#define PMIC_ADC_SRC_SEL_MAX            (PMIC_ADC_SRC_SEL_THERMAL_SENSOR)
+#define PMIC_ADC_SRC_SEL_MIN            ((uint8_t)PMIC_ADC_SRC_SEL_INPUT)
+#define PMIC_ADC_SRC_SEL_MAX            ((uint8_t)PMIC_ADC_SRC_SEL_THERMAL_SENSOR)
 /** @} */
 
 /**
@@ -80,8 +80,8 @@ extern "C" {
  * @{
  */
 #define PMIC_ADC_RDIV_EN_VALID      (1U << 0U)
-#define PMIC_ADC_CONT_CONV_EN_VALID (2U << 1U)
-#define PMIC_ADC_SRC_SEL_VALID      (3U << 2U)
+#define PMIC_ADC_CONT_CONV_EN_VALID (1U << 1U)
+#define PMIC_ADC_SRC_SEL_VALID      (1U << 2U)
 /** @} */
 
 /* ========================================================================== */
@@ -133,8 +133,7 @@ typedef struct Pmic_AdcCfg_s {
  * @brief Set PMIC ADC configurations.
  *
  * Design: PMICDRV-677
- * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551
- *               PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-543
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -150,8 +149,7 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
  * @brief Get PMIC ADC configurations.
  *
  * Design: PMICDRV-678
- * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-543
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -168,8 +166,8 @@ int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg);
  * does nothing and returns.
  *
  * Design: PMICDRV-679
- * Architecture: PMICDRV-543, PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523
- *               PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-543
  *
  * @attention This API should only be called if ADC continuous conversion is
  * disabled.
@@ -186,8 +184,8 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle);
  * waits for the ADC to become idle.
  *
  * Design: PMICDRV-680
- * Architecture: PMICDRV-543, PMICDRV-510, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523
- *               PMICDRV-551, PMICDRV-506, PMICDRV-504, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523
+ *               PMICDRV-543
  *
  * @attention This API should only be called if ADC continuous conversion is
  * disabled.
@@ -203,8 +201,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle);
  * @brief Get PMIC ADC status; specifically, whether the ADC is busy or idle.
  *
  * Design: PMICDRV-681
- * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-543
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -222,8 +219,7 @@ int32_t Pmic_adcGetStatus(const Pmic_Handle_t *handle, bool *adcBusy);
  * value (i.e., voltage or temperature).
  *
  * Design: PMICDRV-682
- * Architecture: PMICDRV-543, PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-543
  *
  * @param handle [IN] PMIC interface handle.
  *

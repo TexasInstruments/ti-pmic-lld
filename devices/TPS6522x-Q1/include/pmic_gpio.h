@@ -69,8 +69,8 @@ extern "C" {
 #define PMIC_GPIO_PIN4    (4U)
 #define PMIC_GPIO_PIN5    (5U)
 #define PMIC_GPIO_PIN6    (6U)
-#define PMIC_GPIO_PIN_MIN (PMIC_GPIO_PIN1)
-#define PMIC_GPIO_PIN_MAX (PMIC_GPIO_PIN6)
+#define PMIC_GPIO_PIN_MIN ((uint8_t)PMIC_GPIO_PIN1)
+#define PMIC_GPIO_PIN_MAX ((uint8_t)PMIC_GPIO_PIN6)
 /** @} */
 
 /**
@@ -85,8 +85,8 @@ extern "C" {
 #define PMIC_GPIO_PIN1_FXN_SEL_SDO_SPI (1U)
 #define PMIC_GPIO_PIN1_FXN_SEL_NSLEEP2 (2U)
 #define PMIC_GPIO_PIN1_FXN_SEL_NINT    (3U)
-#define PMIC_GPIO_PIN1_FXN_SEL_MIN     (PMIC_GPIO_PIN1_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN1_FXN_SEL_MAX     (PMIC_GPIO_PIN1_FXN_SEL_NINT)
+#define PMIC_GPIO_PIN1_FXN_SEL_MIN     ((uint8_t)PMIC_GPIO_PIN1_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN1_FXN_SEL_MAX     ((uint8_t)PMIC_GPIO_PIN1_FXN_SEL_NINT)
 /** @} */
 
 /**
@@ -101,8 +101,8 @@ extern "C" {
 #define PMIC_GPIO_PIN2_FXN_SEL_CS_SPI    (1U)
 #define PMIC_GPIO_PIN2_FXN_SEL_NSLEEP1   (2U)
 #define PMIC_GPIO_PIN2_FXN_SEL_TRIG_WDOG (3U)
-#define PMIC_GPIO_PIN2_FXN_SEL_MIN       (PMIC_GPIO_PIN2_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN2_FXN_SEL_MAX       (PMIC_GPIO_PIN2_FXN_SEL_TRIG_WDOG)
+#define PMIC_GPIO_PIN2_FXN_SEL_MIN       ((uint8_t)PMIC_GPIO_PIN2_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN2_FXN_SEL_MAX       ((uint8_t)PMIC_GPIO_PIN2_FXN_SEL_TRIG_WDOG)
 /** @} */
 
 /**
@@ -116,8 +116,8 @@ extern "C" {
 #define PMIC_GPIO_PIN3_FXN_SEL_GPIO    (0U)
 #define PMIC_GPIO_PIN3_FXN_SEL_NSLEEP1 (2U)
 #define PMIC_GPIO_PIN3_FXN_SEL_PB      (3U)
-#define PMIC_GPIO_PIN3_FXN_SEL_MIN     (PMIC_GPIO_PIN3_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN3_FXN_SEL_MAX     (PMIC_GPIO_PIN3_FXN_SEL_PB)
+#define PMIC_GPIO_PIN3_FXN_SEL_MIN     ((uint8_t)PMIC_GPIO_PIN3_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN3_FXN_SEL_MAX     ((uint8_t)PMIC_GPIO_PIN3_FXN_SEL_PB)
 /** @} */
 
 /**
@@ -131,8 +131,8 @@ extern "C" {
 #define PMIC_GPIO_PIN4_FXN_SEL_GPIO    (0U)
 #define PMIC_GPIO_PIN4_FXN_SEL_NSLEEP1 (2U)
 #define PMIC_GPIO_PIN4_FXN_SEL_ADC_IN  (3U)
-#define PMIC_GPIO_PIN4_FXN_SEL_MIN     (PMIC_GPIO_PIN4_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN4_FXN_SEL_MAX     (PMIC_GPIO_PIN4_FXN_SEL_ADC_IN)
+#define PMIC_GPIO_PIN4_FXN_SEL_MIN     ((uint8_t)PMIC_GPIO_PIN4_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN4_FXN_SEL_MAX     ((uint8_t)PMIC_GPIO_PIN4_FXN_SEL_ADC_IN)
 /** @} */
 
 /**
@@ -147,8 +147,8 @@ extern "C" {
 #define PMIC_GPIO_PIN5_FXN_SEL_WKUP      (1U)
 #define PMIC_GPIO_PIN5_FXN_SEL_SYNCCLKIN (2U)
 #define PMIC_GPIO_PIN5_FXN_SEL_ADC_IN    (3U)
-#define PMIC_GPIO_PIN5_FXN_SEL_MIN       (PMIC_GPIO_PIN5_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN5_FXN_SEL_MAX       (PMIC_GPIO_PIN5_FXN_SEL_ADC_IN)
+#define PMIC_GPIO_PIN5_FXN_SEL_MIN       ((uint8_t)PMIC_GPIO_PIN5_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN5_FXN_SEL_MAX       ((uint8_t)PMIC_GPIO_PIN5_FXN_SEL_ADC_IN)
 /** @} */
 
 /**
@@ -163,8 +163,8 @@ extern "C" {
 #define PMIC_GPIO_PIN6_FXN_SEL_NSLEEP2   (1U)
 #define PMIC_GPIO_PIN6_FXN_SEL_SYNCCLKIN (3U)
 #define PMIC_GPIO_PIN6_FXN_SEL_WKUP      (4U)
-#define PMIC_GPIO_PIN6_FXN_SEL_MIN       (PMIC_GPIO_PIN6_FXN_SEL_GPIO)
-#define PMIC_GPIO_PIN6_FXN_SEL_MAX       (PMIC_GPIO_PIN6_FXN_SEL_WKUP)
+#define PMIC_GPIO_PIN6_FXN_SEL_MIN       ((uint8_t)PMIC_GPIO_PIN6_FXN_SEL_GPIO)
+#define PMIC_GPIO_PIN6_FXN_SEL_MAX       ((uint8_t)PMIC_GPIO_PIN6_FXN_SEL_WKUP)
 /** @} */
 
 /**
@@ -177,8 +177,8 @@ extern "C" {
  */
 #define PMIC_GPIO_PIN_PULL_DOWN_RESISTOR (0U)
 #define PMIC_GPIO_PIN_PULL_UP_RESISTOR   (1U)
-#define PMIC_GPIO_PIN_PU_SEL_MIN         (PMIC_GPIO_PIN_PULL_DOWN_RESISTOR)
-#define PMIC_GPIO_PIN_PU_SEL_MAX         (PMIC_GPIO_PIN_PULL_UP_RESISTOR)
+#define PMIC_GPIO_PIN_PU_SEL_MIN         ((uint8_t)PMIC_GPIO_PIN_PULL_DOWN_RESISTOR)
+#define PMIC_GPIO_PIN_PU_SEL_MAX         ((uint8_t)PMIC_GPIO_PIN_PULL_UP_RESISTOR)
 /** @} */
 
 /**
@@ -191,8 +191,8 @@ extern "C" {
  */
 #define PMIC_GPIO_PIN_PUSH_PULL  (0U)
 #define PMIC_GPIO_PIN_OPEN_DRAIN (1U)
-#define PMIC_GPIO_PIN_TYPE_MIN   (PMIC_GPIO_PIN_PUSH_PULL)
-#define PMIC_GPIO_PIN_TYPE_MAX   (PMIC_GPIO_PIN_OPEN_DRAIN)
+#define PMIC_GPIO_PIN_TYPE_MIN   ((uint8_t)PMIC_GPIO_PIN_PUSH_PULL)
+#define PMIC_GPIO_PIN_TYPE_MAX   ((uint8_t)PMIC_GPIO_PIN_OPEN_DRAIN)
 /** @} */
 
 /**
@@ -205,8 +205,8 @@ extern "C" {
  */
 #define PMIC_GPIO_PIN_INPUT   (0U)
 #define PMIC_GPIO_PIN_OUTPUT  (1U)
-#define PMIC_GPIO_PIN_DIR_MIN (PMIC_GPIO_PIN_INPUT)
-#define PMIC_GPIO_PIN_DIR_MAX (PMIC_GPIO_PIN_OUTPUT)
+#define PMIC_GPIO_PIN_DIR_MIN ((uint8_t)PMIC_GPIO_PIN_INPUT)
+#define PMIC_GPIO_PIN_DIR_MAX ((uint8_t)PMIC_GPIO_PIN_OUTPUT)
 /** @} */
 
 /**
@@ -220,8 +220,8 @@ extern "C" {
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE (0U)
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB     (1U)
 #define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE (2U)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MIN    (PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX    (PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE)
+#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MIN    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
+#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE)
 /** @} */
 
 /**
@@ -237,10 +237,10 @@ extern "C" {
 #define PMIC_GPIO_EN_DEGLITCH_50_MS  (1U)
 #define PMIC_GPIO_PB_DEGLITCH_200_MS (0U)
 #define PMIC_GPIO_PB_DEGLITCH_600_MS (1U)
-#define PMIC_GPIO_EN_DEGL_MIN        (PMIC_GPIO_EN_DEGLITCH_120_US)
-#define PMIC_GPIO_EN_DEGL_MAX        (PMIC_GPIO_EN_DEGLITCH_50_MS)
-#define PMIC_GPIO_PB_DEGL_MIN        (PMIC_GPIO_PB_DEGLITCH_200_MS)
-#define PMIC_GPIO_PB_DEGL_MAX        (PMIC_GPIO_PB_DEGLITCH_600_MS)
+#define PMIC_GPIO_EN_DEGL_MIN        ((uint8_t)PMIC_GPIO_EN_DEGLITCH_120_US)
+#define PMIC_GPIO_EN_DEGL_MAX        ((uint8_t)PMIC_GPIO_EN_DEGLITCH_50_MS)
+#define PMIC_GPIO_PB_DEGL_MIN        ((uint8_t)PMIC_GPIO_PB_DEGLITCH_200_MS)
+#define PMIC_GPIO_PB_DEGL_MAX        ((uint8_t)PMIC_GPIO_PB_DEGLITCH_600_MS)
 /** @} */
 
 /**
@@ -253,8 +253,8 @@ extern "C" {
  */
 #define PMIC_GPIO_NINT_ENDRV_FXN_SEL_NINT   (0U)
 #define PMIC_GPIO_NINT_ENDRV_FXN_SEL_EN_DRV (1U)
-#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_MIN    (PMIC_GPIO_NINT_ENDRV_FXN_SEL_NINT)
-#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_MAX    (PMIC_GPIO_NINT_ENDRV_FXN_SEL_EN_DRV)
+#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_MIN    ((uint8_t)PMIC_GPIO_NINT_ENDRV_FXN_SEL_NINT)
+#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_MAX    ((uint8_t)PMIC_GPIO_NINT_ENDRV_FXN_SEL_EN_DRV)
 /** @} */
 
 /**
@@ -396,7 +396,7 @@ typedef struct Pmic_GpioPinCfg_s {
  * @param fxnSel ENABLE/PB/VSENSE pin functionality selection. For valid values,
  * refer to @ref Pmic_GpioEnPbVSenseFxnSel.
  *
- * @param enPbDegl Deglitch configuraton for when the EN/PB/VSENSE pin is
+ * @param enPbDegl Deglitch configuration for when the EN/PB/VSENSE pin is
  * configured to ENABLE or PB functionality. For valid values, refer to
  * @ref Pmic_GpioEnPbDegl.
  *
@@ -483,8 +483,7 @@ typedef struct Pmic_GpioEnPbVSenseStatus_s {
  * @brief Set PMIC GPIO pin configurations.
  *
  * Design: PMICDRV-700
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -500,8 +499,7 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
  * @brief Get PMIC GPIO pin configurations.
  *
  * Design: PMICDRV-701
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -518,8 +516,7 @@ int32_t Pmic_gpioGetPinCfg(const Pmic_Handle_t *handle, Pmic_GpioPinCfg_t *gpioP
  * @brief Set PMIC GPIO pin value to be high or low.
  *
  * Design: PMICDRV-702
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -538,8 +535,7 @@ int32_t Pmic_gpioSetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool hi
  * @brief Get PMIC GPIO pin value.
  *
  * Design: PMICDRV-703
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -559,8 +555,7 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
  * @brief Set nINT/EN_DRV pin configurations.
  *
  * Design: PMICDRV-704
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -578,8 +573,7 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
  * configurations that are settable by 'Pmic_GpioSetNIntEnDrvCfg()'.
  *
  * Design: PMICDRV-705
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -597,8 +591,7 @@ int32_t Pmic_gpioGetNIntEnDrvCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDrv
  * @brief Get nINT/EN_DRV pin value (signal level).
  *
  * Design: PMICDRV-706
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -615,8 +608,7 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high);
  * @brief Set PMIC EN/PB/VSENSE pin configurations.
  *
  * Design: PMICDRV-707
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-522, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -634,8 +626,7 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
  * @brief Get PMIC EN/PB/VSENSE pin configurations.
  *
  * Design: PMICDRV-708
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -653,8 +644,7 @@ int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDr
  * @brief Get PMIC EN/PB/VSENSE pin status.
  *
  * Design: PMICDRV-709
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -671,8 +661,7 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
  * @brief Get PMIC nRSTOUT pin value (signal level).
  *
  * Design: PMICDRV-710
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-522, PMICDRV-528, PMICDRV-541, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-541
  *
  * @param handle [IN] PMIC interface handle.
  *

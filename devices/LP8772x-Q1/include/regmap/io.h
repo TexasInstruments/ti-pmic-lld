@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 /** @brief PMIC I/O Related Register Offset */
-#define PMIC_IO_INTERFACE_CONF (0x1DU)
+#define PMIC_IO_INTERFACE_CONF ((uint8_t)0x1DU)
 
 /** @brief PMIC Interface Configuration Register (INTERFACE_CONF) */
 #define PMIC_INTF_CONF_NINT_GPO_PU_EN_SHIFT (0U)

@@ -41,6 +41,16 @@
 #include "pmic_core.h"
 #include "regmap/core.h"
 
+static inline void CORE_copyGpioCfg(const Pmic_CoreCrc16Cfg_t *src, Pmic_CoreCrc16Cfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreCrc16Cfg_t));
+}
+
+static inline void CORE_copyLpmCfg(const Pmic_CoreLpmCfg_t *src, Pmic_CoreLpmCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreLpmCfg_t));
+}
+
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -55,7 +65,7 @@ int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)
         status = Pmic_ioRxByte_CS(handle, PMIC_NVM_CODE_2_REG, nvmRev);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
@@ -72,12 +82,13 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev)
         status = Pmic_ioRxByte_CS(handle, PMIC_MANUFACTURING_VER_REG, siliconRev);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 
 int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *handle, const Pmic_CoreCrc16Cfg_t *crc16Cfg)
 {
+    Pmic_CoreCrc16Cfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -86,13 +97,23 @@ int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *handle, const Pmic_CoreCrc16Cfg_t 
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (crc16Cfg->validParams == 0U))
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (crc16Cfg->validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        CORE_copyGpioCfg(crc16Cfg, &localCfg);
+    }
+
     // Read CONFIG_CRC_CONFIG register
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
@@ -101,27 +122,28 @@ int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *handle, const Pmic_CoreCrc16Cfg_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Modify CONFIG_CRC_CALC bit field
-        if (Pmic_validParamCheck(crc16Cfg->validParams, PMIC_CRC16_ACTIVATE_CALC_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CRC16_ACTIVATE_CALC_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, PMIC_CONFIG_CRC_CALC_MASK, crc16Cfg->activateCalc);
+            Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, PMIC_CONFIG_CRC_CALC_MASK, localCfg.activateCalc);
         }
 
         // Modify CONFIG_CRC_EN bit field
-        if (Pmic_validParamCheck(crc16Cfg->validParams, PMIC_CRC16_ENABLE_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CRC16_ENABLE_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_EN_SHIFT, PMIC_CONFIG_CRC_EN_MASK, crc16Cfg->enable);
+            Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_EN_SHIFT, PMIC_CONFIG_CRC_EN_MASK, localCfg.enable);
         }
 
         // Write new register value back to PMIC
         status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *handle, Pmic_CoreCrc16Cfg_t *crc16Cfg)
 {
+    Pmic_CoreCrc16Cfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -130,9 +152,19 @@ int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *handle, Pmic_CoreCrc16Cfg_t *crc16
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (crc16Cfg->validParams == 0U))
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (crc16Cfg->validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        CORE_copyGpioCfg(crc16Cfg, &localCfg);
     }
 
     // Read CONFIG_CRC_CONFIG register
@@ -144,19 +176,24 @@ int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *handle, Pmic_CoreCrc16Cfg_t *crc16
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract CONFIG_CRC_CALC bit field
-        if (Pmic_validParamCheck(crc16Cfg->validParams, PMIC_CRC16_ACTIVATE_CALC_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CRC16_ACTIVATE_CALC_VALID))
         {
-            crc16Cfg->activateCalc = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_CALC_SHIFT);
+            localCfg.activateCalc = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_CALC_SHIFT);
         }
 
         // Extract CONFIG_CRC_EN bit field
-        if (Pmic_validParamCheck(crc16Cfg->validParams, PMIC_CRC16_ENABLE_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CRC16_ENABLE_VALID))
         {
-            crc16Cfg->enable = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_EN_SHIFT);
+            localCfg.enable = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_EN_SHIFT);
         }
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        CORE_copyGpioCfg(&localCfg, crc16Cfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpmCfg)
@@ -165,7 +202,7 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read LOW_PWR_CONFIG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID))
     {
         status = Pmic_ioRxByte(handle, PMIC_LOW_PWR_CONFIG_REG, &regData);
@@ -202,13 +239,14 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
     {
         status = Pmic_ioTxByte(handle, PMIC_LOW_PWR_CONFIG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpmCfg)
 {
+    Pmic_CoreLpmCfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -217,19 +255,29 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (lpmCfg->validParams == 0U))
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (lpmCfg->validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = CORE_setLpmDetectionCfg(handle, lpmCfg);
+        CORE_copyLpmCfg(lpmCfg, &localCfg);
     }
 
-    Pmic_criticalSectionStart(handle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = CORE_setLpmDetectionCfg(handle, &localCfg);
+    }
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (Pmic_validParamStatusCheck(
-            lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
+            localCfg.validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
         // Read LPM_CONF register
         status = Pmic_ioRxByte(handle, PMIC_LPM_CONF_REG, &regData);
@@ -238,33 +286,33 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
     if (status == PMIC_ST_SUCCESS)
     {
         // Modify LOWPWR_VMON_EN bit field
-        if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_VMON_EN_SHIFT, PMIC_LOWPWR_VMON_EN_MASK, lpmCfg->vmonEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_VMON_EN_SHIFT, PMIC_LOWPWR_VMON_EN_MASK, localCfg.vmonEn);
         }
 
         // Modify LOWPWR_ESM_EN bit field
-        if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_ESM_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_ESM_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_ESM_EN_SHIFT, PMIC_LOWPWR_ESM_EN_MASK, lpmCfg->esmEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_ESM_EN_SHIFT, PMIC_LOWPWR_ESM_EN_MASK, localCfg.esmEn);
         }
 
         // Modify LOWPWR_WD_EN bit field
-        if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_WDG_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_WDG_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_WD_EN_SHIFT, PMIC_LOWPWR_WD_EN_MASK, lpmCfg->wdgEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_WD_EN_SHIFT, PMIC_LOWPWR_WD_EN_MASK, localCfg.wdgEn);
         }
     }
 
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(
-        lpmCfg->validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
+        localCfg.validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
     {
         status = Pmic_ioTxByte(handle, PMIC_LPM_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
@@ -290,11 +338,12 @@ static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *handle, Pmic_CoreLpm
         }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
 {
+    Pmic_CoreLpmCfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -303,17 +352,27 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (lpmCfg->validParams == 0U))
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (lpmCfg->validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = CORE_getLpmDetectionCfg(handle, lpmCfg);
+        CORE_copyLpmCfg(lpmCfg, &localCfg);
     }
 
-    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = CORE_getLpmDetectionCfg(handle, &localCfg);
+    }
+
+    if (Pmic_validParamStatusCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
     {
         // Read LPM_CONF register
         status = Pmic_ioRxByte_CS(handle, PMIC_LPM_CONF_REG, &regData);
@@ -321,26 +380,31 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
         if (status == PMIC_ST_SUCCESS)
         {
             // Extract LOWPWR_VMON_EN bit field
-            if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_VMON_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID))
             {
-                lpmCfg->vmonEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_VMON_EN_SHIFT);
+                localCfg.vmonEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_VMON_EN_SHIFT);
             }
 
             // Extract LOWPWR_ESM_EN bit field
-            if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_ESM_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_ESM_EN_VALID))
             {
-                lpmCfg->esmEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_ESM_EN_SHIFT);
+                localCfg.esmEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_ESM_EN_SHIFT);
             }
 
             // Extract LOWPWR_WD_EN bit field
-            if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_WDG_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_WDG_EN_VALID))
             {
-                lpmCfg->wdgEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_WD_EN_SHIFT);
+                localCfg.wdgEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_WD_EN_SHIFT);
             }
         }
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        CORE_copyLpmCfg(&localCfg, lpmCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getABISTStat(const Pmic_Handle_t *handle, bool *isActive)
@@ -365,7 +429,7 @@ int32_t Pmic_getABISTStat(const Pmic_Handle_t *handle, bool *isActive)
         }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_runABIST(const Pmic_Handle_t *handle)
@@ -377,7 +441,7 @@ int32_t Pmic_runABIST(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, PMIC_ABIST_RUN_CMD_REG, PMIC_RUN_ABIST_COMMAND);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getPwrOn(const Pmic_Handle_t *handle, bool *pwrOnStat)
@@ -402,7 +466,7 @@ int32_t Pmic_getPwrOn(const Pmic_Handle_t *handle, bool *pwrOnStat)
         *pwrOnStat = Pmic_getBitField_b(regData, PMIC_PWR_ON_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_setPwrOn(const Pmic_Handle_t *handle, bool pwrOn)
@@ -410,7 +474,7 @@ int32_t Pmic_setPwrOn(const Pmic_Handle_t *handle, bool pwrOn)
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         // Read FUNC_CONF register
@@ -424,9 +488,9 @@ int32_t Pmic_setPwrOn(const Pmic_Handle_t *handle, bool pwrOn)
 
         status = Pmic_ioTxByte(handle, PMIC_FUNC_CONF_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
@@ -444,7 +508,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
         status = Pmic_ioTxByte_CS(handle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
@@ -473,7 +537,7 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
         *value = regData;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *regLockStat)
@@ -498,7 +562,7 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *regLockStat)
         *regLockStat = Pmic_getBitField_b(regData, PMIC_REGISTER_LOCK_STATUS_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock)
@@ -512,7 +576,7 @@ int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock)
         status = Pmic_ioTxByte_CS(handle, PMIC_REGISTER_LOCK_REG, key);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_enableRegLock(const Pmic_Handle_t *handle)

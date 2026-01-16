@@ -33,6 +33,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -49,50 +50,54 @@
 #define CONFIG_CRC_REG_LO (0x14U)
 #define CONFIG_CRC_REG_HI (0x43U)
 
-static const uint16_t CRC16LUT[] = {
-    0x0000, 0x755B, 0xEAB6, 0x9FED, 0xA037, 0xD56C, 0x4A81, 0x3FDA,
-    0x3535, 0x406E, 0xDF83, 0xAAD8, 0x9502, 0xE059, 0x7FB4, 0x0AEF,
-    0x6A6A, 0x1F31, 0x80DC, 0xF587, 0xCA5D, 0xBF06, 0x20EB, 0x55B0,
-    0x5F5F, 0x2A04, 0xB5E9, 0xC0B2, 0xFF68, 0x8A33, 0x15DE, 0x6085,
-    0xD4D4, 0xA18F, 0x3E62, 0x4B39, 0x74E3, 0x01B8, 0x9E55, 0xEB0E,
-    0xE1E1, 0x94BA, 0x0B57, 0x7E0C, 0x41D6, 0x348D, 0xAB60, 0xDE3B,
-    0xBEBE, 0xCBE5, 0x5408, 0x2153, 0x1E89, 0x6BD2, 0xF43F, 0x8164,
-    0x8B8B, 0xFED0, 0x613D, 0x1466, 0x2BBC, 0x5EE7, 0xC10A, 0xB451,
-    0xDCF3, 0xA9A8, 0x3645, 0x431E, 0x7CC4, 0x099F, 0x9672, 0xE329,
-    0xE9C6, 0x9C9D, 0x0370, 0x762B, 0x49F1, 0x3CAA, 0xA347, 0xD61C,
-    0xB699, 0xC3C2, 0x5C2F, 0x2974, 0x16AE, 0x63F5, 0xFC18, 0x8943,
-    0x83AC, 0xF6F7, 0x691A, 0x1C41, 0x239B, 0x56C0, 0xC92D, 0xBC76,
-    0x0827, 0x7D7C, 0xE291, 0x97CA, 0xA810, 0xDD4B, 0x42A6, 0x37FD,
-    0x3D12, 0x4849, 0xD7A4, 0xA2FF, 0x9D25, 0xE87E, 0x7793, 0x02C8,
-    0x624D, 0x1716, 0x88FB, 0xFDA0, 0xC27A, 0xB721, 0x28CC, 0x5D97,
-    0x5778, 0x2223, 0xBDCE, 0xC895, 0xF74F, 0x8214, 0x1DF9, 0x68A2,
-    0xCCBD, 0xB9E6, 0x260B, 0x5350, 0x6C8A, 0x19D1, 0x863C, 0xF367,
-    0xF988, 0x8CD3, 0x133E, 0x6665, 0x59BF, 0x2CE4, 0xB309, 0xC652,
-    0xA6D7, 0xD38C, 0x4C61, 0x393A, 0x06E0, 0x73BB, 0xEC56, 0x990D,
-    0x93E2, 0xE6B9, 0x7954, 0x0C0F, 0x33D5, 0x468E, 0xD963, 0xAC38,
-    0x1869, 0x6D32, 0xF2DF, 0x8784, 0xB85E, 0xCD05, 0x52E8, 0x27B3,
-    0x2D5C, 0x5807, 0xC7EA, 0xB2B1, 0x8D6B, 0xF830, 0x67DD, 0x1286,
-    0x7203, 0x0758, 0x98B5, 0xEDEE, 0xD234, 0xA76F, 0x3882, 0x4DD9,
-    0x4736, 0x326D, 0xAD80, 0xD8DB, 0xE701, 0x925A, 0x0DB7, 0x78EC,
-    0x104E, 0x6515, 0xFAF8, 0x8FA3, 0xB079, 0xC522, 0x5ACF, 0x2F94,
-    0x257B, 0x5020, 0xCFCD, 0xBA96, 0x854C, 0xF017, 0x6FFA, 0x1AA1,
-    0x7A24, 0x0F7F, 0x9092, 0xE5C9, 0xDA13, 0xAF48, 0x30A5, 0x45FE,
-    0x4F11, 0x3A4A, 0xA5A7, 0xD0FC, 0xEF26, 0x9A7D, 0x0590, 0x70CB,
-    0xC49A, 0xB1C1, 0x2E2C, 0x5B77, 0x64AD, 0x11F6, 0x8E1B, 0xFB40,
-    0xF1AF, 0x84F4, 0x1B19, 0x6E42, 0x5198, 0x24C3, 0xBB2E, 0xCE75,
-    0xAEF0, 0xDBAB, 0x4446, 0x311D, 0x0EC7, 0x7B9C, 0xE471, 0x912A,
-    0x9BC5, 0xEE9E, 0x7173, 0x0428, 0x3BF2, 0x4EA9, 0xD144, 0xA41F,
-};
-
 static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 {
+    static const uint16_t CRC16LUT[] = {
+        0x0000U, 0x755BU, 0xEAB6U, 0x9FEDU, 0xA037U, 0xD56CU, 0x4A81U, 0x3FDAU,
+        0x3535U, 0x406EU, 0xDF83U, 0xAAD8U, 0x9502U, 0xE059U, 0x7FB4U, 0x0AEFU,
+        0x6A6AU, 0x1F31U, 0x80DCU, 0xF587U, 0xCA5DU, 0xBF06U, 0x20EBU, 0x55B0U,
+        0x5F5FU, 0x2A04U, 0xB5E9U, 0xC0B2U, 0xFF68U, 0x8A33U, 0x15DEU, 0x6085U,
+        0xD4D4U, 0xA18FU, 0x3E62U, 0x4B39U, 0x74E3U, 0x01B8U, 0x9E55U, 0xEB0EU,
+        0xE1E1U, 0x94BAU, 0x0B57U, 0x7E0CU, 0x41D6U, 0x348DU, 0xAB60U, 0xDE3BU,
+        0xBEBEU, 0xCBE5U, 0x5408U, 0x2153U, 0x1E89U, 0x6BD2U, 0xF43FU, 0x8164U,
+        0x8B8BU, 0xFED0U, 0x613DU, 0x1466U, 0x2BBCU, 0x5EE7U, 0xC10AU, 0xB451U,
+        0xDCF3U, 0xA9A8U, 0x3645U, 0x431EU, 0x7CC4U, 0x099FU, 0x9672U, 0xE329U,
+        0xE9C6U, 0x9C9DU, 0x0370U, 0x762BU, 0x49F1U, 0x3CAAU, 0xA347U, 0xD61CU,
+        0xB699U, 0xC3C2U, 0x5C2FU, 0x2974U, 0x16AEU, 0x63F5U, 0xFC18U, 0x8943U,
+        0x83ACU, 0xF6F7U, 0x691AU, 0x1C41U, 0x239BU, 0x56C0U, 0xC92DU, 0xBC76U,
+        0x0827U, 0x7D7CU, 0xE291U, 0x97CAU, 0xA810U, 0xDD4BU, 0x42A6U, 0x37FDU,
+        0x3D12U, 0x4849U, 0xD7A4U, 0xA2FFU, 0x9D25U, 0xE87EU, 0x7793U, 0x02C8U,
+        0x624DU, 0x1716U, 0x88FBU, 0xFDA0U, 0xC27AU, 0xB721U, 0x28CCU, 0x5D97U,
+        0x5778U, 0x2223U, 0xBDCEU, 0xC895U, 0xF74FU, 0x8214U, 0x1DF9U, 0x68A2U,
+        0xCCBDU, 0xB9E6U, 0x260BU, 0x5350U, 0x6C8AU, 0x19D1U, 0x863CU, 0xF367U,
+        0xF988U, 0x8CD3U, 0x133EU, 0x6665U, 0x59BFU, 0x2CE4U, 0xB309U, 0xC652U,
+        0xA6D7U, 0xD38CU, 0x4C61U, 0x393AU, 0x06E0U, 0x73BBU, 0xEC56U, 0x990DU,
+        0x93E2U, 0xE6B9U, 0x7954U, 0x0C0FU, 0x33D5U, 0x468EU, 0xD963U, 0xAC38U,
+        0x1869U, 0x6D32U, 0xF2DFU, 0x8784U, 0xB85EU, 0xCD05U, 0x52E8U, 0x27B3U,
+        0x2D5CU, 0x5807U, 0xC7EAU, 0xB2B1U, 0x8D6BU, 0xF830U, 0x67DDU, 0x1286U,
+        0x7203U, 0x0758U, 0x98B5U, 0xEDEEU, 0xD234U, 0xA76FU, 0x3882U, 0x4DD9U,
+        0x4736U, 0x326DU, 0xAD80U, 0xD8DBU, 0xE701U, 0x925AU, 0x0DB7U, 0x78ECU,
+        0x104EU, 0x6515U, 0xFAF8U, 0x8FA3U, 0xB079U, 0xC522U, 0x5ACFU, 0x2F94U,
+        0x257BU, 0x5020U, 0xCFCDU, 0xBA96U, 0x854CU, 0xF017U, 0x6FFAU, 0x1AA1U,
+        0x7A24U, 0x0F7FU, 0x9092U, 0xE5C9U, 0xDA13U, 0xAF48U, 0x30A5U, 0x45FEU,
+        0x4F11U, 0x3A4AU, 0xA5A7U, 0xD0FCU, 0xEF26U, 0x9A7DU, 0x0590U, 0x70CBU,
+        0xC49AU, 0xB1C1U, 0x2E2CU, 0x5B77U, 0x64ADU, 0x11F6U, 0x8E1BU, 0xFB40U,
+        0xF1AFU, 0x84F4U, 0x1B19U, 0x6E42U, 0x5198U, 0x24C3U, 0xBB2EU, 0xCE75U,
+        0xAEF0U, 0xDBABU, 0x4446U, 0x311DU, 0x0EC7U, 0x7B9CU, 0xE471U, 0x912AU,
+        0x9BC5U, 0xEE9EU, 0x7173U, 0x0428U, 0x3BF2U, 0x4EA9U, 0xD144U, 0xA41FU,
+    };
+
     const uint16_t index = MIN(data ^ (uint16_t)((crc & 0xFFFFU) >> 8U), 0xFFU);
     const uint16_t calculatedCrc = (uint16_t)(crc << 8U) ^ CRC16LUT[index];
 
     return (uint16_t)(calculatedCrc & 0xFFFFU);
 }
 
-int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
+static inline void CORE_copyConfigCrcStat(const Pmic_ConfigCrcStat_t *src, Pmic_ConfigCrcStat_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_ConfigCrcStat_t));
+}
+
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
 {
     int32_t status = Pmic_checkHandle(handle);
 
@@ -104,15 +109,15 @@ int32_t Pmic_setScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
     // Set scratchpad value
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, value);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioTxByte(handle, (uint8_t)(PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum), value);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -130,7 +135,7 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
     // Get scratchpad value
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, &regData);
+        status = Pmic_ioRxByte_CS(handle, (uint8_t)(PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum), &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -138,10 +143,10 @@ int32_t Pmic_getScratchPadValue(Pmic_Handle_t *handle, uint8_t scratchPadRegNum,
         *value = regData;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState)
+int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lockState)
 {
     int32_t status = Pmic_checkHandle(handle);
     const uint8_t key = (lockState == PMIC_LOCK_ENABLE) ? PMIC_REG_LOCK : PMIC_REG_UNLOCK;
@@ -149,15 +154,15 @@ int32_t Pmic_setRegLockState(Pmic_Handle_t *handle, bool lockState)
     // Write the key to REGISTER_LOCK
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioTxByte(handle, PMIC_REGISTER_LOCK_REG, key);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState)
+int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *lockState)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -179,7 +184,7 @@ int32_t Pmic_getRegLockState(Pmic_Handle_t *handle, bool *lockState)
         *lockState = Pmic_getBitField_b(regData, PMIC_REGISTER_LOCK_STATUS_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate)
@@ -196,9 +201,9 @@ int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate)
     if (status == PMIC_ST_SUCCESS) {
         Pmic_setBitField_b(&regData, CONFIG_CRC_EN_SHIFT, PMIC_ENABLE);
 
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, regData);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     // Update the handle
@@ -206,7 +211,7 @@ int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate)
         handle->configCrcEnable = PMIC_ENABLE;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle)
@@ -216,9 +221,9 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle)
     // Write 0x00 to the CONFIG_CRC_CONFIG register in order to disable this
     // feature as described in the TRM.
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, 0x00U);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     // Update the handle
@@ -226,11 +231,12 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle)
         handle->configCrcEnable = PMIC_DISABLE;
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
+int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
 {
+    Pmic_ConfigCrcStat_t localConfigCrcStat;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -245,10 +251,10 @@ int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *con
 
     if (status == PMIC_ST_SUCCESS) {
         // Extract CONFIG_CRC_EN
-        configCrcStat->crcEn = Pmic_getBitField_b(regData, CONFIG_CRC_EN_SHIFT);
+        localConfigCrcStat.crcEn = Pmic_getBitField_b(regData, CONFIG_CRC_EN_SHIFT);
 
         // Extract CONFIG_CRC_CALC
-        configCrcStat->crcCalc = Pmic_getBitField_b(regData, CONFIG_CRC_CALC_SHIFT);
+        localConfigCrcStat.crcCalc = Pmic_getBitField_b(regData, CONFIG_CRC_CALC_SHIFT);
     }
 
     // Read STAT_MODERATE_ERR
@@ -258,18 +264,22 @@ int32_t Pmic_getConfigCrcStatus(Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *con
 
     // Extract CONFIG_CRC_STAT
     if (status == PMIC_ST_SUCCESS) {
-        configCrcStat->errorDetected = Pmic_getBitField_b(regData, CONFIG_CRC_STAT_SHIFT);
+        localConfigCrcStat.errorDetected = Pmic_getBitField_b(regData, CONFIG_CRC_STAT_SHIFT);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS) {
+        CORE_copyConfigCrcStat(&localConfigCrcStat, configCrcStat);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t CORE_configCrcValidate(Pmic_Handle_t *handle)
+static int32_t CORE_configCrcValidate(const Pmic_Handle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &regData);
 
     // This operation should only be performed if Config CRC feature is
@@ -310,29 +320,38 @@ static int32_t CORE_configCrcValidate(Pmic_Handle_t *handle)
         status = PMIC_ST_ERR_CONFIG_REG_CRC;
     }
 
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     return status;
 }
 
-int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle)
+/** @brief Calculate config CRC over register range */
+static int32_t CORE_calculateCrc(const Pmic_Handle_t *handle, uint16_t *crc)
 {
-    int32_t status = Pmic_checkHandle(handle);
+    int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint16_t crc = CONFIG_CRC_INIT;
 
-    // Obtain critical section for the entirety of this operation
-    Pmic_criticalSectionStart(handle);
+    *crc = CONFIG_CRC_INIT;
 
-    // Read each register in the config CRC range, and calculate cumulative CRC
     for (uint8_t regAddr = CONFIG_CRC_REG_LO; regAddr <= CONFIG_CRC_REG_HI; regAddr++) {
-        // If a comms failure has occured or the handle failed to validate in
-        // the first place, exit out of the calculation loop.
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
+        *crc = CORE_Crc16Calc(*crc, (uint16_t)regData);
+    }
 
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
-        crc = CORE_Crc16Calc(crc, (uint16_t)regData);
+    return status;
+}
+
+int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle)
+{
+    int32_t status = Pmic_checkHandle(handle);
+    uint16_t crc = 0U;
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = CORE_calculateCrc(handle, &crc);
     }
 
     // Write calculated CRC (LSB)
@@ -345,18 +364,17 @@ int32_t Pmic_configCrcCalculate(Pmic_Handle_t *handle)
         status = Pmic_ioTxByte(handle, CONFIG_CRC_REG_2_REG, (uint8_t)((crc >> 8U) & 0xFFU));
     }
 
-    // Release critical section
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     // Perform CRC validation process
     if (status == PMIC_ST_SUCCESS) {
         status = CORE_configCrcValidate(handle);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
+int32_t Pmic_configCrcGetFromDevice(const Pmic_Handle_t *handle, uint16_t *crc)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t crcMsb = 0U;
@@ -378,5 +396,5 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_Handle_t *handle, uint16_t *crc)
         *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

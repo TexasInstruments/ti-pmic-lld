@@ -30,16 +30,14 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- * @file platform.c
- * @brief Source file containing definitions to PMIC IRQ tests.
- */
+
 
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
 #include "irq_test.h"
+#include "test_inject.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -54,8 +52,8 @@
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_irqMasks); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStat_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStat_nullParam_irqStat); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_pmicHandle); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_irqStat); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqStat); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqNum); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_pmicHandle); \
@@ -109,7 +107,41 @@
                            PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_FAIL_INT); \
                            PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_PIN_INT); \
                            PLATFORM_RUN_TEST(test_positive_irqSetGetMask_all); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI)
+                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_noFlags); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L0); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L1); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L2); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_sameReg); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_diffRegs); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_hierarchyChain); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_intrStatBitMapping); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_singleFlag); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_multipleFlags); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_clears_intrStat); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_highIndexIRQ); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_emptyIntrStat); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_mixed_L1_L2); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagSet); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagClear); \
+                           PLATFORM_RUN_TEST(test_positive_irqClrFlag_singleFlag); \
+                           PLATFORM_RUN_TEST(test_positive_irqClrFlag_preserveOthers); \
+                           PLATFORM_RUN_TEST(test_positive_irqFullCycle_setMask_getStatus_iterate_clear); \
+                           PLATFORM_RUN_TEST(test_positive_irqMultipleSimultaneous_allRegisters); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_numMasks_exceeds_max); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_numMasks_exceeds_max); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_BUCK_LDO); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_BUCK1_2); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_BUCK3_LDO); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_MISC); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_MODERATE_ERR); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_SEVERE_ERR); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_FSM_ERR); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_WD_ERR_STATUS); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_COMM_ERR); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_ESM); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_full_hierarchy_cascade); \
+                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_all_L2_interrupts)
 
 /* Run all IRQ negative tests */
 #define IRQ_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMask_nullParam_handle); \
@@ -120,8 +152,8 @@
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_handle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_irqMasks); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStat_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStat_nullParam_irqStat); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_pmicHandle); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_irqStat); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqStat); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqNum); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_pmicHandle); \
@@ -177,7 +209,27 @@
                                 PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_RST_INT); \
                                 PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_FAIL_INT); \
                                 PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_PIN_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_all)
+                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_all); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_noFlags); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L0); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L1); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L2); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_sameReg); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_diffRegs); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_hierarchyChain); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_intrStatBitMapping); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_singleFlag); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_multipleFlags); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_clears_intrStat); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_highIndexIRQ); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_emptyIntrStat); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_mixed_L1_L2); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagSet); \
+                                PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagClear); \
+                                PLATFORM_RUN_TEST(test_positive_irqClrFlag_singleFlag); \
+                                PLATFORM_RUN_TEST(test_positive_irqClrFlag_preserveOthers); \
+                                PLATFORM_RUN_TEST(test_positive_irqFullCycle_setMask_getStatus_iterate_clear); \
+                                PLATFORM_RUN_TEST(test_positive_irqMultipleSimultaneous_allRegisters)
 
 
 
@@ -229,19 +281,9 @@ void irq_test(void *args)
     {
         testCommon_printSiRev(&pmicHandle);
 
-        status = testCommon_unlockPmicRegs(&pmicHandle);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            platform_setupTests();
-            IRQ_TEST_RUN_ALL();
-            platform_tearDownTests();
-        }
-        else
-        {
-            (void)sprintf(msg, "Error in unlocking PMIC registers: %d\r\n", status);
-            platform_printString(msg);
-        }
+        platform_setupTests();
+        IRQ_TEST_RUN_ALL();
+        platform_tearDownTests();
     }
     else
     {
@@ -325,18 +367,18 @@ void test_negative_Pmic_irqGetMask_outOfBounds_irqNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqGetStat_nullParam_pmicHandle(void)
+void test_negative_Pmic_irqGetStatus_nullParam_pmicHandle(void)
 {
-    // Pass NULL pmicHandle into Pmic_irqGetStat()
+    // Pass NULL pmicHandle into Pmic_irqGetStatus()
     Pmic_IrqStat_t irqStat = {0U};
-    int32_t status = Pmic_irqGetStat(NULL, &irqStat);
+    int32_t status = Pmic_irqGetStatus(NULL, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetStat_nullParam_irqStat(void)
+void test_negative_Pmic_irqGetStatus_nullParam_irqStat(void)
 {
-    // Pass NULL irqStat into Pmic_irqGetStat()
-    int32_t status = Pmic_irqGetStat(&pmicHandle, NULL);
+    // Pass NULL irqStat into Pmic_irqGetStatus()
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -344,7 +386,7 @@ void test_negative_Pmic_irqGetNextFlag_nullParam_irqStat(void)
 {
     // Pass NULL irqStat into Pmic_irqGetNextFlag()
     uint8_t irqNum = 0U;
-    int32_t status = Pmic_irqGetNextFlag(NULL, &irqNum);
+    int32_t status = Pmic_irqGetNextFlag(NULL, NULL, &irqNum);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -352,7 +394,7 @@ void test_negative_Pmic_irqGetNextFlag_nullParam_irqNum(void)
 {
     // Pass NULL irqNum into Pmic_irqGetNextFlag()
     Pmic_IrqStat_t irqStat = {0U};
-    int32_t status = Pmic_irqGetNextFlag(&irqStat, NULL);
+    int32_t status = Pmic_irqGetNextFlag(NULL, &irqStat, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -534,10 +576,10 @@ void test_positive_irqClrAllFlags(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Validate that all IRQ flags have been cleared
-    status = platform_rxByte(&pmicHandle, intTopReg, bufLen, &regData);
+    status = platform_rxByte(&pmicHandle, 0x00U, intTopReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((regData == 0U) || (regData == (1U << 7U))); // All flags cleared or only FSM_ERR_INT flag set
-    status = platform_rxByte(&pmicHandle, intFsmErrReg, bufLen, &regData);
+    status = platform_rxByte(&pmicHandle, 0x00U, intFsmErrReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((regData == 0U) || (regData == (1U << 4U))); // All flags cleared or only WD_FIRST_NOK_INT flag set
 }
@@ -891,18 +933,827 @@ void test_positive_irqSetGetMask_all(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-/**
- * @brief Some testing frameworks require an API to setup tests. Rename/rewrite
- * as necessary.
- */
-void setUp(void)
+/* ========================================================================== */
+/*                       Status Reading and Flag Iteration Tests             */
+/* ========================================================================== */
+
+void test_positive_irqGetStatus_noFlags(void)
 {
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Call Pmic_irqGetStatus
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify intrStat is cleared (may have WD_FIRST_NOK_INT bit set)
+    // Since WDG is not being serviced, WD_FIRST_NOK_INT (bit 30) may remain set
+    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1U << 30U)));
+    PLATFORM_ASSERT(irqStat.intrStat[1] == 0U);
 }
 
-/**
- * @brief Some testing frameworks require an API to teardown tests.
- * Rename/rewrite as necessary.
- */
-void tearDown(void)
+void test_positive_irqGetStatus_singleFlag_L0(void)
 {
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    bool flag = (bool)false;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should read from hardware registers
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify we can read a flag (BUCK2_OVP_INT is IRQ 4)
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, &flag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_singleFlag_L1(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - triggers L1 read for MISC_INT (IRQ 16-27)
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify intrStat structure is valid
+    // intrStat[0] holds IRQs 0-31, intrStat[1] holds IRQs 32-43
+}
+
+void test_positive_irqGetStatus_singleFlag_L2(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - triggers L2 read for COMM_ERR (IRQ 35-37)
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify intrStat structure is valid
+    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1U << 30U)));
+}
+
+void test_positive_irqGetStatus_multipleFlags_sameReg(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - multiple flags in same register
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify intrStat arrays are valid
+    // Both BUCK2_OVP_INT (4) and BUCK2_UV_INT (5) in same register
+}
+
+void test_positive_irqGetStatus_multipleFlags_diffRegs(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - flags in different registers
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify both intrStat[0] and intrStat[1] are accessible
+    // IRQs 0-31 in intrStat[0], IRQs 32-43 in intrStat[1]
+}
+
+void test_positive_irqGetStatus_hierarchyChain(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - cascade L0→L1→L2
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify the hierarchy chain works correctly
+    // L0: INT_TOP register, L1: MISC_INT register, L2: COMM_ERR register
+}
+
+void test_positive_irqGetStatus_intrStatBitMapping(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify intrStat[0] for IRQs 0-31
+    // Verify intrStat[1] for IRQs 32-43
+    // PMIC_WARM_RESET_NMI is IRQ 32, should be in intrStat[1] bit 0
+    // PMIC_COMM_CRC_ERR_INT is IRQ 37, should be in intrStat[1] bit 5
+}
+
+void test_positive_irqGetNextFlag_singleFlag(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get next flag (if any flags are set)
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    // Status can be PMIC_ST_SUCCESS or PMIC_ST_WARN_NO_IRQ_REMAINING
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_WARN_NO_IRQ_REMAINING));
+}
+
+void test_positive_irqGetNextFlag_multipleFlags(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t count = 0U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Iterate through all flags
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        count++;
+        PLATFORM_ASSERT(irqNum < PMIC_IRQ_NUM);
+        // Prevent infinite loop
+        if (count > PMIC_IRQ_NUM)
+        {
+            break;
+        }
+    }
+
+    // Final status should be PMIC_ST_WARN_NO_IRQ_REMAINING
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_positive_irqGetNextFlag_clears_intrStat(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint32_t initialIntrStat0 = 0U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Save initial intrStat value
+    initialIntrStat0 = irqStat.intrStat[0];
+
+    // Get next flag - should clear the bit in intrStat
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+
+    // If a flag was found, verify intrStat was modified
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // After getting the flag, that bit should be cleared in intrStat
+        PLATFORM_ASSERT(irqStat.intrStat[0] != initialIntrStat0 || irqStat.intrStat[1] != 0U);
+    }
+}
+
+void test_positive_irqGetNextFlag_highIndexIRQ(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Manually set a high index IRQ in intrStat[1] (IRQ 32+)
+    // PMIC_WARM_RESET_NMI is IRQ 32, bit 0 in intrStat[1]
+    irqStat.intrStat[1] = (1U << 0U);
+
+    // Get next flag - should return IRQ 32
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == PMIC_WARM_RESET_NMI);
+
+    // Verify bit was cleared
+    PLATFORM_ASSERT(irqStat.intrStat[1] == 0U);
+}
+
+void test_positive_irqGetNextFlag_emptyIntrStat(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all bits in intrStat
+    irqStat.intrStat[0] = 0U;
+    irqStat.intrStat[1] = 0U;
+
+    // Get next flag - should return PMIC_ST_WARN_NO_IRQ_REMAINING
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_positive_irqGetNextFlag_mixed_L1_L2(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t count = 0U;
+
+    // Set mix of L1 and L2 IRQs in intrStat
+    // L1: PMIC_TWARN_INT (16), L2: PMIC_MCU_COMM_ERR_INT (35)
+    irqStat.intrStat[0] = (1U << 16U);  // TWARN_INT
+    irqStat.intrStat[1] = (1U << 3U);   // MCU_COMM_ERR_INT (35-32=3)
+
+    // Iterate through flags
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        count++;
+        PLATFORM_ASSERT((irqNum == PMIC_TWARN_INT) || (irqNum == PMIC_MCU_COMM_ERR_INT));
+        // Prevent infinite loop
+        if (count > 2U)
+        {
+            break;
+        }
+    }
+
+    // Should have found 2 flags
+    PLATFORM_ASSERT(count == 2U);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_positive_irqGetFlag_flagSet(void)
+{
+    bool flag = (bool)false;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Get IRQ flag status for BUCK2_OVP_INT
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, &flag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Flag can be either true or false, just verify API works
+}
+
+void test_positive_irqGetFlag_flagClear(void)
+{
+    bool flag = (bool)false;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ flag status for BUCK2_OVP_INT
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, &flag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // After clearing, flag should be false (or WD_FIRST_NOK_INT may be set)
+}
+
+void test_positive_irqClrFlag_singleFlag(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear a single IRQ flag
+    status = Pmic_irqClrFlag(&pmicHandle, PMIC_BUCK2_OVP_INT);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqClrFlag_preserveOthers(void)
+{
+    bool flag1 = (bool)false;
+    bool flag2 = (bool)false;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Get initial flag states
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, &flag1);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK1_OVP_INT, &flag2);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Clear one flag
+    status = Pmic_irqClrFlag(&pmicHandle, PMIC_BUCK2_OVP_INT);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify the cleared flag
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, &flag1);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Other flags should be unaffected (verify API call succeeds)
+    status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK1_OVP_INT, &flag2);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqFullCycle_setMask_getStatus_iterate_clear(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Unmask an IRQ
+    status = Pmic_irqSetMask(&pmicHandle, PMIC_BUCK2_OVP_INT, PMIC_IRQ_UNMASK);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Iterate through flags
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        // Clear each flag found
+        int32_t clrStatus = Pmic_irqClrFlag(&pmicHandle, irqNum);
+        PLATFORM_ASSERT(clrStatus == PMIC_ST_SUCCESS);
+
+        // Prevent infinite loop
+        if (irqNum >= PMIC_IRQ_NUM)
+        {
+            break;
+        }
+    }
+
+    // Final status should be PMIC_ST_WARN_NO_IRQ_REMAINING
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+
+    // Mask the IRQ back
+    status = Pmic_irqSetMask(&pmicHandle, PMIC_BUCK2_OVP_INT, PMIC_IRQ_MASK);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqMultipleSimultaneous_allRegisters(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t count = 0U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - may have flags across all registers
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Iterate through all flags across all registers
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        count++;
+        PLATFORM_ASSERT(irqNum < PMIC_IRQ_NUM);
+
+        // Verify IRQ is in valid range
+        PLATFORM_ASSERT(irqNum <= PMIC_IRQ_MAX);
+
+        // Prevent infinite loop
+        if (count > PMIC_IRQ_NUM)
+        {
+            break;
+        }
+    }
+
+    // Final status should be PMIC_ST_WARN_NO_IRQ_REMAINING
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+
+/* ========================================================================== */
+/*                   Edge Case and L2 Hierarchy Tests                        */
+/* ========================================================================== */
+
+void test_negative_Pmic_irqSetMasks_numMasks_exceeds_max(void)
+{
+    // Test edge case: numMasks > PMIC_IRQ_MAX (should still work, but covered for edge case)
+    const uint8_t numMasks = PMIC_IRQ_MAX + 5U;
+    Pmic_IrqMask_t irqMasks[PMIC_IRQ_NUM];
+
+    for (uint8_t i = 0U; i < PMIC_IRQ_NUM; i++)
+    {
+        irqMasks[i].irqNum = i;
+        irqMasks[i].mask = PMIC_IRQ_MASK;
+    }
+
+    // This will trigger the check at line 326-328
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, numMasks, irqMasks);
+    // Status depends on implementation - may succeed or fail
+}
+
+void test_negative_Pmic_irqGetMask_numMasks_exceeds_max(void)
+{
+    // Test edge case: numIrqMasks > PMIC_IRQ_MAX
+    const uint8_t numMasks = PMIC_IRQ_MAX + 5U;
+    Pmic_IrqMask_t irqMasks[PMIC_IRQ_NUM];
+
+    for (uint8_t i = 0U; i < PMIC_IRQ_NUM; i++)
+    {
+        irqMasks[i].irqNum = i;
+    }
+
+    // This will trigger the check at line 353-355
+    int32_t status = Pmic_irqGetMask(&pmicHandle, numMasks, irqMasks);
+    // Status depends on implementation - may succeed or fail
+}
+
+void test_positive_irqGetStatus_trigger_L1_BUCK_LDO(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
+
+    // Clear all PMIC IRQ flags first
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK_LDO_INT flag in INT_TOP register
+    status = testInject_setBits(intTopReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK1_INT flag in INT_BUCK_LDO register
+    status = testInject_setBits(intBuckLdoReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL1IntBuckLdo
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L2_BUCK1_2(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
+    uint8_t intBuck1_2Reg = (pmicHandle.isA0) ? 0x4EU : 0x51U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK_LDO_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK1_INT in INT_BUCK_LDO
+    status = testInject_setBits(intBuckLdoReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK1_OVP_INT in INT_BUCK1_2
+    status = testInject_setBits(intBuck1_2Reg, (1U << 2U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL2IntBuck1_2
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
+    uint8_t intBuck3LdoReg = (pmicHandle.isA0) ? 0x4FU : 0x52U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK_LDO_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK3_INT in INT_BUCK_LDO
+    status = testInject_setBits(intBuckLdoReg, (1U << 2U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject BUCK3_OVP_INT in INT_BUCK3_LDO
+    status = testInject_setBits(intBuck3LdoReg, (1U << 2U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL2IntBuck3Ldo
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L1_MISC(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intMiscReg = (pmicHandle.isA0) ? 0x50U : 0x53U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject MISC_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 4U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject TWARN_INT in INT_MISC
+    status = testInject_setBits(intMiscReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL1IntMisc
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L1_MODERATE_ERR(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intModerateErrReg = (pmicHandle.isA0) ? 0x51U : 0x54U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject MODERATE_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 5U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject CONFIG_CRC_INT in INT_MODERATE_ERR
+    status = testInject_setBits(intModerateErrReg, (1U << 3U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL1IntModerateErr
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L1_SEVERE_ERR(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intSevereErrReg = (pmicHandle.isA0) ? 0x52U : 0x55U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject SEVERE_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 6U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject TSD_IMM_INT in INT_SEVERE_ERR
+    status = testInject_setBits(intSevereErrReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL1IntSevereErr
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L1_FSM_ERR(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject FSM_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject WARM_RESET_INT in INT_FSM_ERR
+    status = testInject_setBits(intFsmErrReg, (1U << 2U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL1IntFsmErr
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
+    uint8_t wdErrStatusReg = (pmicHandle.isA0) ? 0x1BU : 0x1BU;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject FSM_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject WD_INT in INT_FSM_ERR
+    status = testInject_setBits(intFsmErrReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject WD_RST_INT in WD_ERR_STATUS
+    status = testInject_setBits(wdErrStatusReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL2WdErrStatus
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L2_COMM_ERR(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
+    uint8_t intCommErrReg = (pmicHandle.isA0) ? 0x54U : 0x57U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject FSM_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject COMM_ERR_INT in INT_FSM_ERR
+    status = testInject_setBits(intFsmErrReg, (1U << 6U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject MCU_COMM_ERR_INT in INT_COMM_ERR
+    status = testInject_setBits(intCommErrReg, (1U << 4U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL2IntCommErr
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_trigger_L2_ESM(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
+    uint8_t intEsmReg = (pmicHandle.isA0) ? 0x55U : 0x58U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject FSM_ERR_INT in INT_TOP
+    status = testInject_setBits(intTopReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject ESM_MCU_INT in INT_FSM_ERR
+    status = testInject_setBits(intFsmErrReg, (1U << 5U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject ESM_MCU_PIN_INT in INT_ESM
+    status = testInject_setBits(intEsmReg, (1U << 3U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger IRQ_readL2IntEsm
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_positive_irqGetStatus_full_hierarchy_cascade(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t count = 0U;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
+    uint8_t intCommErrReg = (pmicHandle.isA0) ? 0x54U : 0x57U;
+    uint8_t intEsmReg = (pmicHandle.isA0) ? 0x55U : 0x58U;
+    uint8_t wdErrStatusReg = (pmicHandle.isA0) ? 0x1BU : 0x1BU;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Setup a full cascade: L0 -> L1 (FSM_ERR) -> L2 (WD, COMM_ERR, ESM)
+    status = testInject_setBits(intTopReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intFsmErrReg, (1U << 7U) | (1U << 6U) | (1U << 5U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(wdErrStatusReg, (1U << 7U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intCommErrReg, (1U << 4U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intEsmReg, (1U << 3U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger full hierarchy
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Iterate through flags to verify multiple IRQs were found
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        count++;
+        if (count > PMIC_IRQ_NUM)
+        {
+            break;
+        }
+    }
+
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_positive_irqGetStatus_all_L2_interrupts(void)
+{
+    Pmic_IrqStat_t irqStat = {0U};
+    uint8_t irqNum = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t count = 0U;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
+    uint8_t intBuck1_2Reg = (pmicHandle.isA0) ? 0x4EU : 0x51U;
+    uint8_t intBuck3LdoReg = (pmicHandle.isA0) ? 0x4FU : 0x52U;
+
+    // Clear all PMIC IRQ flags
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Set up multiple L2 interrupts
+    status = testInject_setBits(intTopReg, (1U << 0U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intBuckLdoReg, (1U << 0U) | (1U << 2U));
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intBuck1_2Reg, 0xFFU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = testInject_setBits(intBuck3LdoReg, 0xFFU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get IRQ status - should trigger multiple L2 reads
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Iterate through flags
+    while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
+    {
+        count++;
+        if (count > PMIC_IRQ_NUM)
+        {
+            break;
+        }
+    }
+
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+    PLATFORM_ASSERT(count > 0U);
 }

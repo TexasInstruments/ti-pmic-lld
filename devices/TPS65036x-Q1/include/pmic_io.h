@@ -58,9 +58,18 @@ extern "C" {
  * could use the API for direct register access.
  *
  * Design: PMICDRV-618
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+  * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509
+ *               PMICDRV-511, PMICDRV-512, PMICDRV-517, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544
+ *               PMICDRV-549, PMICDRV-552
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -79,9 +88,9 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
  * before/after the write.
  *
  * Design: PMICDRV-619
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+  * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509
+ *               PMICDRV-511, PMICDRV-512, PMICDRV-517, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544, PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -100,9 +109,17 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t t
  * use the API for direct register access.
  *
  * Design: PMICDRV-620
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-506
- *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512
+ *               PMICDRV-517, PMICDRV-521, PMICDRV-522, PMICDRV-526, PMICDRV-528, PMICDRV-544
+ *               PMICDRV-549, PMICDRV-552
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
+ *
+ * @note This function does not automatically log diagnostic information upon
+ * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
+ * to log the status if such information is desired.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -122,9 +139,9 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxD
  * release a critical section before/after the read.
  *
  * Design: PMICDRV-621
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-506
- *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-517, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512
+ *               PMICDRV-517, PMICDRV-521, PMICDRV-522, PMICDRV-526, PMICDRV-528, PMICDRV-544
+ *               PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -143,9 +160,8 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *
  * modified without modifying other bit fields.
  *
  * Design: PMICDRV-622
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544, PMICDRV-549, PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -168,9 +184,8 @@ int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t 
  * critical section is stopped.
  *
  * Design: PMICDRV-623
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544, PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -191,9 +206,8 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8
  * @brief Modify a target bit field of width 1 without modifying other bit fields.
  *
  * Design: PMICDRV-626
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544, PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -215,9 +229,8 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_
  * section is stopped.
  *
  * Design: PMICDRV-627
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-552
- *               PMICDRV-521, PMICDRV-505, PMICDRV-512, PMICDRV-511, PMICDRV-509
+ * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544, PMICDRV-552
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -238,9 +251,8 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint
  * is a superset of `Pmic_ioCrcEnable()` and `Pmic_ioCrcDisable()`.
  *
  * Design: PMICDRV-711
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
- *               PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-526
+ *               PMICDRV-544
  *
  * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set equal to parameter `crcEnable` upon API call success.
@@ -258,9 +270,8 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable);
  * `Pmic_ioSetCrcEnableState()`.
  *
  * Design: PMICDRV-712
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
- *               PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544
  *
  * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set to true upon API call success.
@@ -275,9 +286,8 @@ int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle);
  * `Pmic_ioSetCrcEnableState()`.
  *
  * Design: PMICDRV-713
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-549, PMICDRV-551
- *               PMICDRV-506, PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-544, PMICDRV-521
- *               PMICDRV-512
+  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521
+ *               PMICDRV-522, PMICDRV-523, PMICDRV-526, PMICDRV-544
  *
  * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
  * will be set to false upon API call success.
@@ -291,9 +301,8 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
  * @brief Get serial communication CRC enable/disable state.
  *
  * Design: PMICDRV-714
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-549, PMICDRV-551, PMICDRV-506
- *               PMICDRV-526, PMICDRV-504, PMICDRV-522, PMICDRV-528, PMICDRV-544, PMICDRV-521
- *               PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-526, PMICDRV-528
+ *               PMICDRV-544
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -303,7 +312,7 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
  * @return Success code if CRC8 enable status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioGetCrcEnableState(Pmic_Handle_t *handle, bool *crcEnabled);
+int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *crcEnabled);
 
 #ifdef __cplusplus
 }

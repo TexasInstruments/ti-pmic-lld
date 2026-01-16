@@ -40,14 +40,14 @@ extern "C" {
 #endif
 
 /** @brief PMIC GPIO module register addresses */
-#define RDBK_LVL_STAT_REG  (0x0AU)
-#define GPO_CFG1_REG       (0x7CU)
-#define GPO_CFG2_REG       (0x7DU)
-#define GPI_CFG_REG        (0x7EU)
-#define RDBK_DGL_CFG1_REG  (0x7FU)
-#define RDBK_DGL_CFG2_REG  (0x80U)
-#define RDBK_DGL_CFG3_REG  (0x81U)
-#define RDBK_DGL_CFG4_REG  (0x82U)
+#define RDBK_LVL_STAT_REG  ((uint8_t)0x0AU)
+#define GPO_CFG1_REG       ((uint8_t)0x7CU)
+#define GPO_CFG2_REG       ((uint8_t)0x7DU)
+#define GPI_CFG_REG        ((uint8_t)0x7EU)
+#define RDBK_DGL_CFG1_REG  ((uint8_t)0x7FU)
+#define RDBK_DGL_CFG2_REG  ((uint8_t)0x80U)
+#define RDBK_DGL_CFG3_REG  ((uint8_t)0x81U)
+#define RDBK_DGL_CFG4_REG  ((uint8_t)0x82U)
 
 /** @brief PMIC Readback Level Status (RDBK_LVL_STAT) */
 #define GPO1_RDBK_LVL_SHIFT    (3U)

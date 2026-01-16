@@ -64,8 +64,8 @@ extern "C" {
  */
 #define PMIC_ESM_MODE_LEVEL (0U)
 #define PMIC_ESM_MODE_PWM   (1U)
-#define PMIC_ESM_MODE_MIN   (PMIC_ESM_MODE_LEVEL)
-#define PMIC_ESM_MODE_MAX   (PMIC_ESM_MODE_PWM)
+#define PMIC_ESM_MODE_MIN   ((uint8_t)PMIC_ESM_MODE_LEVEL)
+#define PMIC_ESM_MODE_MAX   ((uint8_t)PMIC_ESM_MODE_PWM)
 /** @} */
 
 /**
@@ -76,8 +76,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_ERR_CNT_THR_MIN (0x0U)
-#define PMIC_ESM_ERR_CNT_THR_MAX (0xFU)
+#define PMIC_ESM_ERR_CNT_THR_MIN ((uint8_t)0x0U)
+#define PMIC_ESM_ERR_CNT_THR_MAX ((uint8_t)0xFU)
 /** @} */
 
 /**
@@ -97,6 +97,20 @@ extern "C" {
 #define PMIC_ESM_HMIN_VALID                   (1U << 6U)
 #define PMIC_ESM_HMAX_VALID                   (1U << 7U)
 #define PMIC_ESM_CLR_EN_DRV_ON_FAIL_INT_VALID (1U << 8U)
+/** @} */
+
+/**
+ * @anchor Pmic_EsmStatValidParams
+ * @name PMIC ESM Status Structure Valid Parameters
+ *
+ * @brief Valid parameter bits for ESM status structure.
+ *
+ * @{
+ */
+#define PMIC_ESM_RST_INT_VALID  (1UL << 0U)
+#define PMIC_ESM_FAIL_INT_VALID (1UL << 1U)
+#define PMIC_ESM_PIN_INT_VALID  (1UL << 2U)
+#define PMIC_ESM_STATUS_ALL_VALID (PMIC_ESM_RST_INT_VALID | PMIC_ESM_FAIL_INT_VALID | PMIC_ESM_PIN_INT_VALID)
 /** @} */
 
 /* ========================================================================== */
@@ -163,6 +177,33 @@ typedef struct Pmic_EsmCfg_s {
 } Pmic_EsmCfg_t;
 /** @} */
 
+/**
+ * @anchor Pmic_EsmStat
+ * @name PMIC ESM Status Structure
+ *
+ * @brief Structure used to get and clear ESM status/interrupt flags.
+ *
+ * @param validParams Each bit in this variable corresponds to a member in this
+ * structure. For possible valid parameter values, refer to
+ * @ref Pmic_EsmStatValidParams.
+ *
+ * @param rstInt ESM MCU reset interrupt flag.
+ *
+ * @param failInt ESM MCU fail interrupt flag.
+ *
+ * @param pinInt ESM MCU pin interrupt flag.
+ *
+ * @{
+ */
+typedef struct Pmic_EsmStat_s {
+    uint32_t validParams;
+
+    bool rstInt;
+    bool failInt;
+    bool pinInt;
+} Pmic_EsmStat_t;
+/** @} */
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
@@ -171,8 +212,7 @@ typedef struct Pmic_EsmCfg_s {
  * @brief Enable or disable the PMIC ESM.
  *
  * Design: PMICDRV-686
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -188,8 +228,7 @@ int32_t Pmic_esmSetEnableState(const Pmic_Handle_t *handle, bool enable);
  * @brief Get the enable state of the PMIC ESM.
  *
  * Design: PMICDRV-687
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -205,8 +244,7 @@ int32_t Pmic_esmGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled);
  * @brief Start or stop the PMIC ESM.
  *
  * Design: PMICDRV-593
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -222,8 +260,7 @@ int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start);
  * @brief Get start state of the PMIC ESM.
  *
  * Design: PMICDRV-596
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -239,8 +276,7 @@ int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *started);
  * @brief Set PMIC ESM configurations.
  *
  * Design: PMICDRV-597
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-523, PMICDRV-551, PMICDRV-506
- *               PMICDRV-504, PMICDRV-539, PMICDRV-522, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -256,8 +292,7 @@ int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
  * @brief Get PMIC ESM configurations.
  *
  * Design: PMICDRV-598
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -273,8 +308,7 @@ int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg);
  * @brief Get PMIC ESM error counter.
  *
  * Design: PMICDRV-688
- * Architecture: PMICDRV-507, PMICDRV-516, PMICDRV-508, PMICDRV-551, PMICDRV-506, PMICDRV-504
- *               PMICDRV-539, PMICDRV-522, PMICDRV-528, PMICDRV-521, PMICDRV-512
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-539
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -285,6 +319,68 @@ int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg);
  * to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *handle, uint8_t *esmErrCnt);
+
+/**
+ * @brief Start PMIC ESM monitoring.
+ *
+ * Design: PMICDRV-594
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-539
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC ESM has been started, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_esmStart(const Pmic_Handle_t *handle);
+
+/**
+ * @brief Stop PMIC ESM monitoring.
+ *
+ * Design: PMICDRV-595
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-539
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC ESM has been stopped, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_esmStop(const Pmic_Handle_t *handle);
+
+/**
+ * @brief Get PMIC ESM status flags.
+ *
+ * Design: PMICDRV-599
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-539
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param esmStat [OUT] PMIC ESM status flags obtained from the PMIC. For more
+ * information, refer to @ref Pmic_EsmStat.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC ESM status has been obtained, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat);
+
+/**
+ * @brief Clear PMIC ESM status flags.
+ *
+ * Design: PMICDRV-600
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-539
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param esmStat [IN] PMIC ESM status flags to clear. For more information,
+ * refer to @ref Pmic_EsmStat.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC ESM status flags have been cleared, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStat_t *esmStat);
 
 #ifdef __cplusplus
 }

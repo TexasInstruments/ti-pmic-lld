@@ -43,50 +43,65 @@
 
 #include "regmap/adc.h"
 
+#include <string.h>
+
+/**
+ * @brief Copy Pmic_AdcCfg_t structure member-wise
+ */
+static inline void ADC_copyAdcCfg(const Pmic_AdcCfg_t *src, Pmic_AdcCfg_t *dst)
+{
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_AdcCfg_t));
+}
+
 int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
 {
+    Pmic_AdcCfg_t adcCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (adcCfg == NULL))
+    if (status != PMIC_ST_SUCCESS)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, status);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (adcCfg->validParams == 0U))
+    if (adcCfg == NULL)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
+
+    if (adcCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    ADC_copyAdcCfg(adcCfg, &adcCfgLocal);
 
     // Read ADC_CTRL register
-    Pmic_criticalSectionStart(handle);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte(handle, ADC_CTRL_REG, &regData);
-    }
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, ADC_CTRL_REG, &regData);
 
     // Set resistor divider enable
-    if (Pmic_validParamStatusCheck(adcCfg->validParams, PMIC_ADC_RDIV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_RDIV_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, ADC_RDIV_EN_SHIFT, ADC_RDIV_EN_MASK, adcCfg->rDivEn);
+        Pmic_setBitField_b(&regData, ADC_RDIV_EN_SHIFT, ADC_RDIV_EN_MASK, adcCfgLocal.rDivEn);
     }
 
     // Set continuous conversion enable
-    if (Pmic_validParamStatusCheck(adcCfg->validParams, PMIC_ADC_CONT_CONV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_CONT_CONV_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, ADC_CONT_CONV_SHIFT, ADC_CONT_CONV_MASK, adcCfg->contConvEn);
+        Pmic_setBitField_b(&regData, ADC_CONT_CONV_SHIFT, ADC_CONT_CONV_MASK, adcCfgLocal.contConvEn);
     }
 
     // Set ADC source select
-    if (Pmic_validParamStatusCheck(adcCfg->validParams, PMIC_ADC_SRC_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_SRC_SEL_VALID, status))
     {
-        if (adcCfg->srcSel > PMIC_ADC_SRC_SEL_MAX)
+        if (adcCfgLocal.srcSel > PMIC_ADC_SRC_SEL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            Pmic_setBitField(&regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK, adcCfg->srcSel);
+            Pmic_setBitField(&regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK, adcCfgLocal.srcSel);
         }
     }
 
@@ -95,13 +110,14 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
     {
         status = Pmic_ioTxByte(handle, ADC_CTRL_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
 {
+    Pmic_AdcCfg_t adcCfgLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -110,25 +126,41 @@ int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        ADC_copyAdcCfg(adcCfg, &adcCfgLocal);
+    }
+
     // Read ADC_CTRL register
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte_CS(handle, ADC_CTRL_REG, &regData);
     }
 
-    if (status == PMIC_ST_SUCCESS)
+    // Get resistor divider enable
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_RDIV_EN_VALID, status))
     {
-        // Get resistor divider enable
-        adcCfg->rDivEn = Pmic_getBitField_b(regData, ADC_RDIV_EN_SHIFT);
-
-        // Get continuous conversion enable
-        adcCfg->contConvEn = Pmic_getBitField_b(regData, ADC_CONT_CONV_SHIFT);
-
-        // Get ADC source select
-        adcCfg->srcSel = Pmic_getBitField(regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK);
+        adcCfgLocal.rDivEn = Pmic_getBitField_b(regData, ADC_RDIV_EN_SHIFT);
     }
 
-    return status;
+    // Get continuous conversion enable
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_CONT_CONV_EN_VALID, status))
+    {
+        adcCfgLocal.contConvEn = Pmic_getBitField_b(regData, ADC_CONT_CONV_SHIFT);
+    }
+
+    // Get ADC source select
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_SRC_SEL_VALID, status))
+    {
+        adcCfgLocal.srcSel = Pmic_getBitField(regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        ADC_copyAdcCfg(&adcCfgLocal, adcCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
@@ -137,7 +169,7 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
     uint8_t regData = 0U;
 
     // Read ADC_CTRL register to check if ADC is busy
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte(handle, ADC_CTRL_REG, &regData);
@@ -151,7 +183,8 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
         // If ADC is busy, return without starting conversion
         if (adcBusy)
         {
-            return PMIC_ST_SUCCESS;
+            Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+            return Pmic_logStatus(handle, PMIC_ST_SUCCESS);
         }
     }
 
@@ -161,9 +194,9 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
         Pmic_setBitField_b(&regData, ADC_START_SHIFT, ADC_START_MASK, true);
         status = Pmic_ioTxByte(handle, ADC_CTRL_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
@@ -183,7 +216,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
         iter++;
     }
 
-    if (iter >= handle->maxLoopCnt)
+    if ((status == PMIC_ST_SUCCESS) && (iter >= handle->maxLoopCnt))
     {
         status = PMIC_ST_ERR_MAX_LOOP_CNT_FAIL;
     }
@@ -195,7 +228,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte_CS(handle, ADC_CTRL_REG, regData);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_adcGetStatus(const Pmic_Handle_t *handle, bool *adcBusy)
@@ -220,7 +253,7 @@ int32_t Pmic_adcGetStatus(const Pmic_Handle_t *handle, bool *adcBusy)
         *adcBusy = Pmic_getBitField_b(regData, ADC_STATUS_SHIFT);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 int32_t Pmic_adcGetResultCode(const Pmic_Handle_t *handle, uint16_t *adcResult)
@@ -256,5 +289,5 @@ int32_t Pmic_adcGetResultCode(const Pmic_Handle_t *handle, uint16_t *adcResult)
         *adcResult = (uint16_t)((result11_4 << 4U) | result3_0);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

@@ -43,17 +43,17 @@ extern "C" {
 #include <stdint.h>
 
 /** @brief PMIC Watchdog Register Offsets */
-#define PMIC_WD_ANSWER_REG      (0x0EU)
-#define PMIC_WD_ENABLE_REG      (0x0FU)
-#define PMIC_WD_MODE_REG        (0x10U)
-#define PMIC_WD_WIN1_CFG_REG    (0x3FU)
-#define PMIC_WD_WIN2_CFG_REG    (0x40U)
-#define PMIC_WD_LONGWIN_CFG_REG (0x41U)
-#define PMIC_WD_QA_CFG_REG      (0x42U)
-#define PMIC_WD_THR_CFG_REG     (0x43U)
-#define PMIC_WD_QA_CNT_REG      (0x5DU)
-#define PMIC_WD_ERR_STAT_REG    (0x5EU)
-#define PMIC_WD_FAIL_CNT_REG    (0x5FU)
+#define PMIC_WD_ANSWER_REG      ((uint8_t)0x0EU)
+#define PMIC_WD_ENABLE_REG      ((uint8_t)0x0FU)
+#define PMIC_WD_MODE_REG        ((uint8_t)0x10U)
+#define PMIC_WD_WIN1_CFG_REG    ((uint8_t)0x3FU)
+#define PMIC_WD_WIN2_CFG_REG    ((uint8_t)0x40U)
+#define PMIC_WD_LONGWIN_CFG_REG ((uint8_t)0x41U)
+#define PMIC_WD_QA_CFG_REG      ((uint8_t)0x42U)
+#define PMIC_WD_THR_CFG_REG     ((uint8_t)0x43U)
+#define PMIC_WD_QA_CNT_REG      ((uint8_t)0x5DU)
+#define PMIC_WD_ERR_STAT_REG    ((uint8_t)0x5EU)
+#define PMIC_WD_FAIL_CNT_REG    ((uint8_t)0x5FU)
 
 /** @brief PMIC Watchdog Answer Register (WD_ANSWER_REG) */
 #define PMIC_WD_ANSWER_SHIFT         (0U)

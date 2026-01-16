@@ -30,15 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PLATFORM_H__
-#define __PLATFORM_H__
+#ifndef PMIC_TEST_PLATFORM_H
+#define PMIC_TEST_PLATFORM_H
 
-/**
- * @file platform.h
- *
- * @brief Platform-specific macros/defines and function declarations for testing
- * PMIC LLD.
- */
+
 
 /**
  * @brief Platform part number.
@@ -67,6 +62,7 @@
 /**
  * @brief Platform-specific include(s).
  */
+#ifndef BUILD_MOCK
 #include "driverlib/gpio.h"
 #include "driverlib/i2c.h"
 #include "driverlib/pin_map.h"
@@ -75,12 +71,16 @@
 #include "driverlib/uart.h"
 #include "inc/hw_memmap.h"
 #include "inc/tm4c123gh6pm.h"
+#else
+#include "platform_mock.h"
+#endif
 
 /**
  * @brief Testing framework include(s).
  */
 #include "unity.h"
 
+#ifndef BUILD_MOCK
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -158,12 +158,12 @@ void platform_timerWaitMs(uint16_t ms);
 /**
  * @brief Start platform-specific critical section.
  */
-void platform_critSecStart(void);
+void platform_critSecStart(uint8_t resource);
 
 /**
  * @brief Stop platform-specific critical section.
  */
-void platform_critSecStop(void);
+void platform_critSecStop(uint8_t resource);
 
 /**
  * @brief Platform-specific response to PMIC IRQ.
@@ -196,7 +196,7 @@ void *platform_getCommHandle(void);
  * @return Success code if `txBuf` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_txByte(struct Pmic_CoreHandle_s *handle,
+int32_t platform_txByte(const Pmic_Handle_t *handle,
                         uint8_t page,
                         uint8_t regAddr,
                         const uint8_t *buffer,
@@ -220,13 +220,24 @@ int32_t platform_txByte(struct Pmic_CoreHandle_s *handle,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t platform_rxByte(struct Pmic_CoreHandle_s *handle,
+int32_t platform_rxByte(const Pmic_Handle_t *handle,
                         uint8_t page,
                         uint8_t regAddr,
                         uint8_t *buffer,
                         uint8_t bufLen);
 
+/**
+ * @brief Unlock PMIC registers for testing.
+ *
+ * @details This function unlocks PMIC configuration registers to allow
+ * register modifications during testing. In hardware mode, this sends the
+ * unlock sequence to the PMIC. In mock mode, this is a no-op since the mock
+ * doesn't enforce register locking.
+ */
+void platform_unlockRegisters(void);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PLATFORM_H__ */
+#endif /* BUILD_MOCK */
+#endif /* PMIC_TEST_PLATFORM_H */

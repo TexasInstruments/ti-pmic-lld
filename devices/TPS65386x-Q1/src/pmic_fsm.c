@@ -37,6 +37,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -59,8 +60,27 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
+static inline void FSM_copyFsmCfg(const Pmic_FsmCfg_t *src, Pmic_FsmCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmCfg_t));
+}
 
-int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
+static inline void FSM_copyFsmWakeupCfg(const Pmic_FsmWakeupCfg_t *src, Pmic_FsmWakeupCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupCfg_t));
+}
+
+static inline void FSM_copyFsmWakeupStat(const Pmic_FsmWakeupStat_t *src, Pmic_FsmWakeupStat_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupStat_t));
+}
+
+static inline void FSM_copyFsmPwrLatchCfg(const Pmic_FsmPwrLatchCfg_t *src, Pmic_FsmPwrLatchCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatchCfg_t));
+}
+
+static inline void FSM_copyFsmPwrLatch(const Pmic_FsmPwrLatch_t *src, Pmic_FsmPwrLatch_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatch_t));
+}
+
+int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t state)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -73,7 +93,7 @@ int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read STATE_CTRL
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, STATE_CTRL_REG, &regData);
 
         // Modify STATE_REQ and write STATE_CTRL
@@ -82,13 +102,13 @@ int32_t Pmic_fsmSetDevState(Pmic_Handle_t *handle, uint8_t state)
             Pmic_setBitField(&regData, STATE_REQ_SHIFT, STATE_REQ_MASK, state);
             status = Pmic_ioTxByte(handle, STATE_CTRL_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
+int32_t Pmic_fsmGetDevState(const Pmic_Handle_t *handle, uint8_t *state)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -120,7 +140,7 @@ int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
         }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 // Set FSM-related configurations in STBY_CFG register:
@@ -128,13 +148,13 @@ int32_t Pmic_fsmGetDevState(Pmic_Handle_t *handle, uint8_t *state)
 // 2. Pmic_FsmCfg_t.stbyEn
 // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
 // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
-static int32_t FSM_setStbyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setStbyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read STBY_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, STBY_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
@@ -176,7 +196,7 @@ static int32_t FSM_setStbyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg
     {
         status = Pmic_ioTxByte(handle, STBY_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -184,13 +204,13 @@ static int32_t FSM_setStbyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg
 // Set FSM-related configurations in SAFETY_CFG register:
 // 1. Pmic_FsmCfg_t.autoBistEn
 // 2. Pmic_FsmCfg_t.pwdThr
-static int32_t FSM_setSafetyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setSafetyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read SAFETY_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, SAFETY_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
@@ -220,7 +240,7 @@ static int32_t FSM_setSafetyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmC
     {
         status = Pmic_ioTxByte(handle, SAFETY_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -228,13 +248,13 @@ static int32_t FSM_setSafetyCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmC
 // Set FSM-related configurations in RST_MCU_CFG register:
 // 1. Pmic_FsmCfg_t.rstMcuTmo
 // 2. Pmic_FsmCfg_t.nrstExt
-static int32_t FSM_setRstMcuCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setRstMcuCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read RST_MCU_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, RST_MCU_CFG_REG, &regData);
 
     // Modify RST_MCU_TMO_CFG to be Pmic_FsmCfg_t.rstMcuTmo
@@ -268,7 +288,7 @@ static int32_t FSM_setRstMcuCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmC
     {
         status = Pmic_ioTxByte(handle, RST_MCU_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -276,13 +296,13 @@ static int32_t FSM_setRstMcuCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmC
 // Set FSM-related configurations in SAFE_TMO_CFG register:
 // 1. Pmic_FsmCfg_t.safeTmo
 // 2. Pmic_FsmCfg_t.safeLockThr
-static int32_t FSM_setSafeTmoCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_setSafeTmoCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read SAFE_TMO_CFG_REG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, SAFE_TMO_CFG_REG, &regData);
 
     // Modify SAFE_TMO to be Pmic_FsmCfg_t.safeTmo
@@ -316,14 +336,15 @@ static int32_t FSM_setSafeTmoCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsm
     {
         status = Pmic_ioTxByte(handle, SAFE_TMO_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-int32_t Pmic_fsmSetCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
+int32_t Pmic_fsmSetCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmCfg_t localFsmCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (fsmCfg == NULL))
     {
@@ -335,51 +356,56 @@ int32_t Pmic_fsmSetCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmCfg(fsmCfg, &localFsmCfg);
+    }
+
     // Set FSM-related configurations in STBY_CFG register:
     // 1. Pmic_FsmCfg_t.nrstActiveInStbySeq
     // 2. Pmic_FsmCfg_t.stbyEn
     // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
     // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_STBY_EN_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_STBY_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
     {
-        status = FSM_setStbyCfg(handle, fsmCfg);
+        status = FSM_setStbyCfg(handle, &localFsmCfg);
     }
 
     // Set FSM-related configurations in SAFETY_CFG register:
     // 1. Pmic_FsmCfg_t.autoBistEn
     // 2. Pmic_FsmCfg_t.pwdThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_PWD_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_PWD_THR_VALID)))
     {
-        status = FSM_setSafetyCfg(handle, fsmCfg);
+        status = FSM_setSafetyCfg(handle, &localFsmCfg);
     }
 
     // Set FSM-related configurations in RST_MCU_CFG register:
     // 1. Pmic_FsmCfg_t.rstMcuTmo
     // 2. Pmic_FsmCfg_t.nrstExt
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_EXT_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_EXT_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
     {
-        status = FSM_setRstMcuCfg(handle, fsmCfg);
+        status = FSM_setRstMcuCfg(handle, &localFsmCfg);
     }
 
     // Set FSM-related configurations in SAFE_TMO_CFG register:
     // 1. Pmic_FsmCfg_t.safeTmo
     // 2. Pmic_FsmCfg_t.safeLockThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_TMO_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_TMO_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
     {
-        status = FSM_setSafeTmoCfg(handle, fsmCfg);
+        status = FSM_setSafeTmoCfg(handle, &localFsmCfg);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
 // Get FSM-related configurations in STBY_CFG register:
@@ -387,7 +413,7 @@ int32_t Pmic_fsmSetCfg(Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 // 2. Pmic_FsmCfg_t.stbyEn
 // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
 // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
-static int32_t FSM_getStbyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getStbyCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -428,7 +454,7 @@ static int32_t FSM_getStbyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 // Get FSM-related configurations in SAFETY_CFG register:
 // 1. Pmic_FsmCfg_t.autoBistEn
 // 2. Pmic_FsmCfg_t.pwdThr
-static int32_t FSM_getSafetyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getSafetyCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -457,7 +483,7 @@ static int32_t FSM_getSafetyCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 // Get FSM-related configurations in RST_MCU_CFG register:
 // 1. Pmic_FsmCfg_t.rstMcuTmo
 // 2. Pmic_FsmCfg_t.nrstExt
-static int32_t FSM_getRstMcuCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getRstMcuCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -486,7 +512,7 @@ static int32_t FSM_getRstMcuCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 // Get FSM-related configurations in SAFE_TMO_CFG register:
 // 1. Pmic_FsmCfg_t.safeTmo
 // 2. Pmic_FsmCfg_t.safeLockThr
-static int32_t FSM_getSafeTmoCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+static int32_t FSM_getSafeTmoCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -512,9 +538,10 @@ static int32_t FSM_getSafeTmoCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     return status;
 }
 
-int32_t Pmic_fsmGetCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
+int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmCfg_t localFsmCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (fsmCfg == NULL))
     {
@@ -526,54 +553,64 @@ int32_t Pmic_fsmGetCfg(Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmCfg(fsmCfg, &localFsmCfg);
+    }
+
     // Get FSM-related configurations in STBY_CFG register:
     // 1. Pmic_FsmCfg_t.nrstActiveInStbySeq
     // 2. Pmic_FsmCfg_t.stbyEn
     // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
     // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_STBY_EN_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_STBY_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
     {
-        status = FSM_getStbyCfg(handle, fsmCfg);
+        status = FSM_getStbyCfg(handle, &localFsmCfg);
     }
 
     // Get FSM-related configurations in SAFETY_CFG register:
     // 1. Pmic_FsmCfg_t.autoBistEn
     // 2. Pmic_FsmCfg_t.pwdThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_PWD_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_PWD_THR_VALID)))
     {
-        status = FSM_getSafetyCfg(handle, fsmCfg);
+        status = FSM_getSafetyCfg(handle, &localFsmCfg);
     }
 
     // Get FSM-related configurations in RST_MCU_CFG register:
     // 1. Pmic_FsmCfg_t.rstMcuTmo
     // 2. Pmic_FsmCfg_t.nrstExt
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_EXT_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_EXT_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
     {
-        status = FSM_getRstMcuCfg(handle, fsmCfg);
+        status = FSM_getRstMcuCfg(handle, &localFsmCfg);
     }
 
     // Get FSM-related configurations in SAFE_TMO_CFG register:
     // 1. Pmic_FsmCfg_t.safeTmo
     // 2. Pmic_FsmCfg_t.safeLockThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_TMO_VALID) ||
-         Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_TMO_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
     {
-        status = FSM_getSafeTmoCfg(handle, fsmCfg);
+        status = FSM_getSafeTmoCfg(handle, &localFsmCfg);
     }
 
-    return status;
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmCfg(&localFsmCfg, fsmCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
+int32_t Pmic_fsmSetDevErrCnt(const Pmic_Handle_t *handle, uint8_t devErrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -586,7 +623,7 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
     if (status == PMIC_ST_SUCCESS)
     {
         // Read DEV_ERR_STAT
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, DEV_ERR_STAT_REG, &regData);
 
         // Extract DEV_ERR_CNT and write DEV_ERR_STAT
@@ -595,13 +632,13 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_Handle_t *handle, uint8_t devErrCnt)
             Pmic_setBitField(&regData, DEV_ERR_CNT_SHIFT, DEV_ERR_CNT_MASK, devErrCnt);
             status = Pmic_ioTxByte(handle, DEV_ERR_STAT_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt)
+int32_t Pmic_fsmGetDevErrCnt(const Pmic_Handle_t *handle, uint8_t *devErrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -623,16 +660,16 @@ int32_t Pmic_fsmGetDevErrCnt(Pmic_Handle_t *handle, uint8_t *devErrCnt)
         }
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t FSM_setWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
+static int32_t FSM_setWakeupCfg(const Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read WAKE_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, WAKE_CFG_REG, &regData);
 
     // Modify WAKE1_STBY_CFG to be Pmic_FsmWakeupCfg_t.wake1Event
@@ -692,14 +729,15 @@ static int32_t FSM_setWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t
     {
         status = Pmic_ioTxByte(handle, WAKE_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-int32_t Pmic_fsmSetWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
+int32_t Pmic_fsmSetWakeupCfg(const Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmWakeupCfg_t localWakeupCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupCfg == NULL))
     {
@@ -711,27 +749,32 @@ int32_t Pmic_fsmSetWakeupCfg(Pmic_Handle_t *handle, const Pmic_FsmWakeupCfg_t *w
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = FSM_setWakeupCfg(handle, wakeupCfg);
+        FSM_copyFsmWakeupCfg(wakeupCfg, &localWakeupCfg);
     }
 
-    return status;
+    if ((status == PMIC_ST_SUCCESS) &&
+        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+    {
+        status = FSM_setWakeupCfg(handle, &localWakeupCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t FSM_getWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
+static int32_t FSM_getWakeupCfg(const Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read WAKE_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, WAKE_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -763,9 +806,10 @@ static int32_t FSM_getWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wake
     return status;
 }
 
-int32_t Pmic_fsmGetWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
+int32_t Pmic_fsmGetWakeupCfg(const Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmWakeupCfg_t localWakeupCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupCfg == NULL))
     {
@@ -777,54 +821,71 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *wakeupC
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
-         Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = FSM_getWakeupCfg(handle, wakeupCfg);
+        FSM_copyFsmWakeupCfg(wakeupCfg, &localWakeupCfg);
     }
 
-    return status;
+    if ((status == PMIC_ST_SUCCESS) &&
+        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+    {
+        status = FSM_getWakeupCfg(handle, &localWakeupCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmWakeupCfg(&localWakeupCfg, wakeupCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmGetWakeStatus(Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
+int32_t Pmic_fsmGetWakeStatus(const Pmic_Handle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_FsmWakeupStat_t localWakeupStat;
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupStat == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmWakeupStat(wakeupStat, &localWakeupStat);
+    }
+
     // Read WAKE_STAT
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, WAKE_STAT_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     // Extract WAKE1_LVL_DGL, WAKE2_LVL_DGL, WAKE_SOURCE
     if (status == PMIC_ST_SUCCESS)
     {
-        wakeupStat->wake1Lvl = Pmic_getBitField(regData, WAKE1_LVL_DGL_SHIFT, WAKE1_LVL_DGL_MASK);
-        wakeupStat->wake2Lvl = Pmic_getBitField(regData, WAKE2_LVL_DGL_SHIFT, WAKE2_LVL_DGL_MASK);
-        wakeupStat->wakeSrc = Pmic_getBitField(regData, WAKE_SOURCE_SHIFT, WAKE_SOURCE_MASK);
+        localWakeupStat.wake1Lvl = Pmic_getBitField_b(regData, WAKE1_LVL_DGL_SHIFT);
+        localWakeupStat.wake2Lvl = Pmic_getBitField_b(regData, WAKE2_LVL_DGL_SHIFT);
+        localWakeupStat.wakeSrc = Pmic_getBitField(regData, WAKE_SOURCE_SHIFT, WAKE_SOURCE_MASK);
+        FSM_copyFsmWakeupStat(&localWakeupStat, wakeupStat);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t FSM_setPwrLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+static int32_t FSM_setPwrLatchCfg(const Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read PWRL_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, PWRL_CFG_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
@@ -866,14 +927,15 @@ static int32_t FSM_setPwrLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchC
     {
         status = Pmic_ioTxByte(handle, PWRL_CFG_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-int32_t Pmic_fsmSetPowerLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmSetPowerLatchCfg(const Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmPwrLatchCfg_t localPwrLatchCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatchCfg == NULL))
     {
@@ -885,27 +947,32 @@ int32_t Pmic_fsmSetPowerLatchCfg(Pmic_Handle_t *handle, const Pmic_FsmPwrLatchCf
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_PWD_DLY_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = FSM_setPwrLatchCfg(handle, pwrLatchCfg);
+        FSM_copyFsmPwrLatchCfg(pwrLatchCfg, &localPwrLatchCfg);
     }
 
-    return status;
+    if ((status == PMIC_ST_SUCCESS) &&
+        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_PWD_DLY_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+    {
+        status = FSM_setPwrLatchCfg(handle, &localPwrLatchCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-static int32_t FSM_getPwrLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+static int32_t FSM_getPwrLatchCfg(const Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     // Read PWRL_CFG
-    Pmic_criticalSectionStart(handle);
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, PWRL_CFG_REG, &regData);
-    Pmic_criticalSectionStop(handle);
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -937,9 +1004,10 @@ static int32_t FSM_getPwrLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *
     return status;
 }
 
-int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmGetPowerLatchCfg(const Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
+    Pmic_FsmPwrLatchCfg_t localPwrLatchCfg;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatchCfg == NULL))
     {
@@ -951,22 +1019,33 @@ int32_t Pmic_fsmGetPowerLatchCfg(Pmic_Handle_t *handle, Pmic_FsmPwrLatchCfg_t *p
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_PWD_DLY_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = FSM_getPwrLatchCfg(handle, pwrLatchCfg);
+        FSM_copyFsmPwrLatchCfg(pwrLatchCfg, &localPwrLatchCfg);
     }
 
-    return status;
+    if ((status == PMIC_ST_SUCCESS) &&
+        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_PWD_DLY_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+    {
+        status = FSM_getPwrLatchCfg(handle, &localPwrLatchCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmPwrLatchCfg(&localPwrLatchCfg, pwrLatchCfg);
+    }
+
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmSetPowerLatch(const Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_FsmPwrLatch_t localPwrLatch;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -980,40 +1059,45 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *p
 
     if (status == PMIC_ST_SUCCESS)
     {
+        FSM_copyFsmPwrLatch(pwrLatch, &localPwrLatch);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
         // Read PWRL_CTRL
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, PWRL_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify STBY_ERR_WK_PWRL
-            if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
             {
-                Pmic_setBitField_b(&regData, STBY_ERR_WK_PWRL_SHIFT, pwrLatch->stbyErrWakeLatch);
+                Pmic_setBitField_b(&regData, STBY_ERR_WK_PWRL_SHIFT, localPwrLatch.stbyErrWakeLatch);
             }
 
             // Modify TMR_WK_PWRL
-            if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
             {
-                Pmic_setBitField_b(&regData, TMR_WK_PWRL_SHIFT, pwrLatch->stbyTmrWakeLatch);
+                Pmic_setBitField_b(&regData, TMR_WK_PWRL_SHIFT, localPwrLatch.stbyTmrWakeLatch);
             }
 
             // Modify M_PMIC_WK_PWRL
-            if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
             {
-                Pmic_setBitField_b(&regData, M_PMIC_WK_PWRL_SHIFT, pwrLatch->mPmicWakeLatch);
+                Pmic_setBitField_b(&regData, M_PMIC_WK_PWRL_SHIFT, localPwrLatch.mPmicWakeLatch);
             }
 
             // Modify WAKE2_PWRL
-            if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_WAKE1_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE1_LATCH_VALID))
             {
-                Pmic_setBitField_b(&regData, WAKE2_PWRL_SHIFT, pwrLatch->wake2Latch);
+                Pmic_setBitField_b(&regData, WAKE2_PWRL_SHIFT, localPwrLatch.wake2Latch);
             }
 
             // Modify WAKE1_PWRL
-            if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_WAKE2_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE2_LATCH_VALID))
             {
-                Pmic_setBitField_b(&regData, WAKE1_PWRL_SHIFT, pwrLatch->wake1Latch);
+                Pmic_setBitField_b(&regData, WAKE1_PWRL_SHIFT, localPwrLatch.wake1Latch);
             }
         }
 
@@ -1022,16 +1106,17 @@ int32_t Pmic_fsmSetPowerLatch(Pmic_Handle_t *handle, const Pmic_FsmPwrLatch_t *p
         {
             status = Pmic_ioTxByte(handle, PWRL_CTRL_REG, regData);
         }
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmGetPowerLatch(const Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    Pmic_FsmPwrLatch_t localPwrLatch;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -1043,51 +1128,58 @@ int32_t Pmic_fsmGetPowerLatch(Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *pwrLatc
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        FSM_copyFsmPwrLatch(pwrLatch, &localPwrLatch);
+    }
+
     // Read PWRL_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, PWRL_CTRL_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
         // Get STBY_ERR_WK_PWRL
-        if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
         {
-            pwrLatch->stbyErrWakeLatch = Pmic_getBitField_b(regData, STBY_ERR_WK_PWRL_SHIFT);
+            localPwrLatch.stbyErrWakeLatch = Pmic_getBitField_b(regData, STBY_ERR_WK_PWRL_SHIFT);
         }
 
         // Get TMR_WK_PWRL
-        if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
         {
-            pwrLatch->stbyTmrWakeLatch = Pmic_getBitField_b(regData, TMR_WK_PWRL_SHIFT);
+            localPwrLatch.stbyTmrWakeLatch = Pmic_getBitField_b(regData, TMR_WK_PWRL_SHIFT);
         }
 
         // Get M_PMIC_WK_PWRL
-        if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
         {
-            pwrLatch->mPmicWakeLatch = Pmic_getBitField_b(regData, M_PMIC_WK_PWRL_SHIFT);
+            localPwrLatch.mPmicWakeLatch = Pmic_getBitField_b(regData, M_PMIC_WK_PWRL_SHIFT);
         }
 
         // Get WAKE2_PWRL
-        if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_WAKE1_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE1_LATCH_VALID))
         {
-            pwrLatch->wake2Latch = Pmic_getBitField_b(regData, WAKE2_PWRL_SHIFT);
+            localPwrLatch.wake2Latch = Pmic_getBitField_b(regData, WAKE2_PWRL_SHIFT);
         }
 
         // Get WAKE1_PWRL
-        if (Pmic_validParamCheck(pwrLatch->validParams, PMIC_CFG_WAKE2_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE2_LATCH_VALID))
         {
-            pwrLatch->wake1Latch = Pmic_getBitField_b(regData, WAKE1_PWRL_SHIFT);
+            localPwrLatch.wake1Latch = Pmic_getBitField_b(regData, WAKE1_PWRL_SHIFT);
         }
+
+        FSM_copyFsmPwrLatch(&localPwrLatch, pwrLatch);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *duration)
+int32_t Pmic_fsmGetLastResetMcuStateDuration(const Pmic_Handle_t *handle, uint8_t *duration)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
@@ -1100,9 +1192,9 @@ int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *dur
     // Read RST_MCU_TMR_REG
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
         status = Pmic_ioRxByte(handle, RST_MCU_TMR_REG_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     // Extract RST_MCU_TMR
@@ -1111,5 +1203,5 @@ int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_Handle_t *handle, uint8_t *dur
         *duration = Pmic_getBitField(regData, RST_MCU_TMR_SHIFT, RST_MCU_TMR_MASK);
     }
 
-    return status;
+    return Pmic_logStatus(handle, status);
 }

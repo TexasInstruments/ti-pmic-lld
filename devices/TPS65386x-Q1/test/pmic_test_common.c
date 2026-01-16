@@ -30,11 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 
-/**
- *  @file  pmic_test_common.c
- *
- *  @brief  This file contains all the testing related files APIs for the common tests.
- */
+
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -74,11 +70,12 @@ void delay(uint32_t milliseconds) {
  * used to ensure exclusive access to resources during PMIC operations.
  * If the semaphore acquisition fails, an error message is logged.
  *
- * @param   void
+ * @param   resource [IN] Resource type for the critical section.
  * @return  NULL
  */
-void test_pmic_criticalSectionStartFn(void)
+void test_pmic_criticalSectionStartFn(uint8_t resource)
 {
+    (void)resource;
     if (SemaphoreP_OK != SemaphoreP_pend(&gpmicCoreObj,
                                          SemaphoreP_WAIT_FOREVER))
     {
@@ -92,11 +89,12 @@ void test_pmic_criticalSectionStartFn(void)
  * the end of a critical section initiated by a
  * corresponding "start" function.
  *
- * @param   void
+ * @param   resource [IN] Resource type for the critical section.
  * @return  NULL
  */
-void test_pmic_criticalSectionStopFn(void)
+void test_pmic_criticalSectionStopFn(uint8_t resource)
 {
+    (void)resource;
     SemaphoreP_post(&gpmicCoreObj);
 }
 

@@ -51,15 +51,15 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define ESM_MCU_START_REG_REG   (0x8FU)
-#define ESM_MCU_DELAY1_REG_REG  (0x90U)
-#define ESM_MCU_DELAY2_REG_REG  (0x91U)
-#define ESM_MCU_MODE_CFG_REG    (0x92U)
-#define ESM_MCU_HMAX_REG_REG    (0x93U)
-#define ESM_MCU_HMIN_REG_REG    (0x94U)
-#define ESM_MCU_LMAX_REG_REG    (0x95U)
-#define ESM_MCU_LMIN_REG_REG    (0x96U)
-#define ESM_MCU_ERR_CNT_REG_REG (0x97U)
+#define ESM_MCU_START_REG_REG   ((uint16_t)0x8FU)
+#define ESM_MCU_DELAY1_REG_REG  ((uint16_t)0x90U)
+#define ESM_MCU_DELAY2_REG_REG  ((uint16_t)0x91U)
+#define ESM_MCU_MODE_CFG_REG    ((uint16_t)0x92U)
+#define ESM_MCU_HMAX_REG_REG    ((uint16_t)0x93U)
+#define ESM_MCU_HMIN_REG_REG    ((uint16_t)0x94U)
+#define ESM_MCU_LMAX_REG_REG    ((uint16_t)0x95U)
+#define ESM_MCU_LMIN_REG_REG    ((uint16_t)0x96U)
+#define ESM_MCU_ERR_CNT_REG_REG ((uint16_t)0x97U)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */
