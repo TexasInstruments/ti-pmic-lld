@@ -51,130 +51,197 @@ extern "C" {
 
 void irq_test(void *args);
 
-void test_negative_Pmic_irqSetMask_nullParam_handle(void);
-void test_negative_Pmic_irqSetMask_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqSetMasks_nullParam_handle(void);
-void test_negative_Pmic_irqSetMasks_nullParam_irqMasks(void);
-void test_negative_Pmic_irqSetMasks_outOfBounds_numIrqMasks(void);
-void test_negative_Pmic_irqSetMasks_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqGetMask_nullParam_handle(void);
-void test_negative_Pmic_irqGetMask_nullParam_irqMasks(void);
-void test_negative_Pmic_irqGetMask_outOfBounds_numIrqMasks(void);
-void test_negative_Pmic_irqGetMask_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqGetStatus_nullParam_handle(void);
-void test_negative_Pmic_irqGetStatus_nullParam_irqStat(void);
-void test_negative_Pmic_irqGetNextFlag_nullParam_irqStat(void);
-void test_negative_Pmic_irqGetNextFlag_nullParam_irqNum(void);
-void test_negative_Pmic_irqGetFlag_nullParam_handle(void);
-void test_negative_Pmic_irqGetFlag_nullParam_flag(void);
-void test_negative_Pmic_irqGetFlag_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqClrFlag_nullParam_handle(void);
-void test_negative_Pmic_irqClrFlag_outOfBounds_irqNum(void);
-void test_negative_Pmic_irqClrAllFlags_nullParam_handle(void);
-void test_negative_irqSetGetMask_BUCK1_SC_NMI(void);
-void test_negative_irqSetGetMask_BUCK2_SC_NMI(void);
-void test_negative_irqSetGetMask_BUCK3_SC_NMI(void);
-void test_negative_irqSetGetMask_LDO_LS1_VMON1_SC_NMI(void);
-void test_negative_irqSetGetMask_LS2_VMON2_SC_NMI(void);
-void test_negative_irqSetGetMask_TSD_ORD_NMI(void);
-void test_negative_irqSetGetMask_RECOV_CNT_NMI(void);
-void test_negative_irqSetGetMask_TSD_IMM_NMI(void);
-void test_negative_irqSetGetMask_VCCA_OVP_NMI(void);
-void test_negative_irqSetGetMask_WDG_FIRST_NOK_NMI(void);
-void test_negative_irqSetGetMask_WDG_LONGWIN_TIMEOUT_NMI(void);
-void test_negative_irqSetGetMask_WDG_TIMEOUT_NMI(void);
-void test_negative_irqSetGetMask_WDG_ANSWER_EARLY_NMI(void);
-void test_negative_irqSetGetMask_WDG_SEQ_ERR_NMI(void);
-void test_negative_irqSetGetMask_WDG_ANSWER_ERR_NMI(void);
-void test_negative_irqSetGetMask_WDG_FAIL_NMI(void);
-void test_negative_irqSetGetMask_WDG_RST_NMI(void);
-void test_negative_irqSetGetMask_REGULATOR_ERR_NMI(void);
-void test_negative_irqSetGetMask_FSM_IMM_SHUTDOWN_NMI(void);
-void test_negative_irqSetGetMask_FSM_ORD_SHUTDOWN_NMI(void);
-void test_negative_irqSetGetMask_FSM_WARM_RESET_NMI(void);
-void test_positive_irqClrAllFlags(void);
-void test_positive_irqSetGetMask_BUCK1_OV_INT(void);
-void test_positive_irqSetGetMask_BUCK1_UV_INT(void);
-void test_positive_irqSetGetMask_BUCK1_RV_INT(void);
-void test_positive_irqSetGetMask_BUCK1_ILIM_INT(void);
-void test_positive_irqSetGetMask_BUCK2_OV_INT(void);
-void test_positive_irqSetGetMask_BUCK2_UV_INT(void);
-void test_positive_irqSetGetMask_BUCK2_RV_INT(void);
-void test_positive_irqSetGetMask_BUCK2_ILIM_INT(void);
-void test_positive_irqSetGetMask_BUCK3_OV_INT(void);
-void test_positive_irqSetGetMask_BUCK3_UV_INT(void);
-void test_positive_irqSetGetMask_BUCK3_RV_INT(void);
-void test_positive_irqSetGetMask_BUCK3_ILIM_INT(void);
-void test_positive_irqSetGetMask_LDO_LS1_VMON1_OV_INT(void);
-void test_positive_irqSetGetMask_LDO_LS1_VMON1_UV_INT(void);
-void test_positive_irqSetGetMask_LDO_LS1_VMON1_RV_INT(void);
-void test_positive_irqSetGetMask_LDO_LS1_VMON1_ILIM_INT(void);
-void test_positive_irqSetGetMask_LS2_VMON2_OV_INT(void);
-void test_positive_irqSetGetMask_LS2_VMON2_UV_INT(void);
-void test_positive_irqSetGetMask_LS2_VMON2_RV_INT(void);
-void test_positive_irqSetGetMask_LS2_VMON2_ILIM_INT(void);
-void test_positive_irqSetGetMask_VCCA_OV_INT(void);
-void test_positive_irqSetGetMask_VCCA_UV_INT(void);
-void test_positive_irqSetGetMask_STARTUP_ENABLE_INT(void);
-void test_positive_irqSetGetMask_ABIST_FAIL_INT(void);
-void test_positive_irqSetGetMask_BUCKS_VSET_ERR_INT(void);
-void test_positive_irqSetGetMask_EXT_CLK_INT(void);
-void test_positive_irqSetGetMask_TWARN_INT(void);
-void test_positive_irqSetGetMask_TRIM_TEST_CRC_INT(void);
-void test_positive_irqSetGetMask_CONFIG_CRC_INT(void);
-void test_positive_irqSetGetMask_NINT_READBACK_INT(void);
-void test_positive_irqSetGetMask_NRSTOUT_READBACK_INT(void);
-void test_positive_irqSetGetMask_COMM_FRM_ERR_INT(void);
-void test_positive_irqSetGetMask_COMM_CRC_ERR_INT(void);
-void test_positive_irqSetGetMask_COMM_ADR_ERR_INT(void);
-void test_positive_irqSetGetMask_COMM_MCU_ERR_INT(void);
-void test_positive_irqSetGetMask_ESM_MCU_PIN_INT(void);
-void test_positive_irqSetGetMask_ESM_MCU_FAIL_INT(void);
-void test_positive_irqSetGetMask_ESM_MCU_RST_INT(void);
-void test_positive_irqSetGetMask_all(void);
-void test_positive_irqGetClrFlag(void);
-void test_positive_irqGetStatus_noFlags(void);
-void test_positive_irqGetStatus_withFlags(void);
-void test_positive_irqGetNextFlag_noFlags(void);
-void test_positive_irqGetNextFlag_multipleFlags(void);
-void test_positive_irqGetFlag_variousIrqs(void);
-void test_positive_irqClrFlag_singleFlag(void);
-void test_positive_irqClrFlag_multipleSequence(void);
-void test_positive_irqWorkflow_completeHandling(void);
-void test_positive_irqMaskedBehavior(void);
-void test_positive_irqFlagPersistence(void);
-void test_positive_irqStatusReadMultipleTimes(void);
-void test_positive_irqGetFlag_allMaskableIrqs(void);
-void test_positive_irqClrFlag_verifyCleared(void);
-void test_positive_irqIterateAndClearAll(void);
-void test_positive_irqGetStatus_afterClearAll(void);
+/* ========================================================================== */
+/*                       irqSetMask API Tests                                 */
+/* ========================================================================== */
 
-/* IRQ Hierarchy Navigation Tests */
-void test_positive_irqGetStatus_trigger_L1_BUCK_LDO(void);
-void test_positive_irqGetStatus_trigger_L1_LS2_VMON2(void);
-void test_positive_irqGetStatus_trigger_L1_VCCA(void);
-void test_positive_irqGetStatus_trigger_L1_STARTUP(void);
-void test_positive_irqGetStatus_trigger_L1_MISC(void);
-void test_positive_irqGetStatus_trigger_L1_MODERATE_ERR(void);
-void test_positive_irqGetStatus_trigger_L1_SEVERE_ERR(void);
-void test_positive_irqGetStatus_trigger_L1_FSM_ERR(void);
-void test_positive_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void);
-void test_positive_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void);
-void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void);
-void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void);
-void test_positive_irqGetStatus_trigger_L2_ESM(void);
-void test_positive_irqGetStatus_trigger_L2_COMM_ERR(void);
-void test_positive_irqGetStatus_trigger_L2_WD_ERR_STAT(void);
-void test_positive_irqGetStatus_full_hierarchy_cascade(void);
-void test_positive_irqGetNextFlag_L2_populated_intrStat(void);
-void test_positive_irqGetNextFlag_mixed_L1_L2_flags(void);
-void test_positive_irqGetNextFlag_highIndex_IRQs(void);
-void test_positive_irqGetStatus_L1_set_but_L2_empty(void);
-void test_positive_irqGetStatus_all_L0_categories_set(void);
-void test_positive_irqGetStatus_multiple_L2_same_category(void);
+/* Negative tests */
+void test_neg_irq_irqSetMask_nullParam_handle(void);
+void test_neg_irq_irqSetMask_outOfBounds_irqNum(void);
 
-/* LP8772x-Q1 tests for uncovered lines in pmic_irq.c */
-void test_positive_irq_getNextFlag_noFlagsFound(void);
+/* ========================================================================== */
+/*                       irqSetMasks API Tests                                */
+/* ========================================================================== */
+
+/* Negative tests */
+void test_neg_irq_irqSetMasks_nullParam_handle(void);
+void test_neg_irq_irqSetMasks_nullParam_irqMasks(void);
+void test_neg_irq_irqSetMasks_outOfBounds_numIrqMasks(void);
+void test_neg_irq_irqSetMasks_outOfBounds_irqNum(void);
+
+/* ========================================================================== */
+/*                       irqGetMask API Tests                                 */
+/* ========================================================================== */
+
+/* Negative tests */
+void test_neg_irq_irqGetMask_nullParam_handle(void);
+void test_neg_irq_irqGetMask_nullParam_irqMasks(void);
+void test_neg_irq_irqGetMask_outOfBounds_numIrqMasks(void);
+void test_neg_irq_irqGetMask_outOfBounds_irqNum(void);
+
+/* ========================================================================== */
+/*                  irqSetGetMask API Tests (Combined)                        */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqSetGetMask_BUCK1_OV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK1_UV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK1_RV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK1_ILIM_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK2_OV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK2_UV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK2_RV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK2_ILIM_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK3_OV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK3_UV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK3_RV_INT(void);
+void test_pos_irq_irqSetGetMask_BUCK3_ILIM_INT(void);
+void test_pos_irq_irqSetGetMask_LDO_LS1_VMON1_OV_INT(void);
+void test_pos_irq_irqSetGetMask_LDO_LS1_VMON1_UV_INT(void);
+void test_pos_irq_irqSetGetMask_LDO_LS1_VMON1_RV_INT(void);
+void test_pos_irq_irqSetGetMask_LDO_LS1_VMON1_ILIM_INT(void);
+void test_pos_irq_irqSetGetMask_LS2_VMON2_OV_INT(void);
+void test_pos_irq_irqSetGetMask_LS2_VMON2_UV_INT(void);
+void test_pos_irq_irqSetGetMask_LS2_VMON2_RV_INT(void);
+void test_pos_irq_irqSetGetMask_LS2_VMON2_ILIM_INT(void);
+void test_pos_irq_irqSetGetMask_VCCA_OV_INT(void);
+void test_pos_irq_irqSetGetMask_VCCA_UV_INT(void);
+void test_pos_irq_irqSetGetMask_STARTUP_ENABLE_INT(void);
+void test_pos_irq_irqSetGetMask_ABIST_FAIL_INT(void);
+void test_pos_irq_irqSetGetMask_BUCKS_VSET_ERR_INT(void);
+void test_pos_irq_irqSetGetMask_EXT_CLK_INT(void);
+void test_pos_irq_irqSetGetMask_TWARN_INT(void);
+void test_pos_irq_irqSetGetMask_TRIM_TEST_CRC_INT(void);
+void test_pos_irq_irqSetGetMask_CONFIG_CRC_INT(void);
+void test_pos_irq_irqSetGetMask_NINT_READBACK_INT(void);
+void test_pos_irq_irqSetGetMask_NRSTOUT_READBACK_INT(void);
+void test_pos_irq_irqSetGetMask_COMM_FRM_ERR_INT(void);
+void test_pos_irq_irqSetGetMask_COMM_CRC_ERR_INT(void);
+void test_pos_irq_irqSetGetMask_COMM_ADR_ERR_INT(void);
+void test_pos_irq_irqSetGetMask_COMM_MCU_ERR_INT(void);
+void test_pos_irq_irqSetGetMask_ESM_MCU_PIN_INT(void);
+void test_pos_irq_irqSetGetMask_ESM_MCU_FAIL_INT(void);
+void test_pos_irq_irqSetGetMask_ESM_MCU_RST_INT(void);
+void test_pos_irq_irqSetGetMask_all(void);
+
+/* Negative tests - Non-maskable IRQs */
+void test_neg_irq_irqSetGetMask_BUCK1_SC_NMI(void);
+void test_neg_irq_irqSetGetMask_BUCK2_SC_NMI(void);
+void test_neg_irq_irqSetGetMask_BUCK3_SC_NMI(void);
+void test_neg_irq_irqSetGetMask_LDO_LS1_VMON1_SC_NMI(void);
+void test_neg_irq_irqSetGetMask_LS2_VMON2_SC_NMI(void);
+void test_neg_irq_irqSetGetMask_TSD_ORD_NMI(void);
+void test_neg_irq_irqSetGetMask_RECOV_CNT_NMI(void);
+void test_neg_irq_irqSetGetMask_TSD_IMM_NMI(void);
+void test_neg_irq_irqSetGetMask_VCCA_OVP_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_FIRST_NOK_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_LONGWIN_TIMEOUT_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_TIMEOUT_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_ANSWER_EARLY_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_SEQ_ERR_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_ANSWER_ERR_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_FAIL_NMI(void);
+void test_neg_irq_irqSetGetMask_WDG_RST_NMI(void);
+void test_neg_irq_irqSetGetMask_REGULATOR_ERR_NMI(void);
+void test_neg_irq_irqSetGetMask_FSM_IMM_SHUTDOWN_NMI(void);
+void test_neg_irq_irqSetGetMask_FSM_ORD_SHUTDOWN_NMI(void);
+void test_neg_irq_irqSetGetMask_FSM_WARM_RESET_NMI(void);
+
+/* ========================================================================== */
+/*                      irqGetStatus API Tests                                */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqGetStatus_noFlags(void);
+void test_pos_irq_irqGetStatus_withFlags(void);
+void test_pos_irq_irqGetStatus_afterClearAll(void);
+void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void);
+void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void);
+void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void);
+void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void);
+void test_pos_irq_irqGetStatus_trigger_L1_MISC(void);
+void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void);
+void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void);
+void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void);
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void);
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void);
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void);
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void);
+void test_pos_irq_irqGetStatus_trigger_L2_ESM(void);
+void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void);
+void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void);
+void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void);
+void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void);
+void test_pos_irq_irqGetStatus_all_L0_categories_set(void);
+void test_pos_irq_irqGetStatus_multiple_L2_same_category(void);
+
+/* Negative tests */
+void test_neg_irq_irqGetStatus_nullParam_handle(void);
+void test_neg_irq_irqGetStatus_nullParam_irqStat(void);
+
+/* ========================================================================== */
+/*                     irqGetNextFlag API Tests                               */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqGetNextFlag_noFlags(void);
+void test_pos_irq_irqGetNextFlag_multipleFlags(void);
+void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void);
+void test_pos_irq_irqGetNextFlag_mixed_L1_L2_flags(void);
+void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void);
+void test_pos_irq_irqGetNextFlag_noFlagsFound(void);
+
+/* Negative tests */
+void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void);
+void test_neg_irq_irqGetNextFlag_nullParam_irqNum(void);
+
+/* ========================================================================== */
+/*                       irqGetFlag API Tests                                 */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqGetFlag_variousIrqs(void);
+void test_pos_irq_irqGetFlag_allMaskableIrqs(void);
+void test_pos_irq_irqGetClrFlag(void);
+
+/* Negative tests */
+void test_neg_irq_irqGetFlag_nullParam_handle(void);
+void test_neg_irq_irqGetFlag_nullParam_flag(void);
+void test_neg_irq_irqGetFlag_outOfBounds_irqNum(void);
+
+/* ========================================================================== */
+/*                       irqClrFlag API Tests                                 */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqClrFlag_singleFlag(void);
+void test_pos_irq_irqClrFlag_multipleSequence(void);
+void test_pos_irq_irqClrFlag_verifyCleared(void);
+
+/* Negative tests */
+void test_neg_irq_irqClrFlag_nullParam_handle(void);
+void test_neg_irq_irqClrFlag_outOfBounds_irqNum(void);
+
+/* ========================================================================== */
+/*                     irqClrAllFlags API Tests                               */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqClrAllFlags_basic(void);
+
+/* Negative tests */
+void test_neg_irq_irqClrAllFlags_nullParam_handle(void);
+
+/* ========================================================================== */
+/*                     Integration & Workflow Tests                           */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqWorkflow_completeHandling(void);
+void test_pos_irq_irqMaskedBehavior(void);
+void test_pos_irq_irqFlagPersistence(void);
+void test_pos_irq_irqStatusReadMultipleTimes(void);
+void test_pos_irq_irqIterateAndClearAll(void);
 
 #ifdef __cplusplus
 }

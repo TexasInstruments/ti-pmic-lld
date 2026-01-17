@@ -58,149 +58,107 @@ extern "C" {
 void gpio_test(void *args);
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
+/*                    Positive Test Declarations - gpioSetCfg/gpioGetCfg     */
 /* ========================================================================== */
 
-/* Run all GPIO tests */
-#define GPIO_TEST_RUN_ALL() \
-    GPIO_TEST_RUN_POSITIVE(); \
-    GPIO_TEST_RUN_NEGATIVE()
+/* GPI1 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpi1_esmIn(void);
+void test_pos_gpio_gpioSetGetCfg_gpi1_wdIn(void);
 
-/* Run all GPIO positive tests */
-#define GPIO_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpi1_esmIn); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpi1_wdIn); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpi4_comparator); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpi4_wdIn); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpi4_cosN); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_lowLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_highLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_hiz); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_nint); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_enOut); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_enOut2); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo1_sinNO); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_lowLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_highLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_hiz); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_comp1Out); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_enOut2); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_syncClkOut); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_pgood); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo2_sinPO); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_lowLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_highLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_hiz); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_pgood); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_comp2Out); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_enOut2); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_safeOut2); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo3_cosPO); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_lowLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_highLvl); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_hiz); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_safeOut2); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_enOut); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_nint); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_pgood); \
-    PLATFORM_RUN_TEST(test_positive_gpio_setGetCfg_gpo4_cosNO); \
-    PLATFORM_RUN_TEST(test_positive_gpio_getOutputValue_allGpos); \
-    PLATFORM_RUN_TEST(test_positive_gpio_gpo1_hiz_duplicate); \
-    PLATFORM_RUN_TEST(test_positive_gpio_safeOutSetGet); \
-    PLATFORM_RUN_TEST(test_positive_gpio_safeOut_individual)
+/* GPI4 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpi4_comparator(void);
+void test_pos_gpio_gpioSetGetCfg_gpi4_wdIn(void);
+void test_pos_gpio_gpioSetGetCfg_gpi4_cosN(void);
 
-/* Run all GPIO negative tests */
-#define GPIO_TEST_RUN_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidParam_validParams); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_invalidParam_validParams); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetOutputValue_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetOutputValue_nullParam_high); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetOutputValue_invalidParam_gpo); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpi1); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpi4); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpo1); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpo2); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpo3); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalidValue_gpo4); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetSafeOutCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetSafeOutCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetSafeOutCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetSafeOutCfg_invalidParam_validParams)
+/* GPO1 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpo1_lowLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_highLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_hiz(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_nint(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_enOut(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_enOut2(void);
+void test_pos_gpio_gpioSetGetCfg_gpo1_sinNO(void);
+void test_pos_gpio_gpioGpo1Hiz_duplicate(void);
+
+/* GPO2 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpo2_lowLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_highLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_hiz(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_comp1Out(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_enOut2(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_syncClkOut(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_pgood(void);
+void test_pos_gpio_gpioSetGetCfg_gpo2_sinPO(void);
+
+/* GPO3 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpo3_lowLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_highLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_hiz(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_pgood(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_comp2Out(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_enOut2(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_safeOut2(void);
+void test_pos_gpio_gpioSetGetCfg_gpo3_cosPO(void);
+
+/* GPO4 Tests */
+void test_pos_gpio_gpioSetGetCfg_gpo4_lowLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_highLvl(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_hiz(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_safeOut2(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_enOut(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_nint(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_pgood(void);
+void test_pos_gpio_gpioSetGetCfg_gpo4_cosNO(void);
 
 /* ========================================================================== */
-/*                         Structures and Enums                               */
+/*                    Positive Test Declarations - gpioGetOutputValue        */
 /* ========================================================================== */
 
+void test_pos_gpio_gpioGetOutputValue_allGpos(void);
+
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*              Positive Test Declarations - gpioSetSafeOutCfg/gpioGetSafeOutCfg */
 /* ========================================================================== */
 
-/* Positive test function declarations */
-void test_positive_gpio_setGetCfg_gpi1_esmIn(void);
-void test_positive_gpio_setGetCfg_gpi1_wdIn(void);
-void test_positive_gpio_setGetCfg_gpi4_comparator(void);
-void test_positive_gpio_setGetCfg_gpi4_wdIn(void);
-void test_positive_gpio_setGetCfg_gpi4_cosN(void);
-void test_positive_gpio_setGetCfg_gpo1_lowLvl(void);
-void test_positive_gpio_setGetCfg_gpo1_highLvl(void);
-void test_positive_gpio_setGetCfg_gpo1_hiz(void);
-void test_positive_gpio_setGetCfg_gpo1_nint(void);
-void test_positive_gpio_setGetCfg_gpo1_enOut(void);
-void test_positive_gpio_setGetCfg_gpo1_enOut2(void);
-void test_positive_gpio_setGetCfg_gpo1_sinNO(void);
-void test_positive_gpio_setGetCfg_gpo2_lowLvl(void);
-void test_positive_gpio_setGetCfg_gpo2_highLvl(void);
-void test_positive_gpio_setGetCfg_gpo2_hiz(void);
-void test_positive_gpio_setGetCfg_gpo2_comp1Out(void);
-void test_positive_gpio_setGetCfg_gpo2_enOut2(void);
-void test_positive_gpio_setGetCfg_gpo2_syncClkOut(void);
-void test_positive_gpio_setGetCfg_gpo2_pgood(void);
-void test_positive_gpio_setGetCfg_gpo2_sinPO(void);
-void test_positive_gpio_setGetCfg_gpo3_lowLvl(void);
-void test_positive_gpio_setGetCfg_gpo3_highLvl(void);
-void test_positive_gpio_setGetCfg_gpo3_hiz(void);
-void test_positive_gpio_setGetCfg_gpo3_pgood(void);
-void test_positive_gpio_setGetCfg_gpo3_comp2Out(void);
-void test_positive_gpio_setGetCfg_gpo3_enOut2(void);
-void test_positive_gpio_setGetCfg_gpo3_safeOut2(void);
-void test_positive_gpio_setGetCfg_gpo3_cosPO(void);
-void test_positive_gpio_setGetCfg_gpo4_lowLvl(void);
-void test_positive_gpio_setGetCfg_gpo4_highLvl(void);
-void test_positive_gpio_setGetCfg_gpo4_hiz(void);
-void test_positive_gpio_setGetCfg_gpo4_safeOut2(void);
-void test_positive_gpio_setGetCfg_gpo4_enOut(void);
-void test_positive_gpio_setGetCfg_gpo4_nint(void);
-void test_positive_gpio_setGetCfg_gpo4_pgood(void);
-void test_positive_gpio_setGetCfg_gpo4_cosNO(void);
-void test_positive_gpio_getOutputValue_allGpos(void);
-void test_positive_gpio_gpo1_hiz_duplicate(void);
-void test_positive_gpio_safeOutSetGet(void);
-void test_positive_gpio_safeOut_individual(void);
+void test_pos_gpio_gpioSafeOutSetGet(void);
+void test_pos_gpio_gpioSafeOut_individual(void);
 
-/* Negative test function declarations */
-void test_negative_Pmic_gpioSetCfg_nullParam_handle(void);
-void test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg(void);
-void test_negative_Pmic_gpioSetCfg_invalidParam_validParams(void);
-void test_negative_Pmic_gpioGetCfg_nullParam_handle(void);
-void test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg(void);
-void test_negative_Pmic_gpioGetCfg_invalidParam_validParams(void);
-void test_negative_Pmic_gpioGetOutputValue_nullParam_handle(void);
-void test_negative_Pmic_gpioGetOutputValue_nullParam_high(void);
-void test_negative_Pmic_gpioGetOutputValue_invalidParam_gpo(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpi1(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpi4(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpo1(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpo2(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpo3(void);
-void test_negative_Pmic_gpioSetCfg_invalidValue_gpo4(void);
-void test_negative_Pmic_gpioSetSafeOutCfg_nullParam_handle(void);
-void test_negative_Pmic_gpioGetSafeOutCfg_nullParam_handle(void);
-void test_negative_Pmic_gpioGetSafeOutCfg_nullParam_config(void);
-void test_negative_Pmic_gpioSetSafeOutCfg_invalidParam_validParams(void);
+/* ========================================================================== */
+/*                    Negative Test Declarations - gpioSetCfg/gpioGetCfg     */
+/* ========================================================================== */
+
+/* NULL Parameter Tests */
+void test_neg_gpio_gpioSetCfg_nullParam_handle(void);
+void test_neg_gpio_gpioSetCfg_nullParam_gpioCfg(void);
+void test_neg_gpio_gpioSetCfg_invalidParam_validParams(void);
+void test_neg_gpio_gpioGetCfg_nullParam_handle(void);
+void test_neg_gpio_gpioGetCfg_nullParam_gpioCfg(void);
+void test_neg_gpio_gpioGetCfg_invalidParam_validParams(void);
+
+/* Invalid Value Tests */
+void test_neg_gpio_gpioSetCfg_invalidValue_gpi1(void);
+void test_neg_gpio_gpioSetCfg_invalidValue_gpi4(void);
+void test_neg_gpio_gpioSetCfg_invalidValue_gpo1(void);
+void test_neg_gpio_gpioSetCfg_invalidValue_gpo2(void);
+void test_neg_gpio_gpioSetCfg_invalidValue_gpo3(void);
+void test_neg_gpio_gpioSetCfg_invalidValue_gpo4(void);
+
+/* ========================================================================== */
+/*                    Negative Test Declarations - gpioGetOutputValue        */
+/* ========================================================================== */
+
+void test_neg_gpio_gpioGetOutputValue_nullParam_handle(void);
+void test_neg_gpio_gpioGetOutputValue_nullParam_high(void);
+void test_neg_gpio_gpioGetOutputValue_invalidParam_gpo(void);
+
+/* ========================================================================== */
+/*              Negative Test Declarations - gpioSetSafeOutCfg/gpioGetSafeOutCfg */
+/* ========================================================================== */
+
+void test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle(void);
+void test_neg_gpio_gpioSetSafeOutCfg_invalidParam_validParams(void);
+void test_neg_gpio_gpioGetSafeOutCfg_nullParam_handle(void);
+void test_neg_gpio_gpioGetSafeOutCfg_nullParam_config(void);
 
 #ifdef __cplusplus
 }

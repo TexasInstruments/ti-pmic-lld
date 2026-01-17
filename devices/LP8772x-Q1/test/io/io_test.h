@@ -51,41 +51,39 @@ extern "C" {
 
 void io_test(void *args);
 
-void test_negative_Pmic_ioTxByte_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_nullParam_rxBuffer(void);
-void test_negative_Pmic_ioTxByte_CS_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_CS_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_CS_nullParam_rxBuffer(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_handle(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_isEnabled(void);
-void test_negative_Pmic_ioSetCrcEnableState_nullParam_handle(void);
-void test_negative_Pmic_ioCrcEnable_nullParam_handle(void);
-void test_negative_Pmic_ioCrcDisable_nullParam_handle(void);
-void test_positive_Pmic_ioTxByte_Pmic_ioRxByte_writeReadScratchpadReg1To4(void);
-void test_positive_Pmic_ioTxByte_CS_Pmic_ioRxByte_CS_writeReadScratchpadReg1To4(void);
-void test_positive_setGetCrcEnableState(void);
-void test_positive_enableDisableCrc(void);
-void test_positive_io_read_with_crc_validation(void);
-void test_negative_io_read_with_crc_error(void);
-void test_positive_io_write_with_crc_calculation(void);
-void test_positive_io_crc_enable_disable_transitions(void);
-void test_positive_io_updateByte_basic(void);
-void test_positive_io_updateByte_with_critical_section(void);
-void test_positive_io_updateByte_boolean_bit(void);
-void test_positive_io_updateByte_boolean_with_CS(void);
-void test_negative_io_updateByte_null_handle(void);
-void test_positive_io_setCrcState_error_handling(void);
-void test_positive_io_operations_all_pages(void);
-void test_positive_ioRxByte_withRetryOnCrcError(void);
-void test_positive_ioTxByte_withRetryOnFailure(void);
-void test_negative_io_crcErrorExhaustsRetries(void);
-void test_positive_ioTxByte_retrySucceedsOnLastAttempt(void);
-void test_negative_ioRxByte_zeroRetryCntImmediateFail(void);
-void test_positive_ioTxByte_multipleRetryAttempts(void);
-
-/* LP8772x-Q1 tests for uncovered lines in pmic_io.c */
-void test_negative_io_txByte_nullIoWrite(void);
+void test_neg_io_ioCrcDisable_nullHandle(void);
+void test_neg_io_ioCrcEnable_nullHandle(void);
+void test_neg_io_ioGetCrcEnableState_nullHandle(void);
+void test_neg_io_ioGetCrcEnableState_nullIsEnabled(void);
+void test_neg_io_ioRxByte_CS_nullHandle(void);
+void test_neg_io_ioRxByte_CS_nullRxBuffer(void);
+void test_neg_io_ioRxByte_nullHandle(void);
+void test_neg_io_ioRxByte_nullRxBuffer(void);
+void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void);
+void test_neg_io_ioSetCrcEnableState_nullHandle(void);
+void test_neg_io_ioTxByte_CS_nullHandle(void);
+void test_neg_io_ioTxByte_nullHandle(void);
+void test_neg_io_ioTxByte_nullIoWrite(void);
+void test_neg_io_ioUpdateByte_nullHandle(void);
+void test_neg_io_crcErrorExhaustsRetries(void);
+void test_neg_io_readWithCrcError(void);
+void test_pos_io_crcEnableDisableTransitions(void);
+void test_pos_io_enableDisableCrc(void);
+void test_pos_io_ioRxByte_withRetryOnCrcError(void);
+void test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4(void);
+void test_pos_io_ioTxByte_ioRxByte_writeReadScratchpadReg1To4(void);
+void test_pos_io_ioTxByte_multipleRetryAttempts(void);
+void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
+void test_pos_io_ioTxByte_withRetryOnFailure(void);
+void test_pos_io_operationsAllPages(void);
+void test_pos_io_readWithCrcValidation(void);
+void test_pos_io_setCrcStateErrorHandling(void);
+void test_pos_io_setGetCrcEnableState(void);
+void test_pos_io_updateByte_basic(void);
+void test_pos_io_updateByte_booleanBit(void);
+void test_pos_io_updateByte_booleanWithCS(void);
+void test_pos_io_updateByte_withCriticalSection(void);
+void test_pos_io_writeWithCrcCalculation(void);
 
 #ifdef __cplusplus
 }

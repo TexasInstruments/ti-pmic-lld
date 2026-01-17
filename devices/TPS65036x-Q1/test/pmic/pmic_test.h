@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_INIT_TEST_H
-#define PMIC_INIT_TEST_H
+#ifndef PMIC_TEST_H
+#define PMIC_TEST_H
 
 
 
@@ -49,44 +49,46 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-void pmic_init_test(void *args);
+/**
+ * @brief PMIC test suite entry point
+ * @param args Test arguments (unused)
+ */
+void pmic_test(void *args);
 
-void test_negative_Pmic_init_nullParam_handle(void);
-void test_negative_Pmic_init_nullParam_coreCfg(void);
-void test_negative_Pmic_init_nullParam_coreCfg_commHandle0(void);
-void test_negative_Pmic_init_nullParam_coreCfg_ioRead(void);
-void test_negative_Pmic_init_nullParam_coreCfg_ioWrite(void);
-void test_negative_Pmic_init_nullParam_coreCfg_criticalSectionStart(void);
-void test_negative_Pmic_init_nullParam_coreCfg_criticalSectionStop(void);
-void test_negative_Pmic_init_nullParam_coreCfg_irqResponseCallback(void);
-void test_negative_Pmic_init_incorrect_coreCfg_commMode(void);
-void test_negative_Pmic_deinit_nullParam_handle(void);
-void test_negative_Pmic_checkPmicCoreHandle_nullParam_handle(void);
-void test_negative_Pmic_checkPmicCoreHandle_nullParam_commHandle0(void);
-void test_negative_Pmic_checkPmicCoreHandle_nullParam_ioRead(void);
-void test_negative_Pmic_checkPmicCoreHandle_incorrect_drvInitStatus(void);
-void test_positive_Pmic_init(void);
-void test_positive_Pmic_checkPmicCoreHandle(void);
-void test_positive_Pmic_deinit(void);
-void test_positive_Pmic_init_with_crc_enabled(void);
-void test_positive_Pmic_init_with_config_crc_enabled(void);
-void test_positive_Pmic_init_with_both_crc_enabled(void);
-void test_positive_Pmic_init_crc_error_recovery(void);
-void test_positive_Pmic_init_complete_flow(void);
-void test_positive_Pmic_init_device_info_retrieval(void);
-void test_positive_Pmic_init_communication_validation(void);
-void test_positive_Pmic_deinit_complete_flow(void);
-void test_positive_Pmic_checkHandle_validations(void);
-void test_positive_init_withRetryCnt(void);
-void test_positive_init_withRetryInterval(void);
-void test_positive_init_withTimerWaitMs(void);
-void test_negative_init_timerWaitNull(void);
+/* ========================================================================== */
+/*                      init / deinit API Tests                               */
+/* ========================================================================== */
 
-/* LP8772x-Q1 tests for uncovered lines in pmic.c */
-void test_negative_pmic_checkHandle_invalidCommMode(void);
-void test_negative_pmic_checkHandle_nullTimerWithRetry(void);
+/* Positive tests */
+void test_pos_pmic_init(void);
+void test_pos_pmic_deinit(void);
+void test_pos_pmic_init_withRetryCnt(void);
+void test_pos_pmic_init_withRetryInterval(void);
+void test_pos_pmic_init_withTimerWaitMs(void);
+
+/* Negative tests */
+void test_neg_pmic_init_nullHandle(void);
+void test_neg_pmic_init_nullPmicCfg(void);
+void test_neg_pmic_init_nullCommHandle(void);
+void test_neg_pmic_init_nullIoRead(void);
+void test_neg_pmic_init_nullIoWrite(void);
+void test_neg_pmic_init_nullCritSecStart(void);
+void test_neg_pmic_init_nullCritSecStop(void);
+void test_neg_pmic_deinit_nullHandle(void);
+void test_neg_pmic_init_timerWaitNull(void);
+void test_neg_pmic_init_nullIrqResponseCallback(void);
+
+/* ========================================================================== */
+/*                      checkHandle API Tests                                 */
+/* ========================================================================== */
+
+/* Negative tests */
+void test_neg_pmic_checkHandle_nullCommHandle(void);
+void test_neg_pmic_checkHandle_nullFptrs(void);
+void test_neg_pmic_checkHandle_nullTimerWithRetry(void);
+void test_neg_pmic_checkHandle_invalidDrvInitStat(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__PMIC_INIT_TEST_H__*/
+#endif /* PMIC_TEST_H */

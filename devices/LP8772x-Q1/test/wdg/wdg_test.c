@@ -47,158 +47,6 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all WDG tests */
-#define WDG_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_wdgEnable_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgDisable_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetEnableState_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetEnableState_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetEnableState_nullParam_isEnabled); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_nullParam_wdgCfg); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetCfg_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetCfg_nullParam_wdgCfg); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetPowerHold_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetPowerHold_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetPowerHold_nullParam_isEnabled); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetReturnToLongWindow_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_isEnabled); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStatus_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStatus_nullParam_errors); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_errors); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatusAll_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStatus_nullParam_failCount); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgQaWriteAnswer_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo); \
-                           PLATFORM_RUN_TEST(test_positive_wdgEnableDisable); \
-                           PLATFORM_RUN_TEST(test_positive_wdgEnableDisablePowerHold); \
-                           PLATFORM_RUN_TEST(test_positive_wdgEnableDisableReturnToLongWindow); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_rstEn); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_thresholdReset); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_thresholdFail); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_longWinCode); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_win1Code); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_win2Code); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaFdbk); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaLfsr); \
-                           PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaQuesSeed); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectNoErrors); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectTimeout); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectLongWindowTimeout); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectAnswerEarlyError); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectSequenceError); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectAnswerError); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectFailInt); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectResetInt); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_qa_with_irq_callback); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_clear_error_optimization); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk0); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk1); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk2); \
-                           PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk3); \
-                           PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_th1ErrorOnly); \
-                           PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_th2ErrorOnly); \
-                           PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_seqErrorOnly); \
-                           PLATFORM_RUN_TEST(test_positive_wdgGetFailCntStatus_failCntOnly); \
-                           PLATFORM_RUN_TEST(test_positive_wdgGetFailCntStatus_badCntOnly); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_qaWithIrqCallback); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_getErrStatus_longWindowTimeout); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_getErrStatus_answerEarly); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_getErrStatus_answerError); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_getFailCnt_goodEvent); \
-                           PLATFORM_RUN_TEST(test_positive_wdg_writeAnswer_success)
-
-/* Run all WDG negative tests */
-#define WDG_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_wdgEnable_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgDisable_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetEnableState_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetEnableState_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetEnableState_nullParam_isEnabled); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_nullParam_wdgCfg); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetCfg_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetCfg_nullParam_wdgCfg); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetPowerHold_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetPowerHold_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetPowerHold_nullParam_isEnabled); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgSetReturnToLongWindow_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_isEnabled); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStatus_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetErrStatus_nullParam_errors); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatus_nullParam_errors); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgClrErrStatusAll_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFailCntStatus_nullParam_failCount); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgQaWriteAnswer_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo)
-
-/* Run all WDG positive tests */
-#define WDG_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_wdgEnableDisable); \
-                                PLATFORM_RUN_TEST(test_positive_wdgEnableDisablePowerHold); \
-                                PLATFORM_RUN_TEST(test_positive_wdgEnableDisableReturnToLongWindow); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_rstEn); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_thresholdReset); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_thresholdFail); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_longWinCode); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_win1Code); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_win2Code); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaFdbk); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaLfsr); \
-                                PLATFORM_RUN_TEST(test_positive_wdgSetGetCfg_qaQuesSeed); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectNoErrors); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectTimeout); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectLongWindowTimeout); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectAnswerEarlyError); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectSequenceError); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectAnswerError); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectFailInt); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaSequence_detectResetInt); \
-                                PLATFORM_RUN_TEST(test_positive_wdg_qa_with_irq_callback); \
-                                PLATFORM_RUN_TEST(test_positive_wdg_clear_error_optimization); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk0); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk1); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk2); \
-                                PLATFORM_RUN_TEST(test_positive_wdgQaWriteAnswer_qaFdbk3); \
-                                PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_th1ErrorOnly); \
-                                PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_th2ErrorOnly); \
-                                PLATFORM_RUN_TEST(test_positive_wdgClrErrStatus_seqErrorOnly); \
-                                PLATFORM_RUN_TEST(test_positive_wdgGetFailCntStatus_failCntOnly); \
-                                PLATFORM_RUN_TEST(test_positive_wdgGetFailCntStatus_badCntOnly)
-
 #define WDG_TEST_LONG_WINDOW_CODE_MAX (0xFFU)
 
 /* ========================================================================== */
@@ -297,28 +145,28 @@ static int32_t wdgTest_clrAllPmicIrq(void)
     return status;
 }
 
-void test_negative_Pmic_wdgEnable_nullParam_handle(void)
+void test_neg_wdg_wdgEnable_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgEnable()
     int32_t status = Pmic_wdgEnable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgDisable_nullParam_handle(void)
+void test_neg_wdg_wdgDisable_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgDisable()
     int32_t status = Pmic_wdgDisable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetEnableState_nullParam_handle(void)
+void test_neg_wdg_wdgSetEnableState_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgSetEnableState()
     int32_t status = Pmic_wdgSetEnableState(NULL, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetEnableState_nullParam_handle(void)
+void test_neg_wdg_wdgGetEnableState_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetEnableState()
     bool isEnabled = PMIC_DISABLE;
@@ -326,14 +174,14 @@ void test_negative_Pmic_wdgGetEnableState_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetEnableState_nullParam_isEnabled(void)
+void test_neg_wdg_wdgGetEnableState_nullParam(void)
 {
     // Pass null isEnabled into Pmic_wdgGetEnableState()
     int32_t status = Pmic_wdgGetEnableState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_nullParam_handle(void)
+void test_neg_wdg_wdgSetCfg_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {0U};
@@ -341,14 +189,14 @@ void test_negative_Pmic_wdgSetCfg_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_nullParam_wdgCfg(void)
+void test_neg_wdg_wdgSetCfg_nullConfig(void)
 {
     // Pass NULL wdgCfg into Pmic_wdgSetCfg()
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset(void)
+void test_neg_wdg_wdgSetCfg_invalidThreshold2(void)
 {
     // Pass out of bounds thresholdReset value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -359,7 +207,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail(void)
+void test_neg_wdg_wdgSetCfg_invalidThreshold1(void)
 {
     // Pass out of bounds thresholdFail value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -370,7 +218,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code(void)
+void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
 {
     // Pass out of bounds win1Code value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -381,7 +229,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code(void)
+void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
 {
     // Pass out of bounds win2Code value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -392,7 +240,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk(void)
+void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
 {
     // Pass out of bounds qaFdbk value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -403,7 +251,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr(void)
+void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
 {
     // Pass out of bounds qaLfsr value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -414,7 +262,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed(void)
+void test_neg_wdg_wdgSetCfg_invalidQaQuesSeed(void)
 {
     // Pass out of bounds qaQuesSeed value into Pmic_wdgSetCfg()
     Pmic_WdgCfg_t wdgCfg = {
@@ -425,7 +273,7 @@ void test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_wdgGetCfg_nullParam_handle(void)
+void test_neg_wdg_wdgGetCfg_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetCfg()
     Pmic_WdgCfg_t wdgCfg = {0U};
@@ -433,21 +281,21 @@ void test_negative_Pmic_wdgGetCfg_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetCfg_nullParam_wdgCfg(void)
+void test_neg_wdg_wdgGetCfg_nullConfig(void)
 {
     // Pass NULL wdgCfg into Pmic_wdgGetCfg()
     int32_t status = Pmic_wdgGetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetPowerHold_nullParam_handle(void)
+void test_neg_wdg_wdgSetPowerHold_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgSetPowerHold()
     int32_t status = Pmic_wdgSetPowerHold(NULL, PMIC_DISABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetPowerHold_nullParam_handle(void)
+void test_neg_wdg_wdgGetPowerHold_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetPowerHold()
     bool isEnabled = PMIC_DISABLE;
@@ -455,21 +303,21 @@ void test_negative_Pmic_wdgGetPowerHold_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetPowerHold_nullParam_isEnabled(void)
+void test_neg_wdg_wdgGetPowerHold_nullParam(void)
 {
     // Pass NULL isEnabled into Pmic_wdgGetPowerHold()
     int32_t status = Pmic_wdgGetPowerHold(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgSetReturnToLongWindow_nullParam_handle(void)
+void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgSetReturnToLongWindow()
     int32_t status = Pmic_wdgSetReturnToLongWindow(NULL, PMIC_DISABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle(void)
+void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetReturnToLongWindow()
     bool isEnabled = PMIC_DISABLE;
@@ -477,14 +325,14 @@ void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_isEnabled(void)
+void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void)
 {
     // Pass NULL isEnabled into Pmic_wdgGetReturnToLongWindow()
     int32_t status = Pmic_wdgGetReturnToLongWindow(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetErrStatus_nullParam_handle(void)
+void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetErrStatus()
     Pmic_WdgError_t wdgErrStat = {0U};
@@ -492,14 +340,14 @@ void test_negative_Pmic_wdgGetErrStatus_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetErrStatus_nullParam_errors(void)
+void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
 {
     // Pass NULL errors into Pmic_wdgGetErrStatus()
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStatus_nullParam_handle(void)
+void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgClrErrStatus()
     Pmic_WdgError_t wdgErrStat = {0U};
@@ -507,21 +355,21 @@ void test_negative_Pmic_wdgClrErrStatus_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStatus_nullParam_errors(void)
+void test_neg_wdg_wdgClrErrStatus_nullParam(void)
 {
     // Pass NULL errors into Pmic_wdgClrErrStatus()
     int32_t status = Pmic_wdgClrErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgClrErrStatusAll_nullParam_handle(void)
+void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgClrErrStatusAll()
     int32_t status = Pmic_wdgClrErrStatusAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle(void)
+void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetFailCntStatus()
     Pmic_WdgFailCntStat_t failCnt = {0U};
@@ -529,21 +377,21 @@ void test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetFailCntStatus_nullParam_failCount(void)
+void test_neg_wdg_wdgGetFailCntStatus_nullParam(void)
 {
     // Pass NULL failCount into Pmic_wdgGetFailCntStatus()
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgQaWriteAnswer_nullParam_handle(void)
+void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgQaWriteAnswer()
     int32_t status = Pmic_wdgQaWriteAnswer(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle(void)
+void test_neg_wdg_wdgGetFdbkRegData_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetFdbkRegData()
     uint8_t regData = 0U;
@@ -551,14 +399,14 @@ void test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData(void)
+void test_neg_wdg_wdgGetFdbkRegData_nullParam(void)
 {
     // Pass NULL regData into Pmic_wdgGetFdbkRegData()
     int32_t status = Pmic_wdgGetFdbkRegData(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo(void)
+void test_neg_wdg_wdgExtractFdbk_nullParam(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgExtractFdbk
     const uint8_t regData = 0xAAU;
@@ -566,7 +414,7 @@ void test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle(void)
+void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetAnsCntAndQuesRegData()
     uint8_t regData = 0U;
@@ -574,14 +422,14 @@ void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData(void)
+void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullParam(void)
 {
     // Pass NULL regData into Pmic_wdgGetAnsCntAndQuesRegData()
     int32_t status = Pmic_wdgGetAnsCntAndQuesRegData(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle(void)
+void test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle(void)
 {
     Pmic_WdgAnsInfo_t wdgAnsInfo = {0U};
 
@@ -591,7 +439,7 @@ void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo(void)
+void test_neg_wdg_wdgExtractAnsCntAndQues_nullParam(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgExtractAnsCntAndQues()
     const uint8_t regData = 0xAAU;
@@ -599,7 +447,7 @@ void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgWriteAnswer_nullParam_handle(void)
+void test_neg_wdg_wdgWriteAnswer_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgWriteAnswer()
     Pmic_WdgAnsInfo_t wdgAnsInfo = {0U};
@@ -607,14 +455,14 @@ void test_negative_Pmic_wdgWriteAnswer_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo(void)
+void test_neg_wdg_wdgWriteAnswer_nullParam(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgWriteAnswer()
     int32_t status = Pmic_wdgWriteAnswer(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_positive_wdgEnableDisable(void)
+void test_pos_wdg_wdgEnable_enableDisable(void)
 {
     bool isEnabled = PMIC_ENABLE;
 
@@ -637,7 +485,7 @@ void test_positive_wdgEnableDisable(void)
     PLATFORM_ASSERT(isEnabled == PMIC_ENABLE);
 }
 
-void test_positive_wdgEnableDisablePowerHold(void)
+void test_pos_wdg_wdgSetPowerHold_enableDisable(void)
 {
     bool isEnabled = PMIC_ENABLE;
 
@@ -660,7 +508,7 @@ void test_positive_wdgEnableDisablePowerHold(void)
     PLATFORM_ASSERT(isEnabled == PMIC_ENABLE);
 }
 
-void test_positive_wdgEnableDisableReturnToLongWindow(void)
+void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void)
 {
     bool isEnabled = PMIC_ENABLE;
 
@@ -683,7 +531,7 @@ void test_positive_wdgEnableDisableReturnToLongWindow(void)
     PLATFORM_ASSERT(isEnabled == PMIC_ENABLE);
 }
 
-void test_positive_wdgSetGetCfg_rstEn(void)
+void test_pos_wdg_wdgSetCfg_resetEnable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
@@ -710,7 +558,7 @@ void test_positive_wdgSetGetCfg_rstEn(void)
     PLATFORM_ASSERT(expWdgCfg.rstEn == actWdgCfg.rstEn);
 }
 
-void test_positive_wdgSetGetCfg_thresholdReset(void)
+void test_pos_wdg_wdgSetCfg_threshold2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID};
@@ -731,7 +579,7 @@ void test_positive_wdgSetGetCfg_thresholdReset(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_thresholdFail(void)
+void test_pos_wdg_wdgSetCfg_threshold1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID};
@@ -752,7 +600,7 @@ void test_positive_wdgSetGetCfg_thresholdFail(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_longWinCode(void)
+void test_pos_wdg_wdgSetCfg_longWindowCode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
@@ -773,7 +621,7 @@ void test_positive_wdgSetGetCfg_longWinCode(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_win1Code(void)
+void test_pos_wdg_wdgSetCfg_win1Code(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID};
@@ -794,7 +642,7 @@ void test_positive_wdgSetGetCfg_win1Code(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_win2Code(void)
+void test_pos_wdg_wdgSetCfg_win2Code(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID};
@@ -815,7 +663,7 @@ void test_positive_wdgSetGetCfg_win2Code(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_qaFdbk(void)
+void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
@@ -836,7 +684,7 @@ void test_positive_wdgSetGetCfg_qaFdbk(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_qaLfsr(void)
+void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
@@ -857,7 +705,7 @@ void test_positive_wdgSetGetCfg_qaLfsr(void)
     }
 }
 
-void test_positive_wdgSetGetCfg_qaQuesSeed(void)
+void test_pos_wdg_wdgSetCfg_qaQuesSeed(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID};
@@ -889,7 +737,7 @@ static void wdgTest_checkForWdgErrors(void)
     PLATFORM_ASSERT(regData == 0U);
 }
 
-void test_positive_wdgQaSequence_detectNoErrors(void)
+void test_pos_wdg_wdgQaSequence_noErrors(void)
 {
     uint8_t answerCnt = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -972,7 +820,7 @@ void test_positive_wdgQaSequence_detectNoErrors(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectTimeout(void)
+void test_pos_wdg_wdgGetErrorStatus_timeout(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1065,7 +913,7 @@ void test_positive_wdgQaSequence_detectTimeout(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectLongWindowTimeout(void)
+void test_pos_wdg_wdgQaSequence_longWindowTimeout(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1132,7 +980,7 @@ void test_positive_wdgQaSequence_detectLongWindowTimeout(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectAnswerEarlyError(void)
+void test_pos_wdg_wdgQaSequence_answerEarly(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1216,7 +1064,7 @@ void test_positive_wdgQaSequence_detectAnswerEarlyError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectSequenceError(void)
+void test_pos_wdg_wdgQaSequence_sequenceError(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1302,7 +1150,7 @@ void test_positive_wdgQaSequence_detectSequenceError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectAnswerError(void)
+void test_pos_wdg_wdgQaSequence_answerError(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1390,7 +1238,7 @@ void test_positive_wdgQaSequence_detectAnswerError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectFailInt(void)
+void test_pos_wdg_wdgQaSequence_failInt(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1495,7 +1343,7 @@ void test_positive_wdgQaSequence_detectFailInt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaSequence_detectResetInt(void)
+void test_pos_wdg_wdgQaSequence_resetInt(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1596,7 +1444,7 @@ void test_positive_wdgQaSequence_detectResetInt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdg_qa_with_irq_callback(void)
+void test_pos_wdg_wdgQaSequence_withIrqCallback(void)
 {
 #ifdef BUILD_MOCK
     // This test verifies that the IRQ response callback is invoked when
@@ -1649,7 +1497,7 @@ void test_positive_wdg_qa_with_irq_callback(void)
 #endif
 }
 
-void test_positive_wdg_clear_error_optimization(void)
+void test_pos_wdg_wdgClrErrStatusAll_optimization(void)
 {
     // This test verifies the conditional error clearing optimization (line 700)
     // When regVal = 0 (no errors to clear), no I2C transaction should occur
@@ -1695,7 +1543,7 @@ void test_positive_wdg_clear_error_optimization(void)
     PLATFORM_ASSERT(wdgErrStat.timeout == (bool)false);
 }
 
-void test_positive_wdgQaWriteAnswer_qaFdbk0(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
 {
     // Test Pmic_wdgQaWriteAnswer with qaFdbk = 0 to exercise mux_4x1 case 0
     int32_t status = PMIC_ST_SUCCESS;
@@ -1717,7 +1565,7 @@ void test_positive_wdgQaWriteAnswer_qaFdbk0(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaWriteAnswer_qaFdbk1(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
 {
     // Test Pmic_wdgQaWriteAnswer with qaFdbk = 1 to exercise mux_4x1 case 1
     int32_t status = PMIC_ST_SUCCESS;
@@ -1739,7 +1587,7 @@ void test_positive_wdgQaWriteAnswer_qaFdbk1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaWriteAnswer_qaFdbk2(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
 {
     // Test Pmic_wdgQaWriteAnswer with qaFdbk = 2 to exercise mux_4x1 case 2
     int32_t status = PMIC_ST_SUCCESS;
@@ -1761,7 +1609,7 @@ void test_positive_wdgQaWriteAnswer_qaFdbk2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgQaWriteAnswer_qaFdbk3(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 {
     // Test Pmic_wdgQaWriteAnswer with qaFdbk = 3 to exercise mux_4x1 case 3 (default)
     int32_t status = PMIC_ST_SUCCESS;
@@ -1783,7 +1631,7 @@ void test_positive_wdgQaWriteAnswer_qaFdbk3(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgClrErrStatus_th1ErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
     // Test clearing only threshold1 error (failInt) using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
@@ -1811,7 +1659,7 @@ void test_positive_wdgClrErrStatus_th1ErrorOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgClrErrStatus_th2ErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
     // Test clearing only threshold2 error (resetInt) using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
@@ -1839,7 +1687,7 @@ void test_positive_wdgClrErrStatus_th2ErrorOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgClrErrStatus_seqErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
     // Test clearing only sequence error using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
@@ -1867,7 +1715,7 @@ void test_positive_wdgClrErrStatus_seqErrorOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_wdgGetFailCntStatus_failCntOnly(void)
+void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 {
     // Test getting fail count with specific validParams (fail count only)
     int32_t status = PMIC_ST_SUCCESS;
@@ -1888,7 +1736,7 @@ void test_positive_wdgGetFailCntStatus_failCntOnly(void)
     // Note: We don't assert a specific value as it depends on hardware state
 }
 
-void test_positive_wdgGetFailCntStatus_badCntOnly(void)
+void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
 {
     // Test getting bad event status with specific validParams (bad event only)
     int32_t status = PMIC_ST_SUCCESS;
@@ -1913,7 +1761,7 @@ void test_positive_wdgGetFailCntStatus_badCntOnly(void)
 /*           LP8772x-Q1 Tests for Uncovered Lines in pmic_wdg.c              */
 /* ========================================================================== */
 
-void test_positive_wdg_qaWithIrqCallback(void)
+void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
 {
     // Test coverage for lines 360-361: INT_TOP_STATUS bit set during Q&A
     // This test verifies the IRQ callback is invoked when INT_TOP_STATUS is detected
@@ -1949,7 +1797,7 @@ void test_positive_wdg_qaWithIrqCallback(void)
 #endif
 }
 
-void test_positive_wdg_getErrStatus_longWindowTimeout(void)
+void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
 {
     // Test coverage for lines 666-667: Get long window timeout error status
 
@@ -1971,7 +1819,7 @@ void test_positive_wdg_getErrStatus_longWindowTimeout(void)
     // We don't assert a specific value as it depends on device state
 }
 
-void test_positive_wdg_getErrStatus_answerEarly(void)
+void test_pos_wdg_wdgGetErrorStatus_answerEarly(void)
 {
     // Test coverage for lines 674-675: Get answer early error status
 
@@ -1992,7 +1840,7 @@ void test_positive_wdg_getErrStatus_answerEarly(void)
     // The answerEarlyError field should be populated
 }
 
-void test_positive_wdg_getErrStatus_answerError(void)
+void test_pos_wdg_wdgGetErrorStatus_answerError(void)
 {
     // Test coverage for lines 682-683: Get answer error status
 
@@ -2013,7 +1861,7 @@ void test_positive_wdg_getErrStatus_answerError(void)
     // The answerError field should be populated
 }
 
-void test_positive_wdg_getFailCnt_goodEvent(void)
+void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void)
 {
     // Test coverage for lines 792-793: Get good event status
 
@@ -2034,7 +1882,7 @@ void test_positive_wdg_getFailCnt_goodEvent(void)
     // The goodEvent field should be populated (either true or false)
 }
 
-void test_positive_wdg_writeAnswer_success(void)
+void test_pos_wdg_wdgWriteAnswer_success(void)
 {
     // Test coverage for lines 913-919: Pmic_wdgWriteAnswer with valid wdgAnsInfo
 

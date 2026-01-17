@@ -86,89 +86,89 @@ extern "C" {
  * @brief Run all positive FSM tests.
  */
 #define FSM_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetDevState); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getDevState); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_stbyEn); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_autoBistEn); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_nrstActiveInStbySeq); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_pwdThr); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_nrstExt); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_rstMcuTmo); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_safeTmo); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_safeLockThr); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_vbatStbyEntryThr); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_multiple); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetDevErrCnt); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetWakeupCfg); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getWakeStatus); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetPowerLatchCfg); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetPowerLatch); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getLastResetMcuStateDuration); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setGetCfg_higherVbatStbyExitThr); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getState_initState); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getState_offState); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setWakeupCfg_withAllValidParams); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getCfg_vbatStbyEntryThr); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getWakeupCfg_individualParams); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getPowerLatchCfg_individualParams); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getPowerLatch_individualParams); \
-    PLATFORM_RUN_TEST(test_positive_fsmGetDevState_validRead); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getDevState_initStateMapping); \
-    PLATFORM_RUN_TEST(test_positive_fsm_getDevState_offStateRepeated); \
-    PLATFORM_RUN_TEST(test_positive_fsm_setPwrLatchCfg_stbyErrWakeEvent)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_validStates); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_validRange); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_stbyEn); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_autoBistEn); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_nrstActiveInStbySeq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_pwdThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_nrstExt); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_rstMcuTmo); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_safeTmo); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_safeLockThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_vbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_multiple); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevErrCnt_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeStatus_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetLastResetMcuStateDuration_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_initState); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_offState); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_withAllValidParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_vbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_individualParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_individualParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatch_individualParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_validRead); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_initState); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_offState); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent)
 
 /**
  * @brief Run all negative FSM tests.
  */
 #define FSM_TEST_RUN_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_fsm_setDevState_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setDevState_invalidState); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getDevState_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getDevState_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getCfg_invalidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setDevErrCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setDevErrCnt_outOfBounds); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getDevErrCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getDevErrCnt_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getWakeStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getWakeStatus_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatchCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatchCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatch_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatch_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidVbatStbyEntryThr); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidPwdThr); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidRstMcuTmo); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidNrstExt); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidSafeTmo); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setCfg_invalidSafeLockThr); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_invalidWake1Event); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_invalidWake2Event); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_invalidWake1Dgl); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setWakeupCfg_invalidWake2Dgl); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getWakeupCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getWakeupCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getWakeupCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatchCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatchCfg_invalidPwdDly); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatchCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatchCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatchCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatch_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatch_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsm_setPowerLatch_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getPowerLatch_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getLastResetMcuStateDuration_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_fsm_getLastResetMcuStateDuration_nullPointer); \
-    PLATFORM_RUN_TEST(test_negative_fsmSetDevState_invalidState)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidState); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_invalidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_outOfBounds); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidVbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidPwdThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidRstMcuTmo); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidNrstExt); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeTmo); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeLockThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Event); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Event); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidStateBoundary)
 
 /* ========================================================================== */
 /*                       Positive Test Declarations                           */
@@ -177,142 +177,142 @@ extern "C" {
 /**
  * @brief Test: Set and get FSM device state.
  */
-void test_positive_fsm_setGetDevState(void);
+void test_pos_fsm_fsmSetDevState_validStates(void);
 
 /**
  * @brief Test: Get FSM device state.
  */
-void test_positive_fsm_getDevState(void);
+void test_pos_fsm_fsmGetDevState_validRange(void);
 
 /**
  * @brief Test: Set and get FSM standby enable configuration.
  */
-void test_positive_fsm_setGetCfg_stbyEn(void);
+void test_pos_fsm_fsmSetCfg_stbyEn(void);
 
 /**
  * @brief Test: Set and get FSM auto BIST enable configuration.
  */
-void test_positive_fsm_setGetCfg_autoBistEn(void);
+void test_pos_fsm_fsmSetCfg_autoBistEn(void);
 
 /**
  * @brief Test: Set and get FSM nRST active in standby sequence configuration.
  */
-void test_positive_fsm_setGetCfg_nrstActiveInStbySeq(void);
+void test_pos_fsm_fsmSetCfg_nrstActiveInStbySeq(void);
 
 /**
  * @brief Test: Set and get FSM power-down threshold configuration.
  */
-void test_positive_fsm_setGetCfg_pwdThr(void);
+void test_pos_fsm_fsmSetCfg_pwdThr(void);
 
 /**
  * @brief Test: Set and get FSM nRST extension configuration.
  */
-void test_positive_fsm_setGetCfg_nrstExt(void);
+void test_pos_fsm_fsmSetCfg_nrstExt(void);
 
 /**
  * @brief Test: Set and get FSM RESET-MCU timeout configuration.
  */
-void test_positive_fsm_setGetCfg_rstMcuTmo(void);
+void test_pos_fsm_fsmSetCfg_rstMcuTmo(void);
 
 /**
  * @brief Test: Set and get FSM SAFE timeout configuration.
  */
-void test_positive_fsm_setGetCfg_safeTmo(void);
+void test_pos_fsm_fsmSetCfg_safeTmo(void);
 
 /**
  * @brief Test: Set and get FSM SAFE lock threshold configuration.
  */
-void test_positive_fsm_setGetCfg_safeLockThr(void);
+void test_pos_fsm_fsmSetCfg_safeLockThr(void);
 
 /**
  * @brief Test: Set and get FSM VBAT standby entry threshold configuration.
  */
-void test_positive_fsm_setGetCfg_vbatStbyEntryThr(void);
+void test_pos_fsm_fsmSetCfg_vbatStbyEntryThr(void);
 
 /**
  * @brief Test: Set and get multiple FSM configuration parameters simultaneously.
  */
-void test_positive_fsm_setGetCfg_multiple(void);
+void test_pos_fsm_fsmSetCfg_multiple(void);
 
 /**
  * @brief Test: Set and get FSM device error count.
  */
-void test_positive_fsm_setGetDevErrCnt(void);
+void test_pos_fsm_fsmSetDevErrCnt_basic(void);
 
 /**
  * @brief Test: Set and get FSM wakeup configuration.
  */
-void test_positive_fsm_setGetWakeupCfg(void);
+void test_pos_fsm_fsmSetWakeupCfg_basic(void);
 
 /**
  * @brief Test: Get FSM wakeup status.
  */
-void test_positive_fsm_getWakeStatus(void);
+void test_pos_fsm_fsmGetWakeStatus_basic(void);
 
 /**
  * @brief Test: Set and get FSM power latch configuration.
  */
-void test_positive_fsm_setGetPowerLatchCfg(void);
+void test_pos_fsm_fsmSetPowerLatchCfg_basic(void);
 
 /**
  * @brief Test: Set and get FSM power latch status.
  */
-void test_positive_fsm_setGetPowerLatch(void);
+void test_pos_fsm_fsmSetPowerLatch_basic(void);
 
 /**
  * @brief Test: Get last RESET-MCU state duration.
  */
-void test_positive_fsm_getLastResetMcuStateDuration(void);
+void test_pos_fsm_fsmGetLastResetMcuStateDuration_basic(void);
 
 /**
  * @brief Test: Set and get FSM higher VBAT standby exit threshold configuration.
  */
-void test_positive_fsm_setGetCfg_higherVbatStbyExitThr(void);
+void test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr(void);
 
 /**
  * @brief Test: Get FSM state when in INIT state (covers INIT state path).
  */
-void test_positive_fsm_getState_initState(void);
+void test_pos_fsm_fsmGetDevState_initState(void);
 
 /**
  * @brief Test: Get FSM state when in OFF state (covers OFF_STATE_REPEATED path).
  */
-void test_positive_fsm_getState_offState(void);
+void test_pos_fsm_fsmGetDevState_offState(void);
 
 /**
  * @brief Test: Set and get FSM wakeup configuration with all valid parameters.
  */
-void test_positive_fsm_setWakeupCfg_withAllValidParams(void);
+void test_pos_fsm_fsmSetWakeupCfg_withAllValidParams(void);
 
 /**
  * @brief Test: Get FSM vbatStbyEntryThr configuration individually.
  */
-void test_positive_fsm_getCfg_vbatStbyEntryThr(void);
+void test_pos_fsm_fsmGetCfg_vbatStbyEntryThr(void);
 
 /**
  * @brief Test: Get FSM wakeup configuration parameters individually.
  */
-void test_positive_fsm_getWakeupCfg_individualParams(void);
+void test_pos_fsm_fsmGetWakeupCfg_individualParams(void);
 
 /**
  * @brief Test: Get FSM power latch configuration parameters individually.
  */
-void test_positive_fsm_getPowerLatchCfg_individualParams(void);
+void test_pos_fsm_fsmGetPowerLatchCfg_individualParams(void);
 
 /**
  * @brief Test: Get FSM power latch status parameters individually.
  */
-void test_positive_fsm_getPowerLatch_individualParams(void);
+void test_pos_fsm_fsmGetPowerLatch_individualParams(void);
 
 /**
  * @brief Test: Get FSM device state reads current state correctly after state requests.
  */
-void test_positive_fsmGetDevState_validRead(void);
+void test_pos_fsm_fsmGetDevState_validRead(void);
 
 /* Coverage tests for pmic_fsm.c */
-void test_positive_fsm_getDevState_initStateMapping(void);
-void test_positive_fsm_getDevState_offStateRepeated(void);
-void test_positive_fsm_setPwrLatchCfg_stbyErrWakeEvent(void);
+void test_pos_fsm_fsmGetDevState_validRange_initStateMapping(void);
+void test_pos_fsm_fsmGetDevState_validRange_offStateRepeated(void);
+void test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent(void);
 
 /* ========================================================================== */
 /*                       Negative Test Declarations                           */
@@ -321,237 +321,237 @@ void test_positive_fsm_setPwrLatchCfg_stbyErrWakeEvent(void);
 /**
  * @brief Test: Pmic_fsmSetDevState() with NULL handle.
  */
-void test_negative_fsm_setDevState_nullHandle(void);
+void test_neg_fsm_fsmSetDevState_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetDevState() with invalid state value.
  */
-void test_negative_fsm_setDevState_invalidState(void);
+void test_neg_fsm_fsmSetDevState_invalidState(void);
 
 /**
  * @brief Test: Pmic_fsmGetDevState() with NULL handle.
  */
-void test_negative_fsm_getDevState_nullHandle(void);
+void test_neg_fsm_fsmGetDevState_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetDevState() with NULL state pointer.
  */
-void test_negative_fsm_getDevState_nullPointer(void);
+void test_neg_fsm_fsmGetDevState_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with NULL handle.
  */
-void test_negative_fsm_setCfg_nullHandle(void);
+void test_neg_fsm_fsmSetCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_setCfg_nullPointer(void);
+void test_neg_fsm_fsmSetCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid validParams (0).
  */
-void test_negative_fsm_setCfg_invalidParams(void);
+void test_neg_fsm_fsmSetCfg_invalidParams(void);
 
 /**
  * @brief Test: Pmic_fsmGetCfg() with NULL handle.
  */
-void test_negative_fsm_getCfg_nullHandle(void);
+void test_neg_fsm_fsmGetCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_getCfg_nullPointer(void);
+void test_neg_fsm_fsmGetCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmGetCfg() with invalid validParams (0).
  */
-void test_negative_fsm_getCfg_invalidParams(void);
+void test_neg_fsm_fsmGetCfg_invalidParams(void);
 
 /**
  * @brief Test: Pmic_fsmSetDevErrCnt() with NULL handle.
  */
-void test_negative_fsm_setDevErrCnt_nullHandle(void);
+void test_neg_fsm_fsmSetDevErrCnt_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetDevErrCnt() with out-of-bounds error count.
  */
-void test_negative_fsm_setDevErrCnt_outOfBounds(void);
+void test_neg_fsm_fsmSetDevErrCnt_outOfBounds(void);
 
 /**
  * @brief Test: Pmic_fsmGetDevErrCnt() with NULL handle.
  */
-void test_negative_fsm_getDevErrCnt_nullHandle(void);
+void test_neg_fsm_fsmGetDevErrCnt_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetDevErrCnt() with NULL error count pointer.
  */
-void test_negative_fsm_getDevErrCnt_nullPointer(void);
+void test_neg_fsm_fsmGetDevErrCnt_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with NULL handle.
  */
-void test_negative_fsm_setWakeupCfg_nullHandle(void);
+void test_neg_fsm_fsmSetWakeupCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_setWakeupCfg_nullPointer(void);
+void test_neg_fsm_fsmSetWakeupCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmGetWakeStatus() with NULL handle.
  */
-void test_negative_fsm_getWakeStatus_nullHandle(void);
+void test_neg_fsm_fsmGetWakeStatus_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetWakeStatus() with NULL status pointer.
  */
-void test_negative_fsm_getWakeStatus_nullPointer(void);
+void test_neg_fsm_fsmGetWakeStatus_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatchCfg() with NULL handle.
  */
-void test_negative_fsm_setPowerLatchCfg_nullHandle(void);
+void test_neg_fsm_fsmSetPowerLatchCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatchCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_setPowerLatchCfg_nullPointer(void);
+void test_neg_fsm_fsmSetPowerLatchCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatch() with NULL handle.
  */
-void test_negative_fsm_getPowerLatch_nullHandle(void);
+void test_neg_fsm_fsmGetPowerLatch_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatch() with NULL latch pointer.
  */
-void test_negative_fsm_getPowerLatch_nullPointer(void);
+void test_neg_fsm_fsmGetPowerLatch_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid vbatStbyEntryThr value.
  */
-void test_negative_fsm_setCfg_invalidVbatStbyEntryThr(void);
+void test_neg_fsm_fsmSetCfg_invalidVbatStbyEntryThr(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid pwdThr value.
  */
-void test_negative_fsm_setCfg_invalidPwdThr(void);
+void test_neg_fsm_fsmSetCfg_invalidPwdThr(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid rstMcuTmo value.
  */
-void test_negative_fsm_setCfg_invalidRstMcuTmo(void);
+void test_neg_fsm_fsmSetCfg_invalidRstMcuTmo(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid nrstExt value.
  */
-void test_negative_fsm_setCfg_invalidNrstExt(void);
+void test_neg_fsm_fsmSetCfg_invalidNrstExt(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid safeTmo value.
  */
-void test_negative_fsm_setCfg_invalidSafeTmo(void);
+void test_neg_fsm_fsmSetCfg_invalidSafeTmo(void);
 
 /**
  * @brief Test: Pmic_fsmSetCfg() with invalid safeLockThr value.
  */
-void test_negative_fsm_setCfg_invalidSafeLockThr(void);
+void test_neg_fsm_fsmSetCfg_invalidSafeLockThr(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with zero validParams.
  */
-void test_negative_fsm_setWakeupCfg_zeroValidParams(void);
+void test_neg_fsm_fsmSetWakeupCfg_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with invalid wake1Event value.
  */
-void test_negative_fsm_setWakeupCfg_invalidWake1Event(void);
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake1Event(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with invalid wake2Event value.
  */
-void test_negative_fsm_setWakeupCfg_invalidWake2Event(void);
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake2Event(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with invalid wake1Dgl value.
  */
-void test_negative_fsm_setWakeupCfg_invalidWake1Dgl(void);
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl(void);
 
 /**
  * @brief Test: Pmic_fsmSetWakeupCfg() with invalid wake2Dgl value.
  */
-void test_negative_fsm_setWakeupCfg_invalidWake2Dgl(void);
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl(void);
 
 /**
  * @brief Test: Pmic_fsmGetWakeupCfg() with NULL handle.
  */
-void test_negative_fsm_getWakeupCfg_nullHandle(void);
+void test_neg_fsm_fsmGetWakeupCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetWakeupCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_getWakeupCfg_nullPointer(void);
+void test_neg_fsm_fsmGetWakeupCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmGetWakeupCfg() with zero validParams.
  */
-void test_negative_fsm_getWakeupCfg_zeroValidParams(void);
+void test_neg_fsm_fsmGetWakeupCfg_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatchCfg() with zero validParams.
  */
-void test_negative_fsm_setPowerLatchCfg_zeroValidParams(void);
+void test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatchCfg() with invalid pwdDly value.
  */
-void test_negative_fsm_setPowerLatchCfg_invalidPwdDly(void);
+void test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatchCfg() with NULL handle.
  */
-void test_negative_fsm_getPowerLatchCfg_nullHandle(void);
+void test_neg_fsm_fsmGetPowerLatchCfg_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatchCfg() with NULL configuration pointer.
  */
-void test_negative_fsm_getPowerLatchCfg_nullPointer(void);
+void test_neg_fsm_fsmGetPowerLatchCfg_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatchCfg() with zero validParams.
  */
-void test_negative_fsm_getPowerLatchCfg_zeroValidParams(void);
+void test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatch() with NULL handle.
  */
-void test_negative_fsm_setPowerLatch_nullHandle(void);
+void test_neg_fsm_fsmSetPowerLatch_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatch() with NULL latch pointer.
  */
-void test_negative_fsm_setPowerLatch_nullPointer(void);
+void test_neg_fsm_fsmSetPowerLatch_nullPointer(void);
 
 /**
  * @brief Test: Pmic_fsmSetPowerLatch() with zero validParams.
  */
-void test_negative_fsm_setPowerLatch_zeroValidParams(void);
+void test_neg_fsm_fsmSetPowerLatch_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmGetPowerLatch() with zero validParams.
  */
-void test_negative_fsm_getPowerLatch_zeroValidParams(void);
+void test_neg_fsm_fsmGetPowerLatch_zeroValidParams(void);
 
 /**
  * @brief Test: Pmic_fsmGetLastResetMcuStateDuration() with NULL handle.
  */
-void test_negative_fsm_getLastResetMcuStateDuration_nullHandle(void);
+void test_neg_fsm_fsmGetLastResetMcuStateDuration_nullHandle(void);
 
 /**
  * @brief Test: Pmic_fsmGetLastResetMcuStateDuration() with NULL duration pointer.
  */
-void test_negative_fsm_getLastResetMcuStateDuration_nullPointer(void);
+void test_neg_fsm_fsmGetLastResetMcuStateDuration_nullPointer(void);
 
 /* ========================================================================== */
 /*                         Unity Framework Functions                          */

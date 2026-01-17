@@ -56,7 +56,7 @@ extern "C" {
  */
 void adc_test(void *args);
 
-void test_negative_adc_maxLoopCntFail(void);
+void test_neg_adc_maxLoopCntFail(void);
 
 #ifdef __cplusplus
 }

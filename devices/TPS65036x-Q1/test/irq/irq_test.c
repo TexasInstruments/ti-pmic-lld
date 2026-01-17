@@ -43,193 +43,220 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
+/* ========================================================================== */
+/*             irqSetMask / irqSetMasks / irqGetMask API Tests                */
+/* ========================================================================== */
+
+/* Positive tests for irqSetMask / irqSetMasks / irqGetMask */
+#define IRQ_TEST_POS_SETGETMASK() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK2_OVP_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK2_UV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK2_OV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK1_OVP_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK1_UV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK1_OV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_LDO_OVP_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_LDO_UV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_LDO_OV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK3_OVP_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK3_UV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK3_OV_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_TWARN_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_B1_PVIN_UVLO_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCKS_VSET_ERR_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ABIST_FAIL_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ABIST_DONE_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_GPO_READBACK_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_NINT_READBACK_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_CONFIG_CRC_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_TRIM_TEST_CRC_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_MCU_COMM_ERR_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_COMM_ADR_ERR_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_COMM_CRC_ERR_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ESM_MCU_RST_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ESM_MCU_FAIL_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ESM_MCU_PIN_INT); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_all)
+
+/* Negative tests for irqSetMask / irqSetMasks / irqGetMask */
+#define IRQ_TEST_NEG_SETGETMASK() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_outOfBounds_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_nullParam_irqMasks); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_outOfBounds_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_nullParam_irqMasks); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_outOfBounds_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_LDO_SC_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_BUCK3_SC_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_BUCK2_SC_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_BUCK1_SC_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_CFG_NVM_VERIFY_ERR_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_CFG_NVM_VERIFY_DONE_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_CFG_NVM_PRG_DONE_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_RECOV_CNT_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_TSD_IMM_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WD_FIRST_NOK_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WAIT_FOR_PWRCYCLE_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WARM_RESET_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_ORD_SHUTDOWN_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_IMM_SHUTDOWN_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WD_RST_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WD_FAIL_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_numMasks_exceeds_max); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_numMasks_exceeds_max)
+
+/* All tests for irqSetMask / irqSetMasks / irqGetMask */
+#define IRQ_TEST_SETGETMASK() \
+    IRQ_TEST_POS_SETGETMASK(); \
+    IRQ_TEST_NEG_SETGETMASK()
+
+/* ========================================================================== */
+/*                      irqGetStatus API Tests                                */
+/* ========================================================================== */
+
+/* Positive tests for irqGetStatus */
+#define IRQ_TEST_POS_GETSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_noFlags); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_singleFlag_L0); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_singleFlag_L1); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_singleFlag_L2); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_multipleFlags_sameReg); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_multipleFlags_diffRegs); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_hierarchyChain); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_intrStatBitMapping); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L1_MISC); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_trigger_L2_ESM); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_full_hierarchy_cascade); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_all_L2_interrupts)
+
+/* Negative tests for irqGetStatus */
+#define IRQ_TEST_NEG_GETSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_irqStat)
+
+/* All tests for irqGetStatus */
+#define IRQ_TEST_GETSTATUS() \
+    IRQ_TEST_POS_GETSTATUS(); \
+    IRQ_TEST_NEG_GETSTATUS()
+
+/* ========================================================================== */
+/*                     irqGetNextFlag API Tests                               */
+/* ========================================================================== */
+
+/* Positive tests for irqGetNextFlag */
+#define IRQ_TEST_POS_GETNEXTFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_singleFlag); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlags); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_clears_intrStat); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_highIndexIRQ); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_emptyIntrStat); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_mixed_L1_L2)
+
+/* Negative tests for irqGetNextFlag */
+#define IRQ_TEST_NEG_GETNEXTFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqNum)
+
+/* All tests for irqGetNextFlag */
+#define IRQ_TEST_GETNEXTFLAG() \
+    IRQ_TEST_POS_GETNEXTFLAG(); \
+    IRQ_TEST_NEG_GETNEXTFLAG()
+
+/* ========================================================================== */
+/*                       irqGetFlag API Tests                                 */
+/* ========================================================================== */
+
+/* Positive tests for irqGetFlag */
+#define IRQ_TEST_POS_GETFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetFlag_flagSet); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetFlag_flagClear)
+
+/* Negative tests for irqGetFlag */
+#define IRQ_TEST_NEG_GETFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_outOfBounds_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_flag)
+
+/* All tests for irqGetFlag */
+#define IRQ_TEST_GETFLAG() \
+    IRQ_TEST_POS_GETFLAG(); \
+    IRQ_TEST_NEG_GETFLAG()
+
+/* ========================================================================== */
+/*                 irqClrFlag / irqClrAllFlags API Tests                      */
+/* ========================================================================== */
+
+/* Positive tests for irqClrFlag / irqClrAllFlags */
+#define IRQ_TEST_POS_CLRFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers)
+
+/* Negative tests for irqClrFlag / irqClrAllFlags */
+#define IRQ_TEST_NEG_CLRFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_outOfBounds_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
+
+/* All tests for irqClrFlag / irqClrAllFlags */
+#define IRQ_TEST_CLRFLAG() \
+    IRQ_TEST_POS_CLRFLAG(); \
+    IRQ_TEST_NEG_CLRFLAG()
+
+/* ========================================================================== */
+/*                       Integration Tests                                    */
+/* ========================================================================== */
+
+/* Integration tests */
+#define IRQ_TEST_INTEGRATION() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqMultipleSimultaneous_allRegisters)
+
+/* ========================================================================== */
+/*                         Aggregate Test Macros                              */
+/* ========================================================================== */
+
+/* Run all positive IRQ tests */
+#define IRQ_TEST_RUN_POSITIVE() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags); \
+    IRQ_TEST_POS_SETGETMASK(); \
+    IRQ_TEST_POS_GETSTATUS(); \
+    IRQ_TEST_POS_GETNEXTFLAG(); \
+    IRQ_TEST_POS_GETFLAG(); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers); \
+    IRQ_TEST_INTEGRATION()
+
+/* Run all negative IRQ tests */
+#define IRQ_TEST_RUN_NEGATIVE() \
+    IRQ_TEST_NEG_SETGETMASK(); \
+    IRQ_TEST_NEG_GETSTATUS(); \
+    IRQ_TEST_NEG_GETNEXTFLAG(); \
+    IRQ_TEST_NEG_GETFLAG(); \
+    IRQ_TEST_NEG_CLRFLAG()
+
 /* Run all IRQ tests */
-#define IRQ_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMask_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMask_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_nullParam_irqMasks); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_irqMasks); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_irqStat); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqStat); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_flag); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqClrFlag_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqClrFlag_outOfBounds_irqNum); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqClrAllFlags_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_LDO_SC_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK3_SC_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK2_SC_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK1_SC_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_VERIFY_ERR_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_VERIFY_DONE_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_PRG_DONE_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_RECOV_CNT_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_TSD_IMM_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_FIRST_NOK_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WAIT_FOR_PWRCYCLE_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WARM_RESET_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_ORD_SHUTDOWN_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_IMM_SHUTDOWN_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_RST_NMI); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_FAIL_NMI); \
-                           PLATFORM_RUN_TEST(test_positive_irqClrAllFlags); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_OVP_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_UV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_OV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_OVP_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_UV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_OV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_OVP_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_UV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_OV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_OVP_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_UV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_OV_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_TWARN_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_B1_PVIN_UVLO_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCKS_VSET_ERR_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ABIST_FAIL_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ABIST_DONE_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_GPO_READBACK_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_NINT_READBACK_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_CONFIG_CRC_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_TRIM_TEST_CRC_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_MCU_COMM_ERR_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_COMM_ADR_ERR_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_COMM_CRC_ERR_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_RST_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_FAIL_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_PIN_INT); \
-                           PLATFORM_RUN_TEST(test_positive_irqSetGetMask_all); \
-                           PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_noFlags); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L0); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L1); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L2); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_sameReg); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_diffRegs); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_hierarchyChain); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_intrStatBitMapping); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_singleFlag); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_multipleFlags); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_clears_intrStat); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_highIndexIRQ); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_emptyIntrStat); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_mixed_L1_L2); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagSet); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagClear); \
-                           PLATFORM_RUN_TEST(test_positive_irqClrFlag_singleFlag); \
-                           PLATFORM_RUN_TEST(test_positive_irqClrFlag_preserveOthers); \
-                           PLATFORM_RUN_TEST(test_positive_irqFullCycle_setMask_getStatus_iterate_clear); \
-                           PLATFORM_RUN_TEST(test_positive_irqMultipleSimultaneous_allRegisters); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_numMasks_exceeds_max); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_numMasks_exceeds_max); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_BUCK_LDO); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_BUCK1_2); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_BUCK3_LDO); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_MISC); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_MODERATE_ERR); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_SEVERE_ERR); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L1_FSM_ERR); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_WD_ERR_STATUS); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_COMM_ERR); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_trigger_L2_ESM); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_full_hierarchy_cascade); \
-                           PLATFORM_RUN_TEST(test_positive_irqGetStatus_all_L2_interrupts)
-
-/* Run all IRQ negative tests */
-#define IRQ_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMask_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMask_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_nullParam_irqMasks); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqSetMasks_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_nullParam_irqMasks); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetMask_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetStatus_nullParam_irqStat); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqStat); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetNextFlag_nullParam_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqGetFlag_nullParam_flag); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqClrFlag_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqClrFlag_outOfBounds_irqNum); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_irqClrAllFlags_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_LDO_SC_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK3_SC_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK2_SC_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_BUCK1_SC_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_VERIFY_ERR_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_VERIFY_DONE_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_CFG_NVM_PRG_DONE_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_RECOV_CNT_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_TSD_IMM_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_FIRST_NOK_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WAIT_FOR_PWRCYCLE_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WARM_RESET_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_ORD_SHUTDOWN_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_IMM_SHUTDOWN_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_RST_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_FAIL_NMI); \
-                                PLATFORM_RUN_TEST(test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI)
-
-// Run all IRQ positive tests
-#define IRQ_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_irqClrAllFlags); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_OVP_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_UV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK2_OV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_OVP_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_UV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK1_OV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_OVP_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_UV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_LDO_OV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_OVP_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_UV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCK3_OV_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_TWARN_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_B1_PVIN_UVLO_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_BUCKS_VSET_ERR_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ABIST_FAIL_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ABIST_DONE_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_GPO_READBACK_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_NINT_READBACK_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_CONFIG_CRC_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_TRIM_TEST_CRC_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_MCU_COMM_ERR_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_COMM_ADR_ERR_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_COMM_CRC_ERR_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_RST_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_FAIL_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_ESM_MCU_PIN_INT); \
-                                PLATFORM_RUN_TEST(test_positive_irqSetGetMask_all); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_noFlags); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L0); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L1); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_singleFlag_L2); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_sameReg); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_multipleFlags_diffRegs); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_hierarchyChain); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetStatus_intrStatBitMapping); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_singleFlag); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_multipleFlags); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_clears_intrStat); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_highIndexIRQ); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_emptyIntrStat); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetNextFlag_mixed_L1_L2); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagSet); \
-                                PLATFORM_RUN_TEST(test_positive_irqGetFlag_flagClear); \
-                                PLATFORM_RUN_TEST(test_positive_irqClrFlag_singleFlag); \
-                                PLATFORM_RUN_TEST(test_positive_irqClrFlag_preserveOthers); \
-                                PLATFORM_RUN_TEST(test_positive_irqFullCycle_setMask_getStatus_iterate_clear); \
-                                PLATFORM_RUN_TEST(test_positive_irqMultipleSimultaneous_allRegisters)
+#define IRQ_TEST_RUN_ALL() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags); \
+    IRQ_TEST_SETGETMASK(); \
+    IRQ_TEST_GETSTATUS(); \
+    IRQ_TEST_GETNEXTFLAG(); \
+    IRQ_TEST_GETFLAG(); \
+    IRQ_TEST_NEG_CLRFLAG(); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers); \
+    IRQ_TEST_INTEGRATION()
 
 
 
@@ -279,7 +306,7 @@ void irq_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
         platform_setupTests();
         IRQ_TEST_RUN_ALL();
@@ -295,21 +322,21 @@ void irq_test(void *args)
     platform_deinit();
 }
 
-void test_negative_Pmic_irqSetMask_nullParam_handle(void)
+void test_neg_irq_irqSetMask_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_irqSetMask()
     int32_t status = Pmic_irqSetMask(NULL, PMIC_BUCK2_OVP_INT, PMIC_IRQ_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqSetMask_outOfBounds_irqNum(void)
+void test_neg_irq_irqSetMask_outOfBounds_irqNum(void)
 {
     // Pass out of bounds irqNum into Pmic_irqSetMask()
     int32_t status = Pmic_irqSetMask(&pmicHandle, PMIC_IRQ_MAX + 1U, PMIC_IRQ_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqSetMasks_nullParam_handle(void)
+void test_neg_irq_irqSetMasks_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_irqSetMasks()
     Pmic_IrqMask_t irqMasks[2U] = {
@@ -320,14 +347,14 @@ void test_negative_Pmic_irqSetMasks_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqSetMasks_nullParam_irqMasks(void)
+void test_neg_irq_irqSetMasks_nullParam_irqMasks(void)
 {
     // Pass NULL irqMasks into Pmic_irqSetMasks()
     int32_t status = Pmic_irqSetMasks(&pmicHandle, 2U, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqSetMasks_outOfBounds_irqNum(void)
+void test_neg_irq_irqSetMasks_outOfBounds_irqNum(void)
 {
     // Pass out of bounds irqNum into Pmic_irqSetMasks()
     Pmic_IrqMask_t irqMasks[2U] = {
@@ -338,7 +365,7 @@ void test_negative_Pmic_irqSetMasks_outOfBounds_irqNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqGetMask_nullParam_handle(void)
+void test_neg_irq_irqGetMask_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_irqGetMask()
     Pmic_IrqMask_t irqMasks[2U] = {
@@ -349,14 +376,14 @@ void test_negative_Pmic_irqGetMask_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetMask_nullParam_irqMasks(void)
+void test_neg_irq_irqGetMask_nullParam_irqMasks(void)
 {
     // Pass NULL irqMasks into Pmic_irqGetMask()
     int32_t status = Pmic_irqGetMask(&pmicHandle, 2U, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetMask_outOfBounds_irqNum(void)
+void test_neg_irq_irqGetMask_outOfBounds_irqNum(void)
 {
     // Pass out of bounds irqNum into Pmic_irqGetMask()
     Pmic_IrqMask_t irqMasks[2U] = {
@@ -367,7 +394,7 @@ void test_negative_Pmic_irqGetMask_outOfBounds_irqNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqGetStatus_nullParam_pmicHandle(void)
+void test_neg_irq_irqGetStatus_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_irqGetStatus()
     Pmic_IrqStat_t irqStat = {0U};
@@ -375,14 +402,14 @@ void test_negative_Pmic_irqGetStatus_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetStatus_nullParam_irqStat(void)
+void test_neg_irq_irqGetStatus_nullParam_irqStat(void)
 {
     // Pass NULL irqStat into Pmic_irqGetStatus()
     int32_t status = Pmic_irqGetStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetNextFlag_nullParam_irqStat(void)
+void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void)
 {
     // Pass NULL irqStat into Pmic_irqGetNextFlag()
     uint8_t irqNum = 0U;
@@ -390,7 +417,7 @@ void test_negative_Pmic_irqGetNextFlag_nullParam_irqStat(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetNextFlag_nullParam_irqNum(void)
+void test_neg_irq_irqGetNextFlag_nullParam_irqNum(void)
 {
     // Pass NULL irqNum into Pmic_irqGetNextFlag()
     Pmic_IrqStat_t irqStat = {0U};
@@ -398,7 +425,7 @@ void test_negative_Pmic_irqGetNextFlag_nullParam_irqNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetFlag_nullParam_pmicHandle(void)
+void test_neg_irq_irqGetFlag_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_irqGetFlag()
     bool flag = (bool)false;
@@ -406,7 +433,7 @@ void test_negative_Pmic_irqGetFlag_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqGetFlag_outOfBounds_irqNum(void)
+void test_neg_irq_irqGetFlag_outOfBounds_irqNum(void)
 {
     // Pass out of bounds irqNum into Pmic_irqGetFlag()
     bool flag = (bool)false;
@@ -414,28 +441,28 @@ void test_negative_Pmic_irqGetFlag_outOfBounds_irqNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqGetFlag_nullParam_flag(void)
+void test_neg_irq_irqGetFlag_nullParam_flag(void)
 {
     // Pass NULL flag into Pmic_irqGetFlag()
     int32_t status = Pmic_irqGetFlag(&pmicHandle, PMIC_BUCK2_OVP_INT, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqClrFlag_nullParam_pmicHandle(void)
+void test_neg_irq_irqClrFlag_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_irqClrFlag()
     int32_t status = Pmic_irqClrFlag(NULL, PMIC_BUCK2_OVP_INT);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_irqClrFlag_outOfBounds_irqNum(void)
+void test_neg_irq_irqClrFlag_outOfBounds_irqNum(void)
 {
     // Pass out of bounds irqNum into Pmic_irqClrFlag()
     int32_t status = Pmic_irqClrFlag(&pmicHandle, PMIC_IRQ_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_irqClrAllFlags_nullParam_handle(void)
+void test_neg_irq_irqClrAllFlags_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_irqClrAllFlags()
     int32_t status = Pmic_irqClrAllFlags(NULL);
@@ -461,110 +488,110 @@ static void irqTest_setGetMaskError(uint8_t irqNum)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
 
-void test_negative_irqSetGetMask_LDO_SC_NMI(void)
+void test_neg_irq_irqSetGetMask_LDO_SC_NMI(void)
 {
     // Pass LDO_SC_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_LDO_SC_NMI);
 }
 
-void test_negative_irqSetGetMask_BUCK3_SC_NMI(void)
+void test_neg_irq_irqSetGetMask_BUCK3_SC_NMI(void)
 {
     // Pass BUCK3_SC_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_BUCK3_SC_NMI);
 }
 
-void test_negative_irqSetGetMask_BUCK2_SC_NMI(void)
+void test_neg_irq_irqSetGetMask_BUCK2_SC_NMI(void)
 {
     // Pass BUCK2_SC_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_BUCK2_SC_NMI);
 }
 
-void test_negative_irqSetGetMask_BUCK1_SC_NMI(void)
+void test_neg_irq_irqSetGetMask_BUCK1_SC_NMI(void)
 {
     // Pass BUCK1_SC_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_BUCK1_SC_NMI);
 }
 
-void test_negative_irqSetGetMask_CFG_NVM_VERIFY_ERR_NMI(void)
+void test_neg_irq_irqSetGetMask_CFG_NVM_VERIFY_ERR_NMI(void)
 {
     // Pass CFG_NVM_VERIFY_ERR_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_CFG_NVM_VERIFY_ERR_NMI);
 }
 
-void test_negative_irqSetGetMask_CFG_NVM_VERIFY_DONE_NMI(void)
+void test_neg_irq_irqSetGetMask_CFG_NVM_VERIFY_DONE_NMI(void)
 {
     // Pass CFG_NVM_VERIFY_DONE_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_CFG_NVM_VERIFY_DONE_NMI);
 }
 
-void test_negative_irqSetGetMask_CFG_NVM_PRG_DONE_NMI(void)
+void test_neg_irq_irqSetGetMask_CFG_NVM_PRG_DONE_NMI(void)
 {
     // Pass CFG_NVM_PRG_DONE_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_CFG_NVM_PRG_DONE_NMI);
 }
 
-void test_negative_irqSetGetMask_RECOV_CNT_NMI(void)
+void test_neg_irq_irqSetGetMask_RECOV_CNT_NMI(void)
 {
     // Pass RECOV_CNT_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_RECOV_CNT_NMI);
 }
 
-void test_negative_irqSetGetMask_TSD_IMM_NMI(void)
+void test_neg_irq_irqSetGetMask_TSD_IMM_NMI(void)
 {
     // Pass TSD_IMM_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_TSD_IMM_NMI);
 }
 
-void test_negative_irqSetGetMask_WD_FIRST_NOK_NMI(void)
+void test_neg_irq_irqSetGetMask_WD_FIRST_NOK_NMI(void)
 {
     // Pass WD_FIRST_NOK_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WD_FIRST_NOK_NMI);
 }
 
-void test_negative_irqSetGetMask_WAIT_FOR_PWRCYCLE_NMI(void)
+void test_neg_irq_irqSetGetMask_WAIT_FOR_PWRCYCLE_NMI(void)
 {
     // Pass WAIT_FOR_PWRCYCLE_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WAIT_FOR_PWRCYCLE_NMI);
 }
 
-void test_negative_irqSetGetMask_WARM_RESET_NMI(void)
+void test_neg_irq_irqSetGetMask_WARM_RESET_NMI(void)
 {
     // Pass WARM_RESET_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WARM_RESET_NMI);
 }
 
-void test_negative_irqSetGetMask_ORD_SHUTDOWN_NMI(void)
+void test_neg_irq_irqSetGetMask_ORD_SHUTDOWN_NMI(void)
 {
     // Pass ORD_SHUTDOWN_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_ORD_SHUTDOWN_NMI);
 }
 
-void test_negative_irqSetGetMask_IMM_SHUTDOWN_NMI(void)
+void test_neg_irq_irqSetGetMask_IMM_SHUTDOWN_NMI(void)
 {
     // Pass IMM_SHUTDOWN_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_IMM_SHUTDOWN_NMI);
 }
 
-void test_negative_irqSetGetMask_WD_RST_NMI(void)
+void test_neg_irq_irqSetGetMask_WD_RST_NMI(void)
 {
     // Pass WD_RST_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WD_RST_NMI);
 }
 
-void test_negative_irqSetGetMask_WD_FAIL_NMI(void)
+void test_neg_irq_irqSetGetMask_WD_FAIL_NMI(void)
 {
     // Pass WD_FAIL_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WD_FAIL_NMI);
 }
 
-void test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI(void)
+void test_neg_irq_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI(void)
 {
     // Pass WD_LONGWIN_TIMEOUT_NMI into Pmic_irq{Set,Get}Mask
     irqTest_setGetMaskError(PMIC_WD_LONGWIN_TIMEOUT_NMI);
 }
 
 // NOTE: Since WDG is not being serviced, WD_FIRST_NOK_INT flag will remain set
-void test_positive_irqClrAllFlags(void)
+void test_pos_irq_irqClrAllFlags(void)
 {
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -608,7 +635,7 @@ static int32_t irqTest_setGetMask(uint8_t irqNum, bool shouldMask)
     return status;
 }
 
-void test_positive_irqSetGetMask_BUCK2_OVP_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK2_OVP_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK2_OVP_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -617,7 +644,7 @@ void test_positive_irqSetGetMask_BUCK2_OVP_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK2_UV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK2_UV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK2_UV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -626,7 +653,7 @@ void test_positive_irqSetGetMask_BUCK2_UV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK2_OV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK2_OV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK2_OV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -635,7 +662,7 @@ void test_positive_irqSetGetMask_BUCK2_OV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK1_OVP_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK1_OVP_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK1_OVP_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -644,7 +671,7 @@ void test_positive_irqSetGetMask_BUCK1_OVP_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK1_UV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK1_UV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK1_UV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -653,7 +680,7 @@ void test_positive_irqSetGetMask_BUCK1_UV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK1_OV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK1_OV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK1_OV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -662,7 +689,7 @@ void test_positive_irqSetGetMask_BUCK1_OV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_LDO_OVP_INT(void)
+void test_pos_irq_irqSetGetMask_LDO_OVP_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_LDO_OVP_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -671,7 +698,7 @@ void test_positive_irqSetGetMask_LDO_OVP_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_LDO_UV_INT(void)
+void test_pos_irq_irqSetGetMask_LDO_UV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_LDO_UV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -680,7 +707,7 @@ void test_positive_irqSetGetMask_LDO_UV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_LDO_OV_INT(void)
+void test_pos_irq_irqSetGetMask_LDO_OV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_LDO_OV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -689,7 +716,7 @@ void test_positive_irqSetGetMask_LDO_OV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK3_OVP_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK3_OVP_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK3_OVP_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -698,7 +725,7 @@ void test_positive_irqSetGetMask_BUCK3_OVP_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK3_UV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK3_UV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK3_UV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -707,7 +734,7 @@ void test_positive_irqSetGetMask_BUCK3_UV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCK3_OV_INT(void)
+void test_pos_irq_irqSetGetMask_BUCK3_OV_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCK3_OV_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -716,7 +743,7 @@ void test_positive_irqSetGetMask_BUCK3_OV_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_TWARN_INT(void)
+void test_pos_irq_irqSetGetMask_TWARN_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_TWARN_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -725,7 +752,7 @@ void test_positive_irqSetGetMask_TWARN_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_B1_PVIN_UVLO_INT(void)
+void test_pos_irq_irqSetGetMask_B1_PVIN_UVLO_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_B1_PVIN_UVLO_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -734,7 +761,7 @@ void test_positive_irqSetGetMask_B1_PVIN_UVLO_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_BUCKS_VSET_ERR_INT(void)
+void test_pos_irq_irqSetGetMask_BUCKS_VSET_ERR_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_BUCKS_VSET_ERR_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -743,7 +770,7 @@ void test_positive_irqSetGetMask_BUCKS_VSET_ERR_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_ABIST_FAIL_INT(void)
+void test_pos_irq_irqSetGetMask_ABIST_FAIL_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_ABIST_FAIL_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -752,7 +779,7 @@ void test_positive_irqSetGetMask_ABIST_FAIL_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_ABIST_DONE_INT(void)
+void test_pos_irq_irqSetGetMask_ABIST_DONE_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_ABIST_DONE_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -761,7 +788,7 @@ void test_positive_irqSetGetMask_ABIST_DONE_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_GPO_READBACK_INT(void)
+void test_pos_irq_irqSetGetMask_GPO_READBACK_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_GPO_READBACK_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -770,7 +797,7 @@ void test_positive_irqSetGetMask_GPO_READBACK_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_NINT_READBACK_INT(void)
+void test_pos_irq_irqSetGetMask_NINT_READBACK_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_NINT_READBACK_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -779,7 +806,7 @@ void test_positive_irqSetGetMask_NINT_READBACK_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_CONFIG_CRC_INT(void)
+void test_pos_irq_irqSetGetMask_CONFIG_CRC_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_CONFIG_CRC_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -788,7 +815,7 @@ void test_positive_irqSetGetMask_CONFIG_CRC_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_TRIM_TEST_CRC_INT(void)
+void test_pos_irq_irqSetGetMask_TRIM_TEST_CRC_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_TRIM_TEST_CRC_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -797,7 +824,7 @@ void test_positive_irqSetGetMask_TRIM_TEST_CRC_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_MCU_COMM_ERR_INT(void)
+void test_pos_irq_irqSetGetMask_MCU_COMM_ERR_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_MCU_COMM_ERR_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -806,7 +833,7 @@ void test_positive_irqSetGetMask_MCU_COMM_ERR_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_COMM_ADR_ERR_INT(void)
+void test_pos_irq_irqSetGetMask_COMM_ADR_ERR_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_COMM_ADR_ERR_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -815,7 +842,7 @@ void test_positive_irqSetGetMask_COMM_ADR_ERR_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_COMM_CRC_ERR_INT(void)
+void test_pos_irq_irqSetGetMask_COMM_CRC_ERR_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_COMM_CRC_ERR_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -824,7 +851,7 @@ void test_positive_irqSetGetMask_COMM_CRC_ERR_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_ESM_MCU_RST_INT(void)
+void test_pos_irq_irqSetGetMask_ESM_MCU_RST_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_ESM_MCU_RST_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -833,7 +860,7 @@ void test_positive_irqSetGetMask_ESM_MCU_RST_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_ESM_MCU_FAIL_INT(void)
+void test_pos_irq_irqSetGetMask_ESM_MCU_FAIL_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_ESM_MCU_FAIL_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -842,7 +869,7 @@ void test_positive_irqSetGetMask_ESM_MCU_FAIL_INT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqSetGetMask_ESM_MCU_PIN_INT(void)
+void test_pos_irq_irqSetGetMask_ESM_MCU_PIN_INT(void)
 {
     int32_t status = irqTest_setGetMask(PMIC_ESM_MCU_PIN_INT, PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -924,7 +951,7 @@ static int32_t irqTest_setGetMaskAll(bool shouldMask)
     return status;
 }
 
-void test_positive_irqSetGetMask_all(void)
+void test_pos_irq_irqSetGetMask_all(void)
 {
     int32_t status = irqTest_setGetMaskAll(PMIC_IRQ_UNMASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -937,7 +964,7 @@ void test_positive_irqSetGetMask_all(void)
 /*                       Status Reading and Flag Iteration Tests             */
 /* ========================================================================== */
 
-void test_positive_irqGetStatus_noFlags(void)
+void test_pos_irq_irqGetStatus_noFlags(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -956,7 +983,7 @@ void test_positive_irqGetStatus_noFlags(void)
     PLATFORM_ASSERT(irqStat.intrStat[1] == 0U);
 }
 
-void test_positive_irqGetStatus_singleFlag_L0(void)
+void test_pos_irq_irqGetStatus_singleFlag_L0(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -975,7 +1002,7 @@ void test_positive_irqGetStatus_singleFlag_L0(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_singleFlag_L1(void)
+void test_pos_irq_irqGetStatus_singleFlag_L1(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -992,7 +1019,7 @@ void test_positive_irqGetStatus_singleFlag_L1(void)
     // intrStat[0] holds IRQs 0-31, intrStat[1] holds IRQs 32-43
 }
 
-void test_positive_irqGetStatus_singleFlag_L2(void)
+void test_pos_irq_irqGetStatus_singleFlag_L2(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1009,7 +1036,7 @@ void test_positive_irqGetStatus_singleFlag_L2(void)
     PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1U << 30U)));
 }
 
-void test_positive_irqGetStatus_multipleFlags_sameReg(void)
+void test_pos_irq_irqGetStatus_multipleFlags_sameReg(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1026,7 +1053,7 @@ void test_positive_irqGetStatus_multipleFlags_sameReg(void)
     // Both BUCK2_OVP_INT (4) and BUCK2_UV_INT (5) in same register
 }
 
-void test_positive_irqGetStatus_multipleFlags_diffRegs(void)
+void test_pos_irq_irqGetStatus_multipleFlags_diffRegs(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1043,7 +1070,7 @@ void test_positive_irqGetStatus_multipleFlags_diffRegs(void)
     // IRQs 0-31 in intrStat[0], IRQs 32-43 in intrStat[1]
 }
 
-void test_positive_irqGetStatus_hierarchyChain(void)
+void test_pos_irq_irqGetStatus_hierarchyChain(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1060,7 +1087,7 @@ void test_positive_irqGetStatus_hierarchyChain(void)
     // L0: INT_TOP register, L1: MISC_INT register, L2: COMM_ERR register
 }
 
-void test_positive_irqGetStatus_intrStatBitMapping(void)
+void test_pos_irq_irqGetStatus_intrStatBitMapping(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1079,7 +1106,7 @@ void test_positive_irqGetStatus_intrStatBitMapping(void)
     // PMIC_COMM_CRC_ERR_INT is IRQ 37, should be in intrStat[1] bit 5
 }
 
-void test_positive_irqGetNextFlag_singleFlag(void)
+void test_pos_irq_irqGetNextFlag_singleFlag(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1099,7 +1126,7 @@ void test_positive_irqGetNextFlag_singleFlag(void)
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_WARN_NO_IRQ_REMAINING));
 }
 
-void test_positive_irqGetNextFlag_multipleFlags(void)
+void test_pos_irq_irqGetNextFlag_multipleFlags(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1130,7 +1157,7 @@ void test_positive_irqGetNextFlag_multipleFlags(void)
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 }
 
-void test_positive_irqGetNextFlag_clears_intrStat(void)
+void test_pos_irq_irqGetNextFlag_clears_intrStat(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1159,7 +1186,7 @@ void test_positive_irqGetNextFlag_clears_intrStat(void)
     }
 }
 
-void test_positive_irqGetNextFlag_highIndexIRQ(void)
+void test_pos_irq_irqGetNextFlag_highIndexIRQ(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1178,7 +1205,7 @@ void test_positive_irqGetNextFlag_highIndexIRQ(void)
     PLATFORM_ASSERT(irqStat.intrStat[1] == 0U);
 }
 
-void test_positive_irqGetNextFlag_emptyIntrStat(void)
+void test_pos_irq_irqGetNextFlag_emptyIntrStat(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1193,7 +1220,7 @@ void test_positive_irqGetNextFlag_emptyIntrStat(void)
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 }
 
-void test_positive_irqGetNextFlag_mixed_L1_L2(void)
+void test_pos_irq_irqGetNextFlag_mixed_L1_L2(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1222,7 +1249,7 @@ void test_positive_irqGetNextFlag_mixed_L1_L2(void)
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 }
 
-void test_positive_irqGetFlag_flagSet(void)
+void test_pos_irq_irqGetFlag_flagSet(void)
 {
     bool flag = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1234,7 +1261,7 @@ void test_positive_irqGetFlag_flagSet(void)
     // Flag can be either true or false, just verify API works
 }
 
-void test_positive_irqGetFlag_flagClear(void)
+void test_pos_irq_irqGetFlag_flagClear(void)
 {
     bool flag = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1250,7 +1277,7 @@ void test_positive_irqGetFlag_flagClear(void)
     // After clearing, flag should be false (or WD_FIRST_NOK_INT may be set)
 }
 
-void test_positive_irqClrFlag_singleFlag(void)
+void test_pos_irq_irqClrFlag_singleFlag(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1259,7 +1286,7 @@ void test_positive_irqClrFlag_singleFlag(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqClrFlag_preserveOthers(void)
+void test_pos_irq_irqClrFlag_preserveOthers(void)
 {
     bool flag1 = (bool)false;
     bool flag2 = (bool)false;
@@ -1285,7 +1312,7 @@ void test_positive_irqClrFlag_preserveOthers(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqFullCycle_setMask_getStatus_iterate_clear(void)
+void test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1325,7 +1352,7 @@ void test_positive_irqFullCycle_setMask_getStatus_iterate_clear(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqMultipleSimultaneous_allRegisters(void)
+void test_pos_irq_irqMultipleSimultaneous_allRegisters(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1365,7 +1392,7 @@ void test_positive_irqMultipleSimultaneous_allRegisters(void)
 /*                   Edge Case and L2 Hierarchy Tests                        */
 /* ========================================================================== */
 
-void test_negative_Pmic_irqSetMasks_numMasks_exceeds_max(void)
+void test_neg_irq_irqSetMasks_numMasks_exceeds_max(void)
 {
     // Test edge case: numMasks > PMIC_IRQ_MAX (should still work, but covered for edge case)
     const uint8_t numMasks = PMIC_IRQ_MAX + 5U;
@@ -1382,7 +1409,7 @@ void test_negative_Pmic_irqSetMasks_numMasks_exceeds_max(void)
     // Status depends on implementation - may succeed or fail
 }
 
-void test_negative_Pmic_irqGetMask_numMasks_exceeds_max(void)
+void test_neg_irq_irqGetMask_numMasks_exceeds_max(void)
 {
     // Test edge case: numIrqMasks > PMIC_IRQ_MAX
     const uint8_t numMasks = PMIC_IRQ_MAX + 5U;
@@ -1398,7 +1425,7 @@ void test_negative_Pmic_irqGetMask_numMasks_exceeds_max(void)
     // Status depends on implementation - may succeed or fail
 }
 
-void test_positive_irqGetStatus_trigger_L1_BUCK_LDO(void)
+void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1422,7 +1449,7 @@ void test_positive_irqGetStatus_trigger_L1_BUCK_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L2_BUCK1_2(void)
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1451,7 +1478,7 @@ void test_positive_irqGetStatus_trigger_L2_BUCK1_2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO(void)
+void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1480,7 +1507,7 @@ void test_positive_irqGetStatus_trigger_L2_BUCK3_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L1_MISC(void)
+void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1504,7 +1531,7 @@ void test_positive_irqGetStatus_trigger_L1_MISC(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L1_MODERATE_ERR(void)
+void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1528,7 +1555,7 @@ void test_positive_irqGetStatus_trigger_L1_MODERATE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L1_SEVERE_ERR(void)
+void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1552,7 +1579,7 @@ void test_positive_irqGetStatus_trigger_L1_SEVERE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L1_FSM_ERR(void)
+void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1576,7 +1603,7 @@ void test_positive_irqGetStatus_trigger_L1_FSM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
+void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1605,7 +1632,7 @@ void test_positive_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L2_COMM_ERR(void)
+void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1634,7 +1661,7 @@ void test_positive_irqGetStatus_trigger_L2_COMM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_trigger_L2_ESM(void)
+void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
@@ -1663,7 +1690,7 @@ void test_positive_irqGetStatus_trigger_L2_ESM(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_irqGetStatus_full_hierarchy_cascade(void)
+void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;
@@ -1712,7 +1739,7 @@ void test_positive_irqGetStatus_full_hierarchy_cascade(void)
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 }
 
-void test_positive_irqGetStatus_all_L2_interrupts(void)
+void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
 {
     Pmic_IrqStat_t irqStat = {0U};
     uint8_t irqNum = 0U;

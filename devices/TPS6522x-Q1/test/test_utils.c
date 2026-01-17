@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -36,7 +36,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "test_common.h"
+#include "test_utils.h"
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -55,23 +55,19 @@
 /*                           Function Definitions                             */
 /* ========================================================================== */
 
-void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle)
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
 {
     char msg[50U] = {0};
 
+    // TPS6522x doesn't have isA0 field, use devSiRev only
     if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFIER_MASK) != 0U)
     {
-        (void)sprintf(msg, "PMIC device is B1\r\n\r\n");
-        platform_printString(msg);
-    }
-    else if (pmicHandle->isA0)
-    {
-        (void)sprintf(msg, "PMIC device is A0\r\n\r\n");
+        (void)sprintf(msg, "PMIC device is PG2 (B1)\r\n\r\n");
         platform_printString(msg);
     }
     else
     {
-        (void)sprintf(msg, "PMIC device is B0\r\n\r\n");
+        (void)sprintf(msg, "PMIC device is PG1 (A0 or B0)\r\n\r\n");
         platform_printString(msg);
     }
 }

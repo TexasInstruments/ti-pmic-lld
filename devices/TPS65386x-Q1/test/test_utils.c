@@ -30,51 +30,53 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef FSM_TEST_H
-#define FSM_TEST_H
-
 
 
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "platform.h"
+#include "test_utils.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* ========================================================================= */
+/*                             Macros & Typedefs                             */
+/* ========================================================================= */
+
+#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
+#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
+#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
+#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
+#define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
+
+// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
+#define DEVICE_PG_IDENTIFIER_MASK (1U << 3U)
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                           Function Definitions                             */
 /* ========================================================================== */
 
-void fsm_test(void *args);
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
+{
+    char msg[50U] = {0};
 
-void test_neg_fsm_fsmClrRecovCnt_nullHandle(void);
-void test_neg_fsm_fsmClrResetCnt_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCnt_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCnt_nullRecovCnt(void);
-void test_neg_fsm_fsmGetRecovCntThr_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr(void);
-void test_neg_fsm_fsmGetResetCnt_nullHandle(void);
-void test_neg_fsm_fsmGetResetCnt_nullResetCnt(void);
-void test_neg_fsm_fsmGetResetCntThr_nullHandle(void);
-void test_neg_fsm_fsmGetResetCntThr_nullResetCntThr(void);
-void test_neg_fsm_fsmSetDevState_invalidCmd(void);
-void test_neg_fsm_fsmSetDevState_nullHandle(void);
-void test_neg_fsm_fsmSetRecovCntThr_nullHandle(void);
-void test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr(void);
-void test_neg_fsm_fsmSetResetCntThr_nullHandle(void);
-void test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr(void);
-void test_pos_fsm_fsmSetDevState_coldBootReq(void);
-void test_pos_fsm_fsmSetDevState_offReq(void);
-void test_pos_fsm_fsmSetDevState_safeRecovReq(void);
-void test_pos_fsm_fsmSetDevState_warmResetReq(void);
-void test_pos_fsm_setGetRecovCntThr(void);
-void test_pos_fsm_setGetResetCntThr(void);
-
-#ifdef __cplusplus
+    // TPS65386x doesn't have isA0 field, use devSiRev only
+    if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFIER_MASK) != 0U)
+    {
+        (void)sprintf(msg, "PMIC device is PG2 (B1)\r\n\r\n");
+        platform_printString(msg);
+    }
+    else
+    {
+        (void)sprintf(msg, "PMIC device is PG1 (A0 or B0)\r\n\r\n");
+        platform_printString(msg);
+    }
 }
-#endif /* __cplusplus */
-#endif /*__FSM_TEST_H__*/
+
+void platform_unlockRegisters(void)
+{
+    #ifndef BUILD_MOCK
+    // Hardware: Device-specific unlock sequence for TPS65386x-Q1
+    // NOTE: Register unlock not needed for mock testing; implement for hardware tests
+    #endif
+    // Mock: No-op (mock doesn't enforce register locking)
+}

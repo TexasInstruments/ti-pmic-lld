@@ -49,6 +49,237 @@ static Pmic_Handle_t g_handle;
 static uint32_t dummyCommHandle = 0x12345678U;
 
 /* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmSetDevState/fsmGetDevState     */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_validStates)
+
+#define FSM_TEST_NEG_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidState); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidStateBoundary)
+
+#define FSM_TEST_FSMSETDEVSTATE() \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
+    FSM_TEST_NEG_FSMSETDEVSTATE()
+
+#define FSM_TEST_POS_FSMGETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_validRange); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_validRead); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_initStateMapping); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_offStateRepeated); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_initState); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_offState)
+
+#define FSM_TEST_NEG_FSMGETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullPointer)
+
+#define FSM_TEST_FSMGETDEVSTATE() \
+    FSM_TEST_POS_FSMGETDEVSTATE(); \
+    FSM_TEST_NEG_FSMGETDEVSTATE()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - fsmSetCfg/fsmGetCfg             */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_stbyEn); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_autoBistEn); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_nrstActiveInStbySeq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_pwdThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_nrstExt); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_rstMcuTmo); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_safeTmo); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_safeLockThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_vbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_multiple); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr)
+
+#define FSM_TEST_NEG_FSMSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidVbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidPwdThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidRstMcuTmo); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidNrstExt); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeTmo); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeLockThr)
+
+#define FSM_TEST_FSMSETCFG() \
+    FSM_TEST_POS_FSMSETCFG(); \
+    FSM_TEST_NEG_FSMSETCFG()
+
+#define FSM_TEST_POS_FSMGETCFG() \
+    /* Positive tests for fsmGetCfg are combined with fsmSetCfg tests */ \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_vbatStbyEntryThr)
+
+#define FSM_TEST_NEG_FSMGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_invalidParams)
+
+#define FSM_TEST_FSMGETCFG() \
+    FSM_TEST_POS_FSMGETCFG(); \
+    FSM_TEST_NEG_FSMGETCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - fsmSetDevErrCnt/fsmGetDevErrCnt       */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETDEVERRCNT() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevErrCnt_basic)
+
+#define FSM_TEST_NEG_FSMSETDEVERRCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_outOfBounds)
+
+#define FSM_TEST_FSMSETDEVERRCNT() \
+    FSM_TEST_POS_FSMSETDEVERRCNT(); \
+    FSM_TEST_NEG_FSMSETDEVERRCNT()
+
+#define FSM_TEST_POS_FSMGETDEVERRCNT() \
+    /* Positive tests for fsmGetDevErrCnt are combined with fsmSetDevErrCnt tests */
+
+#define FSM_TEST_NEG_FSMGETDEVERRCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullPointer)
+
+#define FSM_TEST_FSMGETDEVERRCNT() \
+    FSM_TEST_POS_FSMGETDEVERRCNT(); \
+    FSM_TEST_NEG_FSMGETDEVERRCNT()
+
+/* ========================================================================== */
+/*        API-Specific Test Macros - fsmSetWakeupCfg/fsmGetWakeupCfg         */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETWAKEUPCFG() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_withAllValidParams)
+
+#define FSM_TEST_NEG_FSMSETWAKEUPCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Event); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Event); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl)
+
+#define FSM_TEST_FSMSETWAKEUPCFG() \
+    FSM_TEST_POS_FSMSETWAKEUPCFG(); \
+    FSM_TEST_NEG_FSMSETWAKEUPCFG()
+
+#define FSM_TEST_POS_FSMGETWAKEUPCFG() \
+    /* Positive tests for fsmGetWakeupCfg are combined with fsmSetWakeupCfg tests */ \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_individualParams)
+
+#define FSM_TEST_NEG_FSMGETWAKEUPCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_zeroValidParams)
+
+#define FSM_TEST_FSMGETWAKEUPCFG() \
+    FSM_TEST_POS_FSMGETWAKEUPCFG(); \
+    FSM_TEST_NEG_FSMGETWAKEUPCFG()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmGetWakeStatus                   */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETWAKESTATUS() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeStatus_basic)
+
+#define FSM_TEST_NEG_FSMGETWAKESTATUS() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullPointer)
+
+#define FSM_TEST_FSMGETWAKESTATUS() \
+    FSM_TEST_POS_FSMGETWAKESTATUS(); \
+    FSM_TEST_NEG_FSMGETWAKESTATUS()
+
+/* ========================================================================== */
+/*    API-Specific Test Macros - fsmSetPowerLatchCfg/fsmGetPowerLatchCfg     */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETPOWERLATCHCFG() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent)
+
+#define FSM_TEST_NEG_FSMSETPOWERLATCHCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly)
+
+#define FSM_TEST_FSMSETPOWERLATCHCFG() \
+    FSM_TEST_POS_FSMSETPOWERLATCHCFG(); \
+    FSM_TEST_NEG_FSMSETPOWERLATCHCFG()
+
+#define FSM_TEST_POS_FSMGETPOWERLATCHCFG() \
+    /* Positive tests for fsmGetPowerLatchCfg are combined with fsmSetPowerLatchCfg tests */ \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_individualParams)
+
+#define FSM_TEST_NEG_FSMGETPOWERLATCHCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams)
+
+#define FSM_TEST_FSMGETPOWERLATCHCFG() \
+    FSM_TEST_POS_FSMGETPOWERLATCHCFG(); \
+    FSM_TEST_NEG_FSMGETPOWERLATCHCFG()
+
+/* ========================================================================== */
+/*        API-Specific Test Macros - fsmSetPowerLatch/fsmGetPowerLatch       */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETPOWERLATCH() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_basic)
+
+#define FSM_TEST_NEG_FSMSETPOWERLATCH() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_zeroValidParams)
+
+#define FSM_TEST_FSMSETPOWERLATCH() \
+    FSM_TEST_POS_FSMSETPOWERLATCH(); \
+    FSM_TEST_NEG_FSMSETPOWERLATCH()
+
+#define FSM_TEST_POS_FSMGETPOWERLATCH() \
+    /* Positive tests for fsmGetPowerLatch are combined with fsmSetPowerLatch tests */ \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatch_individualParams)
+
+#define FSM_TEST_NEG_FSMGETPOWERLATCH() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_nullPointer); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_zeroValidParams)
+
+#define FSM_TEST_FSMGETPOWERLATCH() \
+    FSM_TEST_POS_FSMGETPOWERLATCH(); \
+    FSM_TEST_NEG_FSMGETPOWERLATCH()
+
+/* ========================================================================== */
+/*        API-Specific Test Macros - fsmGetLastResetMcuStateDuration         */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETLASTRESETMCUSTATEDURATION() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetLastResetMcuStateDuration_basic)
+
+#define FSM_TEST_NEG_FSMGETLASTRESETMCUSTATEDURATION() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullPointer)
+
+#define FSM_TEST_FSMGETLASTRESETMCUSTATEDURATION() \
+    FSM_TEST_POS_FSMGETLASTRESETMCUSTATEDURATION(); \
+    FSM_TEST_NEG_FSMGETLASTRESETMCUSTATEDURATION()
+
+/* ========================================================================== */
 /*                           Helper Functions                                 */
 /* ========================================================================== */
 
@@ -91,7 +322,7 @@ static void helper_deinitPmic(Pmic_Handle_t *handle)
 /*                         Positive Test Implementations                      */
 /* ========================================================================== */
 
-void test_positive_fsm_setGetDevState(void)
+void test_pos_fsm_fsmSetDevState_validStates(void)
 {
     int32_t status;
     uint8_t stateGet;
@@ -120,7 +351,7 @@ void test_positive_fsm_setGetDevState(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getDevState(void)
+void test_pos_fsm_fsmGetDevState_validRange(void)
 {
     int32_t status;
     uint8_t state;
@@ -147,7 +378,7 @@ void test_positive_fsm_getDevState(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_stbyEn(void)
+void test_pos_fsm_fsmSetCfg_stbyEn(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -178,7 +409,7 @@ void test_positive_fsm_setGetCfg_stbyEn(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_autoBistEn(void)
+void test_pos_fsm_fsmSetCfg_autoBistEn(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -210,7 +441,7 @@ void test_positive_fsm_setGetCfg_autoBistEn(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_nrstActiveInStbySeq(void)
+void test_pos_fsm_fsmSetCfg_nrstActiveInStbySeq(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -242,7 +473,7 @@ void test_positive_fsm_setGetCfg_nrstActiveInStbySeq(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_pwdThr(void)
+void test_pos_fsm_fsmSetCfg_pwdThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -268,7 +499,7 @@ void test_positive_fsm_setGetCfg_pwdThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_nrstExt(void)
+void test_pos_fsm_fsmSetCfg_nrstExt(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -294,7 +525,7 @@ void test_positive_fsm_setGetCfg_nrstExt(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_rstMcuTmo(void)
+void test_pos_fsm_fsmSetCfg_rstMcuTmo(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -325,7 +556,7 @@ void test_positive_fsm_setGetCfg_rstMcuTmo(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_safeTmo(void)
+void test_pos_fsm_fsmSetCfg_safeTmo(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -351,7 +582,7 @@ void test_positive_fsm_setGetCfg_safeTmo(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_safeLockThr(void)
+void test_pos_fsm_fsmSetCfg_safeLockThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -377,7 +608,7 @@ void test_positive_fsm_setGetCfg_safeLockThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_vbatStbyEntryThr(void)
+void test_pos_fsm_fsmSetCfg_vbatStbyEntryThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -408,7 +639,7 @@ void test_positive_fsm_setGetCfg_vbatStbyEntryThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetCfg_multiple(void)
+void test_pos_fsm_fsmSetCfg_multiple(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -443,7 +674,7 @@ void test_positive_fsm_setGetCfg_multiple(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetDevErrCnt(void)
+void test_pos_fsm_fsmSetDevErrCnt_basic(void)
 {
     int32_t status;
     uint8_t errCntSet, errCntGet;
@@ -466,7 +697,7 @@ void test_positive_fsm_setGetDevErrCnt(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetWakeupCfg(void)
+void test_pos_fsm_fsmSetWakeupCfg_basic(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfgSet = {0}, wakeupCfgGet = {0};
@@ -498,7 +729,7 @@ void test_positive_fsm_setGetWakeupCfg(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getWakeStatus(void)
+void test_pos_fsm_fsmGetWakeStatus_basic(void)
 {
     int32_t status;
     Pmic_FsmWakeupStat_t wakeupStat;
@@ -512,7 +743,7 @@ void test_positive_fsm_getWakeStatus(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetPowerLatchCfg(void)
+void test_pos_fsm_fsmSetPowerLatchCfg_basic(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfgSet = {0}, pwrLatchCfgGet = {0};
@@ -544,7 +775,7 @@ void test_positive_fsm_setGetPowerLatchCfg(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setGetPowerLatch(void)
+void test_pos_fsm_fsmSetPowerLatch_basic(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatchSet = {0}, pwrLatchGet = {0};
@@ -576,7 +807,7 @@ void test_positive_fsm_setGetPowerLatch(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getLastResetMcuStateDuration(void)
+void test_pos_fsm_fsmGetLastResetMcuStateDuration_basic(void)
 {
     int32_t status;
     uint8_t duration;
@@ -594,7 +825,7 @@ void test_positive_fsm_getLastResetMcuStateDuration(void)
 /*                         Negative Test Implementations                      */
 /* ========================================================================== */
 
-void test_negative_fsm_setDevState_nullHandle(void)
+void test_neg_fsm_fsmSetDevState_nullHandle(void)
 {
     int32_t status;
 
@@ -602,7 +833,7 @@ void test_negative_fsm_setDevState_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setDevState_invalidState(void)
+void test_neg_fsm_fsmSetDevState_invalidState(void)
 {
     int32_t status;
 
@@ -615,7 +846,7 @@ void test_negative_fsm_setDevState_invalidState(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getDevState_nullHandle(void)
+void test_neg_fsm_fsmGetDevState_nullHandle(void)
 {
     int32_t status;
     uint8_t state;
@@ -624,7 +855,7 @@ void test_negative_fsm_getDevState_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getDevState_nullPointer(void)
+void test_neg_fsm_fsmGetDevState_nullPointer(void)
 {
     int32_t status;
 
@@ -637,7 +868,7 @@ void test_negative_fsm_getDevState_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_nullHandle(void)
+void test_neg_fsm_fsmSetCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -647,7 +878,7 @@ void test_negative_fsm_setCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setCfg_nullPointer(void)
+void test_neg_fsm_fsmSetCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -660,7 +891,7 @@ void test_negative_fsm_setCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidParams(void)
+void test_neg_fsm_fsmSetCfg_invalidParams(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -675,7 +906,7 @@ void test_negative_fsm_setCfg_invalidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getCfg_nullHandle(void)
+void test_neg_fsm_fsmGetCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -685,7 +916,7 @@ void test_negative_fsm_getCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getCfg_nullPointer(void)
+void test_neg_fsm_fsmGetCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -698,7 +929,7 @@ void test_negative_fsm_getCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getCfg_invalidParams(void)
+void test_neg_fsm_fsmGetCfg_invalidParams(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -713,7 +944,7 @@ void test_negative_fsm_getCfg_invalidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setDevErrCnt_nullHandle(void)
+void test_neg_fsm_fsmSetDevErrCnt_nullHandle(void)
 {
     int32_t status;
 
@@ -721,7 +952,7 @@ void test_negative_fsm_setDevErrCnt_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setDevErrCnt_outOfBounds(void)
+void test_neg_fsm_fsmSetDevErrCnt_outOfBounds(void)
 {
     int32_t status;
 
@@ -734,7 +965,7 @@ void test_negative_fsm_setDevErrCnt_outOfBounds(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getDevErrCnt_nullHandle(void)
+void test_neg_fsm_fsmGetDevErrCnt_nullHandle(void)
 {
     int32_t status;
     uint8_t devErrCnt;
@@ -743,7 +974,7 @@ void test_negative_fsm_getDevErrCnt_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getDevErrCnt_nullPointer(void)
+void test_neg_fsm_fsmGetDevErrCnt_nullPointer(void)
 {
     int32_t status;
 
@@ -756,7 +987,7 @@ void test_negative_fsm_getDevErrCnt_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_nullHandle(void)
+void test_neg_fsm_fsmSetWakeupCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -766,7 +997,7 @@ void test_negative_fsm_setWakeupCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setWakeupCfg_nullPointer(void)
+void test_neg_fsm_fsmSetWakeupCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -779,7 +1010,7 @@ void test_negative_fsm_setWakeupCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getWakeStatus_nullHandle(void)
+void test_neg_fsm_fsmGetWakeStatus_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmWakeupStat_t wakeupStat;
@@ -788,7 +1019,7 @@ void test_negative_fsm_getWakeStatus_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getWakeStatus_nullPointer(void)
+void test_neg_fsm_fsmGetWakeStatus_nullPointer(void)
 {
     int32_t status;
 
@@ -801,7 +1032,7 @@ void test_negative_fsm_getWakeStatus_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setPowerLatchCfg_nullHandle(void)
+void test_neg_fsm_fsmSetPowerLatchCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
@@ -811,7 +1042,7 @@ void test_negative_fsm_setPowerLatchCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setPowerLatchCfg_nullPointer(void)
+void test_neg_fsm_fsmSetPowerLatchCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -824,7 +1055,7 @@ void test_negative_fsm_setPowerLatchCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getPowerLatch_nullHandle(void)
+void test_neg_fsm_fsmGetPowerLatch_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatch = {0};
@@ -834,7 +1065,7 @@ void test_negative_fsm_getPowerLatch_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getPowerLatch_nullPointer(void)
+void test_neg_fsm_fsmGetPowerLatch_nullPointer(void)
 {
     int32_t status;
 
@@ -851,7 +1082,7 @@ void test_negative_fsm_getPowerLatch_nullPointer(void)
 /*                    Additional Edge Case Tests                             */
 /* ========================================================================== */
 
-void test_positive_fsm_setGetCfg_higherVbatStbyExitThr(void)
+void test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgSet = {0}, cfgGet = {0};
@@ -882,7 +1113,7 @@ void test_positive_fsm_setGetCfg_higherVbatStbyExitThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidVbatStbyEntryThr(void)
+void test_neg_fsm_fsmSetCfg_invalidVbatStbyEntryThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -898,7 +1129,7 @@ void test_negative_fsm_setCfg_invalidVbatStbyEntryThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidPwdThr(void)
+void test_neg_fsm_fsmSetCfg_invalidPwdThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -914,7 +1145,7 @@ void test_negative_fsm_setCfg_invalidPwdThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidRstMcuTmo(void)
+void test_neg_fsm_fsmSetCfg_invalidRstMcuTmo(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -930,7 +1161,7 @@ void test_negative_fsm_setCfg_invalidRstMcuTmo(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidNrstExt(void)
+void test_neg_fsm_fsmSetCfg_invalidNrstExt(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -946,7 +1177,7 @@ void test_negative_fsm_setCfg_invalidNrstExt(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidSafeTmo(void)
+void test_neg_fsm_fsmSetCfg_invalidSafeTmo(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -962,7 +1193,7 @@ void test_negative_fsm_setCfg_invalidSafeTmo(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setCfg_invalidSafeLockThr(void)
+void test_neg_fsm_fsmSetCfg_invalidSafeLockThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t fsmCfg = {0};
@@ -978,7 +1209,7 @@ void test_negative_fsm_setCfg_invalidSafeLockThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_zeroValidParams(void)
+void test_neg_fsm_fsmSetWakeupCfg_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -993,7 +1224,7 @@ void test_negative_fsm_setWakeupCfg_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_invalidWake1Event(void)
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake1Event(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1009,7 +1240,7 @@ void test_negative_fsm_setWakeupCfg_invalidWake1Event(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_invalidWake2Event(void)
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake2Event(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1025,7 +1256,7 @@ void test_negative_fsm_setWakeupCfg_invalidWake2Event(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_invalidWake1Dgl(void)
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1041,7 +1272,7 @@ void test_negative_fsm_setWakeupCfg_invalidWake1Dgl(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setWakeupCfg_invalidWake2Dgl(void)
+void test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1057,7 +1288,7 @@ void test_negative_fsm_setWakeupCfg_invalidWake2Dgl(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getWakeupCfg_nullHandle(void)
+void test_neg_fsm_fsmGetWakeupCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1067,7 +1298,7 @@ void test_negative_fsm_getWakeupCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getWakeupCfg_nullPointer(void)
+void test_neg_fsm_fsmGetWakeupCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -1080,7 +1311,7 @@ void test_negative_fsm_getWakeupCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getWakeupCfg_zeroValidParams(void)
+void test_neg_fsm_fsmGetWakeupCfg_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfg = {0};
@@ -1095,7 +1326,7 @@ void test_negative_fsm_getWakeupCfg_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setPowerLatchCfg_zeroValidParams(void)
+void test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
@@ -1110,7 +1341,7 @@ void test_negative_fsm_setPowerLatchCfg_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setPowerLatchCfg_invalidPwdDly(void)
+void test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
@@ -1126,7 +1357,7 @@ void test_negative_fsm_setPowerLatchCfg_invalidPwdDly(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getPowerLatchCfg_nullHandle(void)
+void test_neg_fsm_fsmGetPowerLatchCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
@@ -1136,7 +1367,7 @@ void test_negative_fsm_getPowerLatchCfg_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getPowerLatchCfg_nullPointer(void)
+void test_neg_fsm_fsmGetPowerLatchCfg_nullPointer(void)
 {
     int32_t status;
 
@@ -1149,7 +1380,7 @@ void test_negative_fsm_getPowerLatchCfg_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getPowerLatchCfg_zeroValidParams(void)
+void test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
@@ -1164,7 +1395,7 @@ void test_negative_fsm_getPowerLatchCfg_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setPowerLatch_nullHandle(void)
+void test_neg_fsm_fsmSetPowerLatch_nullHandle(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatch = {0};
@@ -1174,7 +1405,7 @@ void test_negative_fsm_setPowerLatch_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_setPowerLatch_nullPointer(void)
+void test_neg_fsm_fsmSetPowerLatch_nullPointer(void)
 {
     int32_t status;
 
@@ -1187,7 +1418,7 @@ void test_negative_fsm_setPowerLatch_nullPointer(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_setPowerLatch_zeroValidParams(void)
+void test_neg_fsm_fsmSetPowerLatch_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatch = {0};
@@ -1202,7 +1433,7 @@ void test_negative_fsm_setPowerLatch_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getPowerLatch_zeroValidParams(void)
+void test_neg_fsm_fsmGetPowerLatch_zeroValidParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatch = {0};
@@ -1217,7 +1448,7 @@ void test_negative_fsm_getPowerLatch_zeroValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_negative_fsm_getLastResetMcuStateDuration_nullHandle(void)
+void test_neg_fsm_fsmGetLastResetMcuStateDuration_nullHandle(void)
 {
     int32_t status;
     uint8_t duration;
@@ -1226,7 +1457,7 @@ void test_negative_fsm_getLastResetMcuStateDuration_nullHandle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_fsm_getLastResetMcuStateDuration_nullPointer(void)
+void test_neg_fsm_fsmGetLastResetMcuStateDuration_nullPointer(void)
 {
     int32_t status;
 
@@ -1243,7 +1474,7 @@ void test_negative_fsm_getLastResetMcuStateDuration_nullPointer(void)
 /*                    Additional State Coverage Tests                        */
 /* ========================================================================== */
 
-void test_positive_fsm_getState_initState(void)
+void test_pos_fsm_fsmGetDevState_initState(void)
 {
     int32_t status;
     uint8_t state;
@@ -1273,7 +1504,7 @@ void test_positive_fsm_getState_initState(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getState_offState(void)
+void test_pos_fsm_fsmGetDevState_offState(void)
 {
     int32_t status;
     uint8_t state;
@@ -1303,7 +1534,7 @@ void test_positive_fsm_getState_offState(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_setWakeupCfg_withAllValidParams(void)
+void test_pos_fsm_fsmSetWakeupCfg_withAllValidParams(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfgSet = {0}, wakeupCfgGet = {0};
@@ -1335,7 +1566,7 @@ void test_positive_fsm_setWakeupCfg_withAllValidParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getCfg_vbatStbyEntryThr(void)
+void test_pos_fsm_fsmGetCfg_vbatStbyEntryThr(void)
 {
     int32_t status;
     Pmic_FsmCfg_t cfgGet = {0};
@@ -1351,7 +1582,7 @@ void test_positive_fsm_getCfg_vbatStbyEntryThr(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getWakeupCfg_individualParams(void)
+void test_pos_fsm_fsmGetWakeupCfg_individualParams(void)
 {
     int32_t status;
     Pmic_FsmWakeupCfg_t wakeupCfgGet = {0};
@@ -1377,7 +1608,7 @@ void test_positive_fsm_getWakeupCfg_individualParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getPowerLatchCfg_individualParams(void)
+void test_pos_fsm_fsmGetPowerLatchCfg_individualParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfgGet = {0};
@@ -1403,7 +1634,7 @@ void test_positive_fsm_getPowerLatchCfg_individualParams(void)
     helper_deinitPmic(&g_handle);
 }
 
-void test_positive_fsm_getPowerLatch_individualParams(void)
+void test_pos_fsm_fsmGetPowerLatch_individualParams(void)
 {
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatchGet = {0};
@@ -1432,7 +1663,7 @@ void test_positive_fsm_getPowerLatch_individualParams(void)
 /**
  * @brief Test negative case: setDevState with invalid state value beyond max
  */
-void test_negative_fsmSetDevState_invalidState(void)
+void test_neg_fsm_fsmSetDevState_invalidStateBoundary(void)
 {
     int32_t status;
 
@@ -1453,7 +1684,7 @@ void test_negative_fsmSetDevState_invalidState(void)
 /**
  * @brief Test positive case: getDevState reads current state correctly after state requests
  */
-void test_positive_fsmGetDevState_validRead(void)
+void test_pos_fsm_fsmGetDevState_validRead(void)
 {
     int32_t status;
     uint8_t state;
@@ -1590,7 +1821,7 @@ void fsm_test(void *args)
  *
  * Tests that STATE register values 1-4 map to PMIC_INIT_STATE
  */
-void test_positive_fsm_getDevState_initStateMapping(void)
+void test_pos_fsm_fsmGetDevState_initStateMapping(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1634,7 +1865,7 @@ void test_positive_fsm_getDevState_initStateMapping(void)
  *
  * Tests that STATE register value 0xE maps to PMIC_OFF_STATE
  */
-void test_positive_fsm_getDevState_offStateRepeated(void)
+void test_pos_fsm_fsmGetDevState_offStateRepeated(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1662,7 +1893,7 @@ void test_positive_fsm_getDevState_offStateRepeated(void)
  *
  * Tests the validParam check for STBY_ERR_WAKE_EVENT_PWRL_EN
  */
-void test_positive_fsm_setPwrLatchCfg_stbyErrWakeEvent(void)
+void test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent(void)
 {
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};

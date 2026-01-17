@@ -50,72 +50,226 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                           Macro Definitions                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                     Pmic_ioTxByte / Pmic_ioRxByte                          */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_ioTxByte / Pmic_ioRxByte */
+#define IO_TEST_POS_IOTXRXBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_ioRxByte_writeReadScratchpadReg1To4); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4)
+
+/* Negative tests for Pmic_ioTxByte / Pmic_ioRxByte */
+#define IO_TEST_NEG_IOTXRXBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
+
+/* All tests for Pmic_ioTxByte / Pmic_ioRxByte */
+#define IO_TEST_IOTXRXBYTE() \
+    IO_TEST_NEG_IOTXRXBYTE(); \
+    IO_TEST_POS_IOTXRXBYTE()
+
+/* ========================================================================== */
+/*                          Pmic_ioUpdateByte                                 */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_ioUpdateByte */
+#define IO_TEST_POS_IOUPDATEBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_modifyBitFields); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_CS_modifyBitFields); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_b_modifySingleBit); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_bCS_modifySingleBit)
+
+/* Negative tests for Pmic_ioUpdateByte */
+#define IO_TEST_NEG_IOUPDATEBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_CS_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_b_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_bCS_nullHandle)
+
+/* All tests for Pmic_ioUpdateByte */
+#define IO_TEST_IOUPDATEBYTE() \
+    IO_TEST_NEG_IOUPDATEBYTE(); \
+    IO_TEST_POS_IOUPDATEBYTE()
+
+/* ========================================================================== */
+/*                          CRC Enable/Disable                                */
+/* ========================================================================== */
+
+/* Positive tests for CRC Enable/Disable */
+#define IO_TEST_POS_CRC() \
+    PLATFORM_RUN_TEST(test_pos_io_setGetCrcEnableState); \
+    PLATFORM_RUN_TEST(test_pos_io_enableDisableCrc); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_withCrcEnabled); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_CS_withCrcEnabled); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_withCrcEnabled)
+
+/* Negative tests for CRC Enable/Disable */
+#define IO_TEST_NEG_CRC() \
+    PLATFORM_RUN_TEST(test_neg_io_ioGetCrcEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioGetCrcEnableState_nullIsEnabled); \
+    PLATFORM_RUN_TEST(test_neg_io_ioSetCrcEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioCrcEnable_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioCrcDisable_nullHandle)
+
+/* All tests for CRC Enable/Disable */
+#define IO_TEST_CRC() \
+    IO_TEST_NEG_CRC(); \
+    IO_TEST_POS_CRC()
+
+/* ========================================================================== */
+/*                      Revision Mapping Tests                                */
+/* ========================================================================== */
+
+/* Positive tests for Revision Mapping */
+#define IO_TEST_POS_REVISION() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_A0_revisionMapping); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_B0_revisionMapping); \
+    PLATFORM_RUN_TEST(test_pos_io_a0RevisionMapping)
+
+/* Negative tests for Revision Mapping */
+#define IO_TEST_NEG_REVISION()
+
+/* All tests for Revision Mapping */
+#define IO_TEST_REVISION() \
+    IO_TEST_NEG_REVISION(); \
+    IO_TEST_POS_REVISION()
+
+/* ========================================================================== */
+/*                          Retry Tests                                       */
+/* ========================================================================== */
+
+/* Positive tests for Retry */
+#define IO_TEST_POS_RETRY() \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_withRetryOnFailure); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts)
+
+/* Negative tests for Retry */
+#define IO_TEST_NEG_RETRY() \
+    PLATFORM_RUN_TEST(test_neg_io_crcErrorExhaustsRetries); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
+    PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry)
+
+/* All tests for Retry */
+#define IO_TEST_RETRY() \
+    IO_TEST_NEG_RETRY(); \
+    IO_TEST_POS_RETRY()
+
+/* ========================================================================== */
+/*                      Additional Coverage Tests                             */
+/* ========================================================================== */
+
+/* Positive tests for Additional Coverage */
+#define IO_TEST_POS_COVERAGE()
+
+/* Negative tests for Additional Coverage */
+#define IO_TEST_NEG_COVERAGE() \
+    PLATFORM_RUN_TEST(test_neg_io_nullIoWriteFunc); \
+    PLATFORM_RUN_TEST(test_neg_io_nullIoRead)
+
+/* All tests for Additional Coverage */
+#define IO_TEST_COVERAGE() \
+    IO_TEST_NEG_COVERAGE()
+
+/* ========================================================================== */
+/*                     Aggregate Test Macros                                  */
+/* ========================================================================== */
+
+/* Run all IO positive tests */
+#define IO_TEST_RUN_POSITIVE() \
+    IO_TEST_POS_IOTXRXBYTE(); \
+    IO_TEST_POS_IOUPDATEBYTE(); \
+    IO_TEST_POS_CRC(); \
+    IO_TEST_POS_REVISION(); \
+    IO_TEST_POS_RETRY(); \
+    IO_TEST_POS_COVERAGE()
+
+/* Run all IO negative tests */
+#define IO_TEST_RUN_NEGATIVE() \
+    IO_TEST_NEG_IOTXRXBYTE(); \
+    IO_TEST_NEG_IOUPDATEBYTE(); \
+    IO_TEST_NEG_CRC(); \
+    IO_TEST_NEG_REVISION(); \
+    IO_TEST_NEG_RETRY(); \
+    IO_TEST_NEG_COVERAGE()
+
+/* Run all IO tests */
+#define IO_TEST_RUN_ALL() \
+    IO_TEST_IOTXRXBYTE(); \
+    IO_TEST_IOUPDATEBYTE(); \
+    IO_TEST_CRC(); \
+    IO_TEST_REVISION(); \
+    IO_TEST_RETRY(); \
+    IO_TEST_COVERAGE()
+
+/* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
 void io_test(void *args);
 
-/* Negative tests - NULL parameter tests */
-void test_negative_Pmic_ioTxByte_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_nullParam_rxBuffer(void);
-void test_negative_Pmic_ioTxByte_CS_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_CS_nullParam_handle(void);
-void test_negative_Pmic_ioRxByte_CS_nullParam_rxBuffer(void);
-void test_negative_Pmic_ioUpdateByte_nullParam_handle(void);
-void test_negative_Pmic_ioUpdateByte_CS_nullParam_handle(void);
-void test_negative_Pmic_ioUpdateByte_b_nullParam_handle(void);
-void test_negative_Pmic_ioUpdateByte_bCS_nullParam_handle(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_handle(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_isEnabled(void);
-void test_negative_Pmic_ioSetCrcEnableState_nullParam_handle(void);
-void test_negative_Pmic_ioCrcEnable_nullParam_handle(void);
-void test_negative_Pmic_ioCrcDisable_nullParam_handle(void);
+/* Negative tests - Pmic_ioTxByte / Pmic_ioRxByte */
+void test_neg_io_ioTxByte_nullHandle(void);
+void test_neg_io_ioRxByte_nullHandle(void);
+void test_neg_io_ioRxByte_nullRxBuffer(void);
+void test_neg_io_ioTxByte_CS_nullHandle(void);
+void test_neg_io_ioRxByte_CS_nullHandle(void);
+void test_neg_io_ioRxByte_CS_nullRxBuffer(void);
+
+/* Negative tests - Pmic_ioUpdateByte */
+void test_neg_io_ioUpdateByte_nullHandle(void);
+void test_neg_io_ioUpdateByte_CS_nullHandle(void);
+void test_neg_io_ioUpdateByte_b_nullHandle(void);
+void test_neg_io_ioUpdateByte_bCS_nullHandle(void);
+
+/* Negative tests - CRC */
+void test_neg_io_ioGetCrcEnableState_nullHandle(void);
+void test_neg_io_ioGetCrcEnableState_nullIsEnabled(void);
+void test_neg_io_ioSetCrcEnableState_nullHandle(void);
+void test_neg_io_ioCrcEnable_nullHandle(void);
+void test_neg_io_ioCrcDisable_nullHandle(void);
 
 /* Positive tests - Basic read/write operations */
-void test_positive_Pmic_ioTxByte_Pmic_ioRxByte_writeReadScratchpadReg1To4(void);
-void test_positive_Pmic_ioTxByte_CS_Pmic_ioRxByte_CS_writeReadScratchpadReg1To4(void);
-void test_positive_Pmic_ioUpdateByte_modifyBitFields(void);
-void test_positive_Pmic_ioUpdateByte_CS_modifyBitFields(void);
-void test_positive_Pmic_ioUpdateByte_b_modifySingleBit(void);
-void test_positive_Pmic_ioUpdateByte_bCS_modifySingleBit(void);
-void test_positive_setGetCrcEnableState(void);
-void test_positive_enableDisableCrc(void);
+void test_pos_io_ioTxByte_ioRxByte_writeReadScratchpadReg1To4(void);
+void test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4(void);
+void test_pos_io_ioUpdateByte_modifyBitFields(void);
+void test_pos_io_ioUpdateByte_CS_modifyBitFields(void);
+void test_pos_io_ioUpdateByte_b_modifySingleBit(void);
+void test_pos_io_ioUpdateByte_bCS_modifySingleBit(void);
 
 /* Positive tests - CRC operations */
-void test_positive_Pmic_ioTxRxByte_withCrcEnabled(void);
-void test_positive_Pmic_ioTxRxByte_CS_withCrcEnabled(void);
-void test_positive_Pmic_ioUpdateByte_withCrcEnabled(void);
+void test_pos_io_setGetCrcEnableState(void);
+void test_pos_io_enableDisableCrc(void);
+void test_pos_io_ioTxRxByte_withCrcEnabled(void);
+void test_pos_io_ioTxRxByte_CS_withCrcEnabled(void);
+void test_pos_io_ioUpdateByte_withCrcEnabled(void);
 
 /* Positive tests - Silicon revision handling */
-void test_positive_Pmic_ioTxRxByte_A0_revisionMapping(void);
-void test_positive_Pmic_ioTxRxByte_B0_revisionMapping(void);
-
-#ifdef BUILD_MOCK
-/* Property tests - CRC8 validation */
-void test_property_Pmic_ioCrc8Calculation_allByteValues(void);
-
-/* Property tests - Register address ranges */
-void test_property_Pmic_ioTxRxByte_allValidRegAddresses(void);
-
-/* Property tests - Bit field operations */
-void test_property_Pmic_ioUpdateByte_allBitPositions(void);
-void test_property_Pmic_ioUpdateByte_b_allBitPositions(void);
-
-/* Property tests - Mask combinations */
-void test_property_Pmic_ioUpdateByte_maskCombinations(void);
-#endif
+void test_pos_io_ioTxRxByte_A0_revisionMapping(void);
+void test_pos_io_ioTxRxByte_B0_revisionMapping(void);
 
 /* Retry loop and CRC error tests */
-void test_positive_ioRxByte_withRetryOnCrcError(void);
-void test_positive_ioTxByte_withRetryOnFailure(void);
-void test_negative_io_crcErrorExhaustsRetries(void);
+void test_pos_io_ioRxByte_withRetryOnCrcError(void);
+void test_pos_io_ioTxByte_withRetryOnFailure(void);
+void test_neg_io_crcErrorExhaustsRetries(void);
 
 /* Additional coverage tests */
-void test_negative_io_nullTimerWithRetry(void);
-void test_positive_io_a0RevisionMapping(void);
-void test_negative_io_nullIoWriteFunc(void);
-void test_negative_io_nullIoRead(void);
+void test_neg_io_nullTimerWithRetry(void);
+void test_pos_io_a0RevisionMapping(void);
+void test_neg_io_nullIoWriteFunc(void);
+void test_neg_io_nullIoRead(void);
+void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
+void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void);
+void test_pos_io_ioTxByte_multipleRetryAttempts(void);
 
 #ifdef __cplusplus
 }

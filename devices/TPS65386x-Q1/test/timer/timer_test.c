@@ -42,71 +42,182 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Timer tests */
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerSetCfg                  */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale64us); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale16ms); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale131ms); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale1049ms); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeStopped); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeOperSeq); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeStdby); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeStdbyWu); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeOperSeqStdby); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeOperSeqStdbyWu); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescaleAndModeVerify)
+
+#define TIMER_TEST_NEG_TIMERSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_invalidPrescale); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullCfg); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_invalidMode); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_validParamsZero)
+
+#define TIMER_TEST_TIMERSETCFG() \
+    TIMER_TEST_POS_TIMERSETCFG(); \
+    TIMER_TEST_NEG_TIMERSETCFG()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerGetCfg                  */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERGETCFG() \
+    /* Positive tests for timerGetCfg are combined with timerSetCfg tests */
+
+#define TIMER_TEST_NEG_TIMERGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetCfg_nullCfg); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetCfg_validParamsZero)
+
+#define TIMER_TEST_TIMERGETCFG() \
+    TIMER_TEST_POS_TIMERGETCFG(); \
+    TIMER_TEST_NEG_TIMERGETCFG()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerSetCnt                  */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERSETCNT() \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_minValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_maxValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_midValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_boundary1Verify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_boundary2Verify)
+
+#define TIMER_TEST_NEG_TIMERSETCNT() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCnt_outOfBounds); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCnt_overflowValue)
+
+#define TIMER_TEST_TIMERSETCNT() \
+    TIMER_TEST_POS_TIMERSETCNT(); \
+    TIMER_TEST_NEG_TIMERSETCNT()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerGetCnt                  */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERGETCNT() \
+    /* Positive tests for timerGetCnt are combined with timerSetCnt tests */
+
+#define TIMER_TEST_NEG_TIMERGETCNT() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetCnt_nullCnt); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetCnt_nullHandle)
+
+#define TIMER_TEST_TIMERGETCNT() \
+    TIMER_TEST_POS_TIMERGETCNT(); \
+    TIMER_TEST_NEG_TIMERGETCNT()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerClr                     */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERCLR() \
+    PLATFORM_RUN_TEST(test_pos_timer_timerClr_resetCounter); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerClr_verifyZero); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerClr_sequenceVerify)
+
+#define TIMER_TEST_NEG_TIMERCLR() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerClr_nullHandle)
+
+#define TIMER_TEST_TIMERCLR() \
+    TIMER_TEST_POS_TIMERCLR(); \
+    TIMER_TEST_NEG_TIMERCLR()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - timerStop                    */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERSTOP() \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode1); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode2); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode3); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode4); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode5); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_verifyStopped)
+
+#define TIMER_TEST_NEG_TIMERSTOP() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerStop_nullHandle)
+
+#define TIMER_TEST_TIMERSTOP() \
+    TIMER_TEST_POS_TIMERSTOP(); \
+    TIMER_TEST_NEG_TIMERSTOP()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - timerSetWakeupValue             */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERSETWAKEUPVALUE() \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_minValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_maxValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_midValueVerify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_boundary1Verify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_boundary2Verify); \
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_persistenceVerify)
+
+#define TIMER_TEST_NEG_TIMERSETWAKEUPVALUE() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetWakeupValue_outOfBounds); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetWakeupValue_nullHandle)
+
+#define TIMER_TEST_TIMERSETWAKEUPVALUE() \
+    TIMER_TEST_POS_TIMERSETWAKEUPVALUE(); \
+    TIMER_TEST_NEG_TIMERSETWAKEUPVALUE()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - timerGetWakeupValue             */
+/* ========================================================================== */
+
+#define TIMER_TEST_POS_TIMERGETWAKEUPVALUE() \
+    /* Positive tests for timerGetWakeupValue are combined with timerSetWakeupValue tests */
+
+#define TIMER_TEST_NEG_TIMERGETWAKEUPVALUE() \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetWakeupValue_nullWakeup); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerGetWakeupValue_nullHandle)
+
+#define TIMER_TEST_TIMERGETWAKEUPVALUE() \
+    TIMER_TEST_POS_TIMERGETWAKEUPVALUE(); \
+    TIMER_TEST_NEG_TIMERGETWAKEUPVALUE()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define TIMER_TEST_RUN_POSITIVE() \
+    TIMER_TEST_POS_TIMERSETCFG(); \
+    TIMER_TEST_POS_TIMERGETCFG(); \
+    TIMER_TEST_POS_TIMERSETCNT(); \
+    TIMER_TEST_POS_TIMERGETCNT(); \
+    TIMER_TEST_POS_TIMERCLR(); \
+    TIMER_TEST_POS_TIMERSTOP(); \
+    TIMER_TEST_POS_TIMERSETWAKEUPVALUE(); \
+    TIMER_TEST_POS_TIMERGETWAKEUPVALUE()
+
+#define TIMER_TEST_RUN_NEGATIVE() \
+    TIMER_TEST_NEG_TIMERSETCFG(); \
+    TIMER_TEST_NEG_TIMERGETCFG(); \
+    TIMER_TEST_NEG_TIMERSETCNT(); \
+    TIMER_TEST_NEG_TIMERGETCNT(); \
+    TIMER_TEST_NEG_TIMERCLR(); \
+    TIMER_TEST_NEG_TIMERSTOP(); \
+    TIMER_TEST_NEG_TIMERSETWAKEUPVALUE(); \
+    TIMER_TEST_NEG_TIMERGETWAKEUPVALUE()
+
 #define TIMER_TEST_RUN_ALL() \
     TIMER_TEST_RUN_POSITIVE(); \
     TIMER_TEST_RUN_NEGATIVE()
-
-/* Run all Timer positive tests */
-#define TIMER_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_prescale_64us); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_prescale_16ms); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_prescale_131ms); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_prescale_1049ms); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_stopped); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_operSeq); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_stdby); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_stdbyWu); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_operSeqStdby); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_mode_operSeqStdbyWu); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCfg_prescaleAndMode); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCnt_minValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCnt_maxValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCnt_midValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCnt_boundary1); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetCnt_boundary2); \
-    PLATFORM_RUN_TEST(test_positive_timer_clr_resetCounter); \
-    PLATFORM_RUN_TEST(test_positive_timer_clr_verifyZero); \
-    PLATFORM_RUN_TEST(test_positive_timer_setClrGetCnt_sequence); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetWakeup_minValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetWakeup_maxValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetWakeup_midValue); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetWakeup_boundary1); \
-    PLATFORM_RUN_TEST(test_positive_timer_setGetWakeup_boundary2); \
-    PLATFORM_RUN_TEST(test_positive_timer_wakeupPersistence_acrossModeChange); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_fromMode1); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_fromMode2); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_fromMode3); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_fromMode4); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_fromMode5); \
-    PLATFORM_RUN_TEST(test_positive_timer_stop_verifyStopped)
-
-/* Run all Timer negative tests */
-#define TIMER_TEST_RUN_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCfg_invalidParam_prescale); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCfg_nullParam_pCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCfg_invalidParam_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetCfg_nullParam_pCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCnt_outOfBounds); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetCnt_nullParam_pCnt); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetWakeupValue_outOfBounds); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetWakeupValue_nullParam_pWakeup); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCnt_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetCnt_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetWakeupValue_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetWakeupValue_nullParam_handle); \
-    \
-    /* Edge Cases */ \
-    PLATFORM_RUN_TEST(test_positive_Pmic_timerSetCnt_maxValue); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCnt_overflowValue); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerSetCfg_validParamsZero); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerGetCfg_validParamsZero); \
-    \
-    /* Completeness */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerStop_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_timerClr_nullHandle)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -140,7 +251,7 @@ static void unlockCntRegisters(void)
 /**
  * @brief Test setting and getting prescale to 64.64 microseconds.
  */
-void test_positive_timer_setGetCfg_prescale_64us(void)
+void test_pos_timer_timerSetCfg_prescale64us(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -161,7 +272,7 @@ void test_positive_timer_setGetCfg_prescale_64us(void)
 /**
  * @brief Test setting and getting prescale to 16.384 milliseconds.
  */
-void test_positive_timer_setGetCfg_prescale_16ms(void)
+void test_pos_timer_timerSetCfg_prescale16ms(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -182,7 +293,7 @@ void test_positive_timer_setGetCfg_prescale_16ms(void)
 /**
  * @brief Test setting and getting prescale to 131.072 milliseconds.
  */
-void test_positive_timer_setGetCfg_prescale_131ms(void)
+void test_pos_timer_timerSetCfg_prescale131ms(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -203,7 +314,7 @@ void test_positive_timer_setGetCfg_prescale_131ms(void)
 /**
  * @brief Test setting and getting prescale to 1049 milliseconds.
  */
-void test_positive_timer_setGetCfg_prescale_1049ms(void)
+void test_pos_timer_timerSetCfg_prescale1049ms(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -224,7 +335,7 @@ void test_positive_timer_setGetCfg_prescale_1049ms(void)
 /**
  * @brief Test setting and getting timer mode to stopped.
  */
-void test_positive_timer_setGetCfg_mode_stopped(void)
+void test_pos_timer_timerSetCfg_modeStopped(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -245,7 +356,7 @@ void test_positive_timer_setGetCfg_mode_stopped(void)
 /**
  * @brief Test setting and getting timer mode to operating and sequencing.
  */
-void test_positive_timer_setGetCfg_mode_operSeq(void)
+void test_pos_timer_timerSetCfg_modeOperSeq(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -266,7 +377,7 @@ void test_positive_timer_setGetCfg_mode_operSeq(void)
 /**
  * @brief Test setting and getting timer mode to STANDBY only.
  */
-void test_positive_timer_setGetCfg_mode_stdby(void)
+void test_pos_timer_timerSetCfg_modeStdby(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -287,7 +398,7 @@ void test_positive_timer_setGetCfg_mode_stdby(void)
 /**
  * @brief Test setting and getting timer mode to STANDBY with wakeup.
  */
-void test_positive_timer_setGetCfg_mode_stdbyWu(void)
+void test_pos_timer_timerSetCfg_modeStdbyWu(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -308,7 +419,7 @@ void test_positive_timer_setGetCfg_mode_stdbyWu(void)
 /**
  * @brief Test setting and getting timer mode to operating, sequencing, and STANDBY.
  */
-void test_positive_timer_setGetCfg_mode_operSeqStdby(void)
+void test_pos_timer_timerSetCfg_modeOperSeqStdby(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -329,7 +440,7 @@ void test_positive_timer_setGetCfg_mode_operSeqStdby(void)
 /**
  * @brief Test setting and getting timer mode to all states with wakeup.
  */
-void test_positive_timer_setGetCfg_mode_operSeqStdbyWu(void)
+void test_pos_timer_timerSetCfg_modeOperSeqStdbyWu(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -350,7 +461,7 @@ void test_positive_timer_setGetCfg_mode_operSeqStdbyWu(void)
 /**
  * @brief Test setting and getting both prescale and mode simultaneously.
  */
-void test_positive_timer_setGetCfg_prescaleAndMode(void)
+void test_pos_timer_timerSetCfg_prescaleAndModeVerify(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -375,7 +486,7 @@ void test_positive_timer_setGetCfg_prescaleAndMode(void)
 /**
  * @brief Test setting and getting minimum counter value (0x000000).
  */
-void test_positive_timer_setGetCnt_minValue(void)
+void test_pos_timer_timerSetCnt_minValueVerify(void)
 {
     int32_t status;
     uint32_t setCnt = 0x000000U;
@@ -397,7 +508,7 @@ void test_positive_timer_setGetCnt_minValue(void)
 /**
  * @brief Test setting and getting maximum counter value (0xFFFFFF).
  */
-void test_positive_timer_setGetCnt_maxValue(void)
+void test_pos_timer_timerSetCnt_maxValueVerify(void)
 {
     int32_t status;
     uint32_t setCnt = 0xFFFFFFU;
@@ -419,7 +530,7 @@ void test_positive_timer_setGetCnt_maxValue(void)
 /**
  * @brief Test setting and getting mid-range counter value (0x800000).
  */
-void test_positive_timer_setGetCnt_midValue(void)
+void test_pos_timer_timerSetCnt_midValueVerify(void)
 {
     int32_t status;
     uint32_t setCnt = 0x800000U;
@@ -441,7 +552,7 @@ void test_positive_timer_setGetCnt_midValue(void)
 /**
  * @brief Test setting and getting boundary counter value (0x000001).
  */
-void test_positive_timer_setGetCnt_boundary1(void)
+void test_pos_timer_timerSetCnt_boundary1Verify(void)
 {
     int32_t status;
     uint32_t setCnt = 0x000001U;
@@ -463,7 +574,7 @@ void test_positive_timer_setGetCnt_boundary1(void)
 /**
  * @brief Test setting and getting boundary counter value (0xFFFFFE).
  */
-void test_positive_timer_setGetCnt_boundary2(void)
+void test_pos_timer_timerSetCnt_boundary2Verify(void)
 {
     int32_t status;
     uint32_t setCnt = 0xFFFFFEU;
@@ -485,7 +596,7 @@ void test_positive_timer_setGetCnt_boundary2(void)
 /**
  * @brief Test clearing timer counter.
  */
-void test_positive_timer_clr_resetCounter(void)
+void test_pos_timer_timerClr_resetCounter(void)
 {
     int32_t status;
 
@@ -504,7 +615,7 @@ void test_positive_timer_clr_resetCounter(void)
 /**
  * @brief Test that counter is zero after clearing.
  */
-void test_positive_timer_clr_verifyZero(void)
+void test_pos_timer_timerClr_verifyZero(void)
 {
     int32_t status;
     uint32_t getCnt;
@@ -529,7 +640,7 @@ void test_positive_timer_clr_verifyZero(void)
 /**
  * @brief Test sequence: Set counter, clear, then get to verify zero.
  */
-void test_positive_timer_setClrGetCnt_sequence(void)
+void test_pos_timer_timerClr_sequenceVerify(void)
 {
     int32_t status;
     uint32_t getCnt;
@@ -556,7 +667,7 @@ void test_positive_timer_setClrGetCnt_sequence(void)
 /**
  * @brief Test setting and getting minimum wakeup value (0x000000).
  */
-void test_positive_timer_setGetWakeup_minValue(void)
+void test_pos_timer_timerSetWakeupValue_minValueVerify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0x000000U;
@@ -575,7 +686,7 @@ void test_positive_timer_setGetWakeup_minValue(void)
 /**
  * @brief Test setting and getting maximum wakeup value (0xFFFFFF).
  */
-void test_positive_timer_setGetWakeup_maxValue(void)
+void test_pos_timer_timerSetWakeupValue_maxValueVerify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0xFFFFFFU;
@@ -594,7 +705,7 @@ void test_positive_timer_setGetWakeup_maxValue(void)
 /**
  * @brief Test setting and getting mid-range wakeup value (0x800000).
  */
-void test_positive_timer_setGetWakeup_midValue(void)
+void test_pos_timer_timerSetWakeupValue_midValueVerify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0x800000U;
@@ -613,7 +724,7 @@ void test_positive_timer_setGetWakeup_midValue(void)
 /**
  * @brief Test setting and getting boundary wakeup value (0x000001).
  */
-void test_positive_timer_setGetWakeup_boundary1(void)
+void test_pos_timer_timerSetWakeupValue_boundary1Verify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0x000001U;
@@ -632,7 +743,7 @@ void test_positive_timer_setGetWakeup_boundary1(void)
 /**
  * @brief Test setting and getting boundary wakeup value (0xFFFFFE).
  */
-void test_positive_timer_setGetWakeup_boundary2(void)
+void test_pos_timer_timerSetWakeupValue_boundary2Verify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0xFFFFFEU;
@@ -651,7 +762,7 @@ void test_positive_timer_setGetWakeup_boundary2(void)
 /**
  * @brief Test that wakeup value persists across mode changes.
  */
-void test_positive_timer_wakeupPersistence_acrossModeChange(void)
+void test_pos_timer_timerSetWakeupValue_persistenceVerify(void)
 {
     int32_t status;
     uint32_t setWakeup = 0x123456U;
@@ -684,7 +795,7 @@ void test_positive_timer_wakeupPersistence_acrossModeChange(void)
 /**
  * @brief Test stopping timer from mode 1 (OPER_SEQ).
  */
-void test_positive_timer_stop_fromMode1(void)
+void test_pos_timer_timerStop_fromMode1(void)
 {
     int32_t status;
     Pmic_timerCfg_t cfg;
@@ -703,7 +814,7 @@ void test_positive_timer_stop_fromMode1(void)
 /**
  * @brief Test stopping timer from mode 2 (STDBY).
  */
-void test_positive_timer_stop_fromMode2(void)
+void test_pos_timer_timerStop_fromMode2(void)
 {
     int32_t status;
     Pmic_timerCfg_t cfg;
@@ -722,7 +833,7 @@ void test_positive_timer_stop_fromMode2(void)
 /**
  * @brief Test stopping timer from mode 3 (STDBY_WU).
  */
-void test_positive_timer_stop_fromMode3(void)
+void test_pos_timer_timerStop_fromMode3(void)
 {
     int32_t status;
     Pmic_timerCfg_t cfg;
@@ -741,7 +852,7 @@ void test_positive_timer_stop_fromMode3(void)
 /**
  * @brief Test stopping timer from mode 4 (OPER_SEQ_STDBY).
  */
-void test_positive_timer_stop_fromMode4(void)
+void test_pos_timer_timerStop_fromMode4(void)
 {
     int32_t status;
     Pmic_timerCfg_t cfg;
@@ -760,7 +871,7 @@ void test_positive_timer_stop_fromMode4(void)
 /**
  * @brief Test stopping timer from mode 5 (OPER_SEQ_STDBY_WU).
  */
-void test_positive_timer_stop_fromMode5(void)
+void test_pos_timer_timerStop_fromMode5(void)
 {
     int32_t status;
     Pmic_timerCfg_t cfg;
@@ -779,7 +890,7 @@ void test_positive_timer_stop_fromMode5(void)
 /**
  * @brief Test verifying timer is in stopped mode after stop.
  */
-void test_positive_timer_stop_verifyStopped(void)
+void test_pos_timer_timerStop_verifyStopped(void)
 {
     int32_t status;
     Pmic_timerCfg_t setCfg, getCfg;
@@ -810,7 +921,7 @@ void test_positive_timer_stop_verifyStopped(void)
 /**
  * @brief Test Pmic_timerSetCfg with invalid prescale parameter.
  */
-void test_negative_Pmic_timerSetCfg_invalidParam_prescale(void)
+void test_neg_timer_timerSetCfg_invalidPrescale(void)
 {
     Pmic_timerCfg_t cfg = {
         .validParams = PMIC_CFG_TMR_PRESCALE_VALID,
@@ -823,7 +934,7 @@ void test_negative_Pmic_timerSetCfg_invalidParam_prescale(void)
 /**
  * @brief Test Pmic_timerSetCfg with NULL config pointer.
  */
-void test_negative_Pmic_timerSetCfg_nullParam_pCfg(void)
+void test_neg_timer_timerSetCfg_nullCfg(void)
 {
     int32_t status = Pmic_timerSetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -832,7 +943,7 @@ void test_negative_Pmic_timerSetCfg_nullParam_pCfg(void)
 /**
  * @brief Test Pmic_timerSetCfg with invalid mode parameter.
  */
-void test_negative_Pmic_timerSetCfg_invalidParam_mode(void)
+void test_neg_timer_timerSetCfg_invalidMode(void)
 {
     Pmic_timerCfg_t cfg = {
         .validParams = PMIC_CFG_TMR_MODE_VALID,
@@ -845,7 +956,7 @@ void test_negative_Pmic_timerSetCfg_invalidParam_mode(void)
 /**
  * @brief Test Pmic_timerGetCfg with NULL config pointer.
  */
-void test_negative_Pmic_timerGetCfg_nullParam_pCfg(void)
+void test_neg_timer_timerGetCfg_nullCfg(void)
 {
     int32_t status = Pmic_timerGetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -856,7 +967,7 @@ void test_negative_Pmic_timerGetCfg_nullParam_pCfg(void)
 /**
  * @brief Test Pmic_timerSetCnt with out-of-bounds counter value.
  */
-void test_negative_Pmic_timerSetCnt_outOfBounds(void)
+void test_neg_timer_timerSetCnt_outOfBounds(void)
 {
     /* Unlock CNT registers before timer operations */
     unlockCntRegisters();
@@ -868,7 +979,7 @@ void test_negative_Pmic_timerSetCnt_outOfBounds(void)
 /**
  * @brief Test Pmic_timerGetCnt with NULL counter pointer.
  */
-void test_negative_Pmic_timerGetCnt_nullParam_pCnt(void)
+void test_neg_timer_timerGetCnt_nullCnt(void)
 {
     int32_t status = Pmic_timerGetCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -879,7 +990,7 @@ void test_negative_Pmic_timerGetCnt_nullParam_pCnt(void)
 /**
  * @brief Test Pmic_timerSetWakeupValue with out-of-bounds wakeup value.
  */
-void test_negative_Pmic_timerSetWakeupValue_outOfBounds(void)
+void test_neg_timer_timerSetWakeupValue_outOfBounds(void)
 {
     int32_t status = Pmic_timerSetWakeupValue(&pmicHandle, PMIC_TMR_WAKEUP_VAL_MAX + 1);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -888,7 +999,7 @@ void test_negative_Pmic_timerSetWakeupValue_outOfBounds(void)
 /**
  * @brief Test Pmic_timerGetWakeupValue with NULL wakeup pointer.
  */
-void test_negative_Pmic_timerGetWakeupValue_nullParam_pWakeup(void)
+void test_neg_timer_timerGetWakeupValue_nullWakeup(void)
 {
     int32_t status = Pmic_timerGetWakeupValue(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -899,7 +1010,7 @@ void test_negative_Pmic_timerGetWakeupValue_nullParam_pWakeup(void)
 /**
  * @brief Test Pmic_timerSetCfg with NULL handle.
  */
-void test_negative_Pmic_timerSetCfg_nullParam_handle(void)
+void test_neg_timer_timerSetCfg_nullHandle(void)
 {
     Pmic_timerCfg_t cfg = {0};
     int32_t status = Pmic_timerSetCfg(NULL, &cfg);
@@ -909,7 +1020,7 @@ void test_negative_Pmic_timerSetCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_timerGetCfg with NULL handle.
  */
-void test_negative_Pmic_timerGetCfg_nullParam_handle(void)
+void test_neg_timer_timerGetCfg_nullHandle(void)
 {
     Pmic_timerCfg_t cfg = {0};
     int32_t status = Pmic_timerGetCfg(NULL, &cfg);
@@ -919,7 +1030,7 @@ void test_negative_Pmic_timerGetCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_timerSetCnt with NULL handle.
  */
-void test_negative_Pmic_timerSetCnt_nullParam_handle(void)
+void test_neg_timer_timerSetCnt_nullHandle(void)
 {
     int32_t status = Pmic_timerSetCnt(NULL, 0x123456U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -928,7 +1039,7 @@ void test_negative_Pmic_timerSetCnt_nullParam_handle(void)
 /**
  * @brief Test Pmic_timerGetCnt with NULL handle.
  */
-void test_negative_Pmic_timerGetCnt_nullParam_handle(void)
+void test_neg_timer_timerGetCnt_nullHandle(void)
 {
     uint32_t cnt;
     int32_t status = Pmic_timerGetCnt(NULL, &cnt);
@@ -938,7 +1049,7 @@ void test_negative_Pmic_timerGetCnt_nullParam_handle(void)
 /**
  * @brief Test Pmic_timerSetWakeupValue with NULL handle.
  */
-void test_negative_Pmic_timerSetWakeupValue_nullParam_handle(void)
+void test_neg_timer_timerSetWakeupValue_nullHandle(void)
 {
     int32_t status = Pmic_timerSetWakeupValue(NULL, 0x123456U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -947,36 +1058,19 @@ void test_negative_Pmic_timerSetWakeupValue_nullParam_handle(void)
 /**
  * @brief Test Pmic_timerGetWakeupValue with NULL handle.
  */
-void test_negative_Pmic_timerGetWakeupValue_nullParam_handle(void)
+void test_neg_timer_timerGetWakeupValue_nullHandle(void)
 {
     uint32_t wakeup;
     int32_t status = Pmic_timerGetWakeupValue(NULL, &wakeup);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-/* Edge Case Tests (3 tests) */
-
-/**
- * @brief Test setting counter to maximum value (0xFFFFFF).
- */
-void test_positive_Pmic_timerSetCnt_maxValue(void)
-{
-    int32_t status;
-    uint32_t setCnt = PMIC_TMR_CNT_MAX;  /* 0xFFFFFF */
-    uint32_t getCnt = 0;
-
-    status = Pmic_timerSetCnt(&pmicHandle, setCnt);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_timerGetCnt(&pmicHandle, &getCnt);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCnt == setCnt);
-}
+/* Edge Case Tests (2 tests) */
 
 /**
  * @brief Test Pmic_timerSetCnt with overflow value beyond maximum.
  */
-void test_negative_Pmic_timerSetCnt_overflowValue(void)
+void test_neg_timer_timerSetCnt_overflowValue(void)
 {
     int32_t status;
     uint32_t cnt = PMIC_TMR_CNT_MAX + 1;  /* 0x1000000 - overflow */
@@ -988,7 +1082,7 @@ void test_negative_Pmic_timerSetCnt_overflowValue(void)
 /**
  * @brief Test Pmic_timerSetCfg with validParams set to zero.
  */
-void test_negative_Pmic_timerSetCfg_validParamsZero(void)
+void test_neg_timer_timerSetCfg_validParamsZero(void)
 {
     Pmic_timerCfg_t cfg = {
         .validParams = 0,
@@ -1001,7 +1095,7 @@ void test_negative_Pmic_timerSetCfg_validParamsZero(void)
 /**
  * @brief Test Pmic_timerGetCfg with validParams set to zero.
  */
-void test_negative_Pmic_timerGetCfg_validParamsZero(void)
+void test_neg_timer_timerGetCfg_validParamsZero(void)
 {
     Pmic_timerCfg_t cfg = {
         .validParams = 0
@@ -1015,7 +1109,7 @@ void test_negative_Pmic_timerGetCfg_validParamsZero(void)
 /**
  * @brief Test Pmic_timerStop with NULL handle.
  */
-void test_negative_Pmic_timerStop_nullHandle(void)
+void test_neg_timer_timerStop_nullHandle(void)
 {
     int32_t status = Pmic_timerStop(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1024,7 +1118,7 @@ void test_negative_Pmic_timerStop_nullHandle(void)
 /**
  * @brief Test Pmic_timerClr with NULL handle.
  */
-void test_negative_Pmic_timerClr_nullHandle(void)
+void test_neg_timer_timerClr_nullHandle(void)
 {
     int32_t status = Pmic_timerClr(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1071,7 +1165,7 @@ void timer_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
         platform_setupTests();
         TIMER_TEST_RUN_ALL();

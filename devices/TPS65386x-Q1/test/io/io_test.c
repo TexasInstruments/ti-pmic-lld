@@ -54,52 +54,201 @@
 #define IO_TEST_BIT_MASK_NIBBLE     (0x0FU)
 #define IO_TEST_BIT_MASK_SINGLE     (0x01U)
 
-/* Test macro runners */
-#define IO_TEST_RUN_ALL() \
-    IO_TEST_RUN_NEGATIVE(); \
-    IO_TEST_RUN_POSITIVE()
+/* ========================================================================== */
+/*                    API-Specific Test Macros - ioTxByte                     */
+/* ========================================================================== */
 
-#define IO_TEST_RUN_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_ioTxByte_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioRxByte_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioTxByte_CS_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioRxByte_CS_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioRxByte_nullRxBuffer); \
-    PLATFORM_RUN_TEST(test_negative_ioRxByte_CS_nullRxBuffer); \
-    PLATFORM_RUN_TEST(test_negative_ioRxWordSeq_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioRxWordSeq_nullRxData); \
-    PLATFORM_RUN_TEST(test_negative_ioTxWordSeq_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_ioRxWordSeq_invalidCount); \
-    PLATFORM_RUN_TEST(test_negative_ioTxWordSeq_invalidCount); \
-    PLATFORM_RUN_TEST(test_negative_io_crcErrorExhaustsRetries); \
-    PLATFORM_RUN_TEST(test_negative_ioRxByte_zeroRetryCntImmediateFail); \
-    PLATFORM_RUN_TEST(test_negative_io_nullCommHandle); \
-    PLATFORM_RUN_TEST(test_negative_io_nullIoFptrs); \
-    PLATFORM_RUN_TEST(test_negative_io_nullTimerWithRetry)
+#define IO_TEST_POS_IOTXBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad2); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts)
+
+#define IO_TEST_NEG_IOTXBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_withRetryOnFailure)
+
+#define IO_TEST_IOTXBYTE() \
+    IO_TEST_POS_IOTXBYTE(); \
+    IO_TEST_NEG_IOTXBYTE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - ioRxByte                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IORXBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad2); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError)
+
+#define IO_TEST_NEG_IORXBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError)
+
+#define IO_TEST_IORXBYTE() \
+    IO_TEST_POS_IORXBYTE(); \
+    IO_TEST_NEG_IORXBYTE()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - ioTxByte_CS                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOTXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_scratchpad2)
+
+#define IO_TEST_NEG_IOTXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle)
+
+#define IO_TEST_IOTXBYTE_CS() \
+    IO_TEST_POS_IOTXBYTE_CS(); \
+    IO_TEST_NEG_IOTXBYTE_CS()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - ioRxByte_CS                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IORXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_CS_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_CS_scratchpad2)
+
+#define IO_TEST_NEG_IORXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
+
+#define IO_TEST_IORXBYTE_CS() \
+    IO_TEST_POS_IORXBYTE_CS(); \
+    IO_TEST_NEG_IORXBYTE_CS()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - ioTxRxWordSeq                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOTXRXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxWordSeq_1byte); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxWordSeq_2bytes)
+
+#define IO_TEST_NEG_IOTXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_invalidCount)
+
+#define IO_TEST_NEG_IORXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_nullRxData); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_invalidCount)
+
+#define IO_TEST_IOTXRXWORDSEQ() \
+    IO_TEST_POS_IOTXRXWORDSEQ(); \
+    IO_TEST_NEG_IOTXWORDSEQ(); \
+    IO_TEST_NEG_IORXWORDSEQ()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - ioUpdateByte                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_singleBitField); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_multiBitField)
+
+#define IO_TEST_IOUPDATEBYTE() \
+    IO_TEST_POS_IOUPDATEBYTE()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - ioUpdateByte_b                  */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_B() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_b_setBit); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_b_clearBit)
+
+#define IO_TEST_IOUPDATEBYTE_B() \
+    IO_TEST_POS_IOUPDATEBYTE_B()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - ioUpdateByte_CS                  */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_CS_singleBitField)
+
+#define IO_TEST_IOUPDATEBYTE_CS() \
+    IO_TEST_POS_IOUPDATEBYTE_CS()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - ioUpdateByte_bCS                 */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_BCS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_bCS_setBit)
+
+#define IO_TEST_IOUPDATEBYTE_BCS() \
+    IO_TEST_POS_IOUPDATEBYTE_BCS()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - Register Tests                 */
+/* ========================================================================== */
+
+#define IO_TEST_POS_REGISTER() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_registerBoundaries); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_allScratchpadRegs)
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - CRC Tests                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_CRC() \
+    PLATFORM_RUN_TEST(test_pos_io_read_with_crc_validation); \
+    PLATFORM_RUN_TEST(test_pos_io_write_with_crc_calculation); \
+    PLATFORM_RUN_TEST(test_pos_io_crc_enable_disable_transitions)
+
+#define IO_TEST_NEG_CRC() \
+    PLATFORM_RUN_TEST(test_neg_io_crcErrorExhaustsRetries)
+
+#define IO_TEST_CRC() \
+    IO_TEST_POS_CRC(); \
+    IO_TEST_NEG_CRC()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - Validation Tests                */
+/* ========================================================================== */
+
+#define IO_TEST_NEG_VALIDATION() \
+    PLATFORM_RUN_TEST(test_neg_io_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_nullIoFptrs); \
+    PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry)
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
 
 #define IO_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_scratchpad1); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_scratchpad2); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_CS_scratchpad1); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_CS_scratchpad2); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxWordSeq_1byte); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxWordSeq_2bytes); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_singleBitField); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_multiBitField); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_b_setBit); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_b_clearBit); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_CS_singleBitField); \
-    PLATFORM_RUN_TEST(test_positive_ioUpdateByte_bCS_setBit); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_registerBoundaries); \
-    PLATFORM_RUN_TEST(test_positive_ioTxRxByte_allScratchpadRegs); \
-    PLATFORM_RUN_TEST(test_positive_io_read_with_crc_validation); \
-    PLATFORM_RUN_TEST(test_negative_io_read_with_crc_error); \
-    PLATFORM_RUN_TEST(test_positive_io_write_with_crc_calculation); \
-    PLATFORM_RUN_TEST(test_positive_io_crc_enable_disable_transitions); \
-    PLATFORM_RUN_TEST(test_positive_ioRxByte_withRetryOnCrcError); \
-    PLATFORM_RUN_TEST(test_positive_ioTxByte_withRetryOnFailure); \
-    PLATFORM_RUN_TEST(test_positive_ioTxByte_retrySucceedsOnLastAttempt); \
-    PLATFORM_RUN_TEST(test_positive_ioTxByte_multipleRetryAttempts)
+    IO_TEST_POS_IOTXBYTE(); \
+    IO_TEST_POS_IORXBYTE(); \
+    IO_TEST_POS_IOTXBYTE_CS(); \
+    IO_TEST_POS_IORXBYTE_CS(); \
+    IO_TEST_POS_IOTXRXWORDSEQ(); \
+    IO_TEST_POS_IOUPDATEBYTE(); \
+    IO_TEST_POS_IOUPDATEBYTE_B(); \
+    IO_TEST_POS_IOUPDATEBYTE_CS(); \
+    IO_TEST_POS_IOUPDATEBYTE_BCS(); \
+    IO_TEST_POS_REGISTER(); \
+    IO_TEST_POS_CRC()
+
+#define IO_TEST_RUN_NEGATIVE() \
+    IO_TEST_NEG_IOTXBYTE(); \
+    IO_TEST_NEG_IORXBYTE(); \
+    IO_TEST_NEG_IOTXBYTE_CS(); \
+    IO_TEST_NEG_IORXBYTE_CS(); \
+    IO_TEST_NEG_IOTXWORDSEQ(); \
+    IO_TEST_NEG_IORXWORDSEQ(); \
+    IO_TEST_NEG_CRC(); \
+    IO_TEST_NEG_VALIDATION()
+
+#define IO_TEST_RUN_ALL() \
+    IO_TEST_RUN_POSITIVE(); \
+    IO_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -227,28 +376,28 @@ void io_test(void *args)
 /*                      Negative Tests - NULL Handle                          */
 /* ========================================================================== */
 
-void test_negative_ioTxByte_nullHandle(void)
+void test_neg_io_ioTxByte_nullHandle(void)
 {
     uint8_t txData = 0xAAU;
     int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioRxByte_nullHandle(void)
+void test_neg_io_ioRxByte_nullHandle(void)
 {
     uint8_t rxData = 0U;
     int32_t status = Pmic_ioRxByte(NULL, IO_TEST_SCRATCHPAD1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioTxByte_CS_nullHandle(void)
+void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
     uint8_t txData = 0xAAU;
     int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioRxByte_CS_nullHandle(void)
+void test_neg_io_ioRxByte_CS_nullHandle(void)
 {
     uint8_t rxData = 0U;
     int32_t status = Pmic_ioRxByte_CS(NULL, IO_TEST_SCRATCHPAD1_REG, &rxData);
@@ -259,32 +408,32 @@ void test_negative_ioRxByte_CS_nullHandle(void)
 /*                    Negative Tests - NULL Parameters                        */
 /* ========================================================================== */
 
-void test_negative_ioRxByte_nullRxBuffer(void)
+void test_neg_io_ioRxByte_nullRxBuffer(void)
 {
     int32_t status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioRxByte_CS_nullRxBuffer(void)
+void test_neg_io_ioRxByte_CS_nullRxBuffer(void)
 {
     int32_t status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioRxWordSeq_nullHandle(void)
+void test_neg_io_ioRxWordSeq_nullHandle(void)
 {
     uint32_t rxData = 0U;
     int32_t status = Pmic_ioRxWordSeq(NULL, IO_TEST_SCRATCHPAD1_REG, &rxData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioRxWordSeq_nullRxData(void)
+void test_neg_io_ioRxWordSeq_nullRxData(void)
 {
     int32_t status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, NULL, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_ioTxWordSeq_nullHandle(void)
+void test_neg_io_ioTxWordSeq_nullHandle(void)
 {
     uint32_t txData = 0xAABBCCDDU;
     int32_t status = Pmic_ioTxWordSeq(NULL, IO_TEST_SCRATCHPAD1_REG, txData, 2U);
@@ -295,7 +444,7 @@ void test_negative_ioTxWordSeq_nullHandle(void)
 /*                   Negative Tests - Invalid Parameters                      */
 /* ========================================================================== */
 
-void test_negative_ioRxWordSeq_invalidCount(void)
+void test_neg_io_ioRxWordSeq_invalidCount(void)
 {
     uint32_t rxData = 0U;
     /* Count exceeds uint32_t size (4 bytes) */
@@ -303,7 +452,7 @@ void test_negative_ioRxWordSeq_invalidCount(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_ioTxWordSeq_invalidCount(void)
+void test_neg_io_ioTxWordSeq_invalidCount(void)
 {
     uint32_t txData = 0xAABBCCDDU;
     /* Count exceeds uint32_t size (4 bytes) */
@@ -315,7 +464,7 @@ void test_negative_ioTxWordSeq_invalidCount(void)
 /*              Positive Tests - Single Byte Operations                       */
 /* ========================================================================== */
 
-void test_positive_ioTxRxByte_scratchpad1(void)
+void test_pos_io_ioTxByte_scratchpad1(void)
 {
     int32_t status;
     uint8_t writeData = 0xA5U;
@@ -331,7 +480,23 @@ void test_positive_ioTxRxByte_scratchpad1(void)
     PLATFORM_ASSERT(readData == writeData);
 }
 
-void test_positive_ioTxRxByte_scratchpad2(void)
+void test_pos_io_ioRxByte_scratchpad1(void)
+{
+    int32_t status;
+    uint8_t writeData = 0xA5U;
+    uint8_t readData = 0U;
+
+    /* Write test pattern */
+    status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Read back and verify */
+    status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readData == writeData);
+}
+
+void test_pos_io_ioTxByte_scratchpad2(void)
 {
     int32_t status;
     uint8_t writeData = 0x5AU;
@@ -347,7 +512,23 @@ void test_positive_ioTxRxByte_scratchpad2(void)
     PLATFORM_ASSERT(readData == writeData);
 }
 
-void test_positive_ioTxRxByte_CS_scratchpad1(void)
+void test_pos_io_ioRxByte_scratchpad2(void)
+{
+    int32_t status;
+    uint8_t writeData = 0x5AU;
+    uint8_t readData = 0U;
+
+    /* Write test pattern */
+    status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Read back and verify */
+    status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readData == writeData);
+}
+
+void test_pos_io_ioTxByte_CS_scratchpad1(void)
 {
     int32_t status;
     uint8_t writeData = 0x3CU;
@@ -363,7 +544,39 @@ void test_positive_ioTxRxByte_CS_scratchpad1(void)
     PLATFORM_ASSERT(readData == writeData);
 }
 
-void test_positive_ioTxRxByte_CS_scratchpad2(void)
+void test_pos_io_ioRxByte_CS_scratchpad1(void)
+{
+    int32_t status;
+    uint8_t writeData = 0x3CU;
+    uint8_t readData = 0U;
+
+    /* Write test pattern with critical section */
+    status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Read back and verify with critical section */
+    status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readData == writeData);
+}
+
+void test_pos_io_ioTxByte_CS_scratchpad2(void)
+{
+    int32_t status;
+    uint8_t writeData = 0xC3U;
+    uint8_t readData = 0U;
+
+    /* Write test pattern with critical section */
+    status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Read back and verify with critical section */
+    status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readData == writeData);
+}
+
+void test_pos_io_ioRxByte_CS_scratchpad2(void)
 {
     int32_t status;
     uint8_t writeData = 0xC3U;
@@ -383,7 +596,7 @@ void test_positive_ioTxRxByte_CS_scratchpad2(void)
 /*          Positive Tests - Multi-Byte Sequential Operations                 */
 /* ========================================================================== */
 
-void test_positive_ioTxRxWordSeq_1byte(void)
+void test_pos_io_ioTxRxWordSeq_1byte(void)
 {
     int32_t status;
     uint32_t writeData = 0x000000ABU;
@@ -399,7 +612,7 @@ void test_positive_ioTxRxWordSeq_1byte(void)
     PLATFORM_ASSERT((readData & 0xFFU) == (writeData & 0xFFU));
 }
 
-void test_positive_ioTxRxWordSeq_2bytes(void)
+void test_pos_io_ioTxRxWordSeq_2bytes(void)
 {
     int32_t status;
     uint32_t writeData = 0x0000ABCDU;
@@ -420,7 +633,7 @@ void test_positive_ioTxRxWordSeq_2bytes(void)
 /*          Positive Tests - Read-Modify-Write Operations                     */
 /* ========================================================================== */
 
-void test_positive_ioUpdateByte_singleBitField(void)
+void test_pos_io_ioUpdateByte_singleBitField(void)
 {
     int32_t status;
     uint8_t initialValue = 0xF0U;
@@ -443,7 +656,7 @@ void test_positive_ioUpdateByte_singleBitField(void)
     PLATFORM_ASSERT(readData == expectedValue);
 }
 
-void test_positive_ioUpdateByte_multiBitField(void)
+void test_pos_io_ioUpdateByte_multiBitField(void)
 {
     int32_t status;
     uint8_t initialValue = 0x00U;
@@ -467,7 +680,7 @@ void test_positive_ioUpdateByte_multiBitField(void)
     PLATFORM_ASSERT(readData == expectedValue);
 }
 
-void test_positive_ioUpdateByte_b_setBit(void)
+void test_pos_io_ioUpdateByte_b_setBit(void)
 {
     int32_t status;
     uint8_t initialValue = 0x00U;
@@ -488,7 +701,7 @@ void test_positive_ioUpdateByte_b_setBit(void)
     PLATFORM_ASSERT((readData & (1U << IO_TEST_BIT_POS_4)) != 0U);
 }
 
-void test_positive_ioUpdateByte_b_clearBit(void)
+void test_pos_io_ioUpdateByte_b_clearBit(void)
 {
     int32_t status;
     uint8_t initialValue = 0xFFU;
@@ -509,7 +722,7 @@ void test_positive_ioUpdateByte_b_clearBit(void)
     PLATFORM_ASSERT((readData & (1U << IO_TEST_BIT_POS_4)) == 0U);
 }
 
-void test_positive_ioUpdateByte_CS_singleBitField(void)
+void test_pos_io_ioUpdateByte_CS_singleBitField(void)
 {
     int32_t status;
     uint8_t initialValue = 0x55U;
@@ -532,7 +745,7 @@ void test_positive_ioUpdateByte_CS_singleBitField(void)
     PLATFORM_ASSERT(readData == expectedValue);
 }
 
-void test_positive_ioUpdateByte_bCS_setBit(void)
+void test_pos_io_ioUpdateByte_bCS_setBit(void)
 {
     int32_t status;
     uint8_t initialValue = 0xAAU;
@@ -557,7 +770,7 @@ void test_positive_ioUpdateByte_bCS_setBit(void)
 /*               Positive Tests - Register Boundaries                         */
 /* ========================================================================== */
 
-void test_positive_ioTxRxByte_registerBoundaries(void)
+void test_pos_io_ioTxRxByte_registerBoundaries(void)
 {
     int32_t status;
     uint8_t writeData1 = 0x12U;
@@ -582,7 +795,7 @@ void test_positive_ioTxRxByte_registerBoundaries(void)
     PLATFORM_ASSERT(readData2 == writeData2);
 }
 
-void test_positive_ioTxRxByte_allScratchpadRegs(void)
+void test_pos_io_ioTxRxByte_allScratchpadRegs(void)
 {
     int32_t status;
     uint8_t writePattern[2] = {0xABU, 0xCDU};
@@ -612,7 +825,7 @@ void test_positive_ioTxRxByte_allScratchpadRegs(void)
 /*                      Positive Tests - CRC Validation                       */
 /* ========================================================================== */
 
-void test_positive_io_read_with_crc_validation(void)
+void test_pos_io_read_with_crc_validation(void)
 {
     int32_t status;
     uint8_t testData[] = {0x12U, 0x34U, 0x56U, 0x78U};
@@ -652,7 +865,7 @@ void test_positive_io_read_with_crc_validation(void)
     PLATFORM_ASSERT(byte1 == testData[1]);
 }
 
-void test_negative_io_read_with_crc_error(void)
+void test_neg_io_ioRxByte_crcError(void)
 {
     int32_t status;
     uint8_t readData = 0U;
@@ -691,7 +904,7 @@ void test_negative_io_read_with_crc_error(void)
     PmicMock_ClearErrors(mockDevice);
 }
 
-void test_positive_io_write_with_crc_calculation(void)
+void test_pos_io_write_with_crc_calculation(void)
 {
     int32_t status;
     uint8_t testPatterns[] = {0xAAU, 0x55U, 0xF0U, 0x0FU};
@@ -731,7 +944,7 @@ void test_positive_io_write_with_crc_calculation(void)
     PLATFORM_ASSERT((readData & 0xFFFFU) == (writeData & 0xFFFFU));
 }
 
-void test_positive_io_crc_enable_disable_transitions(void)
+void test_pos_io_crc_enable_disable_transitions(void)
 {
     int32_t status;
 
@@ -787,7 +1000,7 @@ void test_positive_io_crc_enable_disable_transitions(void)
     PLATFORM_ASSERT((readData4 & (1U << IO_TEST_BIT_POS_4)) != 0U);
 }
 
-void test_positive_ioRxByte_withRetryOnCrcError(void)
+void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -810,7 +1023,7 @@ void test_positive_ioRxByte_withRetryOnCrcError(void)
     PLATFORM_ASSERT(g_mockIoReadCallCount == 2U);
 }
 
-void test_positive_ioTxByte_withRetryOnFailure(void)
+void test_neg_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xAAU;
@@ -837,7 +1050,7 @@ void test_positive_ioTxByte_withRetryOnFailure(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
-void test_negative_io_crcErrorExhaustsRetries(void)
+void test_neg_io_crcErrorExhaustsRetries(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -893,7 +1106,7 @@ void test_negative_io_crcErrorExhaustsRetries(void)
 /**
  * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
  */
-void test_positive_ioTxByte_retrySucceedsOnLastAttempt(void)
+void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xBBU;
@@ -930,7 +1143,7 @@ void test_positive_ioTxByte_retrySucceedsOnLastAttempt(void)
 /**
  * @brief Test ioRxByte with zero retry count (no retries allowed)
  */
-void test_negative_ioRxByte_zeroRetryCntImmediateFail(void)
+void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -961,7 +1174,7 @@ void test_negative_ioRxByte_zeroRetryCntImmediateFail(void)
 /**
  * @brief Test ioTxByte with multiple retry attempts before success
  */
-void test_positive_ioTxByte_multipleRetryAttempts(void)
+void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xCCU;
@@ -994,7 +1207,7 @@ void test_positive_ioTxByte_multipleRetryAttempts(void)
  *
  * Covers line 138 in pmic_io.c - commHandle0 NULL validation
  */
-void test_negative_io_nullCommHandle(void)
+void test_neg_io_nullCommHandle(void)
 {
     Pmic_Handle_t testHandle;
     uint8_t rxData = 0U;
@@ -1015,7 +1228,7 @@ void test_negative_io_nullCommHandle(void)
  *
  * Covers line 142 in pmic_io.c - ioRead/ioWrite NULL validation
  */
-void test_negative_io_nullIoFptrs(void)
+void test_neg_io_nullIoFptrs(void)
 {
     Pmic_Handle_t testHandle;
     uint8_t rxData = 0U;
@@ -1041,7 +1254,7 @@ void test_negative_io_nullIoFptrs(void)
  *
  * Covers line 146 in pmic_io.c - timer validation when retry interval is set
  */
-void test_negative_io_nullTimerWithRetry(void)
+void test_neg_io_nullTimerWithRetry(void)
 {
     Pmic_Handle_t testHandle;
     uint8_t rxData = 0U;

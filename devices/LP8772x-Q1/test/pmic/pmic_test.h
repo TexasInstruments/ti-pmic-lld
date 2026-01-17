@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_INIT_TEST_H
-#define PMIC_INIT_TEST_H
+#ifndef PMIC_TEST_H
+#define PMIC_TEST_H
 
 
 
@@ -49,50 +49,42 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-void pmic_init_test(void *args);
+void pmic_test(void *args);
 
-void test_negative_Pmic_init_nullHandle(void);
-void test_negative_Pmic_init_nullConfig(void);
-void test_negative_Pmic_deinit_nullHandle(void);
-void test_negative_Pmic_checkHandle_nullHandle(void);
-void test_negative_Pmic_init_invalidCommMode(void);
-void test_negative_Pmic_init_nullCommHandle(void);
-void test_negative_Pmic_init_nullTaskHandle(void);
-void test_negative_Pmic_init_nullIoRead(void);
-void test_negative_Pmic_init_nullIoWrite(void);
-void test_negative_Pmic_init_nullAsyncRxStart(void);
-void test_negative_Pmic_init_nullAsyncTxStart(void);
-void test_negative_Pmic_init_nullAsyncRxAwait(void);
-void test_negative_Pmic_init_nullAsyncTxAwait(void);
-void test_negative_Pmic_init_nullCritSecStart(void);
-void test_negative_Pmic_init_nullCritSecStop(void);
-void test_negative_Pmic_init_nullIrqCallback(void);
-
-void test_positive_Pmic_init_validConfig(void);
-void test_positive_Pmic_deinit_afterInit(void);
-void test_positive_Pmic_checkHandle_validHandle(void);
-void test_positive_Pmic_checkHandle_invalidHandle(void);
-void test_positive_Pmic_init_reinit(void);
-void test_positive_Pmic_init_with_crc_enabled(void);
-void test_positive_Pmic_init_with_both_crc_flags(void);
-void test_positive_Pmic_init_crc_disabled(void);
-void test_positive_Pmic_init_verify_crc_state(void);
-void test_positive_Pmic_init_complete_flow(void);
-void test_positive_Pmic_init_i2c_single_mode(void);
-void test_positive_Pmic_init_i2c_dual_mode(void);
-void test_positive_Pmic_init_device_info_retrieval(void);
-void test_positive_Pmic_deinit_success_path(void);
-void test_positive_Pmic_checkHandle_all_validations(void);
-void test_positive_Pmic_init_async_mode(void);
-void test_positive_Pmic_init_with_i2c_addresses(void);
-void test_positive_Pmic_init_with_task_handle(void);
-void test_positive_init_withRetryCnt(void);
-void test_positive_init_withRetryInterval(void);
-void test_positive_init_withTimerWaitMs(void);
-void test_negative_init_timerWaitNull(void);
-void test_negative_init_timerWaitMsCallbackNull(void);
+void test_neg_pmic_checkHandle_invalidCommMode(void);
+void test_neg_pmic_checkHandle_nullTimerWithRetry(void);
+void test_neg_pmic_checkPmicCoreHandle_incorrectDrvInitStatus(void);
+void test_neg_pmic_checkPmicCoreHandle_nullCommHandle0(void);
+void test_neg_pmic_checkPmicCoreHandle_nullHandle(void);
+void test_neg_pmic_checkPmicCoreHandle_nullIoRead(void);
+void test_neg_pmic_deinit_nullHandle(void);
+void test_neg_pmic_init_incorrectCoreCfgCommMode(void);
+void test_neg_pmic_init_nullCoreCfg(void);
+void test_neg_pmic_init_nullCoreCfgCommHandle0(void);
+void test_neg_pmic_init_nullCoreCfgCriticalSectionStart(void);
+void test_neg_pmic_init_nullCoreCfgCriticalSectionStop(void);
+void test_neg_pmic_init_nullCoreCfgIoRead(void);
+void test_neg_pmic_init_nullCoreCfgIoWrite(void);
+void test_neg_pmic_init_nullCoreCfgIrqResponseCallback(void);
+void test_neg_pmic_init_nullHandle(void);
+void test_neg_pmic_init_timerWaitNull(void);
+void test_pos_pmic_checkHandle_validations(void);
+void test_pos_pmic_checkPmicCoreHandle(void);
+void test_pos_pmic_deinit(void);
+void test_pos_pmic_deinit_completeFlow(void);
+void test_pos_pmic_init(void);
+void test_pos_pmic_init_communicationValidation(void);
+void test_pos_pmic_init_completeFlow(void);
+void test_pos_pmic_init_crcErrorRecovery(void);
+void test_pos_pmic_init_deviceInfoRetrieval(void);
+void test_pos_pmic_init_withBothCrcEnabled(void);
+void test_pos_pmic_init_withConfigCrcEnabled(void);
+void test_pos_pmic_init_withCrcEnabled(void);
+void test_pos_pmic_init_withRetryCnt(void);
+void test_pos_pmic_init_withRetryInterval(void);
+void test_pos_pmic_init_withTimerWaitMs(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__PMIC_INIT_TEST_H__*/
+#endif /*__PMIC_TEST_H__*/

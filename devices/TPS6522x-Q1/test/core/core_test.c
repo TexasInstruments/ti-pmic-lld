@@ -41,52 +41,6 @@
 #include "pmic_core.h"
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/* Run all Core tests */
-#define CORE_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_siliconRev); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_lockState); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullValue); \
-                            PLATFORM_RUN_TEST(test_positive_getSiliconRev); \
-                            PLATFORM_RUN_TEST(test_positive_getNvmRev); \
-                            PLATFORM_RUN_TEST(test_positive_getRegLockState); \
-                            PLATFORM_RUN_TEST(test_positive_setScratchPadValue_reg1); \
-                            PLATFORM_RUN_TEST(test_positive_getScratchPadValue_reg2); \
-                            PLATFORM_RUN_TEST(test_positive_setScratchPadValue_reg3); \
-                            PLATFORM_RUN_TEST(test_positive_getScratchPadValue_reg4); \
-                            PLATFORM_RUN_TEST(test_positive_scratchPadValue_boundary)
-
-/* Run all Core negative tests */
-#define CORE_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_siliconRev); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_lockState); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullValue)
-
-/* Run all Core positive tests */
-#define CORE_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_getSiliconRev); \
-                                 PLATFORM_RUN_TEST(test_positive_getNvmRev); \
-                                 PLATFORM_RUN_TEST(test_positive_getRegLockState); \
-                                 PLATFORM_RUN_TEST(test_positive_setScratchPadValue_reg1); \
-                                 PLATFORM_RUN_TEST(test_positive_getScratchPadValue_reg2); \
-                                 PLATFORM_RUN_TEST(test_positive_setScratchPadValue_reg3); \
-                                 PLATFORM_RUN_TEST(test_positive_getScratchPadValue_reg4); \
-                                 PLATFORM_RUN_TEST(test_positive_scratchPadValue_boundary)
-
-/* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
@@ -161,65 +115,65 @@ void core_test(void *args)
 /*                         Negative Test Cases                                */
 /* ========================================================================== */
 
-void test_negative_Pmic_getSiliconRev_nullParam_handle(void)
+void test_neg_core_getSiliconRev_nullParam_handle(void)
 {
     uint8_t siliconRev = 0U;
     int32_t status = Pmic_getSiliconRev(NULL, &siliconRev);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void)
+void test_neg_core_getSiliconRev_nullParam_siliconRev(void)
 {
     int32_t status = Pmic_getSiliconRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getNvmRev_nullParam_handle(void)
+void test_neg_core_getNvmRev_nullParam_handle(void)
 {
     uint8_t nvmRev = 0U;
     int32_t status = Pmic_getNvmRev(NULL, &nvmRev);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void)
+void test_neg_core_getNvmRev_nullParam_nvmRev(void)
 {
     int32_t status = Pmic_getNvmRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_handle(void)
+void test_neg_core_getRegLockState_nullParam_handle(void)
 {
     bool lockState = PMIC_DISABLE;
     int32_t status = Pmic_getRegLockState(NULL, &lockState);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_lockState(void)
+void test_neg_core_getRegLockState_nullParam_lockState(void)
 {
     int32_t status = Pmic_getRegLockState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setScratchPadValue_nullParam_handle(void)
+void test_neg_core_setScratchPadValue_nullParam_handle(void)
 {
     int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
     int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
     uint8_t value = 0U;
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, &value);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_nullValue(void)
+void test_neg_core_getScratchPadValue_nullValue(void)
 {
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -229,28 +183,28 @@ void test_negative_Pmic_getScratchPadValue_nullValue(void)
 /*                         Positive Test Cases                                */
 /* ========================================================================== */
 
-void test_positive_getSiliconRev(void)
+void test_pos_core_getSiliconRev(void)
 {
     uint8_t siliconRev = 0U;
     int32_t status = Pmic_getSiliconRev(&pmicHandle, &siliconRev);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_getNvmRev(void)
+void test_pos_core_getNvmRev(void)
 {
     uint8_t nvmRev = 0U;
     int32_t status = Pmic_getNvmRev(&pmicHandle, &nvmRev);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_getRegLockState(void)
+void test_pos_core_getRegLockState(void)
 {
     bool lockState = PMIC_DISABLE;
     int32_t status = Pmic_getRegLockState(&pmicHandle, &lockState);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_setScratchPadValue_reg1(void)
+void test_pos_core_setScratchPadValue_reg1(void)
 {
     uint8_t writeVal = 0xA5U;
     uint8_t readVal = 0U;
@@ -265,7 +219,7 @@ void test_positive_setScratchPadValue_reg1(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
-void test_positive_getScratchPadValue_reg2(void)
+void test_pos_core_getScratchPadValue_reg2(void)
 {
     uint8_t writeVal = 0x5AU;
     uint8_t readVal = 0U;
@@ -280,7 +234,7 @@ void test_positive_getScratchPadValue_reg2(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
-void test_positive_setScratchPadValue_reg3(void)
+void test_pos_core_setScratchPadValue_reg3(void)
 {
     uint8_t writeVal = 0xF0U;
     uint8_t readVal = 0U;
@@ -295,7 +249,7 @@ void test_positive_setScratchPadValue_reg3(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
-void test_positive_getScratchPadValue_reg4(void)
+void test_pos_core_getScratchPadValue_reg4(void)
 {
     uint8_t writeVal = 0x0FU;
     uint8_t readVal = 0U;
@@ -310,7 +264,7 @@ void test_positive_getScratchPadValue_reg4(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
-void test_positive_scratchPadValue_boundary(void)
+void test_pos_core_scratchPadValue_boundary(void)
 {
     uint8_t writeVal = 0xFFU;
     uint8_t readVal = 0U;

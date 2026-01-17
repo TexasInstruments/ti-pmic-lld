@@ -42,96 +42,6 @@
 #include "esm_test.h"
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/* Run all ESM tests */
-#define ESM_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_nullParam_esmCfg); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_invalid_validParams); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_outOfBounds_mode); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_outOfBounds_errCntThr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_nullParam_esmCfg); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_invalid_validParams); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmSetStartState_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmStart_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmStop_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStartState_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStartState_nullParam_start); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_nullParam_esmStat); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_invalid_validParams_zero); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_invalid_validParams_outOfBounds); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_nullParam_esmStat); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_invalid_validParams_zero); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_invalid_validParams_outOfBounds); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetErrCnt_nullParam_pmicHandle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_esmGetErrCnt_nullParam_errCnt); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_enable); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_mode_level); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_mode_pwm); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_errCntThr); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_delay1); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_delay2); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_hmax); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_hmin); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_lmax); \
-                           PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_lmin); \
-                           PLATFORM_RUN_TEST(test_positive_esmStartStop); \
-                           PLATFORM_RUN_TEST(test_positive_esmStart); \
-                           PLATFORM_RUN_TEST(test_positive_esmStop); \
-                           PLATFORM_RUN_TEST(test_positive_esmGetStartState); \
-                           PLATFORM_RUN_TEST(test_positive_esmGetStatus); \
-                           PLATFORM_RUN_TEST(test_positive_esmClrStatus); \
-                           PLATFORM_RUN_TEST(test_positive_esmGetErrCnt)
-
-/* Run all ESM negative tests */
-#define ESM_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_nullParam_esmCfg); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_invalid_validParams); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_outOfBounds_mode); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmSetCfg_outOfBounds_errCntThr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_nullParam_esmCfg); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetCfg_invalid_validParams); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmSetStartState_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmStart_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmStop_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStartState_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStartState_nullParam_start); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_nullParam_esmStat); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_invalid_validParams_zero); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetStatus_invalid_validParams_outOfBounds); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_nullParam_esmStat); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_invalid_validParams_zero); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmClrStatus_invalid_validParams_outOfBounds); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetErrCnt_nullParam_pmicHandle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_esmGetErrCnt_nullParam_errCnt)
-
-/* Run all ESM positive tests */
-#define ESM_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_enable); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_mode_level); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_mode_pwm); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_errCntThr); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_delay1); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_delay2); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_hmax); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_hmin); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_lmax); \
-                                PLATFORM_RUN_TEST(test_positive_esmSetGetCfg_lmin); \
-                                PLATFORM_RUN_TEST(test_positive_esmStartStop); \
-                                PLATFORM_RUN_TEST(test_positive_esmStart); \
-                                PLATFORM_RUN_TEST(test_positive_esmStop); \
-                                PLATFORM_RUN_TEST(test_positive_esmGetStartState); \
-                                PLATFORM_RUN_TEST(test_positive_esmGetStatus); \
-                                PLATFORM_RUN_TEST(test_positive_esmClrStatus); \
-                                PLATFORM_RUN_TEST(test_positive_esmGetErrCnt)
-
-/* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
@@ -172,7 +82,7 @@ void esm_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
         /* Unlock PMIC registers for testing */
         if (status != PMIC_ST_SUCCESS)
@@ -199,7 +109,7 @@ void esm_test(void *args)
 /*                    Negative Tests - Pmic_esmSetCfg                         */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmSetCfg_nullParam_pmicHandle(void)
+void test_neg_esm_esmSetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmSetCfg()
     Pmic_EsmCfg_t esmCfg = {
@@ -210,14 +120,14 @@ void test_negative_Pmic_esmSetCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmSetCfg_nullParam_esmCfg(void)
+void test_neg_esm_esmSetCfg_nullEsmCfg(void)
 {
     // Pass NULL esmCfg into Pmic_esmSetCfg()
     int32_t status = Pmic_esmSetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmSetCfg_invalid_validParams(void)
+void test_neg_esm_esmSetCfg_invalidValidParams(void)
 {
     // Pass invalid validParams (0) into Pmic_esmSetCfg()
     Pmic_EsmCfg_t esmCfg = {
@@ -228,7 +138,7 @@ void test_negative_Pmic_esmSetCfg_invalid_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_esmSetCfg_outOfBounds_mode(void)
+void test_neg_esm_esmSetCfg_outOfBounds_mode(void)
 {
     // Pass out of bounds mode into Pmic_esmSetCfg()
     Pmic_EsmCfg_t esmCfg = {
@@ -239,7 +149,7 @@ void test_negative_Pmic_esmSetCfg_outOfBounds_mode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_esmSetCfg_outOfBounds_errCntThr(void)
+void test_neg_esm_esmSetCfg_outOfBounds_errCntThr(void)
 {
     // Pass out of bounds errCntThr into Pmic_esmSetCfg()
     Pmic_EsmCfg_t esmCfg = {
@@ -254,7 +164,7 @@ void test_negative_Pmic_esmSetCfg_outOfBounds_errCntThr(void)
 /*                    Negative Tests - Pmic_esmGetCfg                         */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmGetCfg_nullParam_pmicHandle(void)
+void test_neg_esm_esmGetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmGetCfg()
     Pmic_EsmCfg_t esmCfg = {.validParams = PMIC_ESM_ENABLE_VALID};
@@ -262,14 +172,14 @@ void test_negative_Pmic_esmGetCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetCfg_nullParam_esmCfg(void)
+void test_neg_esm_esmGetCfg_nullEsmCfg(void)
 {
     // Pass NULL esmCfg into Pmic_esmGetCfg()
     int32_t status = Pmic_esmGetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetCfg_invalid_validParams(void)
+void test_neg_esm_esmGetCfg_invalidValidParams(void)
 {
     // Pass invalid validParams (0) into Pmic_esmGetCfg()
     Pmic_EsmCfg_t esmCfg = {.validParams = 0U};
@@ -281,7 +191,7 @@ void test_negative_Pmic_esmGetCfg_invalid_validParams(void)
 /*                  Negative Tests - Pmic_esmSetStartState                    */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmSetStartState_nullParam_pmicHandle(void)
+void test_neg_esm_esmSetStartState_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmSetStartState()
     int32_t status = Pmic_esmSetStartState(NULL, PMIC_ESM_START);
@@ -292,7 +202,7 @@ void test_negative_Pmic_esmSetStartState_nullParam_pmicHandle(void)
 /*                     Negative Tests - Pmic_esmStart                         */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmStart_nullParam_pmicHandle(void)
+void test_neg_esm_esmStart_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmStart()
     int32_t status = Pmic_esmStart(NULL);
@@ -303,7 +213,7 @@ void test_negative_Pmic_esmStart_nullParam_pmicHandle(void)
 /*                     Negative Tests - Pmic_esmStop                          */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmStop_nullParam_pmicHandle(void)
+void test_neg_esm_esmStop_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmStop()
     int32_t status = Pmic_esmStop(NULL);
@@ -314,7 +224,7 @@ void test_negative_Pmic_esmStop_nullParam_pmicHandle(void)
 /*                  Negative Tests - Pmic_esmGetStartState                    */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmGetStartState_nullParam_pmicHandle(void)
+void test_neg_esm_esmGetStartState_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmGetStartState()
     bool start = (bool)false;
@@ -322,7 +232,7 @@ void test_negative_Pmic_esmGetStartState_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetStartState_nullParam_start(void)
+void test_neg_esm_esmGetStartState_nullStarted(void)
 {
     // Pass NULL start into Pmic_esmGetStartState()
     int32_t status = Pmic_esmGetStartState(&pmicHandle, NULL);
@@ -333,7 +243,7 @@ void test_negative_Pmic_esmGetStartState_nullParam_start(void)
 /*                   Negative Tests - Pmic_esmGetStatus                       */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmGetStatus_nullParam_pmicHandle(void)
+void test_neg_esm_esmGetStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmGetStatus()
     Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
@@ -341,14 +251,14 @@ void test_negative_Pmic_esmGetStatus_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetStatus_nullParam_esmStat(void)
+void test_neg_esm_esmGetStatus_nullEsmStat(void)
 {
     // Pass NULL esmStat into Pmic_esmGetStatus()
     int32_t status = Pmic_esmGetStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetStatus_invalid_validParams_zero(void)
+void test_neg_esm_esmGetStatus_invalidValidParams_zero(void)
 {
     // Pass invalid validParams (0) into Pmic_esmGetStatus()
     Pmic_EsmStat_t esmStat = {.validParams = 0U};
@@ -356,7 +266,7 @@ void test_negative_Pmic_esmGetStatus_invalid_validParams_zero(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_esmGetStatus_invalid_validParams_outOfBounds(void)
+void test_neg_esm_esmGetStatus_invalidValidParams_outOfBounds(void)
 {
     // Pass out of bounds validParams into Pmic_esmGetStatus()
     Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
@@ -368,7 +278,7 @@ void test_negative_Pmic_esmGetStatus_invalid_validParams_outOfBounds(void)
 /*                   Negative Tests - Pmic_esmClrStatus                       */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmClrStatus_nullParam_pmicHandle(void)
+void test_neg_esm_esmClrStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmClrStatus()
     Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
@@ -376,14 +286,14 @@ void test_negative_Pmic_esmClrStatus_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmClrStatus_nullParam_esmStat(void)
+void test_neg_esm_esmClrStatus_nullEsmStat(void)
 {
     // Pass NULL esmStat into Pmic_esmClrStatus()
     int32_t status = Pmic_esmClrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmClrStatus_invalid_validParams_zero(void)
+void test_neg_esm_esmClrStatus_invalidValidParams_zero(void)
 {
     // Pass invalid validParams (0) into Pmic_esmClrStatus()
     Pmic_EsmStat_t esmStat = {.validParams = 0U};
@@ -391,7 +301,7 @@ void test_negative_Pmic_esmClrStatus_invalid_validParams_zero(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_esmClrStatus_invalid_validParams_outOfBounds(void)
+void test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds(void)
 {
     // Pass out of bounds validParams into Pmic_esmClrStatus()
     Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
@@ -403,7 +313,7 @@ void test_negative_Pmic_esmClrStatus_invalid_validParams_outOfBounds(void)
 /*                   Negative Tests - Pmic_esmGetErrCnt                       */
 /* ========================================================================== */
 
-void test_negative_Pmic_esmGetErrCnt_nullParam_pmicHandle(void)
+void test_neg_esm_esmGetErrCnt_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmGetErrCnt()
     uint8_t errCnt = 0U;
@@ -411,7 +321,7 @@ void test_negative_Pmic_esmGetErrCnt_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_esmGetErrCnt_nullParam_errCnt(void)
+void test_neg_esm_esmGetErrCnt_nullErrCnt(void)
 {
     // Pass NULL errCnt into Pmic_esmGetErrCnt()
     int32_t status = Pmic_esmGetErrCnt(&pmicHandle, NULL);
@@ -422,7 +332,7 @@ void test_negative_Pmic_esmGetErrCnt_nullParam_errCnt(void)
 /*                 Positive Tests - Set/Get ESM Configuration                 */
 /* ========================================================================== */
 
-void test_positive_esmSetGetCfg_enable(void)
+void test_pos_esm_esmSetGetCfg_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_ENABLE_VALID};
@@ -453,7 +363,7 @@ void test_positive_esmSetGetCfg_enable(void)
     PLATFORM_ASSERT(actCfg.enable == PMIC_DISABLE);
 }
 
-void test_positive_esmSetGetCfg_mode_level(void)
+void test_pos_esm_esmSetGetCfg_mode_level(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_MODE_VALID};
@@ -474,7 +384,7 @@ void test_positive_esmSetGetCfg_mode_level(void)
     PLATFORM_ASSERT(actCfg.mode == ESM_LEVEL_MODE);
 }
 
-void test_positive_esmSetGetCfg_mode_pwm(void)
+void test_pos_esm_esmSetGetCfg_mode_pwm(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_MODE_VALID};
@@ -495,7 +405,7 @@ void test_positive_esmSetGetCfg_mode_pwm(void)
     PLATFORM_ASSERT(actCfg.mode == ESM_PWM_MODE);
 }
 
-void test_positive_esmSetGetCfg_errCntThr(void)
+void test_pos_esm_esmSetGetCfg_errCntThr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_ERR_CNT_THR_VALID};
@@ -521,7 +431,7 @@ void test_positive_esmSetGetCfg_errCntThr(void)
     PLATFORM_ASSERT(actCfg.errCntThr == ESM_ERR_CNT_THR_MAX);
 }
 
-void test_positive_esmSetGetCfg_delay1(void)
+void test_pos_esm_esmSetGetCfg_delay1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_DELAY1_VALID};
@@ -547,7 +457,7 @@ void test_positive_esmSetGetCfg_delay1(void)
     PLATFORM_ASSERT(actCfg.delay1 == 0xFFU);
 }
 
-void test_positive_esmSetGetCfg_delay2(void)
+void test_pos_esm_esmSetGetCfg_delay2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_DELAY2_VALID};
@@ -573,7 +483,7 @@ void test_positive_esmSetGetCfg_delay2(void)
     PLATFORM_ASSERT(actCfg.delay2 == 0xFFU);
 }
 
-void test_positive_esmSetGetCfg_hmax(void)
+void test_pos_esm_esmSetGetCfg_hmax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_HMAX_VALID};
@@ -599,7 +509,7 @@ void test_positive_esmSetGetCfg_hmax(void)
     PLATFORM_ASSERT(actCfg.hmax == 0xFFU);
 }
 
-void test_positive_esmSetGetCfg_hmin(void)
+void test_pos_esm_esmSetGetCfg_hmin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_HMIN_VALID};
@@ -625,7 +535,7 @@ void test_positive_esmSetGetCfg_hmin(void)
     PLATFORM_ASSERT(actCfg.hmin == 0xFFU);
 }
 
-void test_positive_esmSetGetCfg_lmax(void)
+void test_pos_esm_esmSetGetCfg_lmax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_LMAX_VALID};
@@ -651,7 +561,7 @@ void test_positive_esmSetGetCfg_lmax(void)
     PLATFORM_ASSERT(actCfg.lmax == 0xFFU);
 }
 
-void test_positive_esmSetGetCfg_lmin(void)
+void test_pos_esm_esmSetGetCfg_lmin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmCfg_t expCfg = {.validParams = PMIC_ESM_LMIN_VALID};
@@ -681,7 +591,7 @@ void test_positive_esmSetGetCfg_lmin(void)
 /*                    Positive Tests - Start/Stop ESM                         */
 /* ========================================================================== */
 
-void test_positive_esmStartStop(void)
+void test_pos_esm_esmStartStop(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool startState = (bool)false;
@@ -705,7 +615,7 @@ void test_positive_esmStartStop(void)
     PLATFORM_ASSERT(startState == (bool)false);
 }
 
-void test_positive_esmStart(void)
+void test_pos_esm_esmStart(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool startState = (bool)false;
@@ -720,7 +630,7 @@ void test_positive_esmStart(void)
     PLATFORM_ASSERT(startState == (bool)true);
 }
 
-void test_positive_esmStop(void)
+void test_pos_esm_esmStop(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool startState = (bool)false;
@@ -739,7 +649,7 @@ void test_positive_esmStop(void)
     PLATFORM_ASSERT(startState == (bool)false);
 }
 
-void test_positive_esmGetStartState(void)
+void test_pos_esm_esmGetStartState(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool startState = (bool)false;
@@ -771,7 +681,7 @@ void test_positive_esmGetStartState(void)
 /*                      Positive Tests - ESM Status                           */
 /* ========================================================================== */
 
-void test_positive_esmGetStatus(void)
+void test_pos_esm_esmGetStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID};
@@ -794,7 +704,7 @@ void test_positive_esmGetStatus(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_esmClrStatus(void)
+void test_pos_esm_esmClrStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_EsmStat_t esmStat = {0U};
@@ -822,7 +732,7 @@ void test_positive_esmClrStatus(void)
 /*                   Positive Tests - ESM Error Count                         */
 /* ========================================================================== */
 
-void test_positive_esmGetErrCnt(void)
+void test_pos_esm_esmGetErrCnt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t errCnt = 0U;

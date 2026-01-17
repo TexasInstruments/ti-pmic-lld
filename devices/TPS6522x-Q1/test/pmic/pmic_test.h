@@ -1,0 +1,196 @@
+/******************************************************************************
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *****************************************************************************/
+#ifndef PMIC_TEST_H
+#define PMIC_TEST_H
+
+
+
+/* ========================================================================== */
+/*                              Include Files                                 */
+/* ========================================================================== */
+
+#include "platform.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+void pmic_test(void *args);
+
+/* ========================================================================== */
+/*                       Pmic_init Test Declarations                          */
+/* ========================================================================== */
+
+/* Negative Tests */
+void test_neg_pmic_init_nullHandle(void);
+void test_neg_pmic_init_nullConfig(void);
+void test_neg_pmic_init_invalidCommMode(void);
+void test_neg_pmic_init_nullCommHandle(void);
+void test_neg_pmic_init_nullTaskHandle(void);
+void test_neg_pmic_init_nullIoRead(void);
+void test_neg_pmic_init_nullIoWrite(void);
+void test_neg_pmic_init_nullAsyncRxStart(void);
+void test_neg_pmic_init_nullAsyncTxStart(void);
+void test_neg_pmic_init_nullAsyncRxAwait(void);
+void test_neg_pmic_init_nullAsyncTxAwait(void);
+void test_neg_pmic_init_nullCritSecStart(void);
+void test_neg_pmic_init_nullCritSecStop(void);
+void test_neg_pmic_init_nullIrqCallback(void);
+void test_neg_pmic_init_timerWaitNull(void);
+void test_neg_pmic_init_timerWaitMsCallbackNull(void);
+
+/* Positive Tests */
+void test_pos_pmic_init_validConfig(void);
+void test_pos_pmic_init_reinit(void);
+void test_pos_pmic_init_with_crc_enabled(void);
+void test_pos_pmic_init_with_both_crc_flags(void);
+void test_pos_pmic_init_crc_disabled(void);
+void test_pos_pmic_init_verify_crc_state(void);
+void test_pos_pmic_init_complete_flow(void);
+void test_pos_pmic_init_i2c_single_mode(void);
+void test_pos_pmic_init_i2c_dual_mode(void);
+void test_pos_pmic_init_device_info_retrieval(void);
+void test_pos_pmic_init_async_mode(void);
+void test_pos_pmic_init_with_i2c_addresses(void);
+void test_pos_pmic_init_with_task_handle(void);
+void test_pos_pmic_init_withRetryCnt(void);
+void test_pos_pmic_init_withRetryInterval(void);
+void test_pos_pmic_init_withTimerWaitMs(void);
+
+/* ========================================================================== */
+/*                      Pmic_deinit Test Declarations                         */
+/* ========================================================================== */
+
+/* Negative Tests */
+void test_neg_pmic_deinit_nullHandle(void);
+
+/* Positive Tests */
+void test_pos_pmic_deinit_afterInit(void);
+void test_pos_pmic_deinit_success_path(void);
+
+/* ========================================================================== */
+/*                    Pmic_checkHandle Test Declarations                      */
+/* ========================================================================== */
+
+/* Negative Tests */
+void test_neg_pmic_checkHandle_nullHandle(void);
+
+/* Positive Tests */
+void test_pos_pmic_checkHandle_validHandle(void);
+void test_pos_pmic_checkHandle_invalidHandle(void);
+void test_pos_pmic_checkHandle_all_validations(void);
+
+/* ========================================================================== */
+/*                        Test Organization Macros                            */
+/* ========================================================================== */
+
+/* Pmic_init Tests */
+#define PMIC_TEST_POS_INIT() \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validConfig); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_reinit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_crc_enabled); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_both_crc_flags); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_crc_disabled); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_verify_crc_state); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_complete_flow); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_i2c_single_mode); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_i2c_dual_mode); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_device_info_retrieval); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_async_mode); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_i2c_addresses); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_task_handle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
+
+#define PMIC_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_invalidCommMode); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullTaskHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullAsyncRxStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullAsyncTxStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullAsyncRxAwait); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullAsyncTxAwait); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqCallback); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitMsCallbackNull)
+
+#define PMIC_TEST_INIT() \
+    PMIC_TEST_POS_INIT(); \
+    PMIC_TEST_NEG_INIT()
+
+/* Pmic_deinit Tests */
+#define PMIC_TEST_POS_DEINIT() \
+    PLATFORM_RUN_TEST(test_pos_pmic_deinit_afterInit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_deinit_success_path)
+
+#define PMIC_TEST_NEG_DEINIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle)
+
+#define PMIC_TEST_DEINIT() \
+    PMIC_TEST_POS_DEINIT(); \
+    PMIC_TEST_NEG_DEINIT()
+
+/* Pmic_checkHandle Tests */
+#define PMIC_TEST_POS_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_validHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_invalidHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_all_validations)
+
+#define PMIC_TEST_NEG_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullHandle)
+
+#define PMIC_TEST_CHECKHANDLE() \
+    PMIC_TEST_POS_CHECKHANDLE(); \
+    PMIC_TEST_NEG_CHECKHANDLE()
+
+/* Run all PMIC tests */
+#define PMIC_TEST_RUN_ALL() \
+    PMIC_TEST_INIT(); \
+    PMIC_TEST_DEINIT(); \
+    PMIC_TEST_CHECKHANDLE()
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+#endif /*__PMIC_TEST_H__*/

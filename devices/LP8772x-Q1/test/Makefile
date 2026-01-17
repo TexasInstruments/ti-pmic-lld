@@ -59,7 +59,7 @@ CFLAGS = -Weverything \
          -Wno-covered-switch-default \
          -Wno-missing-variable-declarations \
          -Werror \
-         -std=c99 -I$(INC_DIR) -I. -Icore -Ifsm -Iio -Iirq -Ipmic_init -Ipower -Iwdg -Iesm
+         -std=c99 -I$(INC_DIR) -I. -Icore -Ifsm -Iio -Iirq -Ipmic -Ipower -Iwdg -Iesm
 
 # PMIC driver source files (always needed)
 PMIC_SOURCES = \
@@ -76,12 +76,13 @@ PMIC_SOURCES = \
 # Test source files
 TEST_SOURCES = \
 	test_runner.c \
+	test_utils.c \
 	common/common_test.c \
 	core/core_test.c \
 	fsm/fsm_test.c \
 	io/io_test.c \
 	irq/irq_test.c \
-	pmic_init/pmic_init_test.c \
+	pmic/pmic_test.c \
 	power/power_test.c \
 	wdg/wdg_test.c \
 	esm/esm_test.c

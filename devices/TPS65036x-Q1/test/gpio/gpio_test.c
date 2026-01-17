@@ -45,84 +45,6 @@
 #endif
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/* Run all GPIO tests */
-#define GPIO_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalid_gpioPin); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalid_validParams_zero); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_invalid_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_invalid_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_functionality); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_polarity); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_functionality); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_polarity); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_invalid_gpioPin); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_invalid_validParams_zero); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_gpio_invalid_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nIntGpi_invalid_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetActivationState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioActivate_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioDeactivate_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetActivationState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetActivationState_nullParam_activated); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_functionality); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_polarity); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_all_params); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_functionality); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_polarity); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_puPdCfg); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_odPpCfg); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_all_params); \
-                            PLATFORM_RUN_TEST(test_positive_gpioActivateDeactivate); \
-                            PLATFORM_RUN_TEST(test_positive_gpioSetActivationState); \
-                            PLATFORM_RUN_TEST(test_positive_gpio_nIntGpi_repeatedFunctionality)
-
-/* Run all GPIO negative tests */
-#define GPIO_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalid_gpioPin); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_invalid_validParams_zero); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_invalid_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_invalid_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_functionality); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_polarity); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_functionality); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_polarity); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_invalid_gpioPin); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_invalid_validParams_zero); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_gpio_invalid_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetCfg_nIntGpi_invalid_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioSetActivationState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioActivate_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioDeactivate_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetActivationState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_gpioGetActivationState_nullParam_activated)
-
-/* Run all GPIO positive tests */
-#define GPIO_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_functionality); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_polarity); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_gpio_all_params); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_functionality); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_polarity); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_puPdCfg); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_odPpCfg); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetGetCfg_nIntGpi_all_params); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioActivateDeactivate); \
-                                 PLATFORM_RUN_TEST(test_positive_gpioSetActivationState); \
-                                 PLATFORM_RUN_TEST(test_positive_gpio_nIntGpi_repeatedFunctionality)
-
-/* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
@@ -163,7 +85,7 @@ void gpio_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
 
         if (status == PMIC_ST_SUCCESS)
@@ -202,7 +124,7 @@ void gpio_test(void *args)
 /*                    Negative Tests - Pmic_gpioSetCfg                        */
 /* ========================================================================== */
 
-void test_negative_Pmic_gpioSetCfg_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioSetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioSetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -213,14 +135,14 @@ void test_negative_Pmic_gpioSetCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg(void)
+void test_neg_gpio_gpioSetCfg_nullGpioCfg(void)
 {
     // Pass NULL gpioCfg into Pmic_gpioSetCfg()
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_GPIO, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_invalid_gpioPin(void)
+void test_neg_gpio_gpioSetCfg_invalidGpioPin(void)
 {
     // Pass invalid gpioPin into Pmic_gpioSetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -231,7 +153,7 @@ void test_negative_Pmic_gpioSetCfg_invalid_gpioPin(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_invalid_validParams_zero(void)
+void test_neg_gpio_gpioSetCfg_zeroValidParams(void)
 {
     // Pass validParams = 0 into Pmic_gpioSetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -242,7 +164,7 @@ void test_negative_Pmic_gpioSetCfg_invalid_validParams_zero(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_gpio_invalid_validParams(void)
+void test_neg_gpio_gpioSetCfg_gpio_invalidValidParams(void)
 {
     // Pass invalid validParams for GPIO pin (PU_PD_CFG_VALID not supported for GPIO)
     Pmic_GpioCfg_t gpioCfg = {
@@ -253,7 +175,7 @@ void test_negative_Pmic_gpioSetCfg_gpio_invalid_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
 }
 
-void test_negative_Pmic_gpioSetCfg_nIntGpi_invalid_validParams(void)
+void test_neg_gpio_gpioSetCfg_nIntGpi_invalidValidParams(void)
 {
     // Pass invalid validParams with no valid bits set (nothing to configure)
     Pmic_GpioCfg_t gpioCfg = {
@@ -264,7 +186,7 @@ void test_negative_Pmic_gpioSetCfg_nIntGpi_invalid_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_functionality(void)
+void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality(void)
 {
     // Pass out of bounds functionality for GPIO pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -275,7 +197,7 @@ void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_functionality(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_polarity(void)
+void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity(void)
 {
     // Pass out of bounds polarity for GPIO pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -286,7 +208,7 @@ void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_polarity(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_functionality(void)
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality(void)
 {
     // Pass out of bounds functionality for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -297,7 +219,7 @@ void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_functionality(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_polarity(void)
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity(void)
 {
     // Pass out of bounds polarity for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -308,7 +230,7 @@ void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_polarity(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void)
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void)
 {
     // Pass out of bounds puPdCfg for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -319,7 +241,7 @@ void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void)
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void)
 {
     // Pass out of bounds odPpCfg for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
@@ -334,7 +256,7 @@ void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void)
 /*                    Negative Tests - Pmic_gpioGetCfg                        */
 /* ========================================================================== */
 
-void test_negative_Pmic_gpioGetCfg_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioGetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioGetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -344,14 +266,14 @@ void test_negative_Pmic_gpioGetCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg(void)
+void test_neg_gpio_gpioGetCfg_nullGpioCfg(void)
 {
     // Pass NULL gpioCfg into Pmic_gpioGetCfg()
     int32_t status = Pmic_gpioGetCfg(&pmicHandle, PMIC_GPIO, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioGetCfg_invalid_gpioPin(void)
+void test_neg_gpio_gpioGetCfg_invalidGpioPin(void)
 {
     // Pass invalid gpioPin into Pmic_gpioGetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -361,7 +283,7 @@ void test_negative_Pmic_gpioGetCfg_invalid_gpioPin(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioGetCfg_invalid_validParams_zero(void)
+void test_neg_gpio_gpioGetCfg_zeroValidParams(void)
 {
     // Pass validParams = 0 into Pmic_gpioGetCfg()
     Pmic_GpioCfg_t gpioCfg = {
@@ -371,7 +293,7 @@ void test_negative_Pmic_gpioGetCfg_invalid_validParams_zero(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_gpioGetCfg_gpio_invalid_validParams(void)
+void test_neg_gpio_gpioGetCfg_gpio_invalidValidParams(void)
 {
     // Pass invalid validParams for GPIO pin (PU_PD_CFG_VALID not supported for GPIO)
     Pmic_GpioCfg_t gpioCfg = {
@@ -381,7 +303,7 @@ void test_negative_Pmic_gpioGetCfg_gpio_invalid_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
 }
 
-void test_negative_Pmic_gpioGetCfg_nIntGpi_invalid_validParams(void)
+void test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams(void)
 {
     // Pass invalid validParams with no valid bits set (nothing to get)
     Pmic_GpioCfg_t gpioCfg = {
@@ -395,28 +317,28 @@ void test_negative_Pmic_gpioGetCfg_nIntGpi_invalid_validParams(void)
 /*              Negative Tests - Activation State APIs                        */
 /* ========================================================================== */
 
-void test_negative_Pmic_gpioSetActivationState_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioSetActivationState_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioSetActivationState()
     int32_t status = Pmic_gpioSetActivationState(NULL, (bool)true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioActivate_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioActivate_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioActivate()
     int32_t status = Pmic_gpioActivate(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioDeactivate_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioDeactivate_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioDeactivate()
     int32_t status = Pmic_gpioDeactivate(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioGetActivationState_nullParam_pmicHandle(void)
+void test_neg_gpio_gpioGetActivationState_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioGetActivationState()
     bool activated = (bool)false;
@@ -424,7 +346,7 @@ void test_negative_Pmic_gpioGetActivationState_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_gpioGetActivationState_nullParam_activated(void)
+void test_neg_gpio_gpioGetActivationState_nullActivated(void)
 {
     // Pass NULL activated into Pmic_gpioGetActivationState()
     int32_t status = Pmic_gpioGetActivationState(&pmicHandle, NULL);
@@ -435,7 +357,7 @@ void test_negative_Pmic_gpioGetActivationState_nullParam_activated(void)
 /*              Positive Tests - PMIC_GPIO Pin Configuration                  */
 /* ========================================================================== */
 
-void test_positive_gpioSetGetCfg_gpio_functionality(void)
+void test_pos_gpio_gpioSetGetCfg_gpio_functionality(void)
 {
     /* Test all valid GPIO functionalities */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
@@ -454,7 +376,7 @@ void test_positive_gpioSetGetCfg_gpio_functionality(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_gpio_polarity(void)
+void test_pos_gpio_gpioSetGetCfg_gpio_polarity(void)
 {
     /* Test all valid GPIO polarities */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_POLARITY_VALID};
@@ -473,7 +395,7 @@ void test_positive_gpioSetGetCfg_gpio_polarity(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_gpio_all_params(void)
+void test_pos_gpio_gpioSetGetCfg_gpio_all_params(void)
 {
     /* Test GPIO with all valid parameters simultaneously */
     Pmic_GpioCfg_t expCfg = {
@@ -499,7 +421,7 @@ void test_positive_gpioSetGetCfg_gpio_all_params(void)
 /*            Positive Tests - PMIC_NINT_GPI Pin Configuration                */
 /* ========================================================================== */
 
-void test_positive_gpioSetGetCfg_nIntGpi_functionality(void)
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality(void)
 {
     /* Test all valid NINT_GPI functionalities */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
@@ -518,7 +440,7 @@ void test_positive_gpioSetGetCfg_nIntGpi_functionality(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_nIntGpi_polarity(void)
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity(void)
 {
     /* Test all valid NINT_GPI polarities */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_POLARITY_VALID};
@@ -537,7 +459,7 @@ void test_positive_gpioSetGetCfg_nIntGpi_polarity(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_nIntGpi_puPdCfg(void)
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg(void)
 {
     /* Test all valid NINT_GPI pullup/pulldown configurations */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_PU_PD_CFG_VALID};
@@ -556,7 +478,7 @@ void test_positive_gpioSetGetCfg_nIntGpi_puPdCfg(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_nIntGpi_odPpCfg(void)
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_odPpCfg(void)
 {
     /* Test all valid NINT_GPI open-drain/push-pull configurations */
     Pmic_GpioCfg_t expCfg = {.validParams = PMIC_OD_PP_CFG_VALID};
@@ -575,7 +497,7 @@ void test_positive_gpioSetGetCfg_nIntGpi_odPpCfg(void)
     }
 }
 
-void test_positive_gpioSetGetCfg_nIntGpi_all_params(void)
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params(void)
 {
     /* Test NINT_GPI with all valid parameters simultaneously */
     Pmic_GpioCfg_t expCfg = {
@@ -607,7 +529,7 @@ void test_positive_gpioSetGetCfg_nIntGpi_all_params(void)
 /*              Positive Tests - GPIO Activation State                        */
 /* ========================================================================== */
 
-void test_positive_gpioActivateDeactivate(void)
+void test_pos_gpio_gpioActivateDeactivate(void)
 {
     /* Test GPIO activate/deactivate */
     bool isActivated = (bool)false;
@@ -628,7 +550,7 @@ void test_positive_gpioActivateDeactivate(void)
     PLATFORM_ASSERT(isActivated == (bool)true);
 }
 
-void test_positive_gpioSetActivationState(void)
+void test_pos_gpio_gpioSetActivationState(void)
 {
     /* Test Pmic_gpioSetActivationState() with both activate and deactivate */
     bool isActivated = (bool)false;
@@ -649,7 +571,7 @@ void test_positive_gpioSetActivationState(void)
     PLATFORM_ASSERT(isActivated == (bool)true);
 }
 
-void test_positive_gpio_nIntGpi_repeatedFunctionality(void)
+void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void)
 {
 #ifdef BUILD_MOCK
     // Test NINT_GPI functionality value 3 (repeated value - lines 281-282)

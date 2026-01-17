@@ -43,11 +43,134 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "test_common.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* ========================================================================== */
+/*                           Macro Definitions                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*              Pmic_gpioSetCfg / Pmic_gpioGetCfg - GPIO Pin                  */
+/* ========================================================================== */
+
+/* Positive tests for GPIO pin configuration */
+#define GPIO_TEST_POS_SETGETCFG_GPIO() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_functionality); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_polarity); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_all_params)
+
+/* Negative tests for GPIO pin configuration */
+#define GPIO_TEST_NEG_SETGETCFG_GPIO() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_invalidValidParams)
+
+/* All tests for GPIO pin configuration */
+#define GPIO_TEST_SETGETCFG_GPIO() \
+    GPIO_TEST_NEG_SETGETCFG_GPIO(); \
+    GPIO_TEST_POS_SETGETCFG_GPIO()
+
+/* ========================================================================== */
+/*            Pmic_gpioSetCfg / Pmic_gpioGetCfg - NINT_GPI Pin                */
+/* ========================================================================== */
+
+/* Positive tests for NINT_GPI pin configuration */
+#define GPIO_TEST_POS_SETGETCFG_NINTGPI() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_odPpCfg); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params)
+
+/* Negative tests for NINT_GPI pin configuration */
+#define GPIO_TEST_NEG_SETGETCFG_NINTGPI() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams)
+
+/* All tests for NINT_GPI pin configuration */
+#define GPIO_TEST_SETGETCFG_NINTGPI() \
+    GPIO_TEST_NEG_SETGETCFG_NINTGPI(); \
+    GPIO_TEST_POS_SETGETCFG_NINTGPI()
+
+/* ========================================================================== */
+/*          Pmic_gpioSetCfg / Pmic_gpioGetCfg - Common Tests                  */
+/* ========================================================================== */
+
+/* Positive tests for common GPIO operations */
+#define GPIO_TEST_POS_SETGETCFG_COMMON() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpio_nIntGpi_repeatedFunctionality)
+
+/* Negative tests for common GPIO operations */
+#define GPIO_TEST_NEG_SETGETCFG_COMMON() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullGpioCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidGpioPin); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullGpioCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidGpioPin); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_zeroValidParams)
+
+/* All tests for common GPIO operations */
+#define GPIO_TEST_SETGETCFG_COMMON() \
+    GPIO_TEST_NEG_SETGETCFG_COMMON(); \
+    GPIO_TEST_POS_SETGETCFG_COMMON()
+
+/* ========================================================================== */
+/*                        GPIO Activation State                               */
+/* ========================================================================== */
+
+/* Positive tests for GPIO activation state */
+#define GPIO_TEST_POS_ACTIVATION() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioActivateDeactivate); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetActivationState)
+
+/* Negative tests for GPIO activation state */
+#define GPIO_TEST_NEG_ACTIVATION() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetActivationState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioActivate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioDeactivate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_nullActivated)
+
+/* All tests for GPIO activation state */
+#define GPIO_TEST_ACTIVATION() \
+    GPIO_TEST_NEG_ACTIVATION(); \
+    GPIO_TEST_POS_ACTIVATION()
+
+/* ========================================================================== */
+/*                     Aggregate Test Macros                                  */
+/* ========================================================================== */
+
+/* Run all GPIO positive tests */
+#define GPIO_TEST_RUN_POSITIVE() \
+    GPIO_TEST_POS_SETGETCFG_GPIO(); \
+    GPIO_TEST_POS_SETGETCFG_NINTGPI(); \
+    GPIO_TEST_POS_SETGETCFG_COMMON(); \
+    GPIO_TEST_POS_ACTIVATION()
+
+/* Run all GPIO negative tests */
+#define GPIO_TEST_RUN_NEGATIVE() \
+    GPIO_TEST_NEG_SETGETCFG_GPIO(); \
+    GPIO_TEST_NEG_SETGETCFG_NINTGPI(); \
+    GPIO_TEST_NEG_SETGETCFG_COMMON(); \
+    GPIO_TEST_NEG_ACTIVATION()
+
+/* Run all GPIO tests */
+#define GPIO_TEST_RUN_ALL() \
+    GPIO_TEST_SETGETCFG_GPIO(); \
+    GPIO_TEST_SETGETCFG_NINTGPI(); \
+    GPIO_TEST_SETGETCFG_COMMON(); \
+    GPIO_TEST_ACTIVATION()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -56,56 +179,56 @@ extern "C" {
 void gpio_test(void *args);
 
 /* Negative tests - Pmic_gpioSetCfg */
-void test_negative_Pmic_gpioSetCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_gpioSetCfg_nullParam_gpioCfg(void);
-void test_negative_Pmic_gpioSetCfg_invalid_gpioPin(void);
-void test_negative_Pmic_gpioSetCfg_invalid_validParams_zero(void);
-void test_negative_Pmic_gpioSetCfg_gpio_invalid_validParams(void);
-void test_negative_Pmic_gpioSetCfg_nIntGpi_invalid_validParams(void);
-void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_functionality(void);
-void test_negative_Pmic_gpioSetCfg_gpio_outOfBounds_polarity(void);
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_functionality(void);
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_polarity(void);
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void);
-void test_negative_Pmic_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void);
+void test_neg_gpio_gpioSetCfg_nullHandle(void);
+void test_neg_gpio_gpioSetCfg_nullGpioCfg(void);
+void test_neg_gpio_gpioSetCfg_invalidGpioPin(void);
+void test_neg_gpio_gpioSetCfg_zeroValidParams(void);
+void test_neg_gpio_gpioSetCfg_gpio_invalidValidParams(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_invalidValidParams(void);
+void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality(void);
+void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void);
 
 /* Negative tests - Pmic_gpioGetCfg */
-void test_negative_Pmic_gpioGetCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_gpioGetCfg_nullParam_gpioCfg(void);
-void test_negative_Pmic_gpioGetCfg_invalid_gpioPin(void);
-void test_negative_Pmic_gpioGetCfg_invalid_validParams_zero(void);
-void test_negative_Pmic_gpioGetCfg_gpio_invalid_validParams(void);
-void test_negative_Pmic_gpioGetCfg_nIntGpi_invalid_validParams(void);
+void test_neg_gpio_gpioGetCfg_nullHandle(void);
+void test_neg_gpio_gpioGetCfg_nullGpioCfg(void);
+void test_neg_gpio_gpioGetCfg_invalidGpioPin(void);
+void test_neg_gpio_gpioGetCfg_zeroValidParams(void);
+void test_neg_gpio_gpioGetCfg_gpio_invalidValidParams(void);
+void test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams(void);
 
 /* Negative tests - Pmic_gpioSetActivationState */
-void test_negative_Pmic_gpioSetActivationState_nullParam_pmicHandle(void);
+void test_neg_gpio_gpioSetActivationState_nullHandle(void);
 
 /* Negative tests - Pmic_gpioActivate */
-void test_negative_Pmic_gpioActivate_nullParam_pmicHandle(void);
+void test_neg_gpio_gpioActivate_nullHandle(void);
 
 /* Negative tests - Pmic_gpioDeactivate */
-void test_negative_Pmic_gpioDeactivate_nullParam_pmicHandle(void);
+void test_neg_gpio_gpioDeactivate_nullHandle(void);
 
 /* Negative tests - Pmic_gpioGetActivationState */
-void test_negative_Pmic_gpioGetActivationState_nullParam_pmicHandle(void);
-void test_negative_Pmic_gpioGetActivationState_nullParam_activated(void);
+void test_neg_gpio_gpioGetActivationState_nullHandle(void);
+void test_neg_gpio_gpioGetActivationState_nullActivated(void);
 
 /* Positive tests - PMIC_GPIO pin */
-void test_positive_gpioSetGetCfg_gpio_functionality(void);
-void test_positive_gpioSetGetCfg_gpio_polarity(void);
-void test_positive_gpioSetGetCfg_gpio_all_params(void);
+void test_pos_gpio_gpioSetGetCfg_gpio_functionality(void);
+void test_pos_gpio_gpioSetGetCfg_gpio_polarity(void);
+void test_pos_gpio_gpioSetGetCfg_gpio_all_params(void);
 
 /* Positive tests - PMIC_NINT_GPI pin */
-void test_positive_gpioSetGetCfg_nIntGpi_functionality(void);
-void test_positive_gpioSetGetCfg_nIntGpi_polarity(void);
-void test_positive_gpioSetGetCfg_nIntGpi_puPdCfg(void);
-void test_positive_gpioSetGetCfg_nIntGpi_odPpCfg(void);
-void test_positive_gpioSetGetCfg_nIntGpi_all_params(void);
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality(void);
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity(void);
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg(void);
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_odPpCfg(void);
+void test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params(void);
 
 /* Positive tests - Activation state */
-void test_positive_gpioActivateDeactivate(void);
-void test_positive_gpioSetActivationState(void);
-void test_positive_gpio_nIntGpi_repeatedFunctionality(void);
+void test_pos_gpio_gpioActivateDeactivate(void);
+void test_pos_gpio_gpioSetActivationState(void);
+void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void);
 
 #ifdef __cplusplus
 }

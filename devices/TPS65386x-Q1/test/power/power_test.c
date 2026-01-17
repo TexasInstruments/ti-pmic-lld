@@ -43,291 +43,367 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Power tests */
-#define POWER_TEST_RUN_ALL() \
-    POWER_TEST_RUN_NEGATIVE(); \
-    POWER_TEST_RUN_POSITIVE()
+/* ========================================================================== */
+/*             API-Specific Test Macros - pwrSetBuckBoostCfg/pwrGetBuckBoostCfg */
+/* ========================================================================== */
 
-/* Run all Power negative tests */
-#define POWER_TEST_RUN_NEGATIVE() \
-    /* BuckBoost NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckBoostCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckBoostCfg_nullParam_config); \
-    /* BuckBoost out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_stbyLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_boostTmo); \
-    /* LDO NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_config); \
-    /* LDO1 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo1_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_rampTime); \
-    /* LDO2 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo2_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_rampTime); \
-    /* LDO3 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo3_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_rampTime); \
-    /* LDO4 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo4_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_rampTime); \
-    /* PLDO NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetPldoCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetPldoCfg_nullParam_config); \
-    /* PLDO1 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_invalidParam_pldo1_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vtrackRange); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_rampTime); \
-    /* PLDO2 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_invalidParam_pldo2_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_lvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_ilimLvl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_ilimDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vmonDgl); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vtrackRange); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_rampTime); \
-    /* ExtVmon NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetExtVmonCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetExtVmonCfg_nullParam_config); \
-    /* ExtVmon1 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_invalidParam_vmon1_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonDgl); \
-    /* ExtVmon2 out of bounds tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_invalidParam_vmon2_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl); \
-    /* Resource Status NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetRsrcStatus_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetRsrcStatus_nullParam_status); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrClrRsrcStatus_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrClrRsrcStatus_nullParam_status); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrClrRsrcStatusAll_nullParam_handle); \
-    /* PGOOD NULL parameter tests */ \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetPGoodInStby_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetPGoodInStby_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetPGoodInStby_nullParam_isEnabled); \
-    /* Zero validParams tests */ \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckBoostCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckBoostCfg_zeroValidParams); \
-    /* Invalid resource ID tests */ \
-    PLATFORM_RUN_TEST(test_negative_pwrSetLdoCfg_invalidLdoId); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetLdoCfg_invalidLdoId); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetPldoCfg_invalidPldoId); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetPldoCfg_invalidPldoId); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetExtVmonCfg_invalidExtVmonId); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetExtVmonCfg_invalidExtVmonId); \
-    /* Resource status invalid type tests */ \
-    PLATFORM_RUN_TEST(test_negative_pwrGetRsrcStatus_invalidResourceType); \
-    PLATFORM_RUN_TEST(test_negative_pwrClrRsrcStatus_invalidResourceType); \
-    /* Malformed resource ID tests (type bits don't match resource) */ \
-    PLATFORM_RUN_TEST(test_negative_pwrGetRsrcStatus_malformedBbResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetRsrcStatus_malformedLdoResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetRsrcStatus_malformedPldoResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetRsrcStatus_malformedExtVmonResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrClrRsrcStatus_malformedBbResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrClrRsrcStatus_malformedLdoResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrClrRsrcStatus_malformedPldoResource); \
-    PLATFORM_RUN_TEST(test_negative_pwrClrRsrcStatus_malformedExtVmonResource); \
-    /* LDO status unsupported params */ \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_ldo_unsupportedBbLite); \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_ldo_unsupportedBbIlimLvl); \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_ldo_unsupportedBbMode); \
-    /* PLDO status unsupported params */ \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_pldo_unsupportedBbLite); \
-    /* ExtVmon status unsupported params */ \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_extVmon_unsupportedIlimErr); \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_extVmon_unsupportedTsdErr); \
-    PLATFORM_RUN_TEST(test_negative_getRsrcStatus_extVmon_unsupportedTsdWarn)
+#define POWER_TEST_POS_PWRSETBUCKBOOSTCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_stbyLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_boostTmo); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_ssEn); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_allCfg)
 
-/* Run all Power positive tests */
+#define POWER_TEST_NEG_PWRSETBUCKBOOSTCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_stbyLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_zeroValidParams)
+
+#define POWER_TEST_PWRSETBUCKBOOSTCFG() \
+    POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRSETBUCKBOOSTCFG()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - pwrSetLdoCfg/pwrGetLdoCfg      */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRSETLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_allLdos_allCfg)
+
+#define POWER_TEST_NEG_PWRSETLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo3_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo4_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidLdoId); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_invalidLdoId)
+
+#define POWER_TEST_PWRSETLDOCFG() \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
+    POWER_TEST_NEG_PWRSETLDOCFG()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - pwrSetPldoCfg/pwrGetPldoCfg     */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRSETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_trackingMode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vtrackRange); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_trackingMode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vtrackRange); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_allPldos_allCfg); \
+    PLATFORM_RUN_TEST(test_pos_power_pwrGetPldoCfg_redundantModeConversion)
+
+#define POWER_TEST_NEG_PWRSETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidParam_pldo1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vtrackRange); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidParam_pldo2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vtrackRange); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidPldoId); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_invalidPldoId)
+
+#define POWER_TEST_PWRSETPLDOCFG() \
+    POWER_TEST_POS_PWRSETPLDOCFG(); \
+    POWER_TEST_NEG_PWRSETPLDOCFG()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - pwrSetExtVmonCfg/pwrGetExtVmonCfg */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRSETEXTVMONCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_allVmons_allCfg)
+
+#define POWER_TEST_NEG_PWRSETEXTVMONCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId)
+
+#define POWER_TEST_PWRSETEXTVMONCFG() \
+    POWER_TEST_POS_PWRSETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRSETEXTVMONCFG()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - pwrGetRsrcStatus             */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRGETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo3); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo4); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbLite); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbIlimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbMode); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon_ovErr)
+
+#define POWER_TEST_NEG_PWRGETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_invalidResourceType); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedBbResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedLdoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedPldoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbLite); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbIlimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbMode); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_pldo_unsupportedBbLite); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedIlimErr); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn)
+
+#define POWER_TEST_PWRGETRSRCSTATUS() \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRGETRSRCSTATUS()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - pwrClrRsrcStatus             */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRCLRRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_bbMode); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_ilimErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo3_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo4_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo_allStatus); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo_allStatus); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon_allStatus)
+
+#define POWER_TEST_NEG_PWRCLRRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_invalidResourceType); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedBbResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedLdoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedPldoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource); \
+    PLATFORM_RUN_TEST(test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn)
+
+#define POWER_TEST_PWRCLRRSRCSTATUS() \
+    POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUS()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - pwrClrRsrcStatusAll            */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRCLRRSRCSTATUSALL() \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatusAll)
+
+#define POWER_TEST_NEG_PWRCLRRSRCSTATUSALL() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatusAll_nullHandle)
+
+#define POWER_TEST_PWRCLRRSRCSTATUSALL() \
+    POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUSALL()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - pwrSetPGoodInStby/pwrGetPGoodInStby */
+/* ========================================================================== */
+
+#define POWER_TEST_POS_PWRSETPGOODINSTBY() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPGoodInStby)
+
+#define POWER_TEST_NEG_PWRSETPGOODINSTBY() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPGoodInStby_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullIsEnabled)
+
+#define POWER_TEST_PWRSETPGOODINSTBY() \
+    POWER_TEST_POS_PWRSETPGOODINSTBY(); \
+    POWER_TEST_NEG_PWRSETPGOODINSTBY()
+
+/* ========================================================================== */
+/*                     Coverage Test Macros (Internal)                       */
+/* ========================================================================== */
+
+#define POWER_TEST_COVERAGE() \
+    PLATFORM_RUN_TEST(test_pos_power_pwr_getPldoMode_disabledFallback); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_clrLdoStat_unsupportedBbParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_clrPldoStat_unsupportedBbParams)
+
+/* ========================================================================== */
+/*                         Aggregate Test Macros                              */
+/* ========================================================================== */
+
 #define POWER_TEST_RUN_POSITIVE() \
-    /* BuckBoost configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_stbyLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_boostTmo); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_ssEn); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_includeOvUvStatInPGood); \
-    PLATFORM_RUN_TEST(test_positive_setGetBuckBoostCfg_allCfg); \
-    /* LDO1 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo1_includeOvUvStatInPGood); \
-    /* LDO2 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo2_includeOvUvStatInPGood); \
-    /* LDO3 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo3_includeOvUvStatInPGood); \
-    /* LDO4 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_ldo4_includeOvUvStatInPGood); \
-    /* PLDO1 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_trackingMode); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_vtrackRange); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo1_includeOvUvStatInPGood); \
-    /* PLDO2 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_trackingMode); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_lvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_ilimLvl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_ilimDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_vtrackRange); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_rampTime); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_disableDischarge); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_pldo2_includeOvUvStatInPGood); \
-    /* ExtVmon1 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon1_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon1_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon1_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon1_includeOvUvStatInPGood); \
-    /* ExtVmon2 configuration tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon2_mode); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon2_vmonThr); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon2_vmonDgl); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood); \
-    /* Resource Status tests */ \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo1); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo2); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo3); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo4); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo1); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo2); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_extVmon1); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_extVmon2); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_buckBoost); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatusAll); \
-    /* PGOOD tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetPGoodInStby); \
-    /* Comprehensive tests */ \
-    PLATFORM_RUN_TEST(test_positive_setGetLdoCfg_allLdos_allCfg); \
-    PLATFORM_RUN_TEST(test_positive_setGetPldoCfg_allPldos_allCfg); \
-    PLATFORM_RUN_TEST(test_positive_setGetExtVmonCfg_allVmons_allCfg); \
-    /* BuckBoost status GET tests */ \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_bbLite); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_bbIlimLvl); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_bbMode); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_ovErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_buckBoost_tsdWarn); \
-    /* LDO status GET tests */ \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo_ovErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_ldo_tsdWarn); \
-    /* PLDO status GET tests */ \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo_ovErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_pldo_tsdWarn); \
-    /* ExtVmon status GET tests */ \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_extVmon_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_getRsrcStatus_extVmon_ovErr); \
-    /* BuckBoost status CLEAR tests */ \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_buckBoost_bbMode); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_buckBoost_ilimErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_buckBoost_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_buckBoost_tsdWarn); \
-    /* LDO status CLEAR tests */ \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_ldo1_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_ldo2_ovErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_ldo3_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_ldo4_tsdWarn); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_ldo_allStatus); \
-    /* PLDO status CLEAR tests */ \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_pldo1_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_pldo2_ovErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_pldo_tsdErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_pldo_allStatus); \
-    /* ExtVmon status CLEAR tests */ \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_extVmon1_uvErr); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_extVmon2_ovErr); \
-    PLATFORM_RUN_TEST(test_negative_clrRsrcStatus_extVmon_unsupportedTsdWarn); \
-    PLATFORM_RUN_TEST(test_positive_clrRsrcStatus_extVmon_allStatus); \
-    /* Edge case tests */ \
-    PLATFORM_RUN_TEST(test_positive_pwrGetPldoCfg_redundantModeConversion); \
-    /* Coverage tests */ \
-    PLATFORM_RUN_TEST(test_positive_pwr_getPldoMode_disabledFallback); \
-    PLATFORM_RUN_TEST(test_negative_pwr_clrLdoStat_unsupportedBbParams); \
-    PLATFORM_RUN_TEST(test_negative_pwr_clrPldoStat_unsupportedBbParams)
+    POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
+    POWER_TEST_POS_PWRSETPLDOCFG(); \
+    POWER_TEST_POS_PWRSETEXTVMONCFG(); \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
+    POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_POS_PWRSETPGOODINSTBY()
+
+#define POWER_TEST_RUN_NEGATIVE() \
+    POWER_TEST_NEG_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRSETLDOCFG(); \
+    POWER_TEST_NEG_PWRSETPLDOCFG(); \
+    POWER_TEST_NEG_PWRSETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRGETRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_NEG_PWRSETPGOODINSTBY(); \
+    POWER_TEST_COVERAGE()
+
+#define POWER_TEST_RUN_ALL() \
+    POWER_TEST_RUN_POSITIVE(); \
+    POWER_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -449,156 +525,156 @@ static void helper_deinitPmic(Pmic_Handle_t *pmicHandle)
 /*                     NEGATIVE TESTS - NULL Parameters                       */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_nullParam_handle(void)
+void test_neg_power_pwrSetBuckBoostCfg_nullHandle(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {0};
     int32_t status = Pmic_pwrSetBuckBoostCfg(NULL, &bbCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_nullParam_config(void)
+void test_neg_power_pwrSetBuckBoostCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrSetBuckBoostCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetBuckBoostCfg_nullParam_handle(void)
+void test_neg_power_pwrGetBuckBoostCfg_nullHandle(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {0};
     int32_t status = Pmic_pwrGetBuckBoostCfg(NULL, &bbCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetBuckBoostCfg_nullParam_config(void)
+void test_neg_power_pwrGetBuckBoostCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrGetBuckBoostCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_nullParam_handle(void)
+void test_neg_power_pwrSetLdoCfg_nullHandle(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.ldo = PMIC_PWR_LDO1};
     int32_t status = Pmic_pwrSetLdoCfg(NULL, &ldoCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_nullParam_config(void)
+void test_neg_power_pwrSetLdoCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrSetLdoCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetLdoCfg_nullParam_handle(void)
+void test_neg_power_pwrGetLdoCfg_nullHandle(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.ldo = PMIC_PWR_LDO1};
     int32_t status = Pmic_pwrGetLdoCfg(NULL, &ldoCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetLdoCfg_nullParam_config(void)
+void test_neg_power_pwrGetLdoCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrGetLdoCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetPldoCfg_nullParam_handle(void)
+void test_neg_power_pwrSetPldoCfg_nullHandle(void)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {.pldo = PMIC_PWR_PLDO1};
     int32_t status = Pmic_pwrSetPldoCfg(NULL, &pldoCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetPldoCfg_nullParam_config(void)
+void test_neg_power_pwrSetPldoCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrSetPldoCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetPldoCfg_nullParam_handle(void)
+void test_neg_power_pwrGetPldoCfg_nullHandle(void)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {.pldo = PMIC_PWR_PLDO1};
     int32_t status = Pmic_pwrGetPldoCfg(NULL, &pldoCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetPldoCfg_nullParam_config(void)
+void test_neg_power_pwrGetPldoCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrGetPldoCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetExtVmonCfg_nullParam_handle(void)
+void test_neg_power_pwrSetExtVmonCfg_nullHandle(void)
 {
     Pmic_PwrExtVmonCfg_t vmonCfg = {.extVmon = PMIC_PWR_EXT_VMON1};
     int32_t status = Pmic_pwrSetExtVmonCfg(NULL, &vmonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetExtVmonCfg_nullParam_config(void)
+void test_neg_power_pwrSetExtVmonCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrSetExtVmonCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetExtVmonCfg_nullParam_handle(void)
+void test_neg_power_pwrGetExtVmonCfg_nullHandle(void)
 {
     Pmic_PwrExtVmonCfg_t vmonCfg = {.extVmon = PMIC_PWR_EXT_VMON1};
     int32_t status = Pmic_pwrGetExtVmonCfg(NULL, &vmonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetExtVmonCfg_nullParam_config(void)
+void test_neg_power_pwrGetExtVmonCfg_nullConfig(void)
 {
     int32_t status = Pmic_pwrGetExtVmonCfg(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetRsrcStatus_nullParam_handle(void)
+void test_neg_power_pwrGetRsrcStatus_nullHandle(void)
 {
     Pmic_PwrRsrcStat_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
     int32_t status = Pmic_pwrGetRsrcStatus(NULL, &stat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetRsrcStatus_nullParam_status(void)
+void test_neg_power_pwrGetRsrcStatus_nullStatus(void)
 {
     int32_t status = Pmic_pwrGetRsrcStatus(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrClrRsrcStatus_nullParam_handle(void)
+void test_neg_power_pwrClrRsrcStatus_nullHandle(void)
 {
     Pmic_PwrRsrcStat_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
     int32_t status = Pmic_pwrClrRsrcStatus(NULL, &stat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrClrRsrcStatus_nullParam_status(void)
+void test_neg_power_pwrClrRsrcStatus_nullStatus(void)
 {
     int32_t status = Pmic_pwrClrRsrcStatus(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrClrRsrcStatusAll_nullParam_handle(void)
+void test_neg_power_pwrClrRsrcStatusAll_nullHandle(void)
 {
     int32_t status = Pmic_pwrClrRsrcStatusAll(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetPGoodInStby_nullParam_handle(void)
+void test_neg_power_pwrSetPGoodInStby_nullHandle(void)
 {
     int32_t status = Pmic_pwrSetPGoodInStby(NULL, true);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetPGoodInStby_nullParam_handle(void)
+void test_neg_power_pwrGetPGoodInStby_nullHandle(void)
 {
     bool isEnabled = false;
     int32_t status = Pmic_pwrGetPGoodInStby(NULL, &isEnabled);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_negative_Pmic_pwrGetPGoodInStby_nullParam_isEnabled(void)
+void test_neg_power_pwrGetPGoodInStby_nullIsEnabled(void)
 {
     int32_t status = Pmic_pwrGetPGoodInStby(&handle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -608,7 +684,7 @@ void test_negative_Pmic_pwrGetPGoodInStby_nullParam_isEnabled(void)
 /*              NEGATIVE TESTS - Buck/Boost Out of Bounds                     */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_lvl(void)
+void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_lvl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
         .validParams = PMIC_PWR_CFG_BB_LVL_VALID,
@@ -618,7 +694,7 @@ void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_lvl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_stbyLvl(void)
+void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_stbyLvl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
         .validParams = PMIC_PWR_CFG_BB_STBY_LVL_VALID,
@@ -628,7 +704,7 @@ void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_stbyLvl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonThr(void)
+void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonThr(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
         .validParams = PMIC_PWR_CFG_BB_VMON_THR_VALID,
@@ -638,7 +714,7 @@ void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonThr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonDgl(void)
+void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonDgl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
         .validParams = PMIC_PWR_CFG_BB_VMON_DGL_VALID,
@@ -648,7 +724,7 @@ void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_vmonDgl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetBuckBoostCfg_outOfBounds_boostTmo(void)
+void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
         .validParams = PMIC_PWR_CFG_BB_BOOST_TMO_VALID,
@@ -740,37 +816,37 @@ static void helper_negative_setLdoCfg_rampTime(uint16_t ldo)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo1_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO1); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo1_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_invalidParam_ldo1_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO1); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO1); }
 
-void test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo2_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO2); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo2_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_invalidParam_ldo2_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO2); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO2); }
 
-void test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo3_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO3); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo3_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_invalidParam_ldo3_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO3); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO3); }
 
-void test_negative_Pmic_pwrSetLdoCfg_invalidParam_ldo4_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO4); }
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ldo4_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_invalidParam_ldo4_mode(void) { helper_negative_setLdoCfg_mode(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_lvl(void) { helper_negative_setLdoCfg_lvl(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimLvl(void) { helper_negative_setLdoCfg_ilimLvl(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimDgl(void) { helper_negative_setLdoCfg_ilimDgl(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonThr(void) { helper_negative_setLdoCfg_vmonThr(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonDgl(void) { helper_negative_setLdoCfg_vmonDgl(PMIC_PWR_LDO4); }
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime(void) { helper_negative_setLdoCfg_rampTime(PMIC_PWR_LDO4); }
 
 /* ========================================================================== */
 /*                NEGATIVE TESTS - PLDO Out of Bounds Tests                   */
@@ -864,23 +940,23 @@ static void helper_negative_setPldoCfg_rampTime(uint16_t pldo)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetPldoCfg_invalidParam_pldo1_mode(void) { helper_negative_setPldoCfg_mode(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_lvl(void) { helper_negative_setPldoCfg_lvl(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_ilimLvl(void) { helper_negative_setPldoCfg_ilimLvl(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_ilimDgl(void) { helper_negative_setPldoCfg_ilimDgl(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vmonThr(void) { helper_negative_setPldoCfg_vmonThr(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vmonDgl(void) { helper_negative_setPldoCfg_vmonDgl(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_vtrackRange(void) { helper_negative_setPldoCfg_vtrackRange(PMIC_PWR_PLDO1); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo1_rampTime(void) { helper_negative_setPldoCfg_rampTime(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_invalidParam_pldo1_mode(void) { helper_negative_setPldoCfg_mode(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_lvl(void) { helper_negative_setPldoCfg_lvl(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimLvl(void) { helper_negative_setPldoCfg_ilimLvl(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimDgl(void) { helper_negative_setPldoCfg_ilimDgl(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonThr(void) { helper_negative_setPldoCfg_vmonThr(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonDgl(void) { helper_negative_setPldoCfg_vmonDgl(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vtrackRange(void) { helper_negative_setPldoCfg_vtrackRange(PMIC_PWR_PLDO1); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_rampTime(void) { helper_negative_setPldoCfg_rampTime(PMIC_PWR_PLDO1); }
 
-void test_negative_Pmic_pwrSetPldoCfg_invalidParam_pldo2_mode(void) { helper_negative_setPldoCfg_mode(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_lvl(void) { helper_negative_setPldoCfg_lvl(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_ilimLvl(void) { helper_negative_setPldoCfg_ilimLvl(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_ilimDgl(void) { helper_negative_setPldoCfg_ilimDgl(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vmonThr(void) { helper_negative_setPldoCfg_vmonThr(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vmonDgl(void) { helper_negative_setPldoCfg_vmonDgl(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_vtrackRange(void) { helper_negative_setPldoCfg_vtrackRange(PMIC_PWR_PLDO2); }
-void test_negative_Pmic_pwrSetPldoCfg_outOfBounds_pldo2_rampTime(void) { helper_negative_setPldoCfg_rampTime(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_invalidParam_pldo2_mode(void) { helper_negative_setPldoCfg_mode(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_lvl(void) { helper_negative_setPldoCfg_lvl(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimLvl(void) { helper_negative_setPldoCfg_ilimLvl(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimDgl(void) { helper_negative_setPldoCfg_ilimDgl(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonThr(void) { helper_negative_setPldoCfg_vmonThr(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonDgl(void) { helper_negative_setPldoCfg_vmonDgl(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vtrackRange(void) { helper_negative_setPldoCfg_vtrackRange(PMIC_PWR_PLDO2); }
+void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_rampTime(void) { helper_negative_setPldoCfg_rampTime(PMIC_PWR_PLDO2); }
 
 /* ========================================================================== */
 /*             NEGATIVE TESTS - ExtVmon Out of Bounds Tests                   */
@@ -919,20 +995,20 @@ static void helper_negative_setExtVmonCfg_vmonDgl(uint16_t extVmon)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_Pmic_pwrSetExtVmonCfg_invalidParam_vmon1_mode(void) { helper_negative_setExtVmonCfg_mode(PMIC_PWR_EXT_VMON1); }
-void test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonThr(void) { helper_negative_setExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON1); }
-void test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonDgl(void) { helper_negative_setExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON1); }
+void test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon1_mode(void) { helper_negative_setExtVmonCfg_mode(PMIC_PWR_EXT_VMON1); }
+void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonThr(void) { helper_negative_setExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON1); }
+void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonDgl(void) { helper_negative_setExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON1); }
 
-void test_negative_Pmic_pwrSetExtVmonCfg_invalidParam_vmon2_mode(void) { helper_negative_setExtVmonCfg_mode(PMIC_PWR_EXT_VMON2); }
-void test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonThr(void) { helper_negative_setExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON2); }
-void test_negative_Pmic_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl(void) { helper_negative_setExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON2); }
+void test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon2_mode(void) { helper_negative_setExtVmonCfg_mode(PMIC_PWR_EXT_VMON2); }
+void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonThr(void) { helper_negative_setExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON2); }
+void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl(void) { helper_negative_setExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON2); }
 
 
 /* ========================================================================== */
 /*                  POSITIVE TESTS - Buck/Boost Configuration                 */
 /* ========================================================================== */
 
-void test_positive_setGetBuckBoostCfg_lvl(void)
+void test_pos_power_setGetBuckBoostCfg_lvl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_LVL_VALID,
@@ -950,7 +1026,7 @@ void test_positive_setGetBuckBoostCfg_lvl(void)
     TEST_ASSERT_EQUAL(setCfg.lvl, getCfg.lvl);
 }
 
-void test_positive_setGetBuckBoostCfg_stbyLvl(void)
+void test_pos_power_setGetBuckBoostCfg_stbyLvl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_STBY_LVL_VALID,
@@ -968,7 +1044,7 @@ void test_positive_setGetBuckBoostCfg_stbyLvl(void)
     TEST_ASSERT_EQUAL(setCfg.stbyLvl, getCfg.stbyLvl);
 }
 
-void test_positive_setGetBuckBoostCfg_vmonThr(void)
+void test_pos_power_setGetBuckBoostCfg_vmonThr(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_VMON_THR_VALID,
@@ -986,7 +1062,7 @@ void test_positive_setGetBuckBoostCfg_vmonThr(void)
     TEST_ASSERT_EQUAL(setCfg.vmonThr, getCfg.vmonThr);
 }
 
-void test_positive_setGetBuckBoostCfg_vmonDgl(void)
+void test_pos_power_setGetBuckBoostCfg_vmonDgl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_VMON_DGL_VALID,
@@ -1004,7 +1080,7 @@ void test_positive_setGetBuckBoostCfg_vmonDgl(void)
     TEST_ASSERT_EQUAL(setCfg.vmonDgl, getCfg.vmonDgl);
 }
 
-void test_positive_setGetBuckBoostCfg_boostTmo(void)
+void test_pos_power_setGetBuckBoostCfg_boostTmo(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_BOOST_TMO_VALID,
@@ -1022,7 +1098,7 @@ void test_positive_setGetBuckBoostCfg_boostTmo(void)
     TEST_ASSERT_EQUAL(setCfg.boostTmo, getCfg.boostTmo);
 }
 
-void test_positive_setGetBuckBoostCfg_ssEn(void)
+void test_pos_power_setGetBuckBoostCfg_ssEn(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_SS_EN_VALID,
@@ -1040,7 +1116,7 @@ void test_positive_setGetBuckBoostCfg_ssEn(void)
     TEST_ASSERT_EQUAL(setCfg.ssEn, getCfg.ssEn);
 }
 
-void test_positive_setGetBuckBoostCfg_includeOvUvStatInPGood(void)
+void test_pos_power_setGetBuckBoostCfg_includeOvUvStatInPGood(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
@@ -1058,7 +1134,7 @@ void test_positive_setGetBuckBoostCfg_includeOvUvStatInPGood(void)
     TEST_ASSERT_EQUAL(setCfg.includeOvUvStatInPGood, getCfg.includeOvUvStatInPGood);
 }
 
-void test_positive_setGetBuckBoostCfg_allCfg(void)
+void test_pos_power_setGetBuckBoostCfg_allCfg(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_BB_ALL,
@@ -1273,48 +1349,48 @@ static void helper_setGetLdoCfg_includeOvUvStatInPGood(uint16_t ldo)
 }
 
 /* LDO1 positive tests */
-void test_positive_setGetLdoCfg_ldo1_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO1); }
-void test_positive_setGetLdoCfg_ldo1_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO1); }
 
 /* LDO2 positive tests */
-void test_positive_setGetLdoCfg_ldo2_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO2); }
-void test_positive_setGetLdoCfg_ldo2_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO2); }
+void test_pos_power_setGetLdoCfg_ldo2_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO2); }
 
 /* LDO3 positive tests */
-void test_positive_setGetLdoCfg_ldo3_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO3); }
-void test_positive_setGetLdoCfg_ldo3_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO3); }
+void test_pos_power_setGetLdoCfg_ldo3_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO3); }
 
 /* LDO4 positive tests */
-void test_positive_setGetLdoCfg_ldo4_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO4); }
-void test_positive_setGetLdoCfg_ldo4_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_vmonDgl(void) { helper_setGetLdoCfg_vmonDgl(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_rampTime(void) { helper_setGetLdoCfg_rampTime(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO4); }
 
 
 /* ========================================================================== */
@@ -1542,30 +1618,30 @@ static void helper_setGetPldoCfg_includeOvUvStatInPGood(uint16_t pldo)
 }
 
 /* PLDO1 positive tests */
-void test_positive_setGetPldoCfg_pldo1_mode(void) { helper_setGetPldoCfg_mode(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_trackingMode(void) { helper_setGetPldoCfg_trackingMode(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_lvl(void) { helper_setGetPldoCfg_lvl(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_ilimLvl(void) { helper_setGetPldoCfg_ilimLvl(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_ilimDgl(void) { helper_setGetPldoCfg_ilimDgl(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_vmonThr(void) { helper_setGetPldoCfg_vmonThr(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_vmonDgl(void) { helper_setGetPldoCfg_vmonDgl(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_vtrackRange(void) { helper_setGetPldoCfg_vtrackRange(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_rampTime(void) { helper_setGetPldoCfg_rampTime(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_disableDischarge(void) { helper_setGetPldoCfg_disableDischarge(PMIC_PWR_PLDO1); }
-void test_positive_setGetPldoCfg_pldo1_includeOvUvStatInPGood(void) { helper_setGetPldoCfg_includeOvUvStatInPGood(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_mode(void) { helper_setGetPldoCfg_mode(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_trackingMode(void) { helper_setGetPldoCfg_trackingMode(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_lvl(void) { helper_setGetPldoCfg_lvl(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_ilimLvl(void) { helper_setGetPldoCfg_ilimLvl(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_ilimDgl(void) { helper_setGetPldoCfg_ilimDgl(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_vmonThr(void) { helper_setGetPldoCfg_vmonThr(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_vmonDgl(void) { helper_setGetPldoCfg_vmonDgl(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_vtrackRange(void) { helper_setGetPldoCfg_vtrackRange(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_rampTime(void) { helper_setGetPldoCfg_rampTime(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_disableDischarge(void) { helper_setGetPldoCfg_disableDischarge(PMIC_PWR_PLDO1); }
+void test_pos_power_setGetPldoCfg_pldo1_includeOvUvStatInPGood(void) { helper_setGetPldoCfg_includeOvUvStatInPGood(PMIC_PWR_PLDO1); }
 
 /* PLDO2 positive tests */
-void test_positive_setGetPldoCfg_pldo2_mode(void) { helper_setGetPldoCfg_mode(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_trackingMode(void) { helper_setGetPldoCfg_trackingMode(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_lvl(void) { helper_setGetPldoCfg_lvl(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_ilimLvl(void) { helper_setGetPldoCfg_ilimLvl(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_ilimDgl(void) { helper_setGetPldoCfg_ilimDgl(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_vmonThr(void) { helper_setGetPldoCfg_vmonThr(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_vmonDgl(void) { helper_setGetPldoCfg_vmonDgl(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_vtrackRange(void) { helper_setGetPldoCfg_vtrackRange(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_rampTime(void) { helper_setGetPldoCfg_rampTime(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_disableDischarge(void) { helper_setGetPldoCfg_disableDischarge(PMIC_PWR_PLDO2); }
-void test_positive_setGetPldoCfg_pldo2_includeOvUvStatInPGood(void) { helper_setGetPldoCfg_includeOvUvStatInPGood(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_mode(void) { helper_setGetPldoCfg_mode(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_trackingMode(void) { helper_setGetPldoCfg_trackingMode(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_lvl(void) { helper_setGetPldoCfg_lvl(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_ilimLvl(void) { helper_setGetPldoCfg_ilimLvl(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_ilimDgl(void) { helper_setGetPldoCfg_ilimDgl(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_vmonThr(void) { helper_setGetPldoCfg_vmonThr(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_vmonDgl(void) { helper_setGetPldoCfg_vmonDgl(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_vtrackRange(void) { helper_setGetPldoCfg_vtrackRange(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_rampTime(void) { helper_setGetPldoCfg_rampTime(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_disableDischarge(void) { helper_setGetPldoCfg_disableDischarge(PMIC_PWR_PLDO2); }
+void test_pos_power_setGetPldoCfg_pldo2_includeOvUvStatInPGood(void) { helper_setGetPldoCfg_includeOvUvStatInPGood(PMIC_PWR_PLDO2); }
 
 /* ========================================================================== */
 /*                  POSITIVE TESTS - ExtVmon Configuration                    */
@@ -1652,16 +1728,16 @@ static void helper_setGetExtVmonCfg_includeOvUvStatInPGood(uint16_t extVmon)
 }
 
 /* ExtVmon1 positive tests */
-void test_positive_setGetExtVmonCfg_vmon1_mode(void) { helper_setGetExtVmonCfg_mode(PMIC_PWR_EXT_VMON1); }
-void test_positive_setGetExtVmonCfg_vmon1_vmonThr(void) { helper_setGetExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON1); }
-void test_positive_setGetExtVmonCfg_vmon1_vmonDgl(void) { helper_setGetExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON1); }
-void test_positive_setGetExtVmonCfg_vmon1_includeOvUvStatInPGood(void) { helper_setGetExtVmonCfg_includeOvUvStatInPGood(PMIC_PWR_EXT_VMON1); }
+void test_pos_power_setGetExtVmonCfg_vmon1_mode(void) { helper_setGetExtVmonCfg_mode(PMIC_PWR_EXT_VMON1); }
+void test_pos_power_setGetExtVmonCfg_vmon1_vmonThr(void) { helper_setGetExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON1); }
+void test_pos_power_setGetExtVmonCfg_vmon1_vmonDgl(void) { helper_setGetExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON1); }
+void test_pos_power_setGetExtVmonCfg_vmon1_includeOvUvStatInPGood(void) { helper_setGetExtVmonCfg_includeOvUvStatInPGood(PMIC_PWR_EXT_VMON1); }
 
 /* ExtVmon2 positive tests */
-void test_positive_setGetExtVmonCfg_vmon2_mode(void) { helper_setGetExtVmonCfg_mode(PMIC_PWR_EXT_VMON2); }
-void test_positive_setGetExtVmonCfg_vmon2_vmonThr(void) { helper_setGetExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON2); }
-void test_positive_setGetExtVmonCfg_vmon2_vmonDgl(void) { helper_setGetExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON2); }
-void test_positive_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood(void) { helper_setGetExtVmonCfg_includeOvUvStatInPGood(PMIC_PWR_EXT_VMON2); }
+void test_pos_power_setGetExtVmonCfg_vmon2_mode(void) { helper_setGetExtVmonCfg_mode(PMIC_PWR_EXT_VMON2); }
+void test_pos_power_setGetExtVmonCfg_vmon2_vmonThr(void) { helper_setGetExtVmonCfg_vmonThr(PMIC_PWR_EXT_VMON2); }
+void test_pos_power_setGetExtVmonCfg_vmon2_vmonDgl(void) { helper_setGetExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON2); }
+void test_pos_power_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood(void) { helper_setGetExtVmonCfg_includeOvUvStatInPGood(PMIC_PWR_EXT_VMON2); }
 
 /* ========================================================================== */
 /*                  POSITIVE TESTS - Resource Status                          */
@@ -1688,17 +1764,17 @@ static void helper_getRsrcStatus(uint16_t pwrRsrc)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost(void) { helper_getRsrcStatus(PMIC_PWR_BUCK_BOOST); }
-void test_positive_getRsrcStatus_ldo1(void) { helper_getRsrcStatus(PMIC_PWR_LDO1); }
-void test_positive_getRsrcStatus_ldo2(void) { helper_getRsrcStatus(PMIC_PWR_LDO2); }
-void test_positive_getRsrcStatus_ldo3(void) { helper_getRsrcStatus(PMIC_PWR_LDO3); }
-void test_positive_getRsrcStatus_ldo4(void) { helper_getRsrcStatus(PMIC_PWR_LDO4); }
-void test_positive_getRsrcStatus_pldo1(void) { helper_getRsrcStatus(PMIC_PWR_PLDO1); }
-void test_positive_getRsrcStatus_pldo2(void) { helper_getRsrcStatus(PMIC_PWR_PLDO2); }
-void test_positive_getRsrcStatus_extVmon1(void) { helper_getRsrcStatus(PMIC_PWR_EXT_VMON1); }
-void test_positive_getRsrcStatus_extVmon2(void) { helper_getRsrcStatus(PMIC_PWR_EXT_VMON2); }
+void test_pos_power_getRsrcStatus_buckBoost(void) { helper_getRsrcStatus(PMIC_PWR_BUCK_BOOST); }
+void test_pos_power_getRsrcStatus_ldo1(void) { helper_getRsrcStatus(PMIC_PWR_LDO1); }
+void test_pos_power_getRsrcStatus_ldo2(void) { helper_getRsrcStatus(PMIC_PWR_LDO2); }
+void test_pos_power_getRsrcStatus_ldo3(void) { helper_getRsrcStatus(PMIC_PWR_LDO3); }
+void test_pos_power_getRsrcStatus_ldo4(void) { helper_getRsrcStatus(PMIC_PWR_LDO4); }
+void test_pos_power_getRsrcStatus_pldo1(void) { helper_getRsrcStatus(PMIC_PWR_PLDO1); }
+void test_pos_power_getRsrcStatus_pldo2(void) { helper_getRsrcStatus(PMIC_PWR_PLDO2); }
+void test_pos_power_getRsrcStatus_extVmon1(void) { helper_getRsrcStatus(PMIC_PWR_EXT_VMON1); }
+void test_pos_power_getRsrcStatus_extVmon2(void) { helper_getRsrcStatus(PMIC_PWR_EXT_VMON2); }
 
-void test_positive_clrRsrcStatus_buckBoost(void)
+void test_pos_power_clrRsrcStatus_buckBoost(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID | PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -1709,7 +1785,7 @@ void test_positive_clrRsrcStatus_buckBoost(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatusAll(void)
+void test_pos_power_clrRsrcStatusAll(void)
 {
     int32_t status = Pmic_pwrClrRsrcStatusAll(&handle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1719,7 +1795,7 @@ void test_positive_clrRsrcStatusAll(void)
 /*                       POSITIVE TESTS - PGOOD                               */
 /* ========================================================================== */
 
-void test_positive_setGetPGoodInStby(void)
+void test_pos_power_setGetPGoodInStby(void)
 {
     bool setEnable = true;
     bool getEnable = false;
@@ -1736,7 +1812,7 @@ void test_positive_setGetPGoodInStby(void)
 /*                  POSITIVE TESTS - Comprehensive                            */
 /* ========================================================================== */
 
-void test_positive_setGetLdoCfg_allLdos_allCfg(void)
+void test_pos_power_setGetLdoCfg_allLdos_allCfg(void)
 {
     const uint16_t ldos[] = {PMIC_PWR_LDO1, PMIC_PWR_LDO2, PMIC_PWR_LDO3, PMIC_PWR_LDO4};
     const uint8_t numLdos = sizeof(ldos) / sizeof(ldos[0]);
@@ -1779,7 +1855,7 @@ void test_positive_setGetLdoCfg_allLdos_allCfg(void)
     }
 }
 
-void test_positive_setGetPldoCfg_allPldos_allCfg(void)
+void test_pos_power_setGetPldoCfg_allPldos_allCfg(void)
 {
     const uint16_t pldos[] = {PMIC_PWR_PLDO1, PMIC_PWR_PLDO2};
     const uint8_t numPldos = sizeof(pldos) / sizeof(pldos[0]);
@@ -1826,7 +1902,7 @@ void test_positive_setGetPldoCfg_allPldos_allCfg(void)
     }
 }
 
-void test_positive_setGetExtVmonCfg_allVmons_allCfg(void)
+void test_pos_power_setGetExtVmonCfg_allVmons_allCfg(void)
 {
     const uint16_t vmons[] = {PMIC_PWR_EXT_VMON1, PMIC_PWR_EXT_VMON2};
     const uint8_t numVmons = sizeof(vmons) / sizeof(vmons[0]);
@@ -1863,7 +1939,7 @@ void test_positive_setGetExtVmonCfg_allVmons_allCfg(void)
 /*                  Zero validParams Tests                                    */
 /* ========================================================================== */
 
-void test_negative_pwrSetBuckBoostCfg_zeroValidParams(void)
+void test_neg_power_pwrSetBuckBoostCfg_zeroValidParams(void)
 {
     Pmic_PwrBuckBoostCfg_t cfg = {
         .validParams = 0U
@@ -1872,7 +1948,7 @@ void test_negative_pwrSetBuckBoostCfg_zeroValidParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetBuckBoostCfg_zeroValidParams(void)
+void test_neg_power_pwrGetBuckBoostCfg_zeroValidParams(void)
 {
     Pmic_PwrBuckBoostCfg_t cfg = {
         .validParams = 0U
@@ -1885,7 +1961,7 @@ void test_negative_pwrGetBuckBoostCfg_zeroValidParams(void)
 /*                  Invalid Resource ID Tests                                 */
 /* ========================================================================== */
 
-void test_negative_pwrSetLdoCfg_invalidLdoId(void)
+void test_neg_power_pwrSetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
         .ldo = 0xFFU,
@@ -1895,7 +1971,7 @@ void test_negative_pwrSetLdoCfg_invalidLdoId(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetLdoCfg_invalidLdoId(void)
+void test_neg_power_pwrGetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
         .ldo = 0xFFU,
@@ -1905,7 +1981,7 @@ void test_negative_pwrGetLdoCfg_invalidLdoId(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrSetPldoCfg_invalidPldoId(void)
+void test_neg_power_pwrSetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
         .pldo = 0xFFU,
@@ -1915,7 +1991,7 @@ void test_negative_pwrSetPldoCfg_invalidPldoId(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetPldoCfg_invalidPldoId(void)
+void test_neg_power_pwrGetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
         .pldo = 0xFFU,
@@ -1925,7 +2001,7 @@ void test_negative_pwrGetPldoCfg_invalidPldoId(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrSetExtVmonCfg_invalidExtVmonId(void)
+void test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
         .extVmon = 0xFFU,
@@ -1935,7 +2011,7 @@ void test_negative_pwrSetExtVmonCfg_invalidExtVmonId(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetExtVmonCfg_invalidExtVmonId(void)
+void test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
         .extVmon = 0xFFU,
@@ -1949,7 +2025,7 @@ void test_negative_pwrGetExtVmonCfg_invalidExtVmonId(void)
 /*              BuckBoost Status GET Tests                                    */
 /* ========================================================================== */
 
-void test_positive_getRsrcStatus_buckBoost_bbLite(void)
+void test_pos_power_getRsrcStatus_buckBoost_bbLite(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
@@ -1959,7 +2035,7 @@ void test_positive_getRsrcStatus_buckBoost_bbLite(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_bbIlimLvl(void)
+void test_pos_power_getRsrcStatus_buckBoost_bbIlimLvl(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
@@ -1969,7 +2045,7 @@ void test_positive_getRsrcStatus_buckBoost_bbIlimLvl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_bbMode(void)
+void test_pos_power_getRsrcStatus_buckBoost_bbMode(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
@@ -1979,7 +2055,7 @@ void test_positive_getRsrcStatus_buckBoost_bbMode(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_ovErr(void)
+void test_pos_power_getRsrcStatus_buckBoost_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -1989,7 +2065,7 @@ void test_positive_getRsrcStatus_buckBoost_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_uvErr(void)
+void test_pos_power_getRsrcStatus_buckBoost_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -1999,7 +2075,7 @@ void test_positive_getRsrcStatus_buckBoost_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_tsdErr(void)
+void test_pos_power_getRsrcStatus_buckBoost_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2009,7 +2085,7 @@ void test_positive_getRsrcStatus_buckBoost_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_buckBoost_tsdWarn(void)
+void test_pos_power_getRsrcStatus_buckBoost_tsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2023,7 +2099,7 @@ void test_positive_getRsrcStatus_buckBoost_tsdWarn(void)
 /*              LDO Status GET Tests                                          */
 /* ========================================================================== */
 
-void test_negative_getRsrcStatus_ldo_unsupportedBbLite(void)
+void test_neg_power_getRsrcStatus_ldo_unsupportedBbLite(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
@@ -2033,7 +2109,7 @@ void test_negative_getRsrcStatus_ldo_unsupportedBbLite(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_negative_getRsrcStatus_ldo_unsupportedBbIlimLvl(void)
+void test_neg_power_getRsrcStatus_ldo_unsupportedBbIlimLvl(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
@@ -2043,7 +2119,7 @@ void test_negative_getRsrcStatus_ldo_unsupportedBbIlimLvl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_negative_getRsrcStatus_ldo_unsupportedBbMode(void)
+void test_neg_power_getRsrcStatus_ldo_unsupportedBbMode(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
@@ -2053,7 +2129,7 @@ void test_negative_getRsrcStatus_ldo_unsupportedBbMode(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_positive_getRsrcStatus_ldo_uvErr(void)
+void test_pos_power_getRsrcStatus_ldo_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2063,7 +2139,7 @@ void test_positive_getRsrcStatus_ldo_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_ldo_ovErr(void)
+void test_pos_power_getRsrcStatus_ldo_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2073,7 +2149,7 @@ void test_positive_getRsrcStatus_ldo_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_ldo_tsdErr(void)
+void test_pos_power_getRsrcStatus_ldo_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2083,7 +2159,7 @@ void test_positive_getRsrcStatus_ldo_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_ldo_tsdWarn(void)
+void test_pos_power_getRsrcStatus_ldo_tsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2097,7 +2173,7 @@ void test_positive_getRsrcStatus_ldo_tsdWarn(void)
 /*              PLDO Status GET Tests                                         */
 /* ========================================================================== */
 
-void test_negative_getRsrcStatus_pldo_unsupportedBbLite(void)
+void test_neg_power_getRsrcStatus_pldo_unsupportedBbLite(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
@@ -2107,7 +2183,7 @@ void test_negative_getRsrcStatus_pldo_unsupportedBbLite(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_positive_getRsrcStatus_pldo_uvErr(void)
+void test_pos_power_getRsrcStatus_pldo_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2117,7 +2193,7 @@ void test_positive_getRsrcStatus_pldo_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_pldo_ovErr(void)
+void test_pos_power_getRsrcStatus_pldo_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2127,7 +2203,7 @@ void test_positive_getRsrcStatus_pldo_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_pldo_tsdErr(void)
+void test_pos_power_getRsrcStatus_pldo_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2137,7 +2213,7 @@ void test_positive_getRsrcStatus_pldo_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_pldo_tsdWarn(void)
+void test_pos_power_getRsrcStatus_pldo_tsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2151,7 +2227,7 @@ void test_positive_getRsrcStatus_pldo_tsdWarn(void)
 /*              ExtVmon Status GET Tests                                      */
 /* ========================================================================== */
 
-void test_negative_getRsrcStatus_extVmon_unsupportedIlimErr(void)
+void test_neg_power_getRsrcStatus_extVmon_unsupportedIlimErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID,
@@ -2161,7 +2237,7 @@ void test_negative_getRsrcStatus_extVmon_unsupportedIlimErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_negative_getRsrcStatus_extVmon_unsupportedTsdErr(void)
+void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2171,7 +2247,7 @@ void test_negative_getRsrcStatus_extVmon_unsupportedTsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_positive_getRsrcStatus_extVmon_uvErr(void)
+void test_pos_power_getRsrcStatus_extVmon_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2181,7 +2257,7 @@ void test_positive_getRsrcStatus_extVmon_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_getRsrcStatus_extVmon_ovErr(void)
+void test_pos_power_getRsrcStatus_extVmon_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2191,7 +2267,7 @@ void test_positive_getRsrcStatus_extVmon_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_negative_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
+void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2205,7 +2281,7 @@ void test_negative_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
 /*              BuckBoost Status CLEAR Tests                                  */
 /* ========================================================================== */
 
-void test_positive_clrRsrcStatus_buckBoost_bbMode(void)
+void test_pos_power_clrRsrcStatus_buckBoost_bbMode(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
@@ -2215,7 +2291,7 @@ void test_positive_clrRsrcStatus_buckBoost_bbMode(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_buckBoost_ilimErr(void)
+void test_pos_power_clrRsrcStatus_buckBoost_ilimErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID,
@@ -2225,7 +2301,7 @@ void test_positive_clrRsrcStatus_buckBoost_ilimErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_buckBoost_tsdErr(void)
+void test_pos_power_clrRsrcStatus_buckBoost_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2235,7 +2311,7 @@ void test_positive_clrRsrcStatus_buckBoost_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_buckBoost_tsdWarn(void)
+void test_pos_power_clrRsrcStatus_buckBoost_tsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2249,7 +2325,7 @@ void test_positive_clrRsrcStatus_buckBoost_tsdWarn(void)
 /*              LDO Status CLEAR Tests                                        */
 /* ========================================================================== */
 
-void test_positive_clrRsrcStatus_ldo1_uvErr(void)
+void test_pos_power_clrRsrcStatus_ldo1_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2259,7 +2335,7 @@ void test_positive_clrRsrcStatus_ldo1_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_ldo2_ovErr(void)
+void test_pos_power_clrRsrcStatus_ldo2_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2269,7 +2345,7 @@ void test_positive_clrRsrcStatus_ldo2_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_ldo3_tsdErr(void)
+void test_pos_power_clrRsrcStatus_ldo3_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2279,7 +2355,7 @@ void test_positive_clrRsrcStatus_ldo3_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_ldo4_tsdWarn(void)
+void test_pos_power_clrRsrcStatus_ldo4_tsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2289,7 +2365,7 @@ void test_positive_clrRsrcStatus_ldo4_tsdWarn(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_ldo_allStatus(void)
+void test_pos_power_clrRsrcStatus_ldo_allStatus(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_LDO_ALL,
@@ -2303,7 +2379,7 @@ void test_positive_clrRsrcStatus_ldo_allStatus(void)
 /*              PLDO Status CLEAR Tests                                       */
 /* ========================================================================== */
 
-void test_positive_clrRsrcStatus_pldo1_uvErr(void)
+void test_pos_power_clrRsrcStatus_pldo1_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2313,7 +2389,7 @@ void test_positive_clrRsrcStatus_pldo1_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_pldo2_ovErr(void)
+void test_pos_power_clrRsrcStatus_pldo2_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2323,7 +2399,7 @@ void test_positive_clrRsrcStatus_pldo2_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_pldo_tsdErr(void)
+void test_pos_power_clrRsrcStatus_pldo_tsdErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
@@ -2333,7 +2409,7 @@ void test_positive_clrRsrcStatus_pldo_tsdErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_pldo_allStatus(void)
+void test_pos_power_clrRsrcStatus_pldo_allStatus(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_PLDO_ALL,
@@ -2347,7 +2423,7 @@ void test_positive_clrRsrcStatus_pldo_allStatus(void)
 /*              ExtVmon Status CLEAR Tests                                    */
 /* ========================================================================== */
 
-void test_positive_clrRsrcStatus_extVmon1_uvErr(void)
+void test_pos_power_clrRsrcStatus_extVmon1_uvErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2357,7 +2433,7 @@ void test_positive_clrRsrcStatus_extVmon1_uvErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_positive_clrRsrcStatus_extVmon2_ovErr(void)
+void test_pos_power_clrRsrcStatus_extVmon2_ovErr(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
@@ -2367,7 +2443,7 @@ void test_positive_clrRsrcStatus_extVmon2_ovErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_negative_clrRsrcStatus_extVmon_unsupportedTsdWarn(void)
+void test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
@@ -2377,7 +2453,7 @@ void test_negative_clrRsrcStatus_extVmon_unsupportedTsdWarn(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
 }
 
-void test_positive_clrRsrcStatus_extVmon_allStatus(void)
+void test_pos_power_clrRsrcStatus_extVmon_allStatus(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_EXT_VMON_ALL,
@@ -2391,7 +2467,7 @@ void test_positive_clrRsrcStatus_extVmon_allStatus(void)
 /*              Resource Status Invalid Type Tests                            */
 /* ========================================================================== */
 
-void test_negative_pwrGetRsrcStatus_invalidResourceType(void)
+void test_neg_power_pwrGetRsrcStatus_invalidResourceType(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2401,7 +2477,7 @@ void test_negative_pwrGetRsrcStatus_invalidResourceType(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrClrRsrcStatus_invalidResourceType(void)
+void test_neg_power_pwrClrRsrcStatus_invalidResourceType(void)
 {
     Pmic_PwrRsrcStat_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
@@ -2412,7 +2488,7 @@ void test_negative_pwrClrRsrcStatus_invalidResourceType(void)
 }
 
 /* Tests for malformed resource IDs - type bits don't match actual resource */
-void test_negative_pwrGetRsrcStatus_malformedBbResource(void)
+void test_neg_power_pwrGetRsrcStatus_malformedBbResource(void)
 {
     /* Resource with BuckBoost type bits (0x00) but invalid ID */
     Pmic_PwrRsrcStat_t stat = {
@@ -2423,7 +2499,7 @@ void test_negative_pwrGetRsrcStatus_malformedBbResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetRsrcStatus_malformedLdoResource(void)
+void test_neg_power_pwrGetRsrcStatus_malformedLdoResource(void)
 {
     /* Resource with LDO type bits (0x01) but ID outside LDO range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2434,7 +2510,7 @@ void test_negative_pwrGetRsrcStatus_malformedLdoResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetRsrcStatus_malformedPldoResource(void)
+void test_neg_power_pwrGetRsrcStatus_malformedPldoResource(void)
 {
     /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2445,7 +2521,7 @@ void test_negative_pwrGetRsrcStatus_malformedPldoResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrGetRsrcStatus_malformedExtVmonResource(void)
+void test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource(void)
 {
     /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2456,7 +2532,7 @@ void test_negative_pwrGetRsrcStatus_malformedExtVmonResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrClrRsrcStatus_malformedBbResource(void)
+void test_neg_power_pwrClrRsrcStatus_malformedBbResource(void)
 {
     /* Resource with BuckBoost type bits (0x00) but invalid ID */
     Pmic_PwrRsrcStat_t stat = {
@@ -2467,7 +2543,7 @@ void test_negative_pwrClrRsrcStatus_malformedBbResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrClrRsrcStatus_malformedLdoResource(void)
+void test_neg_power_pwrClrRsrcStatus_malformedLdoResource(void)
 {
     /* Resource with LDO type bits (0x01) but ID outside LDO range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2478,7 +2554,7 @@ void test_negative_pwrClrRsrcStatus_malformedLdoResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrClrRsrcStatus_malformedPldoResource(void)
+void test_neg_power_pwrClrRsrcStatus_malformedPldoResource(void)
 {
     /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2489,7 +2565,7 @@ void test_negative_pwrClrRsrcStatus_malformedPldoResource(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_negative_pwrClrRsrcStatus_malformedExtVmonResource(void)
+void test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource(void)
 {
     /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
     Pmic_PwrRsrcStat_t stat = {
@@ -2504,7 +2580,7 @@ void test_negative_pwrClrRsrcStatus_malformedExtVmonResource(void)
 /*              Edge Case Tests                                               */
 /* ========================================================================== */
 
-void test_positive_pwrGetPldoCfg_redundantModeConversion(void)
+void test_pos_power_pwrGetPldoCfg_redundantModeConversion(void)
 {
     /* Test that getting PLDO config twice in a row works correctly */
     Pmic_PwrPldoCfg_t cfg1 = {
@@ -2536,7 +2612,7 @@ void test_positive_pwrGetPldoCfg_redundantModeConversion(void)
  * Covers lines 1539-1540 in pmic_power.c - PLDO mode value validation
  */
 #ifdef BUILD_MOCK
-void test_positive_pwr_getPldoMode_disabledFallback(void)
+void test_pos_power_pwr_getPldoMode_disabledFallback(void)
 {
     int32_t status;
     Pmic_PwrPldoCfg_t cfg = {0};
@@ -2563,7 +2639,7 @@ void test_positive_pwr_getPldoMode_disabledFallback(void)
     TEST_ASSERT_EQUAL(0U, cfg.mode);  // Should fallback to 0 (disabled)
 }
 #else
-void test_positive_pwr_getPldoMode_disabledFallback(void)
+void test_pos_power_pwr_getPldoMode_disabledFallback(void)
 {
     TEST_ASSERT_TRUE(true);  // Skip if not BUILD_MOCK
 }
@@ -2574,7 +2650,7 @@ void test_positive_pwr_getPldoMode_disabledFallback(void)
  *
  * Covers lines 2515-2516 in pmic_power.c - LDO status clear with unsupported BB params
  */
-void test_negative_pwr_clrLdoStat_unsupportedBbParams(void)
+void test_neg_power_pwr_clrLdoStat_unsupportedBbParams(void)
 {
     Pmic_PwrRsrcStat_t status_cfg = {0};
 
@@ -2591,7 +2667,7 @@ void test_negative_pwr_clrLdoStat_unsupportedBbParams(void)
  *
  * Covers lines 2595-2596 in pmic_power.c - PLDO status clear with unsupported BB params
  */
-void test_negative_pwr_clrPldoStat_unsupportedBbParams(void)
+void test_neg_power_pwr_clrPldoStat_unsupportedBbParams(void)
 {
     Pmic_PwrRsrcStat_t status_cfg = {0};
 

@@ -35,7 +35,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "pmic_init_test.h"
+#include "pmic_test.h"
 #include "regmap/core.h"
 
 /* ========================================================================== */
@@ -49,71 +49,117 @@
 /* NOTE: PMIC_MAIN_INST not defined for TPS65386x-Q1 - using magic number only */
 #define PMIC_INIT_TEST_EXPECTED_STAT    (PMIC_INIT_TEST_DRV_INIT_MAGIC)
 
-/* Test macro runners */
-#define PMIC_INIT_TEST_RUN_ALL() \
-    PMIC_INIT_TEST_RUN_NEGATIVE(); \
-    PMIC_INIT_TEST_RUN_POSITIVE()
+/* ========================================================================== */
+/*                    API-Specific Test Macros - Pmic_init                   */
+/* ========================================================================== */
 
-#define PMIC_INIT_TEST_RUN_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_init_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_init_nullCoreCfg); \
-    PLATFORM_RUN_TEST(test_negative_init_nullCommHandle); \
-    PLATFORM_RUN_TEST(test_negative_init_nullIoRead); \
-    PLATFORM_RUN_TEST(test_negative_init_nullIoWrite); \
-    PLATFORM_RUN_TEST(test_negative_init_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_negative_init_nullCritSecStop); \
-    PLATFORM_RUN_TEST(test_negative_deinit_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_checkHandle_nullHandle); \
-    PLATFORM_RUN_TEST(test_negative_init_invalidDeviceType); \
-    PLATFORM_RUN_TEST(test_negative_init_invalidCommMode); \
-    PLATFORM_RUN_TEST(test_negative_init_insufficientCfg_missingIoRead); \
-    PLATFORM_RUN_TEST(test_negative_init_insufficientCfg_missingIoWrite); \
-    PLATFORM_RUN_TEST(test_negative_init_insufficientCfg_missingCritSec); \
-    PLATFORM_RUN_TEST(test_negative_checkHandle_invalidInitStat); \
-    PLATFORM_RUN_TEST(test_negative_init_timerWaitNull); \
-    PLATFORM_RUN_TEST(test_negative_checkHandle_invalidCommMode); \
-    PLATFORM_RUN_TEST(test_negative_checkHandle_nullCritSec); \
-    PLATFORM_RUN_TEST(test_negative_checkHandle_nullTimerWithRetry)
+#define PMIC_TEST_POS_INIT() \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_spiMode); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validateHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withAllCallbacks); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_multipleInitDeinit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_handlePersistence); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validDeviceType); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validCommMode); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validateCommHandleStored); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_validateCallbacksStored); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_communicationTest); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_registerAccess); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_deinit_reinit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_cleanStateAfterDeinit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_verifySubsystemInfo); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_minimalConfig); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_fullConfig); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_verifyInitMagic); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_critSecFunctions); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_verifyDeviceComm); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_crc_enabled); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_config_crc_enabled); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_with_both_crc_enabled); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_crc_error_recovery); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_complete_flow); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_device_info_retrieval); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_communication_validation); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_spi_comprehensive); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
 
-#define PMIC_INIT_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_init_spiMode); \
-    PLATFORM_RUN_TEST(test_positive_init_validateHandle); \
-    PLATFORM_RUN_TEST(test_positive_deinit_clearsHandle); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_validHandle); \
-    PLATFORM_RUN_TEST(test_positive_init_withAllCallbacks); \
-    PLATFORM_RUN_TEST(test_positive_init_multipleInitDeinit); \
-    PLATFORM_RUN_TEST(test_positive_init_handlePersistence); \
-    PLATFORM_RUN_TEST(test_positive_init_validDeviceType); \
-    PLATFORM_RUN_TEST(test_positive_init_validCommMode); \
-    PLATFORM_RUN_TEST(test_positive_init_validateCommHandleStored); \
-    PLATFORM_RUN_TEST(test_positive_init_validateCallbacksStored); \
-    PLATFORM_RUN_TEST(test_positive_init_communicationTest); \
-    PLATFORM_RUN_TEST(test_positive_init_registerAccess); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_afterInit); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_detectsUninit); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_detectsMissingIoRead); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_detectsMissingCommHandle); \
-    PLATFORM_RUN_TEST(test_positive_init_deinit_reinit); \
-    PLATFORM_RUN_TEST(test_positive_init_cleanStateAfterDeinit); \
-    PLATFORM_RUN_TEST(test_positive_init_verifySubsystemInfo); \
-    PLATFORM_RUN_TEST(test_positive_init_minimalConfig); \
-    PLATFORM_RUN_TEST(test_positive_init_fullConfig); \
-    PLATFORM_RUN_TEST(test_positive_init_verifyInitMagic); \
-    PLATFORM_RUN_TEST(test_positive_init_critSecFunctions); \
-    PLATFORM_RUN_TEST(test_positive_init_verifyDeviceComm); \
-    PLATFORM_RUN_TEST(test_positive_init_with_crc_enabled); \
-    PLATFORM_RUN_TEST(test_positive_init_with_config_crc_enabled); \
-    PLATFORM_RUN_TEST(test_positive_init_with_both_crc_enabled); \
-    PLATFORM_RUN_TEST(test_positive_init_crc_error_recovery); \
-    PLATFORM_RUN_TEST(test_positive_init_complete_flow); \
-    PLATFORM_RUN_TEST(test_positive_init_device_info_retrieval); \
-    PLATFORM_RUN_TEST(test_positive_init_communication_validation); \
-    PLATFORM_RUN_TEST(test_positive_init_spi_comprehensive); \
-    PLATFORM_RUN_TEST(test_positive_deinit_success_comprehensive); \
-    PLATFORM_RUN_TEST(test_positive_checkHandle_comprehensive); \
-    PLATFORM_RUN_TEST(test_positive_init_withRetryCnt); \
-    PLATFORM_RUN_TEST(test_positive_init_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_positive_init_withTimerWaitMs)
+#define PMIC_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCoreCfg); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_invalidDeviceType); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_invalidCommMode); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingIoRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingCritSec); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull)
+
+#define PMIC_TEST_INIT() \
+    PMIC_TEST_POS_INIT(); \
+    PMIC_TEST_NEG_INIT()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - Pmic_deinit                 */
+/* ========================================================================== */
+
+#define PMIC_TEST_POS_DEINIT() \
+    PLATFORM_RUN_TEST(test_pos_pmic_deinit_clearsHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_deinit_success_comprehensive)
+
+#define PMIC_TEST_NEG_DEINIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle)
+
+#define PMIC_TEST_DEINIT() \
+    PMIC_TEST_POS_DEINIT(); \
+    PMIC_TEST_NEG_DEINIT()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - Pmic_checkHandle              */
+/* ========================================================================== */
+
+#define PMIC_TEST_POS_CHECK_HANDLE() \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_validHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_afterInit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsUninit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsMissingIoRead); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsMissingCommHandle); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_comprehensive)
+
+#define PMIC_TEST_NEG_CHECK_HANDLE() \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidInitStat); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidCommMode); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCritSec); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry)
+
+#define PMIC_TEST_CHECK_HANDLE() \
+    PMIC_TEST_POS_CHECK_HANDLE(); \
+    PMIC_TEST_NEG_CHECK_HANDLE()
+
+/* ========================================================================== */
+/*                         Aggregate Test Macros                              */
+/* ========================================================================== */
+
+#define PMIC_TEST_RUN_POSITIVE() \
+    PMIC_TEST_POS_INIT(); \
+    PMIC_TEST_POS_DEINIT(); \
+    PMIC_TEST_POS_CHECK_HANDLE()
+
+#define PMIC_TEST_RUN_NEGATIVE() \
+    PMIC_TEST_NEG_INIT(); \
+    PMIC_TEST_NEG_DEINIT(); \
+    PMIC_TEST_NEG_CHECK_HANDLE()
+
+#define PMIC_TEST_RUN_ALL() \
+    PMIC_TEST_INIT(); \
+    PMIC_TEST_DEINIT(); \
+    PMIC_TEST_CHECK_HANDLE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -138,22 +184,22 @@ static void mockTimerWait(uint32_t ms)
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-void pmic_init_test(void *args)
+void pmic_test(void *args)
 {
     platform_init();
 
     printf("\r\n");
     printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 PMIC Init Module Tests\r\n");
+    printf("    TPS65386x-Q1 PMIC Module Tests\r\n");
     printf("==================================================\r\n\r\n");
 
-    /* Run all PMIC Init tests */
-    PMIC_INIT_TEST_RUN_ALL();
+    /* Run all PMIC tests */
+    PMIC_TEST_RUN_ALL();
 
     platform_deinit();
 
     printf("\r\n==================================================\r\n");
-    printf("    PMIC Init Module Tests Complete\r\n");
+    printf("    PMIC Module Tests Complete\r\n");
     printf("==================================================\r\n\r\n");
 }
 
@@ -180,7 +226,7 @@ static void initTestHandleCfg(Pmic_HandleCfg_t *pmicCfg)
 /*                    Negative Tests - NULL Parameters                        */
 /* ========================================================================== */
 
-void test_negative_init_nullHandle(void)
+void test_neg_pmic_init_nullHandle(void)
 {
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
@@ -189,7 +235,7 @@ void test_negative_init_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_init_nullCoreCfg(void)
+void test_neg_pmic_init_nullCoreCfg(void)
 {
     Pmic_Handle_t handle = {0};
 
@@ -197,7 +243,7 @@ void test_negative_init_nullCoreCfg(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_init_nullCommHandle(void)
+void test_neg_pmic_init_nullCommHandle(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -210,7 +256,7 @@ void test_negative_init_nullCommHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_init_nullIoRead(void)
+void test_neg_pmic_init_nullIoRead(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -221,7 +267,7 @@ void test_negative_init_nullIoRead(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_nullIoWrite(void)
+void test_neg_pmic_init_nullIoWrite(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -232,7 +278,7 @@ void test_negative_init_nullIoWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_nullCritSecStart(void)
+void test_neg_pmic_init_nullCritSecStart(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -243,7 +289,7 @@ void test_negative_init_nullCritSecStart(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_nullCritSecStop(void)
+void test_neg_pmic_init_nullCritSecStop(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -254,13 +300,13 @@ void test_negative_init_nullCritSecStop(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_deinit_nullHandle(void)
+void test_neg_pmic_deinit_nullHandle(void)
 {
     int32_t status = Pmic_deinit(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_checkHandle_nullHandle(void)
+void test_neg_pmic_checkHandle_nullHandle(void)
 {
     int32_t status = Pmic_checkHandle(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -270,7 +316,7 @@ void test_negative_checkHandle_nullHandle(void)
 /*                   Negative Tests - Invalid Parameters                      */
 /* ========================================================================== */
 
-void test_negative_init_invalidDeviceType(void)
+void test_neg_pmic_init_invalidDeviceType(void)
 {
     /* NOTE: TPS65386x-Q1 does not have deviceType validation (unlike TPS6522x-Q1).
      * This device variant only supports SPI mode and doesn't require deviceType configuration.
@@ -278,7 +324,7 @@ void test_negative_init_invalidDeviceType(void)
     (void)0;  /* No-op test */
 }
 
-void test_negative_init_invalidCommMode(void)
+void test_neg_pmic_init_invalidCommMode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -290,7 +336,7 @@ void test_negative_init_invalidCommMode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_init_insufficientCfg_missingIoRead(void)
+void test_neg_pmic_init_insufficientCfg_missingIoRead(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -304,7 +350,7 @@ void test_negative_init_insufficientCfg_missingIoRead(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_insufficientCfg_missingIoWrite(void)
+void test_neg_pmic_init_insufficientCfg_missingIoWrite(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -318,7 +364,7 @@ void test_negative_init_insufficientCfg_missingIoWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_insufficientCfg_missingCritSec(void)
+void test_neg_pmic_init_insufficientCfg_missingCritSec(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -332,7 +378,7 @@ void test_negative_init_insufficientCfg_missingCritSec(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_checkHandle_invalidInitStat(void)
+void test_neg_pmic_checkHandle_invalidInitStat(void)
 {
     Pmic_Handle_t handle = {0};
 
@@ -350,7 +396,7 @@ void test_negative_checkHandle_invalidInitStat(void)
 /*                 Positive Tests - Basic Init/Deinit                         */
 /* ========================================================================== */
 
-void test_positive_init_spiMode(void)
+void test_pos_pmic_init_spiMode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -364,7 +410,7 @@ void test_positive_init_spiMode(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_validateHandle(void)
+void test_pos_pmic_init_validateHandle(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -384,7 +430,7 @@ void test_positive_init_validateHandle(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_deinit_clearsHandle(void)
+void test_pos_pmic_deinit_clearsHandle(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -406,7 +452,7 @@ void test_positive_deinit_clearsHandle(void)
     PLATFORM_ASSERT(handle.criticalSectionStop == NULL);
 }
 
-void test_positive_checkHandle_validHandle(void)
+void test_pos_pmic_checkHandle_validHandle(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -426,7 +472,7 @@ void test_positive_checkHandle_validHandle(void)
 /*              Positive Tests - Initialization Variations                    */
 /* ========================================================================== */
 
-void test_positive_init_withAllCallbacks(void)
+void test_pos_pmic_init_withAllCallbacks(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -444,7 +490,7 @@ void test_positive_init_withAllCallbacks(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_multipleInitDeinit(void)
+void test_pos_pmic_init_multipleInitDeinit(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -469,7 +515,7 @@ void test_positive_init_multipleInitDeinit(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_handlePersistence(void)
+void test_pos_pmic_init_handlePersistence(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -493,7 +539,7 @@ void test_positive_init_handlePersistence(void)
 /*            Positive Tests - Configuration Validation                       */
 /* ========================================================================== */
 
-void test_positive_init_validDeviceType(void)
+void test_pos_pmic_init_validDeviceType(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -505,7 +551,7 @@ void test_positive_init_validDeviceType(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_validCommMode(void)
+void test_pos_pmic_init_validCommMode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -520,7 +566,7 @@ void test_positive_init_validCommMode(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_validateCommHandleStored(void)
+void test_pos_pmic_init_validateCommHandleStored(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -536,7 +582,7 @@ void test_positive_init_validateCommHandleStored(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_validateCallbacksStored(void)
+void test_pos_pmic_init_validateCallbacksStored(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -558,7 +604,7 @@ void test_positive_init_validateCallbacksStored(void)
 /*            Positive Tests - Communication Validation                       */
 /* ========================================================================== */
 
-void test_positive_init_communicationTest(void)
+void test_pos_pmic_init_communicationTest(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -574,7 +620,7 @@ void test_positive_init_communicationTest(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_registerAccess(void)
+void test_pos_pmic_init_registerAccess(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -595,7 +641,7 @@ void test_positive_init_registerAccess(void)
 /*                Positive Tests - Handle Validation                          */
 /* ========================================================================== */
 
-void test_positive_checkHandle_afterInit(void)
+void test_pos_pmic_checkHandle_afterInit(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -611,7 +657,7 @@ void test_positive_checkHandle_afterInit(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_checkHandle_detectsUninit(void)
+void test_pos_pmic_checkHandle_detectsUninit(void)
 {
     Pmic_Handle_t handle = {0};
 
@@ -624,7 +670,7 @@ void test_positive_checkHandle_detectsUninit(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_positive_checkHandle_detectsMissingIoRead(void)
+void test_pos_pmic_checkHandle_detectsMissingIoRead(void)
 {
     Pmic_Handle_t handle = {0};
 
@@ -638,7 +684,7 @@ void test_positive_checkHandle_detectsMissingIoRead(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_positive_checkHandle_detectsMissingCommHandle(void)
+void test_pos_pmic_checkHandle_detectsMissingCommHandle(void)
 {
     Pmic_Handle_t handle = {0};
 
@@ -656,7 +702,7 @@ void test_positive_checkHandle_detectsMissingCommHandle(void)
 /*            Positive Tests - Initialization Lifecycle                       */
 /* ========================================================================== */
 
-void test_positive_init_deinit_reinit(void)
+void test_pos_pmic_init_deinit_reinit(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -679,7 +725,7 @@ void test_positive_init_deinit_reinit(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_cleanStateAfterDeinit(void)
+void test_pos_pmic_init_cleanStateAfterDeinit(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -700,7 +746,7 @@ void test_positive_init_cleanStateAfterDeinit(void)
     PLATFORM_ASSERT(handle.ioWrite == NULL);
 }
 
-void test_positive_init_verifySubsystemInfo(void)
+void test_pos_pmic_init_verifySubsystemInfo(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -716,7 +762,7 @@ void test_positive_init_verifySubsystemInfo(void)
 /*          Positive Tests - Configuration Combinations                       */
 /* ========================================================================== */
 
-void test_positive_init_minimalConfig(void)
+void test_pos_pmic_init_minimalConfig(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -736,7 +782,7 @@ void test_positive_init_minimalConfig(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_fullConfig(void)
+void test_pos_pmic_init_fullConfig(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -757,7 +803,7 @@ void test_positive_init_fullConfig(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_verifyInitMagic(void)
+void test_pos_pmic_init_verifyInitMagic(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -776,7 +822,7 @@ void test_positive_init_verifyInitMagic(void)
 /*                    Positive Tests - Advanced                               */
 /* ========================================================================== */
 
-void test_positive_init_critSecFunctions(void)
+void test_pos_pmic_init_critSecFunctions(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -792,7 +838,7 @@ void test_positive_init_critSecFunctions(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_verifyDeviceComm(void)
+void test_pos_pmic_init_verifyDeviceComm(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -814,7 +860,7 @@ void test_positive_init_verifyDeviceComm(void)
 /*                    Positive Tests - CRC Configuration                      */
 /* ========================================================================== */
 
-void test_positive_init_with_crc_enabled(void)
+void test_pos_pmic_init_with_crc_enabled(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -844,7 +890,7 @@ void test_positive_init_with_crc_enabled(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_with_config_crc_enabled(void)
+void test_pos_pmic_init_with_config_crc_enabled(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -870,7 +916,7 @@ void test_positive_init_with_config_crc_enabled(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_with_both_crc_enabled(void)
+void test_pos_pmic_init_with_both_crc_enabled(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -906,7 +952,7 @@ void test_positive_init_with_both_crc_enabled(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_crc_error_recovery(void)
+void test_pos_pmic_init_crc_error_recovery(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -944,7 +990,7 @@ void test_positive_init_crc_error_recovery(void)
 /*        Phase 3 Tests - Device Info Retrieval & Complete Flow              */
 /* ========================================================================== */
 
-void test_positive_init_complete_flow(void)
+void test_pos_pmic_init_complete_flow(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -976,7 +1022,7 @@ void test_positive_init_complete_flow(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_device_info_retrieval(void)
+void test_pos_pmic_init_device_info_retrieval(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1008,7 +1054,7 @@ void test_positive_init_device_info_retrieval(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_communication_validation(void)
+void test_pos_pmic_init_communication_validation(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1035,7 +1081,7 @@ void test_positive_init_communication_validation(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_init_spi_comprehensive(void)
+void test_pos_pmic_init_spi_comprehensive(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1077,7 +1123,7 @@ void test_positive_init_spi_comprehensive(void)
     (void)Pmic_deinit(&handle);
 }
 
-void test_positive_deinit_success_comprehensive(void)
+void test_pos_pmic_deinit_success_comprehensive(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1114,7 +1160,7 @@ void test_positive_deinit_success_comprehensive(void)
     PLATFORM_ASSERT(handle.nvmRev == 0U);
 }
 
-void test_positive_checkHandle_comprehensive(void)
+void test_pos_pmic_checkHandle_comprehensive(void)
 {
     Pmic_Handle_t handle = {0};
     int32_t status;
@@ -1156,7 +1202,7 @@ void test_positive_checkHandle_comprehensive(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_withRetryCnt(void)
+void test_pos_pmic_init_withRetryCnt(void)
 {
     // Initialize with PMIC_RETRY_CNT_VALID set
     Pmic_Handle_t handle = {0};
@@ -1178,7 +1224,7 @@ void test_positive_init_withRetryCnt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_withRetryInterval(void)
+void test_pos_pmic_init_withRetryInterval(void)
 {
     // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
     Pmic_Handle_t handle = {0};
@@ -1202,7 +1248,7 @@ void test_positive_init_withRetryInterval(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_withTimerWaitMs(void)
+void test_pos_pmic_init_withTimerWaitMs(void)
 {
     // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
     Pmic_Handle_t handle = {0};
@@ -1224,7 +1270,7 @@ void test_positive_init_withTimerWaitMs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_init_timerWaitNull(void)
+void test_neg_pmic_init_timerWaitNull(void)
 {
     // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_Handle_t handle = {0};
@@ -1244,7 +1290,7 @@ void test_negative_init_timerWaitNull(void)
  *
  * Covers line 291 in pmic.c - commMode validation in Pmic_checkHandle
  */
-void test_negative_checkHandle_invalidCommMode(void)
+void test_neg_pmic_checkHandle_invalidCommMode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1271,7 +1317,7 @@ void test_negative_checkHandle_invalidCommMode(void)
  *
  * Covers line 303 in pmic.c - critical section function pointer validation
  */
-void test_negative_checkHandle_nullCritSec(void)
+void test_neg_pmic_checkHandle_nullCritSec(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
@@ -1309,7 +1355,7 @@ void test_negative_checkHandle_nullCritSec(void)
  *
  * Covers line 307 in pmic.c - timer validation when retry interval is set
  */
-void test_negative_checkHandle_nullTimerWithRetry(void)
+void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};

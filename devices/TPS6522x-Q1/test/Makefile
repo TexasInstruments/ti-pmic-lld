@@ -74,8 +74,9 @@ MOCK_DIR = $(patsubst %/,%,$(PMIC_MOCK_DIR))
 # Test module sources
 TEST_SOURCES = \
 	test_runner.c \
+	test_utils.c \
 	common/common_test.c \
-	pmic_init/pmic_init_test.c \
+	pmic/pmic_test.c \
 	core/core_test.c \
 	adc/adc_test.c \
 	power/power_test.c \
@@ -140,7 +141,7 @@ INCLUDES = \
 	-I$(TEST_ROOT) \
 	-I$(PMIC_ROOT)/include \
 	-I$(UNITY_DIR)/src \
-	-Ipmic_init -Icore -Iadc -Ipower -Igpio -Iwdg -Iesm -Iio -Iirq -Ifsm
+	-Ipmic -Icore -Iadc -Ipower -Igpio -Iwdg -Iesm -Iio -Iirq -Ifsm
 
 # ============================================================================
 # Compiler Flags

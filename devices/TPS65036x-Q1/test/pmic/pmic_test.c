@@ -36,58 +36,73 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "pmic_init_test.h"
+#include "pmic_test.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all PMIC_INIT tests */
-#define PMIC_INIT_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_commHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_ioRead); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_ioWrite); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStart); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStop); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_deinit_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_init_timerWaitNull); \
-                                 PLATFORM_RUN_TEST(test_negative_init_nullIrqResponseCallback); \
-                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullCommHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullFptrs); \
-                                 PLATFORM_RUN_TEST(test_negative_checkHandle_nullTimerWithRetry); \
-                                 PLATFORM_RUN_TEST(test_negative_checkHandle_invalidDrvInitStat); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_init); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_deinit); \
-                                 PLATFORM_RUN_TEST(test_positive_init_withRetryCnt); \
-                                 PLATFORM_RUN_TEST(test_positive_init_withRetryInterval); \
-                                 PLATFORM_RUN_TEST(test_positive_init_withTimerWaitMs)
+/* ========================================================================== */
+/*               API-Specific Test Macros - init/deinit                       */
+/* ========================================================================== */
 
-/* Run all PMIC_INIT negative tests */
-#define PMIC_INIT_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicHandle); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_commHandle); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_ioRead); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_ioWrite); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStart); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_init_nullParam_pmicCfg_critSecStop); \
-                                      PLATFORM_RUN_TEST(test_negative_Pmic_deinit_nullParam_pmicHandle); \
-                                      PLATFORM_RUN_TEST(test_negative_init_nullIrqResponseCallback); \
-                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullCommHandle); \
-                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullFptrs); \
-                                      PLATFORM_RUN_TEST(test_negative_checkHandle_nullTimerWithRetry); \
-                                      PLATFORM_RUN_TEST(test_negative_checkHandle_invalidDrvInitStat)
+#define PMIC_TEST_POS_INIT() \
+    PLATFORM_RUN_TEST(test_pos_pmic_init); \
+    PLATFORM_RUN_TEST(test_pos_pmic_deinit); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
 
-/* Run all PMIC_INIT positive tests */
-#define PMIC_INIT_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_Pmic_init); \
-                                      PLATFORM_RUN_TEST(test_positive_Pmic_deinit)
+#define PMIC_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullPmicCfg); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqResponseCallback)
+
+#define PMIC_TEST_INIT() \
+    PMIC_TEST_POS_INIT(); \
+    PMIC_TEST_NEG_INIT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - checkHandle                       */
+/* ========================================================================== */
+
+#define PMIC_TEST_NEG_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullFptrs); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidDrvInitStat)
+
+#define PMIC_TEST_CHECKHANDLE() \
+    PMIC_TEST_NEG_CHECKHANDLE()
+
+/* ========================================================================== */
+/*                        Aggregate Test Macros                               */
+/* ========================================================================== */
+
+#define PMIC_TEST_RUN_POSITIVE() \
+    PMIC_TEST_POS_INIT()
+
+#define PMIC_TEST_RUN_NEGATIVE() \
+    PMIC_TEST_NEG_INIT(); \
+    PMIC_TEST_NEG_CHECKHANDLE()
+
+#define PMIC_TEST_RUN_ALL() \
+    PMIC_TEST_INIT(); \
+    PMIC_TEST_CHECKHANDLE()
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 
-static void pmicInitTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg);
-static void pmicInitTest_nullParamPmicInit(const char *param);
+static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg);
+static void pmicTest_nullParamPmicInit(const char *param);
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -106,22 +121,22 @@ static void testTimerWaitWrapper(uint32_t ms)
 /*                           Function Definitions                             */
 /* ========================================================================== */
 
-void pmic_init_test(void *args)
+void pmic_test(void *args)
 {
     platform_init();
 
     platform_printString("\r\n");
-    platform_printString("PMIC_INIT_TEST\r\n");
-    platform_printString("--------------\r\n\r\n");
+    platform_printString("PMIC_TEST\r\n");
+    platform_printString("---------\r\n\r\n");
 
     platform_setupTests();
-    PMIC_INIT_TEST_RUN_ALL();
+    PMIC_TEST_RUN_ALL();
     platform_tearDownTests();
 
     platform_deinit();
 }
 
-static void pmicInitTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
+static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
 {
     pmicCfg->validParams = PMIC_I2C_ADDR0_VALID |
                            PMIC_COMM_HANDLE_0_VALID |
@@ -139,26 +154,26 @@ static void pmicInitTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
     pmicCfg->irqResponseCallback = &platform_irqResponse;
 }
 
-void test_negative_Pmic_init_nullParam_pmicHandle(void)
+void test_neg_pmic_init_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_init()
     Pmic_HandleCfg_t pmicCfg = {0U};
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
     int32_t status = Pmic_init(NULL, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg(void)
+void test_neg_pmic_init_nullPmicCfg(void)
 {
     // Pass NULL pmicCfg into Pmic_init()
     int32_t status = Pmic_init(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void pmicInitTest_nullParamPmicInit(const char *param)
+static void pmicTest_nullParamPmicInit(const char *param)
 {
     Pmic_HandleCfg_t pmicCfg = {0U};
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     if (strcmp(param, "commHandle0") == 0U) {
         pmicCfg.commHandle0 = NULL;
@@ -185,53 +200,53 @@ static void pmicInitTest_nullParamPmicInit(const char *param)
     }
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg_commHandle(void)
+void test_neg_pmic_init_nullCommHandle(void)
 {
     // Pass NULL commHandle0 into Pmic_init()
-    pmicInitTest_nullParamPmicInit("commHandle0");
+    pmicTest_nullParamPmicInit("commHandle0");
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg_ioRead(void)
+void test_neg_pmic_init_nullIoRead(void)
 {
     // Pass NULL ioRead into Pmic_init()
-    pmicInitTest_nullParamPmicInit("ioRead");
+    pmicTest_nullParamPmicInit("ioRead");
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg_ioWrite(void)
+void test_neg_pmic_init_nullIoWrite(void)
 {
     // Pass NULL ioWrite into Pmic_init()
-    pmicInitTest_nullParamPmicInit("ioWrite");
+    pmicTest_nullParamPmicInit("ioWrite");
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg_critSecStart(void)
+void test_neg_pmic_init_nullCritSecStart(void)
 {
     // Pass NULL criticalSectionStart into Pmic_init()
-    pmicInitTest_nullParamPmicInit("criticalSectionStart");
+    pmicTest_nullParamPmicInit("criticalSectionStart");
 }
 
-void test_negative_Pmic_init_nullParam_pmicCfg_critSecStop(void)
+void test_neg_pmic_init_nullCritSecStop(void)
 {
     // Pass NULL criticalSectionStop into Pmic_init()
-    pmicInitTest_nullParamPmicInit("criticalSectionStop");
+    pmicTest_nullParamPmicInit("criticalSectionStop");
 }
 
-void test_negative_Pmic_deinit_nullParam_pmicHandle(void)
+void test_neg_pmic_deinit_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_deinit()
     int32_t status = Pmic_deinit(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_positive_Pmic_init(void)
+void test_pos_pmic_init(void)
 {
     // Initialize PMIC LLD
     Pmic_HandleCfg_t pmicCfg = {0U};
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
     int32_t status = Pmic_init(&pmicHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_Pmic_deinit(void)
+void test_pos_pmic_deinit(void)
 {
     // De-initialize PMIC LLD
     int32_t status = Pmic_deinit(&pmicHandle);
@@ -251,13 +266,13 @@ void test_positive_Pmic_deinit(void)
     PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
-void test_positive_init_withRetryCnt(void)
+void test_pos_pmic_init_withRetryCnt(void)
 {
     // Initialize with PMIC_RETRY_CNT_VALID set
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     // Add retry count configuration
     pmicCfg.validParams |= PMIC_RETRY_CNT_VALID;
@@ -274,13 +289,13 @@ void test_positive_init_withRetryCnt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_withRetryInterval(void)
+void test_pos_pmic_init_withRetryInterval(void)
 {
     // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     // Add retry interval configuration
     // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
@@ -299,13 +314,13 @@ void test_positive_init_withRetryInterval(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_init_withTimerWaitMs(void)
+void test_pos_pmic_init_withTimerWaitMs(void)
 {
     // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     // Add timer wait callback configuration
     pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
@@ -322,13 +337,13 @@ void test_positive_init_withTimerWaitMs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_init_timerWaitNull(void)
+void test_neg_pmic_init_timerWaitNull(void)
 {
     // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     // Set valid param flag but provide NULL callback
     pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
@@ -338,13 +353,13 @@ void test_negative_init_timerWaitNull(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_init_nullIrqResponseCallback(void)
+void test_neg_pmic_init_nullIrqResponseCallback(void)
 {
     // Test NULL IRQ response callback with PMIC_IRQ_RESPONSE_CALLBACK_VALID set (lines 173-174)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     // Set valid param flag but provide NULL callback
     pmicCfg.validParams |= PMIC_IRQ_RESPONSE_CALLBACK_VALID;
@@ -354,13 +369,13 @@ void test_negative_init_nullIrqResponseCallback(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_negative_checkHandle_nullCommHandle(void)
+void test_neg_pmic_checkHandle_nullCommHandle(void)
 {
     // Test corrupted commHandle0 to NULL (line 411)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -379,13 +394,13 @@ void test_negative_checkHandle_nullCommHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_checkHandle_nullFptrs(void)
+void test_neg_pmic_checkHandle_nullFptrs(void)
 {
     // Test corrupted function pointers to NULL (line 417)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -404,13 +419,13 @@ void test_negative_checkHandle_nullFptrs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_checkHandle_nullTimerWithRetry(void)
+void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
 {
     // Test non-zero retry with NULL timer (line 422)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -430,13 +445,13 @@ void test_negative_checkHandle_nullTimerWithRetry(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_checkHandle_invalidDrvInitStat(void)
+void test_neg_pmic_checkHandle_invalidDrvInitStat(void)
 {
     // Test corrupted drvInitStat (line 427)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
-    pmicInitTest_initPmicCfg(&pmicCfg);
+    pmicTest_initPmicCfg(&pmicCfg);
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -454,4 +469,3 @@ void test_negative_checkHandle_invalidDrvInitStat(void)
     status = Pmic_deinit(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
-

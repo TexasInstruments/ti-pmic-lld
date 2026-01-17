@@ -46,91 +46,99 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+#include "wdg_test_macros.h"
+
+/* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
 void wdg_test(void *args);
 
-void test_negative_Pmic_wdgEnable_nullParam_handle(void);
-void test_negative_Pmic_wdgDisable_nullParam_handle(void);
-void test_negative_Pmic_wdgSetEnableState_nullParam_handle(void);
-void test_negative_Pmic_wdgGetEnableState_nullParam_handle(void);
-void test_negative_Pmic_wdgGetEnableState_nullParam_isEnabled(void);
-void test_negative_Pmic_wdgSetCfg_nullParam_handle(void);
-void test_negative_Pmic_wdgSetCfg_nullParam_wdgCfg(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdReset(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_thresholdFail(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_win1Code(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_win2Code(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaFdbk(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaLfsr(void);
-void test_negative_Pmic_wdgSetCfg_outOfBounds_qaQuesSeed(void);
-void test_negative_Pmic_wdgGetCfg_nullParam_handle(void);
-void test_negative_Pmic_wdgGetCfg_nullParam_wdgCfg(void);
-void test_negative_Pmic_wdgSetPowerHold_nullParam_handle(void);
-void test_negative_Pmic_wdgGetPowerHold_nullParam_handle(void);
-void test_negative_Pmic_wdgGetPowerHold_nullParam_isEnabled(void);
-void test_negative_Pmic_wdgSetReturnToLongWindow_nullParam_handle(void);
-void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_handle(void);
-void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam_isEnabled(void);
-void test_negative_Pmic_wdgGetErrStatus_nullParam_handle(void);
-void test_negative_Pmic_wdgGetErrStatus_nullParam_errors(void);
-void test_negative_Pmic_wdgClrErrStatus_nullParam_handle(void);
-void test_negative_Pmic_wdgClrErrStatus_nullParam_errors(void);
-void test_negative_Pmic_wdgClrErrStatusAll_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFailCntStatus_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFailCntStatus_nullParam_failCount(void);
-void test_negative_Pmic_wdgQaWriteAnswer_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFdbkRegData_nullParam_handle(void);
-void test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData(void);
-void test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo(void);
-void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle(void);
-void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData(void);
-void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle(void);
-void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo(void);
-void test_negative_Pmic_wdgWriteAnswer_nullParam_handle(void);
-void test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo(void);
-void test_positive_wdgEnableDisable(void);
-void test_positive_wdgEnableDisablePowerHold(void);
-void test_positive_wdgEnableDisableReturnToLongWindow(void);
-void test_positive_wdgSetGetCfg_rstEn(void);
-void test_positive_wdgSetGetCfg_thresholdReset(void);
-void test_positive_wdgSetGetCfg_thresholdFail(void);
-void test_positive_wdgSetGetCfg_longWinCode(void);
-void test_positive_wdgSetGetCfg_win1Code(void);
-void test_positive_wdgSetGetCfg_win2Code(void);
-void test_positive_wdgSetGetCfg_qaFdbk(void);
-void test_positive_wdgSetGetCfg_qaLfsr(void);
-void test_positive_wdgSetGetCfg_qaQuesSeed(void);
-void test_positive_wdgQaSequence_detectNoErrors(void);
-void test_positive_wdgQaSequence_detectTimeout(void);
-void test_positive_wdgQaSequence_detectLongWindowTimeout(void);
-void test_positive_wdgQaSequence_detectAnswerEarlyError(void);
-void test_positive_wdgQaSequence_detectSequenceError(void);
-void test_positive_wdgQaSequence_detectAnswerError(void);
-void test_positive_wdgQaSequence_detectFailInt(void);
-void test_positive_wdgQaSequence_detectResetInt(void);
-void test_positive_wdg_qa_with_irq_callback(void);
-void test_positive_wdg_clear_error_optimization(void);
-void test_positive_wdgQaWriteAnswer_qaFdbk0(void);
-void test_positive_wdgQaWriteAnswer_qaFdbk1(void);
-void test_positive_wdgQaWriteAnswer_qaFdbk2(void);
-void test_positive_wdgQaWriteAnswer_qaFdbk3(void);
-void test_positive_wdgClrErrStatus_th1ErrorOnly(void);
-void test_positive_wdgClrErrStatus_th2ErrorOnly(void);
-void test_positive_wdgClrErrStatus_seqErrorOnly(void);
-void test_positive_wdgGetFailCntStatus_failCntOnly(void);
-void test_positive_wdgGetFailCntStatus_badCntOnly(void);
-
-/* LP8772x-Q1 tests for uncovered lines in pmic_wdg.c */
-void test_positive_wdg_qaWithIrqCallback(void);
-void test_positive_wdg_getErrStatus_longWindowTimeout(void);
-void test_positive_wdg_getErrStatus_answerEarly(void);
-void test_positive_wdg_getErrStatus_answerError(void);
-void test_positive_wdg_getFailCnt_goodEvent(void);
-void test_positive_wdg_writeAnswer_success(void);
+/* Negative Test Functions */
+void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void);
+void test_neg_wdg_wdgClrErrStatus_nullHandle(void);
+void test_neg_wdg_wdgClrErrStatus_nullParam(void);
+void test_neg_wdg_wdgDisable_nullHandle(void);
+void test_neg_wdg_wdgEnable_nullHandle(void);
+void test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle(void);
+void test_neg_wdg_wdgExtractAnsCntAndQues_nullParam(void);
+void test_neg_wdg_wdgExtractFdbk_nullParam(void);
+void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullHandle(void);
+void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullParam(void);
+void test_neg_wdg_wdgGetCfg_nullConfig(void);
+void test_neg_wdg_wdgGetCfg_nullHandle(void);
+void test_neg_wdg_wdgGetEnableState_nullHandle(void);
+void test_neg_wdg_wdgGetEnableState_nullParam(void);
+void test_neg_wdg_wdgGetErrorStatus_nullHandle(void);
+void test_neg_wdg_wdgGetErrorStatus_nullParam(void);
+void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void);
+void test_neg_wdg_wdgGetFailCntStatus_nullParam(void);
+void test_neg_wdg_wdgGetFdbkRegData_nullHandle(void);
+void test_neg_wdg_wdgGetFdbkRegData_nullParam(void);
+void test_neg_wdg_wdgGetPowerHold_nullHandle(void);
+void test_neg_wdg_wdgGetPowerHold_nullParam(void);
+void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void);
+void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void);
+void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void);
+void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void);
+void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void);
+void test_neg_wdg_wdgSetCfg_invalidQaQuesSeed(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold1(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold2(void);
+void test_neg_wdg_wdgSetCfg_invalidWin1Code(void);
+void test_neg_wdg_wdgSetCfg_invalidWin2Code(void);
+void test_neg_wdg_wdgSetCfg_nullConfig(void);
+void test_neg_wdg_wdgSetCfg_nullHandle(void);
+void test_neg_wdg_wdgSetEnableState_nullHandle(void);
+void test_neg_wdg_wdgSetPowerHold_nullHandle(void);
+void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void);
+void test_neg_wdg_wdgWriteAnswer_nullHandle(void);
+void test_neg_wdg_wdgWriteAnswer_nullParam(void);
+void test_pos_wdg_wdgClrErrStatusAll_optimization(void);
+void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void);
+void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void);
+void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void);
+void test_pos_wdg_wdgEnable_enableDisable(void);
+void test_pos_wdg_wdgGetErrorStatus_answerEarly(void);
+void test_pos_wdg_wdgGetErrorStatus_answerError(void);
+void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void);
+void test_pos_wdg_wdgGetErrorStatus_timeout(void);
+void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void);
+void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void);
+void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void);
+void test_pos_wdg_wdgQaSequence_answerEarly(void);
+void test_pos_wdg_wdgQaSequence_answerError(void);
+void test_pos_wdg_wdgQaSequence_failInt(void);
+void test_pos_wdg_wdgQaSequence_longWindowTimeout(void);
+void test_pos_wdg_wdgQaSequence_noErrors(void);
+void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void);
+void test_pos_wdg_wdgQaSequence_resetInt(void);
+void test_pos_wdg_wdgQaSequence_sequenceError(void);
+void test_pos_wdg_wdgQaSequence_withIrqCallback(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void);
+void test_pos_wdg_wdgSetCfg_longWindowCode(void);
+void test_pos_wdg_wdgSetCfg_qaFdbk(void);
+void test_pos_wdg_wdgSetCfg_qaLfsr(void);
+void test_pos_wdg_wdgSetCfg_qaQuesSeed(void);
+void test_pos_wdg_wdgSetCfg_resetEnable(void);
+void test_pos_wdg_wdgSetCfg_threshold1(void);
+void test_pos_wdg_wdgSetCfg_threshold2(void);
+void test_pos_wdg_wdgSetCfg_win1Code(void);
+void test_pos_wdg_wdgSetCfg_win2Code(void);
+void test_pos_wdg_wdgSetPowerHold_enableDisable(void);
+void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void);
+void test_pos_wdg_wdgWriteAnswer_success(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__WDG_TEST_H__*/
+
+#endif /* WDG_TEST_H */

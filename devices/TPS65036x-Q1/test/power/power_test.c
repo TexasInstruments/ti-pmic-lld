@@ -51,286 +51,286 @@
 
 /* Run all Power tests */
 #define POWER_TEST_RUN_ALL() \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_ldoCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_vset); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_dischargeSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_deglitchSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ilimSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovpSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_scSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_rvConf); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_ldoCfg); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_enable); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_mode); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_vset); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_vmonOnly); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_dischargeEn); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_dischargeSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_deglitchSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_uvThr); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovThr); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ilimSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovpSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_uvSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_scSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_rvConf); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetTsdCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetTsdCfg_nullParam_tsdCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetTsdCfg_outOfBounds_tsdImmLevel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetTsdCfg_outOfBounds_twarnLevel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetTsdCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetTsdCfg_nullParam_tsdCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetTsdImmStatus_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetTsdImmStatus_nullParam_tsdImmStat); \
-    PLATFORM_RUN_TEST(test_positive_tsdSetGetCfg_twarnStayInSafeState); \
-    PLATFORM_RUN_TEST(test_positive_tsdSetGetCfg_tsdImmLevel); \
-    PLATFORM_RUN_TEST(test_positive_tsdSetGetCfg_twarnLevel); \
-    PLATFORM_RUN_TEST(test_positive_tsdGetImmStatus); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetRsrcStatus_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetRsrcStatus_nullParam_pwrRsrcStat); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetRsrcStatus_outOfBounds_resource); \
-    PLATFORM_RUN_TEST(test_positive_rsrcGetStatus_buck1); \
-    PLATFORM_RUN_TEST(test_positive_rsrcGetStatus_buck2); \
-    PLATFORM_RUN_TEST(test_positive_rsrcGetStatus_buck3); \
-    PLATFORM_RUN_TEST(test_positive_rsrcGetStatus_ldo); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqDly_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg); \
-    PLATFORM_RUN_TEST(test_positive_seqTrigSetGet_buck1); \
-    PLATFORM_RUN_TEST(test_positive_seqTrigSetGet_buck2); \
-    PLATFORM_RUN_TEST(test_positive_seqTrigSetGet_buck3); \
-    PLATFORM_RUN_TEST(test_positive_seqTrigSetGet_ldo); \
-    PLATFORM_RUN_TEST(test_positive_seqTrigSetGet_allResources); \
-    PLATFORM_RUN_TEST(test_positive_seqDlySetGet_buck1); \
-    PLATFORM_RUN_TEST(test_positive_seqDlySetGet_buck2); \
-    PLATFORM_RUN_TEST(test_positive_seqDlySetGet_buck3); \
-    PLATFORM_RUN_TEST(test_positive_seqDlySetGet_ldo); \
-    PLATFORM_RUN_TEST(test_positive_seqDlySetGet_allResources); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_nullParam_buckCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckCfg_nullParam_buckCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_invalidParam_resource); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckCfg_invalidParam_resource); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetBuckCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vset); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetActive); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetLPwr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck1); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck2); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovpSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_scSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_rvConf); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_slewRate); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_deglitchSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_dischargeSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloRising); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloFalling); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetBuckCfg_outOfBounds_highSideSlewRate); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_enable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_enable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_enable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_disable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_disable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_disable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_enable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_enable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_enable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_disable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_disable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_fpwmEn_disable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_enable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_enable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_enable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_disable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_disable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_pldnEn_disable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck1_active); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck1_resistive); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck2_active); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck2_resistive); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck3_active); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_dischargeSel_buck3_resistive); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_enable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_enable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_enable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_disable_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_disable_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssEn_disable_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovpSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovpSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovpSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ovSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_uvSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_uvSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_uvSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_scSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_scSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_scSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_rvConf_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_rvConf_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_rvConf_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ilimSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ilimSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckGetCfg_ilimSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vset_buck1_min); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vset_buck1_mid); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vset_buck1_max); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vset_buck1_boundary_low); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vset_buck1_boundary_high); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck2_min); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck2_mid); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck2_max); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck3_min); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck3_mid); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck3_max); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck2_boundary); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetActive_buck3_boundary); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck2_min); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck2_max); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck3_min); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck3_max); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck2_mid); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vsetLPwr_buck3_mid); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vmonOnly_buck2_enable); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_vmonOnly_buck3_enable); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck1_val0); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck1_val1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck2_val2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck2_val3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck3_val0); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvThr_buck3_val3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck1_val0); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck1_val1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck2_val2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck2_val3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck3_val0); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ovThr_buck3_val3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_slewRate_buck1_allValues); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_slewRate_buck2_minMax); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_slewRate_buck3_minMax); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_highSideSlewRate_buck1_fast); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_highSideSlewRate_buck1_slow); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_highSideSlewRate_buck1_slowest); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_deglitchSel_allBucks); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssmSel_buck1); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssmSel_buck2); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssmSel_buck3); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_ssmSel_allValues); \
-    PLATFORM_RUN_TEST(test_negative_buckSetCfg_ssmSel_outOfBounds); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvloRising_buck1_allValues); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvloFalling_buck1_allValues); \
-    PLATFORM_RUN_TEST(test_positive_buckSetGetCfg_uvloRisingAndFalling_buck1); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck1_vsetActiveNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck1_vsetActiveNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck1_vsetLpwrNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck1_vsetLpwrNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck2_vsetNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck2_vsetNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck3_vsetNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck3_vsetNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck1_vmonOnlyNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck1_vmonOnlyNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported); \
-    PLATFORM_RUN_TEST(test_negative_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck2OvpSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck3OvpSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck2OvSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck3OvSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck2UvSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck3UvSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck2ScSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck3ScSel); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck1RvConf); \
-    PLATFORM_RUN_TEST(test_positive_buckSetCfg_buck1IlimSel); \
-    PLATFORM_RUN_TEST(test_positive_powerGetCfg_buck2Enable); \
-    PLATFORM_RUN_TEST(test_positive_powerSetCfg_buck2Enable); \
-    PLATFORM_RUN_TEST(test_positive_powerGetVoutCfg_buck2Voltage); \
-    PLATFORM_RUN_TEST(test_positive_powerSetVoutCfg_buck2Voltage); \
-    PLATFORM_RUN_TEST(test_positive_powerGetCfg_buck3Enable); \
-    PLATFORM_RUN_TEST(test_positive_powerSetCfg_buck3Enable); \
-    PLATFORM_RUN_TEST(test_positive_powerGetVoutCfg_buck3Voltage); \
-    PLATFORM_RUN_TEST(test_positive_powerSetVoutCfg_buck3Voltage); \
-    PLATFORM_RUN_TEST(test_positive_powerGetStat_buck2); \
-    PLATFORM_RUN_TEST(test_positive_powerGetStat_buck3); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getUvlo_invalidBuck); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setUvlo_invalidBuck); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setBuck_invalidDischargeSel); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setBuck_invalidSlewRate); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setLdoCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getLdoCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setTsdCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getTsdCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setSeqTrig_zeroLen); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setSeqTrig_invalidPwrRsrc); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setSeqTrig_invalidBitPos); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getSeqTrig_zeroLen); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getSeqTrig_invalidResource); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getSeqTrig_invalidBitPos); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setSeqDelay_zeroLen); \
-    PLATFORM_RUN_TEST(test_negative_pwr_setSeqDelay_invalidConfig); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getSeqDelay_zeroLen); \
-    PLATFORM_RUN_TEST(test_negative_pwr_getSeqDelay_invalidConfig)
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_ldoCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_vset); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_dischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_deglitchSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ilimSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_scSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vset); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vmonOnly); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeEn); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_deglitchSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ilimSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_scSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_rvConf); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_tsdCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_tsdImmLevel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_tsdCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_tsdImmStat); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnStayInSafeState); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_tsdImmLevel); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnLevel); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdGetImmStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_outOfBounds_resource); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_ldo); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_ldo); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_allResources); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_ldo); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_allResources); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_buckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_nullParam_buckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_invalidParam_resource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_invalidParam_resource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vset); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_scSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_low); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_high); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck2_minMax); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck3_minMax); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_deglitchSel_allBucks); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_allValues); \
+    PLATFORM_RUN_TEST(test_neg_power_buckSetCfg_ssmSel_outOfBounds); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetActiveNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetActiveNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetLpwrNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetLpwrNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vmonOnlyNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2UvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3UvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2ScSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3ScSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1RvConf); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1IlimSel); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck2Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck2Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck2Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck2Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck3Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck3Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck3Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck3Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck3); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getUvlo_invalidBuck); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setUvlo_invalidBuck); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidDischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidSlewRate); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setLdoCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getLdoCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setTsdCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getTsdCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidPwrRsrc); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidBitPos); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidBitPos); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_invalidConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_invalidConfig)
 
 /* Run all Power LDO negative tests */
 #define POWER_TEST_RUN_LDO_NEGATIVE() \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_nullParam_ldoCfg); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_mode); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_vset); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_dischargeSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_deglitchSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovThr); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ilimSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovpSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_scSel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrSetLdoCfg_outOfBounds_rvConf); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_pwrGetLdoCfg_nullParam_ldoCfg)
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_ldoCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_vset); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_dischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_deglitchSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ilimSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_scSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg)
 
 /* Run all Power LDO positive tests */
 #define POWER_TEST_RUN_LDO_POSITIVE() \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_enable); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_mode); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_vset); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_vmonOnly); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_dischargeEn); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_dischargeSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_deglitchSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_uvThr); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovThr); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ilimSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovpSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_ovSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_uvSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_scSel); \
-    PLATFORM_RUN_TEST(test_positive_ldoSetGetCfg_rvConf)
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vset); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vmonOnly); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeEn); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_deglitchSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ilimSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_scSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_rvConf)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -379,7 +379,7 @@ void power_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
     
         if (status == PMIC_ST_SUCCESS)
@@ -422,7 +422,7 @@ void power_test(void *args)
 /*                    LDO Configuration Negative Tests                        */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetLdoCfg_nullParam_pmicHandle(void)
+void test_neg_power_pwrSetLdoCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -433,14 +433,14 @@ void test_negative_Pmic_pwrSetLdoCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_nullParam_ldoCfg(void)
+void test_neg_power_pwrSetLdoCfg_nullParam_ldoCfg(void)
 {
     // Pass NULL ldoCfg into Pmic_pwrSetLdoCfg()
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_mode(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_mode(void)
 {
     // Pass out of bounds mode into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -451,7 +451,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_mode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_vset(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_vset(void)
 {
     // Pass out of bounds vset into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -462,7 +462,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_vset(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_dischargeSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_dischargeSel(void)
 {
     // Pass out of bounds dischargeSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -473,7 +473,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_dischargeSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_deglitchSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_deglitchSel(void)
 {
     // Pass out of bounds deglitchSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -484,7 +484,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_deglitchSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvThr(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_uvThr(void)
 {
     // Pass out of bounds uvThr into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -495,7 +495,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvThr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovThr(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ovThr(void)
 {
     // Pass out of bounds ovThr into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -506,7 +506,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovThr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ilimSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ilimSel(void)
 {
     // Pass out of bounds ilimSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -517,7 +517,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ilimSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovpSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ovpSel(void)
 {
     // Pass out of bounds ovpSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -528,7 +528,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovpSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_ovSel(void)
 {
     // Pass out of bounds ovSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -539,7 +539,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_ovSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel(void)
 {
     // Pass out of bounds uvSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -550,7 +550,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_uvSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_scSel(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_scSel(void)
 {
     // Pass out of bounds scSel into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -561,7 +561,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_scSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_rvConf(void)
+void test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf(void)
 {
     // Pass out of bounds rvConf into Pmic_pwrSetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -572,7 +572,7 @@ void test_negative_Pmic_pwrSetLdoCfg_outOfBounds_rvConf(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrGetLdoCfg_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetLdoCfg()
     Pmic_PwrLdoCfg_t ldoCfg = {0};
@@ -580,7 +580,7 @@ void test_negative_Pmic_pwrGetLdoCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetLdoCfg_nullParam_ldoCfg(void)
+void test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg(void)
 {
     // Pass NULL ldoCfg into Pmic_pwrGetLdoCfg()
     int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, NULL);
@@ -591,7 +591,7 @@ void test_negative_Pmic_pwrGetLdoCfg_nullParam_ldoCfg(void)
 /*                    LDO Configuration Positive Tests                        */
 /* ========================================================================== */
 
-void test_positive_ldoSetGetCfg_enable(void)
+void test_pos_power_ldoSetGetCfg_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -622,7 +622,7 @@ void test_positive_ldoSetGetCfg_enable(void)
     PLATFORM_ASSERT(ldoCfgGet.enable == PMIC_DISABLE);
 }
 
-void test_positive_ldoSetGetCfg_mode(void)
+void test_pos_power_ldoSetGetCfg_mode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -653,7 +653,7 @@ void test_positive_ldoSetGetCfg_mode(void)
     PLATFORM_ASSERT(ldoCfgGet.mode == PMIC_BYPASS_MODE);
 }
 
-void test_positive_ldoSetGetCfg_vset(void)
+void test_pos_power_ldoSetGetCfg_vset(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -684,7 +684,7 @@ void test_positive_ldoSetGetCfg_vset(void)
     PLATFORM_ASSERT(ldoCfgGet.vset == PMIC_LDO_VSET_MAX);
 }
 
-void test_positive_ldoSetGetCfg_vmonOnly(void)
+void test_pos_power_ldoSetGetCfg_vmonOnly(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -715,7 +715,7 @@ void test_positive_ldoSetGetCfg_vmonOnly(void)
     PLATFORM_ASSERT(ldoCfgGet.vmonOnly == false);
 }
 
-void test_positive_ldoSetGetCfg_dischargeEn(void)
+void test_pos_power_ldoSetGetCfg_dischargeEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -746,7 +746,7 @@ void test_positive_ldoSetGetCfg_dischargeEn(void)
     PLATFORM_ASSERT(ldoCfgGet.dischargeEn == false);
 }
 
-void test_positive_ldoSetGetCfg_dischargeSel(void)
+void test_pos_power_ldoSetGetCfg_dischargeSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -767,7 +767,7 @@ void test_positive_ldoSetGetCfg_dischargeSel(void)
     PLATFORM_ASSERT(ldoCfgGet.dischargeSel == ldoCfgSet.dischargeSel);
 }
 
-void test_positive_ldoSetGetCfg_deglitchSel(void)
+void test_pos_power_ldoSetGetCfg_deglitchSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -788,7 +788,7 @@ void test_positive_ldoSetGetCfg_deglitchSel(void)
     PLATFORM_ASSERT(ldoCfgGet.deglitchSel == ldoCfgSet.deglitchSel);
 }
 
-void test_positive_ldoSetGetCfg_uvThr(void)
+void test_pos_power_ldoSetGetCfg_uvThr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -809,7 +809,7 @@ void test_positive_ldoSetGetCfg_uvThr(void)
     PLATFORM_ASSERT(ldoCfgGet.uvThr == ldoCfgSet.uvThr);
 }
 
-void test_positive_ldoSetGetCfg_ovThr(void)
+void test_pos_power_ldoSetGetCfg_ovThr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -830,7 +830,7 @@ void test_positive_ldoSetGetCfg_ovThr(void)
     PLATFORM_ASSERT(ldoCfgGet.ovThr == ldoCfgSet.ovThr);
 }
 
-void test_positive_ldoSetGetCfg_ilimSel(void)
+void test_pos_power_ldoSetGetCfg_ilimSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -851,7 +851,7 @@ void test_positive_ldoSetGetCfg_ilimSel(void)
     PLATFORM_ASSERT(ldoCfgGet.ilimSel == ldoCfgSet.ilimSel);
 }
 
-void test_positive_ldoSetGetCfg_ovpSel(void)
+void test_pos_power_ldoSetGetCfg_ovpSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -872,7 +872,7 @@ void test_positive_ldoSetGetCfg_ovpSel(void)
     PLATFORM_ASSERT(ldoCfgGet.ovpSel == ldoCfgSet.ovpSel);
 }
 
-void test_positive_ldoSetGetCfg_ovSel(void)
+void test_pos_power_ldoSetGetCfg_ovSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -893,7 +893,7 @@ void test_positive_ldoSetGetCfg_ovSel(void)
     PLATFORM_ASSERT(ldoCfgGet.ovSel == ldoCfgSet.ovSel);
 }
 
-void test_positive_ldoSetGetCfg_uvSel(void)
+void test_pos_power_ldoSetGetCfg_uvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -914,7 +914,7 @@ void test_positive_ldoSetGetCfg_uvSel(void)
     PLATFORM_ASSERT(ldoCfgGet.uvSel == ldoCfgSet.uvSel);
 }
 
-void test_positive_ldoSetGetCfg_scSel(void)
+void test_pos_power_ldoSetGetCfg_scSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -935,7 +935,7 @@ void test_positive_ldoSetGetCfg_scSel(void)
     PLATFORM_ASSERT(ldoCfgGet.scSel == ldoCfgSet.scSel);
 }
 
-void test_positive_ldoSetGetCfg_rvConf(void)
+void test_pos_power_ldoSetGetCfg_rvConf(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrLdoCfg_t ldoCfgSet = {
@@ -960,7 +960,7 @@ void test_positive_ldoSetGetCfg_rvConf(void)
 /*                    SSM_SEL Coverage Tests                                  */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_ssmSel_buck1(void)
+void test_pos_power_buckSetGetCfg_ssmSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
@@ -979,7 +979,7 @@ void test_positive_buckSetGetCfg_ssmSel_buck1(void)
     PLATFORM_ASSERT(getCfg.ssmSel == PMIC_SSM_SEL_MAX);
 }
 
-void test_positive_buckSetGetCfg_ssmSel_buck2(void)
+void test_pos_power_buckSetGetCfg_ssmSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK2;
@@ -998,7 +998,7 @@ void test_positive_buckSetGetCfg_ssmSel_buck2(void)
     PLATFORM_ASSERT(getCfg.ssmSel == PMIC_SSM_SEL_MAX);
 }
 
-void test_positive_buckSetGetCfg_ssmSel_buck3(void)
+void test_pos_power_buckSetGetCfg_ssmSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK3;
@@ -1017,7 +1017,7 @@ void test_positive_buckSetGetCfg_ssmSel_buck3(void)
     PLATFORM_ASSERT(getCfg.ssmSel == PMIC_SSM_SEL_MAX);
 }
 
-void test_positive_buckSetGetCfg_ssmSel_allValues(void)
+void test_pos_power_buckSetGetCfg_ssmSel_allValues(void)
 {
     // Test SSM_SEL with all valid values on BUCK1
     Pmic_PwrBuckCfg_t setCfg = {0};
@@ -1040,7 +1040,7 @@ void test_positive_buckSetGetCfg_ssmSel_allValues(void)
     }
 }
 
-void test_negative_buckSetCfg_ssmSel_outOfBounds(void)
+void test_neg_power_buckSetCfg_ssmSel_outOfBounds(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
@@ -1055,7 +1055,7 @@ void test_negative_buckSetCfg_ssmSel_outOfBounds(void)
 /*                    UVLO Rising/Falling Coverage Tests (BUCK1)             */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_uvloRising_buck1_allValues(void)
+void test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
@@ -1077,7 +1077,7 @@ void test_positive_buckSetGetCfg_uvloRising_buck1_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_uvloFalling_buck1_allValues(void)
+void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
@@ -1099,7 +1099,7 @@ void test_positive_buckSetGetCfg_uvloFalling_buck1_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_uvloRisingAndFalling_buck1(void)
+void test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
@@ -1124,7 +1124,7 @@ void test_positive_buckSetGetCfg_uvloRisingAndFalling_buck1(void)
 /*                    Parameter Mismatch Tests                                */
 /* ========================================================================== */
 
-void test_negative_pwrSetBuckCfg_buck1_vsetActiveNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck1_vsetActiveNotSupported(void)
 {
     // BUCK1 does not support VSET_ACTIVE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1136,7 +1136,7 @@ void test_negative_pwrSetBuckCfg_buck1_vsetActiveNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck1_vsetActiveNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck1_vsetActiveNotSupported(void)
 {
     // BUCK1 does not support VSET_ACTIVE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1147,7 +1147,7 @@ void test_negative_pwrGetBuckCfg_buck1_vsetActiveNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck1_vsetLpwrNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck1_vsetLpwrNotSupported(void)
 {
     // BUCK1 does not support VSET_LPWR parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1159,7 +1159,7 @@ void test_negative_pwrSetBuckCfg_buck1_vsetLpwrNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck1_vsetLpwrNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck1_vsetLpwrNotSupported(void)
 {
     // BUCK1 does not support VSET_LPWR parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1170,7 +1170,7 @@ void test_negative_pwrGetBuckCfg_buck1_vsetLpwrNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck2_vsetNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck2_vsetNotSupported(void)
 {
     // BUCK2 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1182,7 +1182,7 @@ void test_negative_pwrSetBuckCfg_buck2_vsetNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck2_vsetNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck2_vsetNotSupported(void)
 {
     // BUCK2 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1193,7 +1193,7 @@ void test_negative_pwrGetBuckCfg_buck2_vsetNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck3_vsetNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck3_vsetNotSupported(void)
 {
     // BUCK3 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1205,7 +1205,7 @@ void test_negative_pwrSetBuckCfg_buck3_vsetNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck3_vsetNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck3_vsetNotSupported(void)
 {
     // BUCK3 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1216,7 +1216,7 @@ void test_negative_pwrGetBuckCfg_buck3_vsetNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck1_vmonOnlyNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck1_vmonOnlyNotSupported(void)
 {
     // BUCK1 does not support VMON_ONLY parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1228,7 +1228,7 @@ void test_negative_pwrSetBuckCfg_buck1_vmonOnlyNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck1_vmonOnlyNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported(void)
 {
     // BUCK1 does not support VMON_ONLY parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1239,7 +1239,7 @@ void test_negative_pwrGetBuckCfg_buck1_vmonOnlyNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported(void)
 {
     // BUCK2 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1251,7 +1251,7 @@ void test_negative_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported(void)
 {
     // BUCK2 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1262,7 +1262,7 @@ void test_negative_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported(void)
+void test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported(void)
 {
     // BUCK3 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1274,7 +1274,7 @@ void test_negative_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported(void)
+void test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported(void)
 {
     // BUCK3 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
@@ -1285,84 +1285,6 @@ void test_negative_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-#ifdef BUILD_MOCK
-/* ========================================================================== */
-/*                    LDO Configuration Property Tests                        */
-/* ========================================================================== */
-
-void test_property_ldoSetGetCfg_vset_allValues(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrLdoCfg_t ldoCfgSet = {
-        .validParams = PMIC_LDO_VSET_VALID
-    };
-    Pmic_PwrLdoCfg_t ldoCfgGet = {
-        .validParams = PMIC_LDO_VSET_VALID
-    };
-
-    // Test all valid vset values from 0x18 to 0x58
-    for (uint8_t vset = PMIC_LDO_VSET_MIN; vset <= PMIC_LDO_VSET_MAX; vset++)
-    {
-        ldoCfgSet.vset = vset;
-        status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfgSet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfgGet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(ldoCfgGet.vset == vset);
-    }
-}
-
-void test_property_ldoSetGetCfg_dischargeSel_allValues(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrLdoCfg_t ldoCfgSet = {
-        .validParams = PMIC_LDO_DISCHARGE_SEL_VALID
-    };
-    Pmic_PwrLdoCfg_t ldoCfgGet = {
-        .validParams = PMIC_LDO_DISCHARGE_SEL_VALID
-    };
-
-    // Test all valid discharge selection values
-    for (uint8_t dischargeSel = PMIC_LDO_DISCHARGE_SEL_50K_OHM; 
-         dischargeSel <= PMIC_LDO_DISCHARGE_SEL_MAX; 
-         dischargeSel++)
-    {
-        ldoCfgSet.dischargeSel = dischargeSel;
-        status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfgSet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfgGet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(ldoCfgGet.dischargeSel == dischargeSel);
-    }
-}
-
-void test_property_ldoSetGetCfg_deglitchSel_allValues(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrLdoCfg_t ldoCfgSet = {
-        .validParams = PMIC_LDO_DEGLITCH_SEL_VALID
-    };
-    Pmic_PwrLdoCfg_t ldoCfgGet = {
-        .validParams = PMIC_LDO_DEGLITCH_SEL_VALID
-    };
-
-    // Test all valid deglitch selection values
-    for (uint8_t deglitchSel = PMIC_LDO_DEGLITCH_SEL_4_US; 
-         deglitchSel <= PMIC_LDO_DEGLITCH_SEL_MAX; 
-         deglitchSel++)
-    {
-        ldoCfgSet.deglitchSel = deglitchSel;
-        status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfgSet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfgGet);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(ldoCfgGet.deglitchSel == deglitchSel);
-    }
-}
-#endif /* BUILD_MOCK */
 
 
 /* ========================================================================== */
@@ -1373,7 +1295,7 @@ void test_property_ldoSetGetCfg_deglitchSel_allValues(void)
 /*                  TSD Configuration Negative Tests                          */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetTsdCfg_nullParam_pmicHandle(void)
+void test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
@@ -1384,14 +1306,14 @@ void test_negative_Pmic_pwrSetTsdCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetTsdCfg_nullParam_tsdCfg(void)
+void test_neg_power_pwrSetTsdCfg_nullParam_tsdCfg(void)
 {
     // Pass NULL tsdCfg into Pmic_pwrSetTsdCfg()
     int32_t status = Pmic_pwrSetTsdCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetTsdCfg_outOfBounds_tsdImmLevel(void)
+void test_neg_power_pwrSetTsdCfg_outOfBounds_tsdImmLevel(void)
 {
     // Pass out of bounds tsdImmLevel into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
@@ -1402,7 +1324,7 @@ void test_negative_Pmic_pwrSetTsdCfg_outOfBounds_tsdImmLevel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetTsdCfg_outOfBounds_twarnLevel(void)
+void test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel(void)
 {
     // Pass out of bounds twarnLevel into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
@@ -1413,7 +1335,7 @@ void test_negative_Pmic_pwrSetTsdCfg_outOfBounds_twarnLevel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrGetTsdCfg_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetTsdCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {0};
@@ -1421,14 +1343,14 @@ void test_negative_Pmic_pwrGetTsdCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetTsdCfg_nullParam_tsdCfg(void)
+void test_neg_power_pwrGetTsdCfg_nullParam_tsdCfg(void)
 {
     // Pass NULL tsdCfg into Pmic_pwrGetTsdCfg()
     int32_t status = Pmic_pwrGetTsdCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetTsdImmStatus_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetTsdImmStatus_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetTsdImmStatus()
     bool tsdImmStat = false;
@@ -1436,7 +1358,7 @@ void test_negative_Pmic_pwrGetTsdImmStatus_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetTsdImmStatus_nullParam_tsdImmStat(void)
+void test_neg_power_pwrGetTsdImmStatus_nullParam_tsdImmStat(void)
 {
     // Pass NULL tsdImmStat into Pmic_pwrGetTsdImmStatus()
     int32_t status = Pmic_pwrGetTsdImmStatus(&pmicHandle, NULL);
@@ -1447,7 +1369,7 @@ void test_negative_Pmic_pwrGetTsdImmStatus_nullParam_tsdImmStat(void)
 /*                  TSD Configuration Positive Tests                          */
 /* ========================================================================== */
 
-void test_positive_tsdSetGetCfg_twarnStayInSafeState(void)
+void test_pos_power_tsdSetGetCfg_twarnStayInSafeState(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
@@ -1478,7 +1400,7 @@ void test_positive_tsdSetGetCfg_twarnStayInSafeState(void)
     PLATFORM_ASSERT(tsdCfgGet.twarnStayInSafeState == false);
 }
 
-void test_positive_tsdSetGetCfg_tsdImmLevel(void)
+void test_pos_power_tsdSetGetCfg_tsdImmLevel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
@@ -1509,7 +1431,7 @@ void test_positive_tsdSetGetCfg_tsdImmLevel(void)
     PLATFORM_ASSERT(tsdCfgGet.tsdImmLevel == PMIC_TSD_IMM_LEVEL_160C);
 }
 
-void test_positive_tsdSetGetCfg_twarnLevel(void)
+void test_pos_power_tsdSetGetCfg_twarnLevel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
@@ -1540,7 +1462,7 @@ void test_positive_tsdSetGetCfg_twarnLevel(void)
     PLATFORM_ASSERT(tsdCfgGet.twarnLevel == PMIC_TWARN_LEVEL_140C);
 }
 
-void test_positive_tsdGetImmStatus(void)
+void test_pos_power_tsdGetImmStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool tsdImmStat = false;
@@ -1559,7 +1481,7 @@ void test_positive_tsdGetImmStatus(void)
 /*                Resource Status Negative Tests                              */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrGetRsrcStatus_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetRsrcStatus()
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1569,14 +1491,14 @@ void test_negative_Pmic_pwrGetRsrcStatus_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetRsrcStatus_nullParam_pwrRsrcStat(void)
+void test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat(void)
 {
     // Pass NULL pwrRsrcStat into Pmic_pwrGetRsrcStatus()
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetRsrcStatus_outOfBounds_resource(void)
+void test_neg_power_pwrGetRsrcStatus_outOfBounds_resource(void)
 {
     // Pass out of bounds resource into Pmic_pwrGetRsrcStatus()
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1590,7 +1512,7 @@ void test_negative_Pmic_pwrGetRsrcStatus_outOfBounds_resource(void)
 /*                Resource Status Positive Tests                              */
 /* ========================================================================== */
 
-void test_positive_rsrcGetStatus_buck1(void)
+void test_pos_power_rsrcGetStatus_buck1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1603,7 +1525,7 @@ void test_positive_rsrcGetStatus_buck1(void)
     // Note: Status values depend on actual BUCK1 state
 }
 
-void test_positive_rsrcGetStatus_buck2(void)
+void test_pos_power_rsrcGetStatus_buck2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1616,7 +1538,7 @@ void test_positive_rsrcGetStatus_buck2(void)
     // Note: Status values depend on actual BUCK2 state
 }
 
-void test_positive_rsrcGetStatus_buck3(void)
+void test_pos_power_rsrcGetStatus_buck3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1629,7 +1551,7 @@ void test_positive_rsrcGetStatus_buck3(void)
     // Note: Status values depend on actual BUCK3 state
 }
 
-void test_positive_rsrcGetStatus_ldo(void)
+void test_pos_power_rsrcGetStatus_ldo(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -1651,7 +1573,7 @@ void test_positive_rsrcGetStatus_ldo(void)
 /*                    Sequencing Negative Tests                               */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle(void)
+void test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetBuckLdoSeqTrig()
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[] = {
@@ -1664,14 +1586,14 @@ void test_negative_Pmic_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg(void)
+void test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg(void)
 {
     // Pass NULL seqTrigCfg into Pmic_pwrSetBuckLdoSeqTrig()
     int32_t status = Pmic_pwrSetBuckLdoSeqTrig(&pmicHandle, NULL, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetBuckLdoSeqTrig()
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[1U] = {0};
@@ -1679,14 +1601,14 @@ void test_negative_Pmic_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg(void)
+void test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg(void)
 {
     // Pass NULL seqTrigCfg into Pmic_pwrGetBuckLdoSeqTrig()
     int32_t status = Pmic_pwrGetBuckLdoSeqTrig(&pmicHandle, NULL, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckLdoSeqDly_nullParam_pmicHandle(void)
+void test_neg_power_pwrSetBuckLdoSeqDly_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
@@ -1700,14 +1622,14 @@ void test_negative_Pmic_pwrSetBuckLdoSeqDly_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg(void)
+void test_neg_power_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg(void)
 {
     // Pass NULL seqDlyCfg into Pmic_pwrSetBuckLdoSeqDly()
     int32_t status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, NULL, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn(void)
+void test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn(void)
 {
     // Pass out of bounds seqDlyOn into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
@@ -1721,7 +1643,7 @@ void test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff(void)
+void test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff(void)
 {
     // Pass out of bounds seqDlyOff into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
@@ -1735,7 +1657,7 @@ void test_negative_Pmic_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_pmicHandle(void)
+void test_neg_power_pwrGetBuckLdoSeqDly_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[1U] = {0};
@@ -1743,7 +1665,7 @@ void test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg(void)
+void test_neg_power_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg(void)
 {
     // Pass NULL seqDlyCfg into Pmic_pwrGetBuckLdoSeqDly()
     int32_t status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, NULL, 1U);
@@ -1754,7 +1676,7 @@ void test_negative_Pmic_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg(void)
 /*                    Sequencing Positive Tests                               */
 /* ========================================================================== */
 
-void test_positive_seqTrigSetGet_buck1(void)
+void test_pos_power_seqTrigSetGet_buck1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfgSet[] = {
@@ -1790,7 +1712,7 @@ void test_positive_seqTrigSetGet_buck1(void)
     PLATFORM_ASSERT(seqTrigCfgGet[0].exclude == true);
 }
 
-void test_positive_seqTrigSetGet_buck2(void)
+void test_pos_power_seqTrigSetGet_buck2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfgSet[] = {
@@ -1816,7 +1738,7 @@ void test_positive_seqTrigSetGet_buck2(void)
     PLATFORM_ASSERT(seqTrigCfgGet[0].exclude == seqTrigCfgSet[0].exclude);
 }
 
-void test_positive_seqTrigSetGet_buck3(void)
+void test_pos_power_seqTrigSetGet_buck3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfgSet[] = {
@@ -1842,7 +1764,7 @@ void test_positive_seqTrigSetGet_buck3(void)
     PLATFORM_ASSERT(seqTrigCfgGet[0].exclude == seqTrigCfgSet[0].exclude);
 }
 
-void test_positive_seqTrigSetGet_ldo(void)
+void test_pos_power_seqTrigSetGet_ldo(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfgSet[] = {
@@ -1868,7 +1790,7 @@ void test_positive_seqTrigSetGet_ldo(void)
     PLATFORM_ASSERT(seqTrigCfgGet[0].exclude == seqTrigCfgSet[0].exclude);
 }
 
-void test_positive_seqTrigSetGet_allResources(void)
+void test_pos_power_seqTrigSetGet_allResources(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfgSet[] = {
@@ -1899,7 +1821,7 @@ void test_positive_seqTrigSetGet_allResources(void)
     }
 }
 
-void test_positive_seqDlySetGet_buck1(void)
+void test_pos_power_seqDlySetGet_buck1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
@@ -1928,7 +1850,7 @@ void test_positive_seqDlySetGet_buck1(void)
     PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDlyCfgSet[0].seqDlyOff);
 }
 
-void test_positive_seqDlySetGet_buck2(void)
+void test_pos_power_seqDlySetGet_buck2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
@@ -1957,7 +1879,7 @@ void test_positive_seqDlySetGet_buck2(void)
     PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDlyCfgSet[0].seqDlyOff);
 }
 
-void test_positive_seqDlySetGet_buck3(void)
+void test_pos_power_seqDlySetGet_buck3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
@@ -1986,7 +1908,7 @@ void test_positive_seqDlySetGet_buck3(void)
     PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDlyCfgSet[0].seqDlyOff);
 }
 
-void test_positive_seqDlySetGet_ldo(void)
+void test_pos_power_seqDlySetGet_ldo(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
@@ -2015,7 +1937,7 @@ void test_positive_seqDlySetGet_ldo(void)
     PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDlyCfgSet[0].seqDlyOff);
 }
 
-void test_positive_seqDlySetGet_allResources(void)
+void test_pos_power_seqDlySetGet_allResources(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
@@ -2087,7 +2009,7 @@ void test_positive_seqDlySetGet_allResources(void)
 /*                 Buck Configuration Positive Tests                          */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_enable_buck1(void)
+void test_pos_power_buckSetGetCfg_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2108,7 +2030,7 @@ void test_positive_buckSetGetCfg_enable_buck1(void)
     PLATFORM_ASSERT(getCfg.enable == true);
 }
 
-void test_positive_buckSetGetCfg_enable_buck2(void)
+void test_pos_power_buckSetGetCfg_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2129,7 +2051,7 @@ void test_positive_buckSetGetCfg_enable_buck2(void)
     PLATFORM_ASSERT(getCfg.enable == true);
 }
 
-void test_positive_buckSetGetCfg_enable_buck3(void)
+void test_pos_power_buckSetGetCfg_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2150,7 +2072,7 @@ void test_positive_buckSetGetCfg_enable_buck3(void)
     PLATFORM_ASSERT(getCfg.enable == true);
 }
 
-void test_positive_buckSetGetCfg_disable_buck1(void)
+void test_pos_power_buckSetGetCfg_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2171,7 +2093,7 @@ void test_positive_buckSetGetCfg_disable_buck1(void)
     PLATFORM_ASSERT(getCfg.enable == false);
 }
 
-void test_positive_buckSetGetCfg_disable_buck2(void)
+void test_pos_power_buckSetGetCfg_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2192,7 +2114,7 @@ void test_positive_buckSetGetCfg_disable_buck2(void)
     PLATFORM_ASSERT(getCfg.enable == false);
 }
 
-void test_positive_buckSetGetCfg_disable_buck3(void)
+void test_pos_power_buckSetGetCfg_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2213,7 +2135,7 @@ void test_positive_buckSetGetCfg_disable_buck3(void)
     PLATFORM_ASSERT(getCfg.enable == false);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_enable_buck1(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2234,7 +2156,7 @@ void test_positive_buckSetGetCfg_fpwmEn_enable_buck1(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == true);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_enable_buck2(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2255,7 +2177,7 @@ void test_positive_buckSetGetCfg_fpwmEn_enable_buck2(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == true);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_enable_buck3(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2276,7 +2198,7 @@ void test_positive_buckSetGetCfg_fpwmEn_enable_buck3(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == true);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_disable_buck1(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2297,7 +2219,7 @@ void test_positive_buckSetGetCfg_fpwmEn_disable_buck1(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == false);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_disable_buck2(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2318,7 +2240,7 @@ void test_positive_buckSetGetCfg_fpwmEn_disable_buck2(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == false);
 }
 
-void test_positive_buckSetGetCfg_fpwmEn_disable_buck3(void)
+void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2339,7 +2261,7 @@ void test_positive_buckSetGetCfg_fpwmEn_disable_buck3(void)
     PLATFORM_ASSERT(getCfg.fpwmEn == false);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_enable_buck1(void)
+void test_pos_power_buckSetGetCfg_pldnEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2360,7 +2282,7 @@ void test_positive_buckSetGetCfg_pldnEn_enable_buck1(void)
     PLATFORM_ASSERT(getCfg.pldnEn == true);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_enable_buck2(void)
+void test_pos_power_buckSetGetCfg_pldnEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2381,7 +2303,7 @@ void test_positive_buckSetGetCfg_pldnEn_enable_buck2(void)
     PLATFORM_ASSERT(getCfg.pldnEn == true);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_enable_buck3(void)
+void test_pos_power_buckSetGetCfg_pldnEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2402,7 +2324,7 @@ void test_positive_buckSetGetCfg_pldnEn_enable_buck3(void)
     PLATFORM_ASSERT(getCfg.pldnEn == true);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_disable_buck1(void)
+void test_pos_power_buckSetGetCfg_pldnEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2423,7 +2345,7 @@ void test_positive_buckSetGetCfg_pldnEn_disable_buck1(void)
     PLATFORM_ASSERT(getCfg.pldnEn == false);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_disable_buck2(void)
+void test_pos_power_buckSetGetCfg_pldnEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2444,7 +2366,7 @@ void test_positive_buckSetGetCfg_pldnEn_disable_buck2(void)
     PLATFORM_ASSERT(getCfg.pldnEn == false);
 }
 
-void test_positive_buckSetGetCfg_pldnEn_disable_buck3(void)
+void test_pos_power_buckSetGetCfg_pldnEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2465,7 +2387,7 @@ void test_positive_buckSetGetCfg_pldnEn_disable_buck3(void)
     PLATFORM_ASSERT(getCfg.pldnEn == false);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck1_active(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck1_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2486,7 +2408,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck1_active(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck1_resistive(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2507,7 +2429,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck1_resistive(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck2_active(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck2_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2528,7 +2450,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck2_active(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck2_resistive(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2549,7 +2471,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck2_resistive(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck3_active(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck3_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2570,7 +2492,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck3_active(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
 }
 
-void test_positive_buckSetGetCfg_dischargeSel_buck3_resistive(void)
+void test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2591,7 +2513,7 @@ void test_positive_buckSetGetCfg_dischargeSel_buck3_resistive(void)
     PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
 }
 
-void test_positive_buckSetGetCfg_ssEn_enable_buck1(void)
+void test_pos_power_buckSetGetCfg_ssEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2612,7 +2534,7 @@ void test_positive_buckSetGetCfg_ssEn_enable_buck1(void)
     PLATFORM_ASSERT(getCfg.ssEn == true);
 }
 
-void test_positive_buckSetGetCfg_ssEn_enable_buck2(void)
+void test_pos_power_buckSetGetCfg_ssEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2633,7 +2555,7 @@ void test_positive_buckSetGetCfg_ssEn_enable_buck2(void)
     PLATFORM_ASSERT(getCfg.ssEn == true);
 }
 
-void test_positive_buckSetGetCfg_ssEn_enable_buck3(void)
+void test_pos_power_buckSetGetCfg_ssEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2654,7 +2576,7 @@ void test_positive_buckSetGetCfg_ssEn_enable_buck3(void)
     PLATFORM_ASSERT(getCfg.ssEn == true);
 }
 
-void test_positive_buckSetGetCfg_ssEn_disable_buck1(void)
+void test_pos_power_buckSetGetCfg_ssEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2675,7 +2597,7 @@ void test_positive_buckSetGetCfg_ssEn_disable_buck1(void)
     PLATFORM_ASSERT(getCfg.ssEn == false);
 }
 
-void test_positive_buckSetGetCfg_ssEn_disable_buck2(void)
+void test_pos_power_buckSetGetCfg_ssEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2696,7 +2618,7 @@ void test_positive_buckSetGetCfg_ssEn_disable_buck2(void)
     PLATFORM_ASSERT(getCfg.ssEn == false);
 }
 
-void test_positive_buckSetGetCfg_ssEn_disable_buck3(void)
+void test_pos_power_buckSetGetCfg_ssEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -2722,7 +2644,7 @@ void test_positive_buckSetGetCfg_ssEn_disable_buck3(void)
 /* ========================================================================== */
 
 /* OVP Fault Response GET Tests */
-void test_positive_buckGetCfg_ovpSel_buck1(void)
+void test_pos_power_buckGetCfg_ovpSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2732,7 +2654,7 @@ void test_positive_buckGetCfg_ovpSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ovpSel_buck2(void)
+void test_pos_power_buckGetCfg_ovpSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2742,7 +2664,7 @@ void test_positive_buckGetCfg_ovpSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ovpSel_buck3(void)
+void test_pos_power_buckGetCfg_ovpSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2753,7 +2675,7 @@ void test_positive_buckGetCfg_ovpSel_buck3(void)
 }
 
 /* OV Fault Response GET Tests */
-void test_positive_buckGetCfg_ovSel_buck1(void)
+void test_pos_power_buckGetCfg_ovSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -2763,7 +2685,7 @@ void test_positive_buckGetCfg_ovSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ovSel_buck2(void)
+void test_pos_power_buckGetCfg_ovSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -2773,7 +2695,7 @@ void test_positive_buckGetCfg_ovSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ovSel_buck3(void)
+void test_pos_power_buckGetCfg_ovSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -2784,7 +2706,7 @@ void test_positive_buckGetCfg_ovSel_buck3(void)
 }
 
 /* UV Fault Response GET Tests */
-void test_positive_buckGetCfg_uvSel_buck1(void)
+void test_pos_power_buckGetCfg_uvSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -2794,7 +2716,7 @@ void test_positive_buckGetCfg_uvSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_uvSel_buck2(void)
+void test_pos_power_buckGetCfg_uvSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -2804,7 +2726,7 @@ void test_positive_buckGetCfg_uvSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_uvSel_buck3(void)
+void test_pos_power_buckGetCfg_uvSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -2815,7 +2737,7 @@ void test_positive_buckGetCfg_uvSel_buck3(void)
 }
 
 /* SC Fault Response GET Tests */
-void test_positive_buckGetCfg_scSel_buck1(void)
+void test_pos_power_buckGetCfg_scSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -2825,7 +2747,7 @@ void test_positive_buckGetCfg_scSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_scSel_buck2(void)
+void test_pos_power_buckGetCfg_scSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -2835,7 +2757,7 @@ void test_positive_buckGetCfg_scSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_scSel_buck3(void)
+void test_pos_power_buckGetCfg_scSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -2846,7 +2768,7 @@ void test_positive_buckGetCfg_scSel_buck3(void)
 }
 
 /* RV Configuration GET Tests */
-void test_positive_buckGetCfg_rvConf_buck1(void)
+void test_pos_power_buckGetCfg_rvConf_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -2856,7 +2778,7 @@ void test_positive_buckGetCfg_rvConf_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_rvConf_buck2(void)
+void test_pos_power_buckGetCfg_rvConf_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -2866,7 +2788,7 @@ void test_positive_buckGetCfg_rvConf_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_rvConf_buck3(void)
+void test_pos_power_buckGetCfg_rvConf_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -2877,7 +2799,7 @@ void test_positive_buckGetCfg_rvConf_buck3(void)
 }
 
 /* Current Limit Selection GET Tests */
-void test_positive_buckGetCfg_ilimSel_buck1(void)
+void test_pos_power_buckGetCfg_ilimSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2887,7 +2809,7 @@ void test_positive_buckGetCfg_ilimSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ilimSel_buck2(void)
+void test_pos_power_buckGetCfg_ilimSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2897,7 +2819,7 @@ void test_positive_buckGetCfg_ilimSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_buckGetCfg_ilimSel_buck3(void)
+void test_pos_power_buckGetCfg_ilimSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2909,138 +2831,6 @@ void test_positive_buckGetCfg_ilimSel_buck3(void)
 
 #ifdef BUILD_MOCK
 /* ========================================================================== */
-/*                    Sequencing Property Tests                               */
-/* ========================================================================== */
-
-void test_property_seqDlySetGet_allDelayValues_buck1(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK1
-        }
-    };
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK1
-        }
-    };
-
-    // Test all valid sequence delay values for BUCK1
-    for (uint8_t seqDly = PMIC_SEQ_DLY_0_MS; seqDly <= PMIC_SEQ_DLY_MAX; seqDly++)
-    {
-        seqDlyCfgSet[0].seqDlyOn = seqDly;
-        seqDlyCfgSet[0].seqDlyOff = seqDly;
-        
-        status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfgSet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfgGet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOn == seqDly);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDly);
-    }
-}
-
-void test_property_seqDlySetGet_allDelayValues_buck2(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK2
-        }
-    };
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK2
-        }
-    };
-
-    // Test all valid sequence delay values for BUCK2
-    for (uint8_t seqDly = PMIC_SEQ_DLY_0_MS; seqDly <= PMIC_SEQ_DLY_MAX; seqDly++)
-    {
-        seqDlyCfgSet[0].seqDlyOn = seqDly;
-        seqDlyCfgSet[0].seqDlyOff = seqDly;
-        
-        status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfgSet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfgGet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOn == seqDly);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDly);
-    }
-}
-
-void test_property_seqDlySetGet_allDelayValues_buck3(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK3
-        }
-    };
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_BUCK3
-        }
-    };
-
-    // Test all valid sequence delay values for BUCK3
-    for (uint8_t seqDly = PMIC_SEQ_DLY_0_MS; seqDly <= PMIC_SEQ_DLY_MAX; seqDly++)
-    {
-        seqDlyCfgSet[0].seqDlyOn = seqDly;
-        seqDlyCfgSet[0].seqDlyOff = seqDly;
-        
-        status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfgSet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfgGet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOn == seqDly);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDly);
-    }
-}
-
-void test_property_seqDlySetGet_allDelayValues_ldo(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_LDO
-        }
-    };
-    Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
-        {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
-            .resource = PMIC_LDO
-        }
-    };
-
-    // Test all valid sequence delay values for LDO
-    for (uint8_t seqDly = PMIC_SEQ_DLY_0_MS; seqDly <= PMIC_SEQ_DLY_MAX; seqDly++)
-    {
-        seqDlyCfgSet[0].seqDlyOn = seqDly;
-        seqDlyCfgSet[0].seqDlyOff = seqDly;
-        
-        status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfgSet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-        status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfgGet, 1U);
-        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOn == seqDly);
-        PLATFORM_ASSERT(seqDlyCfgGet[0].seqDlyOff == seqDly);
-    }
-}
-
-/* ========================================================================== */
 /*                     Buck Configuration Tests                               */
 /* ========================================================================== */
 
@@ -3048,7 +2838,7 @@ void test_property_seqDlySetGet_allDelayValues_ldo(void)
 /*                 Buck Current Limit Selection Tests                         */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_ilimSel_buck1_allValues(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3073,7 +2863,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck1_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck2_allValues(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3098,7 +2888,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck2_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck3_allValues(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3123,7 +2913,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck3_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck1_min(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck1_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3146,7 +2936,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck1_min(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK1_ILIM_3P1_A);
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck1_max(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck1_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3169,7 +2959,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck1_max(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK1_ILIM_3P6_A);
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck2_min(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3192,7 +2982,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck2_min(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_4P5_A);
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck2_max(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3215,7 +3005,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck2_max(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_3_A);
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck3_min(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3238,7 +3028,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck3_min(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_4P5_A);
 }
 
-void test_positive_buckSetGetCfg_ilimSel_buck3_max(void)
+void test_pos_power_buckSetGetCfg_ilimSel_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3265,7 +3055,7 @@ void test_positive_buckSetGetCfg_ilimSel_buck3_max(void)
 /*                    Buck OVP Fault Response Tests                           */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_ovpSel_buck1_ignore(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3288,7 +3078,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck1_ignore(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovpSel_buck1_assertNint(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3311,7 +3101,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck1_assertNint(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3334,7 +3124,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3357,7 +3147,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3380,7 +3170,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovpSel_buck2_allResponses(void)
+void test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3409,7 +3199,7 @@ void test_positive_buckSetGetCfg_ovpSel_buck2_allResponses(void)
 /*                    Buck OV Fault Response Tests                            */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_ovSel_buck1_ignore(void)
+void test_pos_power_buckSetGetCfg_ovSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3432,7 +3222,7 @@ void test_positive_buckSetGetCfg_ovSel_buck1_ignore(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovSel_buck2_assertNint(void)
+void test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3455,7 +3245,7 @@ void test_positive_buckSetGetCfg_ovSel_buck2_assertNint(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
+void test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3478,7 +3268,7 @@ void test_positive_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_ovSel_buck1_allResponses(void)
+void test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3507,7 +3297,7 @@ void test_positive_buckSetGetCfg_ovSel_buck1_allResponses(void)
 /*                    Buck UV Fault Response Tests                            */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_uvSel_buck1_ignore(void)
+void test_pos_power_buckSetGetCfg_uvSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3530,7 +3320,7 @@ void test_positive_buckSetGetCfg_uvSel_buck1_ignore(void)
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_uvSel_buck2_assertNint(void)
+void test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3553,7 +3343,7 @@ void test_positive_buckSetGetCfg_uvSel_buck2_assertNint(void)
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_uvSel_buck3_allResponses(void)
+void test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3578,7 +3368,7 @@ void test_positive_buckSetGetCfg_uvSel_buck3_allResponses(void)
     }
 }
 
-void test_positive_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
+void test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3605,7 +3395,7 @@ void test_positive_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
 /*                    Buck SC Fault Response Tests                            */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_scSel_buck1_ignore(void)
+void test_pos_power_buckSetGetCfg_scSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3628,7 +3418,7 @@ void test_positive_buckSetGetCfg_scSel_buck1_ignore(void)
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_scSel_buck2_assertNint(void)
+void test_pos_power_buckSetGetCfg_scSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3651,7 +3441,7 @@ void test_positive_buckSetGetCfg_scSel_buck2_assertNint(void)
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetGetCfg_scSel_buck3_allResponses(void)
+void test_pos_power_buckSetGetCfg_scSel_buck3_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3676,7 +3466,7 @@ void test_positive_buckSetGetCfg_scSel_buck3_allResponses(void)
     }
 }
 
-void test_positive_buckSetGetCfg_scSel_buck1_ordShutdown(void)
+void test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3703,7 +3493,7 @@ void test_positive_buckSetGetCfg_scSel_buck1_ordShutdown(void)
 /*                    Buck RV Configuration Tests                             */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_rvConf_buck1_wait(void)
+void test_pos_power_buckSetGetCfg_rvConf_buck1_wait(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3726,7 +3516,7 @@ void test_positive_buckSetGetCfg_rvConf_buck1_wait(void)
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RAIL_DISCHARGE);
 }
 
-void test_positive_buckSetGetCfg_rvConf_buck2_ignore(void)
+void test_pos_power_buckSetGetCfg_rvConf_buck2_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3749,7 +3539,7 @@ void test_positive_buckSetGetCfg_rvConf_buck2_ignore(void)
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
 }
 
-void test_positive_buckSetGetCfg_rvConf_buck3_allValues(void)
+void test_pos_power_buckSetGetCfg_rvConf_buck3_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3778,7 +3568,7 @@ void test_positive_buckSetGetCfg_rvConf_buck3_allValues(void)
 /*          BUCK2/BUCK3 Specific Configuration Path Coverage Tests           */
 /* ========================================================================== */
 
-void test_positive_buckSetCfg_buck2OvpSel(void)
+void test_pos_power_buckSetCfg_buck2OvpSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3801,7 +3591,7 @@ void test_positive_buckSetCfg_buck2OvpSel(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck3OvpSel(void)
+void test_pos_power_buckSetCfg_buck3OvpSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3824,7 +3614,7 @@ void test_positive_buckSetCfg_buck3OvpSel(void)
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck2OvSel(void)
+void test_pos_power_buckSetCfg_buck2OvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3847,7 +3637,7 @@ void test_positive_buckSetCfg_buck2OvSel(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck3OvSel(void)
+void test_pos_power_buckSetCfg_buck3OvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3870,7 +3660,7 @@ void test_positive_buckSetCfg_buck3OvSel(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck2UvSel(void)
+void test_pos_power_buckSetCfg_buck2UvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3893,7 +3683,7 @@ void test_positive_buckSetCfg_buck2UvSel(void)
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck3UvSel(void)
+void test_pos_power_buckSetCfg_buck3UvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3916,7 +3706,7 @@ void test_positive_buckSetCfg_buck3UvSel(void)
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck2ScSel(void)
+void test_pos_power_buckSetCfg_buck2ScSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3939,7 +3729,7 @@ void test_positive_buckSetCfg_buck2ScSel(void)
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck3ScSel(void)
+void test_pos_power_buckSetCfg_buck3ScSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3962,7 +3752,7 @@ void test_positive_buckSetCfg_buck3ScSel(void)
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
 }
 
-void test_positive_buckSetCfg_buck1RvConf(void)
+void test_pos_power_buckSetCfg_buck1RvConf(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -3985,7 +3775,7 @@ void test_positive_buckSetCfg_buck1RvConf(void)
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
 }
 
-void test_positive_buckSetCfg_buck1IlimSel(void)
+void test_pos_power_buckSetCfg_buck1IlimSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4012,7 +3802,7 @@ void test_positive_buckSetCfg_buck1IlimSel(void)
 /*                 Buck Multi-Parameter Configuration Tests                   */
 /* ========================================================================== */
 
-void test_positive_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
+void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4043,7 +3833,7 @@ void test_positive_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
     PLATFORM_ASSERT(buckCfgGet.fpwmEn == buckCfgSet.fpwmEn);
 }
 
-void test_positive_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(void)
+void test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4074,7 +3864,7 @@ void test_positive_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(voi
     PLATFORM_ASSERT(buckCfgGet.ovThr == buckCfgSet.ovThr);
 }
 
-void test_positive_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
+void test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4111,7 +3901,7 @@ void test_positive_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
     PLATFORM_ASSERT(buckCfgGet.dischargeSel == buckCfgSet.dischargeSel);
 }
 
-void test_positive_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
+void test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4142,7 +3932,7 @@ void test_positive_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
     PLATFORM_ASSERT(buckCfgGet.scSel == buckCfgSet.scSel);
 }
 
-void test_positive_buckSetGetCfg_multiParam_buck2_fullConfig(void)
+void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4190,7 +3980,7 @@ void test_positive_buckSetGetCfg_multiParam_buck2_fullConfig(void)
 /* ========================================================================== */
 
 /* BUCK1 VSET Tests */
-void test_positive_buckSetGetCfg_vset_buck1_min(void)
+void test_pos_power_buckSetGetCfg_vset_buck1_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4211,7 +4001,7 @@ void test_positive_buckSetGetCfg_vset_buck1_min(void)
     PLATFORM_ASSERT(buckCfgGet.vset == 0x00);
 }
 
-void test_positive_buckSetGetCfg_vset_buck1_mid(void)
+void test_pos_power_buckSetGetCfg_vset_buck1_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4232,7 +4022,7 @@ void test_positive_buckSetGetCfg_vset_buck1_mid(void)
     PLATFORM_ASSERT(buckCfgGet.vset == 0x06);
 }
 
-void test_positive_buckSetGetCfg_vset_buck1_max(void)
+void test_pos_power_buckSetGetCfg_vset_buck1_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4253,7 +4043,7 @@ void test_positive_buckSetGetCfg_vset_buck1_max(void)
     PLATFORM_ASSERT(buckCfgGet.vset == 0x0D);
 }
 
-void test_positive_buckSetGetCfg_vset_buck1_boundary_low(void)
+void test_pos_power_buckSetGetCfg_vset_buck1_boundary_low(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4274,7 +4064,7 @@ void test_positive_buckSetGetCfg_vset_buck1_boundary_low(void)
     PLATFORM_ASSERT(buckCfgGet.vset == 0x01);
 }
 
-void test_positive_buckSetGetCfg_vset_buck1_boundary_high(void)
+void test_pos_power_buckSetGetCfg_vset_buck1_boundary_high(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4296,7 +4086,7 @@ void test_positive_buckSetGetCfg_vset_buck1_boundary_high(void)
 }
 
 /* BUCK2/3 VSET Active Tests */
-void test_positive_buckSetGetCfg_vsetActive_buck2_min(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4317,7 +4107,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck2_min(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == PMIC_BUCK2_3_VSET_MIN);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck2_mid(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck2_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4338,7 +4128,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck2_mid(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x22);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck2_max(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4359,7 +4149,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck2_max(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x45);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck3_min(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4380,7 +4170,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck3_min(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == PMIC_BUCK2_3_VSET_MIN);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck3_mid(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck3_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4401,7 +4191,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck3_mid(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x22);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck3_max(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4422,7 +4212,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck3_max(void)
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x45);
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck2_boundary(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
@@ -4447,7 +4237,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck2_boundary(void)
     }
 }
 
-void test_positive_buckSetGetCfg_vsetActive_buck3_boundary(void)
+void test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
@@ -4473,7 +4263,7 @@ void test_positive_buckSetGetCfg_vsetActive_buck3_boundary(void)
 }
 
 /* BUCK2/3 VSET LPwr Tests */
-void test_positive_buckSetGetCfg_vsetLPwr_buck2_min(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4494,7 +4284,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck2_min(void)
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == PMIC_BUCK2_3_VSET_MIN);
 }
 
-void test_positive_buckSetGetCfg_vsetLPwr_buck2_max(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4515,7 +4305,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck2_max(void)
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x45);
 }
 
-void test_positive_buckSetGetCfg_vsetLPwr_buck3_min(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4536,7 +4326,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck3_min(void)
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == PMIC_BUCK2_3_VSET_MIN);
 }
 
-void test_positive_buckSetGetCfg_vsetLPwr_buck3_max(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4557,7 +4347,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck3_max(void)
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x45);
 }
 
-void test_positive_buckSetGetCfg_vsetLPwr_buck2_mid(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4578,7 +4368,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck2_mid(void)
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x22);
 }
 
-void test_positive_buckSetGetCfg_vsetLPwr_buck3_mid(void)
+void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4600,7 +4390,7 @@ void test_positive_buckSetGetCfg_vsetLPwr_buck3_mid(void)
 }
 
 /* VMON Only Tests */
-void test_positive_buckSetGetCfg_vmonOnly_buck2_enable(void)
+void test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4621,7 +4411,7 @@ void test_positive_buckSetGetCfg_vmonOnly_buck2_enable(void)
     PLATFORM_ASSERT(buckCfgGet.vmonOnly == true);
 }
 
-void test_positive_buckSetGetCfg_vmonOnly_buck3_enable(void)
+void test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4643,7 +4433,7 @@ void test_positive_buckSetGetCfg_vmonOnly_buck3_enable(void)
 }
 
 /* UV Threshold Tests */
-void test_positive_buckSetGetCfg_uvThr_buck1_val0(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck1_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4664,7 +4454,7 @@ void test_positive_buckSetGetCfg_uvThr_buck1_val0(void)
     PLATFORM_ASSERT(buckCfgGet.uvThr == 0);
 }
 
-void test_positive_buckSetGetCfg_uvThr_buck1_val1(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck1_val1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4685,7 +4475,7 @@ void test_positive_buckSetGetCfg_uvThr_buck1_val1(void)
     PLATFORM_ASSERT(buckCfgGet.uvThr == 1);
 }
 
-void test_positive_buckSetGetCfg_uvThr_buck2_val2(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck2_val2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4706,7 +4496,7 @@ void test_positive_buckSetGetCfg_uvThr_buck2_val2(void)
     PLATFORM_ASSERT(buckCfgGet.uvThr == 2);
 }
 
-void test_positive_buckSetGetCfg_uvThr_buck2_val3(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck2_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4727,7 +4517,7 @@ void test_positive_buckSetGetCfg_uvThr_buck2_val3(void)
     PLATFORM_ASSERT(buckCfgGet.uvThr == 3);
 }
 
-void test_positive_buckSetGetCfg_uvThr_buck3_val0(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck3_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4748,7 +4538,7 @@ void test_positive_buckSetGetCfg_uvThr_buck3_val0(void)
     PLATFORM_ASSERT(buckCfgGet.uvThr == 0);
 }
 
-void test_positive_buckSetGetCfg_uvThr_buck3_val3(void)
+void test_pos_power_buckSetGetCfg_uvThr_buck3_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4770,7 +4560,7 @@ void test_positive_buckSetGetCfg_uvThr_buck3_val3(void)
 }
 
 /* OV Threshold Tests */
-void test_positive_buckSetGetCfg_ovThr_buck1_val0(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck1_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4791,7 +4581,7 @@ void test_positive_buckSetGetCfg_ovThr_buck1_val0(void)
     PLATFORM_ASSERT(buckCfgGet.ovThr == 0);
 }
 
-void test_positive_buckSetGetCfg_ovThr_buck1_val1(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck1_val1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4812,7 +4602,7 @@ void test_positive_buckSetGetCfg_ovThr_buck1_val1(void)
     PLATFORM_ASSERT(buckCfgGet.ovThr == 1);
 }
 
-void test_positive_buckSetGetCfg_ovThr_buck2_val2(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck2_val2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4833,7 +4623,7 @@ void test_positive_buckSetGetCfg_ovThr_buck2_val2(void)
     PLATFORM_ASSERT(buckCfgGet.ovThr == 2);
 }
 
-void test_positive_buckSetGetCfg_ovThr_buck2_val3(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck2_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4854,7 +4644,7 @@ void test_positive_buckSetGetCfg_ovThr_buck2_val3(void)
     PLATFORM_ASSERT(buckCfgGet.ovThr == 3);
 }
 
-void test_positive_buckSetGetCfg_ovThr_buck3_val0(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck3_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4875,7 +4665,7 @@ void test_positive_buckSetGetCfg_ovThr_buck3_val0(void)
     PLATFORM_ASSERT(buckCfgGet.ovThr == 0);
 }
 
-void test_positive_buckSetGetCfg_ovThr_buck3_val3(void)
+void test_pos_power_buckSetGetCfg_ovThr_buck3_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4897,7 +4687,7 @@ void test_positive_buckSetGetCfg_ovThr_buck3_val3(void)
 }
 
 /* Slew Rate Tests */
-void test_positive_buckSetGetCfg_slewRate_buck1_allValues(void)
+void test_pos_power_buckSetGetCfg_slewRate_buck1_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4922,7 +4712,7 @@ void test_positive_buckSetGetCfg_slewRate_buck1_allValues(void)
     }
 }
 
-void test_positive_buckSetGetCfg_slewRate_buck2_minMax(void)
+void test_pos_power_buckSetGetCfg_slewRate_buck2_minMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
@@ -4947,7 +4737,7 @@ void test_positive_buckSetGetCfg_slewRate_buck2_minMax(void)
     }
 }
 
-void test_positive_buckSetGetCfg_slewRate_buck3_minMax(void)
+void test_pos_power_buckSetGetCfg_slewRate_buck3_minMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
@@ -4973,7 +4763,7 @@ void test_positive_buckSetGetCfg_slewRate_buck3_minMax(void)
 }
 
 /* High Side Slew Rate Tests (BUCK1 only) */
-void test_positive_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
+void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4994,7 +4784,7 @@ void test_positive_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
     PLATFORM_ASSERT(buckCfgGet.highSideSlewRate == 0);
 }
 
-void test_positive_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
+void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -5015,7 +4805,7 @@ void test_positive_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
     PLATFORM_ASSERT(buckCfgGet.highSideSlewRate == 1);
 }
 
-void test_positive_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
+void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -5037,7 +4827,7 @@ void test_positive_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
 }
 
 /* Deglitch Selection Test */
-void test_positive_buckSetGetCfg_deglitchSel_allBucks(void)
+void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t resources[] = {PMIC_BUCK1, PMIC_BUCK2, PMIC_BUCK3};
@@ -5068,7 +4858,7 @@ void test_positive_buckSetGetCfg_deglitchSel_allBucks(void)
 /*                    Buck Configuration Negative Tests                       */
 /* ========================================================================== */
 
-void test_negative_Pmic_pwrSetBuckCfg_nullParam_pmicHandle(void)
+void test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5080,21 +4870,21 @@ void test_negative_Pmic_pwrSetBuckCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_nullParam_buckCfg(void)
+void test_neg_power_pwrSetBuckCfg_nullParam_buckCfg(void)
 {
     // Pass NULL buckCfg into Pmic_pwrSetBuckCfg()
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckCfg_nullParam_buckCfg(void)
+void test_neg_power_pwrGetBuckCfg_nullParam_buckCfg(void)
 {
     // Pass NULL buckCfg into Pmic_pwrGetBuckCfg()
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_invalidParam_resource(void)
+void test_neg_power_pwrSetBuckCfg_invalidParam_resource(void)
 {
     // Pass invalid resource into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5106,7 +4896,7 @@ void test_negative_Pmic_pwrSetBuckCfg_invalidParam_resource(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckCfg_invalidParam_resource(void)
+void test_neg_power_pwrGetBuckCfg_invalidParam_resource(void)
 {
     // Pass invalid resource into Pmic_pwrGetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5117,7 +4907,7 @@ void test_negative_Pmic_pwrGetBuckCfg_invalidParam_resource(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_zeroValidParams(void)
+void test_neg_power_pwrSetBuckCfg_zeroValidParams(void)
 {
     // Pass zero validParams into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5129,7 +4919,7 @@ void test_negative_Pmic_pwrSetBuckCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrGetBuckCfg_zeroValidParams(void)
+void test_neg_power_pwrGetBuckCfg_zeroValidParams(void)
 {
     // Pass zero validParams into Pmic_pwrGetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5140,7 +4930,7 @@ void test_negative_Pmic_pwrGetBuckCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vset(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_vset(void)
 {
     // Pass out of bounds vset into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5152,7 +4942,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vset(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetActive(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive(void)
 {
     // Pass out of bounds vsetActive into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5164,7 +4954,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetActive(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
 {
     // Pass out of bounds vsetLPwr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5176,7 +4966,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvThr(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr(void)
 {
     // Pass out of bounds uvThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5188,7 +4978,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvThr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovThr(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr(void)
 {
     // Pass out of bounds ovThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5200,7 +4990,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovThr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
 {
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5212,7 +5002,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
 {
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5224,7 +5014,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovpSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel(void)
 {
     // Pass out of bounds ovpSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5236,7 +5026,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovpSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel(void)
 {
     // Pass out of bounds ovSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5248,7 +5038,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_ovSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel(void)
 {
     // Pass out of bounds uvSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5260,7 +5050,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_scSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_scSel(void)
 {
     // Pass out of bounds scSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5272,7 +5062,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_scSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_rvConf(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf(void)
 {
     // Pass out of bounds rvConf into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5284,7 +5074,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_rvConf(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_slewRate(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate(void)
 {
     // Pass out of bounds slewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5296,7 +5086,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_slewRate(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
 {
     // Pass out of bounds deglitchSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5308,7 +5098,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
 {
     // Pass out of bounds dischargeSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5320,7 +5110,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloRising(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising(void)
 {
     // Pass out of bounds uvloRising into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5332,7 +5122,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloRising(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
 {
     // Pass out of bounds uvloFalling into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5344,7 +5134,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
+void test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
 {
     // Pass out of bounds highSideSlewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5360,7 +5150,7 @@ void test_negative_Pmic_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
 /*                   BUCK2/BUCK3 Coverage Gap Tests                           */
 /* ========================================================================== */
 
-void test_positive_powerGetCfg_buck2Enable(void)
+void test_pos_power_powerGetCfg_buck2Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5372,7 +5162,7 @@ void test_positive_powerGetCfg_buck2Enable(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_powerSetCfg_buck2Enable(void)
+void test_pos_power_powerSetCfg_buck2Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -5393,7 +5183,7 @@ void test_positive_powerSetCfg_buck2Enable(void)
     PLATFORM_ASSERT(getCfg.enable == true);
 }
 
-void test_positive_powerGetVoutCfg_buck2Voltage(void)
+void test_pos_power_powerGetVoutCfg_buck2Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5405,7 +5195,7 @@ void test_positive_powerGetVoutCfg_buck2Voltage(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_powerSetVoutCfg_buck2Voltage(void)
+void test_pos_power_powerSetVoutCfg_buck2Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -5426,7 +5216,7 @@ void test_positive_powerSetVoutCfg_buck2Voltage(void)
     PLATFORM_ASSERT(getCfg.vsetActive == 0x20);
 }
 
-void test_positive_powerGetCfg_buck3Enable(void)
+void test_pos_power_powerGetCfg_buck3Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5438,7 +5228,7 @@ void test_positive_powerGetCfg_buck3Enable(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_powerSetCfg_buck3Enable(void)
+void test_pos_power_powerSetCfg_buck3Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -5459,7 +5249,7 @@ void test_positive_powerSetCfg_buck3Enable(void)
     PLATFORM_ASSERT(getCfg.enable == true);
 }
 
-void test_positive_powerGetVoutCfg_buck3Voltage(void)
+void test_pos_power_powerGetVoutCfg_buck3Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5471,7 +5261,7 @@ void test_positive_powerGetVoutCfg_buck3Voltage(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_powerSetVoutCfg_buck3Voltage(void)
+void test_pos_power_powerSetVoutCfg_buck3Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
@@ -5492,7 +5282,7 @@ void test_positive_powerSetVoutCfg_buck3Voltage(void)
     PLATFORM_ASSERT(getCfg.vsetActive == 0x30);
 }
 
-void test_positive_powerGetStat_buck2(void)
+void test_pos_power_powerGetStat_buck2(void)
 {
     int32_t status;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -5503,7 +5293,7 @@ void test_positive_powerGetStat_buck2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_powerGetStat_buck3(void)
+void test_pos_power_powerGetStat_buck3(void)
 {
     int32_t status;
     Pmic_PwrRsrcStat_t pwrRsrcStat = {
@@ -5514,7 +5304,7 @@ void test_positive_powerGetStat_buck3(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_pwr_getUvlo_invalidBuck(void)
+void test_neg_power_pwr_getUvlo_invalidBuck(void)
 {
     // Test invalid BUCK resource for UVLO (line 654)
     int32_t status;
@@ -5527,7 +5317,7 @@ void test_negative_pwr_getUvlo_invalidBuck(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setUvlo_invalidBuck(void)
+void test_neg_power_pwr_setUvlo_invalidBuck(void)
 {
     // Test invalid BUCK resource for UVLO (line 931)
     int32_t status;
@@ -5542,7 +5332,7 @@ void test_negative_pwr_setUvlo_invalidBuck(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setBuck_invalidDischargeSel(void)
+void test_neg_power_pwr_setBuck_invalidDischargeSel(void)
 {
     // Test invalid discharge selector (lines 1358-1359)
     int32_t status;
@@ -5556,7 +5346,7 @@ void test_negative_pwr_setBuck_invalidDischargeSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setBuck_invalidSlewRate(void)
+void test_neg_power_pwr_setBuck_invalidSlewRate(void)
 {
     // Test invalid slew rate (lines 1378-1379)
     int32_t status;
@@ -5570,7 +5360,7 @@ void test_negative_pwr_setBuck_invalidSlewRate(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setLdoCfg_zeroValidParams(void)
+void test_neg_power_pwr_setLdoCfg_zeroValidParams(void)
 {
     // Test zero validParams for setLdoCfg (lines 1865-1866)
     int32_t status;
@@ -5582,7 +5372,7 @@ void test_negative_pwr_setLdoCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_getLdoCfg_zeroValidParams(void)
+void test_neg_power_pwr_getLdoCfg_zeroValidParams(void)
 {
     // Test zero validParams for getLdoCfg (lines 2280-2281)
     int32_t status;
@@ -5594,7 +5384,7 @@ void test_negative_pwr_getLdoCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setTsdCfg_zeroValidParams(void)
+void test_neg_power_pwr_setTsdCfg_zeroValidParams(void)
 {
     // Test zero validParams for setTsdCfg (lines 2491-2492)
     int32_t status;
@@ -5606,7 +5396,7 @@ void test_negative_pwr_setTsdCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_getTsdCfg_zeroValidParams(void)
+void test_neg_power_pwr_getTsdCfg_zeroValidParams(void)
 {
     // Test zero validParams for getTsdCfg (lines 2568-2569)
     int32_t status;
@@ -5618,7 +5408,7 @@ void test_negative_pwr_getTsdCfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setSeqTrig_zeroLen(void)
+void test_neg_power_pwr_setSeqTrig_zeroLen(void)
 {
     // Test zero length for setSeqTrig (lines 2775-2778)
     int32_t status;
@@ -5629,7 +5419,7 @@ void test_negative_pwr_setSeqTrig_zeroLen(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setSeqTrig_invalidPwrRsrc(void)
+void test_neg_power_pwr_setSeqTrig_invalidPwrRsrc(void)
 {
     // Test invalid power resource (lines 2715-2716)
     int32_t status;
@@ -5644,7 +5434,7 @@ void test_negative_pwr_setSeqTrig_invalidPwrRsrc(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setSeqTrig_invalidBitPos(void)
+void test_neg_power_pwr_setSeqTrig_invalidBitPos(void)
 {
     /**
      * Test invalid sequence trigger bit position
@@ -5673,7 +5463,7 @@ void test_negative_pwr_setSeqTrig_invalidBitPos(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_getSeqTrig_zeroLen(void)
+void test_neg_power_pwr_getSeqTrig_zeroLen(void)
 {
     // Test zero length for getSeqTrig (lines 2777-2778)
     int32_t status;
@@ -5684,7 +5474,7 @@ void test_negative_pwr_getSeqTrig_zeroLen(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setSeqDelay_zeroLen(void)
+void test_neg_power_pwr_setSeqDelay_zeroLen(void)
 {
     // Test zero length for setSeqDelay (lines 2889-2890)
     int32_t status;
@@ -5695,7 +5485,7 @@ void test_negative_pwr_setSeqDelay_zeroLen(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_pwr_setSeqDelay_invalidConfig(void)
+void test_neg_power_pwr_setSeqDelay_invalidConfig(void)
 {
     // Test invalid resource or zero validParams (lines 2910-2911)
     int32_t status;
@@ -5714,7 +5504,7 @@ void test_negative_pwr_setSeqDelay_invalidConfig(void)
  * @brief Test Pmic_pwrGetBuckLdoSeqTrig() with invalid resource
  * Covers resource bounds check in Pmic_pwrGetBuckLdoSeqTrig() loop
  */
-void test_negative_pwr_getSeqTrig_invalidResource(void)
+void test_neg_power_pwr_getSeqTrig_invalidResource(void)
 {
     int32_t status;
     uint16_t invalidResource = (uint16_t)(PMIC_POWER_RESOURCE_MAX + 1U);
@@ -5732,7 +5522,7 @@ void test_negative_pwr_getSeqTrig_invalidResource(void)
  * @brief Test Pmic_pwrGetBuckLdoSeqTrig() with invalid bit position
  * Covers bit position bounds check in Pmic_pwrGetBuckLdoSeqTrig() loop
  */
-void test_negative_pwr_getSeqTrig_invalidBitPos(void)
+void test_neg_power_pwr_getSeqTrig_invalidBitPos(void)
 {
     int32_t status;
     uint16_t invalidTrigger = ((uint16_t)PMIC_BUCK1 << 8U) | 6U;  // bitPos 6 > max 5
@@ -5749,7 +5539,7 @@ void test_negative_pwr_getSeqTrig_invalidBitPos(void)
  * @brief Test Pmic_pwrGetBuckLdoSeqDly() with zero length
  * Covers zero length check in Pmic_pwrGetBuckLdoSeqDly()
  */
-void test_negative_pwr_getSeqDelay_zeroLen(void)
+void test_neg_power_pwr_getSeqDelay_zeroLen(void)
 {
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[1];
@@ -5762,7 +5552,7 @@ void test_negative_pwr_getSeqDelay_zeroLen(void)
  * @brief Test Pmic_pwrGetBuckLdoSeqDly() with invalid resource or zero validParams
  * Covers resource/validParams check in Pmic_pwrGetBuckLdoSeqDly() loop
  */
-void test_negative_pwr_getSeqDelay_invalidConfig(void)
+void test_neg_power_pwr_getSeqDelay_invalidConfig(void)
 {
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {

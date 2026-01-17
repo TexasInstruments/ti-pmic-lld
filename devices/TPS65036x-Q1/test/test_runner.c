@@ -84,7 +84,7 @@ extern void esm_test(void *args);
 extern void gpio_test(void *args);
 extern void io_test(void *args);
 extern void irq_test(void *args);
-extern void pmic_init_test(void *args);
+extern void pmic_test(void *args);
 extern void power_test(void *args);
 extern void wdg_test(void *args);
 
@@ -110,7 +110,7 @@ int main(void)
     common_test(NULL);
 
     printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_init_test(NULL);
+    pmic_test(NULL);
 
     printf("\n=== Running Core Tests ===\n");
     core_test(NULL);

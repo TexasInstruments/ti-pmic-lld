@@ -79,14 +79,14 @@ PMIC_SOURCES = \
 # Test source files
 TEST_SOURCES = \
 	test_runner.c \
-	test_common.c \
+	test_utils.c \
 	common/common_test.c \
 	core/core_test.c \
 	wdg/wdg_test.c \
 	gpio/gpio_test.c \
 	io/io_test.c \
 	irq/irq_test.c \
-	pmic_init/pmic_init_test.c \
+	pmic/pmic_test.c \
 	power/power_test.c \
 	esm/esm_test.c \
 	fsm/fsm_test.c \
@@ -114,7 +114,7 @@ else
 	# Hardware build configuration
 	CFLAGS += -I/path/to/ti_drivers
 
-	PLATFORM_SOURCES = pmic_test_common.c
+	PLATFORM_SOURCES = platform_hardware.c
 
 	LDFLAGS = -L/path/to/ti_drivers -lmcspi
 

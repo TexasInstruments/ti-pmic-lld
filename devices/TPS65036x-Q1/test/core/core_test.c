@@ -42,216 +42,7 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Core tests */
-#define CORE_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_siliconRev); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setRegLockState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_disableRegLock_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_enableRegLock_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_regLockStat); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_ioSetCrcEnableState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_ioCrcEnable_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_ioCrcDisable_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_ioGetCrcEnableState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_ioGetCrcEnableState_nullParam_crcEnabled); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalid_fsmCmd); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setPwrOn_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getPwrOn_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getPwrOn_nullParam_pwrOnStat); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_nullParam_lpmCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_outOfBounds_pinDetection); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_outOfBounds_detectionDelay); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_nullParam_lpmCfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_runABIST_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getABISTStat_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getABISTStat_nullParam_isActive); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_value); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_threshold); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_threshold); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrRecovCnt_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_threshold); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_threshold); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrResetCnt_nullParam_pmicHandle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_nullParam_crc16Cfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_invalidParam_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_nullParam_crc16Cfg); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_invalidParam_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_invalidParam_validParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_zeroValidParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_zeroValidParams); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_zeroValidParams); \
-                            PLATFORM_RUN_TEST(test_positive_Pmic_getNvmRev); \
-                            PLATFORM_RUN_TEST(test_positive_Pmic_getSiliconRev); \
-                            PLATFORM_RUN_TEST(test_positive_setGetRegLock); \
-                            PLATFORM_RUN_TEST(test_positive_enableDisableCRC8); \
-                            PLATFORM_RUN_TEST(test_positive_setGetPwrOn); \
-                            PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_pinDetection); \
-                            PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_detectionDelay); \
-                            PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_vmonEn); \
-                            PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_esmEn); \
-                            PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_wdgEn); \
-                            PLATFORM_RUN_TEST(test_positive_Pmic_runABIST); \
-                            PLATFORM_RUN_TEST(test_positive_setGetScratchPadVal); \
-                            PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                            PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
-                            PLATFORM_RUN_TEST(test_positive_getClrRecovCnt); \
-                            PLATFORM_RUN_TEST(test_positive_getClrResetCnt); \
-                            PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_enable); \
-                            PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_enable); \
-                            PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_activateCalc); \
-                            PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_activateCalc); \
-                            PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_combinedParams); \
-                            PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_combinedParams); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_pinDetection); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_detectionDelay); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_vmonEn); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_esmEn); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_wdgEn); \
-                            PLATFORM_RUN_TEST(test_positive_getLpmCfg_multipleParams); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_allValues); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_allValues); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_vmonEn_enable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_vmonEn_disable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_esmEn_enable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_esmEn_disable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_wdgEn_enable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_wdgEn_disable); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_multipleEnables); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_allParams); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_boundaryMin); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_boundaryMax); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_boundaryMin); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_boundaryMax); \
-                            PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetectionAndDelay); \
-                            PLATFORM_RUN_TEST(test_positive_getABISTStat_active); \
-                            PLATFORM_RUN_TEST(test_positive_silicon_A0_crc16_at_0x61); \
-                            PLATFORM_RUN_TEST(test_positive_silicon_B0_crc16_at_0x64); \
-                            PLATFORM_RUN_TEST(test_positive_silicon_B1_crc16_at_0x64); \
-                            PLATFORM_RUN_TEST(test_positive_init_A0_silicon_with_locked_registers); \
-                            PLATFORM_RUN_TEST(test_negative_core_getLpmCfg_zeroValidParams)
-
-/* Run all Core negative tests */
-#define CORE_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_siliconRev); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setRegLockState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_disableRegLock_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_enableRegLock_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_regLockStat); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_ioSetCrcEnableState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_ioCrcEnable_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_ioCrcDisable_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_ioGetCrcEnableState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_ioGetCrcEnableState_nullParam_crcEnabled); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalid_fsmCmd); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setPwrOn_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getPwrOn_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getPwrOn_nullParam_pwrOnStat); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_nullParam_lpmCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_outOfBounds_pinDetection); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_outOfBounds_detectionDelay); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_nullParam_lpmCfg); \
-                                 PLATFORM_RUN_TEST(test_negative_core_getLpmCfg_zeroValidParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_runABIST_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getABISTStat_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getABISTStat_nullParam_isActive); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_value); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_threshold); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_threshold); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrRecovCnt_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_threshold); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_threshold); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrResetCnt_nullParam_pmicHandle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_nullParam_crc16Cfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_invalidParam_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_nullParam_crc16Cfg); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_invalidParam_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getLpmCfg_invalidParam_validParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setCRC16Cfg_zeroValidParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getCRC16Cfg_zeroValidParams); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setLpmCfg_zeroValidParams)
-
-/* Run all Core positive tests */
-#define CORE_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_Pmic_getNvmRev); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_getSiliconRev); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetRegLock); \
-                                 PLATFORM_RUN_TEST(test_positive_enableDisableCRC8); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetPwrOn); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_pinDetection); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_detectionDelay); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_vmonEn); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_esmEn); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetLpmCfg_wdgEn); \
-                                 PLATFORM_RUN_TEST(test_positive_Pmic_runABIST); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetScratchPadVal); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
-                                 PLATFORM_RUN_TEST(test_positive_getClrRecovCnt); \
-                                 PLATFORM_RUN_TEST(test_positive_getClrResetCnt); \
-                                 PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_enable); \
-                                 PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_enable); \
-                                 PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_activateCalc); \
-                                 PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_activateCalc); \
-                                 PLATFORM_RUN_TEST(test_positive_setCRC16Cfg_combinedParams); \
-                                 PLATFORM_RUN_TEST(test_positive_getCRC16Cfg_combinedParams); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_pinDetection); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_detectionDelay); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_vmonEn); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_esmEn); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_wdgEn); \
-                                 PLATFORM_RUN_TEST(test_positive_getLpmCfg_multipleParams); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_allValues); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_allValues); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_vmonEn_enable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_vmonEn_disable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_esmEn_enable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_esmEn_disable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_wdgEn_enable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_wdgEn_disable); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_multipleEnables); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_allParams); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_boundaryMin); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetection_boundaryMax); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_boundaryMin); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_detectionDelay_boundaryMax); \
-                                 PLATFORM_RUN_TEST(test_positive_setLpmCfg_pinDetectionAndDelay); \
-                                 PLATFORM_RUN_TEST(test_positive_getABISTStat_active); \
-                                 PLATFORM_RUN_TEST(test_positive_init_A0_silicon_with_locked_registers)
+/* Test organization macros are defined in core_test.h */
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -302,7 +93,7 @@ void core_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
         /* Unlock PMIC registers for testing (except lock-specific tests) */
         status = coreTest_unlockPmicRegs(&pmicHandle);
@@ -334,7 +125,7 @@ void core_test(void *args)
     platform_deinit();
 }
 
-void test_negative_Pmic_getNvmRev_nullParam_pmicHandle(void)
+void test_neg_core_getNvmRev_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getNvmRev()
     uint8_t nvmRev = 0U;
@@ -342,14 +133,14 @@ void test_negative_Pmic_getNvmRev_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void)
+void test_neg_core_getNvmRev_nullParam_nvmRev(void)
 {
     // Pass NULL nvmRev into Pmic_getNvmRev()
     int32_t status = Pmic_getNvmRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getSiliconRev_nullParam_pmicHandle(void)
+void test_neg_core_getSiliconRev_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getSiliconRev()
     uint8_t siliconRev = 0U;
@@ -357,35 +148,35 @@ void test_negative_Pmic_getSiliconRev_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void)
+void test_neg_core_getSiliconRev_nullParam_siliconRev(void)
 {
     // Pass NULL siliconRev into Pmic_getSiliconRev()
     int32_t status = Pmic_getSiliconRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setRegLockState_nullParam_pmicHandle(void)
+void test_neg_core_setRegLockState_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setRegLockState()
     int32_t status = Pmic_setRegLockState(NULL, PMIC_LOCK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_disableRegLock_nullParam_pmicHandle(void)
+void test_neg_core_disableRegLock_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_disableRegLock()
     int32_t status = Pmic_disableRegLock(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_enableRegLock_nullParam_pmicHandle(void)
+void test_neg_core_enableRegLock_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_enableRegLock()
     int32_t status = Pmic_enableRegLock(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_pmicHandle(void)
+void test_neg_core_getRegLockState_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getRegLockState()
     bool isLocked = (bool)false;
@@ -393,35 +184,35 @@ void test_negative_Pmic_getRegLockState_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_regLockStat(void)
+void test_neg_core_getRegLockState_nullParam_regLockStat(void)
 {
     // Pass NULL regLockStat into Pmic_getRegLockState()
     int32_t status = Pmic_getRegLockState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_ioSetCrcEnableState_nullParam_pmicHandle(void)
+void test_neg_core_ioSetCrcEnableState_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_ioSetCrcEnableState()
     int32_t status = Pmic_ioSetCrcEnableState(NULL, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_ioCrcEnable_nullParam_pmicHandle(void)
+void test_neg_core_ioCrcEnable_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_ioCrcEnable()
     int32_t status = Pmic_ioCrcEnable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_ioCrcDisable_nullParam_pmicHandle(void)
+void test_neg_core_ioCrcDisable_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_ioCrcDisable()
     int32_t status = Pmic_ioCrcDisable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_pmicHandle(void)
+void test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_ioGetCrcEnableState()
     bool isEnabled = PMIC_DISABLE;
@@ -429,35 +220,35 @@ void test_negative_Pmic_ioGetCrcEnableState_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_crcEnabled(void)
+void test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled(void)
 {
     // Pass NULL crcEnabled into Pmic_ioGetCrcEnableState()
     int32_t status = Pmic_ioGetCrcEnableState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetDevState_nullParam_pmicHandle(void)
+void test_neg_core_fsmSetDevState_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmSetDevState()
     int32_t status = Pmic_fsmSetDevState(NULL, PMIC_WARM_RESET_REQUEST);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetDevState_invalid_fsmCmd(void)
+void test_neg_core_fsmSetDevState_invalid_fsmCmd(void)
 {
     // Pass invalid fsmCmd into Pmic_sendFsmCmd
     int32_t status = Pmic_fsmSetDevState(&pmicHandle, 0x00U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_setPwrOn_nullParam_pmicHandle(void)
+void test_neg_core_setPwrOn_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setPwrOn()
     int32_t status = Pmic_setPwrOn(NULL, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getPwrOn_nullParam_pmicHandle(void)
+void test_neg_core_getPwrOn_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getPwrOn()
     bool isEnabled = PMIC_DISABLE;
@@ -465,14 +256,14 @@ void test_negative_Pmic_getPwrOn_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getPwrOn_nullParam_pwrOnStat(void)
+void test_neg_core_getPwrOn_nullParam_pwrOnStat(void)
 {
     // Pass NULL pwrOnStat into Pmic_getPwrOn()
     int32_t status = Pmic_getPwrOn(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setLpmCfg_nullParam_pmicHandle(void)
+void test_neg_core_setLpmCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -483,14 +274,14 @@ void test_negative_Pmic_setLpmCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setLpmCfg_nullParam_lpmCfg(void)
+void test_neg_core_setLpmCfg_nullParam_lpmCfg(void)
 {
     // Pass NULL lpmCfg into Pmic_setLpmCfg()
     int32_t status = Pmic_setLpmCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setLpmCfg_outOfBounds_pinDetection(void)
+void test_neg_core_setLpmCfg_outOfBounds_pinDetection(void)
 {
     // Pass out of bounds pinDetection into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -501,7 +292,7 @@ void test_negative_Pmic_setLpmCfg_outOfBounds_pinDetection(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_setLpmCfg_outOfBounds_detectionDelay(void)
+void test_neg_core_setLpmCfg_outOfBounds_detectionDelay(void)
 {
     // Pass out of bounds detectionDelay into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -512,7 +303,7 @@ void test_negative_Pmic_setLpmCfg_outOfBounds_detectionDelay(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getLpmCfg_nullParam_pmicHandle(void)
+void test_neg_core_getLpmCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
@@ -520,21 +311,21 @@ void test_negative_Pmic_getLpmCfg_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getLpmCfg_nullParam_lpmCfg(void)
+void test_neg_core_getLpmCfg_nullParam_lpmCfg(void)
 {
     // Pass NULL lpmCfg into Pmic_getLpmCfg()
     int32_t status = Pmic_getLpmCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_runABIST_nullParam_pmicHandle(void)
+void test_neg_core_runABIST_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_runABIST()
     int32_t status = Pmic_runABIST(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getABISTStat_nullParam_pmicHandle(void)
+void test_neg_core_getABISTStat_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getABISTStat()
     bool isActive = (bool)false;
@@ -542,28 +333,28 @@ void test_negative_Pmic_getABISTStat_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getABISTStat_nullParam_isActive(void)
+void test_neg_core_getABISTStat_nullParam_isActive(void)
 {
     // Pass NULL isActive into Pmic_getABISTStat()
     int32_t status = Pmic_getABISTStat(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setScratchPadValue_nullParam_pmicHandle(void)
+void test_neg_core_setScratchPadValue_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setScratchPadValue()
     int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
     // Pass out of bounds scratchPadRegNum into Pmic_setScratchPadValue()
     int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_nullParam_pmicHandle(void)
+void test_neg_core_getScratchPadValue_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getScratchPadValue()
     uint8_t value = 0U;
@@ -571,7 +362,7 @@ void test_negative_Pmic_getScratchPadValue_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
     // Pass out of bounds scratchPadRegNum into Pmic_getScratchPadValue()
     uint8_t value = 0U;
@@ -579,28 +370,28 @@ void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_nullParam_value(void)
+void test_neg_core_getScratchPadValue_nullParam_value(void)
 {
     // Pass NULL value into Pmic_getScratchPadValue()
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetRecovCntThr_nullParam_pmicHandle(void)
+void test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmSetRecovCntThr()
     int32_t status = Pmic_fsmSetRecovCntThr(NULL, PMIC_RESET_RECOV_CNT_THR_MAX);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_threshold(void)
+void test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold(void)
 {
     // Pass out of bounds threshold into Pmic_fsmSetRecovCntThr()
     int32_t status = Pmic_fsmSetRecovCntThr(&pmicHandle, PMIC_RESET_RECOV_CNT_THR_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_pmicHandle(void)
+void test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmGetRecovCntThr()
     uint8_t threshold = 0U;
@@ -608,14 +399,14 @@ void test_negative_Pmic_fsmGetRecovCntThr_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_threshold(void)
+void test_neg_core_fsmGetRecovCntThr_nullParam_threshold(void)
 {
     // Pass NULL threshold into Pmic_fsmGetRecovCntThr()
     int32_t status = Pmic_fsmGetRecovCntThr(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_pmicHandle(void)
+void test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmGetRecovCnt()
     uint8_t recovCnt = 0U;
@@ -623,35 +414,35 @@ void test_negative_Pmic_fsmGetRecovCnt_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt(void)
+void test_neg_core_fsmGetRecovCnt_nullParam_recovCnt(void)
 {
     // Pass NULL recovCnt into Pmic_fsmGetRecovCnt()
     int32_t status = Pmic_fsmGetRecovCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmClrRecovCnt_nullParam_pmicHandle(void)
+void test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmClrRecovCnt()
     int32_t status = Pmic_fsmClrRecovCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetResetCntThr_nullParam_pmicHandle(void)
+void test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmSetResetCntThr()
     int32_t status = Pmic_fsmSetResetCntThr(NULL, PMIC_RESET_RECOV_CNT_THR_MAX);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetResetCntThr_outOfBounds_threshold(void)
+void test_neg_core_fsmSetResetCntThr_outOfBounds_threshold(void)
 {
     // Pass out of bounds threshold into Pmic_fsmSetResetCntThr()
     int32_t status = Pmic_fsmSetResetCntThr(&pmicHandle, PMIC_RESET_RECOV_CNT_THR_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_pmicHandle(void)
+void test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmGetResetCntThr()
     uint8_t threshold = 0U;
@@ -659,14 +450,14 @@ void test_negative_Pmic_fsmGetResetCntThr_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_threshold(void)
+void test_neg_core_fsmGetResetCntThr_nullParam_threshold(void)
 {
     // Pass NULL threshold into Pmic_fsmGetResetCntThr()
     int32_t status = Pmic_fsmGetResetCntThr(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCnt_nullParam_pmicHandle(void)
+void test_neg_core_fsmGetResetCnt_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmGetResetCnt()
     uint8_t resetCnt = 0U;
@@ -674,21 +465,21 @@ void test_negative_Pmic_fsmGetResetCnt_nullParam_pmicHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt(void)
+void test_neg_core_fsmGetResetCnt_nullParam_resetCnt(void)
 {
     // Pass NULL resetCnt into Pmic_fsmGetResetCnt()
     int32_t status = Pmic_fsmGetResetCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmClrResetCnt_nullParam_pmicHandle(void)
+void test_neg_core_fsmClrResetCnt_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmClrResetCnt()
     int32_t status = Pmic_fsmClrResetCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_positive_Pmic_getNvmRev(void)
+void test_pos_core_getNvmRev(void)
 {
     // Get PMIC NVM revision ID
     uint8_t nvmRev = 0xFFU;
@@ -697,7 +488,7 @@ void test_positive_Pmic_getNvmRev(void)
     PLATFORM_ASSERT(nvmRev != 0xFFU);
 }
 
-void test_positive_Pmic_getSiliconRev(void)
+void test_pos_core_getSiliconRev(void)
 {
     // Get PMIC silicon revision
     uint8_t siliconRev = 0xFFU;
@@ -706,7 +497,7 @@ void test_positive_Pmic_getSiliconRev(void)
     PLATFORM_ASSERT(siliconRev != 0xFFU);
 }
 
-void test_positive_setGetRegLock(void)
+void test_pos_core_setGetRegLock(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool isLocked = (bool)false;
@@ -741,7 +532,7 @@ void test_positive_setGetRegLock(void)
     PLATFORM_ASSERT(readVal == testVal);
 }
 
-void test_positive_enableDisableCRC8(void)
+void test_pos_core_enableDisableCRC8(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool crcEnabled = (bool)false;
@@ -765,7 +556,7 @@ void test_positive_enableDisableCRC8(void)
     PLATFORM_ASSERT(crcEnabled == (bool)false);
 }
 
-void test_positive_setGetPwrOn(void)
+void test_pos_core_setGetPwrOn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool poweredOn = (bool)false;
@@ -789,7 +580,7 @@ void test_positive_setGetPwrOn(void)
     PLATFORM_ASSERT(poweredOn == (bool)false);
 }
 
-void test_positive_setGetLpmCfg_pinDetection(void)
+void test_pos_core_setGetLpmCfg_pinDetection(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
@@ -811,7 +602,7 @@ void test_positive_setGetLpmCfg_pinDetection(void)
     }
 }
 
-void test_positive_setGetLpmCfg_detectionDelay(void)
+void test_pos_core_setGetLpmCfg_detectionDelay(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
@@ -833,7 +624,7 @@ void test_positive_setGetLpmCfg_detectionDelay(void)
     }
 }
 
-void test_positive_setGetLpmCfg_vmonEn(void)
+void test_pos_core_setGetLpmCfg_vmonEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
@@ -860,7 +651,7 @@ void test_positive_setGetLpmCfg_vmonEn(void)
     PLATFORM_ASSERT(actLpmCfg.vmonEn == PMIC_DISABLE);
 }
 
-void test_positive_setGetLpmCfg_esmEn(void)
+void test_pos_core_setGetLpmCfg_esmEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID};
@@ -887,7 +678,7 @@ void test_positive_setGetLpmCfg_esmEn(void)
     PLATFORM_ASSERT(actLpmCfg.esmEn == PMIC_DISABLE);
 }
 
-void test_positive_setGetLpmCfg_wdgEn(void)
+void test_pos_core_setGetLpmCfg_wdgEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID};
@@ -914,7 +705,7 @@ void test_positive_setGetLpmCfg_wdgEn(void)
     PLATFORM_ASSERT(actLpmCfg.wdgEn == PMIC_DISABLE);
 }
 
-void test_positive_Pmic_runABIST(void)
+void test_pos_core_runABIST(void)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -946,7 +737,7 @@ void test_positive_Pmic_runABIST(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_positive_setGetScratchPadVal(void)
+void test_pos_core_setGetScratchPadVal(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t initVal = 0U, actVal = 0U, expVal = 0U;
@@ -1035,7 +826,7 @@ static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle)
     return status;
 }
 
-void test_positive_setGetRecovCntThr(void)
+void test_pos_core_setGetRecovCntThr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t actThreshold = 0U;
@@ -1058,7 +849,7 @@ void test_positive_setGetRecovCntThr(void)
     }
 }
 
-void test_positive_setGetResetCntThr(void)
+void test_pos_core_setGetResetCntThr(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t actThreshold = 0U;
@@ -1086,7 +877,7 @@ void test_positive_setGetResetCntThr(void)
  * As a result, ignore all I2C communication errors after sending Safe Recovery
  * Request.
  */
-void test_positive_getClrRecovCnt(void)
+void test_pos_core_getClrRecovCnt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t initRecovCnt = 0U, newRecovCnt = 0U;
@@ -1123,7 +914,7 @@ void test_positive_getClrRecovCnt(void)
  * NOTE: This test makes the PMIC undergo WARM RESET, which affects I2C communication.
  * As a result, ignore all I2C communication errors after sending WARM RESET Request.
  */
-void test_positive_getClrResetCnt(void)
+void test_pos_core_getClrResetCnt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t initResetCnt = 0U, newResetCnt = 0U;
@@ -1160,20 +951,20 @@ void test_positive_getClrResetCnt(void)
 /*                        CRC16 Negative Tests (6)                            */
 /* ========================================================================== */
 
-void test_negative_Pmic_setCRC16Cfg_nullParam_handle(void)
+void test_neg_core_setCRC16Cfg_nullParam_handle(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status = Pmic_setCRC16Cfg(NULL, &crc16Cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setCRC16Cfg_nullParam_crc16Cfg(void)
+void test_neg_core_setCRC16Cfg_nullParam_crc16Cfg(void)
 {
     int32_t status = Pmic_setCRC16Cfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setCRC16Cfg_invalidParam_validParams(void)
+void test_neg_core_setCRC16Cfg_invalidParam_validParams(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     // Set invalid validParams (bits outside the valid range)
@@ -1183,20 +974,20 @@ void test_negative_Pmic_setCRC16Cfg_invalidParam_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_Pmic_getCRC16Cfg_nullParam_handle(void)
+void test_neg_core_getCRC16Cfg_nullParam_handle(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status = Pmic_getCRC16Cfg(NULL, &crc16Cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getCRC16Cfg_nullParam_crc16Cfg(void)
+void test_neg_core_getCRC16Cfg_nullParam_crc16Cfg(void)
 {
     int32_t status = Pmic_getCRC16Cfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getCRC16Cfg_invalidParam_validParams(void)
+void test_neg_core_getCRC16Cfg_invalidParam_validParams(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     // Set invalid validParams (bits outside the valid range)
@@ -1210,7 +1001,7 @@ void test_negative_Pmic_getCRC16Cfg_invalidParam_validParams(void)
 /*                        CRC16 Positive Tests (6)                            */
 /* ========================================================================== */
 
-void test_positive_setCRC16Cfg_enable(void)
+void test_pos_core_setCRC16Cfg_enable(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1229,7 +1020,7 @@ void test_positive_setCRC16Cfg_enable(void)
     PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
 }
 
-void test_positive_getCRC16Cfg_enable(void)
+void test_pos_core_getCRC16Cfg_enable(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1248,7 +1039,7 @@ void test_positive_getCRC16Cfg_enable(void)
     PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
 }
 
-void test_positive_setCRC16Cfg_activateCalc(void)
+void test_pos_core_setCRC16Cfg_activateCalc(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1267,7 +1058,7 @@ void test_positive_setCRC16Cfg_activateCalc(void)
     PLATFORM_ASSERT(readCfg.activateCalc == PMIC_ENABLE);
 }
 
-void test_positive_getCRC16Cfg_activateCalc(void)
+void test_pos_core_getCRC16Cfg_activateCalc(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1286,7 +1077,7 @@ void test_positive_getCRC16Cfg_activateCalc(void)
     PLATFORM_ASSERT(readCfg.activateCalc == PMIC_DISABLE);
 }
 
-void test_positive_setCRC16Cfg_combinedParams(void)
+void test_pos_core_setCRC16Cfg_combinedParams(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1308,7 +1099,7 @@ void test_positive_setCRC16Cfg_combinedParams(void)
     PLATFORM_ASSERT(readCfg.activateCalc == PMIC_ENABLE);
 }
 
-void test_positive_getCRC16Cfg_combinedParams(void)
+void test_pos_core_getCRC16Cfg_combinedParams(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     int32_t status;
@@ -1333,7 +1124,7 @@ void test_positive_getCRC16Cfg_combinedParams(void)
 /*                        LPM Get Tests (7)                                   */
 /* ========================================================================== */
 
-void test_positive_getLpmCfg_pinDetection(void)
+void test_pos_core_getLpmCfg_pinDetection(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1352,7 +1143,7 @@ void test_positive_getLpmCfg_pinDetection(void)
     PLATFORM_ASSERT(readCfg.pinDetection == PMIC_DELAY_VALUE_MET_CONDITION);
 }
 
-void test_positive_getLpmCfg_detectionDelay(void)
+void test_pos_core_getLpmCfg_detectionDelay(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1371,7 +1162,7 @@ void test_positive_getLpmCfg_detectionDelay(void)
     PLATFORM_ASSERT(readCfg.detectionDelay == PMIC_DETECTION_DELAY_250_MS);
 }
 
-void test_positive_getLpmCfg_vmonEn(void)
+void test_pos_core_getLpmCfg_vmonEn(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1390,7 +1181,7 @@ void test_positive_getLpmCfg_vmonEn(void)
     PLATFORM_ASSERT(readCfg.vmonEn == PMIC_ENABLE);
 }
 
-void test_positive_getLpmCfg_esmEn(void)
+void test_pos_core_getLpmCfg_esmEn(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1409,7 +1200,7 @@ void test_positive_getLpmCfg_esmEn(void)
     PLATFORM_ASSERT(readCfg.esmEn == PMIC_ENABLE);
 }
 
-void test_positive_getLpmCfg_wdgEn(void)
+void test_pos_core_getLpmCfg_wdgEn(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1428,7 +1219,7 @@ void test_positive_getLpmCfg_wdgEn(void)
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_ENABLE);
 }
 
-void test_positive_getLpmCfg_multipleParams(void)
+void test_pos_core_getLpmCfg_multipleParams(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     int32_t status;
@@ -1451,7 +1242,7 @@ void test_positive_getLpmCfg_multipleParams(void)
     PLATFORM_ASSERT(readCfg.esmEn == PMIC_DISABLE);
 }
 
-void test_negative_Pmic_getLpmCfg_invalidParam_validParams(void)
+void test_neg_core_getLpmCfg_invalidParam_validParams(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg = {0};
     // Set invalid validParams (bits outside the valid range)
@@ -1461,7 +1252,7 @@ void test_negative_Pmic_getLpmCfg_invalidParam_validParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_negative_Pmic_setCRC16Cfg_zeroValidParams(void)
+void test_neg_core_setCRC16Cfg_zeroValidParams(void)
 {
     // Pass validParams == 0 into Pmic_setCRC16Cfg()
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
@@ -1470,7 +1261,7 @@ void test_negative_Pmic_setCRC16Cfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getCRC16Cfg_zeroValidParams(void)
+void test_neg_core_getCRC16Cfg_zeroValidParams(void)
 {
     // Pass validParams == 0 into Pmic_getCRC16Cfg()
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
@@ -1479,7 +1270,7 @@ void test_negative_Pmic_getCRC16Cfg_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_setLpmCfg_zeroValidParams(void)
+void test_neg_core_setLpmCfg_zeroValidParams(void)
 {
     // Pass validParams == 0 into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {0};
@@ -1492,7 +1283,7 @@ void test_negative_Pmic_setLpmCfg_zeroValidParams(void)
 /*                   Additional LPM Setter Tests (15)                         */
 /* ========================================================================== */
 
-void test_positive_setLpmCfg_pinDetection_allValues(void)
+void test_pos_core_setLpmCfg_pinDetection_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
@@ -1512,7 +1303,7 @@ void test_positive_setLpmCfg_pinDetection_allValues(void)
     }
 }
 
-void test_positive_setLpmCfg_detectionDelay_allValues(void)
+void test_pos_core_setLpmCfg_detectionDelay_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
@@ -1532,7 +1323,7 @@ void test_positive_setLpmCfg_detectionDelay_allValues(void)
     }
 }
 
-void test_positive_setLpmCfg_vmonEn_enable(void)
+void test_pos_core_setLpmCfg_vmonEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID, .vmonEn = PMIC_ENABLE};
@@ -1546,7 +1337,7 @@ void test_positive_setLpmCfg_vmonEn_enable(void)
     PLATFORM_ASSERT(readCfg.vmonEn == PMIC_ENABLE);
 }
 
-void test_positive_setLpmCfg_vmonEn_disable(void)
+void test_pos_core_setLpmCfg_vmonEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID, .vmonEn = PMIC_DISABLE};
@@ -1560,7 +1351,7 @@ void test_positive_setLpmCfg_vmonEn_disable(void)
     PLATFORM_ASSERT(readCfg.vmonEn == PMIC_DISABLE);
 }
 
-void test_positive_setLpmCfg_esmEn_enable(void)
+void test_pos_core_setLpmCfg_esmEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID, .esmEn = PMIC_ENABLE};
@@ -1574,7 +1365,7 @@ void test_positive_setLpmCfg_esmEn_enable(void)
     PLATFORM_ASSERT(readCfg.esmEn == PMIC_ENABLE);
 }
 
-void test_positive_setLpmCfg_esmEn_disable(void)
+void test_pos_core_setLpmCfg_esmEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID, .esmEn = PMIC_DISABLE};
@@ -1588,7 +1379,7 @@ void test_positive_setLpmCfg_esmEn_disable(void)
     PLATFORM_ASSERT(readCfg.esmEn == PMIC_DISABLE);
 }
 
-void test_positive_setLpmCfg_wdgEn_enable(void)
+void test_pos_core_setLpmCfg_wdgEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID, .wdgEn = PMIC_ENABLE};
@@ -1602,7 +1393,7 @@ void test_positive_setLpmCfg_wdgEn_enable(void)
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_ENABLE);
 }
 
-void test_positive_setLpmCfg_wdgEn_disable(void)
+void test_pos_core_setLpmCfg_wdgEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID, .wdgEn = PMIC_DISABLE};
@@ -1616,7 +1407,7 @@ void test_positive_setLpmCfg_wdgEn_disable(void)
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_DISABLE);
 }
 
-void test_positive_setLpmCfg_multipleEnables(void)
+void test_pos_core_setLpmCfg_multipleEnables(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1639,7 +1430,7 @@ void test_positive_setLpmCfg_multipleEnables(void)
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_ENABLE);
 }
 
-void test_positive_setLpmCfg_allParams(void)
+void test_pos_core_setLpmCfg_allParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1668,7 +1459,7 @@ void test_positive_setLpmCfg_allParams(void)
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_ENABLE);
 }
 
-void test_positive_setLpmCfg_pinDetection_boundaryMin(void)
+void test_pos_core_setLpmCfg_pinDetection_boundaryMin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1685,7 +1476,7 @@ void test_positive_setLpmCfg_pinDetection_boundaryMin(void)
     PLATFORM_ASSERT(readCfg.pinDetection == PMIC_ALL_IRQ_CLEARED_CONDITION);
 }
 
-void test_positive_setLpmCfg_pinDetection_boundaryMax(void)
+void test_pos_core_setLpmCfg_pinDetection_boundaryMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1702,7 +1493,7 @@ void test_positive_setLpmCfg_pinDetection_boundaryMax(void)
     PLATFORM_ASSERT(readCfg.pinDetection == PMIC_PIN_DETECTION_CONDITION_MAX);
 }
 
-void test_positive_setLpmCfg_detectionDelay_boundaryMin(void)
+void test_pos_core_setLpmCfg_detectionDelay_boundaryMin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1719,7 +1510,7 @@ void test_positive_setLpmCfg_detectionDelay_boundaryMin(void)
     PLATFORM_ASSERT(readCfg.detectionDelay == PMIC_DETECTION_DELAY_50_MS);
 }
 
-void test_positive_setLpmCfg_detectionDelay_boundaryMax(void)
+void test_pos_core_setLpmCfg_detectionDelay_boundaryMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1736,7 +1527,7 @@ void test_positive_setLpmCfg_detectionDelay_boundaryMax(void)
     PLATFORM_ASSERT(readCfg.detectionDelay == PMIC_DETECTION_DELAY_MAX);
 }
 
-void test_positive_setLpmCfg_pinDetectionAndDelay(void)
+void test_pos_core_setLpmCfg_pinDetectionAndDelay(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
@@ -1761,7 +1552,7 @@ void test_positive_setLpmCfg_pinDetectionAndDelay(void)
 /*                        ABIST Status Test (1)                               */
 /* ========================================================================== */
 
-void test_positive_getABISTStat_active(void)
+void test_pos_core_getABISTStat_active(void)
 {
     int32_t status;
     bool isActive = (bool)false;
@@ -1806,7 +1597,7 @@ void test_positive_getABISTStat_active(void)
  * Note: This test temporarily switches to A0 silicon and back.
  * Other tests continue to run on default B0 silicon.
  */
-void test_positive_silicon_A0_crc16_at_0x61(void)
+void test_pos_core_silicon_A0_crc16_at_0x61(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     Pmic_CoreCrc16Cfg_t readCfg = {0};
@@ -1847,7 +1638,7 @@ void test_positive_silicon_A0_crc16_at_0x61(void)
  *
  * Note: This test runs on the default B0 silicon mock.
  */
-void test_positive_silicon_B0_crc16_at_0x64(void)
+void test_pos_core_silicon_B0_crc16_at_0x64(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     Pmic_CoreCrc16Cfg_t readCfg = {0};
@@ -1890,7 +1681,7 @@ void test_positive_silicon_B0_crc16_at_0x64(void)
  * Note: This test runs on the default B0 silicon mock.
  * B0 and B1 have identical CRC16 register behavior (both at 0x64).
  */
-void test_positive_silicon_B1_crc16_at_0x64(void)
+void test_pos_core_silicon_B1_crc16_at_0x64(void)
 {
     Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
     Pmic_CoreCrc16Cfg_t readCfg = {0};
@@ -1920,7 +1711,7 @@ void test_positive_silicon_B1_crc16_at_0x64(void)
     PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
 }
 
-void test_negative_core_getLpmCfg_zeroValidParams(void)
+void test_neg_core_getLpmCfg_zeroValidParams(void)
 {
     // Test zero validParams for getLpmCfg (lines 362-363)
     int32_t status;
@@ -1942,7 +1733,7 @@ void test_negative_core_getLpmCfg_zeroValidParams(void)
  * - B0/B1: MASK_MODERATE_ERR (0x39) bit 5 is read-only
  * - platform_reinitWithSiliconLocked() keeps registers locked
  */
-void test_positive_init_A0_silicon_with_locked_registers(void)
+void test_pos_core_init_A0_silicon_with_locked_registers(void)
 {
 #ifdef BUILD_MOCK
     Pmic_Handle_t testHandle = {0};

@@ -142,7 +142,7 @@ static void mockTimerWait(uint32_t ms)
 /**
  * @brief Test Pmic_ioTxByte with NULL handle
  */
-static void test_io_txByte_nullHandle(void)
+static void test_neg_io_ioTxByte_nullHandle(void)
 {
     int32_t status = Pmic_ioTxByte(NULL, DEV_REV_REG, 0x00U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -151,7 +151,7 @@ static void test_io_txByte_nullHandle(void)
 /**
  * @brief Test Pmic_ioTxByte_CS with NULL handle
  */
-static void test_io_txByte_CS_nullHandle(void)
+static void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
     int32_t status = Pmic_ioTxByte_CS(NULL, DEV_REV_REG, 0x00U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -160,7 +160,7 @@ static void test_io_txByte_CS_nullHandle(void)
 /**
  * @brief Test Pmic_ioRxByte with NULL handle
  */
-static void test_io_rxByte_nullHandle(void)
+static void test_neg_io_ioRxByte_nullHandle(void)
 {
     uint8_t rxData = 0U;
     int32_t status = Pmic_ioRxByte(NULL, DEV_REV_REG, &rxData);
@@ -170,7 +170,7 @@ static void test_io_rxByte_nullHandle(void)
 /**
  * @brief Test Pmic_ioRxByte with NULL rxData pointer
  */
-static void test_io_rxByte_nullRxData(void)
+static void test_neg_io_ioRxByte_nullRxData(void)
 {
     int32_t status = Pmic_ioRxByte(&pmicHandle, DEV_REV_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -179,7 +179,7 @@ static void test_io_rxByte_nullRxData(void)
 /**
  * @brief Test Pmic_ioRxByte_CS with NULL handle
  */
-static void test_io_rxByte_CS_nullHandle(void)
+static void test_neg_io_ioRxByte_CS_nullHandle(void)
 {
     uint8_t rxData = 0U;
     int32_t status = Pmic_ioRxByte_CS(NULL, DEV_REV_REG, &rxData);
@@ -189,7 +189,7 @@ static void test_io_rxByte_CS_nullHandle(void)
 /**
  * @brief Test Pmic_ioRxByte_CS with NULL rxData pointer
  */
-static void test_io_rxByte_CS_nullRxData(void)
+static void test_neg_io_ioRxByte_CS_nullRxData(void)
 {
     int32_t status = Pmic_ioRxByte_CS(&pmicHandle, DEV_REV_REG, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -198,7 +198,7 @@ static void test_io_rxByte_CS_nullRxData(void)
 /**
  * @brief Test Pmic_ioTxByte with NULL ioWrite function pointer
  */
-static void test_io_txByte_nullIoWrite(void)
+static void test_neg_io_ioTxByte_nullIoWrite(void)
 {
     Pmic_Handle_t testHandle = pmicHandle;
     testHandle.ioWrite = NULL;
@@ -209,7 +209,7 @@ static void test_io_txByte_nullIoWrite(void)
 /**
  * @brief Test Pmic_ioTxByte with NULL commHandle0
  */
-static void test_io_txByte_nullCommHandle(void)
+static void test_neg_io_ioTxByte_nullCommHandle(void)
 {
     Pmic_Handle_t testHandle = pmicHandle;
     testHandle.commHandle0 = NULL;
@@ -220,7 +220,7 @@ static void test_io_txByte_nullCommHandle(void)
 /**
  * @brief Test Pmic_ioRxByte with NULL ioRead function pointer
  */
-static void test_io_rxByte_nullIoRead(void)
+static void test_neg_io_ioRxByte_nullIoRead(void)
 {
     Pmic_Handle_t testHandle = pmicHandle;
     testHandle.ioRead = NULL;
@@ -232,7 +232,7 @@ static void test_io_rxByte_nullIoRead(void)
 /**
  * @brief Test Pmic_ioRxByte with NULL commHandle0
  */
-static void test_io_rxByte_nullCommHandle(void)
+static void test_neg_io_ioRxByte_nullCommHandle(void)
 {
     Pmic_Handle_t testHandle = pmicHandle;
     testHandle.commHandle0 = NULL;
@@ -244,7 +244,7 @@ static void test_io_rxByte_nullCommHandle(void)
 /**
  * @brief Test Pmic_ioUpdateByte with NULL handle
  */
-static void test_io_updateByte_nullHandle(void)
+static void test_neg_io_ioUpdateByte_nullHandle(void)
 {
     int32_t status = Pmic_ioUpdateByte(NULL, CONFIG_2_REG, 0U, 0x0FU, 0x05U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -253,7 +253,7 @@ static void test_io_updateByte_nullHandle(void)
 /**
  * @brief Test Pmic_ioUpdateByte_CS with NULL handle
  */
-static void test_io_updateByte_CS_nullHandle(void)
+static void test_neg_io_ioUpdateByte_CS_nullHandle(void)
 {
     int32_t status = Pmic_ioUpdateByte_CS(NULL, CONFIG_2_REG, 0U, 0x0FU, 0x05U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -262,7 +262,7 @@ static void test_io_updateByte_CS_nullHandle(void)
 /**
  * @brief Test Pmic_ioUpdateByte_b with NULL handle
  */
-static void test_io_updateByte_b_nullHandle(void)
+static void test_neg_io_ioUpdateByte_b_nullHandle(void)
 {
     int32_t status = Pmic_ioUpdateByte_b(NULL, CONFIG_2_REG, 0U, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -271,7 +271,7 @@ static void test_io_updateByte_b_nullHandle(void)
 /**
  * @brief Test Pmic_ioUpdateByte_bCS with NULL handle
  */
-static void test_io_updateByte_bCS_nullHandle(void)
+static void test_neg_io_ioUpdateByte_bCS_nullHandle(void)
 {
     int32_t status = Pmic_ioUpdateByte_bCS(NULL, CONFIG_2_REG, 0U, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -280,7 +280,7 @@ static void test_io_updateByte_bCS_nullHandle(void)
 /**
  * @brief Test Pmic_ioSetCrcEnableState with NULL handle
  */
-static void test_io_setCrcEnableState_nullHandle(void)
+static void test_neg_io_ioSetCrcEnableState_nullHandle(void)
 {
     int32_t status = Pmic_ioSetCrcEnableState(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -289,7 +289,7 @@ static void test_io_setCrcEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_ioCrcEnable with NULL handle
  */
-static void test_io_crcEnable_nullHandle(void)
+static void test_neg_io_ioCrcEnable_nullHandle(void)
 {
     int32_t status = Pmic_ioCrcEnable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -298,7 +298,7 @@ static void test_io_crcEnable_nullHandle(void)
 /**
  * @brief Test Pmic_ioCrcDisable with NULL handle
  */
-static void test_io_crcDisable_nullHandle(void)
+static void test_neg_io_ioCrcDisable_nullHandle(void)
 {
     int32_t status = Pmic_ioCrcDisable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -307,7 +307,7 @@ static void test_io_crcDisable_nullHandle(void)
 /**
  * @brief Test Pmic_ioGetCrcEnableState with NULL handle
  */
-static void test_io_getCrcEnableState_nullHandle(void)
+static void test_neg_io_ioGetCrcEnableState_nullHandle(void)
 {
     bool enabled = false;
     int32_t status = Pmic_ioGetCrcEnableState(NULL, &enabled);
@@ -317,7 +317,7 @@ static void test_io_getCrcEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_ioGetCrcEnableState with NULL enabled pointer
  */
-static void test_io_getCrcEnableState_nullEnabled(void)
+static void test_neg_io_ioGetCrcEnableState_nullEnabled(void)
 {
     int32_t status = Pmic_ioGetCrcEnableState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -330,7 +330,7 @@ static void test_io_getCrcEnableState_nullEnabled(void)
 /**
  * @brief Test single register read
  */
-static void test_io_singleRegisterRead(void)
+static void test_pos_io_ioRxByte_singleRegisterRead(void)
 {
     uint8_t rxData = 0U;
     int32_t status;
@@ -343,7 +343,7 @@ static void test_io_singleRegisterRead(void)
 /**
  * @brief Test single register write and readback
  */
-static void test_io_singleRegisterWrite(void)
+static void test_pos_io_ioTxByte_singleRegisterWrite(void)
 {
     uint8_t txData = 0xAAU;
     uint8_t rxData = 0U;
@@ -362,7 +362,7 @@ static void test_io_singleRegisterWrite(void)
 /**
  * @brief Test single register read with critical section
  */
-static void test_io_singleRegisterRead_CS(void)
+static void test_pos_io_ioRxByte_CS_singleRegisterRead(void)
 {
     uint8_t rxData = 0U;
     int32_t status;
@@ -375,7 +375,7 @@ static void test_io_singleRegisterRead_CS(void)
 /**
  * @brief Test single register write with critical section
  */
-static void test_io_singleRegisterWrite_CS(void)
+static void test_pos_io_ioTxByte_CS_singleRegisterWrite(void)
 {
     uint8_t txData = 0x55U;
     uint8_t rxData = 0U;
@@ -394,7 +394,7 @@ static void test_io_singleRegisterWrite_CS(void)
 /**
  * @brief Test read-modify-write operation
  */
-static void test_io_readModifyWrite(void)
+static void test_pos_io_ioUpdateByte_readModifyWrite(void)
 {
     uint8_t originalData = 0U;
     uint8_t modifiedData = 0U;
@@ -419,7 +419,7 @@ static void test_io_readModifyWrite(void)
 /**
  * @brief Test read-modify-write operation with critical section
  */
-static void test_io_readModifyWrite_CS(void)
+static void test_pos_io_ioUpdateByte_CS_readModifyWrite(void)
 {
     uint8_t originalData = 0U;
     uint8_t modifiedData = 0U;
@@ -444,7 +444,7 @@ static void test_io_readModifyWrite_CS(void)
 /**
  * @brief Test read-modify-write single bit operation
  */
-static void test_io_readModifyWriteBit(void)
+static void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void)
 {
     uint8_t originalData = 0U;
     uint8_t modifiedData = 0U;
@@ -476,7 +476,7 @@ static void test_io_readModifyWriteBit(void)
 /**
  * @brief Test read-modify-write single bit operation with critical section
  */
-static void test_io_readModifyWriteBit_CS(void)
+static void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void)
 {
     uint8_t originalData = 0U;
     uint8_t modifiedData = 0U;
@@ -508,7 +508,7 @@ static void test_io_readModifyWriteBit_CS(void)
 /**
  * @brief Test CRC enable and disable functionality
  */
-static void test_io_crcEnableDisable(void)
+static void test_pos_io_ioCrcEnable_crcEnableDisable(void)
 {
     bool enabled = false;
     int32_t status;
@@ -539,7 +539,7 @@ static void test_io_crcEnableDisable(void)
 /**
  * @brief Test CRC set enable state functionality
  */
-static void test_io_crcSetEnableState(void)
+static void test_pos_io_ioSetCrcEnableState_crcSetEnableState(void)
 {
     bool enabled = false;
     int32_t status;
@@ -570,7 +570,7 @@ static void test_io_crcSetEnableState(void)
 /**
  * @brief Test multiple register write and readback
  */
-static void test_io_multipleRegisterAccess(void)
+static void test_pos_io_ioTxByte_multipleRegisterAccess(void)
 {
     uint8_t txData[4] = {0x11U, 0x22U, 0x33U, 0x44U};
     uint8_t rxData[4] = {0U};
@@ -610,7 +610,7 @@ static void test_io_multipleRegisterAccess(void)
 /**
  * @brief Test register read verification
  */
-static void test_io_registerReadVerification(void)
+static void test_pos_io_ioRxByte_registerReadVerification(void)
 {
     uint8_t rxData1 = 0U;
     uint8_t rxData2 = 0U;
@@ -630,7 +630,7 @@ static void test_io_registerReadVerification(void)
 /**
  * @brief Test CRC control with register access
  */
-static void test_io_crcWithRegisterAccess(void)
+static void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void)
 {
     uint8_t txData = 0xA5U;
     uint8_t rxData = 0U;
@@ -678,7 +678,7 @@ static void test_io_crcWithRegisterAccess(void)
  * This test enables CRC, performs a read operation, and verifies that
  * CRC validation occurs correctly with valid CRC from the mock device.
  */
-static void test_positive_io_read_with_crc_validation(void)
+static void test_pos_io_ioRxByte_readWithCrcValidation(void)
 {
     uint8_t rxData = 0U;
     int32_t status;
@@ -719,7 +719,7 @@ static void test_positive_io_read_with_crc_validation(void)
  * This test enables CRC, performs write operations, and verifies that
  * CRC calculation is performed correctly for transmitted data.
  */
-static void test_positive_io_write_with_crc_calculation(void)
+static void test_pos_io_ioTxByte_writeWithCrcCalculation(void)
 {
     uint8_t txData = 0xA5U;
     uint8_t rxData = 0U;
@@ -768,7 +768,7 @@ static void test_positive_io_write_with_crc_calculation(void)
  * This test verifies that CRC can be properly enabled and disabled,
  * and that the state is correctly reflected in the handle.
  */
-static void test_positive_io_crc_enable_disable_transitions(void)
+static void test_pos_io_ioCrcEnable_crcEnableDisableTransitions(void)
 {
     bool enabled = false;
     int32_t status;
@@ -833,7 +833,7 @@ static void test_positive_io_crc_enable_disable_transitions(void)
  *
  * This test specifically covers the I2C CRC write path that was previously uncovered.
  */
-static void test_positive_io_i2c_write_with_crc(void)
+static void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
 {
     uint8_t txData = 0xBBU;
     uint8_t rxData = 0U;
@@ -895,7 +895,7 @@ static void test_positive_io_i2c_write_with_crc(void)
  *
  * This test covers async write paths (lines 176-180).
  */
-static void test_positive_io_async_write_spi(void)
+static void test_pos_io_ioTxByte_asyncWriteSpi(void)
 {
     uint8_t txData = 0xCDU;
     int32_t status;
@@ -964,7 +964,7 @@ static void test_positive_io_async_write_spi(void)
  *
  * This test covers async I2C write paths (lines 209-213).
  */
-static void test_positive_io_async_write_i2c(void)
+static void test_pos_io_ioTxByte_asyncWriteI2c(void)
 {
     uint8_t txData = 0xABU;
     int32_t status;
@@ -1033,7 +1033,7 @@ static void test_positive_io_async_write_i2c(void)
  *
  * This test covers async SPI read paths.
  */
-static void test_positive_io_async_read_spi(void)
+static void test_pos_io_ioRxByte_asyncReadSpi(void)
 {
     uint8_t rxData = 0U;
     int32_t status;
@@ -1101,7 +1101,7 @@ static void test_positive_io_async_read_spi(void)
  *
  * This test covers async I2C read paths.
  */
-static void test_positive_io_async_read_i2c(void)
+static void test_pos_io_ioRxByte_asyncReadI2c(void)
 {
     uint8_t rxData = 0U;
     int32_t status;
@@ -1170,7 +1170,7 @@ static void test_positive_io_async_read_i2c(void)
  * This test verifies that I/O operations work correctly when CRC state
  * is changed between operations.
  */
-static void test_positive_io_crc_state_transitions_with_operations(void)
+static void test_pos_io_ioCrcEnable_crcStateTransitionsWithOperations(void)
 {
     uint8_t txData = 0x12U;
     uint8_t rxData = 0U;
@@ -1233,7 +1233,7 @@ static void test_positive_io_crc_state_transitions_with_operations(void)
 /**
  * @brief Test ioRxByte with CRC error and retry logic
  */
-static void test_positive_ioRxByte_withRetryOnCrcError(void)
+static void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1272,7 +1272,7 @@ static void test_positive_ioRxByte_withRetryOnCrcError(void)
 /**
  * @brief Test ioTxByte with I/O failure and retry logic
  */
-static void test_positive_ioTxByte_withRetryOnFailure(void)
+static void test_pos_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xAAU;
@@ -1309,7 +1309,7 @@ static void test_positive_ioTxByte_withRetryOnFailure(void)
 /**
  * @brief Test CRC error exhausts retries
  */
-static void test_negative_io_crcErrorExhaustsRetries(void)
+static void test_neg_io_ioRxByte_crcErrorExhaustsRetries(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1379,7 +1379,7 @@ static void test_negative_io_crcErrorExhaustsRetries(void)
 /**
  * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
  */
-static void test_positive_ioTxByte_retrySucceedsOnLastAttempt(void)
+static void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xBBU;
@@ -1416,7 +1416,7 @@ static void test_positive_ioTxByte_retrySucceedsOnLastAttempt(void)
 /**
  * @brief Test ioRxByte with zero retry count (no retries allowed)
  */
-static void test_negative_ioRxByte_zeroRetryCntImmediateFail(void)
+static void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1447,7 +1447,7 @@ static void test_negative_ioRxByte_zeroRetryCntImmediateFail(void)
 /**
  * @brief Test ioTxByte with multiple retry attempts before success
  */
-static void test_positive_ioTxByte_multipleRetryAttempts(void)
+static void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t writeVal = 0xCCU;
@@ -1479,7 +1479,7 @@ static void test_positive_ioTxByte_multipleRetryAttempts(void)
  * @brief Test NULL timer with retry configuration
  * Covers line 147 in pmic_io.c
  */
-static void test_negative_io_nullTimerWithRetry(void)
+static void test_neg_io_ioTxByte_nullTimerWithRetry(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
@@ -1500,7 +1500,7 @@ static void test_negative_io_nullTimerWithRetry(void)
  * @brief Test NULL async hooks with async enabled
  * Covers line 162 in pmic_io.c
  */
-static void test_negative_io_nullAsyncHooks(void)
+static void test_neg_io_ioTxByte_nullAsyncHooks(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle = {0};
@@ -1540,7 +1540,7 @@ static void test_negative_io_nullAsyncHooks(void)
  * @brief Test I2C TX retry logic
  * Covers lines 275-277 in pmic_io.c
  */
-static void test_positive_io_i2c_txRetry(void)
+static void test_pos_io_ioTxByte_i2cTxRetry(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
@@ -1573,7 +1573,7 @@ static void test_positive_io_i2c_txRetry(void)
  * @brief Test SPI RX CRC mismatch error
  * Covers lines 353-354 in pmic_io.c
  */
-static void test_negative_io_spi_rxCrcMismatch(void)
+static void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
@@ -1607,7 +1607,7 @@ static void test_negative_io_spi_rxCrcMismatch(void)
  * @brief Test I2C RX CRC mismatch error
  * Covers lines 406-407 in pmic_io.c
  */
-static void test_negative_io_i2c_rxCrcMismatch(void)
+static void test_neg_io_ioRxByte_i2cRxCrcMismatch(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
@@ -1641,7 +1641,7 @@ static void test_negative_io_i2c_rxCrcMismatch(void)
  * @brief Test I2C RX retry logic
  * Covers lines 415-417 in pmic_io.c
  */
-static void test_positive_io_i2c_rxRetry(void)
+static void test_pos_io_ioRxByte_i2cRxRetry(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
@@ -1676,63 +1676,63 @@ static void test_positive_io_i2c_rxRetry(void)
 
 #define IO_TEST_RUN_NEGATIVE() \
     do { \
-        RUN_TEST(test_io_txByte_nullHandle); \
-        RUN_TEST(test_io_txByte_CS_nullHandle); \
-        RUN_TEST(test_io_txByte_nullIoWrite); \
-        RUN_TEST(test_io_txByte_nullCommHandle); \
-        RUN_TEST(test_io_rxByte_nullHandle); \
-        RUN_TEST(test_io_rxByte_nullRxData); \
-        RUN_TEST(test_io_rxByte_nullIoRead); \
-        RUN_TEST(test_io_rxByte_nullCommHandle); \
-        RUN_TEST(test_io_rxByte_CS_nullHandle); \
-        RUN_TEST(test_io_rxByte_CS_nullRxData); \
-        RUN_TEST(test_io_updateByte_nullHandle); \
-        RUN_TEST(test_io_updateByte_CS_nullHandle); \
-        RUN_TEST(test_io_updateByte_b_nullHandle); \
-        RUN_TEST(test_io_updateByte_bCS_nullHandle); \
-        RUN_TEST(test_io_setCrcEnableState_nullHandle); \
-        RUN_TEST(test_io_crcEnable_nullHandle); \
-        RUN_TEST(test_io_crcDisable_nullHandle); \
-        RUN_TEST(test_io_getCrcEnableState_nullHandle); \
-        RUN_TEST(test_io_getCrcEnableState_nullEnabled); \
-        RUN_TEST(test_negative_io_crcErrorExhaustsRetries); \
-        RUN_TEST(test_negative_ioRxByte_zeroRetryCntImmediateFail); \
-        RUN_TEST(test_negative_io_nullTimerWithRetry); \
-        RUN_TEST(test_negative_io_nullAsyncHooks); \
-        RUN_TEST(test_negative_io_spi_rxCrcMismatch); \
-        RUN_TEST(test_negative_io_i2c_rxCrcMismatch); \
+        RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
+        RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle); \
+        RUN_TEST(test_neg_io_ioTxByte_nullIoWrite); \
+        RUN_TEST(test_neg_io_ioTxByte_nullCommHandle); \
+        RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
+        RUN_TEST(test_neg_io_ioRxByte_nullRxData); \
+        RUN_TEST(test_neg_io_ioRxByte_nullIoRead); \
+        RUN_TEST(test_neg_io_ioRxByte_nullCommHandle); \
+        RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
+        RUN_TEST(test_neg_io_ioRxByte_CS_nullRxData); \
+        RUN_TEST(test_neg_io_ioUpdateByte_nullHandle); \
+        RUN_TEST(test_neg_io_ioUpdateByte_CS_nullHandle); \
+        RUN_TEST(test_neg_io_ioUpdateByte_b_nullHandle); \
+        RUN_TEST(test_neg_io_ioUpdateByte_bCS_nullHandle); \
+        RUN_TEST(test_neg_io_ioSetCrcEnableState_nullHandle); \
+        RUN_TEST(test_neg_io_ioCrcEnable_nullHandle); \
+        RUN_TEST(test_neg_io_ioCrcDisable_nullHandle); \
+        RUN_TEST(test_neg_io_ioGetCrcEnableState_nullHandle); \
+        RUN_TEST(test_neg_io_ioGetCrcEnableState_nullEnabled); \
+        RUN_TEST(test_neg_io_ioRxByte_crcErrorExhaustsRetries); \
+        RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
+        RUN_TEST(test_neg_io_ioTxByte_nullTimerWithRetry); \
+        RUN_TEST(test_neg_io_ioTxByte_nullAsyncHooks); \
+        RUN_TEST(test_neg_io_ioRxByte_spiRxCrcMismatch); \
+        RUN_TEST(test_neg_io_ioRxByte_i2cRxCrcMismatch); \
     } while(0)
 
 #define IO_TEST_RUN_POSITIVE() \
     do { \
-        RUN_TEST(test_io_singleRegisterRead); \
-        RUN_TEST(test_io_singleRegisterWrite); \
-        RUN_TEST(test_io_singleRegisterRead_CS); \
-        RUN_TEST(test_io_singleRegisterWrite_CS); \
-        RUN_TEST(test_io_readModifyWrite); \
-        RUN_TEST(test_io_readModifyWrite_CS); \
-        RUN_TEST(test_io_readModifyWriteBit); \
-        RUN_TEST(test_io_readModifyWriteBit_CS); \
-        RUN_TEST(test_io_crcEnableDisable); \
-        RUN_TEST(test_io_crcSetEnableState); \
-        RUN_TEST(test_io_multipleRegisterAccess); \
-        RUN_TEST(test_io_registerReadVerification); \
-        RUN_TEST(test_io_crcWithRegisterAccess); \
-        RUN_TEST(test_positive_io_read_with_crc_validation); \
-        RUN_TEST(test_positive_io_write_with_crc_calculation); \
-        RUN_TEST(test_positive_io_crc_enable_disable_transitions); \
-        RUN_TEST(test_positive_io_i2c_write_with_crc); \
-        RUN_TEST(test_positive_io_async_write_spi); \
-        RUN_TEST(test_positive_io_async_write_i2c); \
-        RUN_TEST(test_positive_io_async_read_spi); \
-        RUN_TEST(test_positive_io_async_read_i2c); \
-        RUN_TEST(test_positive_io_crc_state_transitions_with_operations); \
-        RUN_TEST(test_positive_ioRxByte_withRetryOnCrcError); \
-        RUN_TEST(test_positive_ioTxByte_withRetryOnFailure); \
-        RUN_TEST(test_positive_ioTxByte_retrySucceedsOnLastAttempt); \
-        RUN_TEST(test_positive_ioTxByte_multipleRetryAttempts); \
-        RUN_TEST(test_positive_io_i2c_txRetry); \
-        RUN_TEST(test_positive_io_i2c_rxRetry); \
+        RUN_TEST(test_pos_io_ioRxByte_singleRegisterRead); \
+        RUN_TEST(test_pos_io_ioTxByte_singleRegisterWrite); \
+        RUN_TEST(test_pos_io_ioRxByte_CS_singleRegisterRead); \
+        RUN_TEST(test_pos_io_ioTxByte_CS_singleRegisterWrite); \
+        RUN_TEST(test_pos_io_ioUpdateByte_readModifyWrite); \
+        RUN_TEST(test_pos_io_ioUpdateByte_CS_readModifyWrite); \
+        RUN_TEST(test_pos_io_ioUpdateByte_b_readModifyWriteBit); \
+        RUN_TEST(test_pos_io_ioUpdateByte_bCS_readModifyWriteBit); \
+        RUN_TEST(test_pos_io_ioCrcEnable_crcEnableDisable); \
+        RUN_TEST(test_pos_io_ioSetCrcEnableState_crcSetEnableState); \
+        RUN_TEST(test_pos_io_ioTxByte_multipleRegisterAccess); \
+        RUN_TEST(test_pos_io_ioRxByte_registerReadVerification); \
+        RUN_TEST(test_pos_io_ioCrcEnable_crcWithRegisterAccess); \
+        RUN_TEST(test_pos_io_ioRxByte_readWithCrcValidation); \
+        RUN_TEST(test_pos_io_ioTxByte_writeWithCrcCalculation); \
+        RUN_TEST(test_pos_io_ioCrcEnable_crcEnableDisableTransitions); \
+        RUN_TEST(test_pos_io_ioTxByte_i2cWriteWithCrc); \
+        RUN_TEST(test_pos_io_ioTxByte_asyncWriteSpi); \
+        RUN_TEST(test_pos_io_ioTxByte_asyncWriteI2c); \
+        RUN_TEST(test_pos_io_ioRxByte_asyncReadSpi); \
+        RUN_TEST(test_pos_io_ioRxByte_asyncReadI2c); \
+        RUN_TEST(test_pos_io_ioCrcEnable_crcStateTransitionsWithOperations); \
+        RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
+        RUN_TEST(test_pos_io_ioTxByte_withRetryOnFailure); \
+        RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
+        RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts); \
+        RUN_TEST(test_pos_io_ioTxByte_i2cTxRetry); \
+        RUN_TEST(test_pos_io_ioRxByte_i2cRxRetry); \
     } while(0)
 
 #define IO_TEST_RUN_ALL() \

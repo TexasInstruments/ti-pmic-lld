@@ -83,7 +83,7 @@ static void resetMockCounters(void)
 /*                     Critical Section Test Functions                        */
 /* ========================================================================== */
 
-void test_criticalSection_nullHandle(void)
+void test_pos_common_criticalSection_nullHandle(void)
 {
     resetMockCounters();
 
@@ -94,7 +94,7 @@ void test_criticalSection_nullHandle(void)
     PLATFORM_ASSERT(g_critSecStopCallCount == 0);
 }
 
-void test_criticalSection_nullCallback(void)
+void test_pos_common_criticalSection_nullCallback(void)
 {
     Pmic_Handle_t handle = {0};
     resetMockCounters();
@@ -109,7 +109,7 @@ void test_criticalSection_nullCallback(void)
     PLATFORM_ASSERT(g_critSecStopCallCount == 0);
 }
 
-void test_criticalSection_communication(void)
+void test_pos_common_criticalSection_communication(void)
 {
     Pmic_Handle_t handle = {0};
     resetMockCounters();
@@ -125,7 +125,7 @@ void test_criticalSection_communication(void)
     PLATFORM_ASSERT(g_critSecStopCallCount == 1);
 }
 
-void test_criticalSection_diagnostic(void)
+void test_pos_common_criticalSection_diagnostic(void)
 {
     Pmic_Handle_t handle = {0};
     resetMockCounters();
@@ -145,7 +145,7 @@ void test_criticalSection_diagnostic(void)
 /*                       Timer Test Functions                                 */
 /* ========================================================================== */
 
-void test_timerWait_nullHandle(void)
+void test_pos_common_timerWait_nullHandle(void)
 {
     resetMockCounters();
 
@@ -153,7 +153,7 @@ void test_timerWait_nullHandle(void)
     PLATFORM_ASSERT(g_timerWaitCallCount == 0);
 }
 
-void test_timerWait_nullCallback(void)
+void test_pos_common_timerWait_nullCallback(void)
 {
     Pmic_Handle_t handle = {0};
     resetMockCounters();
@@ -164,7 +164,7 @@ void test_timerWait_nullCallback(void)
     PLATFORM_ASSERT(g_timerWaitCallCount == 0);
 }
 
-void test_timerWait_validCall(void)
+void test_pos_common_timerWait_validCall(void)
 {
     Pmic_Handle_t handle = {0};
     resetMockCounters();
@@ -184,7 +184,7 @@ void test_timerWait_validCall(void)
 /*                     Pmic_logStatus Test Functions                          */
 /* ========================================================================== */
 
-void test_logStatus_success(void)
+void test_pos_common_logStatus_success(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -196,13 +196,13 @@ void test_logStatus_success(void)
     PLATFORM_ASSERT(g_critSecStartCallCount == 0);
 }
 
-void test_logStatus_nullHandle(void)
+void test_pos_common_logStatus_nullHandle(void)
 {
     int32_t status = Pmic_logStatus(NULL, PMIC_ST_ERR_NULL_PARAM);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_logStatus_nullCritSec(void)
+void test_pos_common_logStatus_nullCritSec(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = NULL;
@@ -212,7 +212,7 @@ void test_logStatus_nullCritSec(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_logStatus_validError(void)
+void test_pos_common_logStatus_validError(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -235,7 +235,7 @@ void test_logStatus_validError(void)
     PLATFORM_ASSERT(diag.cnt == 1U);
 }
 
-void test_logStatus_validWarning(void)
+void test_pos_common_logStatus_validWarning(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -256,7 +256,7 @@ void test_logStatus_validWarning(void)
     PLATFORM_ASSERT(diag.cnt == 1U);
 }
 
-void test_logStatus_invalidStatusType(void)
+void test_pos_common_logStatus_invalidStatusType(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -269,7 +269,7 @@ void test_logStatus_invalidStatusType(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_logStatus_invalidStatusId(void)
+void test_pos_common_logStatus_invalidStatusId(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -282,7 +282,7 @@ void test_logStatus_invalidStatusId(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
 
-void test_logStatus_allErrorCodes(void)
+void test_pos_common_logStatus_allErrorCodes(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -322,7 +322,7 @@ void test_logStatus_allErrorCodes(void)
 /*                     Diagnostic Get Test Functions                          */
 /* ========================================================================== */
 
-void test_getDiagnostic_nullHandle(void)
+void test_pos_common_getDiagnostic_nullHandle(void)
 {
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -332,7 +332,7 @@ void test_getDiagnostic_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_getDiagnostic_nullDiagnostic(void)
+void test_pos_common_getDiagnostic_nullDiagnostic(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -342,7 +342,7 @@ void test_getDiagnostic_nullDiagnostic(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_getDiagnostic_invalidValidParams(void)
+void test_pos_common_getDiagnostic_invalidValidParams(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -357,7 +357,7 @@ void test_getDiagnostic_invalidValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_getDiagnostic_invalidStatusCode(void)
+void test_pos_common_getDiagnostic_invalidStatusCode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -372,7 +372,7 @@ void test_getDiagnostic_invalidStatusCode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_getDiagnostic_errorCnt(void)
+void test_pos_common_getDiagnostic_errorCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -394,7 +394,7 @@ void test_getDiagnostic_errorCnt(void)
     PLATFORM_ASSERT(diag.cnt == 3U);
 }
 
-void test_getDiagnostic_errorFlag(void)
+void test_pos_common_getDiagnostic_errorFlag(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -412,7 +412,7 @@ void test_getDiagnostic_errorFlag(void)
     PLATFORM_ASSERT(diag.flag == false);
 }
 
-void test_getDiagnostic_warningCnt(void)
+void test_pos_common_getDiagnostic_warningCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -433,7 +433,7 @@ void test_getDiagnostic_warningCnt(void)
     PLATFORM_ASSERT(diag.cnt == 2U);
 }
 
-void test_getDiagnostic_warningFlag(void)
+void test_pos_common_getDiagnostic_warningFlag(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -451,7 +451,7 @@ void test_getDiagnostic_warningFlag(void)
     PLATFORM_ASSERT(diag.flag == false);
 }
 
-void test_getDiagnostic_successType(void)
+void test_pos_common_getDiagnostic_successType(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -466,7 +466,7 @@ void test_getDiagnostic_successType(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_getDiagnostics_multiple(void)
+void test_pos_common_getDiagnostics_multiple(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[3] = {0};
@@ -495,7 +495,7 @@ void test_getDiagnostics_multiple(void)
     PLATFORM_ASSERT(diags[2].cnt == 1U);
 }
 
-void test_getDiagnostics_zeroCount(void)
+void test_pos_common_getDiagnostics_zeroCount(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -507,7 +507,7 @@ void test_getDiagnostics_zeroCount(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_getDiagnostics_exceedsMax(void)
+void test_pos_common_getDiagnostics_exceedsMax(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
@@ -523,7 +523,7 @@ void test_getDiagnostics_exceedsMax(void)
 /*                     Diagnostic Clear Test Functions                        */
 /* ========================================================================== */
 
-void test_clrDiagnostic_nullHandle(void)
+void test_pos_common_clrDiagnostic_nullHandle(void)
 {
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -533,7 +533,7 @@ void test_clrDiagnostic_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_clrDiagnostic_errorCnt(void)
+void test_pos_common_clrDiagnostic_errorCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -559,7 +559,7 @@ void test_clrDiagnostic_errorCnt(void)
     PLATFORM_ASSERT(diag.cnt == 0U);
 }
 
-void test_clrDiagnostic_warningCnt(void)
+void test_pos_common_clrDiagnostic_warningCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -584,7 +584,7 @@ void test_clrDiagnostic_warningCnt(void)
     PLATFORM_ASSERT(diag.cnt == 0U);
 }
 
-void test_clrDiagnostics_multiple(void)
+void test_pos_common_clrDiagnostics_multiple(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -619,7 +619,7 @@ void test_clrDiagnostics_multiple(void)
     PLATFORM_ASSERT(diags[1].cnt == 0U);
 }
 
-void test_clrDiagnosticsAll_clearAll(void)
+void test_pos_common_clrDiagnosticsAll_clearAll(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -653,7 +653,7 @@ void test_clrDiagnosticsAll_clearAll(void)
     PLATFORM_ASSERT(retryCnt == 0U);
 }
 
-void test_overflow_errorCnt(void)
+void test_pos_common_overflow_errorCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -677,7 +677,7 @@ void test_overflow_errorCnt(void)
     PLATFORM_ASSERT(diag.flag == true);
 }
 
-void test_overflow_warningCnt(void)
+void test_pos_common_overflow_warningCnt(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -705,14 +705,14 @@ void test_overflow_warningCnt(void)
 /*                     Retry Counter Test Functions                           */
 /* ========================================================================== */
 
-void test_getRetryCnt_nullHandle(void)
+void test_pos_common_getRetryCnt_nullHandle(void)
 {
     uint32_t retryCnt = 0;
     int32_t status = Pmic_getRetryCnt(NULL, &retryCnt);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_getRetryCnt_nullOutput(void)
+void test_pos_common_getRetryCnt_nullOutput(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -722,7 +722,7 @@ void test_getRetryCnt_nullOutput(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_getRetryCnt_initialZero(void)
+void test_pos_common_getRetryCnt_initialZero(void)
 {
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 99U;
@@ -738,13 +738,13 @@ void test_getRetryCnt_initialZero(void)
     PLATFORM_ASSERT(retryCnt == 0U);
 }
 
-void test_incrementRetryCnt_nullHandle(void)
+void test_pos_common_incrementRetryCnt_nullHandle(void)
 {
     int32_t status = Pmic_incrementRetryCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_incrementRetryCnt_once(void)
+void test_pos_common_incrementRetryCnt_once(void)
 {
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 0;
@@ -763,7 +763,7 @@ void test_incrementRetryCnt_once(void)
     PLATFORM_ASSERT(retryCnt == 1U);
 }
 
-void test_incrementRetryCnt_multiple(void)
+void test_pos_common_incrementRetryCnt_multiple(void)
 {
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 0;
@@ -785,13 +785,13 @@ void test_incrementRetryCnt_multiple(void)
     PLATFORM_ASSERT(retryCnt == 10U);
 }
 
-void test_clrRetryCnt_nullHandle(void)
+void test_pos_common_clrRetryCnt_nullHandle(void)
 {
     int32_t status = Pmic_clrRetryCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_clrRetryCnt_afterIncrement(void)
+void test_pos_common_clrRetryCnt_afterIncrement(void)
 {
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 0;
@@ -813,20 +813,20 @@ void test_clrRetryCnt_afterIncrement(void)
     PLATFORM_ASSERT(retryCnt == 0U);
 }
 
-void test_getRetryCntOverflow_nullHandle(void)
+void test_pos_common_getRetryCntOverflow_nullHandle(void)
 {
     bool reachedThreshold = false;
     int32_t status = Pmic_getRetryCntOverflow(NULL, &reachedThreshold);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_clrRetryCntOverflow_nullHandle(void)
+void test_pos_common_clrRetryCntOverflow_nullHandle(void)
 {
     int32_t status = Pmic_clrRetryCntOverflow(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_overflow_retryCnt(void)
+void test_pos_common_overflow_retryCnt(void)
 {
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 0;
@@ -864,14 +864,14 @@ void test_overflow_retryCnt(void)
 /*                  Additional Edge Case Tests for 100% Coverage             */
 /* ========================================================================== */
 
-void test_logStatus_invalidStatusNullHandle(void)
+void test_pos_common_logStatus_invalidStatusNullHandle(void)
 {
     int32_t invalidStatus = PMIC_STATUS(99U, 0U);
     int32_t status = Pmic_logStatus(NULL, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_logStatus_successTypeInvalidId(void)
+void test_pos_common_logStatus_successTypeInvalidId(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -882,7 +882,7 @@ void test_logStatus_successTypeInvalidId(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
 
-void test_getDiagnostics_nullHandle(void)
+void test_pos_common_getDiagnostics_nullHandle(void)
 {
     Pmic_Diagnostic_t diags[2] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -892,7 +892,7 @@ void test_getDiagnostics_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_getDiagnostics_nullDiagnosticArray(void)
+void test_pos_common_getDiagnostics_nullDiagnosticArray(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -902,7 +902,7 @@ void test_getDiagnostics_nullDiagnosticArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_getDiagnostics_zeroValidParamsInArray(void)
+void test_pos_common_getDiagnostics_zeroValidParamsInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -919,7 +919,7 @@ void test_getDiagnostics_zeroValidParamsInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_getDiagnostics_invalidStatusCodeInArray(void)
+void test_pos_common_getDiagnostics_invalidStatusCodeInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -936,7 +936,7 @@ void test_getDiagnostics_invalidStatusCodeInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_getDiagnostics_successTypeInArray(void)
+void test_pos_common_getDiagnostics_successTypeInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -951,7 +951,7 @@ void test_getDiagnostics_successTypeInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_clrDiagnostic_nullDiagnostic(void)
+void test_pos_common_clrDiagnostic_nullDiagnostic(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -961,7 +961,7 @@ void test_clrDiagnostic_nullDiagnostic(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_clrDiagnostic_invalidValidParams(void)
+void test_pos_common_clrDiagnostic_invalidValidParams(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -976,7 +976,7 @@ void test_clrDiagnostic_invalidValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_clrDiagnostic_invalidStatusCode(void)
+void test_pos_common_clrDiagnostic_invalidStatusCode(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -991,7 +991,7 @@ void test_clrDiagnostic_invalidStatusCode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_clrDiagnostic_successType(void)
+void test_pos_common_clrDiagnostic_successType(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -1006,7 +1006,7 @@ void test_clrDiagnostic_successType(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_clrDiagnostic_errorFlagOnly(void)
+void test_pos_common_clrDiagnostic_errorFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -1035,7 +1035,7 @@ void test_clrDiagnostic_errorFlagOnly(void)
     PLATFORM_ASSERT(diag.cnt == 0U);
 }
 
-void test_clrDiagnostic_warningFlagOnly(void)
+void test_pos_common_clrDiagnostic_warningFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
@@ -1064,7 +1064,7 @@ void test_clrDiagnostic_warningFlagOnly(void)
     PLATFORM_ASSERT(diag.cnt == 0U);
 }
 
-void test_clrDiagnostics_nullHandle(void)
+void test_pos_common_clrDiagnostics_nullHandle(void)
 {
     Pmic_Diagnostic_t diags[1] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -1074,7 +1074,7 @@ void test_clrDiagnostics_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_clrDiagnostics_nullDiagnosticArray(void)
+void test_pos_common_clrDiagnostics_nullDiagnosticArray(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -1084,7 +1084,7 @@ void test_clrDiagnostics_nullDiagnosticArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_clrDiagnostics_zeroCount(void)
+void test_pos_common_clrDiagnostics_zeroCount(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1096,7 +1096,7 @@ void test_clrDiagnostics_zeroCount(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_clrDiagnostics_exceedsMax(void)
+void test_pos_common_clrDiagnostics_exceedsMax(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
@@ -1108,7 +1108,7 @@ void test_clrDiagnostics_exceedsMax(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_clrDiagnostics_zeroValidParamsInArray(void)
+void test_pos_common_clrDiagnostics_zeroValidParamsInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -1125,7 +1125,7 @@ void test_clrDiagnostics_zeroValidParamsInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_clrDiagnostics_invalidStatusCodeInArray(void)
+void test_pos_common_clrDiagnostics_invalidStatusCodeInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
@@ -1142,7 +1142,7 @@ void test_clrDiagnostics_invalidStatusCodeInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_clrDiagnostics_successTypeInArray(void)
+void test_pos_common_clrDiagnostics_successTypeInArray(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1157,7 +1157,7 @@ void test_clrDiagnostics_successTypeInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
-void test_getRetryCntOverflow_nullOutput(void)
+void test_pos_common_getRetryCntOverflow_nullOutput(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -1167,7 +1167,7 @@ void test_getRetryCntOverflow_nullOutput(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_logStatus_warningTypeInvalidId(void)
+void test_pos_common_logStatus_warningTypeInvalidId(void)
 {
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
@@ -1178,7 +1178,7 @@ void test_logStatus_warningTypeInvalidId(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
 
-void test_getDiagnostics_errorFlagOnly(void)
+void test_pos_common_getDiagnostics_errorFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1202,7 +1202,7 @@ void test_getDiagnostics_errorFlagOnly(void)
     PLATFORM_ASSERT(diags[0].flag == true);
 }
 
-void test_getDiagnostics_warningFlagOnly(void)
+void test_pos_common_getDiagnostics_warningFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1226,7 +1226,7 @@ void test_getDiagnostics_warningFlagOnly(void)
     PLATFORM_ASSERT(diags[0].flag == true);
 }
 
-void test_clrDiagnostics_errorFlagOnly(void)
+void test_pos_common_clrDiagnostics_errorFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1254,7 +1254,7 @@ void test_clrDiagnostics_errorFlagOnly(void)
     PLATFORM_ASSERT(diags[0].flag == false);
 }
 
-void test_clrDiagnostics_warningCntOnly(void)
+void test_pos_common_clrDiagnostics_warningCntOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1280,7 +1280,7 @@ void test_clrDiagnostics_warningCntOnly(void)
     PLATFORM_ASSERT(diags[0].cnt == 0U);
 }
 
-void test_clrDiagnostics_warningFlagOnly(void)
+void test_pos_common_clrDiagnostics_warningFlagOnly(void)
 {
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
@@ -1308,7 +1308,7 @@ void test_clrDiagnostics_warningFlagOnly(void)
     PLATFORM_ASSERT(diags[0].flag == false);
 }
 
-void test_clrDiagnosticsAll_nullHandle(void)
+void test_pos_common_clrDiagnosticsAll_nullHandle(void)
 {
     int32_t status = Pmic_clrDiagnosticsAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);

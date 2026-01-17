@@ -42,55 +42,151 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all FSM tests */
-#define FSM_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalidParam_cmd); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_resetCntThr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrResetCnt_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_recovCntThr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_recovCntThr); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt); \
-                           PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrRecovCnt_nullParam_handle); \
-                           PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
-                           PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_coldBootReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_warmResetReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_safeRecovReq); \
-                           PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_offReq)
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmClrRecovCnt                    */
+/* ========================================================================== */
 
-/* Run all FSM negative tests */
-#define FSM_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetDevState_invalidParam_cmd); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCntThr_nullParam_resetCntThr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrResetCnt_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_recovCntThr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCntThr_nullParam_recovCntThr); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_handle); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt); \
-                                PLATFORM_RUN_TEST(test_negative_Pmic_fsmClrRecovCnt_nullParam_handle)
+#define FSM_TEST_NEG_FSMCLRRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
 
-/* Run all FSM positive tests */
-#define FSM_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_setGetResetCntThr); \
-                                PLATFORM_RUN_TEST(test_positive_setGetRecovCntThr); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_coldBootReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_warmResetReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_safeRecovReq); \
-                                PLATFORM_RUN_TEST(test_positive_Pmic_fsmSetDevState_offReq)
+#define FSM_TEST_FSMCLRRECOVCNT() \
+    FSM_TEST_NEG_FSMCLRRECOVCNT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmClrResetCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMCLRRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmClrResetCnt_nullHandle)
+
+#define FSM_TEST_FSMCLRRESETCNT() \
+    FSM_TEST_NEG_FSMCLRRESETCNT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmGetRecovCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMGETRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullRecovCnt)
+
+#define FSM_TEST_FSMGETRECOVCNT() \
+    FSM_TEST_NEG_FSMGETRECOVCNT()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmGetRecovCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
+
+#define FSM_TEST_NEG_FSMGETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
+
+#define FSM_TEST_FSMGETRECOVCNTTHR() \
+    FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRECOVCNTTHR()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmGetResetCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMGETRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullResetCnt)
+
+#define FSM_TEST_FSMGETRESETCNT() \
+    FSM_TEST_NEG_FSMGETRESETCNT()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmGetResetCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)
+
+#define FSM_TEST_NEG_FSMGETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullResetCntThr)
+
+#define FSM_TEST_FSMGETRESETCNTTHR() \
+    FSM_TEST_POS_FSMGETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRESETCNTTHR()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmSetDevState                    */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_coldBootReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_offReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_safeRecovReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_warmResetReq)
+
+#define FSM_TEST_NEG_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidCmd); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle)
+
+#define FSM_TEST_FSMSETDEVSTATE() \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
+    FSM_TEST_NEG_FSMSETDEVSTATE()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmSetRecovCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
+
+#define FSM_TEST_NEG_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr)
+
+#define FSM_TEST_FSMSETRECOVCNTTHR() \
+    FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRECOVCNTTHR()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmSetResetCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)
+
+#define FSM_TEST_NEG_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr)
+
+#define FSM_TEST_FSMSETRESETCNTTHR() \
+    FSM_TEST_POS_FSMSETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRESETCNTTHR()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define FSM_TEST_RUN_POSITIVE() \
+    FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_POS_FSMGETRESETCNTTHR(); \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
+    FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_POS_FSMSETRESETCNTTHR()
+
+#define FSM_TEST_RUN_NEGATIVE() \
+    FSM_TEST_NEG_FSMCLRRECOVCNT(); \
+    FSM_TEST_NEG_FSMCLRRESETCNT(); \
+    FSM_TEST_NEG_FSMGETRECOVCNT(); \
+    FSM_TEST_NEG_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRESETCNT(); \
+    FSM_TEST_NEG_FSMGETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMSETDEVSTATE(); \
+    FSM_TEST_NEG_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRESETCNTTHR()
+
+#define FSM_TEST_RUN_ALL() \
+    FSM_TEST_RUN_POSITIVE(); \
+    FSM_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -158,14 +254,14 @@ void fsm_test(void *args)
     platform_deinit();
 }
 
-void test_negative_Pmic_fsmSetDevState_nullParam_handle(void)
+void test_neg_fsm_fsmSetDevState_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmSetDevState()
     int32_t status = Pmic_fsmSetDevState(NULL, PMIC_FSM_COMMAND_WARM_RESET_REQ);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetDevState_invalidParam_cmd(void)
+void test_neg_fsm_fsmSetDevState_invalidCmd(void)
 {
     // Pass invalid command into Pmic_fsmSetDevState()
     for (uint16_t cmd = 0U; cmd <= UINT8_MAX; cmd++)
@@ -184,21 +280,21 @@ void test_negative_Pmic_fsmSetDevState_invalidParam_cmd(void)
     }
 }
 
-void test_negative_Pmic_fsmSetResetCntThr_nullParam_handle(void)
+void test_neg_fsm_fsmSetResetCntThr_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmSetResetCntThr()
     int32_t status = Pmic_fsmSetResetCntThr(NULL, PMIC_FSM_RESET_RECOV_CNT_THR_MAX);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetResetCntThr_outOfBounds_resetCntThr(void)
+void test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr(void)
 {
     // Pass out-of-bounds resetCntThr into Pmic_fsmSetResetCntThr()
     int32_t status = Pmic_fsmSetResetCntThr(&pmicHandle, PMIC_FSM_RESET_RECOV_CNT_THR_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_handle(void)
+void test_neg_fsm_fsmGetResetCntThr_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmGetResetCntThr()
     uint8_t resetCntThr = 0U;
@@ -206,14 +302,14 @@ void test_negative_Pmic_fsmGetResetCntThr_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_resetCntThr(void)
+void test_neg_fsm_fsmGetResetCntThr_nullResetCntThr(void)
 {
     // Pass null resetCntThr into Pmic_fsmGetResetCntThr()
     int32_t status = Pmic_fsmGetResetCntThr(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCnt_nullParam_handle(void)
+void test_neg_fsm_fsmGetResetCnt_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmGetResetCnt()
     uint8_t resetCnt = 0U;
@@ -221,35 +317,35 @@ void test_negative_Pmic_fsmGetResetCnt_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt(void)
+void test_neg_fsm_fsmGetResetCnt_nullResetCnt(void)
 {
     // Pass null resetCnt into Pmic_fsmGetResetCnt()
     int32_t status = Pmic_fsmGetResetCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmClrResetCnt_nullParam_handle(void)
+void test_neg_fsm_fsmClrResetCnt_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmClrResetCnt()
     int32_t status = Pmic_fsmClrResetCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetRecovCntThr_nullParam_handle(void)
+void test_neg_fsm_fsmSetRecovCntThr_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmSetRecovCntThr()
     int32_t status = Pmic_fsmSetRecovCntThr(NULL, PMIC_FSM_RESET_RECOV_CNT_THR_MAX);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_recovCntThr(void)
+void test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr(void)
 {
     // Pass out-of-bounds recovCntThr into Pmic_fsmSetRecovCntThr()
     int32_t status = Pmic_fsmSetRecovCntThr(&pmicHandle, PMIC_FSM_RESET_RECOV_CNT_THR_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_handle(void)
+void test_neg_fsm_fsmGetRecovCntThr_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmGetRecovCntThr()
     uint8_t recovCntThr = 0U;
@@ -257,14 +353,14 @@ void test_negative_Pmic_fsmGetRecovCntThr_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_recovCntThr(void)
+void test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr(void)
 {
     // Pass null recovCntThr into Pmic_fsmGetRecovCntThr()
     int32_t status = Pmic_fsmGetRecovCntThr(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_handle(void)
+void test_neg_fsm_fsmGetRecovCnt_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmGetRecovCnt()
     uint8_t recovCnt = 0U;
@@ -272,21 +368,21 @@ void test_negative_Pmic_fsmGetRecovCnt_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt(void)
+void test_neg_fsm_fsmGetRecovCnt_nullRecovCnt(void)
 {
     // Pass null recovCnt into Pmic_fsmGetRecovCnt()
     int32_t status = Pmic_fsmGetRecovCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_fsmClrRecovCnt_nullParam_handle(void)
+void test_neg_fsm_fsmClrRecovCnt_nullHandle(void)
 {
     // Pass null handle into Pmic_fsmClrRecovCnt()
     int32_t status = Pmic_fsmClrRecovCnt(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_positive_setGetResetCntThr(void)
+void test_pos_fsm_setGetResetCntThr(void)
 {
     uint8_t actResetCntThr = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -309,7 +405,7 @@ void test_positive_setGetResetCntThr(void)
     }
 }
 
-void test_positive_setGetRecovCntThr(void)
+void test_pos_fsm_setGetRecovCntThr(void)
 {
     uint8_t actRecovCntThr = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -354,7 +450,7 @@ static inline void fsmTest_assertPmicRegsLocked(bool lock)
     }
 }
 
-void test_positive_Pmic_fsmSetDevState_coldBootReq(void)
+void test_pos_fsm_fsmSetDevState_coldBootReq(void)
 {
     // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);
@@ -370,7 +466,7 @@ void test_positive_Pmic_fsmSetDevState_coldBootReq(void)
     fsmTest_assertPmicRegsLocked((bool)true);
 }
 
-void test_positive_Pmic_fsmSetDevState_warmResetReq(void)
+void test_pos_fsm_fsmSetDevState_warmResetReq(void)
 {
     uint8_t initResetCnt = 0U, actResetCnt = 0U;
 
@@ -392,7 +488,7 @@ void test_positive_Pmic_fsmSetDevState_warmResetReq(void)
     PLATFORM_ASSERT((initResetCnt + 1U) == actResetCnt);
 }
 
-void test_positive_Pmic_fsmSetDevState_safeRecovReq(void)
+void test_pos_fsm_fsmSetDevState_safeRecovReq(void)
 {
     uint8_t initRecovCnt = 0U, actRecovCnt = 0U;
 
@@ -414,7 +510,7 @@ void test_positive_Pmic_fsmSetDevState_safeRecovReq(void)
     PLATFORM_ASSERT((initRecovCnt + 1U) == actRecovCnt);
 }
 
-void test_positive_Pmic_fsmSetDevState_offReq(void)
+void test_pos_fsm_fsmSetDevState_offReq(void)
 {
     // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);

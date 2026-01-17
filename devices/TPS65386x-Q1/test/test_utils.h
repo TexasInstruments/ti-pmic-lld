@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_TEST_COMMON_H
-#define PMIC_TEST_COMMON_H
+#ifndef TEST_UTILS_H
+#define TEST_UTILS_H
 
 
 
@@ -54,9 +54,9 @@ extern "C" {
  *
  * @param pmicHandle [IN] PMIC interface handle.
  */
-void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle);
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* PMIC_TEST_COMMON_H */
+#endif /* TEST_UTILS_H */

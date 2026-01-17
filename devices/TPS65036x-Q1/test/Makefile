@@ -77,11 +77,11 @@ PMIC_SOURCES = \
 # Test source files
 TEST_SOURCES = \
 	test_runner.c \
-	test_common.c \
+	test_utils.c \
 	common/common_test.c \
 	core/core_test.c \
 	irq/irq_test.c \
-	pmic_init/pmic_init_test.c \
+	pmic/pmic_test.c \
 	wdg/wdg_test.c \
 	esm/esm_test.c \
 	gpio/gpio_test.c \

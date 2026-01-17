@@ -42,7 +42,7 @@
 #include "platform.h"
 #include "pmic.h"
 #include "pmic_core.h"
-#include "test_common.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,95 +59,150 @@ extern "C" {
 void core_test(void *args);
 
 /* ========================================================================== */
-/* Negative Tests - Scratchpad APIs                                          */
+/*                Negative Tests - setScratchPadValue                         */
 /* ========================================================================== */
-extern void test_negative_Pmic_setScratchPadValue_nullParam_handle(void);
-extern void test_negative_Pmic_setScratchPadValue_invalidParam_regNum(void);
-extern void test_negative_Pmic_getScratchPadValue_nullParam_handle(void);
-extern void test_negative_Pmic_getScratchPadValue_nullParam_value(void);
-extern void test_negative_Pmic_getScratchPadValue_invalidParam_regNum(void);
+void test_neg_core_setScratchPadValue_nullHandle(void);
+void test_neg_core_setScratchPadValue_invalidRegNum(void);
 
 /* ========================================================================== */
-/* Negative Tests - Lock Control APIs                                        */
+/*                Negative Tests - getScratchPadValue                         */
 /* ========================================================================== */
-extern void test_negative_Pmic_setRegLockState_nullParam_handle(void);
-extern void test_negative_Pmic_getRegLockState_nullParam_handle(void);
-extern void test_negative_Pmic_getRegLockState_nullParam_lockState(void);
-extern void test_negative_Pmic_setCntLockState_nullParam_handle(void);
-extern void test_negative_Pmic_setCntLockState_invalidParam_lockState(void);
-extern void test_negative_Pmic_getCntLockState_nullParam_handle(void);
-extern void test_negative_Pmic_getCntLockState_nullParam_lockState(void);
-extern void test_negative_Pmic_setLockCfg_nullParam_config(void);
-extern void test_negative_Pmic_setLockCfg_invalidParam_validParams(void);
-extern void test_negative_Pmic_getLockCfg_nullParam_handle(void);
-extern void test_negative_Pmic_getLockCfg_nullParam_config(void);
+void test_neg_core_getScratchPadValue_nullHandle(void);
+void test_neg_core_getScratchPadValue_nullValue(void);
+void test_neg_core_getScratchPadValue_invalidRegNum(void);
 
 /* ========================================================================== */
-/* Negative Tests - Device Revision APIs                                     */
+/*                Negative Tests - setRegLockState                            */
 /* ========================================================================== */
-extern void test_negative_Pmic_getNvmRev_nullParam_handle(void);
-extern void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void);
-extern void test_negative_Pmic_getSiliconRev_nullParam_handle(void);
-extern void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void);
+void test_neg_core_setRegLockState_nullHandle(void);
 
 /* ========================================================================== */
-/* Negative Tests - Spread Spectrum APIs                                     */
+/*                Negative Tests - getRegLockState                            */
 /* ========================================================================== */
-extern void test_negative_Pmic_spreadSpectrumEnable_nullParam_handle(void);
-extern void test_negative_Pmic_spreadSpectrumEnable_invalidParam_validParams(void);
-extern void test_negative_Pmic_getSpreadSpectrumEnable_nullParam_handle(void);
-extern void test_negative_Pmic_getSpreadSpectrumEnable_nullParam_config(void);
+void test_neg_core_getRegLockState_nullHandle(void);
+void test_neg_core_getRegLockState_nullLockState(void);
 
 /* ========================================================================== */
-/* Negative Tests - Safe Output APIs                                         */
+/*                Negative Tests - setCntLockState                            */
 /* ========================================================================== */
-extern void test_negative_Pmic_setEnableSafeOutCfg_nullParam_handle(void);
-extern void test_negative_Pmic_getSafeOutPinCfg_nullParam_handle(void);
-extern void test_negative_Pmic_getSafeOutPinCfg_nullParam_config(void);
+void test_neg_core_setCntLockState_nullHandle(void);
+void test_neg_core_setCntLockState_invalidLockState(void);
 
 /* ========================================================================== */
-/* Negative Tests - Common Status APIs                                       */
+/*                Negative Tests - getCntLockState                            */
 /* ========================================================================== */
-extern void test_negative_Pmic_getCommonStat_nullParam_handle(void);
-extern void test_negative_Pmic_getCommonStat_nullParam_stat(void);
+void test_neg_core_getCntLockState_nullHandle(void);
+void test_neg_core_getCntLockState_nullLockState(void);
 
 /* ========================================================================== */
-/* Negative Tests - Diagnostic Output Control APIs                           */
+/*                Negative Tests - setLockCfg                                 */
 /* ========================================================================== */
-extern void test_negative_Pmic_diagSetOutCtrlCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_config(void);
+void test_neg_core_setLockCfg_nullConfig(void);
+void test_neg_core_setLockCfg_invalidValidParams(void);
 
 /* ========================================================================== */
-/* Negative Tests - Diagnostic AMUX APIs                                     */
+/*                Negative Tests - getLockCfg                                 */
 /* ========================================================================== */
-extern void test_negative_Pmic_diagSetAmuxCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagSetAmuxCfg_invalidParam_channel(void);
-extern void test_negative_Pmic_diagGetAmuxCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagGetAmuxCfg_nullParam_channel(void);
+void test_neg_core_getLockCfg_nullHandle(void);
+void test_neg_core_getLockCfg_nullConfig(void);
 
 /* ========================================================================== */
-/* Negative Tests - Diagnostic DMUX APIs                                     */
+/*                Negative Tests - getNvmRev                                  */
 /* ========================================================================== */
-extern void test_negative_Pmic_diagSetDmuxCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagSetDmuxCfg_invalidParam_group(void);
-extern void test_negative_Pmic_diagGetDmuxCfg_nullParam_handle(void);
-extern void test_negative_Pmic_diagGetDmuxCfg_nullParam_group(void);
+void test_neg_core_getNvmRev_nullHandle(void);
+void test_neg_core_getNvmRev_nullNvmRev(void);
 
 /* ========================================================================== */
-/* Positive Tests                                                             */
+/*                Negative Tests - getSiliconRev                              */
 /* ========================================================================== */
-extern void test_positive_scratchPadSetGet(void);
-extern void test_positive_regLockSetGet(void);
-extern void test_positive_cntLockSetGet(void);
-extern void test_positive_lockCfgSetGet(void);
-extern void test_positive_deviceIdRevision(void);
-extern void test_positive_spreadSpectrumSetGet(void);
-extern void test_positive_safeOutSetGet(void);
-extern void test_positive_commonStat(void);
-extern void test_positive_diagOutCtrlSetGet(void);
-extern void test_positive_diagAMUXSetGet(void);
-extern void test_positive_diagDMUXSetGet(void);
+void test_neg_core_getSiliconRev_nullHandle(void);
+void test_neg_core_getSiliconRev_nullSiliconRev(void);
+
+/* ========================================================================== */
+/*                Negative Tests - getCommonStat                              */
+/* ========================================================================== */
+void test_neg_core_getCommonStat_nullHandle(void);
+void test_neg_core_getCommonStat_nullStat(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagSetOutCtrlCfg                          */
+/* ========================================================================== */
+void test_neg_core_diagSetOutCtrlCfg_nullHandle(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagGetOutCtrlCfg                          */
+/* ========================================================================== */
+void test_neg_core_diagGetOutCtrlCfg_nullHandle(void);
+void test_neg_core_diagGetOutCtrlCfg_nullConfig(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagSetAmuxCfg                             */
+/* ========================================================================== */
+void test_neg_core_diagSetAmuxCfg_nullHandle(void);
+void test_neg_core_diagSetAmuxCfg_invalidChannel(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagGetAmuxCfg                             */
+/* ========================================================================== */
+void test_neg_core_diagGetAmuxCfg_nullHandle(void);
+void test_neg_core_diagGetAmuxCfg_nullChannel(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagSetDmuxCfg                             */
+/* ========================================================================== */
+void test_neg_core_diagSetDmuxCfg_nullHandle(void);
+void test_neg_core_diagSetDmuxCfg_invalidGroup(void);
+
+/* ========================================================================== */
+/*                Negative Tests - diagGetDmuxCfg                             */
+/* ========================================================================== */
+void test_neg_core_diagGetDmuxCfg_nullHandle(void);
+void test_neg_core_diagGetDmuxCfg_nullGroup(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Scratchpad                                 */
+/* ========================================================================== */
+void test_pos_core_scratchPad_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Register Lock                              */
+/* ========================================================================== */
+void test_pos_core_regLock_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Counter Lock                               */
+/* ========================================================================== */
+void test_pos_core_cntLock_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Lock Configuration                         */
+/* ========================================================================== */
+void test_pos_core_lockCfg_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Device ID & Revision                       */
+/* ========================================================================== */
+void test_pos_core_deviceId_revision(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Common Status                              */
+/* ========================================================================== */
+void test_pos_core_commonStat_get(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Diagnostic Output Control                  */
+/* ========================================================================== */
+void test_pos_core_diagOutCtrl_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Diagnostic AMUX                            */
+/* ========================================================================== */
+void test_pos_core_diagAMUX_setGet(void);
+
+/* ========================================================================== */
+/*                Positive Tests - Diagnostic DMUX                            */
+/* ========================================================================== */
+void test_pos_core_diagDMUX_setGet(void);
 
 #ifdef __cplusplus
 }

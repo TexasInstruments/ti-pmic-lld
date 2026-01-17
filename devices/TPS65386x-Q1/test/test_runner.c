@@ -86,7 +86,7 @@ extern void fsm_test(void *args);
 extern void gpio_test(void *args);
 extern void io_test(void *args);
 extern void irq_test(void *args);
-extern void pmic_init_test(void *args);
+extern void pmic_test(void *args);
 extern void power_test(void *args);
 extern void timer_test(void *args);
 
@@ -117,8 +117,8 @@ int main(void)
     printf("\n=== Running WDG Tests ===\n");
     wdg_test(NULL);
 
-    printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_init_test(NULL);
+    printf("\n=== Running PMIC Tests ===\n");
+    pmic_test(NULL);
 
     printf("\n=== Running GPIO Tests ===\n");
     gpio_test(NULL);

@@ -46,64 +46,190 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Core tests */
-#define CORE_TEST_RUN_ALL() PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_value); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_setRegLockState_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_lockState); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_configCrcEnable_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_configCrcDisable_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getConfigCrcStatus_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_getConfigCrcStatus_nullParam_configCrcStat); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_configCrcCalculate_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_configCrcGetFromDevice_nullParam_handle); \
-                            PLATFORM_RUN_TEST(test_negative_Pmic_configCrcGetFromDevice_nullParam_crc); \
-                            PLATFORM_RUN_TEST(test_positive_setGetRegLockState); \
-                            PLATFORM_RUN_TEST(test_positive_setGetScratchpadReg1to4); \
-                            PLATFORM_RUN_TEST(test_positive_enableDisableConfigRegCrc); \
-                            PLATFORM_RUN_TEST(test_positive_configCrcCalculate); \
-                            PLATFORM_RUN_TEST(test_positive_getConfigCrc); \
-                            PLATFORM_RUN_TEST(test_positive_core_disableConfigCrc); \
-                            PLATFORM_RUN_TEST(test_negative_core_configCrcError); \
-                            PLATFORM_RUN_TEST(test_negative_coreInit_invalidDeviceType); \
-                            PLATFORM_RUN_TEST(test_positive_coreGetErrStatus_multipleErrors); \
-                            PLATFORM_RUN_TEST(test_positive_coreClrErrStatus_specificError); \
-                            PLATFORM_RUN_TEST(test_negative_core_configCrcAlreadyEnabled); \
-                            PLATFORM_RUN_TEST(test_negative_core_configCrcCalcBitHigh); \
-                            PLATFORM_RUN_TEST(test_negative_core_configCrcMismatch); \
-                            PLATFORM_RUN_TEST(test_negative_core_crcLoopIoFailure)
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcCalculate                  */
+/* ========================================================================== */
 
-/* Run all Core negative tests */
-#define CORE_TEST_RUN_NEGATIVE() PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_value); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_setRegLockState_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_lockState); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_configCrcEnable_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_configCrcDisable_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getConfigCrcStatus_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_getConfigCrcStatus_nullParam_configCrcStat); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_configCrcCalculate_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_configCrcGetFromDevice_nullParam_handle); \
-                                 PLATFORM_RUN_TEST(test_negative_Pmic_configCrcGetFromDevice_nullParam_crc); \
-                                 PLATFORM_RUN_TEST(test_negative_core_configCrcError); \
-                                 PLATFORM_RUN_TEST(test_negative_coreInit_invalidDeviceType)
+#define CORE_TEST_POS_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
 
-/* Run all Core positive tests */
-#define CORE_TEST_RUN_POSITIVE() PLATFORM_RUN_TEST(test_positive_setGetRegLockState); \
-                                 PLATFORM_RUN_TEST(test_positive_setGetScratchpadReg1to4); \
-                                 PLATFORM_RUN_TEST(test_positive_enableDisableConfigRegCrc); \
-                                 PLATFORM_RUN_TEST(test_positive_configCrcCalculate); \
-                                 PLATFORM_RUN_TEST(test_positive_getConfigCrc); \
-                                 PLATFORM_RUN_TEST(test_positive_core_disableConfigCrc); \
-                                 PLATFORM_RUN_TEST(test_positive_coreGetErrStatus_multipleErrors); \
-                                 PLATFORM_RUN_TEST(test_positive_coreClrErrStatus_specificError)
+#define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailure)
+
+#define CORE_TEST_CONFIGCRCCALCULATE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcDisable                    */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcDisable_disable)
+
+#define CORE_TEST_NEG_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
+
+#define CORE_TEST_CONFIGCRCDISABLE() \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcEnable                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly)
+
+#define CORE_TEST_NEG_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_alreadyEnabled); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_calcBitHigh); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_crcMismatch); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_error)
+
+#define CORE_TEST_CONFIGCRCENABLE() \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE()
+
+/* ========================================================================== */
+/*           API-Specific Test Macros - configCrcGetFromDevice                */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCGETFROMDEVICE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcGetFromDevice_getCrc)
+
+#define CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullCrc)
+
+#define CORE_TEST_CONFIGCRCGETFROMDEVICE() \
+    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getConfigCrcStatus                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
+    /* Positive tests combined with other CRC tests */
+
+#define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus)
+
+#define CORE_TEST_GETCONFIGCRCSTATUS() \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getRegLockState                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETREGLOCKSTATE() \
+    /* Positive tests combined with setRegLockState */
+
+#define CORE_TEST_NEG_GETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
+
+#define CORE_TEST_GETREGLOCKSTATE() \
+    CORE_TEST_POS_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getScratchPadValue                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_reg1to4)
+
+#define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds)
+
+#define CORE_TEST_GETSCRATCHPADVALUE() \
+    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - init                                */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_INIT() \
+    /* Positive init tests in main setup */
+
+#define CORE_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_core_init_invalidDeviceType)
+
+#define CORE_TEST_INIT() \
+    CORE_TEST_POS_INIT(); \
+    CORE_TEST_NEG_INIT()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - setRegLockState                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_setRegLockState_enableDisable)
+
+#define CORE_TEST_NEG_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
+
+#define CORE_TEST_SETREGLOCKSTATE() \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - setScratchPadValue                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_SETSCRATCHPADVALUE() \
+    /* Positive tests combined with getScratchPadValue */
+
+#define CORE_TEST_NEG_SETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds)
+
+#define CORE_TEST_SETSCRATCHPADVALUE() \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define CORE_TEST_RUN_POSITIVE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_POS_GETREGLOCKSTATE(); \
+    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_INIT(); \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_multipleErrors); \
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_specificError)
+
+#define CORE_TEST_RUN_NEGATIVE() \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_INIT(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+#define CORE_TEST_RUN_ALL() \
+    CORE_TEST_RUN_POSITIVE(); \
+    CORE_TEST_RUN_NEGATIVE()
 
 #define CORE_TEST_CALCUL_CONFIG_CRC_1_REG (0x61U)
 #define CORE_TEST_CALCUL_CONFIG_CRC_2_REG (0x62U)
@@ -169,21 +295,21 @@ void core_test(void *args)
     platform_deinit();
 }
 
-void test_negative_Pmic_setScratchPadValue_nullParam_handle(void)
+void test_neg_core_setScratchPadValue_nullHandle(void)
 {
     // Pass null handle into Pmic_setScratchPadValue()
     int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_setScratchPadValue_outOfBounds(void)
 {
     // Pass out of bounds scratchpad register number into Pmic_setScratchPadValue()
     int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_nullParam_handle(void)
+void test_neg_core_getScratchPadValue_nullHandle(void)
 {
     // Pass null handle into Pmic_getScratchPadValue()
     uint8_t value = 0U;
@@ -191,14 +317,14 @@ void test_negative_Pmic_getScratchPadValue_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_nullParam_value(void)
+void test_neg_core_getScratchPadValue_nullValue(void)
 {
     // Pass null value into Pmic_getScratchPadValue()
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
+void test_neg_core_getScratchPadValue_outOfBounds(void)
 {
     // Pass out of bounds scratchpad register number into Pmic_getScratchPadValue()
     uint8_t value = 0U;
@@ -206,14 +332,14 @@ void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_negative_Pmic_setRegLockState_nullParam_handle(void)
+void test_neg_core_setRegLockState_nullHandle(void)
 {
     // Pass null handle into Pmic_setRegLockState()
     int32_t status = Pmic_setRegLockState(NULL, PMIC_LOCK_DISABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_handle(void)
+void test_neg_core_getRegLockState_nullHandle(void)
 {
     bool lockState = PMIC_LOCK_DISABLE;
 
@@ -222,28 +348,28 @@ void test_negative_Pmic_getRegLockState_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getRegLockState_nullParam_lockState(void)
+void test_neg_core_getRegLockState_nullLockState(void)
 {
     // Pass null lockState into Pmic_getRegLockState()
     int32_t status = Pmic_getRegLockState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_configCrcEnable_nullParam_handle(void)
+void test_neg_core_configCrcEnable_nullHandle(void)
 {
     // Pass null handle into Pmic_configCrcEnable
     int32_t status = Pmic_configCrcEnable(NULL, PMIC_CFG_CRC_ENABLE_ONLY);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_configCrcDisable_nullParam_handle(void)
+void test_neg_core_configCrcDisable_nullHandle(void)
 {
     // Pass null handle into Pmic_configCrcDisable()
     int32_t status = Pmic_configCrcDisable(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getConfigCrcStatus_nullParam_handle(void)
+void test_neg_core_getConfigCrcStatus_nullHandle(void)
 {
     // Pass null handle into Pmic_getConfigCrcStatus()
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
@@ -251,21 +377,21 @@ void test_negative_Pmic_getConfigCrcStatus_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_getConfigCrcStatus_nullParam_configCrcStat(void)
+void test_neg_core_getConfigCrcStatus_nullStatus(void)
 {
     // Pass null configCrcStat into Pmic_getConfigCrcStatus()
     int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_configCrcCalculate_nullParam_handle(void)
+void test_neg_core_configCrcCalculate_nullHandle(void)
 {
     // Pass null handle into Pmic_configCrcCalculate()
     int32_t status = Pmic_configCrcCalculate(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_configCrcGetFromDevice_nullParam_handle(void)
+void test_neg_core_configCrcGetFromDevice_nullHandle(void)
 {
     // Pass null handle into Pmic_configCrcGetFromDevice()
     uint16_t crc = 0U;
@@ -273,14 +399,14 @@ void test_negative_Pmic_configCrcGetFromDevice_nullParam_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_negative_Pmic_configCrcGetFromDevice_nullParam_crc(void)
+void test_neg_core_configCrcGetFromDevice_nullCrc(void)
 {
     // Pass null crc into Pmic_configCrcGetFromDevice
     int32_t status = Pmic_configCrcGetFromDevice(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_positive_setGetRegLockState(void)
+void test_pos_core_setRegLockState_enableDisable(void)
 {
     bool actLockState = PMIC_LOCK_DISABLE;
 
@@ -303,7 +429,7 @@ void test_positive_setGetRegLockState(void)
     PLATFORM_ASSERT(actLockState == PMIC_LOCK_DISABLE);
 }
 
-void test_positive_setGetScratchpadReg1to4(void)
+void test_pos_core_getScratchPadValue_reg1to4(void)
 {
     uint8_t initVal = 0U, expVal = 0U, actVal = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -328,7 +454,7 @@ void test_positive_setGetScratchpadReg1to4(void)
     }
 }
 
-void test_positive_enableDisableConfigRegCrc(void)
+void test_pos_core_configCrcEnable_enableOnly(void)
 {
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
@@ -351,7 +477,7 @@ void test_positive_enableDisableConfigRegCrc(void)
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
 }
 
-void test_positive_configCrcCalculate(void)
+void test_pos_core_configCrcEnable_recalculate(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
@@ -396,7 +522,7 @@ static int32_t coreTest_getConfigCrc(uint16_t *crc)
     return status;
 }
 
-void test_positive_getConfigCrc(void)
+void test_pos_core_configCrcGetFromDevice_getCrc(void)
 {
     uint16_t expCrc = 0U, actCrc = 0U;
 
@@ -414,7 +540,7 @@ void test_positive_getConfigCrc(void)
 /*              LP8772x-Q1 Specific CRC Configuration Tests                   */
 /* ========================================================================== */
 
-void test_positive_core_disableConfigCrc(void)
+void test_pos_core_configCrcDisable_disable(void)
 {
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
@@ -437,7 +563,7 @@ void test_positive_core_disableConfigCrc(void)
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
 }
 
-void test_negative_core_configCrcError(void)
+void test_neg_core_configCrcEnable_error(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -466,7 +592,7 @@ void test_negative_core_configCrcError(void)
 /*              LP8772x-Q1 Additional Error Handling Coverage Tests          */
 /* ========================================================================== */
 
-void test_negative_coreInit_invalidDeviceType(void)
+void test_neg_core_init_invalidDeviceType(void)
 {
     // Test init with invalid configuration (null handle)
     // This covers error handling in Pmic_init for invalid parameters
@@ -479,7 +605,7 @@ void test_negative_coreInit_invalidDeviceType(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_positive_coreGetErrStatus_multipleErrors(void)
+void test_pos_core_errStatus_multipleErrors(void)
 {
     // Test reading multiple error status bits
     // This exercises the error status register read paths
@@ -494,7 +620,7 @@ void test_positive_coreGetErrStatus_multipleErrors(void)
     PLATFORM_ASSERT((crcStat.crcEn == PMIC_ENABLE) || (crcStat.crcEn == PMIC_DISABLE));
 }
 
-void test_positive_coreClrErrStatus_specificError(void)
+void test_pos_core_errStatus_specificError(void)
 {
     // Test clearing specific error bits
     // This covers error clearing logic in core module
@@ -527,7 +653,7 @@ void test_positive_coreClrErrStatus_specificError(void)
 /*           LP8772x-Q1 Tests for Uncovered Lines in pmic_core.c             */
 /* ========================================================================== */
 
-void test_negative_core_configCrcAlreadyEnabled(void)
+void test_neg_core_configCrcEnable_alreadyEnabled(void)
 {
 #ifdef BUILD_MOCK
     // Test coverage for lines 288-289: CONFIG_CRC_EN already enabled
@@ -558,7 +684,7 @@ void test_negative_core_configCrcAlreadyEnabled(void)
 #endif
 }
 
-void test_negative_core_configCrcCalcBitHigh(void)
+void test_neg_core_configCrcEnable_calcBitHigh(void)
 {
 #ifdef BUILD_MOCK
     // Test coverage for lines 294-296: CONFIG_CRC_CALC bit already high
@@ -590,7 +716,7 @@ void test_negative_core_configCrcCalcBitHigh(void)
 #endif
 }
 
-void test_negative_core_configCrcMismatch(void)
+void test_neg_core_configCrcEnable_crcMismatch(void)
 {
 #ifdef BUILD_MOCK
     // Test coverage for lines 320-321: CRC mismatch detection
@@ -624,7 +750,7 @@ void test_negative_core_configCrcMismatch(void)
 #endif
 }
 
-void test_negative_core_crcLoopIoFailure(void)
+void test_neg_core_configCrcCalculate_ioFailure(void)
 {
     int32_t status;
     PmicMockDevice_t *mockDevice;

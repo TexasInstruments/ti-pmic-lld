@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,53 +30,33 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
+#ifndef TEST_UTILS_H
+#define TEST_UTILS_H
 
 
-/* ========================================================================== */
-/*                              Include Files                                 */
-/* ========================================================================== */
-
-#include "test_common.h"
 
 /* ========================================================================= */
-/*                             Macros & Typedefs                             */
+/*                              Include Files                                */
 /* ========================================================================= */
 
-#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
-#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
-#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
-#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
-#define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
+#include "platform.h"
 
-// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
-#define DEVICE_PG_IDENTIFIER_MASK (1U << 3U)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/* ========================================================================== */
-/*                           Function Definitions                             */
-/* ========================================================================== */
+/* ========================================================================= */
+/*                           Function Declarations                           */
+/* ========================================================================= */
 
-void testCommon_printSiRev(const Pmic_Handle_t *pmicHandle)
-{
-    char msg[50U] = {0};
+/**
+ * @brief Print silicon revision of the PMIC device to the console.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle);
 
-    // TPS65386x doesn't have isA0 field, use devSiRev only
-    if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFIER_MASK) != 0U)
-    {
-        (void)sprintf(msg, "PMIC device is PG2 (B1)\r\n\r\n");
-        platform_printString(msg);
-    }
-    else
-    {
-        (void)sprintf(msg, "PMIC device is PG1 (A0 or B0)\r\n\r\n");
-        platform_printString(msg);
-    }
+#ifdef __cplusplus
 }
-
-void platform_unlockRegisters(void)
-{
-    #ifndef BUILD_MOCK
-    // Hardware: Device-specific unlock sequence for TPS65386x-Q1
-    // NOTE: Register unlock not needed for mock testing; implement for hardware tests
-    #endif
-    // Mock: No-op (mock doesn't enforce register locking)
-}
+#endif /* __cplusplus */
+#endif /* TEST_UTILS_H */

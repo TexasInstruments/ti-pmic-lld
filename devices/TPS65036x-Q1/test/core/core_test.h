@@ -33,13 +33,11 @@
 #ifndef PMIC_TEST_CORE_H
 #define PMIC_TEST_CORE_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "test_common.h"
+#include "test_utils.h"
 #include "pmic_fsm.h"
 #include "regmap/core.h"
 
@@ -53,126 +51,531 @@ extern "C" {
 
 void core_test(void *args);
 
-void test_negative_Pmic_getNvmRev_nullParam_pmicHandle(void);
-void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void);
-void test_negative_Pmic_getSiliconRev_nullParam_pmicHandle(void);
-void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void);
-void test_negative_Pmic_setRegLockState_nullParam_pmicHandle(void);
-void test_negative_Pmic_enableRegLock_nullParam_pmicHandle(void);
-void test_negative_Pmic_disableRegLock_nullParam_pmicHandle(void);
-void test_negative_Pmic_getRegLockState_nullParam_pmicHandle(void);
-void test_negative_Pmic_getRegLockState_nullParam_regLockStat(void);
-void test_negative_Pmic_ioSetCrcEnableState_nullParam_pmicHandle(void);
-void test_negative_Pmic_ioCrcEnable_nullParam_pmicHandle(void);
-void test_negative_Pmic_ioCrcDisable_nullParam_pmicHandle(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_pmicHandle(void);
-void test_negative_Pmic_ioGetCrcEnableState_nullParam_crcEnabled(void);
-void test_negative_Pmic_fsmSetDevState_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmSetDevState_invalid_fsmCmd(void);
-void test_negative_Pmic_setPwrOn_nullParam_pmicHandle(void);
-void test_negative_Pmic_getPwrOn_nullParam_pmicHandle(void);
-void test_negative_Pmic_getPwrOn_nullParam_pwrOnStat(void);
-void test_negative_Pmic_setLpmCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_setLpmCfg_nullParam_lpmCfg(void);
-void test_negative_Pmic_setLpmCfg_outOfBounds_pinDetection(void);
-void test_negative_Pmic_setLpmCfg_outOfBounds_detectionDelay(void);
-void test_negative_Pmic_getLpmCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_getLpmCfg_nullParam_lpmCfg(void);
-void test_negative_Pmic_runABIST_nullParam_pmicHandle(void);
-void test_negative_Pmic_getABISTStat_nullParam_pmicHandle(void);
-void test_negative_Pmic_getABISTStat_nullParam_isActive(void);
-void test_negative_Pmic_setScratchPadValue_nullParam_pmicHandle(void);
-void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void);
-void test_negative_Pmic_getScratchPadValue_nullParam_pmicHandle(void);
-void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
-void test_negative_Pmic_getScratchPadValue_nullParam_value(void);
-void test_negative_Pmic_fsmSetRecovCntThr_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmSetRecovCntThr_outOfBounds_threshold(void);
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmGetRecovCntThr_nullParam_threshold(void);
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmGetRecovCnt_nullParam_recovCnt(void);
-void test_negative_Pmic_fsmClrRecovCnt_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmSetResetCntThr_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmSetResetCntThr_outOfBounds_threshold(void);
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmGetResetCntThr_nullParam_threshold(void);
-void test_negative_Pmic_fsmGetResetCnt_nullParam_pmicHandle(void);
-void test_negative_Pmic_fsmGetResetCnt_nullParam_resetCnt(void);
-void test_negative_Pmic_fsmClrResetCnt_nullParam_pmicHandle(void);
-void test_positive_Pmic_getNvmRev(void);
-void test_positive_Pmic_getSiliconRev(void);
-void test_positive_setGetRegLock(void);
-void test_positive_enableDisableCRC8(void);
-void test_positive_setGetPwrOn(void);
-void test_positive_setGetLpmCfg_pinDetection(void);
-void test_positive_setGetLpmCfg_detectionDelay(void);
-void test_positive_setGetLpmCfg_vmonEn(void);
-void test_positive_setGetLpmCfg_esmEn(void);
-void test_positive_setGetLpmCfg_wdgEn(void);
-void test_positive_Pmic_runABIST(void);
-void test_positive_setGetScratchPadVal(void);
-void test_positive_setGetRecovCntThr(void);
-void test_positive_setGetResetCntThr(void);
-void test_positive_getClrRecovCnt(void);
-void test_positive_getClrResetCnt(void);
+/* getNvmRev API tests */
+void test_neg_core_getNvmRev_nullParam_pmicHandle(void);
+void test_neg_core_getNvmRev_nullParam_nvmRev(void);
+void test_pos_core_getNvmRev(void);
 
-/* CRC16 Negative Tests */
-void test_negative_Pmic_setCRC16Cfg_nullParam_handle(void);
-void test_negative_Pmic_setCRC16Cfg_nullParam_crc16Cfg(void);
-void test_negative_Pmic_setCRC16Cfg_invalidParam_validParams(void);
-void test_negative_Pmic_getCRC16Cfg_nullParam_handle(void);
-void test_negative_Pmic_getCRC16Cfg_nullParam_crc16Cfg(void);
-void test_negative_Pmic_getCRC16Cfg_invalidParam_validParams(void);
+/* getSiliconRev API tests */
+void test_neg_core_getSiliconRev_nullParam_pmicHandle(void);
+void test_neg_core_getSiliconRev_nullParam_siliconRev(void);
+void test_pos_core_getSiliconRev(void);
 
-/* CRC16 Positive Tests */
-void test_positive_setCRC16Cfg_enable(void);
-void test_positive_getCRC16Cfg_enable(void);
-void test_positive_setCRC16Cfg_activateCalc(void);
-void test_positive_getCRC16Cfg_activateCalc(void);
-void test_positive_setCRC16Cfg_combinedParams(void);
-void test_positive_getCRC16Cfg_combinedParams(void);
+/* setRegLockState API tests */
+void test_neg_core_setRegLockState_nullParam_pmicHandle(void);
+void test_neg_core_disableRegLock_nullParam_pmicHandle(void);
+void test_neg_core_enableRegLock_nullParam_pmicHandle(void);
+void test_pos_core_setGetRegLock(void);
 
-/* LPM Get Tests */
-void test_positive_getLpmCfg_pinDetection(void);
-void test_positive_getLpmCfg_detectionDelay(void);
-void test_positive_getLpmCfg_vmonEn(void);
-void test_positive_getLpmCfg_esmEn(void);
-void test_positive_getLpmCfg_wdgEn(void);
-void test_positive_getLpmCfg_multipleParams(void);
-void test_negative_Pmic_getLpmCfg_invalidParam_validParams(void);
+/* getRegLockState API tests */
+void test_neg_core_getRegLockState_nullParam_pmicHandle(void);
+void test_neg_core_getRegLockState_nullParam_regLockStat(void);
 
-/* ABIST Status Test */
-void test_positive_getABISTStat_active(void);
+/* ioSetCrcEnableState API tests */
+void test_neg_core_ioSetCrcEnableState_nullParam_pmicHandle(void);
+void test_neg_core_ioCrcEnable_nullParam_pmicHandle(void);
+void test_neg_core_ioCrcDisable_nullParam_pmicHandle(void);
+void test_pos_core_enableDisableCRC8(void);
+
+/* ioGetCrcEnableState API tests */
+void test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle(void);
+void test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled(void);
+
+/* fsmSetDevState API tests */
+void test_neg_core_fsmSetDevState_nullParam_pmicHandle(void);
+void test_neg_core_fsmSetDevState_invalid_fsmCmd(void);
+
+/* setPwrOn API tests */
+void test_neg_core_setPwrOn_nullParam_pmicHandle(void);
+void test_pos_core_setGetPwrOn(void);
+
+/* getPwrOn API tests */
+void test_neg_core_getPwrOn_nullParam_pmicHandle(void);
+void test_neg_core_getPwrOn_nullParam_pwrOnStat(void);
+
+/* setLpmCfg API tests */
+void test_neg_core_setLpmCfg_nullParam_pmicHandle(void);
+void test_neg_core_setLpmCfg_nullParam_lpmCfg(void);
+void test_neg_core_setLpmCfg_outOfBounds_pinDetection(void);
+void test_neg_core_setLpmCfg_outOfBounds_detectionDelay(void);
+void test_neg_core_setLpmCfg_zeroValidParams(void);
+void test_pos_core_setGetLpmCfg_pinDetection(void);
+void test_pos_core_setGetLpmCfg_detectionDelay(void);
+void test_pos_core_setGetLpmCfg_vmonEn(void);
+void test_pos_core_setGetLpmCfg_esmEn(void);
+void test_pos_core_setGetLpmCfg_wdgEn(void);
+void test_pos_core_setLpmCfg_pinDetection_allValues(void);
+void test_pos_core_setLpmCfg_detectionDelay_allValues(void);
+void test_pos_core_setLpmCfg_vmonEn_enable(void);
+void test_pos_core_setLpmCfg_vmonEn_disable(void);
+void test_pos_core_setLpmCfg_esmEn_enable(void);
+void test_pos_core_setLpmCfg_esmEn_disable(void);
+void test_pos_core_setLpmCfg_wdgEn_enable(void);
+void test_pos_core_setLpmCfg_wdgEn_disable(void);
+void test_pos_core_setLpmCfg_multipleEnables(void);
+void test_pos_core_setLpmCfg_allParams(void);
+void test_pos_core_setLpmCfg_pinDetection_boundaryMin(void);
+void test_pos_core_setLpmCfg_pinDetection_boundaryMax(void);
+void test_pos_core_setLpmCfg_detectionDelay_boundaryMin(void);
+void test_pos_core_setLpmCfg_detectionDelay_boundaryMax(void);
+void test_pos_core_setLpmCfg_pinDetectionAndDelay(void);
+
+/* getLpmCfg API tests */
+void test_neg_core_getLpmCfg_nullParam_pmicHandle(void);
+void test_neg_core_getLpmCfg_nullParam_lpmCfg(void);
+void test_neg_core_getLpmCfg_invalidParam_validParams(void);
+void test_neg_core_getLpmCfg_zeroValidParams(void);
+void test_pos_core_getLpmCfg_pinDetection(void);
+void test_pos_core_getLpmCfg_detectionDelay(void);
+void test_pos_core_getLpmCfg_vmonEn(void);
+void test_pos_core_getLpmCfg_esmEn(void);
+void test_pos_core_getLpmCfg_wdgEn(void);
+void test_pos_core_getLpmCfg_multipleParams(void);
+
+/* runABIST API tests */
+void test_neg_core_runABIST_nullParam_pmicHandle(void);
+void test_pos_core_runABIST(void);
+
+/* getABISTStat API tests */
+void test_neg_core_getABISTStat_nullParam_pmicHandle(void);
+void test_neg_core_getABISTStat_nullParam_isActive(void);
+void test_pos_core_getABISTStat_active(void);
+
+/* setScratchPadValue API tests */
+void test_neg_core_setScratchPadValue_nullParam_pmicHandle(void);
+void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void);
+void test_pos_core_setGetScratchPadVal(void);
+
+/* getScratchPadValue API tests */
+void test_neg_core_getScratchPadValue_nullParam_pmicHandle(void);
+void test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
+void test_neg_core_getScratchPadValue_nullParam_value(void);
+
+/* fsmSetRecovCntThr API tests */
+void test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle(void);
+void test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold(void);
+void test_pos_core_setGetRecovCntThr(void);
+
+/* fsmGetRecovCntThr API tests */
+void test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle(void);
+void test_neg_core_fsmGetRecovCntThr_nullParam_threshold(void);
+
+/* fsmGetRecovCnt API tests */
+void test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle(void);
+void test_neg_core_fsmGetRecovCnt_nullParam_recovCnt(void);
+void test_pos_core_getClrRecovCnt(void);
+
+/* fsmClrRecovCnt API tests */
+void test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle(void);
+
+/* fsmSetResetCntThr API tests */
+void test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle(void);
+void test_neg_core_fsmSetResetCntThr_outOfBounds_threshold(void);
+void test_pos_core_setGetResetCntThr(void);
+
+/* fsmGetResetCntThr API tests */
+void test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle(void);
+void test_neg_core_fsmGetResetCntThr_nullParam_threshold(void);
+
+/* fsmGetResetCnt API tests */
+void test_neg_core_fsmGetResetCnt_nullParam_pmicHandle(void);
+void test_neg_core_fsmGetResetCnt_nullParam_resetCnt(void);
+void test_pos_core_getClrResetCnt(void);
+
+/* fsmClrResetCnt API tests */
+void test_neg_core_fsmClrResetCnt_nullParam_pmicHandle(void);
+
+/* setCRC16Cfg API tests */
+void test_neg_core_setCRC16Cfg_nullParam_handle(void);
+void test_neg_core_setCRC16Cfg_nullParam_crc16Cfg(void);
+void test_neg_core_setCRC16Cfg_invalidParam_validParams(void);
+void test_neg_core_setCRC16Cfg_zeroValidParams(void);
+void test_pos_core_setCRC16Cfg_enable(void);
+void test_pos_core_setCRC16Cfg_activateCalc(void);
+void test_pos_core_setCRC16Cfg_combinedParams(void);
+
+/* getCRC16Cfg API tests */
+void test_neg_core_getCRC16Cfg_nullParam_handle(void);
+void test_neg_core_getCRC16Cfg_nullParam_crc16Cfg(void);
+void test_neg_core_getCRC16Cfg_invalidParam_validParams(void);
+void test_neg_core_getCRC16Cfg_zeroValidParams(void);
+void test_pos_core_getCRC16Cfg_enable(void);
+void test_pos_core_getCRC16Cfg_activateCalc(void);
+void test_pos_core_getCRC16Cfg_combinedParams(void);
+
+/* Silicon revision tests */
+void test_pos_core_silicon_A0_crc16_at_0x61(void);
+void test_pos_core_silicon_B0_crc16_at_0x64(void);
+void test_pos_core_silicon_B1_crc16_at_0x64(void);
+void test_pos_core_init_A0_silicon_with_locked_registers(void);
+
+/* ========================================================================== */
+/*                        Test Organization Macros                            */
+/* ========================================================================== */
+
+/* getNvmRev API */
+#define CORE_TEST_POS_GETNVMREV() \
+    PLATFORM_RUN_TEST(test_pos_core_getNvmRev)
+
+#define CORE_TEST_NEG_GETNVMREV() \
+    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_nvmRev)
+
+#define CORE_TEST_GETNVMREV() \
+    CORE_TEST_POS_GETNVMREV(); \
+    CORE_TEST_NEG_GETNVMREV()
+
+/* getSiliconRev API */
+#define CORE_TEST_POS_GETSILICONREV() \
+    PLATFORM_RUN_TEST(test_pos_core_getSiliconRev)
+
+#define CORE_TEST_NEG_GETSILICONREV() \
+    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_siliconRev)
+
+#define CORE_TEST_GETSILICONREV() \
+    CORE_TEST_POS_GETSILICONREV(); \
+    CORE_TEST_NEG_GETSILICONREV()
+
+/* setRegLockState API */
+#define CORE_TEST_POS_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetRegLock)
+
+#define CORE_TEST_NEG_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_disableRegLock_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_enableRegLock_nullParam_pmicHandle)
+
+#define CORE_TEST_SETREGLOCKSTATE() \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE()
+
+/* getRegLockState API */
+#define CORE_TEST_NEG_GETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_regLockStat)
+
+#define CORE_TEST_GETREGLOCKSTATE() \
+    CORE_TEST_NEG_GETREGLOCKSTATE()
+
+/* ioSetCrcEnableState API */
+#define CORE_TEST_POS_IOSETCRCENABLESTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_enableDisableCRC8)
+
+#define CORE_TEST_NEG_IOSETCRCENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_ioSetCrcEnableState_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_ioCrcEnable_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_ioCrcDisable_nullParam_pmicHandle)
+
+#define CORE_TEST_IOSETCRCENABLESTATE() \
+    CORE_TEST_POS_IOSETCRCENABLESTATE(); \
+    CORE_TEST_NEG_IOSETCRCENABLESTATE()
+
+/* ioGetCrcEnableState API */
+#define CORE_TEST_NEG_IOGETCRCENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled)
+
+#define CORE_TEST_IOGETCRCENABLESTATE() \
+    CORE_TEST_NEG_IOGETCRCENABLESTATE()
+
+/* fsmSetDevState API */
+#define CORE_TEST_NEG_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_invalid_fsmCmd)
+
+#define CORE_TEST_FSMSETDEVSTATE() \
+    CORE_TEST_NEG_FSMSETDEVSTATE()
+
+/* setPwrOn API */
+#define CORE_TEST_POS_SETPWRON() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetPwrOn)
+
+#define CORE_TEST_NEG_SETPWRON() \
+    PLATFORM_RUN_TEST(test_neg_core_setPwrOn_nullParam_pmicHandle)
+
+#define CORE_TEST_SETPWRON() \
+    CORE_TEST_POS_SETPWRON(); \
+    CORE_TEST_NEG_SETPWRON()
+
+/* getPwrOn API */
+#define CORE_TEST_NEG_GETPWRON() \
+    PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pwrOnStat)
+
+#define CORE_TEST_GETPWRON() \
+    CORE_TEST_NEG_GETPWRON()
+
+/* setLpmCfg API */
+#define CORE_TEST_POS_SETLPMCFG() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_pinDetection); \
+    PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_detectionDelay); \
+    PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_vmonEn); \
+    PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_esmEn); \
+    PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_wdgEn); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_pinDetection_allValues); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_detectionDelay_allValues); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_vmonEn_enable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_vmonEn_disable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_esmEn_enable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_esmEn_disable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_wdgEn_enable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_wdgEn_disable); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_multipleEnables); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_allParams); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_pinDetection_boundaryMin); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_pinDetection_boundaryMax); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_detectionDelay_boundaryMin); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_detectionDelay_boundaryMax); \
+    PLATFORM_RUN_TEST(test_pos_core_setLpmCfg_pinDetectionAndDelay)
+
+#define CORE_TEST_NEG_SETLPMCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_nullParam_lpmCfg); \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_outOfBounds_pinDetection); \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_outOfBounds_detectionDelay); \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_zeroValidParams)
+
+#define CORE_TEST_SETLPMCFG() \
+    CORE_TEST_POS_SETLPMCFG(); \
+    CORE_TEST_NEG_SETLPMCFG()
+
+/* getLpmCfg API */
+#define CORE_TEST_POS_GETLPMCFG() \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_pinDetection); \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_detectionDelay); \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_vmonEn); \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_esmEn); \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_wdgEn); \
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_multipleParams)
+
+#define CORE_TEST_NEG_GETLPMCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_nullParam_lpmCfg); \
+    PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_invalidParam_validParams); \
+    PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_zeroValidParams)
+
+#define CORE_TEST_GETLPMCFG() \
+    CORE_TEST_POS_GETLPMCFG(); \
+    CORE_TEST_NEG_GETLPMCFG()
+
+/* runABIST API */
+#define CORE_TEST_POS_RUNABIST() \
+    PLATFORM_RUN_TEST(test_pos_core_runABIST)
+
+#define CORE_TEST_NEG_RUNABIST() \
+    PLATFORM_RUN_TEST(test_neg_core_runABIST_nullParam_pmicHandle)
+
+#define CORE_TEST_RUNABIST() \
+    CORE_TEST_POS_RUNABIST(); \
+    CORE_TEST_NEG_RUNABIST()
+
+/* getABISTStat API */
+#define CORE_TEST_POS_GETABISTSTAT() \
+    PLATFORM_RUN_TEST(test_pos_core_getABISTStat_active)
+
+#define CORE_TEST_NEG_GETABISTSTAT() \
+    PLATFORM_RUN_TEST(test_neg_core_getABISTStat_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getABISTStat_nullParam_isActive)
+
+#define CORE_TEST_GETABISTSTAT() \
+    CORE_TEST_POS_GETABISTSTAT(); \
+    CORE_TEST_NEG_GETABISTSTAT()
+
+/* setScratchPadValue API */
+#define CORE_TEST_POS_SETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetScratchPadVal)
+
+#define CORE_TEST_NEG_SETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum)
+
+#define CORE_TEST_SETSCRATCHPADVALUE() \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+/* getScratchPadValue API */
+#define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullParam_value)
+
+#define CORE_TEST_GETSCRATCHPADVALUE() \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+
+/* fsmSetRecovCntThr API */
+#define CORE_TEST_POS_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetRecovCntThr)
+
+#define CORE_TEST_NEG_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold)
+
+#define CORE_TEST_FSMSETRECOVCNTTHR() \
+    CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
+    CORE_TEST_NEG_FSMSETRECOVCNTTHR()
+
+/* fsmGetRecovCntThr API */
+#define CORE_TEST_NEG_FSMGETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_threshold)
+
+#define CORE_TEST_FSMGETRECOVCNTTHR() \
+    CORE_TEST_NEG_FSMGETRECOVCNTTHR()
+
+/* fsmGetRecovCnt API */
+#define CORE_TEST_POS_FSMGETRECOVCNT() \
+    PLATFORM_RUN_TEST(test_pos_core_getClrRecovCnt)
+
+#define CORE_TEST_NEG_FSMGETRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_recovCnt)
+
+#define CORE_TEST_FSMGETRECOVCNT() \
+    CORE_TEST_POS_FSMGETRECOVCNT(); \
+    CORE_TEST_NEG_FSMGETRECOVCNT()
+
+/* fsmClrRecovCnt API */
+#define CORE_TEST_NEG_FSMCLRRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle)
+
+#define CORE_TEST_FSMCLRRECOVCNT() \
+    CORE_TEST_NEG_FSMCLRRECOVCNT()
+
+/* fsmSetResetCntThr API */
+#define CORE_TEST_POS_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_core_setGetResetCntThr)
+
+#define CORE_TEST_NEG_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_outOfBounds_threshold)
+
+#define CORE_TEST_FSMSETRESETCNTTHR() \
+    CORE_TEST_POS_FSMSETRESETCNTTHR(); \
+    CORE_TEST_NEG_FSMSETRESETCNTTHR()
+
+/* fsmGetResetCntThr API */
+#define CORE_TEST_NEG_FSMGETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_threshold)
+
+#define CORE_TEST_FSMGETRESETCNTTHR() \
+    CORE_TEST_NEG_FSMGETRESETCNTTHR()
+
+/* fsmGetResetCnt API */
+#define CORE_TEST_POS_FSMGETRESETCNT() \
+    PLATFORM_RUN_TEST(test_pos_core_getClrResetCnt)
+
+#define CORE_TEST_NEG_FSMGETRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_resetCnt)
+
+#define CORE_TEST_FSMGETRESETCNT() \
+    CORE_TEST_POS_FSMGETRESETCNT(); \
+    CORE_TEST_NEG_FSMGETRESETCNT()
+
+/* fsmClrResetCnt API */
+#define CORE_TEST_NEG_FSMCLRRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_core_fsmClrResetCnt_nullParam_pmicHandle)
+
+#define CORE_TEST_FSMCLRRESETCNT() \
+    CORE_TEST_NEG_FSMCLRRESETCNT()
+
+/* setCRC16Cfg API */
+#define CORE_TEST_POS_SETCRC16CFG() \
+    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_activateCalc); \
+    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_combinedParams)
+
+#define CORE_TEST_NEG_SETCRC16CFG() \
+    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_nullParam_crc16Cfg); \
+    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_invalidParam_validParams); \
+    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_zeroValidParams)
+
+#define CORE_TEST_SETCRC16CFG() \
+    CORE_TEST_POS_SETCRC16CFG(); \
+    CORE_TEST_NEG_SETCRC16CFG()
+
+/* getCRC16Cfg API */
+#define CORE_TEST_POS_GETCRC16CFG() \
+    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_activateCalc); \
+    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_combinedParams)
+
+#define CORE_TEST_NEG_GETCRC16CFG() \
+    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_nullParam_crc16Cfg); \
+    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_invalidParam_validParams); \
+    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_zeroValidParams)
+
+#define CORE_TEST_GETCRC16CFG() \
+    CORE_TEST_POS_GETCRC16CFG(); \
+    CORE_TEST_NEG_GETCRC16CFG()
 
 /* Silicon Revision Tests */
-void test_positive_silicon_A0_crc16_at_0x61(void);
-void test_positive_silicon_B0_crc16_at_0x64(void);
-void test_positive_silicon_B1_crc16_at_0x64(void);
-void test_positive_init_A0_silicon_with_locked_registers(void);
+#define CORE_TEST_POS_SILICON() \
+    PLATFORM_RUN_TEST(test_pos_core_silicon_A0_crc16_at_0x61); \
+    PLATFORM_RUN_TEST(test_pos_core_silicon_B0_crc16_at_0x64); \
+    PLATFORM_RUN_TEST(test_pos_core_silicon_B1_crc16_at_0x64); \
+    PLATFORM_RUN_TEST(test_pos_core_init_A0_silicon_with_locked_registers)
 
-/* Additional Error Path Tests */
-void test_negative_Pmic_setCRC16Cfg_zeroValidParams(void);
-void test_negative_Pmic_getCRC16Cfg_zeroValidParams(void);
-void test_negative_Pmic_setLpmCfg_zeroValidParams(void);
+#define CORE_TEST_SILICON() \
+    CORE_TEST_POS_SILICON()
 
-/* Additional LPM Setter Tests */
-void test_positive_setLpmCfg_pinDetection_allValues(void);
-void test_positive_setLpmCfg_detectionDelay_allValues(void);
-void test_positive_setLpmCfg_vmonEn_enable(void);
-void test_positive_setLpmCfg_vmonEn_disable(void);
-void test_positive_setLpmCfg_esmEn_enable(void);
-void test_positive_setLpmCfg_esmEn_disable(void);
-void test_positive_setLpmCfg_wdgEn_enable(void);
-void test_positive_setLpmCfg_wdgEn_disable(void);
-void test_positive_setLpmCfg_multipleEnables(void);
-void test_positive_setLpmCfg_allParams(void);
-void test_positive_setLpmCfg_pinDetection_boundaryMin(void);
-void test_positive_setLpmCfg_pinDetection_boundaryMax(void);
-void test_positive_setLpmCfg_detectionDelay_boundaryMin(void);
-void test_positive_setLpmCfg_detectionDelay_boundaryMax(void);
-void test_positive_setLpmCfg_pinDetectionAndDelay(void);
-void test_negative_core_getLpmCfg_zeroValidParams(void);
+/* ========================================================================== */
+/*                        Aggregate Test Macros                               */
+/* ========================================================================== */
+
+#define CORE_TEST_RUN_POSITIVE() \
+    CORE_TEST_POS_GETNVMREV(); \
+    CORE_TEST_POS_GETSILICONREV(); \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_POS_IOSETCRCENABLESTATE(); \
+    CORE_TEST_POS_SETPWRON(); \
+    CORE_TEST_POS_SETLPMCFG(); \
+    CORE_TEST_POS_GETLPMCFG(); \
+    CORE_TEST_POS_RUNABIST(); \
+    CORE_TEST_POS_GETABISTSTAT(); \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
+    CORE_TEST_POS_FSMGETRECOVCNT(); \
+    CORE_TEST_POS_FSMSETRESETCNTTHR(); \
+    CORE_TEST_POS_FSMGETRESETCNT(); \
+    CORE_TEST_POS_SETCRC16CFG(); \
+    CORE_TEST_POS_GETCRC16CFG(); \
+    CORE_TEST_POS_SILICON()
+
+#define CORE_TEST_RUN_NEGATIVE() \
+    CORE_TEST_NEG_GETNVMREV(); \
+    CORE_TEST_NEG_GETSILICONREV(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_IOSETCRCENABLESTATE(); \
+    CORE_TEST_NEG_IOGETCRCENABLESTATE(); \
+    CORE_TEST_NEG_FSMSETDEVSTATE(); \
+    CORE_TEST_NEG_SETPWRON(); \
+    CORE_TEST_NEG_GETPWRON(); \
+    CORE_TEST_NEG_SETLPMCFG(); \
+    CORE_TEST_NEG_GETLPMCFG(); \
+    CORE_TEST_NEG_RUNABIST(); \
+    CORE_TEST_NEG_GETABISTSTAT(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_FSMSETRECOVCNTTHR(); \
+    CORE_TEST_NEG_FSMGETRECOVCNTTHR(); \
+    CORE_TEST_NEG_FSMGETRECOVCNT(); \
+    CORE_TEST_NEG_FSMCLRRECOVCNT(); \
+    CORE_TEST_NEG_FSMSETRESETCNTTHR(); \
+    CORE_TEST_NEG_FSMGETRESETCNTTHR(); \
+    CORE_TEST_NEG_FSMGETRESETCNT(); \
+    CORE_TEST_NEG_FSMCLRRESETCNT(); \
+    CORE_TEST_NEG_SETCRC16CFG(); \
+    CORE_TEST_NEG_GETCRC16CFG()
+
+#define CORE_TEST_RUN_ALL() \
+    CORE_TEST_RUN_POSITIVE(); \
+    CORE_TEST_RUN_NEGATIVE()
 
 #ifdef __cplusplus
 }

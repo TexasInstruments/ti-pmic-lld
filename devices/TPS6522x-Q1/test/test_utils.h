@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,14 +30,14 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef FSM_TEST_H
-#define FSM_TEST_H
+#ifndef TEST_UTILS_H
+#define TEST_UTILS_H
 
 
 
-/* ========================================================================== */
-/*                              Include Files                                 */
-/* ========================================================================== */
+/* ========================================================================= */
+/*                              Include Files                                */
+/* ========================================================================= */
 
 #include "platform.h"
 
@@ -45,36 +45,18 @@
 extern "C" {
 #endif
 
-/* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
+/* ========================================================================= */
+/*                           Function Declarations                           */
+/* ========================================================================= */
 
-void fsm_test(void *args);
-
-void test_neg_fsm_fsmClrRecovCnt_nullHandle(void);
-void test_neg_fsm_fsmClrResetCnt_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCnt_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCnt_nullRecovCnt(void);
-void test_neg_fsm_fsmGetRecovCntThr_nullHandle(void);
-void test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr(void);
-void test_neg_fsm_fsmGetResetCnt_nullHandle(void);
-void test_neg_fsm_fsmGetResetCnt_nullResetCnt(void);
-void test_neg_fsm_fsmGetResetCntThr_nullHandle(void);
-void test_neg_fsm_fsmGetResetCntThr_nullResetCntThr(void);
-void test_neg_fsm_fsmSetDevState_invalidCmd(void);
-void test_neg_fsm_fsmSetDevState_nullHandle(void);
-void test_neg_fsm_fsmSetRecovCntThr_nullHandle(void);
-void test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr(void);
-void test_neg_fsm_fsmSetResetCntThr_nullHandle(void);
-void test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr(void);
-void test_pos_fsm_fsmSetDevState_coldBootReq(void);
-void test_pos_fsm_fsmSetDevState_offReq(void);
-void test_pos_fsm_fsmSetDevState_safeRecovReq(void);
-void test_pos_fsm_fsmSetDevState_warmResetReq(void);
-void test_pos_fsm_setGetRecovCntThr(void);
-void test_pos_fsm_setGetResetCntThr(void);
+/**
+ * @brief Print silicon revision of the PMIC device to the console.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__FSM_TEST_H__*/
+#endif /* TEST_UTILS_H */

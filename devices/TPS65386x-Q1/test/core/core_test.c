@@ -41,50 +41,217 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Run all Core tests */
+/* ========================================================================== */
+/*        API-Specific Test Macros - setScratchPadValue/getScratchPadValue   */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_SCRATCHPAD() \
+    PLATFORM_RUN_TEST(test_pos_core_scratchPad_setGet)
+
+#define CORE_TEST_NEG_SETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_invalidRegNum)
+
+#define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_invalidRegNum)
+
+#define CORE_TEST_SCRATCHPAD() \
+    CORE_TEST_POS_SCRATCHPAD(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - setRegLockState/getRegLockState       */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_REGLOCK() \
+    PLATFORM_RUN_TEST(test_pos_core_regLock_setGet)
+
+#define CORE_TEST_NEG_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
+
+#define CORE_TEST_NEG_GETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
+
+#define CORE_TEST_REGLOCK() \
+    CORE_TEST_POS_REGLOCK(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - setCntLockState/getCntLockState       */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CNTLOCK() \
+    PLATFORM_RUN_TEST(test_pos_core_cntLock_setGet)
+
+#define CORE_TEST_NEG_SETCNTLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_setCntLockState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setCntLockState_invalidLockState)
+
+#define CORE_TEST_NEG_GETCNTLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getCntLockState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getCntLockState_nullLockState)
+
+#define CORE_TEST_CNTLOCK() \
+    CORE_TEST_POS_CNTLOCK(); \
+    CORE_TEST_NEG_SETCNTLOCKSTATE(); \
+    CORE_TEST_NEG_GETCNTLOCKSTATE()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - setLockCfg/getLockCfg            */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_LOCKCFG() \
+    PLATFORM_RUN_TEST(test_pos_core_lockCfg_setGet)
+
+#define CORE_TEST_NEG_SETLOCKCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_setLockCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_core_setLockCfg_invalidValidParams)
+
+#define CORE_TEST_NEG_GETLOCKCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_getLockCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getLockCfg_nullConfig)
+
+#define CORE_TEST_LOCKCFG() \
+    CORE_TEST_POS_LOCKCFG(); \
+    CORE_TEST_NEG_SETLOCKCFG(); \
+    CORE_TEST_NEG_GETLOCKCFG()
+
+/* ========================================================================== */
+/*            API-Specific Test Macros - getNvmRev/getSiliconRev             */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_DEVICEID() \
+    PLATFORM_RUN_TEST(test_pos_core_deviceId_revision)
+
+#define CORE_TEST_NEG_GETNVMREV() \
+    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullNvmRev)
+
+#define CORE_TEST_NEG_GETSILICONREV() \
+    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullSiliconRev)
+
+#define CORE_TEST_DEVICEID() \
+    CORE_TEST_POS_DEVICEID(); \
+    CORE_TEST_NEG_GETNVMREV(); \
+    CORE_TEST_NEG_GETSILICONREV()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - getCommonStat                   */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_COMMONSTAT() \
+    PLATFORM_RUN_TEST(test_pos_core_commonStat_get)
+
+#define CORE_TEST_NEG_GETCOMMONSTAT() \
+    PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullStat)
+
+#define CORE_TEST_COMMONSTAT() \
+    CORE_TEST_POS_COMMONSTAT(); \
+    CORE_TEST_NEG_GETCOMMONSTAT()
+
+/* ========================================================================== */
+/*         API-Specific Test Macros - diagSetOutCtrlCfg/diagGetOutCtrlCfg    */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_DIAGOUTCTRL() \
+    PLATFORM_RUN_TEST(test_pos_core_diagOutCtrl_setGet)
+
+#define CORE_TEST_NEG_DIAGSETOUTCTRLCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagSetOutCtrlCfg_nullHandle)
+
+#define CORE_TEST_NEG_DIAGGETOUTCTRLCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullConfig)
+
+#define CORE_TEST_DIAGOUTCTRL() \
+    CORE_TEST_POS_DIAGOUTCTRL(); \
+    CORE_TEST_NEG_DIAGSETOUTCTRLCFG(); \
+    CORE_TEST_NEG_DIAGGETOUTCTRLCFG()
+
+/* ========================================================================== */
+/*            API-Specific Test Macros - diagSetAmuxCfg/diagGetAmuxCfg       */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_DIAGAMUX() \
+    PLATFORM_RUN_TEST(test_pos_core_diagAMUX_setGet)
+
+#define CORE_TEST_NEG_DIAGSETAMUXCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagSetAmuxCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_diagSetAmuxCfg_invalidChannel)
+
+#define CORE_TEST_NEG_DIAGGETAMUXCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetAmuxCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetAmuxCfg_nullChannel)
+
+#define CORE_TEST_DIAGAMUX() \
+    CORE_TEST_POS_DIAGAMUX(); \
+    CORE_TEST_NEG_DIAGSETAMUXCFG(); \
+    CORE_TEST_NEG_DIAGGETAMUXCFG()
+
+/* ========================================================================== */
+/*            API-Specific Test Macros - diagSetDmuxCfg/diagGetDmuxCfg       */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_DIAGDMUX() \
+    PLATFORM_RUN_TEST(test_pos_core_diagDMUX_setGet)
+
+#define CORE_TEST_NEG_DIAGSETDMUXCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagSetDmuxCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_diagSetDmuxCfg_invalidGroup)
+
+#define CORE_TEST_NEG_DIAGGETDMUXCFG() \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetDmuxCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_diagGetDmuxCfg_nullGroup)
+
+#define CORE_TEST_DIAGDMUX() \
+    CORE_TEST_POS_DIAGDMUX(); \
+    CORE_TEST_NEG_DIAGSETDMUXCFG(); \
+    CORE_TEST_NEG_DIAGGETDMUXCFG()
+
+/* ========================================================================== */
+/*                         Aggregate Test Macros                              */
+/* ========================================================================== */
+
+#define CORE_TEST_RUN_POSITIVE() \
+    CORE_TEST_POS_SCRATCHPAD(); \
+    CORE_TEST_POS_REGLOCK(); \
+    CORE_TEST_POS_CNTLOCK(); \
+    CORE_TEST_POS_LOCKCFG(); \
+    CORE_TEST_POS_DEVICEID(); \
+    CORE_TEST_POS_COMMONSTAT(); \
+    CORE_TEST_POS_DIAGOUTCTRL(); \
+    CORE_TEST_POS_DIAGAMUX(); \
+    CORE_TEST_POS_DIAGDMUX()
+
+#define CORE_TEST_RUN_NEGATIVE() \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETCNTLOCKSTATE(); \
+    CORE_TEST_NEG_GETCNTLOCKSTATE(); \
+    CORE_TEST_NEG_SETLOCKCFG(); \
+    CORE_TEST_NEG_GETLOCKCFG(); \
+    CORE_TEST_NEG_GETNVMREV(); \
+    CORE_TEST_NEG_GETSILICONREV(); \
+    CORE_TEST_NEG_GETCOMMONSTAT(); \
+    CORE_TEST_NEG_DIAGSETOUTCTRLCFG(); \
+    CORE_TEST_NEG_DIAGGETOUTCTRLCFG(); \
+    CORE_TEST_NEG_DIAGSETAMUXCFG(); \
+    CORE_TEST_NEG_DIAGGETAMUXCFG(); \
+    CORE_TEST_NEG_DIAGSETDMUXCFG(); \
+    CORE_TEST_NEG_DIAGGETDMUXCFG()
+
 #define CORE_TEST_RUN_ALL() \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setScratchPadValue_invalidParam_regNum); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_nullParam_value); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getScratchPadValue_invalidParam_regNum); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setRegLockState_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getRegLockState_nullParam_lockState); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setCntLockState_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setCntLockState_invalidParam_lockState); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getCntLockState_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getCntLockState_nullParam_lockState); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setLockCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_setLockCfg_invalidParam_validParams); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getLockCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getLockCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getNvmRev_nullParam_nvmRev); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getSiliconRev_nullParam_siliconRev); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getCommonStat_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_getCommonStat_nullParam_stat); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagSetOutCtrlCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetOutCtrlCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetOutCtrlCfg_nullParam_config); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagSetAmuxCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagSetAmuxCfg_invalidParam_channel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetAmuxCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetAmuxCfg_nullParam_channel); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagSetDmuxCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagSetDmuxCfg_invalidParam_group); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetDmuxCfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_negative_Pmic_diagGetDmuxCfg_nullParam_group); \
-    PLATFORM_RUN_TEST(test_positive_scratchPadSetGet); \
-    PLATFORM_RUN_TEST(test_positive_regLockSetGet); \
-    PLATFORM_RUN_TEST(test_positive_cntLockSetGet); \
-    PLATFORM_RUN_TEST(test_positive_lockCfgSetGet); \
-    PLATFORM_RUN_TEST(test_positive_deviceIdRevision); \
-    PLATFORM_RUN_TEST(test_positive_commonStat); \
-    PLATFORM_RUN_TEST(test_positive_diagOutCtrlSetGet); \
-    PLATFORM_RUN_TEST(test_positive_diagAMUXSetGet); \
-    PLATFORM_RUN_TEST(test_positive_diagDMUXSetGet)
+    CORE_TEST_RUN_POSITIVE(); \
+    CORE_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -103,7 +270,7 @@ static Pmic_Handle_t pmicHandle = {0U};
 /**
  * @brief Test Pmic_setScratchPadValue with NULL handle
  */
-void test_negative_Pmic_setScratchPadValue_nullParam_handle(void)
+void test_neg_core_setScratchPadValue_nullHandle(void)
 {
     int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -112,7 +279,7 @@ void test_negative_Pmic_setScratchPadValue_nullParam_handle(void)
 /**
  * @brief Test Pmic_setScratchPadValue with invalid register number
  */
-void test_negative_Pmic_setScratchPadValue_invalidParam_regNum(void)
+void test_neg_core_setScratchPadValue_invalidRegNum(void)
 {
     int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -121,7 +288,7 @@ void test_negative_Pmic_setScratchPadValue_invalidParam_regNum(void)
 /**
  * @brief Test Pmic_getScratchPadValue with NULL handle
  */
-void test_negative_Pmic_getScratchPadValue_nullParam_handle(void)
+void test_neg_core_getScratchPadValue_nullHandle(void)
 {
     uint8_t value = 0U;
     int32_t status = Pmic_getScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, &value);
@@ -131,7 +298,7 @@ void test_negative_Pmic_getScratchPadValue_nullParam_handle(void)
 /**
  * @brief Test Pmic_getScratchPadValue with NULL value pointer
  */
-void test_negative_Pmic_getScratchPadValue_nullParam_value(void)
+void test_neg_core_getScratchPadValue_nullValue(void)
 {
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -140,7 +307,7 @@ void test_negative_Pmic_getScratchPadValue_nullParam_value(void)
 /**
  * @brief Test Pmic_getScratchPadValue with invalid register number
  */
-void test_negative_Pmic_getScratchPadValue_invalidParam_regNum(void)
+void test_neg_core_getScratchPadValue_invalidRegNum(void)
 {
     uint8_t value = 0U;
     int32_t status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, &value);
@@ -150,7 +317,7 @@ void test_negative_Pmic_getScratchPadValue_invalidParam_regNum(void)
 /**
  * @brief Test Pmic_setRegLockState with NULL handle
  */
-void test_negative_Pmic_setRegLockState_nullParam_handle(void)
+void test_neg_core_setRegLockState_nullHandle(void)
 {
     int32_t status = Pmic_setRegLockState(NULL, PMIC_LOCK_DISABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -159,7 +326,7 @@ void test_negative_Pmic_setRegLockState_nullParam_handle(void)
 /**
  * @brief Test Pmic_getRegLockState with NULL handle
  */
-void test_negative_Pmic_getRegLockState_nullParam_handle(void)
+void test_neg_core_getRegLockState_nullHandle(void)
 {
     uint8_t lockState = 0U;
     int32_t status = Pmic_getRegLockState(NULL, &lockState);
@@ -169,7 +336,7 @@ void test_negative_Pmic_getRegLockState_nullParam_handle(void)
 /**
  * @brief Test Pmic_getRegLockState with NULL lockState pointer
  */
-void test_negative_Pmic_getRegLockState_nullParam_lockState(void)
+void test_neg_core_getRegLockState_nullLockState(void)
 {
     int32_t status = Pmic_getRegLockState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -178,7 +345,7 @@ void test_negative_Pmic_getRegLockState_nullParam_lockState(void)
 /**
  * @brief Test Pmic_setCntLockState with NULL handle
  */
-void test_negative_Pmic_setCntLockState_nullParam_handle(void)
+void test_neg_core_setCntLockState_nullHandle(void)
 {
     int32_t status = Pmic_setCntLockState(NULL, PMIC_LOCK_DISABLE);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -187,7 +354,7 @@ void test_negative_Pmic_setCntLockState_nullParam_handle(void)
 /**
  * @brief Test Pmic_setCntLockState with invalid lock state parameter
  */
-void test_negative_Pmic_setCntLockState_invalidParam_lockState(void)
+void test_neg_core_setCntLockState_invalidLockState(void)
 {
     int32_t status = Pmic_setCntLockState(&pmicHandle, 0xFFU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -196,7 +363,7 @@ void test_negative_Pmic_setCntLockState_invalidParam_lockState(void)
 /**
  * @brief Test Pmic_getCntLockState with NULL handle
  */
-void test_negative_Pmic_getCntLockState_nullParam_handle(void)
+void test_neg_core_getCntLockState_nullHandle(void)
 {
     uint8_t lockState = 0U;
     int32_t status = Pmic_getCntLockState(NULL, &lockState);
@@ -206,7 +373,7 @@ void test_negative_Pmic_getCntLockState_nullParam_handle(void)
 /**
  * @brief Test Pmic_getCntLockState with NULL lockState pointer
  */
-void test_negative_Pmic_getCntLockState_nullParam_lockState(void)
+void test_neg_core_getCntLockState_nullLockState(void)
 {
     int32_t status = Pmic_getCntLockState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -215,7 +382,7 @@ void test_negative_Pmic_getCntLockState_nullParam_lockState(void)
 /**
  * @brief Test Pmic_setLockCfg with NULL config pointer
  */
-void test_negative_Pmic_setLockCfg_nullParam_config(void)
+void test_neg_core_setLockCfg_nullConfig(void)
 {
     int32_t status = Pmic_setLockCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -224,7 +391,7 @@ void test_negative_Pmic_setLockCfg_nullParam_config(void)
 /**
  * @brief Test Pmic_setLockCfg with invalid validParams
  */
-void test_negative_Pmic_setLockCfg_invalidParam_validParams(void)
+void test_neg_core_setLockCfg_invalidValidParams(void)
 {
     Pmic_Lock_t lockCfg = {
         .validParams = 0U,
@@ -238,7 +405,7 @@ void test_negative_Pmic_setLockCfg_invalidParam_validParams(void)
 /**
  * @brief Test Pmic_getLockCfg with NULL handle
  */
-void test_negative_Pmic_getLockCfg_nullParam_handle(void)
+void test_neg_core_getLockCfg_nullHandle(void)
 {
     Pmic_Lock_t lockCfg = { .validParams = PMIC_CFG_REG_LOCK_VALID };
     int32_t status = Pmic_getLockCfg(NULL, &lockCfg);
@@ -248,7 +415,7 @@ void test_negative_Pmic_getLockCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_getLockCfg with NULL config pointer
  */
-void test_negative_Pmic_getLockCfg_nullParam_config(void)
+void test_neg_core_getLockCfg_nullConfig(void)
 {
     int32_t status = Pmic_getLockCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -257,7 +424,7 @@ void test_negative_Pmic_getLockCfg_nullParam_config(void)
 /**
  * @brief Test Pmic_getNvmRev with NULL handle
  */
-void test_negative_Pmic_getNvmRev_nullParam_handle(void)
+void test_neg_core_getNvmRev_nullHandle(void)
 {
     uint8_t nvmRev = 0U;
     int32_t status = Pmic_getNvmRev(NULL, &nvmRev);
@@ -267,7 +434,7 @@ void test_negative_Pmic_getNvmRev_nullParam_handle(void)
 /**
  * @brief Test Pmic_getNvmRev with NULL nvmRev pointer
  */
-void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void)
+void test_neg_core_getNvmRev_nullNvmRev(void)
 {
     int32_t status = Pmic_getNvmRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -276,7 +443,7 @@ void test_negative_Pmic_getNvmRev_nullParam_nvmRev(void)
 /**
  * @brief Test Pmic_getSiliconRev with NULL handle
  */
-void test_negative_Pmic_getSiliconRev_nullParam_handle(void)
+void test_neg_core_getSiliconRev_nullHandle(void)
 {
     uint8_t siliconRev = 0U;
     int32_t status = Pmic_getSiliconRev(NULL, &siliconRev);
@@ -286,7 +453,7 @@ void test_negative_Pmic_getSiliconRev_nullParam_handle(void)
 /**
  * @brief Test Pmic_getSiliconRev with NULL siliconRev pointer
  */
-void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void)
+void test_neg_core_getSiliconRev_nullSiliconRev(void)
 {
     int32_t status = Pmic_getSiliconRev(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -295,7 +462,7 @@ void test_negative_Pmic_getSiliconRev_nullParam_siliconRev(void)
 /**
  * @brief Test Pmic_getCommonStat with NULL handle
  */
-void test_negative_Pmic_getCommonStat_nullParam_handle(void)
+void test_neg_core_getCommonStat_nullHandle(void)
 {
     Pmic_CommonCtrlStat_t stat = {0U};
     int32_t status = Pmic_getCommonStat(NULL, &stat);
@@ -305,7 +472,7 @@ void test_negative_Pmic_getCommonStat_nullParam_handle(void)
 /**
  * @brief Test Pmic_getCommonStat with NULL stat pointer
  */
-void test_negative_Pmic_getCommonStat_nullParam_stat(void)
+void test_neg_core_getCommonStat_nullStat(void)
 {
     int32_t status = Pmic_getCommonStat(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -314,7 +481,7 @@ void test_negative_Pmic_getCommonStat_nullParam_stat(void)
 /**
  * @brief Test Pmic_diagSetOutCtrlCfg with NULL handle
  */
-void test_negative_Pmic_diagSetOutCtrlCfg_nullParam_handle(void)
+void test_neg_core_diagSetOutCtrlCfg_nullHandle(void)
 {
     Pmic_DiagOutCfgCtrl_t config = {
         .validParams = PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID,
@@ -327,7 +494,7 @@ void test_negative_Pmic_diagSetOutCtrlCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagGetOutCtrlCfg with NULL handle
  */
-void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_handle(void)
+void test_neg_core_diagGetOutCtrlCfg_nullHandle(void)
 {
     Pmic_DiagOutCfgCtrl_t config = {0U};
     int32_t status = Pmic_diagGetOutCtrlCfg(NULL, &config);
@@ -337,7 +504,7 @@ void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagGetOutCtrlCfg with NULL config pointer
  */
-void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_config(void)
+void test_neg_core_diagGetOutCtrlCfg_nullConfig(void)
 {
     int32_t status = Pmic_diagGetOutCtrlCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -346,7 +513,7 @@ void test_negative_Pmic_diagGetOutCtrlCfg_nullParam_config(void)
 /**
  * @brief Test Pmic_diagSetAmuxCfg with NULL handle
  */
-void test_negative_Pmic_diagSetAmuxCfg_nullParam_handle(void)
+void test_neg_core_diagSetAmuxCfg_nullHandle(void)
 {
     int32_t status = Pmic_diagSetAmuxCfg(NULL, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -355,7 +522,7 @@ void test_negative_Pmic_diagSetAmuxCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagSetAmuxCfg with invalid channel (out of range)
  */
-void test_negative_Pmic_diagSetAmuxCfg_invalidParam_channel(void)
+void test_neg_core_diagSetAmuxCfg_invalidChannel(void)
 {
     int32_t status = Pmic_diagSetAmuxCfg(&pmicHandle, 0x20U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -364,7 +531,7 @@ void test_negative_Pmic_diagSetAmuxCfg_invalidParam_channel(void)
 /**
  * @brief Test Pmic_diagGetAmuxCfg with NULL handle
  */
-void test_negative_Pmic_diagGetAmuxCfg_nullParam_handle(void)
+void test_neg_core_diagGetAmuxCfg_nullHandle(void)
 {
     uint8_t channel = 0U;
     int32_t status = Pmic_diagGetAmuxCfg(NULL, &channel);
@@ -374,7 +541,7 @@ void test_negative_Pmic_diagGetAmuxCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagGetAmuxCfg with NULL channel pointer
  */
-void test_negative_Pmic_diagGetAmuxCfg_nullParam_channel(void)
+void test_neg_core_diagGetAmuxCfg_nullChannel(void)
 {
     int32_t status = Pmic_diagGetAmuxCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -383,7 +550,7 @@ void test_negative_Pmic_diagGetAmuxCfg_nullParam_channel(void)
 /**
  * @brief Test Pmic_diagSetDmuxCfg with NULL handle
  */
-void test_negative_Pmic_diagSetDmuxCfg_nullParam_handle(void)
+void test_neg_core_diagSetDmuxCfg_nullHandle(void)
 {
     int32_t status = Pmic_diagSetDmuxCfg(NULL, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -392,7 +559,7 @@ void test_negative_Pmic_diagSetDmuxCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagSetDmuxCfg with invalid group (out of range)
  */
-void test_negative_Pmic_diagSetDmuxCfg_invalidParam_group(void)
+void test_neg_core_diagSetDmuxCfg_invalidGroup(void)
 {
     int32_t status = Pmic_diagSetDmuxCfg(&pmicHandle, 0x20U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -401,7 +568,7 @@ void test_negative_Pmic_diagSetDmuxCfg_invalidParam_group(void)
 /**
  * @brief Test Pmic_diagGetDmuxCfg with NULL handle
  */
-void test_negative_Pmic_diagGetDmuxCfg_nullParam_handle(void)
+void test_neg_core_diagGetDmuxCfg_nullHandle(void)
 {
     uint8_t group = 0U;
     int32_t status = Pmic_diagGetDmuxCfg(NULL, &group);
@@ -411,7 +578,7 @@ void test_negative_Pmic_diagGetDmuxCfg_nullParam_handle(void)
 /**
  * @brief Test Pmic_diagGetDmuxCfg with NULL group pointer
  */
-void test_negative_Pmic_diagGetDmuxCfg_nullParam_group(void)
+void test_neg_core_diagGetDmuxCfg_nullGroup(void)
 {
     int32_t status = Pmic_diagGetDmuxCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -424,7 +591,7 @@ void test_negative_Pmic_diagGetDmuxCfg_nullParam_group(void)
 /**
  * @brief Test scratchpad register set and get operations
  */
-void test_positive_scratchPadSetGet(void)
+void test_pos_core_scratchPad_setGet(void)
 {
     int32_t status;
     uint8_t writeData1 = 0x38U;
@@ -454,7 +621,7 @@ void test_positive_scratchPadSetGet(void)
 /**
  * @brief Test register lock control set and get operations
  */
-void test_positive_regLockSetGet(void)
+void test_pos_core_regLock_setGet(void)
 {
     int32_t status;
     uint8_t lockState = 0U;
@@ -481,7 +648,7 @@ void test_positive_regLockSetGet(void)
 /**
  * @brief Test counter lock control set and get operations
  */
-void test_positive_cntLockSetGet(void)
+void test_pos_core_cntLock_setGet(void)
 {
     int32_t status;
     uint8_t lockState = 0U;
@@ -508,7 +675,7 @@ void test_positive_cntLockSetGet(void)
 /**
  * @brief Test lock configuration set and get operations
  */
-void test_positive_lockCfgSetGet(void)
+void test_pos_core_lockCfg_setGet(void)
 {
     int32_t status;
     Pmic_Lock_t lockCfg = {0U};
@@ -544,7 +711,7 @@ void test_positive_lockCfgSetGet(void)
 /**
  * @brief Test device ID and revision read operations
  */
-void test_positive_deviceIdRevision(void)
+void test_pos_core_deviceId_revision(void)
 {
     int32_t status;
     uint8_t nvmRev = 0U;
@@ -562,7 +729,7 @@ void test_positive_deviceIdRevision(void)
 /**
  * @brief Test common status read operations
  */
-void test_positive_commonStat(void)
+void test_pos_core_commonStat_get(void)
 {
     int32_t status;
     Pmic_CommonCtrlStat_t stat = {0U};
@@ -575,7 +742,7 @@ void test_positive_commonStat(void)
 /**
  * @brief Test diagnostic output control set and get operations
  */
-void test_positive_diagOutCtrlSetGet(void)
+void test_pos_core_diagOutCtrl_setGet(void)
 {
     int32_t status;
     Pmic_DiagOutCfgCtrl_t setCfg = {0U};
@@ -619,7 +786,7 @@ void test_positive_diagOutCtrlSetGet(void)
 /**
  * @brief Test AMUX channel configuration set and get operations
  */
-void test_positive_diagAMUXSetGet(void)
+void test_pos_core_diagAMUX_setGet(void)
 {
     int32_t status;
     uint8_t setChannel = 0x0AU;
@@ -651,7 +818,7 @@ void test_positive_diagAMUXSetGet(void)
 /**
  * @brief Test DMUX group configuration set and get operations
  */
-void test_positive_diagDMUXSetGet(void)
+void test_pos_core_diagDMUX_setGet(void)
 {
     int32_t status;
     uint8_t setGroup = 0x05U;
@@ -717,7 +884,7 @@ void core_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        testCommon_printSiRev(&pmicHandle);
+        testUtils_printSiRev(&pmicHandle);
 
         platform_setupTests();
         CORE_TEST_RUN_ALL();

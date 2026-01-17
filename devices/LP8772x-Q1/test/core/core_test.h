@@ -51,41 +51,78 @@ extern "C" {
 
 void core_test(void *args);
 
-void test_negative_Pmic_setScratchPadValue_nullParam_handle(void);
-void test_negative_Pmic_setScratchPadValue_outOfBounds_scratchPadRegNum(void);
-void test_negative_Pmic_getScratchPadValue_nullParam_handle(void);
-void test_negative_Pmic_getScratchPadValue_nullParam_value(void);
-void test_negative_Pmic_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
-void test_negative_Pmic_setRegLockState_nullParam_handle(void);
-void test_negative_Pmic_getRegLockState_nullParam_handle(void);
-void test_negative_Pmic_getRegLockState_nullParam_lockState(void);
-void test_negative_Pmic_configCrcEnable_nullParam_handle(void);
-void test_negative_Pmic_configCrcDisable_nullParam_handle(void);
-void test_negative_Pmic_getConfigCrcStatus_nullParam_handle(void);
-void test_negative_Pmic_getConfigCrcStatus_nullParam_configCrcStat(void);
-void test_negative_Pmic_configCrcCalculate_nullParam_handle(void);
-void test_negative_Pmic_configCrcGetFromDevice_nullParam_handle(void);
-void test_negative_Pmic_configCrcGetFromDevice_nullParam_crc(void);
-void test_positive_setGetRegLockState(void);
-void test_positive_setGetScratchpadReg1to4(void);
-void test_positive_enableDisableConfigRegCrc(void);
-void test_positive_configCrcCalculate(void);
-void test_positive_getConfigCrc(void);
+/* ========================================================================== */
+/*                  setScratchPadValue API Tests                              */
+/* ========================================================================== */
+void test_neg_core_setScratchPadValue_nullHandle(void);
+void test_neg_core_setScratchPadValue_outOfBounds(void);
 
-/* LP8772x-Q1 specific CRC configuration tests */
-void test_positive_core_disableConfigCrc(void);
-void test_negative_core_configCrcError(void);
+/* ========================================================================== */
+/*                  getScratchPadValue API Tests                              */
+/* ========================================================================== */
+void test_pos_core_getScratchPadValue_reg1to4(void);
+void test_neg_core_getScratchPadValue_nullHandle(void);
+void test_neg_core_getScratchPadValue_nullValue(void);
+void test_neg_core_getScratchPadValue_outOfBounds(void);
 
-/* LP8772x-Q1 additional coverage tests for error handling */
-void test_negative_coreInit_invalidDeviceType(void);
-void test_positive_coreGetErrStatus_multipleErrors(void);
-void test_positive_coreClrErrStatus_specificError(void);
+/* ========================================================================== */
+/*                  setRegLockState API Tests                                 */
+/* ========================================================================== */
+void test_pos_core_setRegLockState_enableDisable(void);
+void test_neg_core_setRegLockState_nullHandle(void);
 
-/* LP8772x-Q1 tests for uncovered lines in pmic_core.c */
-void test_negative_core_configCrcAlreadyEnabled(void);
-void test_negative_core_configCrcCalcBitHigh(void);
-void test_negative_core_configCrcMismatch(void);
-void test_negative_core_crcLoopIoFailure(void);
+/* ========================================================================== */
+/*                  getRegLockState API Tests                                 */
+/* ========================================================================== */
+void test_neg_core_getRegLockState_nullHandle(void);
+void test_neg_core_getRegLockState_nullLockState(void);
+
+/* ========================================================================== */
+/*                  configCrcEnable API Tests                                 */
+/* ========================================================================== */
+void test_pos_core_configCrcEnable_enableOnly(void);
+void test_pos_core_configCrcEnable_recalculate(void);
+void test_neg_core_configCrcEnable_nullHandle(void);
+void test_neg_core_configCrcEnable_alreadyEnabled(void);
+void test_neg_core_configCrcEnable_calcBitHigh(void);
+void test_neg_core_configCrcEnable_crcMismatch(void);
+void test_neg_core_configCrcEnable_error(void);
+
+/* ========================================================================== */
+/*                  configCrcDisable API Tests                                */
+/* ========================================================================== */
+void test_pos_core_configCrcDisable_disable(void);
+void test_neg_core_configCrcDisable_nullHandle(void);
+
+/* ========================================================================== */
+/*                  getConfigCrcStatus API Tests                              */
+/* ========================================================================== */
+void test_neg_core_getConfigCrcStatus_nullHandle(void);
+void test_neg_core_getConfigCrcStatus_nullStatus(void);
+
+/* ========================================================================== */
+/*                  configCrcCalculate API Tests                              */
+/* ========================================================================== */
+void test_neg_core_configCrcCalculate_nullHandle(void);
+void test_neg_core_configCrcCalculate_ioFailure(void);
+
+/* ========================================================================== */
+/*               configCrcGetFromDevice API Tests                             */
+/* ========================================================================== */
+void test_pos_core_configCrcGetFromDevice_getCrc(void);
+void test_neg_core_configCrcGetFromDevice_nullHandle(void);
+void test_neg_core_configCrcGetFromDevice_nullCrc(void);
+
+/* ========================================================================== */
+/*                  init API Tests                                            */
+/* ========================================================================== */
+void test_neg_core_init_invalidDeviceType(void);
+
+/* ========================================================================== */
+/*                  Error Status Tests                                        */
+/* ========================================================================== */
+void test_pos_core_errStatus_multipleErrors(void);
+void test_pos_core_errStatus_specificError(void);
 
 #ifdef __cplusplus
 }

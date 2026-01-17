@@ -85,7 +85,7 @@ void tearDown(void)
 
 /* Declare test module entry functions */
 extern void common_test(void *args);
-extern void pmic_init_test(void *args);
+extern void pmic_test(void *args);
 extern void core_test(void *args);
 extern void adc_test(void *args);
 extern void power_test(void *args);
@@ -119,7 +119,7 @@ int main(void)
     common_test(NULL);
 
     printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_init_test(NULL);
+    pmic_test(NULL);
 
     printf("\n=== Running Core Tests ===\n");
     core_test(NULL);

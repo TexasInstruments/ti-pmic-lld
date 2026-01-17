@@ -30,48 +30,48 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_TEST_INIT_H
-#define PMIC_TEST_INIT_H
-
 
 
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "platform.h"
+#include "test_utils.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* ========================================================================= */
+/*                             Macros & Typedefs                             */
+/* ========================================================================= */
+
+#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
+#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
+#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
+#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
+#define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
+
+// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
+#define DEVICE_PG_IDENTIFIER_MASK (1U << 3U)
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                           Function Definitions                             */
 /* ========================================================================== */
 
-void pmic_init_test(void *args);
+void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
+{
+    char msg[50U] = {0};
 
-void test_negative_Pmic_init_nullParam_pmicHandle(void);
-void test_negative_Pmic_init_nullParam_pmicCfg(void);
-void test_negative_Pmic_init_nullParam_pmicCfg_commHandle(void);
-void test_negative_Pmic_init_nullParam_pmicCfg_ioRead(void);
-void test_negative_Pmic_init_nullParam_pmicCfg_ioWrite(void);
-void test_negative_Pmic_init_nullParam_pmicCfg_critSecStart(void);
-void test_negative_Pmic_init_nullParam_pmicCfg_critSecStop(void);
-void test_negative_Pmic_deinit_nullParam_pmicHandle(void);
-void test_positive_Pmic_init(void);
-void test_positive_Pmic_deinit(void);
-void test_positive_init_withRetryCnt(void);
-void test_positive_init_withRetryInterval(void);
-void test_positive_init_withTimerWaitMs(void);
-void test_negative_init_timerWaitNull(void);
-void test_negative_init_nullIrqResponseCallback(void);
-void test_negative_checkHandle_nullCommHandle(void);
-void test_negative_checkHandle_nullFptrs(void);
-void test_negative_checkHandle_nullTimerWithRetry(void);
-void test_negative_checkHandle_invalidDrvInitStat(void);
-
-#ifdef __cplusplus
+    if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFIER_MASK) != 0U)
+    {
+        (void)sprintf(msg, "PMIC device is B1\r\n\r\n");
+        platform_printString(msg);
+    }
+    else if (pmicHandle->isA0)
+    {
+        (void)sprintf(msg, "PMIC device is A0\r\n\r\n");
+        platform_printString(msg);
+    }
+    else
+    {
+        (void)sprintf(msg, "PMIC device is B0\r\n\r\n");
+        platform_printString(msg);
+    }
 }
-#endif /* __cplusplus */
-#endif /* PMIC_TEST_INIT_H */

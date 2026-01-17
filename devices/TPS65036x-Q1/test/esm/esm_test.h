@@ -43,11 +43,140 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "test_common.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* ========================================================================== */
+/*                           Macro Definitions                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                  Pmic_esmSetCfg / Pmic_esmGetCfg                           */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
+#define ESM_TEST_POS_SETGETCFG() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_level); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_pwm); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_errCntThr); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_delay1); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_delay2); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_hmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_hmin); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_lmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_lmin)
+
+/* Negative tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
+#define ESM_TEST_NEG_SETGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullEsmCfg); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_outOfBounds_mode); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_outOfBounds_errCntThr); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullEsmCfg); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams)
+
+/* All tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
+#define ESM_TEST_SETGETCFG() \
+    ESM_TEST_NEG_SETGETCFG(); \
+    ESM_TEST_POS_SETGETCFG()
+
+/* ========================================================================== */
+/*              Pmic_esmStart / Pmic_esmStop / Start State                    */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_esmStart / Pmic_esmStop */
+#define ESM_TEST_POS_STARTSTOP() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmStart); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmStop); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState)
+
+/* Negative tests for Pmic_esmStart / Pmic_esmStop */
+#define ESM_TEST_NEG_STARTSTOP() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmStart_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmStop_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullStarted)
+
+/* All tests for Pmic_esmStart / Pmic_esmStop */
+#define ESM_TEST_STARTSTOP() \
+    ESM_TEST_NEG_STARTSTOP(); \
+    ESM_TEST_POS_STARTSTOP()
+
+/* ========================================================================== */
+/*              Pmic_esmGetStatus / Pmic_esmClrStatus                         */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
+#define ESM_TEST_POS_STATUS() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus)
+
+/* Negative tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
+#define ESM_TEST_NEG_STATUS() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullEsmStat); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_invalidValidParams_zero); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_invalidValidParams_outOfBounds); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_nullEsmStat); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_zero); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds)
+
+/* All tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
+#define ESM_TEST_STATUS() \
+    ESM_TEST_NEG_STATUS(); \
+    ESM_TEST_POS_STATUS()
+
+/* ========================================================================== */
+/*                      Pmic_esmGetErrCnt                                     */
+/* ========================================================================== */
+
+/* Positive tests for Pmic_esmGetErrCnt */
+#define ESM_TEST_POS_ERRCNT() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt)
+
+/* Negative tests for Pmic_esmGetErrCnt */
+#define ESM_TEST_NEG_ERRCNT() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullErrCnt)
+
+/* All tests for Pmic_esmGetErrCnt */
+#define ESM_TEST_ERRCNT() \
+    ESM_TEST_NEG_ERRCNT(); \
+    ESM_TEST_POS_ERRCNT()
+
+/* ========================================================================== */
+/*                     Aggregate Test Macros                                  */
+/* ========================================================================== */
+
+/* Run all ESM positive tests */
+#define ESM_TEST_RUN_POSITIVE() \
+    ESM_TEST_POS_SETGETCFG(); \
+    ESM_TEST_POS_STARTSTOP(); \
+    ESM_TEST_POS_STATUS(); \
+    ESM_TEST_POS_ERRCNT()
+
+/* Run all ESM negative tests */
+#define ESM_TEST_RUN_NEGATIVE() \
+    ESM_TEST_NEG_SETGETCFG(); \
+    ESM_TEST_NEG_STARTSTOP(); \
+    ESM_TEST_NEG_STATUS(); \
+    ESM_TEST_NEG_ERRCNT()
+
+/* Run all ESM tests */
+#define ESM_TEST_RUN_ALL() \
+    ESM_TEST_SETGETCFG(); \
+    ESM_TEST_STARTSTOP(); \
+    ESM_TEST_STATUS(); \
+    ESM_TEST_ERRCNT()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -56,70 +185,70 @@ extern "C" {
 void esm_test(void *args);
 
 /* Negative Tests - Pmic_esmSetCfg */
-void test_negative_Pmic_esmSetCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmSetCfg_nullParam_esmCfg(void);
-void test_negative_Pmic_esmSetCfg_invalid_validParams(void);
-void test_negative_Pmic_esmSetCfg_outOfBounds_mode(void);
-void test_negative_Pmic_esmSetCfg_outOfBounds_errCntThr(void);
+void test_neg_esm_esmSetCfg_nullHandle(void);
+void test_neg_esm_esmSetCfg_nullEsmCfg(void);
+void test_neg_esm_esmSetCfg_invalidValidParams(void);
+void test_neg_esm_esmSetCfg_outOfBounds_mode(void);
+void test_neg_esm_esmSetCfg_outOfBounds_errCntThr(void);
 
 /* Negative Tests - Pmic_esmGetCfg */
-void test_negative_Pmic_esmGetCfg_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmGetCfg_nullParam_esmCfg(void);
-void test_negative_Pmic_esmGetCfg_invalid_validParams(void);
+void test_neg_esm_esmGetCfg_nullHandle(void);
+void test_neg_esm_esmGetCfg_nullEsmCfg(void);
+void test_neg_esm_esmGetCfg_invalidValidParams(void);
 
 /* Negative Tests - Pmic_esmSetStartState */
-void test_negative_Pmic_esmSetStartState_nullParam_pmicHandle(void);
+void test_neg_esm_esmSetStartState_nullHandle(void);
 
 /* Negative Tests - Pmic_esmStart */
-void test_negative_Pmic_esmStart_nullParam_pmicHandle(void);
+void test_neg_esm_esmStart_nullHandle(void);
 
 /* Negative Tests - Pmic_esmStop */
-void test_negative_Pmic_esmStop_nullParam_pmicHandle(void);
+void test_neg_esm_esmStop_nullHandle(void);
 
 /* Negative Tests - Pmic_esmGetStartState */
-void test_negative_Pmic_esmGetStartState_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmGetStartState_nullParam_start(void);
+void test_neg_esm_esmGetStartState_nullHandle(void);
+void test_neg_esm_esmGetStartState_nullStarted(void);
 
 /* Negative Tests - Pmic_esmGetStatus */
-void test_negative_Pmic_esmGetStatus_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmGetStatus_nullParam_esmStat(void);
-void test_negative_Pmic_esmGetStatus_invalid_validParams_zero(void);
-void test_negative_Pmic_esmGetStatus_invalid_validParams_outOfBounds(void);
+void test_neg_esm_esmGetStatus_nullHandle(void);
+void test_neg_esm_esmGetStatus_nullEsmStat(void);
+void test_neg_esm_esmGetStatus_invalidValidParams_zero(void);
+void test_neg_esm_esmGetStatus_invalidValidParams_outOfBounds(void);
 
 /* Negative Tests - Pmic_esmClrStatus */
-void test_negative_Pmic_esmClrStatus_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmClrStatus_nullParam_esmStat(void);
-void test_negative_Pmic_esmClrStatus_invalid_validParams_zero(void);
-void test_negative_Pmic_esmClrStatus_invalid_validParams_outOfBounds(void);
+void test_neg_esm_esmClrStatus_nullHandle(void);
+void test_neg_esm_esmClrStatus_nullEsmStat(void);
+void test_neg_esm_esmClrStatus_invalidValidParams_zero(void);
+void test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds(void);
 
 /* Negative Tests - Pmic_esmGetErrCnt */
-void test_negative_Pmic_esmGetErrCnt_nullParam_pmicHandle(void);
-void test_negative_Pmic_esmGetErrCnt_nullParam_errCnt(void);
+void test_neg_esm_esmGetErrCnt_nullHandle(void);
+void test_neg_esm_esmGetErrCnt_nullErrCnt(void);
 
 /* Positive Tests - Set/Get ESM Configuration */
-void test_positive_esmSetGetCfg_enable(void);
-void test_positive_esmSetGetCfg_mode_level(void);
-void test_positive_esmSetGetCfg_mode_pwm(void);
-void test_positive_esmSetGetCfg_errCntThr(void);
-void test_positive_esmSetGetCfg_delay1(void);
-void test_positive_esmSetGetCfg_delay2(void);
-void test_positive_esmSetGetCfg_hmax(void);
-void test_positive_esmSetGetCfg_hmin(void);
-void test_positive_esmSetGetCfg_lmax(void);
-void test_positive_esmSetGetCfg_lmin(void);
+void test_pos_esm_esmSetGetCfg_enable(void);
+void test_pos_esm_esmSetGetCfg_mode_level(void);
+void test_pos_esm_esmSetGetCfg_mode_pwm(void);
+void test_pos_esm_esmSetGetCfg_errCntThr(void);
+void test_pos_esm_esmSetGetCfg_delay1(void);
+void test_pos_esm_esmSetGetCfg_delay2(void);
+void test_pos_esm_esmSetGetCfg_hmax(void);
+void test_pos_esm_esmSetGetCfg_hmin(void);
+void test_pos_esm_esmSetGetCfg_lmax(void);
+void test_pos_esm_esmSetGetCfg_lmin(void);
 
 /* Positive Tests - Start/Stop ESM */
-void test_positive_esmStartStop(void);
-void test_positive_esmStart(void);
-void test_positive_esmStop(void);
-void test_positive_esmGetStartState(void);
+void test_pos_esm_esmStartStop(void);
+void test_pos_esm_esmStart(void);
+void test_pos_esm_esmStop(void);
+void test_pos_esm_esmGetStartState(void);
 
 /* Positive Tests - ESM Status */
-void test_positive_esmGetStatus(void);
-void test_positive_esmClrStatus(void);
+void test_pos_esm_esmGetStatus(void);
+void test_pos_esm_esmClrStatus(void);
 
 /* Positive Tests - ESM Error Count */
-void test_positive_esmGetErrCnt(void);
+void test_pos_esm_esmGetErrCnt(void);
 
 #ifdef __cplusplus
 }

@@ -52,108 +52,292 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* Critical Section Tests */
-#define COMMON_TEST_RUN_CRITICAL_SECTION() \
-    PLATFORM_RUN_TEST(test_criticalSection_nullHandle); \
-    PLATFORM_RUN_TEST(test_criticalSection_nullCallback); \
-    PLATFORM_RUN_TEST(test_criticalSection_communication); \
-    PLATFORM_RUN_TEST(test_criticalSection_diagnostic)
+/* ========================================================================== */
+/*            API-Specific Test Macros - criticalSectionStart/Stop            */
+/* ========================================================================== */
 
-/* Timer Tests */
-#define COMMON_TEST_RUN_TIMER() \
-    PLATFORM_RUN_TEST(test_timerWait_nullHandle); \
-    PLATFORM_RUN_TEST(test_timerWait_nullCallback); \
-    PLATFORM_RUN_TEST(test_timerWait_validCall)
+#define COMMON_TEST_POS_CRITICALSECTION() \
+    PLATFORM_RUN_TEST(test_pos_common_criticalSection_communication); \
+    PLATFORM_RUN_TEST(test_pos_common_criticalSection_diagnostic)
 
-/* Pmic_logStatus Tests */
-#define COMMON_TEST_RUN_LOG_STATUS() \
-    PLATFORM_RUN_TEST(test_logStatus_success); \
-    PLATFORM_RUN_TEST(test_logStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_logStatus_nullCritSec); \
-    PLATFORM_RUN_TEST(test_logStatus_validError); \
-    PLATFORM_RUN_TEST(test_logStatus_validWarning); \
-    PLATFORM_RUN_TEST(test_logStatus_invalidStatusType); \
-    PLATFORM_RUN_TEST(test_logStatus_invalidStatusId); \
-    PLATFORM_RUN_TEST(test_logStatus_allErrorCodes); \
-    PLATFORM_RUN_TEST(test_logStatus_invalidStatusNullHandle); \
-    PLATFORM_RUN_TEST(test_logStatus_successTypeInvalidId); \
-    PLATFORM_RUN_TEST(test_logStatus_warningTypeInvalidId)
+#define COMMON_TEST_NEG_CRITICALSECTION() \
+    PLATFORM_RUN_TEST(test_neg_common_criticalSectionStart_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_criticalSectionStart_nullCallback); \
+    PLATFORM_RUN_TEST(test_neg_common_criticalSectionStop_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_criticalSectionStop_nullCallback)
 
-/* Diagnostic Get/Clear Tests */
-#define COMMON_TEST_RUN_DIAGNOSTIC() \
-    PLATFORM_RUN_TEST(test_getDiagnostic_nullHandle); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_nullDiagnostic); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_invalidStatusCode); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_errorCnt); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_errorFlag); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_warningCnt); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_warningFlag); \
-    PLATFORM_RUN_TEST(test_getDiagnostic_successType); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_multiple); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_zeroCount); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_exceedsMax); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_nullHandle); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_nullDiagnosticArray); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_zeroValidParamsInArray); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_invalidStatusCodeInArray); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_successTypeInArray); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_nullHandle); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_errorCnt); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_warningCnt); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_nullDiagnostic); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_invalidStatusCode); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_successType); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_errorFlagOnly); \
-    PLATFORM_RUN_TEST(test_clrDiagnostic_warningFlagOnly); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_multiple); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_nullHandle); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_nullDiagnosticArray); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_zeroCount); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_exceedsMax); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_zeroValidParamsInArray); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_invalidStatusCodeInArray); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_successTypeInArray); \
-    PLATFORM_RUN_TEST(test_clrDiagnosticsAll_clearAll); \
-    PLATFORM_RUN_TEST(test_clrDiagnosticsAll_nullHandle); \
-    PLATFORM_RUN_TEST(test_overflow_errorCnt); \
-    PLATFORM_RUN_TEST(test_overflow_warningCnt); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_errorFlagOnly); \
-    PLATFORM_RUN_TEST(test_getDiagnostics_warningFlagOnly); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_errorFlagOnly); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_warningCntOnly); \
-    PLATFORM_RUN_TEST(test_clrDiagnostics_warningFlagOnly)
+#define COMMON_TEST_CRITICALSECTION() \
+    COMMON_TEST_POS_CRITICALSECTION(); \
+    COMMON_TEST_NEG_CRITICALSECTION()
 
-/* Retry Counter Tests */
-#define COMMON_TEST_RUN_RETRY_CNT() \
-    PLATFORM_RUN_TEST(test_getRetryCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_getRetryCnt_nullOutput); \
-    PLATFORM_RUN_TEST(test_getRetryCnt_initialZero); \
-    PLATFORM_RUN_TEST(test_incrementRetryCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_incrementRetryCnt_once); \
-    PLATFORM_RUN_TEST(test_incrementRetryCnt_multiple); \
-    PLATFORM_RUN_TEST(test_clrRetryCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_clrRetryCnt_afterIncrement); \
-    PLATFORM_RUN_TEST(test_getRetryCntOverflow_nullHandle); \
-    PLATFORM_RUN_TEST(test_getRetryCntOverflow_nullOutput); \
-    PLATFORM_RUN_TEST(test_clrRetryCntOverflow_nullHandle); \
-    PLATFORM_RUN_TEST(test_overflow_retryCnt)
+/* ========================================================================== */
+/*                 API-Specific Test Macros - timerWaitMs                     */
+/* ========================================================================== */
 
-/* IRQ Response Callback Tests (LP8772x-Q1 only) */
-#define COMMON_TEST_RUN_IRQ_CALLBACK() \
-    PLATFORM_RUN_TEST(test_irqResponseCallback_validCall); \
-    PLATFORM_RUN_TEST(test_irqResponseCallback_nullHandle); \
-    PLATFORM_RUN_TEST(test_irqResponseCallback_nullCallback)
+#define COMMON_TEST_POS_TIMERWAITMS() \
+    PLATFORM_RUN_TEST(test_pos_common_timerWaitMs_validCall)
 
-/* Run all common tests */
+#define COMMON_TEST_NEG_TIMERWAITMS() \
+    PLATFORM_RUN_TEST(test_neg_common_timerWaitMs_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_timerWaitMs_nullCallback)
+
+#define COMMON_TEST_TIMERWAITMS() \
+    COMMON_TEST_POS_TIMERWAITMS(); \
+    COMMON_TEST_NEG_TIMERWAITMS()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - logStatus                      */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_LOGSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_success); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_validError); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_validWarning); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_allErrorCodes)
+
+#define COMMON_TEST_NEG_LOGSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_nullCritSec); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusType); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusId); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusNullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_warningTypeInvalidId)
+
+#define COMMON_TEST_LOGSTATUS() \
+    COMMON_TEST_POS_LOGSTATUS(); \
+    COMMON_TEST_NEG_LOGSTATUS()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - getDiagnostic                     */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_GETDIAGNOSTIC() \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_errorCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_errorFlag); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningFlag)
+
+#define COMMON_TEST_NEG_GETDIAGNOSTIC() \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullDiagnostic); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidStatusCode); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_successType)
+
+#define COMMON_TEST_GETDIAGNOSTIC() \
+    COMMON_TEST_POS_GETDIAGNOSTIC(); \
+    COMMON_TEST_NEG_GETDIAGNOSTIC()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - getDiagnostics                    */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_GETDIAGNOSTICS() \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_multiple); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_errorFlagOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_warningFlagOnly)
+
+#define COMMON_TEST_NEG_GETDIAGNOSTICS() \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullDiagnosticArray); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_zeroCount); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_exceedsMax); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_zeroValidParamsInArray); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_invalidStatusCodeInArray); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_successTypeInArray)
+
+#define COMMON_TEST_GETDIAGNOSTICS() \
+    COMMON_TEST_POS_GETDIAGNOSTICS(); \
+    COMMON_TEST_NEG_GETDIAGNOSTICS()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - clrDiagnostic                     */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_CLRDIAGNOSTIC() \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorFlagOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningFlagOnly)
+
+#define COMMON_TEST_NEG_CLRDIAGNOSTIC() \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullDiagnostic); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_invalidStatusCode); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_successType)
+
+#define COMMON_TEST_CLRDIAGNOSTIC() \
+    COMMON_TEST_POS_CLRDIAGNOSTIC(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTIC()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - clrDiagnostics                    */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_CLRDIAGNOSTICS() \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_multiple); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_errorFlagOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_warningCntOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_warningFlagOnly)
+
+#define COMMON_TEST_NEG_CLRDIAGNOSTICS() \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullDiagnosticArray); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_zeroCount); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_exceedsMax); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_zeroValidParamsInArray); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_invalidStatusCodeInArray); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_successTypeInArray)
+
+#define COMMON_TEST_CLRDIAGNOSTICS() \
+    COMMON_TEST_POS_CLRDIAGNOSTICS(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTICS()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - clrDiagnosticsAll                 */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_CLRDIAGNOSTICSALL() \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_clearAll)
+
+#define COMMON_TEST_NEG_CLRDIAGNOSTICSALL() \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullHandle)
+
+#define COMMON_TEST_CLRDIAGNOSTICSALL() \
+    COMMON_TEST_POS_CLRDIAGNOSTICSALL(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTICSALL()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - Diagnostic Overflow                */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_OVERFLOW() \
+    PLATFORM_RUN_TEST(test_pos_common_overflow_errorCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_overflow_warningCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)
+
+#define COMMON_TEST_OVERFLOW() \
+    COMMON_TEST_POS_OVERFLOW()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - getRetryCnt                     */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_GETRETRYCNT() \
+    PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_initialZero)
+
+#define COMMON_TEST_NEG_GETRETRYCNT() \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullOutput)
+
+#define COMMON_TEST_GETRETRYCNT() \
+    COMMON_TEST_POS_GETRETRYCNT(); \
+    COMMON_TEST_NEG_GETRETRYCNT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - incrementRetryCnt                 */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_INCREMENTRETRYCNT() \
+    PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_once); \
+    PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_multiple)
+
+#define COMMON_TEST_NEG_INCREMENTRETRYCNT() \
+    PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullHandle)
+
+#define COMMON_TEST_INCREMENTRETRYCNT() \
+    COMMON_TEST_POS_INCREMENTRETRYCNT(); \
+    COMMON_TEST_NEG_INCREMENTRETRYCNT()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - clrRetryCnt                     */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_CLRRETRYCNT() \
+    PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_afterIncrement)
+
+#define COMMON_TEST_NEG_CLRRETRYCNT() \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullHandle)
+
+#define COMMON_TEST_CLRRETRYCNT() \
+    COMMON_TEST_POS_CLRRETRYCNT(); \
+    COMMON_TEST_NEG_CLRRETRYCNT()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - getRetryCntOverflow                */
+/* ========================================================================== */
+
+#define COMMON_TEST_NEG_GETRETRYCNTOVERFLOW() \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullOutput)
+
+#define COMMON_TEST_GETRETRYCNTOVERFLOW() \
+    COMMON_TEST_NEG_GETRETRYCNTOVERFLOW()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - clrRetryCntOverflow                */
+/* ========================================================================== */
+
+#define COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW() \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullHandle)
+
+#define COMMON_TEST_CLRRETRYCNTOVERFLOW() \
+    COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - irqResponseCallback                 */
+/* ========================================================================== */
+
+#define COMMON_TEST_POS_IRQRESPONSECALLBACK() \
+    PLATFORM_RUN_TEST(test_pos_common_irqResponseCallback_validCall)
+
+#define COMMON_TEST_NEG_IRQRESPONSECALLBACK() \
+    PLATFORM_RUN_TEST(test_neg_common_irqResponseCallback_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_irqResponseCallback_nullCallback)
+
+#define COMMON_TEST_IRQRESPONSECALLBACK() \
+    COMMON_TEST_POS_IRQRESPONSECALLBACK(); \
+    COMMON_TEST_NEG_IRQRESPONSECALLBACK()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define COMMON_TEST_RUN_POSITIVE() \
+    COMMON_TEST_POS_CRITICALSECTION(); \
+    COMMON_TEST_POS_TIMERWAITMS(); \
+    COMMON_TEST_POS_LOGSTATUS(); \
+    COMMON_TEST_POS_GETDIAGNOSTIC(); \
+    COMMON_TEST_POS_GETDIAGNOSTICS(); \
+    COMMON_TEST_POS_CLRDIAGNOSTIC(); \
+    COMMON_TEST_POS_CLRDIAGNOSTICS(); \
+    COMMON_TEST_POS_CLRDIAGNOSTICSALL(); \
+    COMMON_TEST_POS_OVERFLOW(); \
+    COMMON_TEST_POS_GETRETRYCNT(); \
+    COMMON_TEST_POS_INCREMENTRETRYCNT(); \
+    COMMON_TEST_POS_CLRRETRYCNT(); \
+    COMMON_TEST_POS_IRQRESPONSECALLBACK()
+
+#define COMMON_TEST_RUN_NEGATIVE() \
+    COMMON_TEST_NEG_CRITICALSECTION(); \
+    COMMON_TEST_NEG_TIMERWAITMS(); \
+    COMMON_TEST_NEG_LOGSTATUS(); \
+    COMMON_TEST_NEG_GETDIAGNOSTIC(); \
+    COMMON_TEST_NEG_GETDIAGNOSTICS(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTIC(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTICS(); \
+    COMMON_TEST_NEG_CLRDIAGNOSTICSALL(); \
+    COMMON_TEST_NEG_GETRETRYCNT(); \
+    COMMON_TEST_NEG_INCREMENTRETRYCNT(); \
+    COMMON_TEST_NEG_CLRRETRYCNT(); \
+    COMMON_TEST_NEG_GETRETRYCNTOVERFLOW(); \
+    COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW(); \
+    COMMON_TEST_NEG_IRQRESPONSECALLBACK()
+
 #define COMMON_TEST_RUN_ALL() \
-    COMMON_TEST_RUN_CRITICAL_SECTION(); \
-    COMMON_TEST_RUN_TIMER(); \
-    COMMON_TEST_RUN_LOG_STATUS(); \
-    COMMON_TEST_RUN_DIAGNOSTIC(); \
-    COMMON_TEST_RUN_RETRY_CNT(); \
-    COMMON_TEST_RUN_IRQ_CALLBACK()
+    COMMON_TEST_RUN_POSITIVE(); \
+    COMMON_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                       Function Declarations                                */
@@ -163,92 +347,93 @@ extern "C" {
 void common_test(void *args);
 
 /* Critical Section Tests */
-void test_criticalSection_nullHandle(void);
-void test_criticalSection_nullCallback(void);
-void test_criticalSection_communication(void);
-void test_criticalSection_diagnostic(void);
+void test_neg_common_criticalSectionStart_nullHandle(void);
+void test_neg_common_criticalSectionStop_nullHandle(void);
+void test_neg_common_criticalSectionStart_nullCallback(void);
+void test_neg_common_criticalSectionStop_nullCallback(void);
+void test_pos_common_criticalSection_communication(void);
+void test_pos_common_criticalSection_diagnostic(void);
 
 /* Timer Tests */
-void test_timerWait_nullHandle(void);
-void test_timerWait_nullCallback(void);
-void test_timerWait_validCall(void);
+void test_neg_common_timerWaitMs_nullHandle(void);
+void test_neg_common_timerWaitMs_nullCallback(void);
+void test_pos_common_timerWaitMs_validCall(void);
 
 /* Pmic_logStatus Tests */
-void test_logStatus_success(void);
-void test_logStatus_nullHandle(void);
-void test_logStatus_nullCritSec(void);
-void test_logStatus_validError(void);
-void test_logStatus_validWarning(void);
-void test_logStatus_invalidStatusType(void);
-void test_logStatus_invalidStatusId(void);
-void test_logStatus_allErrorCodes(void);
-void test_logStatus_invalidStatusNullHandle(void);
-void test_logStatus_successTypeInvalidId(void);
-void test_logStatus_warningTypeInvalidId(void);
+void test_pos_common_logStatus_success(void);
+void test_neg_common_logStatus_nullHandle(void);
+void test_neg_common_logStatus_nullCritSec(void);
+void test_pos_common_logStatus_validError(void);
+void test_pos_common_logStatus_validWarning(void);
+void test_neg_common_logStatus_invalidStatusType(void);
+void test_neg_common_logStatus_invalidStatusId(void);
+void test_pos_common_logStatus_allErrorCodes(void);
+void test_neg_common_logStatus_invalidStatusNullHandle(void);
+void test_neg_common_logStatus_warningTypeInvalidId(void);
 
 /* Diagnostic Get/Clear Tests */
-void test_getDiagnostic_nullHandle(void);
-void test_getDiagnostic_nullDiagnostic(void);
-void test_getDiagnostic_invalidValidParams(void);
-void test_getDiagnostic_invalidStatusCode(void);
-void test_getDiagnostic_errorCnt(void);
-void test_getDiagnostic_errorFlag(void);
-void test_getDiagnostic_warningCnt(void);
-void test_getDiagnostic_warningFlag(void);
-void test_getDiagnostic_successType(void);
-void test_getDiagnostics_multiple(void);
-void test_getDiagnostics_zeroCount(void);
-void test_getDiagnostics_exceedsMax(void);
-void test_getDiagnostics_nullHandle(void);
-void test_getDiagnostics_nullDiagnosticArray(void);
-void test_getDiagnostics_zeroValidParamsInArray(void);
-void test_getDiagnostics_invalidStatusCodeInArray(void);
-void test_getDiagnostics_successTypeInArray(void);
-void test_clrDiagnostic_nullHandle(void);
-void test_clrDiagnostic_errorCnt(void);
-void test_clrDiagnostic_warningCnt(void);
-void test_clrDiagnostic_nullDiagnostic(void);
-void test_clrDiagnostic_invalidValidParams(void);
-void test_clrDiagnostic_invalidStatusCode(void);
-void test_clrDiagnostic_successType(void);
-void test_clrDiagnostic_errorFlagOnly(void);
-void test_clrDiagnostic_warningFlagOnly(void);
-void test_clrDiagnostics_multiple(void);
-void test_clrDiagnostics_nullHandle(void);
-void test_clrDiagnostics_nullDiagnosticArray(void);
-void test_clrDiagnostics_zeroCount(void);
-void test_clrDiagnostics_exceedsMax(void);
-void test_clrDiagnostics_zeroValidParamsInArray(void);
-void test_clrDiagnostics_invalidStatusCodeInArray(void);
-void test_clrDiagnostics_successTypeInArray(void);
-void test_clrDiagnosticsAll_clearAll(void);
-void test_clrDiagnosticsAll_nullHandle(void);
-void test_overflow_errorCnt(void);
-void test_overflow_warningCnt(void);
-void test_getDiagnostics_errorFlagOnly(void);
-void test_getDiagnostics_warningFlagOnly(void);
-void test_clrDiagnostics_errorFlagOnly(void);
-void test_clrDiagnostics_warningCntOnly(void);
-void test_clrDiagnostics_warningFlagOnly(void);
+void test_neg_common_getDiagnostic_nullHandle(void);
+void test_neg_common_getDiagnostic_nullDiagnostic(void);
+void test_neg_common_getDiagnostic_invalidValidParams(void);
+void test_neg_common_getDiagnostic_invalidStatusCode(void);
+void test_pos_common_getDiagnostic_errorCnt(void);
+void test_pos_common_getDiagnostic_errorFlag(void);
+void test_pos_common_getDiagnostic_warningCnt(void);
+void test_pos_common_getDiagnostic_warningFlag(void);
+void test_neg_common_getDiagnostic_successType(void);
+void test_pos_common_getDiagnostics_multiple(void);
+void test_neg_common_getDiagnostics_zeroCount(void);
+void test_neg_common_getDiagnostics_exceedsMax(void);
+void test_neg_common_getDiagnostics_nullHandle(void);
+void test_neg_common_getDiagnostics_nullDiagnosticArray(void);
+void test_neg_common_getDiagnostics_zeroValidParamsInArray(void);
+void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void);
+void test_neg_common_getDiagnostics_successTypeInArray(void);
+void test_neg_common_clrDiagnostic_nullHandle(void);
+void test_pos_common_clrDiagnostic_errorCnt(void);
+void test_pos_common_clrDiagnostic_warningCnt(void);
+void test_neg_common_clrDiagnostic_nullDiagnostic(void);
+void test_neg_common_clrDiagnostic_invalidValidParams(void);
+void test_neg_common_clrDiagnostic_invalidStatusCode(void);
+void test_neg_common_clrDiagnostic_successType(void);
+void test_pos_common_clrDiagnostic_errorFlagOnly(void);
+void test_pos_common_clrDiagnostic_warningFlagOnly(void);
+void test_pos_common_clrDiagnostics_multiple(void);
+void test_neg_common_clrDiagnostics_nullHandle(void);
+void test_neg_common_clrDiagnostics_nullDiagnosticArray(void);
+void test_neg_common_clrDiagnostics_zeroCount(void);
+void test_neg_common_clrDiagnostics_exceedsMax(void);
+void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void);
+void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void);
+void test_neg_common_clrDiagnostics_successTypeInArray(void);
+void test_pos_common_clrDiagnosticsAll_clearAll(void);
+void test_neg_common_clrDiagnosticsAll_nullHandle(void);
+void test_pos_common_overflow_errorCnt(void);
+void test_pos_common_overflow_warningCnt(void);
+void test_pos_common_getDiagnostics_errorFlagOnly(void);
+void test_pos_common_getDiagnostics_warningFlagOnly(void);
+void test_pos_common_clrDiagnostics_errorFlagOnly(void);
+void test_pos_common_clrDiagnostics_warningCntOnly(void);
+void test_pos_common_clrDiagnostics_warningFlagOnly(void);
 
 /* Retry Counter Tests */
-void test_getRetryCnt_nullHandle(void);
-void test_getRetryCnt_nullOutput(void);
-void test_getRetryCnt_initialZero(void);
-void test_incrementRetryCnt_nullHandle(void);
-void test_incrementRetryCnt_once(void);
-void test_incrementRetryCnt_multiple(void);
-void test_clrRetryCnt_nullHandle(void);
-void test_clrRetryCnt_afterIncrement(void);
-void test_getRetryCntOverflow_nullHandle(void);
-void test_getRetryCntOverflow_nullOutput(void);
-void test_clrRetryCntOverflow_nullHandle(void);
-void test_overflow_retryCnt(void);
+void test_neg_common_getRetryCnt_nullHandle(void);
+void test_neg_common_getRetryCnt_nullOutput(void);
+void test_pos_common_getRetryCnt_initialZero(void);
+void test_neg_common_incrementRetryCnt_nullHandle(void);
+void test_pos_common_incrementRetryCnt_once(void);
+void test_pos_common_incrementRetryCnt_multiple(void);
+void test_neg_common_clrRetryCnt_nullHandle(void);
+void test_pos_common_clrRetryCnt_afterIncrement(void);
+void test_neg_common_getRetryCntOverflow_nullHandle(void);
+void test_neg_common_getRetryCntOverflow_nullOutput(void);
+void test_neg_common_clrRetryCntOverflow_nullHandle(void);
+void test_pos_common_overflow_retryCnt(void);
 
 /* IRQ Response Callback Tests (LP8772x-Q1 only) */
-void test_irqResponseCallback_validCall(void);
-void test_irqResponseCallback_nullHandle(void);
-void test_irqResponseCallback_nullCallback(void);
+void test_pos_common_irqResponseCallback_validCall(void);
+void test_neg_common_irqResponseCallback_nullHandle(void);
+void test_neg_common_irqResponseCallback_nullCallback(void);
 
 #ifdef __cplusplus
 }

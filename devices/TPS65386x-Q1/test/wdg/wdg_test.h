@@ -42,7 +42,7 @@
 #include "platform.h"
 #include "pmic.h"
 #include "pmic_wdg.h"
-#include "test_common.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,144 +59,167 @@ extern "C" {
 void wdg_test(void *args);
 
 /* ========================================================================== */
-/* Positive Tests                                                             */
+/*                         Test Injection Debug                               */
 /* ========================================================================== */
-extern void test_positive_wdgEnableDisable(void);
-extern void test_positive_wdgSetGetCfg_longWindowDuration(void);
-extern void test_positive_wdgSetGetCfg_window1Duration(void);
-extern void test_positive_wdgSetGetCfg_window2Duration(void);
-extern void test_positive_wdgSetGetCfg_failThreshold(void);
-extern void test_positive_wdgSetGetCfg_resetThreshold(void);
-extern void test_positive_wdgSetGetCfg_threshold1IntBehavior(void);
-extern void test_positive_wdgSetGetCfg_wdgMode(void);
-extern void test_positive_wdgSetGetCfg_threshold2IntBehavior(void);
-extern void test_positive_wdgSetGetCfg_returnLongWindow(void);
-extern void test_positive_wdgSetGetCfg_QA_feedback(void);
-extern void test_positive_wdgSetGetCfg_QA_LFSR(void);
-extern void test_positive_wdgSetGetCfg_QA_questionSeed(void);
-
-/* Test Injection Debug */
-extern void test_positive_wdgTestInjectDebug(void);
-
-/* Q&A Sequence Tests */
-extern void test_positive_wdgQaWriteAnswer_fullSequence(void);
-extern void test_positive_wdgQaWriteAnswer_qaFdbk0(void);
-extern void test_positive_wdgQaWriteAnswer_qaFdbk1(void);
-extern void test_positive_wdgQaWriteAnswer_qaFdbk2(void);
-extern void test_positive_wdgQaWriteAnswer_qaFdbk3(void);
-extern void test_positive_wdgQaWriteAnswer_differentSeeds(void);
-extern void test_positive_wdgQaWriteAnswer_differentLfsr(void);
-extern void test_positive_wdgGetErrorStatus_afterAnswerError(void);
-
-/* Error Status Get Tests */
-extern void test_positive_wdgGetErrorStatus_timeout(void);
-extern void test_positive_wdgGetErrorStatus_longWindowTimeout(void);
-extern void test_positive_wdgGetErrorStatus_answerEarlyError(void);
-extern void test_positive_wdgGetErrorStatus_sequenceErr(void);
-extern void test_positive_wdgGetErrorStatus_answerErr(void);
-extern void test_positive_wdgGetErrorStatus_triggerEarly(void);
-extern void test_positive_wdgGetErrorStatus_th1Int(void);
-extern void test_positive_wdgGetErrorStatus_th2Int(void);
-extern void test_positive_wdgGetErrorStatus_allFlags(void);
-
-/* Clear Error Status Tests */
-extern void test_positive_wdgClrErrStatus_timeout(void);
-extern void test_positive_wdgClrErrStatus_longWindowTimeout(void);
-extern void test_positive_wdgClrErrStatus_answerEarlyError(void);
-extern void test_positive_wdgClrErrStatus_sequenceErr(void);
-extern void test_positive_wdgClrErrStatus_answerErr(void);
-extern void test_positive_wdgClrErrStatus_triggerEarly(void);
-extern void test_positive_wdgClrErrStatusAll_whenNoErrors(void);
-
-/* Fail Count Status Tests */
-extern void test_positive_wdgGetFailCntStatus_badEvent(void);
-extern void test_positive_wdgGetFailCntStatus_goodEvent(void);
-extern void test_positive_wdgGetFailCntStatus_wdFailCnt(void);
-extern void test_positive_wdgGetFailCntStatus_allFields(void);
-
-/* Configuration Tests */
-extern void test_positive_wdgSetGetCfg_timeBase(void);
-extern void test_negative_wdgSetCfg_zeroValidParams(void);
-
-/* Mode Tests */
-extern void test_positive_wdgSetGetMode_triggerMode(void);
-extern void test_positive_wdgSetGetMode_qAndAMode(void);
-
-/* Power Hold Tests */
-extern void test_positive_wdgSetGetPowerHold_enable(void);
-extern void test_positive_wdgSetGetPowerHold_disable(void);
-
-/* Return To Long Window Tests */
-extern void test_positive_wdgSetGetReturnToLongWindow_enable(void);
-extern void test_positive_wdgSetGetReturnToLongWindow_disable(void);
+void test_pos_wdg_testInject_debug(void);
 
 /* ========================================================================== */
-/* Negative Tests - Enable/Disable APIs                                      */
+/*                         wdgEnable API Tests                                */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgEnable_nullHandle(void);
-extern void test_negative_Pmic_wdgDisable_nullHandle(void);
-extern void test_negative_Pmic_wdgSetEnableState_nullHandle(void);
-extern void test_negative_Pmic_wdgGetEnableState_nullHandle(void);
-extern void test_negative_Pmic_wdgGetEnableState_nullParam(void);
+void test_pos_wdg_wdgEnable_enableDisable(void);
+void test_neg_wdg_wdgEnable_nullHandle(void);
 
 /* ========================================================================== */
-/* Negative Tests - Configuration APIs                                       */
+/*                         wdgDisable API Tests                               */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgSetCfg_nullHandle(void);
-extern void test_negative_Pmic_wdgSetCfg_nullConfig(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidMode(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidTimeBase(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidThreshold1(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidThreshold2(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidQaFdbk(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidQaLfsr(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidQaQuesSeed(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidThreshold1IntBehavior(void);
-extern void test_negative_Pmic_wdgSetCfg_invalidThreshold2IntBehavior(void);
-extern void test_negative_Pmic_wdgGetCfg_nullHandle(void);
-extern void test_negative_Pmic_wdgGetCfg_nullConfig(void);
+void test_neg_wdg_wdgDisable_nullHandle(void);
 
 /* ========================================================================== */
-/* Negative Tests - Mode APIs                                                */
+/*                       wdgSetEnableState API Tests                          */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgSetMode_nullHandle(void);
-extern void test_negative_Pmic_wdgSetMode_invalidMode(void);
-extern void test_negative_Pmic_wdgGetMode_nullHandle(void);
-extern void test_negative_Pmic_wdgGetMode_nullParam(void);
+void test_neg_wdg_wdgSetEnableState_nullHandle(void);
 
 /* ========================================================================== */
-/* Negative Tests - Power Hold APIs                                          */
+/*                       wdgGetEnableState API Tests                          */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgSetPowerHold_nullHandle(void);
-extern void test_negative_Pmic_wdgGetPowerHold_nullHandle(void);
-extern void test_negative_Pmic_wdgGetPowerHold_nullParam(void);
+void test_neg_wdg_wdgGetEnableState_nullHandle(void);
+void test_neg_wdg_wdgGetEnableState_nullParam(void);
 
 /* ========================================================================== */
-/* Negative Tests - Return to Long Window APIs                               */
+/*                         wdgSetCfg API Tests                                */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgSetReturnToLongWindow_nullHandle(void);
-extern void test_negative_Pmic_wdgGetReturnToLongWindow_nullHandle(void);
-extern void test_negative_Pmic_wdgGetReturnToLongWindow_nullParam(void);
+void test_pos_wdg_wdgSetCfg_longWindowDuration(void);
+void test_pos_wdg_wdgSetCfg_window1Duration(void);
+void test_pos_wdg_wdgSetCfg_window2Duration(void);
+void test_pos_wdg_wdgSetCfg_failThreshold(void);
+void test_pos_wdg_wdgSetCfg_resetThreshold(void);
+void test_pos_wdg_wdgSetCfg_threshold1IntBehavior(void);
+void test_pos_wdg_wdgSetCfg_wdgMode(void);
+void test_pos_wdg_wdgSetCfg_threshold2IntBehavior(void);
+void test_pos_wdg_wdgSetCfg_returnLongWindow(void);
+void test_pos_wdg_wdgSetCfg_QA_feedback(void);
+void test_pos_wdg_wdgSetCfg_QA_LFSR(void);
+void test_pos_wdg_wdgSetCfg_QA_questionSeed(void);
+void test_pos_wdg_wdgSetCfg_timeBase(void);
+void test_neg_wdg_wdgSetCfg_nullHandle(void);
+void test_neg_wdg_wdgSetCfg_nullConfig(void);
+void test_neg_wdg_wdgSetCfg_invalidMode(void);
+void test_neg_wdg_wdgSetCfg_invalidTimeBase(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold1(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold2(void);
+void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void);
+void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void);
+void test_neg_wdg_wdgSetCfg_invalidQaQuesSeed(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold1IntBehavior(void);
+void test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior(void);
+void test_neg_wdg_wdgSetCfg_zeroValidParams(void);
 
 /* ========================================================================== */
-/* Negative Tests - Error Status APIs                                        */
+/*                         wdgGetCfg API Tests                                */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgGetErrorStatus_nullHandle(void);
-extern void test_negative_Pmic_wdgGetErrorStatus_nullParam(void);
-extern void test_negative_Pmic_wdgClrErrStatus_nullHandle(void);
-extern void test_negative_Pmic_wdgClrErrStatus_nullParam(void);
-extern void test_negative_Pmic_wdgClrErrStatusAll_nullHandle(void);
+void test_neg_wdg_wdgGetCfg_nullHandle(void);
+void test_neg_wdg_wdgGetCfg_nullConfig(void);
 
 /* ========================================================================== */
-/* Negative Tests - Fail Count APIs                                          */
+/*                         wdgSetMode API Tests                               */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgGetFailCntStatus_nullHandle(void);
-extern void test_negative_Pmic_wdgGetFailCntStatus_nullParam(void);
+void test_pos_wdg_wdgSetMode_triggerMode(void);
+void test_pos_wdg_wdgSetMode_qAndAMode(void);
+void test_neg_wdg_wdgSetMode_nullHandle(void);
+void test_neg_wdg_wdgSetMode_invalidMode(void);
 
 /* ========================================================================== */
-/* Negative Tests - Q&A APIs                                                 */
+/*                         wdgGetMode API Tests                               */
 /* ========================================================================== */
-extern void test_negative_Pmic_wdgQaWriteAnswer_nullHandle(void);
+void test_neg_wdg_wdgGetMode_nullHandle(void);
+void test_neg_wdg_wdgGetMode_nullParam(void);
+
+/* ========================================================================== */
+/*                       wdgSetPowerHold API Tests                            */
+/* ========================================================================== */
+void test_pos_wdg_wdgSetPowerHold_enable(void);
+void test_pos_wdg_wdgSetPowerHold_disable(void);
+void test_neg_wdg_wdgSetPowerHold_nullHandle(void);
+
+/* ========================================================================== */
+/*                       wdgGetPowerHold API Tests                            */
+/* ========================================================================== */
+void test_neg_wdg_wdgGetPowerHold_nullHandle(void);
+void test_neg_wdg_wdgGetPowerHold_nullParam(void);
+
+/* ========================================================================== */
+/*                  wdgSetReturnToLongWindow API Tests                        */
+/* ========================================================================== */
+void test_pos_wdg_wdgSetReturnToLongWindow_enable(void);
+void test_pos_wdg_wdgSetReturnToLongWindow_disable(void);
+void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void);
+
+/* ========================================================================== */
+/*                  wdgGetReturnToLongWindow API Tests                        */
+/* ========================================================================== */
+void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void);
+void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void);
+
+/* ========================================================================== */
+/*                      wdgGetErrorStatus API Tests                           */
+/* ========================================================================== */
+void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void);
+void test_pos_wdg_wdgGetErrorStatus_timeout(void);
+void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void);
+void test_pos_wdg_wdgGetErrorStatus_answerEarlyError(void);
+void test_pos_wdg_wdgGetErrorStatus_sequenceErr(void);
+void test_pos_wdg_wdgGetErrorStatus_answerErr(void);
+void test_pos_wdg_wdgGetErrorStatus_triggerEarly(void);
+void test_pos_wdg_wdgGetErrorStatus_th1Int(void);
+void test_pos_wdg_wdgGetErrorStatus_th2Int(void);
+void test_pos_wdg_wdgGetErrorStatus_allFlags(void);
+void test_neg_wdg_wdgGetErrorStatus_nullHandle(void);
+void test_neg_wdg_wdgGetErrorStatus_nullParam(void);
+
+/* ========================================================================== */
+/*                      wdgClrErrStatus API Tests                             */
+/* ========================================================================== */
+void test_pos_wdg_wdgClrErrStatus_timeout(void);
+void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void);
+void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void);
+void test_pos_wdg_wdgClrErrStatus_sequenceErr(void);
+void test_pos_wdg_wdgClrErrStatus_answerErr(void);
+void test_pos_wdg_wdgClrErrStatus_triggerEarly(void);
+void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void);
+void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void);
+void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void);
+void test_neg_wdg_wdgClrErrStatus_nullHandle(void);
+void test_neg_wdg_wdgClrErrStatus_nullParam(void);
+
+/* ========================================================================== */
+/*                     wdgClrErrStatusAll API Tests                           */
+/* ========================================================================== */
+void test_pos_wdg_wdgClrErrStatusAll_whenNoErrors(void);
+void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void);
+
+/* ========================================================================== */
+/*                    wdgGetFailCntStatus API Tests                           */
+/* ========================================================================== */
+void test_pos_wdg_wdgGetFailCntStatus_badEvent(void);
+void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void);
+void test_pos_wdg_wdgGetFailCntStatus_wdFailCnt(void);
+void test_pos_wdg_wdgGetFailCntStatus_allFields(void);
+void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void);
+void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void);
+void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void);
+void test_neg_wdg_wdgGetFailCntStatus_nullParam(void);
+
+/* ========================================================================== */
+/*                      wdgQaWriteAnswer API Tests                            */
+/* ========================================================================== */
+void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void);
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void);
+void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void);
+void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void);
+void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void);
 
 #ifdef __cplusplus
 }
