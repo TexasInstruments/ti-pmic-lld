@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -78,9 +78,9 @@ static inline void PWR_copyLdoCfg(const Pmic_PwrLdoCfg_t *src, Pmic_PwrLdoCfg_t 
     memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
 }
 
-static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStat_t *src, Pmic_PwrRsrcStat_t *dst)
+static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStat_t));
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
 
 static inline void PWR_copyTsdCfg(const Pmic_PwrTsdCfg_t *src, Pmic_PwrTsdCfg_t *dst)
@@ -2312,7 +2312,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
     return Pmic_logStatus(handle, status);
 }
 
-static int32_t PWR_getStatStartup(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatStartup(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2346,7 +2346,7 @@ static int32_t PWR_getStatStartup(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_
     return status;
 }
 
-static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2383,7 +2383,7 @@ static int32_t PWR_getStatBuck1_2(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_
     return status;
 }
 
-static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -2420,10 +2420,10 @@ static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrRsrcStat_t localPwrRsrcStat;
+    Pmic_PwrRsrcStatus_t localPwrRsrcStat;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {

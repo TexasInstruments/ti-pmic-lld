@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -1516,11 +1516,10 @@ int32_t Pmic_pwrSetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
         }
     }
 
-    for (uint8_t i = 0; i < numConfigs; i++) {
+    for (uint8_t i = 0U; i < numConfigs; i++) {
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
-
         status = PWR_setSingleResourceCfg(handle, &localConfigs[i]);
     }
 
@@ -1606,7 +1605,6 @@ int32_t Pmic_pwrGetResourceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
-
         status = PWR_getSingleResourceCfg(handle, &localConfigs[i]);
     }
 
@@ -1743,11 +1741,10 @@ int32_t Pmic_pwrSetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
         }
     }
 
-    for (uint8_t i = 0; i < numConfigs; i++) {
+    for (uint8_t i = 0U; i < numConfigs; i++) {
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
-
         status = PWR_setSingleSequence(handle, &localConfigs[i]);
     }
 
@@ -1774,11 +1771,10 @@ int32_t Pmic_pwrGetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
         }
     }
 
-    for (uint8_t i = 0; i < numConfigs; i++) {
+    for (uint8_t i = 0U; i < numConfigs; i++) {
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
-
         status = PWR_getSingleSequence(handle, &localConfigs[i]);
     }
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "wdg_test.h"
 #include "regmap/wdg.h"
+#include "test_constants.h"
 
 #ifdef BUILD_MOCK
 #include "test_inject.h"
@@ -335,7 +336,7 @@ void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void)
 void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetErrStatus()
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
     int32_t status = Pmic_wdgGetErrStatus(NULL, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -350,7 +351,7 @@ void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
 void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgClrErrStatus()
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
     int32_t status = Pmic_wdgClrErrStatus(NULL, &wdgErrStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -372,7 +373,7 @@ void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
 void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetFailCntStatus()
-    Pmic_WdgFailCntStat_t failCnt = {0U};
+    Pmic_WdgFailCntStatus_t failCnt = {0U};
     int32_t status = Pmic_wdgGetFailCntStatus(NULL, &failCnt);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -409,7 +410,7 @@ void test_neg_wdg_wdgGetFdbkRegData_nullParam(void)
 void test_neg_wdg_wdgExtractFdbk_nullParam(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgExtractFdbk
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_wdgExtractFdbk(NULL, regData, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -434,7 +435,7 @@ void test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle(void)
     Pmic_WdgAnsInfo_t wdgAnsInfo = {0U};
 
     // Pass NULL handle into Pmic_wdgExtractAnsCntAndQues()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_wdgExtractAnsCntAndQues(NULL, regData, &wdgAnsInfo);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -442,7 +443,7 @@ void test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle(void)
 void test_neg_wdg_wdgExtractAnsCntAndQues_nullParam(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgExtractAnsCntAndQues()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_wdgExtractAnsCntAndQues(&pmicHandle, regData, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -846,12 +847,12 @@ void test_pos_wdg_wdgGetErrorStatus_timeout(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = (PMIC_CFG_WD_BAD_EVENT_STAT_VALID | PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .badEvent = (bool)false,
         .wdFailCnt = 0U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID,
         .timeout = (bool)false
     };
@@ -938,7 +939,7 @@ void test_pos_wdg_wdgQaSequence_longWindowTimeout(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID,
         .longWindowTimeout = (bool)false
     };
@@ -1006,7 +1007,7 @@ void test_pos_wdg_wdgQaSequence_answerEarly(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_ANSW_EARLY_ERR_VALID,
         .answerEarlyError = (bool)false
     };
@@ -1090,7 +1091,7 @@ void test_pos_wdg_wdgQaSequence_sequenceError(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_SEQ_ERR_ERR_VALID,
         .sequenceError = (bool)false
     };
@@ -1178,7 +1179,7 @@ void test_pos_wdg_wdgQaSequence_answerError(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_ANSW_ERR_ERR_VALID,
         .answerError = (bool)false
     };
@@ -1264,11 +1265,11 @@ void test_pos_wdg_wdgQaSequence_failInt(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .wdFailCnt = 0U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_FAIL_INT_ERR_VALID,
         .failInt = (bool)false
     };
@@ -1371,11 +1372,11 @@ void test_pos_wdg_wdgQaSequence_resetInt(void)
         .qaLfsr = 1U,
         .qaQuesSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = (PMIC_CFG_WD_FAIL_CNT_VAL_VALID),
         .wdFailCnt = 0U
     };
-    Pmic_WdgError_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_CFG_WD_RST_INT_ERR_VALID,
         .resetInt = (bool)false
     };
@@ -1503,7 +1504,7 @@ void test_pos_wdg_wdgClrErrStatusAll_optimization(void)
     // When regVal = 0 (no errors to clear), no I2C transaction should occur
 
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Set up error structure with all valid params but all errors set to false
     // This will result in regVal = 0 inside Pmic_wdgClrErrStatus
@@ -1635,7 +1636,7 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
     // Test clearing only threshold1 error (failInt) using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1663,7 +1664,7 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
     // Test clearing only threshold2 error (resetInt) using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1691,7 +1692,7 @@ void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
     // Test clearing only sequence error using specific validParams
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1719,7 +1720,7 @@ void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 {
     // Test getting fail count with specific validParams (fail count only)
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {0U};
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1740,7 +1741,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
 {
     // Test getting bad event status with specific validParams (bad event only)
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {0U};
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1802,7 +1803,7 @@ void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
     // Test coverage for lines 666-667: Get long window timeout error status
 
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1824,7 +1825,7 @@ void test_pos_wdg_wdgGetErrorStatus_answerEarly(void)
     // Test coverage for lines 674-675: Get answer early error status
 
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1845,7 +1846,7 @@ void test_pos_wdg_wdgGetErrorStatus_answerError(void)
     // Test coverage for lines 682-683: Get answer error status
 
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgError_t wdgErrStat = {0U};
+    Pmic_WdgErrStatus_t wdgErrStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1866,7 +1867,7 @@ void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void)
     // Test coverage for lines 792-793: Get good event status
 
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {0U};
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {0U};
 
     // Enable watchdog
     status = Pmic_wdgEnable(&pmicHandle);

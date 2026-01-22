@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "esm_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -44,7 +45,7 @@
 static Pmic_Handle_t g_handle;
 
 /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-static uint32_t dummyCommHandle = 0x12345678U;
+static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
 /* ========================================================================== */
 /*                           Helper Functions                                 */

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -434,6 +434,12 @@ void test_neg_power_pwr_setResourceCfg_excessiveNumConfigs(void);
 void test_neg_power_pwr_setResourceCfg_zeroNumConfigs(void);
 void test_neg_power_setPgLevel_invalidResource(void);
 void test_neg_power_setVoltage_invalidResource(void);
+
+/* Batch error handling tests */
+void test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged(void);
+void test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply(void);
+void test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged(void);
+void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void);
 
 #ifdef __cplusplus
 }

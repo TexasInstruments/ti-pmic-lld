@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 - 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -213,7 +213,7 @@ typedef struct Pmic_GpioCfg_s {
  * @param gpioCfg [IN] PMIC GPIO configurations to be set.
  *
  * @return Success code if PMIC GPIO configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg);
 
@@ -232,7 +232,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic
  * @param gpioCfg [OUT] GPIO configurations obtained from PMIC.
  *
  * @return Success code if PMIC GPIO configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg);
 
@@ -253,7 +253,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioC
  * deactivated and its output state is low.
  *
  * @return Success code if GPIO is activated/deactivated, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *handle, bool activate);
 
@@ -273,7 +273,7 @@ int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *handle, bool activate);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if GPIO is activated, error code otherwise. For valid
- * success/error codes, refer to @ref Pmic_errorCodes.
+ * success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioActivate(const Pmic_Handle_t *handle);
 
@@ -293,7 +293,7 @@ int32_t Pmic_gpioActivate(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if GPIO is deactivated, error code otherwise. For valid
- * success/error codes, refer to @ref Pmic_errorCodes.
+ * success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *handle);
 
@@ -312,7 +312,7 @@ int32_t Pmic_gpioDeactivate(const Pmic_Handle_t *handle);
  * When set to false, GPIO is deactivated.
  *
  * @return Success code if GPIO activation status has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_gpioGetActivationState(const Pmic_Handle_t *handle, bool *activated);
 

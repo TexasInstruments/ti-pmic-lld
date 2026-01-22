@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -1484,7 +1484,7 @@ void test_pos_power_tsdGetImmStatus(void)
 void test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrGetRsrcStatus()
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetRsrcStatus(NULL, &pwrRsrcStat);
@@ -1501,7 +1501,7 @@ void test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat(void)
 void test_neg_power_pwrGetRsrcStatus_outOfBounds_resource(void)
 {
     // Pass out of bounds resource into Pmic_pwrGetRsrcStatus()
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_POWER_RESOURCE_MAX + 1U
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &pwrRsrcStat);
@@ -1515,7 +1515,7 @@ void test_neg_power_pwrGetRsrcStatus_outOfBounds_resource(void)
 void test_pos_power_rsrcGetStatus_buck1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK1
     };
 
@@ -1528,7 +1528,7 @@ void test_pos_power_rsrcGetStatus_buck1(void)
 void test_pos_power_rsrcGetStatus_buck2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK2
     };
 
@@ -1541,7 +1541,7 @@ void test_pos_power_rsrcGetStatus_buck2(void)
 void test_pos_power_rsrcGetStatus_buck3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK3
     };
 
@@ -1554,7 +1554,7 @@ void test_pos_power_rsrcGetStatus_buck3(void)
 void test_pos_power_rsrcGetStatus_ldo(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_LDO
     };
 
@@ -5285,7 +5285,7 @@ void test_pos_power_powerSetVoutCfg_buck3Voltage(void)
 void test_pos_power_powerGetStat_buck2(void)
 {
     int32_t status;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK2
     };
 
@@ -5296,7 +5296,7 @@ void test_pos_power_powerGetStat_buck2(void)
 void test_pos_power_powerGetStat_buck3(void)
 {
     int32_t status;
-    Pmic_PwrRsrcStat_t pwrRsrcStat = {
+    Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK3
     };
 

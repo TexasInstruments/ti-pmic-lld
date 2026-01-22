@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -50,6 +50,8 @@
 #define I2C_ADDR_7BIT_MASK    ((uint8_t)0x7FU)  /* Extract 7-bit I2C address */
 #define I2C_ADDR_SHIFT        ((uint8_t)1U)     /* Shift for R/W bit position */
 #define I2C_READ_BIT          ((uint8_t)1U)     /* Set for read operation */
+
+#define PMIC_COMM_CRC_INITIAL_VALUE ((uint8_t)0xFFU)
 
 // Relevant differences between A0 and B0/B1 start at 0x4D.
 #define REGMAP_DIFF_START ((uint8_t)0x4DU)
@@ -116,9 +118,9 @@ static const uint8_t CRC8_TABLE[] =
  *
  * @retval CRC value for data
  */
-static uint8_t getCRC8Val(const uint8_t data[], uint8_t length)
+static uint8_t getCRC8Val(const uint8_t data[PMIC_IO_FRAME_LEN_MAX], uint8_t length)
 {
-    uint8_t crc = 0xFFU;
+    uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 
     for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < length); i++)
     {

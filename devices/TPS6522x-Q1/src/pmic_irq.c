@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -45,6 +45,7 @@
 
 #include <string.h>
 
+#define CLEAR_ALL_STAT_BITS   (0xFFU)
 #define PMIC_IRQ_MASKABLE     ((bool)true)
 #define PMIC_IRQ_NON_MASKABLE ((bool)false)
 
@@ -57,11 +58,11 @@ static inline void IRQ_copyIrqMask(const Pmic_IrqMask_t *src, Pmic_IrqMask_t *ds
 }
 
 /**
- * @brief Copy Pmic_IrqStat_t structure member-wise
+ * @brief Copy Pmic_IrqStatus_t structure member-wise
  */
-static inline void IRQ_copyIrqStat(const Pmic_IrqStat_t *src, Pmic_IrqStat_t *dst)
+static inline void IRQ_copyIrqStat(const Pmic_IrqStatus_t *src, Pmic_IrqStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStat_t));
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStatus_t));
 }
 
 typedef struct Pmic_IrqInfo_s
@@ -295,9 +296,9 @@ int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_I
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
+int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat)
 {
-    Pmic_IrqStat_t irqStatLocal;
+    Pmic_IrqStatus_t irqStatLocal;
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -340,7 +341,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat)
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
+int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat, uint8_t *irqNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -433,52 +434,52 @@ int32_t Pmic_irqClrAllFlags(const Pmic_Handle_t *handle)
     // Clear all interrupt status registers by writing 0xFF (write-1-to-clear)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_BUCK_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_BUCK_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_LDO_VMON_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_LDO_VMON_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_GPIO_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_GPIO_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_STARTUP_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_STARTUP_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_MISC_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_MISC_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_MODERATE_ERR_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_MODERATE_ERR_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_SEVERE_ERR_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_SEVERE_ERR_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_FSM_ERR_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_FSM_ERR_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, INT_ESM_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, INT_ESM_REG, CLEAR_ALL_STAT_BITS);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, CLEAR_ALL_STAT_BITS);
     }
 
     return Pmic_logStatus(handle, status);

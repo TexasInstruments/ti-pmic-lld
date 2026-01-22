@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -36,6 +36,7 @@
 #include "io_test.h"
 #include "pmic_io.h"
 #include "regmap/core.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -246,7 +247,7 @@ static void test_neg_io_ioRxByte_nullCommHandle(void)
  */
 static void test_neg_io_ioUpdateByte_nullHandle(void)
 {
-    int32_t status = Pmic_ioUpdateByte(NULL, CONFIG_2_REG, 0U, 0x0FU, 0x05U);
+    int32_t status = Pmic_ioUpdateByte(NULL, CONFIG_2_REG, 0U, TEST_MASK_LOW_NIBBLE, 0x05U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -255,7 +256,7 @@ static void test_neg_io_ioUpdateByte_nullHandle(void)
  */
 static void test_neg_io_ioUpdateByte_CS_nullHandle(void)
 {
-    int32_t status = Pmic_ioUpdateByte_CS(NULL, CONFIG_2_REG, 0U, 0x0FU, 0x05U);
+    int32_t status = Pmic_ioUpdateByte_CS(NULL, CONFIG_2_REG, 0U, TEST_MASK_LOW_NIBBLE, 0x05U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -345,7 +346,7 @@ static void test_pos_io_ioRxByte_singleRegisterRead(void)
  */
 static void test_pos_io_ioTxByte_singleRegisterWrite(void)
 {
-    uint8_t txData = 0xAAU;
+    uint8_t txData = TEST_PATTERN_AA;
     uint8_t rxData = 0U;
     int32_t status;
 
@@ -377,7 +378,7 @@ static void test_pos_io_ioRxByte_CS_singleRegisterRead(void)
  */
 static void test_pos_io_ioTxByte_CS_singleRegisterWrite(void)
 {
-    uint8_t txData = 0x55U;
+    uint8_t txData = TEST_PATTERN_55;
     uint8_t rxData = 0U;
     int32_t status;
 
@@ -406,14 +407,14 @@ static void test_pos_io_ioUpdateByte_readModifyWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Modify lower 4 bits */
-    status = Pmic_ioUpdateByte(&pmicHandle, SCRATCH_PAD_REG_3_REG, 0U, 0x0FU, testValue);
+    status = Pmic_ioUpdateByte(&pmicHandle, SCRATCH_PAD_REG_3_REG, 0U, TEST_MASK_LOW_NIBBLE, testValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Read back and verify lower 4 bits changed, upper 4 bits unchanged */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_3_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & 0x0FU) == testValue);
-    PLATFORM_ASSERT((modifiedData & 0xF0U) == (originalData & 0xF0U));
+    PLATFORM_ASSERT((modifiedData & TEST_MASK_LOW_NIBBLE) == testValue);
+    PLATFORM_ASSERT((modifiedData & TEST_MASK_HIGH_NIBBLE) == (originalData & TEST_MASK_HIGH_NIBBLE));
 }
 
 /**
@@ -431,14 +432,14 @@ static void test_pos_io_ioUpdateByte_CS_readModifyWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Modify lower 4 bits with critical section */
-    status = Pmic_ioUpdateByte_CS(&pmicHandle, SCRATCH_PAD_REG_4_REG, 0U, 0x0FU, testValue);
+    status = Pmic_ioUpdateByte_CS(&pmicHandle, SCRATCH_PAD_REG_4_REG, 0U, TEST_MASK_LOW_NIBBLE, testValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Read back and verify */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_4_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & 0x0FU) == testValue);
-    PLATFORM_ASSERT((modifiedData & 0xF0U) == (originalData & 0xF0U));
+    PLATFORM_ASSERT((modifiedData & TEST_MASK_LOW_NIBBLE) == testValue);
+    PLATFORM_ASSERT((modifiedData & TEST_MASK_HIGH_NIBBLE) == (originalData & TEST_MASK_HIGH_NIBBLE));
 }
 
 /**
@@ -632,7 +633,7 @@ static void test_pos_io_ioRxByte_registerReadVerification(void)
  */
 static void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void)
 {
-    uint8_t txData = 0xA5U;
+    uint8_t txData = TEST_PATTERN_A5;
     uint8_t rxData = 0U;
     bool enabled = false;
     int32_t status;
@@ -659,7 +660,7 @@ static void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void)
     PLATFORM_ASSERT(enabled == true);
 
     /* Write and read with CRC enabled */
-    txData = 0x5AU;
+    txData = TEST_PATTERN_5A;
     status = Pmic_ioTxByte(&pmicHandle, SCRATCH_PAD_REG_2_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -721,7 +722,7 @@ static void test_pos_io_ioRxByte_readWithCrcValidation(void)
  */
 static void test_pos_io_ioTxByte_writeWithCrcCalculation(void)
 {
-    uint8_t txData = 0xA5U;
+    uint8_t txData = TEST_PATTERN_A5;
     uint8_t rxData = 0U;
     int32_t status;
 
@@ -739,7 +740,7 @@ static void test_pos_io_ioTxByte_writeWithCrcCalculation(void)
     PLATFORM_ASSERT(rxData == txData);
 
     /* Write to scratch pad register 2 with different data */
-    txData = 0x5AU;
+    txData = TEST_PATTERN_5A;
     status = Pmic_ioTxByte(&pmicHandle, SCRATCH_PAD_REG_2_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1217,13 +1218,13 @@ static void test_pos_io_ioCrcEnable_crcStateTransitionsWithOperations(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Perform read-modify-write with CRC enabled */
-    status = Pmic_ioUpdateByte(&pmicHandle, SCRATCH_PAD_REG_4_REG, 0U, 0xF0U, 0xA0U);
+    status = Pmic_ioUpdateByte(&pmicHandle, SCRATCH_PAD_REG_4_REG, 0U, TEST_MASK_HIGH_NIBBLE, 0xA0U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Read back and verify */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_4_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((rxData & 0xF0U) == 0xA0U);
+    PLATFORM_ASSERT((rxData & TEST_MASK_HIGH_NIBBLE) == 0xA0U);
 
     /* Final cleanup - disable CRC */
     status = Pmic_ioCrcDisable(&pmicHandle);
@@ -1255,7 +1256,7 @@ static void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     resetMockIoState();
 
     /* Configure mock to corrupt CRC on first read attempt */
-    g_mockCrcCorruptionMask = 0xFFU;  /* Corrupt CRC byte */
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;  /* Corrupt CRC byte */
 
     /* Perform read - should fail on first attempt with CRC error, succeed on retry */
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &regData);
@@ -1275,7 +1276,7 @@ static void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 static void test_pos_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t writeVal = 0xAAU;
+    uint8_t writeVal = TEST_PATTERN_AA;
     Pmic_Handle_t testHandle;
 
     /* Initialize test handle with mock functions */
@@ -1596,7 +1597,7 @@ static void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Configure mock to corrupt CRC */
-    g_mockCrcCorruptionMask = 0xFFU;
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;
 
     /* Perform read - should fail with CRC error */
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &rxData);
@@ -1630,7 +1631,7 @@ static void test_neg_io_ioRxByte_i2cRxCrcMismatch(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Configure mock to corrupt CRC */
-    g_mockCrcCorruptionMask = 0xFFU;
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;
 
     /* Perform read - should fail with CRC error */
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &rxData);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -146,12 +146,12 @@ extern "C" {
  *
  * @{
  */
-typedef struct Pmic_timerCfg_e {
+typedef struct Pmic_TimerCfg_s {
     uint32_t validParams;
 
     uint8_t prescale;
     uint8_t mode;
-} Pmic_timerCfg_t;
+} Pmic_TimerCfg_t;
 /** @} */
 
 /* ========================================================================== */
@@ -178,7 +178,7 @@ typedef struct Pmic_timerCfg_e {
  * @return Success code if timer configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *timerCfg);
 
 /**
  * @brief Get PMIC timer configuration. This API supports getting the same
@@ -195,7 +195,7 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *tim
  * PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg);
+int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_TimerCfg_t *timerCfg);
 
 /**
  * @brief Alternative routine to stop the PMIC timer. That is to say, this API can

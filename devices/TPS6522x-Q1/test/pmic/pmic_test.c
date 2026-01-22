@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "pmic_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -498,7 +499,7 @@ void test_pos_pmic_init_complete_flow(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify driver initialization status magic number
-    PLATFORM_ASSERT(pmicHandle.drvInitStat == 0x504D4943U);
+    PLATFORM_ASSERT(pmicHandle.drvInitStat == TEST_PMIC_INIT_MAGIC);
 
     // Verify all function pointers are set
     PLATFORM_ASSERT(pmicHandle.ioRead == &platform_rxByte);
@@ -600,7 +601,7 @@ void test_pos_pmic_init_device_info_retrieval(void)
     // Mock should return realistic device info values
     // Verify that device revision fields are populated (non-zero from mock)
     // Note: Mock backend returns register values, we just verify they were read
-    PLATFORM_ASSERT(pmicHandle.drvInitStat == 0x504D4943U);
+    PLATFORM_ASSERT(pmicHandle.drvInitStat == TEST_PMIC_INIT_MAGIC);
 
     // Clean up
     Pmic_deinit(&pmicHandle);
@@ -615,7 +616,7 @@ void test_pos_pmic_deinit_success_path(void)
     // Initialize first
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(pmicHandle.drvInitStat == 0x504D4943U);
+    PLATFORM_ASSERT(pmicHandle.drvInitStat == TEST_PMIC_INIT_MAGIC);
 
     // Deinitialize
     status = Pmic_deinit(&pmicHandle);
@@ -656,7 +657,7 @@ void test_pos_pmic_checkHandle_all_validations(void)
 
     // Test 2: Invalid drvInitStat
     Pmic_Handle_t testHandle = {0};
-    testHandle.drvInitStat = 0xDEADBEEFU;  // Wrong magic number
+    testHandle.drvInitStat = TEST_INVALID_MAGIC;  // Wrong magic number
     testHandle.commMode = PMIC_INTF_SPI;
     testHandle.commHandle0 = platform_getCommHandle();
     testHandle.ioRead = &platform_rxByte;
@@ -667,7 +668,7 @@ void test_pos_pmic_checkHandle_all_validations(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 
     // Test 3: Invalid commMode
-    testHandle.drvInitStat = 0x504D4943U;  // Correct magic number
+    testHandle.drvInitStat = TEST_PMIC_INIT_MAGIC;  // Correct magic number
     testHandle.commMode = PMIC_INTF_MAX + 1U;
     status = Pmic_checkHandle(&testHandle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -819,7 +820,7 @@ void test_pos_pmic_init_with_task_handle(void)
     handleCfg.commMode = PMIC_INTF_SPI;
     handleCfg.crcEnable = PMIC_DISABLE;
     handleCfg.commHandle0 = platform_getCommHandle();
-    handleCfg.taskHandle = (void*)0x12345678U;  // Use a non-NULL sentinel value
+    handleCfg.taskHandle = (void*)TEST_DUMMY_HANDLE;  // Use a non-NULL sentinel value
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;
     handleCfg.criticalSectionStart = &platform_critSecStart;
@@ -830,7 +831,7 @@ void test_pos_pmic_init_with_task_handle(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify task handle is set
-    PLATFORM_ASSERT(pmicHandle.taskHandle == (void*)0x12345678U);
+    PLATFORM_ASSERT(pmicHandle.taskHandle == (void*)TEST_DUMMY_HANDLE);
 
     // Clean up
     Pmic_deinit(&pmicHandle);

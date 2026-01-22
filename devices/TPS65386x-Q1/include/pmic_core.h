@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -151,11 +151,10 @@ typedef struct Pmic_DeviceInfo_s {
  * combination of @ref Pmic_CoreLockCfgValidParamShift and the corresponding
  * member value will be updated.
  *
- * @param cfgLock Configuration Register Lock. True if registers are l Valid
- * only when PMIC_CFG_REG_LOCK_VALID bit is set
+ * @param cfgLock Configuration Register Lock. Valid only when PMIC_CFG_REG_LOCK_VALID bit is set
  *
  * @param cntLock Timer/Rotation Counter Register Lock configuration. Valid
- * only when PMIC_CFG_REG_LOCK_VALID bit is set
+ * only when PMIC_CFG_CNT_LOCK_VALID bit is set
  */
 typedef struct Pmic_Lock_s {
     uint16_t validParams;
@@ -329,25 +328,27 @@ int32_t Pmic_getCntLockState(const Pmic_Handle_t *handle, uint8_t *lockState);
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
- * Design: PMICDRV-684
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
- *               PMICDRV-545
+ * Design: PMICDRV-591
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-527, PMICDRV-545, PMICDRV-551
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
  * @param value            [IN] Value to be written to scratch pad register.
  *
  * @return Success code if value has been written to PMIC scratch pad register,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
  *
- * Design: PMICDRV-685
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-545
+ * Design: PMICDRV-592
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-545, PMICDRV-551
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
@@ -355,7 +356,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  *
  * @return Success code if target scratch pad register value has been obtained
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -34,6 +34,7 @@
 
 #include "../platform.h"
 #include "esm_test.h"
+#include "test_constants.h"
 
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
@@ -641,8 +642,8 @@ void test_pos_esm_esmSetCfg_configurationReadbackVerification(void)
                        PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID,
         .mode = PMIC_ESM_MODE_LEVEL,
         .errCntThr = 0xA,
-        .delay1 = 0xAA,
-        .delay2 = 0x55
+        .delay1 = TEST_PATTERN_AA,
+        .delay2 = TEST_PATTERN_55
     };
 
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
@@ -667,13 +668,13 @@ void test_pos_esm_esmSetCfg_configurationReadbackVerification(void)
     esmCfgGet.validParams = PMIC_ESM_DELAY1_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(esmCfgGet.delay1 == 0xAA);
+    PLATFORM_ASSERT(esmCfgGet.delay1 == TEST_PATTERN_AA);
 
     /* Verify delay2 */
     esmCfgGet.validParams = PMIC_ESM_DELAY2_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(esmCfgGet.delay2 == 0x55);
+    PLATFORM_ASSERT(esmCfgGet.delay2 == TEST_PATTERN_55);
 }
 
 /**
@@ -786,7 +787,7 @@ void test_neg_esm_esmStop_nullHandle(void)
  */
 void test_neg_esm_esmGetStatus_nullHandle(void)
 {
-    Pmic_EsmStat_t esmStat = {0};
+    Pmic_EsmStatus_t esmStat = {0};
     int32_t status = Pmic_esmGetStatus(NULL, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -805,7 +806,7 @@ void test_neg_esm_esmGetStatus_nullEsmStat(void)
  */
 void test_neg_esm_esmGetStatus_zeroValidParams(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = 0U
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -817,7 +818,7 @@ void test_neg_esm_esmGetStatus_zeroValidParams(void)
  */
 void test_neg_esm_esmGetStatus_invalidValidParams(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_STATUS_ALL_VALID + 1U
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -829,7 +830,7 @@ void test_neg_esm_esmGetStatus_invalidValidParams(void)
  */
 void test_pos_esm_esmGetStatus_allFields(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_STATUS_ALL_VALID
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -841,7 +842,7 @@ void test_pos_esm_esmGetStatus_allFields(void)
  */
 void test_pos_esm_esmGetStatus_rstInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_RST_INT_VALID
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -853,7 +854,7 @@ void test_pos_esm_esmGetStatus_rstInt(void)
  */
 void test_pos_esm_esmGetStatus_failInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_FAIL_INT_VALID
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -865,7 +866,7 @@ void test_pos_esm_esmGetStatus_failInt(void)
  */
 void test_pos_esm_esmGetStatus_pinInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_PIN_INT_VALID
     };
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -877,7 +878,7 @@ void test_pos_esm_esmGetStatus_pinInt(void)
  */
 void test_neg_esm_esmClrStatus_nullHandle(void)
 {
-    Pmic_EsmStat_t esmStat = {0};
+    Pmic_EsmStatus_t esmStat = {0};
     int32_t status = Pmic_esmClrStatus(NULL, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -896,7 +897,7 @@ void test_neg_esm_esmClrStatus_nullEsmStat(void)
  */
 void test_neg_esm_esmClrStatus_zeroValidParams(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = 0U
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -908,7 +909,7 @@ void test_neg_esm_esmClrStatus_zeroValidParams(void)
  */
 void test_neg_esm_esmClrStatus_invalidValidParams(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_STATUS_ALL_VALID + 1U
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -920,7 +921,7 @@ void test_neg_esm_esmClrStatus_invalidValidParams(void)
  */
 void test_pos_esm_esmClrStatus_allFields(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_STATUS_ALL_VALID
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -932,7 +933,7 @@ void test_pos_esm_esmClrStatus_allFields(void)
  */
 void test_pos_esm_esmClrStatus_rstInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_RST_INT_VALID
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -944,7 +945,7 @@ void test_pos_esm_esmClrStatus_rstInt(void)
  */
 void test_pos_esm_esmClrStatus_failInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_FAIL_INT_VALID
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -956,7 +957,7 @@ void test_pos_esm_esmClrStatus_failInt(void)
  */
 void test_pos_esm_esmClrStatus_pinInt(void)
 {
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_PIN_INT_VALID
     };
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
@@ -1293,7 +1294,7 @@ void test_neg_esm_esmGetStatus_ioReadFailure(void)
 #ifdef BUILD_MOCK
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_RST_INT_VALID
     };
 
@@ -1318,7 +1319,7 @@ void test_neg_esm_esmClrStatus_ioWriteFailure(void)
 #ifdef BUILD_MOCK
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
-    Pmic_EsmStat_t esmStat = {
+    Pmic_EsmStatus_t esmStat = {
         .validParams = PMIC_ESM_RST_INT_VALID
     };
 

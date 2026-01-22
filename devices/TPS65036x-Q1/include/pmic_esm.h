@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -81,10 +81,10 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_EsmStatValidParams
+ * @anchor Pmic_EsmStatusValidParams
  * @name TPS65036x PMIC ESM Status Valid Parameters
  *
- * @brief Indication of which parameters are valid within the Pmic_EsmStat_t struct.
+ * @brief Indication of which parameters are valid within the Pmic_EsmStatus_t struct.
  *
  * @details For more information on the parameters, refer to @ref Pmic_EsmCfg.
  *
@@ -190,13 +190,13 @@ typedef struct Pmic_EsmCfg_s
 } Pmic_EsmCfg_t;
 
 /**
- * @anchor Pmic_EsmStat
+ * @anchor Pmic_EsmStatus
  * @name PMIC ESM Status Struct
  *
  * @brief Struct used to get and clear ESM error statuses.
  *
  * @param validParams  Each bit in this variable represents whether a struct
- * member is valid. For valid values, refer to @ref Pmic_EsmStatValidParams.
+ * member is valid. For valid values, refer to @ref Pmic_EsmStatusValidParams.
  *
  * @param rstInt Status indicating that MCU ESM reset has been detected.
  *
@@ -204,14 +204,14 @@ typedef struct Pmic_EsmCfg_s
  *
  * @param pinInt Status indicating that MCU ESM fault has been detected.
  */
-typedef struct Pmic_EsmStat_s
+typedef struct Pmic_EsmStatus_s
 {
     uint32_t validParams;
 
     bool rstInt;
     bool failInt;
     bool pinInt;
-} Pmic_EsmStat_t;
+} Pmic_EsmStatus_t;
 
 /* ========================================================================== */
 /*                             Function Declarations                          */
@@ -243,7 +243,7 @@ typedef struct Pmic_EsmStat_s
  * @param esmCfg [IN] ESM configurations to write to PMIC.
  *
  * @return Success code if PMIC ESM configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg);
 
@@ -259,7 +259,7 @@ int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
  * @param esmCfg [OUT] ESM configurations obtained from PMIC.
  *
  * @return Success code if PMIC ESM configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg);
 
@@ -278,7 +278,7 @@ int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg);
  * @ref Pmic_esmSetStartStateValues
  *
  * @return Success code if PMIC ESM_MCU_START bit has been configured, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start);
 
@@ -295,7 +295,7 @@ int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC ESM_MCU_START bit has been set to 1, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmStart(const Pmic_Handle_t *handle);
 
@@ -309,7 +309,7 @@ int32_t Pmic_esmStart(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC ESM_MCU_START bit has been set to 0, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmStop(const Pmic_Handle_t *handle);
 
@@ -326,7 +326,7 @@ int32_t Pmic_esmStop(const Pmic_Handle_t *handle);
  * stopped.
  *
  * @return Success code if PMIC ESM start/stop status has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *start);
 
@@ -341,16 +341,16 @@ int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *start);
  * 1. ESM_MCU_RST_INT (validParams: PMIC_ESM_RST_INT_VALID)
  * 2. ESM_MCU_FAIL_INT (validParams: PMIC_ESM_FAIL_INT_VALID)
  * 3. ESM_MCU_PIN_INT (validParams: PMIC_ESM_PIN_INT_VALID)
- * For more information on the ESM statuses, refer to @ref Pmic_EsmStat.
+ * For more information on the ESM statuses, refer to @ref Pmic_EsmStatus.
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @param esmStat [OUT] ESM statuses obtained from PMIC.
  *
  * @return Success code if PMIC ESM statuses have been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat);
 
 /**
  * @brief Clear PMIC ESM statuses.
@@ -365,16 +365,16 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat);
  * @note To indicate the desired ESM error status(es) to clear, the validParams
  * struct member of \p esmStat parameter must be set. All other struct members
  * will be ignored/unused throughout API execution. For valid values of validParams,
- * refer to @ref Pmic_EsmStatValidParams.
+ * refer to @ref Pmic_EsmStatusValidParams.
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @param esmStat [IN] ESM statuses to be cleared.
  *
  * @return Success code if PMIC ESM statues have been cleared, error code
- * otherwise. for valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. for valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat);
 
 /**
  * @brief Get PMIC ESM error count.
@@ -387,7 +387,7 @@ int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStat_t *esm
  * @param errCnt [OUT] ESM error count.
  *
  * @return Success code if PMIC ESM error count has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *handle, uint8_t *errCnt);
 

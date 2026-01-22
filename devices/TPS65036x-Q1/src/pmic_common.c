@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -309,6 +309,7 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
 
+    // Copy input diagnostics to local buffer before entering critical section
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
         copyDiagnostic(&diagnostic[i], &localDiagnostics[i]);
     }
@@ -358,9 +359,11 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
     }
     Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
 
+    // Copy results back to output diagnostic array after critical section
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
         copyDiagnostic(&localDiagnostics[i], &diagnostic[i]);
     }
+
     return Pmic_logStatus(handle, PMIC_ST_SUCCESS);
 }
 
@@ -446,6 +449,7 @@ int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
 
+    // Copy input diagnostics to local buffer before entering critical section
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
         copyDiagnostic(&diagnostic[i], &localDiagnostics[i]);
     }

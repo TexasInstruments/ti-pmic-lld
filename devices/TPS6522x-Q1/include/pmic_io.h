@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -68,10 +68,6 @@ extern "C" {
  * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
  * to log the status if such information is desired.
  *
- * @note This function does not automatically log diagnostic information upon
- * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
- * to log the status if such information is desired.
- *
  * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
@@ -79,7 +75,7 @@ extern "C" {
  * @param txData [IN] Data to write to PMIC register.
  *
  * @return PMIC_ST_SUCCESS if byte has been successfully transmitted to PMIC,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
@@ -100,7 +96,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
  * @param txData [IN] Data to write to PMIC register.
  *
  * @return PMIC_ST_SUCCESS if byte has been successfully transmitted to PMIC,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
@@ -118,10 +114,6 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
  * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
  * to log the status if such information is desired.
  *
- * @note This function does not automatically log diagnostic information upon
- * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
- * to log the status if such information is desired.
- *
  * @param handle [IN] PMIC interface handle.
  *
  * @param regAddr [IN] PMIC register address.
@@ -130,7 +122,7 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
  * be stored.
  *
  * @return PMIC_ST_SUCCESS if byte has been successfully obtained from PMIC,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
 
@@ -152,7 +144,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
  * be stored.
  *
  * @return PMIC_ST_SUCCESS if byte has been successfully obtained from PMIC,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
 
@@ -175,7 +167,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
  * @param value [IN] Desired value to set the bit field to.
  *
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
@@ -199,7 +191,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t
  * @param value [IN] Desired value to set the bit field to.
  *
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
@@ -220,7 +212,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint
  * the bit field is set to 1. Otherwise, the bit field is set to 0.
  *
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t shift, bool value);
 
@@ -243,7 +235,7 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint16_t regAddr, uint8
  * the bit field is set to 1. Otherwise, the bit field is set to 0.
  *
  * @return PMIC_ST_SUCCESS if read-modify-write operation was successful, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t shift, bool value);
 
@@ -262,7 +254,7 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint16_t regAddr, uin
  * `PMIC_ENABLE`, CRC will be enabled. Else, CRC will be disabled.
  *
  * @return PMIC_ST_SUCCESS if serial communication CRC has been enabled or disabled,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable);
 
@@ -278,7 +270,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable);
  * will be set to true upon API call success.
  *
  * @return PMIC_ST_SUCCESS if serial communication CRC has been enabled, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle);
 
@@ -294,7 +286,7 @@ int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle);
  * will be set to false upon API call success.
  *
  * @return PMIC_ST_SUCCESS if serial communication CRC has been disabled, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
 
@@ -311,7 +303,7 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
  * communication CRC is enabled, otherwise false.
  *
  * @return PMIC_ST_SUCCESS if CRC enable status has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *enabled);
 

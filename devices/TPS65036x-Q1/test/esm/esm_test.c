@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -246,7 +246,7 @@ void test_neg_esm_esmGetStartState_nullStarted(void)
 void test_neg_esm_esmGetStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmGetStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
+    Pmic_EsmStatus_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
     int32_t status = Pmic_esmGetStatus(NULL, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -261,7 +261,7 @@ void test_neg_esm_esmGetStatus_nullEsmStat(void)
 void test_neg_esm_esmGetStatus_invalidValidParams_zero(void)
 {
     // Pass invalid validParams (0) into Pmic_esmGetStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = 0U};
+    Pmic_EsmStatus_t esmStat = {.validParams = 0U};
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -269,7 +269,7 @@ void test_neg_esm_esmGetStatus_invalidValidParams_zero(void)
 void test_neg_esm_esmGetStatus_invalidValidParams_outOfBounds(void)
 {
     // Pass out of bounds validParams into Pmic_esmGetStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
+    Pmic_EsmStatus_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
     int32_t status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -281,7 +281,7 @@ void test_neg_esm_esmGetStatus_invalidValidParams_outOfBounds(void)
 void test_neg_esm_esmClrStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_esmClrStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
+    Pmic_EsmStatus_t esmStat = {.validParams = PMIC_ESM_RST_INT_VALID};
     int32_t status = Pmic_esmClrStatus(NULL, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -296,7 +296,7 @@ void test_neg_esm_esmClrStatus_nullEsmStat(void)
 void test_neg_esm_esmClrStatus_invalidValidParams_zero(void)
 {
     // Pass invalid validParams (0) into Pmic_esmClrStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = 0U};
+    Pmic_EsmStatus_t esmStat = {.validParams = 0U};
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -304,7 +304,7 @@ void test_neg_esm_esmClrStatus_invalidValidParams_zero(void)
 void test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds(void)
 {
     // Pass out of bounds validParams into Pmic_esmClrStatus()
-    Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
+    Pmic_EsmStatus_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID + 1U};
     int32_t status = Pmic_esmClrStatus(&pmicHandle, &esmStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -684,7 +684,7 @@ void test_pos_esm_esmGetStartState(void)
 void test_pos_esm_esmGetStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_EsmStat_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID};
+    Pmic_EsmStatus_t esmStat = {.validParams = PMIC_ESM_STATUS_ALL_VALID};
 
     // Get ESM status (all status bits)
     status = Pmic_esmGetStatus(&pmicHandle, &esmStat);
@@ -707,7 +707,7 @@ void test_pos_esm_esmGetStatus(void)
 void test_pos_esm_esmClrStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_EsmStat_t esmStat = {0U};
+    Pmic_EsmStatus_t esmStat = {0U};
 
     // Clear all ESM status bits
     esmStat.validParams = PMIC_ESM_STATUS_ALL_VALID;

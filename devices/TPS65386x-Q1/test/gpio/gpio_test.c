@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 /* ========================================================================== */
 
 #include "gpio_test.h"
+#include "test_constants.h"
 #include "pmic_mock_core.h"
 
 /* ========================================================================== */
@@ -243,7 +244,7 @@ static Pmic_Handle_t g_pmicHandle;
 static int32_t gpioTest_initHandle(void)
 {
     /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |

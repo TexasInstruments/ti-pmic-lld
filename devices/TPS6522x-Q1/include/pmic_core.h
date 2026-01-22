@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -96,7 +96,7 @@ extern "C" {
 int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock);
 
 /**
- * @brief Get PMIC register enable state.
+ * @brief Get PMIC register lock state.
  *
  * Design: PMICDRV-588
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-521, PMICDRV-522,
@@ -147,13 +147,14 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev);
 /**
  * @brief Set the value of a PMIC scratchpad register.
  *
- * Design: PMICDRV-684
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
- *               PMICDRV-545
+ * Design: PMICDRV-591
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-527, PMICDRV-545, PMICDRV-551
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param scratchpadRegNum [IN] Scratchpad register number. For valid
+ * @param scratchPadRegNum [IN] Scratchpad register number. For valid
  * scratchpad register numbers, refer to @ref Pmic_ScratchpadRegs.
  *
  * @param value [IN] Value to be written to the scratchpad register.
@@ -162,18 +163,19 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev);
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Get the value of a PMIC scratchpad register.
  *
- * Design: PMICDRV-685
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-545
+ * Design: PMICDRV-592
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-545, PMICDRV-551
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param scratchpadRegNum [IN] Scratchpad register number. For valid
+ * @param scratchPadRegNum [IN] Scratchpad register number. For valid
  * scratchpad register numbers, refer to @ref Pmic_ScratchpadRegs.
  *
  * @param value [OUT] Scratchpad register value obtained from the PMIC.
@@ -182,7 +184,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadR
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchpadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 #ifdef __cplusplus
 }

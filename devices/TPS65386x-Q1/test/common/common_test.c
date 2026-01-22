@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -35,6 +35,7 @@
 /* ========================================================================== */
 
 #include "common_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -270,7 +271,7 @@ static Pmic_Handle_t g_pmicHandle;
 /* Mock callback tracking variables */
 static uint32_t g_critSecStartCallCount = 0;
 static uint32_t g_critSecStopCallCount = 0;
-static uint8_t g_lastCritSecResource = 0xFFU;
+static uint8_t g_lastCritSecResource = TEST_INVALID_RSRC_SENTINEL;
 static uint32_t g_timerWaitCallCount = 0;
 static uint32_t g_lastTimerWaitMs = 0;
 
@@ -299,7 +300,7 @@ static void resetMockCounters(void)
 {
     g_critSecStartCallCount = 0;
     g_critSecStopCallCount = 0;
-    g_lastCritSecResource = 0xFFU;
+    g_lastCritSecResource = TEST_INVALID_RSRC_SENTINEL;
     g_timerWaitCallCount = 0;
     g_lastTimerWaitMs = 0;
 }
@@ -489,7 +490,7 @@ void test_neg_common_logStatus_invalidStatusType(void)
 
     Pmic_clrDiagnosticsAll(&handle);
 
-    int32_t invalidStatus = PMIC_STATUS(99U, 0U);
+    int32_t invalidStatus = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
@@ -502,7 +503,7 @@ void test_neg_common_logStatus_invalidStatusId(void)
 
     Pmic_clrDiagnosticsAll(&handle);
 
-    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_ERROR, 99U);
+    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_ERROR, TEST_INVALID_PARAM_99);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
@@ -591,7 +592,7 @@ void test_neg_common_getDiagnostic_invalidStatusCode(void)
     handle.criticalSectionStop = mockCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
-    diag.code = PMIC_STATUS(99U, 0U);
+    diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
@@ -872,7 +873,7 @@ void test_pos_common_clrDiagnosticsAll_clearAll(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diag.cnt == 0U);
 
-    uint32_t retryCnt = 99U;
+    uint32_t retryCnt = TEST_INVALID_PARAM_99;
     status = Pmic_getRetryCnt(&handle, &retryCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(retryCnt == 0U);
@@ -950,7 +951,7 @@ void test_neg_common_getRetryCnt_nullOutput(void)
 void test_pos_common_getRetryCnt_initialZero(void)
 {
     Pmic_Handle_t handle = {0};
-    uint32_t retryCnt = 99U;
+    uint32_t retryCnt = TEST_INVALID_PARAM_99;
     int32_t status;
 
     handle.criticalSectionStart = mockCritSecStart;
@@ -1091,7 +1092,7 @@ void test_pos_common_overflow_retryCnt(void)
 
 void test_neg_common_logStatus_invalidStatusNullHandle(void)
 {
-    int32_t invalidStatus = PMIC_STATUS(99U, 0U);
+    int32_t invalidStatus = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
     int32_t status = Pmic_logStatus(NULL, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
@@ -1102,7 +1103,7 @@ void test_neg_common_logStatus_successTypeInvalidId(void)
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
 
-    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_SUCCESS, 99U);
+    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_SUCCESS, TEST_INVALID_PARAM_99);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
@@ -1155,7 +1156,7 @@ void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
     diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
-    diags[1].code = PMIC_STATUS(99U, 0U);
+    diags[1].code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
@@ -1210,7 +1211,7 @@ void test_neg_common_clrDiagnostic_invalidStatusCode(void)
     handle.criticalSectionStop = mockCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
-    diag.code = PMIC_STATUS(99U, 0U);
+    diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
@@ -1361,7 +1362,7 @@ void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
     diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
-    diags[1].code = PMIC_STATUS(99U, 0U);
+    diags[1].code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
@@ -1398,7 +1399,7 @@ void test_neg_common_logStatus_warningTypeInvalidId(void)
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
 
-    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_WARNING, 99U);
+    int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_WARNING, TEST_INVALID_PARAM_99);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
 }
@@ -1547,7 +1548,7 @@ void common_test(void *args)
 {
     (void)args;
     int32_t status = PMIC_ST_SUCCESS;
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |

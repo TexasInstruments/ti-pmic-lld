@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -213,7 +213,7 @@ typedef struct Pmic_HandleCfg_s
  * their settings/parameters in this struct to initialize the PMIC handle.
  *
  * @return Success code if PMIC handle is initialized without issue, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
 
@@ -231,7 +231,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if PMIC handle is de-initialized, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_deinit(Pmic_Handle_t *handle);
 
@@ -252,7 +252,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC handle is valid, error code otherwise. For
- * valid success/error codes, refer to @ref Pmic_errorCodes.
+ * valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_checkHandle(const Pmic_Handle_t *handle);
 

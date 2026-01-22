@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 
 #include "wdg_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 #include "regmap/wdg.h"
 
 /* ========================================================================== */
@@ -437,7 +438,7 @@ void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
 
     /* Set long window duration */
     wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
-    wdgCfg.longWinCode = 0xFFU;  // 255 * 1100us = 280.5ms (max possible, approximates 772ms intent)
+    wdgCfg.longWinCode = TEST_INVALID_PARAM_255;  // 255 * 1100us = 280.5ms (max possible, approximates 772ms intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -448,7 +449,7 @@ void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(wdgCfg.longWinCode == 0xFFU);
+    PLATFORM_ASSERT(wdgCfg.longWinCode == TEST_INVALID_PARAM_255);
 }
 
 /**
@@ -679,7 +680,7 @@ void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
 
     /* Configure long window and verify we can return to it */
     wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
-    wdgCfg.longWinCode = 0xFFU;  // 255 * 1100us = 280.5ms (max possible, approximates 512ms intent)
+    wdgCfg.longWinCode = TEST_INVALID_PARAM_255;  // 255 * 1100us = 280.5ms (max possible, approximates 512ms intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -697,7 +698,7 @@ void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(wdgCfg.longWinCode == 0xFFU);
+    PLATFORM_ASSERT(wdgCfg.longWinCode == TEST_INVALID_PARAM_255);
 }
 
 /**
@@ -1001,7 +1002,7 @@ void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the ANSW_ERR flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_ANSW_ERR_MASK);
@@ -1009,7 +1010,7 @@ void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void)
 
     /* Read error status */
     errors.validParams = PMIC_CFG_WD_ANSW_ERR_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == true);
 #else
@@ -1029,7 +1030,7 @@ void test_pos_wdg_wdgGetErrorStatus_timeout(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Clear the register first, then set the TIMEOUT flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, 0x00U);
@@ -1039,7 +1040,7 @@ void test_pos_wdg_wdgGetErrorStatus_timeout(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.timeout == true);
 #else
@@ -1055,14 +1056,14 @@ void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the LONGWIN_TMO flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_LONGWIN_TMO_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.longWindowTimeout == true);
 #endif
@@ -1075,14 +1076,14 @@ void test_pos_wdg_wdgGetErrorStatus_answerEarlyError(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the ANSW_EARLY flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_ANSW_EARLY_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_ANSW_EARLY_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerEarlyError == true);
 #else
@@ -1098,14 +1099,14 @@ void test_pos_wdg_wdgGetErrorStatus_sequenceErr(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the SEQ_ERR flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_SEQ_ERR_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_SEQ_ERR_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == true);
 #else
@@ -1121,14 +1122,14 @@ void test_pos_wdg_wdgGetErrorStatus_answerErr(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the ANSW_ERR flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_ANSW_ERR_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_ANSW_ERR_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == true);
 #else
@@ -1144,14 +1145,14 @@ void test_pos_wdg_wdgGetErrorStatus_triggerEarly(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the TRIG_EARLY flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TRIG_EARLY_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_TRIG_EARLY_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.triggerEarlyError == true);
 #else
@@ -1167,14 +1168,14 @@ void test_pos_wdg_wdgGetErrorStatus_th1Int(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the TH1_ERR flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TH1_ERR_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_TH1_INT_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold1Error == true);
 #else
@@ -1190,14 +1191,14 @@ void test_pos_wdg_wdgGetErrorStatus_th2Int(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Use test injection to set the TH2_ERR flag */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TH2_ERR_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     errors.validParams = PMIC_CFG_WD_TH2_INT_ERR_VALID;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold2Error == true);
 #else
@@ -1213,7 +1214,7 @@ void test_pos_wdg_wdgGetErrorStatus_allFlags(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set all error flags */
     uint8_t allFlags = PMIC_WD_TMO_MASK |
@@ -1230,7 +1231,7 @@ void test_pos_wdg_wdgGetErrorStatus_allFlags(void)
 
     /* Read all error flags */
     errors.validParams = PMIC_CFG_WD_ERR_STAT_ALL_VALID_SHIFT;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.timeout == true);
     PLATFORM_ASSERT(errors.triggerEarlyError == true);
@@ -1256,7 +1257,7 @@ void test_pos_wdg_wdgGetErrorStatus_allFlags(void)
 void test_pos_wdg_wdgClrErrStatus_timeout(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TMO_MASK);
@@ -1270,7 +1271,7 @@ void test_pos_wdg_wdgClrErrStatus_timeout(void)
 
     /* Verify it's cleared */
     errors.timeout = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.timeout == false);
 }
@@ -1281,7 +1282,7 @@ void test_pos_wdg_wdgClrErrStatus_timeout(void)
 void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_LONGWIN_TMO_MASK);
@@ -1295,7 +1296,7 @@ void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
 
     /* Verify it's cleared */
     errors.longWindowTimeout = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.longWindowTimeout == false);
 }
@@ -1306,7 +1307,7 @@ void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
 void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_ANSW_EARLY_MASK);
@@ -1320,7 +1321,7 @@ void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
 
     /* Verify it's cleared */
     errors.answerEarlyError = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerEarlyError == false);
 }
@@ -1331,7 +1332,7 @@ void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
 void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_SEQ_ERR_MASK);
@@ -1345,7 +1346,7 @@ void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
 
     /* Verify it's cleared */
     errors.sequenceError = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == false);
 }
@@ -1356,7 +1357,7 @@ void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
 void test_pos_wdg_wdgClrErrStatus_answerErr(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_ANSW_ERR_MASK);
@@ -1370,7 +1371,7 @@ void test_pos_wdg_wdgClrErrStatus_answerErr(void)
 
     /* Verify it's cleared */
     errors.answerError = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == false);
 }
@@ -1381,7 +1382,7 @@ void test_pos_wdg_wdgClrErrStatus_answerErr(void)
 void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TRIG_EARLY_MASK);
@@ -1395,7 +1396,7 @@ void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
 
     /* Verify it's cleared */
     errors.triggerEarlyError = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.triggerEarlyError == false);
 }
@@ -1406,7 +1407,7 @@ void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
 void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TH1_ERR_MASK);
@@ -1420,7 +1421,7 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 
     /* Verify it's cleared */
     errors.threshold1Error = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold1Error == false);
 }
@@ -1431,7 +1432,7 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set the error flag first */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, PMIC_WD_TH2_ERR_MASK);
@@ -1445,7 +1446,7 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 
     /* Verify it's cleared */
     errors.threshold2Error = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold2Error == false);
 }
@@ -1456,7 +1457,7 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
     int32_t status;
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     /* Set multiple error flags: sequence error + answer error */
     status = testInject_setRegister(PMIC_WD_ERR_STAT_REG,
@@ -1473,7 +1474,7 @@ void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
     errors.validParams = PMIC_CFG_WD_SEQ_ERR_ERR_VALID | PMIC_CFG_WD_ANSW_ERR_ERR_VALID;
     errors.sequenceError = false;
     errors.answerError = false;
-    status = Pmic_wdgGetErrorStatus(&pmicHandle, &errors);
+    status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == false);
     PLATFORM_ASSERT(errors.answerError == true);
@@ -1488,7 +1489,7 @@ void test_pos_wdg_wdgClrErrStatusAll_whenNoErrors(void)
     int32_t status;
 
     /* Clear the register first to ensure no errors */
-    status = testInject_clearBits(PMIC_WD_ERR_STAT_REG, 0xFFU);
+    status = testInject_clearBits(PMIC_WD_ERR_STAT_REG, TEST_MASK_FULL_BYTE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Clear all errors (when none are set) */
@@ -1511,7 +1512,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badEvent(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set the bad event flag */
     status = testInject_setRegister(PMIC_WD_STAT_REG, PMIC_WD_BAD_EVENT_MASK);
@@ -1534,7 +1535,7 @@ void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set the first ok flag (good event) */
     status = testInject_setRegister(PMIC_WD_STAT_REG, PMIC_WD_FIRST_OK_MASK);
@@ -1557,7 +1558,7 @@ void test_pos_wdg_wdgGetFailCntStatus_wdFailCnt(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set fail count to 5 (bits [3:0] = 0x5) */
     status = testInject_setRegister(PMIC_WD_STAT_REG, 0x05U);
@@ -1580,7 +1581,7 @@ void test_pos_wdg_wdgGetFailCntStatus_allFields(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set all relevant bits: fail count=3, bad event, first ok, long window active */
     uint8_t statValue = 0x03U |                    /* Fail count = 3 */
@@ -1611,7 +1612,7 @@ void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set fail count to 6 (bits [3:0] = 0x6) with other status bits set */
     uint8_t statValue = 0x06U | PMIC_WD_BAD_EVENT_MASK | PMIC_WD_FIRST_OK_MASK;
@@ -1636,7 +1637,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
 
     /* Set bad event flag along with other fields */
     uint8_t statValue = 0x02U | PMIC_WD_BAD_EVENT_MASK | PMIC_WD_FIRST_OK_MASK;
@@ -1711,7 +1712,7 @@ void test_neg_wdg_wdgSetCfg_zeroValidParams(void)
 void test_pos_wdg_wdgSetMode_triggerMode(void)
 {
     int32_t status;
-    uint8_t mode = 0xFFU;
+    uint8_t mode = TEST_INVALID_PARAM_255;
 
     /* Enable watchdog first */
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1733,7 +1734,7 @@ void test_pos_wdg_wdgSetMode_triggerMode(void)
 void test_pos_wdg_wdgSetMode_qAndAMode(void)
 {
     int32_t status;
-    uint8_t mode = 0xFFU;
+    uint8_t mode = TEST_INVALID_PARAM_255;
 
     /* Enable watchdog first */
     status = Pmic_wdgEnable(&pmicHandle);
@@ -2138,22 +2139,22 @@ void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void)
 }
 
 /**
- * @brief Test Pmic_wdgGetErrorStatus with NULL handle
+ * @brief Test Pmic_wdgGetErrStatus with NULL handle
  */
 void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
 {
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
     errors.validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID;
-    int32_t status = Pmic_wdgGetErrorStatus(NULL, &errors);
+    int32_t status = Pmic_wdgGetErrStatus(NULL, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_wdgGetErrorStatus with NULL output parameter
+ * @brief Test Pmic_wdgGetErrStatus with NULL output parameter
  */
 void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
 {
-    int32_t status = Pmic_wdgGetErrorStatus(&pmicHandle, NULL);
+    int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -2162,7 +2163,7 @@ void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
  */
 void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 {
-    Pmic_WdgError_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
     errors.validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID;
     errors.timeout = true;
     int32_t status = Pmic_wdgClrErrStatus(NULL, &errors);
@@ -2192,7 +2193,7 @@ void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
  */
 void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
-    Pmic_WdgFailCntStat_t failCount = {0};
+    Pmic_WdgFailCntStatus_t failCount = {0};
     failCount.validParams = PMIC_CFG_WD_FAIL_CNT_VAL_VALID;
     int32_t status = Pmic_wdgGetFailCntStatus(NULL, &failCount);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);

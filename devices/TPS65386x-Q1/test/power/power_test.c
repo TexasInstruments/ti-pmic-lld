@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "power_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -492,7 +493,7 @@ void power_test(void *args)
 
 static void helper_initPmic(Pmic_Handle_t *pmicHandle)
 {
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |
@@ -631,7 +632,7 @@ void test_neg_power_pwrGetExtVmonCfg_nullConfig(void)
 
 void test_neg_power_pwrGetRsrcStatus_nullHandle(void)
 {
-    Pmic_PwrRsrcStat_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
+    Pmic_PwrRsrcStatus_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
     int32_t status = Pmic_pwrGetRsrcStatus(NULL, &stat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
@@ -644,7 +645,7 @@ void test_neg_power_pwrGetRsrcStatus_nullStatus(void)
 
 void test_neg_power_pwrClrRsrcStatus_nullHandle(void)
 {
-    Pmic_PwrRsrcStat_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
+    Pmic_PwrRsrcStatus_t stat = {.pwrRsrc = PMIC_PWR_BUCK_BOOST};
     int32_t status = Pmic_pwrClrRsrcStatus(NULL, &stat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
@@ -1745,7 +1746,7 @@ void test_pos_power_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood(void) { helper
 
 static void helper_getRsrcStatus(uint16_t pwrRsrc)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .pwrRsrc = pwrRsrc
     };
     
@@ -1776,7 +1777,7 @@ void test_pos_power_getRsrcStatus_extVmon2(void) { helper_getRsrcStatus(PMIC_PWR
 
 void test_pos_power_clrRsrcStatus_buckBoost(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID | PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -1964,7 +1965,7 @@ void test_neg_power_pwrGetBuckBoostCfg_zeroValidParams(void)
 void test_neg_power_pwrSetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
-        .ldo = 0xFFU,
+        .ldo = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_LDO_MODE_VALID
     };
     int32_t status = Pmic_pwrSetLdoCfg(&handle, &cfg);
@@ -1974,7 +1975,7 @@ void test_neg_power_pwrSetLdoCfg_invalidLdoId(void)
 void test_neg_power_pwrGetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
-        .ldo = 0xFFU,
+        .ldo = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_LDO_MODE_VALID
     };
     int32_t status = Pmic_pwrGetLdoCfg(&handle, &cfg);
@@ -1984,7 +1985,7 @@ void test_neg_power_pwrGetLdoCfg_invalidLdoId(void)
 void test_neg_power_pwrSetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
-        .pldo = 0xFFU,
+        .pldo = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID
     };
     int32_t status = Pmic_pwrSetPldoCfg(&handle, &cfg);
@@ -1994,7 +1995,7 @@ void test_neg_power_pwrSetPldoCfg_invalidPldoId(void)
 void test_neg_power_pwrGetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
-        .pldo = 0xFFU,
+        .pldo = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID
     };
     int32_t status = Pmic_pwrGetPldoCfg(&handle, &cfg);
@@ -2004,7 +2005,7 @@ void test_neg_power_pwrGetPldoCfg_invalidPldoId(void)
 void test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
-        .extVmon = 0xFFU,
+        .extVmon = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID
     };
     int32_t status = Pmic_pwrSetExtVmonCfg(&handle, &cfg);
@@ -2014,7 +2015,7 @@ void test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId(void)
 void test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
-        .extVmon = 0xFFU,
+        .extVmon = TEST_INVALID_PARAM_255,
         .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID
     };
     int32_t status = Pmic_pwrGetExtVmonCfg(&handle, &cfg);
@@ -2027,7 +2028,7 @@ void test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_bbLite(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2037,7 +2038,7 @@ void test_pos_power_getRsrcStatus_buckBoost_bbLite(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_bbIlimLvl(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2047,7 +2048,7 @@ void test_pos_power_getRsrcStatus_buckBoost_bbIlimLvl(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_bbMode(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2057,7 +2058,7 @@ void test_pos_power_getRsrcStatus_buckBoost_bbMode(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2067,7 +2068,7 @@ void test_pos_power_getRsrcStatus_buckBoost_ovErr(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2077,7 +2078,7 @@ void test_pos_power_getRsrcStatus_buckBoost_uvErr(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2087,7 +2088,7 @@ void test_pos_power_getRsrcStatus_buckBoost_tsdErr(void)
 
 void test_pos_power_getRsrcStatus_buckBoost_tsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2101,7 +2102,7 @@ void test_pos_power_getRsrcStatus_buckBoost_tsdWarn(void)
 
 void test_neg_power_getRsrcStatus_ldo_unsupportedBbLite(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2111,7 +2112,7 @@ void test_neg_power_getRsrcStatus_ldo_unsupportedBbLite(void)
 
 void test_neg_power_getRsrcStatus_ldo_unsupportedBbIlimLvl(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2121,7 +2122,7 @@ void test_neg_power_getRsrcStatus_ldo_unsupportedBbIlimLvl(void)
 
 void test_neg_power_getRsrcStatus_ldo_unsupportedBbMode(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2131,7 +2132,7 @@ void test_neg_power_getRsrcStatus_ldo_unsupportedBbMode(void)
 
 void test_pos_power_getRsrcStatus_ldo_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2141,7 +2142,7 @@ void test_pos_power_getRsrcStatus_ldo_uvErr(void)
 
 void test_pos_power_getRsrcStatus_ldo_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO2
     };
@@ -2151,7 +2152,7 @@ void test_pos_power_getRsrcStatus_ldo_ovErr(void)
 
 void test_pos_power_getRsrcStatus_ldo_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO3
     };
@@ -2161,7 +2162,7 @@ void test_pos_power_getRsrcStatus_ldo_tsdErr(void)
 
 void test_pos_power_getRsrcStatus_ldo_tsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_LDO4
     };
@@ -2175,7 +2176,7 @@ void test_pos_power_getRsrcStatus_ldo_tsdWarn(void)
 
 void test_neg_power_getRsrcStatus_pldo_unsupportedBbLite(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
         .pwrRsrc = PMIC_PWR_PLDO1
     };
@@ -2185,7 +2186,7 @@ void test_neg_power_getRsrcStatus_pldo_unsupportedBbLite(void)
 
 void test_pos_power_getRsrcStatus_pldo_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO1
     };
@@ -2195,7 +2196,7 @@ void test_pos_power_getRsrcStatus_pldo_uvErr(void)
 
 void test_pos_power_getRsrcStatus_pldo_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO2
     };
@@ -2205,7 +2206,7 @@ void test_pos_power_getRsrcStatus_pldo_ovErr(void)
 
 void test_pos_power_getRsrcStatus_pldo_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO1
     };
@@ -2215,7 +2216,7 @@ void test_pos_power_getRsrcStatus_pldo_tsdErr(void)
 
 void test_pos_power_getRsrcStatus_pldo_tsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_PLDO2
     };
@@ -2229,7 +2230,7 @@ void test_pos_power_getRsrcStatus_pldo_tsdWarn(void)
 
 void test_neg_power_getRsrcStatus_extVmon_unsupportedIlimErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2239,7 +2240,7 @@ void test_neg_power_getRsrcStatus_extVmon_unsupportedIlimErr(void)
 
 void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2249,7 +2250,7 @@ void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr(void)
 
 void test_pos_power_getRsrcStatus_extVmon_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2259,7 +2260,7 @@ void test_pos_power_getRsrcStatus_extVmon_uvErr(void)
 
 void test_pos_power_getRsrcStatus_extVmon_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON2
     };
@@ -2269,7 +2270,7 @@ void test_pos_power_getRsrcStatus_extVmon_ovErr(void)
 
 void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2283,7 +2284,7 @@ void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
 
 void test_pos_power_clrRsrcStatus_buckBoost_bbMode(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2293,7 +2294,7 @@ void test_pos_power_clrRsrcStatus_buckBoost_bbMode(void)
 
 void test_pos_power_clrRsrcStatus_buckBoost_ilimErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2303,7 +2304,7 @@ void test_pos_power_clrRsrcStatus_buckBoost_ilimErr(void)
 
 void test_pos_power_clrRsrcStatus_buckBoost_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2313,7 +2314,7 @@ void test_pos_power_clrRsrcStatus_buckBoost_tsdErr(void)
 
 void test_pos_power_clrRsrcStatus_buckBoost_tsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
@@ -2327,7 +2328,7 @@ void test_pos_power_clrRsrcStatus_buckBoost_tsdWarn(void)
 
 void test_pos_power_clrRsrcStatus_ldo1_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2337,7 +2338,7 @@ void test_pos_power_clrRsrcStatus_ldo1_uvErr(void)
 
 void test_pos_power_clrRsrcStatus_ldo2_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO2
     };
@@ -2347,7 +2348,7 @@ void test_pos_power_clrRsrcStatus_ldo2_ovErr(void)
 
 void test_pos_power_clrRsrcStatus_ldo3_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_LDO3
     };
@@ -2357,7 +2358,7 @@ void test_pos_power_clrRsrcStatus_ldo3_tsdErr(void)
 
 void test_pos_power_clrRsrcStatus_ldo4_tsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_LDO4
     };
@@ -2367,7 +2368,7 @@ void test_pos_power_clrRsrcStatus_ldo4_tsdWarn(void)
 
 void test_pos_power_clrRsrcStatus_ldo_allStatus(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_LDO_ALL,
         .pwrRsrc = PMIC_PWR_LDO1
     };
@@ -2381,7 +2382,7 @@ void test_pos_power_clrRsrcStatus_ldo_allStatus(void)
 
 void test_pos_power_clrRsrcStatus_pldo1_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO1
     };
@@ -2391,7 +2392,7 @@ void test_pos_power_clrRsrcStatus_pldo1_uvErr(void)
 
 void test_pos_power_clrRsrcStatus_pldo2_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO2
     };
@@ -2401,7 +2402,7 @@ void test_pos_power_clrRsrcStatus_pldo2_ovErr(void)
 
 void test_pos_power_clrRsrcStatus_pldo_tsdErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
         .pwrRsrc = PMIC_PWR_PLDO1
     };
@@ -2411,7 +2412,7 @@ void test_pos_power_clrRsrcStatus_pldo_tsdErr(void)
 
 void test_pos_power_clrRsrcStatus_pldo_allStatus(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_PLDO_ALL,
         .pwrRsrc = PMIC_PWR_PLDO2
     };
@@ -2425,7 +2426,7 @@ void test_pos_power_clrRsrcStatus_pldo_allStatus(void)
 
 void test_pos_power_clrRsrcStatus_extVmon1_uvErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2435,7 +2436,7 @@ void test_pos_power_clrRsrcStatus_extVmon1_uvErr(void)
 
 void test_pos_power_clrRsrcStatus_extVmon2_ovErr(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON2
     };
@@ -2445,7 +2446,7 @@ void test_pos_power_clrRsrcStatus_extVmon2_ovErr(void)
 
 void test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
         .pwrRsrc = PMIC_PWR_EXT_VMON1
     };
@@ -2455,7 +2456,7 @@ void test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn(void)
 
 void test_pos_power_clrRsrcStatus_extVmon_allStatus(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_EXT_VMON_ALL,
         .pwrRsrc = PMIC_PWR_EXT_VMON2
     };
@@ -2469,7 +2470,7 @@ void test_pos_power_clrRsrcStatus_extVmon_allStatus(void)
 
 void test_neg_power_pwrGetRsrcStatus_invalidResourceType(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0xFFFFU  /* Invalid resource type */
     };
@@ -2479,7 +2480,7 @@ void test_neg_power_pwrGetRsrcStatus_invalidResourceType(void)
 
 void test_neg_power_pwrClrRsrcStatus_invalidResourceType(void)
 {
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0xFFFFU  /* Invalid resource type */
     };
@@ -2491,7 +2492,7 @@ void test_neg_power_pwrClrRsrcStatus_invalidResourceType(void)
 void test_neg_power_pwrGetRsrcStatus_malformedBbResource(void)
 {
     /* Resource with BuckBoost type bits (0x00) but invalid ID */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
         .pwrRsrc = 0x00FFU  /* Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST */
     };
@@ -2502,7 +2503,7 @@ void test_neg_power_pwrGetRsrcStatus_malformedBbResource(void)
 void test_neg_power_pwrGetRsrcStatus_malformedLdoResource(void)
 {
     /* Resource with LDO type bits (0x01) but ID outside LDO range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x01FFU  /* Type 1 (LDO) but ID not in valid LDO range */
     };
@@ -2513,7 +2514,7 @@ void test_neg_power_pwrGetRsrcStatus_malformedLdoResource(void)
 void test_neg_power_pwrGetRsrcStatus_malformedPldoResource(void)
 {
     /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x02FFU  /* Type 2 (PLDO) but ID not in valid PLDO range */
     };
@@ -2524,7 +2525,7 @@ void test_neg_power_pwrGetRsrcStatus_malformedPldoResource(void)
 void test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource(void)
 {
     /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x03FFU  /* Type 3 (ExtVmon) but ID not in valid ExtVmon range */
     };
@@ -2535,7 +2536,7 @@ void test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource(void)
 void test_neg_power_pwrClrRsrcStatus_malformedBbResource(void)
 {
     /* Resource with BuckBoost type bits (0x00) but invalid ID */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
         .pwrRsrc = 0x00FFU  /* Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST */
     };
@@ -2546,7 +2547,7 @@ void test_neg_power_pwrClrRsrcStatus_malformedBbResource(void)
 void test_neg_power_pwrClrRsrcStatus_malformedLdoResource(void)
 {
     /* Resource with LDO type bits (0x01) but ID outside LDO range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x01FFU  /* Type 1 (LDO) but ID not in valid LDO range */
     };
@@ -2557,7 +2558,7 @@ void test_neg_power_pwrClrRsrcStatus_malformedLdoResource(void)
 void test_neg_power_pwrClrRsrcStatus_malformedPldoResource(void)
 {
     /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x02FFU  /* Type 2 (PLDO) but ID not in valid PLDO range */
     };
@@ -2568,7 +2569,7 @@ void test_neg_power_pwrClrRsrcStatus_malformedPldoResource(void)
 void test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource(void)
 {
     /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
-    Pmic_PwrRsrcStat_t stat = {
+    Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = 0x03FFU  /* Type 3 (ExtVmon) but ID not in valid ExtVmon range */
     };
@@ -2652,7 +2653,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
  */
 void test_neg_power_pwr_clrLdoStat_unsupportedBbParams(void)
 {
-    Pmic_PwrRsrcStat_t status_cfg = {0};
+    Pmic_PwrRsrcStatus_t status_cfg = {0};
 
     // Set BB-specific validParam for LDO resource (not supported)
     status_cfg.validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID;
@@ -2669,7 +2670,7 @@ void test_neg_power_pwr_clrLdoStat_unsupportedBbParams(void)
  */
 void test_neg_power_pwr_clrPldoStat_unsupportedBbParams(void)
 {
-    Pmic_PwrRsrcStat_t status_cfg = {0};
+    Pmic_PwrRsrcStatus_t status_cfg = {0};
 
     // Set BB-specific validParam for PLDO resource (not supported)
     status_cfg.validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID;

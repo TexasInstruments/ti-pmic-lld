@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,6 +44,8 @@
 #include "regmap/wdg.h"
 #include "regmap/core.h"
 
+#define CLEAR_ALL_STAT_BITS (0xFFU)
+
 /*==========================================================================*/
 /*                         Static Helper Functions                          */
 /*==========================================================================*/
@@ -53,14 +55,14 @@ static inline void WDG_copyWdgCfg(const Pmic_WdgCfg_t *src, Pmic_WdgCfg_t *dst)
     memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
 }
 
-static inline void WDG_copyWdgErrStat(const Pmic_WdgErrStat_t *src, Pmic_WdgErrStat_t *dst)
+static inline void WDG_copyWdgErrStat(const Pmic_WdgErrStatus_t *src, Pmic_WdgErrStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStat_t));
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
 }
 
-static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStat_t *src, Pmic_WdgFailCntStat_t *dst)
+static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStatus_t *src, Pmic_WdgFailCntStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStat_t));
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
 }
 
 static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t qaFdbk)
@@ -845,9 +847,9 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle)
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatus_t *wdgErrStat)
 {
-    Pmic_WdgErrStat_t localErrStat;
+    Pmic_WdgErrStatus_t localErrStat;
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 
@@ -925,15 +927,15 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle)
     // Bits of WD_ERR_STATUS register are W1C - write 1 to clear
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte_CS(handle, PMIC_WD_ERR_STATUS_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, PMIC_WD_ERR_STATUS_REG, CLEAR_ALL_STAT_BITS);
     }
 
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *wdgErrStat)
 {
-    Pmic_WdgErrStat_t localErrStat;
+    Pmic_WdgErrStatus_t localErrStat;
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 
@@ -1011,9 +1013,9 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStat_t *wdg
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *wdgFailCntStat)
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStatus_t *wdgFailCntStat)
 {
-    Pmic_WdgFailCntStat_t localFailCntStat;
+    Pmic_WdgFailCntStatus_t localFailCntStat;
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 

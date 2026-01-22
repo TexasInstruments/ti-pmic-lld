@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "irq_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 #include "regmap/irq.h"
 #include "regmap/fsm.h"
 
@@ -295,7 +296,7 @@ static Pmic_Handle_t g_pmicHandle;
 static int32_t irqTest_initHandle(void)
 {
     /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |
@@ -656,7 +657,7 @@ void test_pos_irq_irqSetCfgs_multipleMasks(void)
 /* IRQ Status and Flag Tests */
 void test_pos_irq_irqGetStatus_allIrqs(void)
 {
-    Pmic_IrqStat_t irqStat;
+    Pmic_IrqStatus_t irqStat;
     int32_t status;
 
     memset(&irqStat, 0, sizeof(irqStat));
@@ -668,7 +669,7 @@ void test_pos_irq_irqGetStatus_allIrqs(void)
 
 void test_pos_irq_irqGetNextFlag_singleFlag(void)
 {
-    Pmic_IrqStat_t irqStat;
+    Pmic_IrqStatus_t irqStat;
     uint8_t irqNum;
     int32_t status;
 
@@ -864,7 +865,7 @@ void test_neg_irq_irqGetCfgs_invalidParam_numIrqs(void)
 /* Pmic_irqGetStatus Negative Tests */
 void test_neg_irq_irqGetStatus_nullParam_handle(void)
 {
-    Pmic_IrqStat_t irqStat;
+    Pmic_IrqStatus_t irqStat;
     int32_t status;
 
     memset(&irqStat, 0, sizeof(irqStat));
@@ -893,7 +894,7 @@ void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void)
 
 void test_neg_irq_irqGetNextFlag_nullParam_irqNum(void)
 {
-    Pmic_IrqStat_t irqStat;
+    Pmic_IrqStatus_t irqStat;
     int32_t status;
 
     memset(&irqStat, 0, sizeof(irqStat));
@@ -1332,7 +1333,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT(void)
 void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void)
 {
 #ifdef BUILD_MOCK
-    Pmic_IrqStat_t irqStat;
+    Pmic_IrqStatus_t irqStat;
     uint8_t irqNum;
     int32_t status;
     int flagCount = 0;
@@ -1341,7 +1342,7 @@ void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void)
 
     /* Inject multiple interrupt flags across different registers */
     /* BB_UV_ERR_INT is in DCDC_STAT_REG */
-    status = testInject_setBits(DCDC_STAT_REG, 0x0FU);  /* Set multiple buck flags */
+    status = testInject_setBits(DCDC_STAT_REG, TEST_MASK_LOW_NIBBLE);  /* Set multiple buck flags */
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* LDO1_UV_ERR_INT is in VMON_LDO_STAT_REG */

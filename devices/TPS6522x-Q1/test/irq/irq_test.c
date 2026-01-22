@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -36,6 +36,7 @@
 #include "irq_test.h"
 #include "pmic.h"
 #include "test_inject.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -131,7 +132,7 @@ static void test_neg_irq_getMask_zeroCount(void)
  */
 static void test_neg_irq_getStatus_nullHandle(void)
 {
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
     int32_t status = Pmic_irqGetStatus(NULL, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -160,7 +161,7 @@ static void test_neg_irq_getNextFlag_nullIrqStat(void)
  */
 static void test_neg_irq_getNextFlag_nullIrqNum(void)
 {
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
     int32_t status = Pmic_irqGetNextFlag(NULL, &irqStat, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -300,7 +301,7 @@ static void test_pos_irq_setMasks_multiple(void)
 static void test_pos_irq_getStatus_read(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
 
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -340,7 +341,7 @@ static void test_pos_irq_clrAllFlags(void)
 static void test_pos_irq_getNextFlag_iteration(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
     uint8_t irqNum = 0;
 
     /* Get status first */
@@ -707,7 +708,7 @@ static void test_neg_irq_setMask_nonMaskable(void)
 static void test_pos_irq_getStatus_withActiveFlags(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
 
     /* Get IRQ status - in mock environment, this reads the current register state */
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -724,7 +725,7 @@ static void test_pos_irq_getStatus_withActiveFlags(void)
 static void test_pos_irq_getNextFlag_multipleFlags(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
     uint8_t irqNum = 0;
     uint8_t flagCount = 0;
 
@@ -806,7 +807,7 @@ static void test_pos_irq_getMask_nonMaskable(void)
 static void test_pos_irq_getNextFlag_fromArray(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
 
     /* Get IRQ status - this will populate the intrStat array */
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -861,7 +862,7 @@ static void test_neg_irq_setMask_invalidIrqNumBeyondMax(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
     /* Try another out-of-range value */
-    status = Pmic_irqSetMask(&pmicHandle, 255U, PMIC_IRQ_MASK);
+    status = Pmic_irqSetMask(&pmicHandle, TEST_INVALID_PARAM_255, PMIC_IRQ_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -952,7 +953,7 @@ static void test_neg_irq_getMask_invalidIrqInArray(void)
 static void test_pos_irq_getStatus_withSetFlag(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
 
     /* Clear all flags first */
     status = Pmic_irqClrAllFlags(&pmicHandle);
@@ -979,7 +980,7 @@ static void test_pos_irq_getStatus_withSetFlag(void)
 static void test_pos_irq_getNextFlag_withSetFlag(void)
 {
     int32_t status;
-    Pmic_IrqStat_t irqStat = {0};
+    Pmic_IrqStatus_t irqStat = {0};
     uint8_t irqNum = 0;
 
     /* Clear all flags first */

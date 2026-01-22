@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -786,7 +786,7 @@ typedef struct Pmic_PwrLdoCfg_s
  * @param ovp Status indicating whether resource output voltage is above
  * overvoltage protection threshold.
  */
-typedef struct Pmic_PwrRsrcStat_s
+typedef struct Pmic_PwrRsrcStatus_s
 {
     uint8_t resource;
 
@@ -794,7 +794,7 @@ typedef struct Pmic_PwrRsrcStat_s
     bool ov;
     bool uv;
     bool ovp;
-} Pmic_PwrRsrcStat_t;
+} Pmic_PwrRsrcStatus_t;
 
 /**
  * @anchor Pmic_PwrTsdCfg
@@ -914,7 +914,7 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * @param buckCfg    [OUT] Buck configurations to write to PMIC.
  *
  * @return Success code if PMIC buck configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg);
 
@@ -929,7 +929,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
  * @param buckCfg    [OUT] Buck configurations obtained from the PMIC.
  *
  * @return Success code if PMIC buck configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg);
 
@@ -966,7 +966,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
  * @param ldoCfg     [IN] LDO configurations to write to PMIC.
  *
  * @return Success code if PMIC LDO configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
@@ -981,16 +981,17 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
  * @param ldoCfg     [OUT] LDO configurations obtained from the PMIC.
  *
  * @return Success code if PMIC LDO configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
  * @brief Get the statuses of a power resource (buck/LDO).
  *
- * Design: PMICDRV-730
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-535, PMICDRV-536
+ * Design: PMICDRV-647
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-535, PMICDRV-536, PMICDRV-551
  *
  * @details The following power resource statuses are obtainable from this API
  * 1. active
@@ -1004,9 +1005,9 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
  * @param pwrRsrcStat [OUT] Power resource statuses obtained from the PMIC.
  *
  * @return Success code if PMIC power resource statuses have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat);
 
 /**
  * @brief Set PMIC thermal shutdown configurations.
@@ -1025,7 +1026,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *p
  * @param tsdCfg     [IN] TSD configurations to write to PMIC.
  *
  * @return Success code if PMIC TSD configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *tsdCfg);
 
@@ -1041,7 +1042,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
  * @param tsdCfg     [OUT] TSD configurations obtained from the PMIC.
  *
  * @return Success code if PMIC TSD configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg);
 
@@ -1058,7 +1059,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
  * junction temperature is below the thermal level.
  *
  * @return Success code if the PMIC immediate TSD status has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *handle, bool *tsdImmStat);
 
@@ -1078,7 +1079,7 @@ int32_t Pmic_pwrGetTsdImmStatus(const Pmic_Handle_t *handle, bool *tsdImmStat);
  * @param len        [IN] Length of `seqTrigCfg` array.
  *
  * @return Success code if sequence trigger configurations have been set, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
@@ -1098,7 +1099,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuc
  * @param len        [IN]  Length of `seqTrigCfg` array.
  *
  * @return Success code if sequence trigger configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len);
 
@@ -1117,7 +1118,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSe
  * @param len        [IN] Length of `seqDlyCfg` array.
  *
  * @return Success code if sequence delay configurations have been set, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 
@@ -1136,7 +1137,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
  * @param len        [IN]  Length of `seqDlyCfg` array.
  *
  * @return Success code if sequence delay configurations have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len);
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -36,6 +36,7 @@
 /* ========================================================================== */
 
 #include "pmic_test.h"
+#include "test_constants.h"
 #include "regmap/core.h"
 
 /* ========================================================================== */
@@ -43,7 +44,7 @@
 /* ========================================================================== */
 
 /* Driver initialization magic number (from pmic.c) */
-#define PMIC_INIT_TEST_DRV_INIT_MAGIC   (0x504D4943U)  /* "PMIC" in ASCII */
+#define PMIC_INIT_TEST_DRV_INIT_MAGIC   TEST_PMIC_INIT_MAGIC
 
 /* Expected initialization status for SPI mode */
 /* NOTE: PMIC_MAIN_INST not defined for TPS65386x-Q1 - using magic number only */
@@ -872,7 +873,7 @@ void test_pos_pmic_init_with_crc_enabled(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify CRC is working by performing I/O operations */
-    uint8_t writeData = 0xA5U;
+    uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
     /* Write to scratchpad register */
@@ -932,7 +933,7 @@ void test_pos_pmic_init_with_both_crc_enabled(void)
     PLATFORM_ASSERT(handle.drvInitStat == PMIC_INIT_TEST_EXPECTED_STAT);
 
     /* Verify multiple I/O operations work with CRC active */
-    uint8_t testPatterns[] = {0xAAU, 0x55U, 0xF0U, 0x0FU};
+    uint8_t testPatterns[] = {TEST_PATTERN_AA, TEST_PATTERN_55, TEST_MASK_HIGH_NIBBLE, TEST_MASK_LOW_NIBBLE};
 
     for (uint8_t i = 0U; i < 4U; i++)
     {
@@ -1002,10 +1003,10 @@ void test_pos_pmic_init_complete_flow(void)
 
     /* Verify device info is populated (getPmicInfo was called) */
     /* Note: Mock will return 0, but fields should be set */
-    PLATFORM_ASSERT(handle.devRev != 0xFFU);  /* Field was written */
-    PLATFORM_ASSERT(handle.devSiRev != 0xFFU);  /* Field was written */
-    PLATFORM_ASSERT(handle.nvmCode != 0xFFU);  /* Field was written */
-    PLATFORM_ASSERT(handle.nvmRev != 0xFFU);  /* Field was written */
+    PLATFORM_ASSERT(handle.devRev != TEST_INVALID_PARAM_255);  /* Field was written */
+    PLATFORM_ASSERT(handle.devSiRev != TEST_INVALID_PARAM_255);  /* Field was written */
+    PLATFORM_ASSERT(handle.nvmCode != TEST_INVALID_PARAM_255);  /* Field was written */
+    PLATFORM_ASSERT(handle.nvmRev != TEST_INVALID_PARAM_255);  /* Field was written */
 
     /* Verify communication validation completed (validateComms was called) */
     PLATFORM_ASSERT(handle.drvInitStat == PMIC_INIT_TEST_EXPECTED_STAT);
@@ -1097,7 +1098,7 @@ void test_pos_pmic_init_spi_comprehensive(void)
     PLATFORM_ASSERT(handle.commMode == PMIC_INTF_SPI);
 
     /* Test multiple SPI operations */
-    uint8_t writeData = 0xA5U;
+    uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
     /* Write to scratchpad */
@@ -1178,21 +1179,21 @@ void test_pos_pmic_checkHandle_comprehensive(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
     /* Test 3: NULL ioRead (line 234) - THIS WAS NEVER TESTED */
-    handle.commHandle0 = (void *)0x12345678U;  /* Non-NULL */
+    handle.commHandle0 = (void *)TEST_DUMMY_HANDLE;  /* Non-NULL */
     handle.ioRead = NULL;  /* NULL ioRead */
     handle.drvInitStat = PMIC_INIT_TEST_EXPECTED_STAT;
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
     /* Test 4: Invalid drvInitStat (line 238) */
-    handle.commHandle0 = (void *)0x12345678U;  /* Non-NULL */
+    handle.commHandle0 = (void *)TEST_DUMMY_HANDLE;  /* Non-NULL */
     handle.ioRead = &test_pmic_regRead;
-    handle.drvInitStat = 0xDEADBEEFU;  /* Invalid magic */
+    handle.drvInitStat = TEST_INVALID_MAGIC;  /* Invalid magic */
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 
     /* Test 5: Valid handle passes all checks */
-    handle.commHandle0 = (void *)0x12345678U;  /* Non-NULL */
+    handle.commHandle0 = (void *)TEST_DUMMY_HANDLE;  /* Non-NULL */
     handle.ioRead = &test_pmic_regRead;
     handle.ioWrite = &test_pmic_regWrite;
     handle.criticalSectionStart = &test_pmic_criticalSectionStartFn;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -118,7 +118,7 @@ static const uint8_t CRC8_TABLE[] =
  *
  * @retval CRC value for data
  */
-static uint8_t getCRC8Val(const uint8_t data[], uint8_t length)
+static uint8_t getCRC8Val(const uint8_t data[PMIC_IO_FRAME_LEN_MAX], uint8_t length)
 {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 

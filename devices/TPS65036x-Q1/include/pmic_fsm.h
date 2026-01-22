@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 - 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -85,7 +85,7 @@ extern "C" {
  * refer to @ref Pmic_fsmCommands.
  *
  * @return Success code if the FSM command has been sent to the PMIC, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t fsmCmd);
 
@@ -106,7 +106,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t fsmCmd);
  * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
  *
  * @return Success code if PMIC recovery counter threshold has been set, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
 
@@ -122,7 +122,7 @@ int32_t Pmic_fsmSetRecovCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
  *
  * @return Success code if PMIC recovery counter threshold has been obtained,
  * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
 
@@ -138,7 +138,7 @@ int32_t Pmic_fsmGetRecovCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
  * @param recovCnt [OUT] PMIC recovery counter value obtained from PMIC.
  *
  * @return Success code if PMIC recovery counter value has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt);
 
@@ -152,7 +152,7 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt);
  *
  * @return Success code if PMIC recovery counter has been cleared without issues,
  * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle);
 
@@ -174,7 +174,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle);
  * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
  *
  * @return Success code if PMIC reset counter threshold has been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
 
@@ -190,7 +190,7 @@ int32_t Pmic_fsmSetResetCntThr(const Pmic_Handle_t *handle, uint8_t threshold);
  * PMIC.
  *
  * @return Success code if PMIC reset counter threshold has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
 
@@ -205,7 +205,7 @@ int32_t Pmic_fsmGetResetCntThr(const Pmic_Handle_t *handle, uint8_t *threshold);
  * @param resetCnt [OUT] PMIC reset counter value obtained from PMIC.
  *
  * @return Success code if PMIC reset counter value has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *handle, uint8_t *resetCnt);
 
@@ -219,7 +219,7 @@ int32_t Pmic_fsmGetResetCnt(const Pmic_Handle_t *handle, uint8_t *resetCnt);
  *
  * @return Success code if PMIC reset counter has been cleared without issues,
  * error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_fsmClrResetCnt(const Pmic_Handle_t *handle);
 

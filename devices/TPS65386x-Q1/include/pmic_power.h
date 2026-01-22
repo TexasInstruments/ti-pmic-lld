@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -271,7 +271,7 @@ extern "C" {
  * @anchor Pmic_PwrRsrcStatValidParams
  * @name PMIC Power Resource Status Valid Parameters
  *
- * @brief Valid parameters of the Pmic_PwrRsrcStat_t struct.
+ * @brief Valid parameters of the Pmic_PwrRsrcStatus_t struct.
  *
  * @{
  */
@@ -289,7 +289,7 @@ extern "C" {
  * @anchor Pmic_PwrRsrcStatValidParamShifts
  * @name PMIC Power Resource Status Valid Parameter Shifts
  *
- * @brief Valid parameter shifts of the Pmic_PwrRsrcStat_t struct. End user
+ * @brief Valid parameter shifts of the Pmic_PwrRsrcStatus_t struct. End user
  * can use the defines listed below to indicate valid power resource statuses.
  * Multiple valid parameters can be indicated using the OR operator.
  *
@@ -878,7 +878,7 @@ typedef struct Pmic_PwrExtVmonCfg_s {
  * @param bbMode Boost mode operation status for Buck/Boost. For valid values that
  * can be returned, see @ref Pmic_BbMode.
  */
-typedef struct Pmic_PwrRsrcStat_s {
+typedef struct Pmic_PwrRsrcStatus_s {
     uint32_t validParams;
     uint16_t pwrRsrc;
 
@@ -895,7 +895,7 @@ typedef struct Pmic_PwrRsrcStat_s {
     bool bbLite;
     uint8_t bbIlimLvl;
     uint8_t bbMode;
-} Pmic_PwrRsrcStat_t;
+} Pmic_PwrRsrcStatus_t;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -1074,9 +1074,10 @@ int32_t Pmic_pwrGetExtVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t 
 /**
  * @brief Get PMIC power resource statuses.
  *
- * Design: PMICDRV-730
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-535, PMICDRV-536
+ * Design: PMICDRV-647
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-535, PMICDRV-536, PMICDRV-551
  *
  * @attention Certain power resources do not have certain statuses. Please see
  * @ref Pmic_PwrRsrcStat for more information.
@@ -1100,7 +1101,7 @@ int32_t Pmic_pwrGetExtVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t 
  * @return Success code if power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat);
 
 /**
  * @brief Clear PMIC power resource statuses.
@@ -1127,7 +1128,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *p
  * @return Success code if power resource statuses have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,6 +44,8 @@
 #include "regmap/wdg.h"
 
 #include <string.h>
+
+#define CLEAR_ALL_STAT_BITS (0xFFU)
 
 /* ========================================================================== */
 /*                           Internal Helper Functions                        */
@@ -785,7 +787,7 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle)
     if (status == PMIC_ST_SUCCESS)
     {
         // Write all 1s to clear all error status bits (write-1-to-clear)
-        status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, 0xFFU);
+        status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, CLEAR_ALL_STAT_BITS);
     }
 
     return Pmic_logStatus(handle, status);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -46,18 +46,24 @@
 #include "pmic_common.h"
 
 /* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+// Clear status register bits
+#define CLEAR_ALL_STAT_BITS (0xFFU)
+
+/* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static inline void WDG_copyWdgCfg(const Pmic_WdgCfg_t *src, Pmic_WdgCfg_t *dst) {
     memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
 }
 
-static inline void WDG_copyWdgError(const Pmic_WdgError_t *src, Pmic_WdgError_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgError_t));
+static inline void WDG_copyWdgError(const Pmic_WdgErrStatus_t *src, Pmic_WdgErrStatus_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
 }
 
-static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStat_t *src, Pmic_WdgFailCntStat_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStat_t));
+static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStatus_t *src, Pmic_WdgFailCntStatus_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
 }
 
 static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {
@@ -793,10 +799,10 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *isEnabl
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgGetErrorStatus(const Pmic_Handle_t *handle, Pmic_WdgError_t *errors) {
+int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
-    Pmic_WdgError_t localErrors;
+    Pmic_WdgErrStatus_t localErrors;
 
     if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -853,10 +859,10 @@ int32_t Pmic_wdgGetErrorStatus(const Pmic_Handle_t *handle, Pmic_WdgError_t *err
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgError_t *errors) {
+int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatus_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
-    Pmic_WdgError_t localErrors;
+    Pmic_WdgErrStatus_t localErrors;
 
     if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -916,17 +922,17 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle) {
     // WD_ERR_STAT register is write 1 to clear, write all bits as 1 to clear.
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioTxByte(handle, PMIC_WD_ERR_STAT_REG, 0xFFU);
+        status = Pmic_ioTxByte(handle, PMIC_WD_ERR_STAT_REG, CLEAR_ALL_STAT_BITS);
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStatus_t *failCount) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x00U;
-    Pmic_WdgFailCntStat_t localFailCount;
+    Pmic_WdgFailCntStatus_t localFailCount;
 
     if ((status == PMIC_ST_SUCCESS) && (failCount == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);

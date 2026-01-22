@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -36,6 +36,7 @@
 /* ========================================================================== */
 
 #include "core_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -272,7 +273,7 @@ static Pmic_Handle_t pmicHandle = {0U};
  */
 void test_neg_core_setScratchPadValue_nullHandle(void)
 {
-    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -281,7 +282,7 @@ void test_neg_core_setScratchPadValue_nullHandle(void)
  */
 void test_neg_core_setScratchPadValue_invalidRegNum(void)
 {
-    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -356,7 +357,7 @@ void test_neg_core_setCntLockState_nullHandle(void)
  */
 void test_neg_core_setCntLockState_invalidLockState(void)
 {
-    int32_t status = Pmic_setCntLockState(&pmicHandle, 0xFFU);
+    int32_t status = Pmic_setCntLockState(&pmicHandle, TEST_INVALID_PARAM_255);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 

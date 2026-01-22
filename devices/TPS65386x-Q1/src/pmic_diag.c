@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -43,6 +43,13 @@
 #include "pmic_diag.h"
 #include "pmic_io.h"
 #include "regmap/core.h"
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+// Diagnostic validation constants
+#define PMIC_DIAG_CHANNEL_MAX ((uint8_t)0x1FU)
+#define PMIC_DIAG_GROUP_MAX   ((uint8_t)0x1FU)
 
 /* ========================================================================== */
 /*                        Interface Implementations                           */
@@ -111,7 +118,7 @@ int32_t Pmic_diagSetAmuxCfg(const Pmic_Handle_t *handle, uint8_t channel) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (channel > 0x1FU)) {
+    if ((status == PMIC_ST_SUCCESS) && (channel > PMIC_DIAG_CHANNEL_MAX)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -152,7 +159,7 @@ int32_t Pmic_diagSetDmuxCfg(const Pmic_Handle_t *handle, uint8_t group) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (group > 0x1FU)) {
+    if ((status == PMIC_ST_SUCCESS) && (group > PMIC_DIAG_GROUP_MAX)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 

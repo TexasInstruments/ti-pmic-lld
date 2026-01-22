@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -419,9 +419,9 @@ typedef struct Pmic_Diagnostic_s {
  *
  * @return True if validParams is set, false if validParam is not set.
  */
-static bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask)
+static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask)
 {
-    return ((validParamVal & bitMask) != 0U);
+    return ((validParams & bitMask) != 0U);
 }
 
 /**
@@ -432,17 +432,17 @@ static bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask)
  * Architecture: PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-519, PMICDRV-521,
  *               PMICDRV-522
  *
- * @param vpv [IN] Valid parameter value.
+ * @param validParams [IN] Valid parameter value.
  *
- * @param bMask [IN] Valid parameter bit mask. used to check whether the valid parameter is set in 'vpv'.
+ * @param bitMask [IN] Valid parameter bit mask. used to check whether the valid parameter is set in 'validParams'.
  *
  * @param status [IN] API checks whether this parameter is equal to LLD success code.
  *
  * @return True if valid parameter is set and status is equal to LLD success code, false otherwise.
  */
-static inline bool Pmic_validParamStatusCheck(uint32_t vpv, uint32_t bMask, int32_t status)
+static inline bool Pmic_validParamStatusCheck(uint32_t validParams, uint32_t bitMask, int32_t status)
 {
-    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bMask));
+    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(validParams, bitMask));
 }
 
 /**
@@ -533,18 +533,18 @@ static inline void Pmic_timerWaitMs(const Pmic_Handle_t *handle, uint32_t ms)
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-521, PMICDRV-522
  *               PMICDRV-549
  *
- * @param regVal [OUT] Pointer to variable holding register value.
+ * @param regData [OUT] Pointer to variable holding register value.
  *
- * @param regFieldShift [IN] Target bit field position.
+ * @param shift [IN] Target bit field position.
  *
- * @param regFieldMask [IN] Target bit field mask.
+ * @param mask [IN] Target bit field mask.
  *
- * @param fieldVal [IN] Desired bit field value.
+ * @param value [IN] Desired bit field value.
  */
 static inline void Pmic_setBitField(
-    uint8_t *regVal, uint8_t regFieldShift, uint8_t regFieldMask, uint8_t fieldVal)
+    uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
 {
-    *regVal = (((*regVal) & (~regFieldMask)) | ((fieldVal << regFieldShift) & regFieldMask));
+    *regData = (((*regData) & (~mask)) | ((value << shift) & mask));
 }
 
 /**
@@ -555,21 +555,21 @@ static inline void Pmic_setBitField(
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-521, PMICDRV-522
  *               PMICDRV-549
  *
- * @param regVal [OUT] Pointer to variable holding register value.
+ * @param regData [OUT] Pointer to variable holding register value.
  *
- * @param regFieldShift [IN] Target bit field position.
+ * @param shift [IN] Target bit field position.
  *
- * @param regFieldMask [IN] Target bit field mask.
+ * @param mask [IN] Target bit field mask.
  *
- * @param fieldVal_b [IN] Desired bit field value. When parameter set to true,
+ * @param value [IN] Desired bit field value. When parameter set to true,
  * bit field value will be set to 1. Otherwise, bit field value will be set to 0.
  */
 static inline void Pmic_setBitField_b(
-    uint8_t *regVal, uint8_t regFieldShift, uint8_t regFieldMask, bool fieldVal_b)
+    uint8_t *regData, uint8_t shift, uint8_t mask, bool value)
 {
-    const uint8_t fieldVal = fieldVal_b ? 1U : 0U;
+    const uint8_t fieldVal = value ? 1U : 0U;
 
-    *regVal = (((*regVal) & (~regFieldMask)) | ((fieldVal << regFieldShift) & regFieldMask));
+    *regData = (((*regData) & (~mask)) | ((fieldVal << shift) & mask));
 }
 
 /**

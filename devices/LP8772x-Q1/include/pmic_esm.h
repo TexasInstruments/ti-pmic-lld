@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -99,7 +99,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_EsmStatValidParams
+ * @anchor Pmic_EsmStatusValidParams
  * @name PMIC ESM Status Structure Valid Parameters
  *
  * @brief Valid parameter bits for ESM status structure.
@@ -172,14 +172,14 @@ typedef struct Pmic_EsmCfg_s {
 /** @} */
 
 /**
- * @anchor Pmic_EsmStat
+ * @anchor Pmic_EsmStatus
  * @name PMIC ESM Status Structure
  *
  * @brief Structure used to get and clear ESM status/interrupt flags.
  *
  * @param validParams Each bit in this variable corresponds to a member in this
  * structure. For possible valid parameter values, refer to
- * @ref Pmic_EsmStatValidParams.
+ * @ref Pmic_EsmStatusValidParams.
  *
  * @param rstInt ESM MCU reset interrupt flag.
  *
@@ -189,13 +189,13 @@ typedef struct Pmic_EsmCfg_s {
  *
  * @{
  */
-typedef struct Pmic_EsmStat_s {
+typedef struct Pmic_EsmStatus_s {
     uint32_t validParams;
 
     bool rstInt;
     bool failInt;
     bool pinInt;
-} Pmic_EsmStat_t;
+} Pmic_EsmStatus_t;
 /** @} */
 
 /* ========================================================================== */
@@ -352,12 +352,12 @@ int32_t Pmic_esmStop(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @param esmStat [OUT] PMIC ESM status flags obtained from the PMIC. For more
- * information, refer to @ref Pmic_EsmStat.
+ * information, refer to @ref Pmic_EsmStatus.
  *
  * @return PMIC_ST_SUCCESS if PMIC ESM status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat);
 
 /**
  * @brief Clear PMIC ESM status flags.
@@ -369,12 +369,12 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat);
  * @param handle [IN] PMIC interface handle.
  *
  * @param esmStat [IN] PMIC ESM status flags to clear. For more information,
- * refer to @ref Pmic_EsmStat.
+ * refer to @ref Pmic_EsmStatus.
  *
  * @return PMIC_ST_SUCCESS if PMIC ESM status flags have been cleared, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStat_t *esmStat);
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat);
 
 #ifdef __cplusplus
 }

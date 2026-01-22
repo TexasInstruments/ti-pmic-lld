@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,6 +39,7 @@
 #include "../platform.h"
 #include "pmic.h"
 #include "pmic_adc.h"
+#include "test_constants.h"
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -54,7 +55,7 @@
 /**
  * @brief Invalid parameter values for negative testing.
  */
-#define INVALID_SRC_SEL_VALUE   (0xFFU)
+#define INVALID_SRC_SEL_VALUE   (TEST_MASK_FULL_BYTE)
 #define ADC_RESULT_MAX          (0x0FFFU)  /* 12-bit max value */
 
 /* ========================================================================= */

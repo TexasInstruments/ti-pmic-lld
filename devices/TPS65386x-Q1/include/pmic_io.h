@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -92,10 +92,6 @@ extern "C" {
  * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
  * to log the status if such information is desired.
  *
- * @note This function does not automatically log diagnostic information upon
- * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
- * to log the status if such information is desired.
- *
  * @param handle  [IN] PMIC Interface Handle
  * @param regAddr [IN] Register address to write to
  * @param txData  [IN] Data to send to `regAddr`
@@ -134,10 +130,6 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t t
  * Architecture: PMICDRV-504, PMICDRV-505, PMICDRV-506, PMICDRV-509, PMICDRV-511, PMICDRV-512
  *               PMICDRV-517, PMICDRV-521, PMICDRV-522, PMICDRV-526, PMICDRV-528, PMICDRV-544
  *               PMICDRV-549, PMICDRV-552
- *
- * @note This function does not automatically log diagnostic information upon
- * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
- * to log the status if such information is desired.
  *
  * @note This function does not automatically log diagnostic information upon
  * encountering errors or warnings (if any). The caller must invoke `Pmic_logStatus()`
@@ -191,7 +183,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *
  * @param value [IN] Desired value to set the bit field to.
  *
  * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
@@ -215,7 +207,7 @@ int32_t Pmic_ioUpdateByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t 
  * @param value [IN] Desired value to set the bit field to.
  *
  * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
 
@@ -236,7 +228,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8
  * the bit field is set to 1. Otherwise, the bit field is set to 0.
  *
  * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 
@@ -259,7 +251,7 @@ int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_
  * the bit field is set to 1. Otherwise, the bit field is set to 0.
  *
  * @return Success code if read-modify-write operation was successful, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value);
 

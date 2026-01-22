@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -41,6 +41,7 @@
 
 #include "io_test.h"
 #include "test_utils.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -250,7 +251,7 @@ static int32_t ioTest_unlockPmicRegs(Pmic_Handle_t *pmicHandle)
 void test_neg_io_ioTxByte_nullHandle(void)
 {
     // Pass null handle into Pmic_ioTxByte()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -273,7 +274,7 @@ void test_neg_io_ioRxByte_nullRxBuffer(void)
 void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
     // Pass null handle into Pmic_ioTxByte_CS()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -296,14 +297,14 @@ void test_neg_io_ioRxByte_CS_nullRxBuffer(void)
 void test_neg_io_ioUpdateByte_nullHandle(void)
 {
     // Pass null handle into Pmic_ioUpdateByte()
-    int32_t status = Pmic_ioUpdateByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0xFFU, 0xAAU);
+    int32_t status = Pmic_ioUpdateByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_FULL_BYTE, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_io_ioUpdateByte_CS_nullHandle(void)
 {
     // Pass null handle into Pmic_ioUpdateByte_CS()
-    int32_t status = Pmic_ioUpdateByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0xFFU, 0xAAU);
+    int32_t status = Pmic_ioUpdateByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_FULL_BYTE, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -423,24 +424,24 @@ void test_pos_io_ioUpdateByte_modifyBitFields(void)
 
     // Test modifying lower 4 bits (shift=0, mask=0x0F)
     const uint8_t newLowNibble = 0x0AU;
-    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 0U, 0x0FU, newLowNibble);
+    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 0U, TEST_MASK_LOW_NIBBLE, newLowNibble);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify the change
     status = Pmic_ioRxByte(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    expVal = (initVal & 0xF0U) | newLowNibble;
+    expVal = (initVal & TEST_MASK_HIGH_NIBBLE) | newLowNibble;
     PLATFORM_ASSERT(actVal == expVal);
 
     // Test modifying upper 4 bits (shift=4, mask=0xF0)
     const uint8_t newHighNibble = 0x05U;
-    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 4U, 0xF0U, newHighNibble);
+    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 4U, TEST_MASK_HIGH_NIBBLE, newHighNibble);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify the change
     status = Pmic_ioRxByte(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    expVal = (actVal & 0x0FU) | (newHighNibble << 4U);
+    expVal = (actVal & TEST_MASK_LOW_NIBBLE) | (newHighNibble << 4U);
     PLATFORM_ASSERT(actVal == expVal);
 
     // Restore initial value
@@ -667,13 +668,13 @@ void test_pos_io_ioUpdateByte_withCrcEnabled(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Modify a bit field with CRC enabled
-    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 0U, 0x0FU, 0x0AU);
+    status = Pmic_ioUpdateByte(&pmicHandle, testReg, 0U, TEST_MASK_LOW_NIBBLE, 0x0AU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Read back and verify with CRC enabled
     status = Pmic_ioRxByte(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((actVal & 0x0FU) == 0x0AU);
+    PLATFORM_ASSERT((actVal & TEST_MASK_LOW_NIBBLE) == 0x0AU);
 
     // Restore initial value
     status = Pmic_ioTxByte(&pmicHandle, testReg, initVal);
@@ -698,7 +699,7 @@ void test_pos_io_ioTxRxByte_A0_revisionMapping(void)
     {
         // Test register access at address >= 0x4D (where mapping differs)
         // For A0, internal address should be (0x4D - 3) = 0x4A
-        uint8_t testVal = 0x55U;
+        uint8_t testVal = TEST_PATTERN_55;
         uint8_t readVal = 0U;
 
         // This tests that the IO layer correctly subtracts 3 for A0 silicon
@@ -726,7 +727,7 @@ void test_pos_io_ioTxRxByte_B0_revisionMapping(void)
     {
         // Test register access at address >= 0x4D (where mapping differs)
         // For B0/B1, internal address should be 0x4D (no adjustment)
-        uint8_t testVal = 0xAAU;
+        uint8_t testVal = TEST_PATTERN_AA;
         uint8_t readVal = 0U;
 
         // This tests that the IO layer does NOT subtract 3 for B0/B1 silicon
@@ -767,7 +768,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     testHandle.crcEnable = PMIC_ENABLE;
 
     /* Configure mock to corrupt CRC on first read attempt */
-    g_mockCrcCorruptionMask = 0xFFU;  /* Corrupt CRC byte */
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;  /* Corrupt CRC byte */
 
     /* Perform read - should fail on first attempt with CRC error, succeed on retry */
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
@@ -780,7 +781,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 void test_pos_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t writeVal = 0xAAU;
+    uint8_t writeVal = TEST_PATTERN_AA;
     Pmic_Handle_t testHandle;
 
     /* Initialize test handle with mock functions */
@@ -1012,7 +1013,7 @@ void test_pos_io_a0RevisionMapping(void)
      */
     Pmic_Handle_t testHandle;
     int32_t status;
-    uint8_t testData = 0xAAU;
+    uint8_t testData = TEST_PATTERN_AA;
     uint8_t readData = 0U;
 
     // Copy existing handle and manually set A0 flag
@@ -1046,7 +1047,7 @@ void test_neg_io_nullIoWriteFunc(void)
 {
     int32_t status;
     Pmic_Handle_t testHandle;
-    uint8_t writeData = 0x55U;
+    uint8_t writeData = TEST_PATTERN_55;
 
     // Initialize test handle with NULL ioWrite function
     (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));

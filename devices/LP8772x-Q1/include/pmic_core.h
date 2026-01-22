@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -125,25 +125,27 @@ typedef struct Pmic_ConfigCrcStat_s {
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
- * Design: PMICDRV-684
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
- *               PMICDRV-545
+ * Design: PMICDRV-591
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-527, PMICDRV-545, PMICDRV-551
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
  * @param value            [IN] Value to be written to scratch pad register.
  *
  * @return Success code if value has been written to PMIC scratch pad register,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
  *
- * Design: PMICDRV-685
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-545
+ * Design: PMICDRV-592
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-545, PMICDRV-551
  *
  * @param handle           [IN] PMIC interface handle.
  * @param scratchPadRegNum [IN] Target scratch pad register number.
@@ -151,7 +153,7 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  *
  * @return Success code if target scratch pad register value has been obtained
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 

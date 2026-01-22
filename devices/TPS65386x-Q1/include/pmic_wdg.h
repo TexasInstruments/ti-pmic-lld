@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -271,7 +271,7 @@ extern "C" {
  * @name PMIC WatchDog Error status Structure Params Bit shift values
  *
  * @brief Application can use these values to set the validParams structure
- * member defined in @ref Pmic_WdgError_t structure.
+ * member defined in @ref Pmic_WdgErrStatus_t structure.
  *
  * @{
  */
@@ -291,7 +291,7 @@ extern "C" {
  * @name PMIC WatchDog Fail Count Status Structure validParams Shift Values
  *
  * @brief Application can use these values to set the validParams structure
- * member defined in @ref Pmic_WdgFailCntStat_t structure.
+ * member defined in @ref Pmic_WdgFailCntStatus_t structure.
  *
  *  @{
  */
@@ -399,7 +399,7 @@ typedef struct Pmic_WdgCfg_s {
  * @param threshold1Error Watchdog failure counter exceeded `threshold1`.
  * @param threshold2Error Watchdog failure counter exceeded `threshold2`.
  */
-typedef struct Pmic_WdgError_s {
+typedef struct Pmic_WdgErrStatus_s {
     uint32_t validParams;
 
     bool timeout;
@@ -410,7 +410,7 @@ typedef struct Pmic_WdgError_s {
     bool answerError;
     bool threshold1Error;
     bool threshold2Error;
-} Pmic_WdgError_t;
+} Pmic_WdgErrStatus_t;
 
 /**
  * @brief This struct is used to get the Watchdog bad/good event and fail count
@@ -429,14 +429,14 @@ typedef struct Pmic_WdgError_s {
  *                      (including forced by PWRHOLD).
  * @param wdFailCnt To get Watchdog Fail Count value.
  */
-typedef struct Pmic_WdgFailCntStat_s {
+typedef struct Pmic_WdgFailCntStatus_s {
     uint16_t validParams;
 
     bool badEvent;
     bool goodEvent;
     bool longWinActive;
     uint8_t wdFailCnt;
-} Pmic_WdgFailCntStat_t;
+} Pmic_WdgFailCntStatus_t;
 
 /* ========================================================================== */
 /*                            Function Declarations                           */
@@ -662,7 +662,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *isEnabl
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetErrorStatus(const Pmic_Handle_t *handle, Pmic_WdgError_t *errors);
+int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *errors);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -681,7 +681,7 @@ int32_t Pmic_wdgGetErrorStatus(const Pmic_Handle_t *handle, Pmic_WdgError_t *err
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgError_t *errors);
+int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatus_t *errors);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -715,7 +715,7 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *failCount);
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStatus_t *failCount);
 
 /**
  * @ingroup DRV_PMIC_WDG_APP_GROUP
@@ -729,7 +729,7 @@ int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntSta
  * Window2 time interval.
  *
  * @note In the event this API returns PMIC_ST_ERR_INV_WDG_ANSWER, the user
- * should call `Pmic_wdgGetErrorStatus()` in order to read the WDG error. Based
+ * should call `Pmic_wdgGetErrStatus()` in order to read the WDG error. Based
  * on the determined error, the following actions may help:
  * - If the WDG error is Long Window Timeout or Timeout, user has to increase
  *   the Long window or window1 time interval accordingly

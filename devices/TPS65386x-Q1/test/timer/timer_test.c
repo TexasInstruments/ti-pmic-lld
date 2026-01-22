@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "timer_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -254,7 +255,7 @@ static void unlockCntRegisters(void)
 void test_pos_timer_timerSetCfg_prescale64us(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set prescale to 64.64us */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
@@ -275,7 +276,7 @@ void test_pos_timer_timerSetCfg_prescale64us(void)
 void test_pos_timer_timerSetCfg_prescale16ms(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set prescale to 16.384ms */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
@@ -296,7 +297,7 @@ void test_pos_timer_timerSetCfg_prescale16ms(void)
 void test_pos_timer_timerSetCfg_prescale131ms(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set prescale to 131.072ms */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
@@ -317,7 +318,7 @@ void test_pos_timer_timerSetCfg_prescale131ms(void)
 void test_pos_timer_timerSetCfg_prescale1049ms(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set prescale to 1049ms */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
@@ -338,7 +339,7 @@ void test_pos_timer_timerSetCfg_prescale1049ms(void)
 void test_pos_timer_timerSetCfg_modeStopped(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to stopped */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -359,7 +360,7 @@ void test_pos_timer_timerSetCfg_modeStopped(void)
 void test_pos_timer_timerSetCfg_modeOperSeq(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to OPER_SEQ */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -380,7 +381,7 @@ void test_pos_timer_timerSetCfg_modeOperSeq(void)
 void test_pos_timer_timerSetCfg_modeStdby(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to STDBY */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -401,7 +402,7 @@ void test_pos_timer_timerSetCfg_modeStdby(void)
 void test_pos_timer_timerSetCfg_modeStdbyWu(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to STDBY_WU */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -422,7 +423,7 @@ void test_pos_timer_timerSetCfg_modeStdbyWu(void)
 void test_pos_timer_timerSetCfg_modeOperSeqStdby(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to OPER_SEQ_STDBY */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -443,7 +444,7 @@ void test_pos_timer_timerSetCfg_modeOperSeqStdby(void)
 void test_pos_timer_timerSetCfg_modeOperSeqStdbyWu(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to OPER_SEQ_STDBY_WU */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -464,7 +465,7 @@ void test_pos_timer_timerSetCfg_modeOperSeqStdbyWu(void)
 void test_pos_timer_timerSetCfg_prescaleAndModeVerify(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set both prescale and mode */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID | PMIC_CFG_TMR_MODE_VALID;
@@ -767,7 +768,7 @@ void test_pos_timer_timerSetWakeupValue_persistenceVerify(void)
     int32_t status;
     uint32_t setWakeup = 0x123456U;
     uint32_t getWakeup;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set wakeup value */
     status = Pmic_timerSetWakeupValue(&pmicHandle, setWakeup);
@@ -798,7 +799,7 @@ void test_pos_timer_timerSetWakeupValue_persistenceVerify(void)
 void test_pos_timer_timerStop_fromMode1(void)
 {
     int32_t status;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set mode to OPER_SEQ */
     cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -817,7 +818,7 @@ void test_pos_timer_timerStop_fromMode1(void)
 void test_pos_timer_timerStop_fromMode2(void)
 {
     int32_t status;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set mode to STDBY */
     cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -836,7 +837,7 @@ void test_pos_timer_timerStop_fromMode2(void)
 void test_pos_timer_timerStop_fromMode3(void)
 {
     int32_t status;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set mode to STDBY_WU */
     cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -855,7 +856,7 @@ void test_pos_timer_timerStop_fromMode3(void)
 void test_pos_timer_timerStop_fromMode4(void)
 {
     int32_t status;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set mode to OPER_SEQ_STDBY */
     cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -874,7 +875,7 @@ void test_pos_timer_timerStop_fromMode4(void)
 void test_pos_timer_timerStop_fromMode5(void)
 {
     int32_t status;
-    Pmic_timerCfg_t cfg;
+    Pmic_TimerCfg_t cfg;
 
     /* Set mode to OPER_SEQ_STDBY_WU */
     cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -893,7 +894,7 @@ void test_pos_timer_timerStop_fromMode5(void)
 void test_pos_timer_timerStop_verifyStopped(void)
 {
     int32_t status;
-    Pmic_timerCfg_t setCfg, getCfg;
+    Pmic_TimerCfg_t setCfg, getCfg;
 
     /* Set mode to running state */
     setCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -923,7 +924,7 @@ void test_pos_timer_timerStop_verifyStopped(void)
  */
 void test_neg_timer_timerSetCfg_invalidPrescale(void)
 {
-    Pmic_timerCfg_t cfg = {
+    Pmic_TimerCfg_t cfg = {
         .validParams = PMIC_CFG_TMR_PRESCALE_VALID,
         .prescale = PMIC_TMR_PRESCALE_MAX + 1
     };
@@ -945,7 +946,7 @@ void test_neg_timer_timerSetCfg_nullCfg(void)
  */
 void test_neg_timer_timerSetCfg_invalidMode(void)
 {
-    Pmic_timerCfg_t cfg = {
+    Pmic_TimerCfg_t cfg = {
         .validParams = PMIC_CFG_TMR_MODE_VALID,
         .mode = PMIC_TMR_MODE_MAX + 1
     };
@@ -1012,7 +1013,7 @@ void test_neg_timer_timerGetWakeupValue_nullWakeup(void)
  */
 void test_neg_timer_timerSetCfg_nullHandle(void)
 {
-    Pmic_timerCfg_t cfg = {0};
+    Pmic_TimerCfg_t cfg = {0};
     int32_t status = Pmic_timerSetCfg(NULL, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -1022,7 +1023,7 @@ void test_neg_timer_timerSetCfg_nullHandle(void)
  */
 void test_neg_timer_timerGetCfg_nullHandle(void)
 {
-    Pmic_timerCfg_t cfg = {0};
+    Pmic_TimerCfg_t cfg = {0};
     int32_t status = Pmic_timerGetCfg(NULL, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -1084,7 +1085,7 @@ void test_neg_timer_timerSetCnt_overflowValue(void)
  */
 void test_neg_timer_timerSetCfg_validParamsZero(void)
 {
-    Pmic_timerCfg_t cfg = {
+    Pmic_TimerCfg_t cfg = {
         .validParams = 0,
         .prescale = PMIC_TMR_PRESCALE_64P64_US
     };
@@ -1097,7 +1098,7 @@ void test_neg_timer_timerSetCfg_validParamsZero(void)
  */
 void test_neg_timer_timerGetCfg_validParamsZero(void)
 {
-    Pmic_timerCfg_t cfg = {
+    Pmic_TimerCfg_t cfg = {
         .validParams = 0
     };
     int32_t status = Pmic_timerGetCfg(&pmicHandle, &cfg);
@@ -1138,7 +1139,7 @@ void timer_test(void *args)
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |

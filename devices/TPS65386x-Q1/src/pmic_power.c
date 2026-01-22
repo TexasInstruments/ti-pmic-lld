@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -100,8 +100,8 @@ static inline void PWR_copyExtVmonCfg(const Pmic_PwrExtVmonCfg_t *src, Pmic_PwrE
     memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrExtVmonCfg_t));
 }
 
-static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStat_t *src, Pmic_PwrRsrcStat_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStat_t));
+static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
 
 // Check if power resource is buck boost
@@ -2059,7 +2059,7 @@ int32_t Pmic_pwrGetExtVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrExtVmonCfg_t 
     return Pmic_logStatus(handle, status);
 }
 
-static int32_t PWR_getBbStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getBbStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -2152,7 +2152,7 @@ static int32_t PWR_getBbStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pw
     return status;
 }
 
-static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2237,7 +2237,7 @@ static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *p
     return status;
 }
 
-static int32_t PWR_getPldoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getPldoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2322,7 +2322,7 @@ static int32_t PWR_getPldoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *
     return status;
 }
 
-static int32_t PWR_getExtVmonStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_getExtVmonStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2372,10 +2372,10 @@ static int32_t PWR_getExtVmonStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrRsrcStat_t localPwrRsrcStat;
+    Pmic_PwrRsrcStatus_t localPwrRsrcStat;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {
@@ -2427,7 +2427,7 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat_t *p
     return Pmic_logStatus(handle, status);
 }
 
-static int32_t PWR_clrBbStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrBbStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -2499,7 +2499,7 @@ static int32_t PWR_clrBbStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat
     return status;
 }
 
-static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2579,7 +2579,7 @@ static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSta
     return status;
 }
 
-static int32_t PWR_clrPldoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrPldoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2648,7 +2648,7 @@ static int32_t PWR_clrPldoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSt
     return status;
 }
 
-static int32_t PWR_clrExtVmonStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+static int32_t PWR_clrExtVmonStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U;
@@ -2696,10 +2696,10 @@ static int32_t PWR_clrExtVmonStat(const Pmic_Handle_t *handle, const Pmic_PwrRsr
     return status;
 }
 
-int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrRsrcStat_t localPwrRsrcStat;
+    Pmic_PwrRsrcStatus_t localPwrRsrcStat;
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {

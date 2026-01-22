@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -352,7 +352,7 @@ void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void)
 void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_wdgClrErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID
     };
     int32_t status = Pmic_wdgClrErrStatus(NULL, &wdgErrStat);
@@ -376,7 +376,7 @@ void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
 void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_wdgGetErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID
     };
     int32_t status = Pmic_wdgGetErrStatus(NULL, &wdgErrStat);
@@ -393,7 +393,7 @@ void test_neg_wdg_wdgGetErrStatus_nullParam(void)
 void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_wdgGetFailCntStatus()
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = PMIC_FAIL_CNT_VALID
     };
     int32_t status = Pmic_wdgGetFailCntStatus(NULL, &wdgFailCntStat);
@@ -430,7 +430,7 @@ void test_neg_wdg_wdgGetCfg_invalidParam(void)
 void test_neg_wdg_wdgClrErrStatus_invalidParamZero(void)
 {
     // Pass validParams = 0 into Pmic_wdgClrErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = 0U
     };
     int32_t status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
@@ -440,7 +440,7 @@ void test_neg_wdg_wdgClrErrStatus_invalidParamZero(void)
 void test_neg_wdg_wdgClrErrStatus_invalidParamOutOfBounds(void)
 {
     // Pass validParams > PMIC_WDG_ERR_STAT_ALL_VALID into Pmic_wdgClrErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_WDG_ERR_STAT_ALL_VALID + 1U
     };
     int32_t status = Pmic_wdgClrErrStatus(&pmicHandle, &wdgErrStat);
@@ -450,7 +450,7 @@ void test_neg_wdg_wdgClrErrStatus_invalidParamOutOfBounds(void)
 void test_neg_wdg_wdgGetErrStatus_invalidParamZero(void)
 {
     // Pass validParams = 0 into Pmic_wdgGetErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = 0U
     };
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, &wdgErrStat);
@@ -460,7 +460,7 @@ void test_neg_wdg_wdgGetErrStatus_invalidParamZero(void)
 void test_neg_wdg_wdgGetErrStatus_invalidParamOutOfBounds(void)
 {
     // Pass validParams > PMIC_WDG_ERR_STAT_ALL_VALID into Pmic_wdgGetErrStatus()
-    Pmic_WdgErrStat_t wdgErrStat = {
+    Pmic_WdgErrStatus_t wdgErrStat = {
         .validParams = PMIC_WDG_ERR_STAT_ALL_VALID + 1U
     };
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, &wdgErrStat);
@@ -470,7 +470,7 @@ void test_neg_wdg_wdgGetErrStatus_invalidParamOutOfBounds(void)
 void test_neg_wdg_wdgGetFailCntStatus_invalidParam(void)
 {
     // Pass validParams = 0 into Pmic_wdgGetFailCntStatus()
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = 0U
     };
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, &wdgFailCntStat);
@@ -843,7 +843,7 @@ void test_pos_wdg_wdgSendSwTrigger_detectTrigEarlyErr(void)
         .win1Duration = PMIC_WD_WIN1_DURATION_MAX, // 70.4 ms
         .win2Duration = PMIC_WD_WIN2_DURATION_MAX  // 70.4 ms
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_TRIG_EARLY_ERR_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_TRIG_EARLY_ERR_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -999,7 +999,7 @@ void test_pos_wdg_wdgQaSequence_detectAnswErr(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_ANSW_ERR_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_ANSW_ERR_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1084,7 +1084,7 @@ void test_pos_wdg_wdgQaSequence_detectSeqErr(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_SEQ_ERR_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_SEQ_ERR_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1168,7 +1168,7 @@ void test_pos_wdg_wdgQaSequence_detectAnswEarlyErr(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1250,11 +1250,11 @@ void test_pos_wdg_wdgQaSequence_detectTimeoutErr(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = (PMIC_BAD_EVENT_VALID | PMIC_FAIL_CNT_VALID),
         .failCnt = 0U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_TIMEOUT_ERR_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_TIMEOUT_ERR_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1339,7 +1339,7 @@ void test_pos_wdg_wdgQaSequence_detectLongWinTimeoutErr(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1408,11 +1408,11 @@ void test_pos_wdg_wdgQaSequence_detectFailInt(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = PMIC_FAIL_CNT_VALID,
         .failCnt = 0U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_FAIL_INT_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_FAIL_INT_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1511,11 +1511,11 @@ void test_pos_wdg_wdgQaSequence_detectRstInt(void)
         .qaLfsr = 1U,
         .qaSeed = 2U
     };
-    Pmic_WdgFailCntStat_t wdgFailCntStat = {
+    Pmic_WdgFailCntStatus_t wdgFailCntStat = {
         .validParams = PMIC_FAIL_CNT_VALID,
         .failCnt = 0U
     };
-    Pmic_WdgErrStat_t wdgErrStat = {.validParams = PMIC_WDG_RST_INT_VALID};
+    Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_RST_INT_VALID};
 
     // Enable Watchdog and clear all watchdog statuses
     status = Pmic_wdgEnable(&pmicHandle);
@@ -1730,7 +1730,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 void test_pos_wdg_wdgGetErrorStatus_answerError(void)
 {
     int32_t status;
-    Pmic_WdgErrStat_t errors = {0};
+    Pmic_WdgErrStatus_t errors = {0};
 
     // Read error status with ANSW_ERR flag
     // This exercises the error flag extraction code path
@@ -1746,7 +1746,7 @@ void test_pos_wdg_wdgClrErrStatus_rstInt(void)
 {
     // Test clearing individual RST_INT flag
     // This exercises the individual flag clearing code path in pmic_wdg.c lines 874-877
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Clear only RST_INT flag (W1C - write 1 to clear)
     errStat.validParams = PMIC_WDG_RST_INT_VALID;
@@ -1760,7 +1760,7 @@ void test_pos_wdg_wdgClrErrStatus_failInt(void)
 {
     // Test clearing individual FAIL_INT flag
     // This exercises lines 879-882 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_FAIL_INT_VALID;
     errStat.failInt = true;
@@ -1773,7 +1773,7 @@ void test_pos_wdg_wdgClrErrStatus_answErr(void)
 {
     // Test clearing individual ANSW_ERR flag
     // This exercises lines 884-887 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_ANSW_ERR_VALID;
     errStat.answErr = true;
@@ -1786,7 +1786,7 @@ void test_pos_wdg_wdgClrErrStatus_seqErr(void)
 {
     // Test clearing individual SEQ_ERR flag
     // This exercises lines 889-892 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_SEQ_ERR_VALID;
     errStat.seqErr = true;
@@ -1799,7 +1799,7 @@ void test_pos_wdg_wdgClrErrStatus_answEarlyErr(void)
 {
     // Test clearing individual ANSW_EARLY_ERR flag
     // This exercises lines 894-897 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_ANSW_EARLY_ERR_VALID;
     errStat.answEarlyErr = true;
@@ -1812,7 +1812,7 @@ void test_pos_wdg_wdgClrErrStatus_trigEarlyErr(void)
 {
     // Test clearing individual TRIG_EARLY_ERR flag
     // This exercises lines 899-902 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_TRIG_EARLY_ERR_VALID;
     errStat.trigEarlyErr = true;
@@ -1825,7 +1825,7 @@ void test_pos_wdg_wdgClrErrStatus_timeout(void)
 {
     // Test clearing individual TIMEOUT flag
     // This exercises lines 904-907 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_TIMEOUT_ERR_VALID;
     errStat.timeoutErr = true;
@@ -1838,7 +1838,7 @@ void test_pos_wdg_wdgClrErrStatus_longwinTimeout(void)
 {
     // Test clearing individual LONGWIN_TIMEOUT_INT flag
     // This exercises lines 909-912 in pmic_wdg.c
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     errStat.validParams = PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID;
     errStat.longWinTimeoutInt = true;
@@ -1851,7 +1851,7 @@ void test_pos_wdg_wdgClrErrStatus_multipleFlags(void)
 {
     // Test clearing multiple flags simultaneously
     // This exercises the WDG_copyWdgErrStat helper function (lines 56-59)
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Clear both RST_INT and FAIL_INT flags together
     errStat.validParams = PMIC_WDG_RST_INT_VALID | PMIC_WDG_FAIL_INT_VALID;
@@ -1865,7 +1865,7 @@ void test_pos_wdg_wdgClrErrStatus_multipleFlags(void)
 void test_pos_wdg_wdgGetFailCntStatus_copyFunction(void)
 {
     // Test with multiple validParams to exercise WDG_copyWdgFailCntStat helper (lines 61-64)
-    Pmic_WdgFailCntStat_t failCnt = {0};
+    Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Set multiple validParams to exercise the copy function
     failCnt.validParams = PMIC_BAD_EVENT_VALID |
@@ -1880,7 +1880,7 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
     // Test clearing threshold1 error flag only
     // This exercises individual threshold error clearing
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Clear only fail interrupt (threshold 1)
     errStat.validParams = PMIC_WDG_FAIL_INT_VALID;
@@ -1901,7 +1901,7 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
     // Test clearing threshold2 error flag only
     // This exercises individual reset threshold error clearing
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Clear only reset interrupt (threshold 2)
     errStat.validParams = PMIC_WDG_RST_INT_VALID;
@@ -1919,7 +1919,7 @@ void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
     // Test clearing sequence error flag only
     // This exercises individual sequence error clearing
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Clear only sequence error
     errStat.validParams = PMIC_WDG_SEQ_ERR_VALID;
@@ -1937,7 +1937,7 @@ void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 {
     // Test getting fail count with specific validParam
     // This exercises individual fail count status retrieval
-    Pmic_WdgFailCntStat_t failCnt = {0};
+    Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Get only fail count
     failCnt.validParams = PMIC_FAIL_CNT_VALID;
@@ -1950,7 +1950,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
 {
     // Test getting bad event count with specific validParam
     // This exercises individual bad event status retrieval
-    Pmic_WdgFailCntStat_t failCnt = {0};
+    Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Get only bad event
     failCnt.validParams = PMIC_BAD_EVENT_VALID;
@@ -2062,7 +2062,7 @@ void test_pos_wdg_wdgGetErrStatus_allFields(void)
     // Test getting all WDG error status fields to exercise lines 953-1008
     // This ensures all error status extraction code paths are covered
     int32_t status;
-    Pmic_WdgErrStat_t errStat = {0};
+    Pmic_WdgErrStatus_t errStat = {0};
 
     // Request all error status fields
     errStat.validParams = PMIC_WDG_RST_INT_VALID |

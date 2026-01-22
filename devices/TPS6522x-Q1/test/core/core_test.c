@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,6 +39,7 @@
 #include "core_test.h"
 #include "pmic.h"
 #include "pmic_core.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -156,13 +157,13 @@ void test_neg_core_getRegLockState_nullParam_lockState(void)
 
 void test_neg_core_setScratchPadValue_nullParam_handle(void)
 {
-    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
-    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -206,7 +207,7 @@ void test_pos_core_getRegLockState(void)
 
 void test_pos_core_setScratchPadValue_reg1(void)
 {
-    uint8_t writeVal = 0xA5U;
+    uint8_t writeVal = TEST_PATTERN_A5;
     uint8_t readVal = 0U;
 
     // Write value to scratchpad register 1
@@ -221,7 +222,7 @@ void test_pos_core_setScratchPadValue_reg1(void)
 
 void test_pos_core_getScratchPadValue_reg2(void)
 {
-    uint8_t writeVal = 0x5AU;
+    uint8_t writeVal = TEST_PATTERN_5A;
     uint8_t readVal = 0U;
 
     // Write value to scratchpad register 2
@@ -236,7 +237,7 @@ void test_pos_core_getScratchPadValue_reg2(void)
 
 void test_pos_core_setScratchPadValue_reg3(void)
 {
-    uint8_t writeVal = 0xF0U;
+    uint8_t writeVal = TEST_MASK_HIGH_NIBBLE;
     uint8_t readVal = 0U;
 
     // Write value to scratchpad register 3
@@ -251,7 +252,7 @@ void test_pos_core_setScratchPadValue_reg3(void)
 
 void test_pos_core_getScratchPadValue_reg4(void)
 {
-    uint8_t writeVal = 0x0FU;
+    uint8_t writeVal = TEST_MASK_LOW_NIBBLE;
     uint8_t readVal = 0U;
 
     // Write value to scratchpad register 4
@@ -266,7 +267,7 @@ void test_pos_core_getScratchPadValue_reg4(void)
 
 void test_pos_core_scratchPadValue_boundary(void)
 {
-    uint8_t writeVal = 0xFFU;
+    uint8_t writeVal = TEST_MASK_FULL_BYTE;
     uint8_t readVal = 0U;
 
     // Test minimum valid register (REG_1)

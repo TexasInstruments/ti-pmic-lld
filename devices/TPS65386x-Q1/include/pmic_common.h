@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -442,10 +442,10 @@ static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
  * Architecture: PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-519, PMICDRV-521,
  *               PMICDRV-522
  *
- * @param vpv [IN] Valid parameter value. Each bit represents whether a parameter
+ * @param validParams [IN] Valid parameter value. Each bit represents whether a parameter
  * is valid.
  *
- * @param bMask [IN] valid parameter to check for.
+ * @param bitMask [IN] valid parameter to check for.
  *
  * @param status [IN] The API checks whether the value of this parameter is
  * equal to the PMIC LLD success code.
@@ -453,8 +453,8 @@ static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
  * @return True if the status code is equal to the LLD success code and the
  * parameter is valid.
  */
-static inline bool Pmic_validParamStatusCheck(uint32_t vpv, uint32_t bMask, int32_t status) {
-    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bMask));
+static inline bool Pmic_validParamStatusCheck(uint32_t validParams, uint32_t bitMask, int32_t status) {
+    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(validParams, bitMask));
 }
 
 /**

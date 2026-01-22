@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "irq_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -463,7 +464,7 @@ void test_neg_irq_irqGetMask_outOfBounds_irqNum(void)
 void test_neg_irq_irqGetStatus_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_irqGetStatus()
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = Pmic_irqGetStatus(NULL, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -486,7 +487,7 @@ void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void)
 void test_neg_irq_irqGetNextFlag_nullParam_irqNum(void)
 {
     // Pass NULL irqNum into Pmic_irqGetNextFlag()
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = Pmic_irqGetNextFlag(NULL, &irqStat, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -687,7 +688,7 @@ static int32_t irqTest_setGetMask(uint8_t irqNum, bool shouldMask)
 void test_pos_irq_irqClrAllFlags_basic(void)
 {
     uint8_t regData = 0U;
-    const uint8_t intTopReg = 0x46U, intFsmErrReg = 0x50U, bufLen = 1U;
+    const uint8_t intTopReg = TEST_REG_INT_TOP, intFsmErrReg = TEST_REG_INT_FSM_ERR, bufLen = 1U;
 
     // Clear all PMIC IRQ flags
     int32_t status = Pmic_irqClrAllFlags(&pmicHandle);
@@ -696,10 +697,10 @@ void test_pos_irq_irqClrAllFlags_basic(void)
     // Validate that all IRQ flags have been cleared
     status = platform_rxByte(&pmicHandle, 0U, intTopReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((regData == 0U) || (regData == 128U)); // All flags cleared or only FSM_ERR_INT flag set
+    PLATFORM_ASSERT((regData == 0U) || (regData == TEST_BIT_7_VALUE)); // All flags cleared or only FSM_ERR_INT flag set
     status = platform_rxByte(&pmicHandle, 0U, intFsmErrReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((regData == 0U) || (regData == 16U)); // All flags cleared or only WD_FIRST_NOK_INT flag set
+    PLATFORM_ASSERT((regData == 0U) || (regData == TEST_BIT_4_VALUE)); // All flags cleared or only WD_FIRST_NOK_INT flag set
 }
 
 void test_pos_irq_irqSetGetMask_BUCK1_OV_INT(void)
@@ -1152,7 +1153,7 @@ void test_pos_irq_irqGetClrFlag(void)
 void test_pos_irq_irqGetStatus_noFlags(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
 
     // Clear all flags first
     status = Pmic_irqClrAllFlags(&pmicHandle);
@@ -1166,7 +1167,7 @@ void test_pos_irq_irqGetStatus_noFlags(void)
 void test_pos_irq_irqGetStatus_withFlags(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
 
     // Get IRQ status - may have some flags set (like WD_FIRST_NOK_INT)
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -1179,7 +1180,7 @@ void test_pos_irq_irqGetStatus_withFlags(void)
 void test_pos_irq_irqGetNextFlag_noFlags(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
 
     // Clear all flags first
@@ -1199,7 +1200,7 @@ void test_pos_irq_irqGetNextFlag_noFlags(void)
 void test_pos_irq_irqGetNextFlag_multipleFlags(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     uint8_t flagCount = 0U;
 
@@ -1301,7 +1302,7 @@ void test_pos_irq_irqClrFlag_multipleSequence(void)
 void test_pos_irq_irqWorkflow_completeHandling(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     bool flag = (bool)false;
 
@@ -1378,8 +1379,8 @@ void test_pos_irq_irqFlagPersistence(void)
 void test_pos_irq_irqStatusReadMultipleTimes(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat1 = {0U};
-    Pmic_IrqStat_t irqStat2 = {0U};
+    Pmic_IrqStatus_t irqStat1 = {0U};
+    Pmic_IrqStatus_t irqStat2 = {0U};
 
     // Read status first time
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat1);
@@ -1431,7 +1432,7 @@ void test_pos_irq_irqClrFlag_verifyCleared(void)
 void test_pos_irq_irqIterateAndClearAll(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     uint8_t clearedCount = 0U;
 
@@ -1468,7 +1469,7 @@ void test_pos_irq_irqIterateAndClearAll(void)
 void test_pos_irq_irqGetStatus_afterClearAll(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
 
     // Clear all flags
@@ -1493,7 +1494,7 @@ void test_pos_irq_irqGetStatus_afterClearAll(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1505,7 +1506,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_SC_NMI in INT_BUCK_LDO_LS1_VMON1 (bit 4)
     regData = (1U << 4U);
@@ -1522,7 +1523,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1534,7 +1535,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void)
 
     // Inject LS2_VMON2_INT in INT_TOP (bit 1)
     regData = (1U << 1U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject LS2_VMON2_SC_NMI in INT_LS2_VMON2 (bit 4)
     regData = (1U << 4U);
@@ -1551,7 +1552,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1563,7 +1564,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void)
 
     // Inject VCCA_INT in INT_TOP (bit 2)
     regData = (1U << 2U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject VCCA_OV_INT in INT_VCCA (bit 0)
     regData = (1U << 0U);
@@ -1580,7 +1581,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1592,7 +1593,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void)
 
     // Inject STARTUP_INT in INT_TOP (bit 3)
     regData = (1U << 3U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject STARTUP_ENABLE_INT in INT_STARTUP (bit 1)
     regData = (1U << 1U);
@@ -1609,7 +1610,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1621,7 +1622,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 
     // Inject MISC_INT in INT_TOP (bit 4)
     regData = (1U << 4U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject TWARN_INT in INT_MISC (bit 7)
     regData = (1U << 7U);
@@ -1638,7 +1639,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1650,7 +1651,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 
     // Inject MODERATE_ERR_INT in INT_TOP (bit 5)
     regData = (1U << 5U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject CONFIG_CRC_INT in INT_MODERATE_ERR (bit 3)
     regData = (1U << 3U);
@@ -1667,7 +1668,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1679,7 +1680,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 
     // Inject SEVERE_ERR_INT in INT_TOP (bit 6)
     regData = (1U << 6U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject TSD_IMM_NMI in INT_SEVERE_ERR (bit 0)
     regData = (1U << 0U);
@@ -1696,7 +1697,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1708,11 +1709,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject FSM_IMM_SHUTDOWN_NMI in INT_FSM_ERR (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - triggers IRQ_getStatFSM()
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -1727,7 +1728,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1739,7 +1740,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_INT in INT_BUCK_LDO_LS1_VMON1 (bit 0) → triggers L2 read
     regData = (1U << 0U);
@@ -1760,7 +1761,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1772,7 +1773,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK2_INT in INT_BUCK_LDO_LS1_VMON1 (bit 1) → triggers L2 read
     regData = (1U << 1U);
@@ -1793,7 +1794,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1805,7 +1806,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK3_INT in INT_BUCK_LDO_LS1_VMON1 (bit 2) → triggers L2 read
     regData = (1U << 2U);
@@ -1826,7 +1827,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1838,7 +1839,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject LDO_LS1_VMON1_INT in INT_BUCK_LDO_LS1_VMON1 (bit 3) → triggers L2 read
     regData = (1U << 3U);
@@ -1859,7 +1860,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1871,11 +1872,11 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject ESM_MCU_INT in INT_FSM_ERR (bit 5) → triggers INT_ESM_REG read
     regData = (1U << 5U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject ESM_MCU_FAIL_INT in INT_ESM (bit 4)
     regData = (1U << 4U);
@@ -1892,7 +1893,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1904,11 +1905,11 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject COMM_ERR_INT in INT_FSM_ERR (bit 6) → triggers INT_COMM_ERR read
     regData = (1U << 6U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject COMM_CRC_ERR_INT in INT_COMM_ERR (bit 1)
     regData = (1U << 1U);
@@ -1925,7 +1926,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1937,15 +1938,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void)
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject WD_INT in INT_FSM_ERR (bit 7) → triggers WD_ERR_STAT read
     regData = (1U << 7U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject WDG_TIMEOUT_NMI in WD_ERR_STAT (bit 1)
     regData = (1U << 1U);
-    testInject_setBits(0x5EU, regData);
+    testInject_setBits(TEST_REG_WD_ERR_STATUS, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -1958,7 +1959,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void)
 
 void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -1970,7 +1971,7 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 
     // Inject multiple L0 bits: BUCK_LDO (bit 0) + FSM_ERR (bit 7)
     regData = (1U << 0U) | (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // L1: Inject BUCK1_INT in INT_BUCK_LDO_LS1_VMON1
     regData = (1U << 0U);
@@ -1982,7 +1983,7 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 
     // L1: Inject ESM_MCU_INT in INT_FSM_ERR
     regData = (1U << 5U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // L2: Inject ESM_MCU_FAIL_INT in INT_ESM
     regData = (1U << 4U);
@@ -2005,7 +2006,7 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 
 void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2020,7 +2021,7 @@ void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void)
 
     // Inject L0→L1→L2 cascade for BUCK1_OV_INT
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     regData = (1U << 0U);
     testInject_setBits(0x47U, regData);
@@ -2030,10 +2031,10 @@ void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void)
 
     // Inject L0→L1→L2 cascade for ESM_MCU_FAIL_INT
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     regData = (1U << 5U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     regData = (1U << 4U);
     testInject_setBits(0x52U, regData);
@@ -2073,7 +2074,7 @@ void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void)
 
 void test_pos_irq_irqGetNextFlag_mixed_L1_L2_flags(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2088,7 +2089,7 @@ void test_pos_irq_irqGetNextFlag_mixed_L1_L2_flags(void)
 
     // Inject L0 bit
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject both L1 direct NMI + L1 indicator for L2 read
     regData = (1U << 4U) | (1U << 0U);  // BUCK1_SC_NMI (bit 4) + BUCK1_INT (bit 0)
@@ -2133,7 +2134,7 @@ void test_pos_irq_irqGetNextFlag_mixed_L1_L2_flags(void)
 
 void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2147,11 +2148,11 @@ void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void)
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
     regData = (1U << 7U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject FSM_IMM_SHUTDOWN_NMI (IRQ 56) in INT_FSM_ERR (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - populates intrStat[1] (IRQ 32+)
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -2189,7 +2190,7 @@ void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void)
 
 void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2200,7 +2201,7 @@ void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_INT (bit 0) and BUCK1_SC_NMI (bit 4) in INT_BUCK_LDO_LS1_VMON1
     regData = (1U << 0U) | (1U << 4U);
@@ -2227,7 +2228,7 @@ void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void)
 
 void test_pos_irq_irqGetStatus_all_L0_categories_set(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2238,7 +2239,7 @@ void test_pos_irq_irqGetStatus_all_L0_categories_set(void)
 
     // Inject all 8 L0 category bits in INT_TOP
     regData = 0xFFU;
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject one flag in each L1 category register
     regData = (1U << 0U);  // BUCK1_SC_NMI
@@ -2263,7 +2264,7 @@ void test_pos_irq_irqGetStatus_all_L0_categories_set(void)
     testInject_setBits(0x4FU, regData);
 
     regData = (1U << 0U);  // FSM_IMM_SHUTDOWN_NMI
-    testInject_setBits(0x50U, regData);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - all category read functions execute
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
@@ -2275,7 +2276,7 @@ void test_pos_irq_irqGetStatus_all_L0_categories_set(void)
 
 void test_pos_irq_irqGetStatus_multiple_L2_same_category(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
@@ -2287,7 +2288,7 @@ void test_pos_irq_irqGetStatus_multiple_L2_same_category(void)
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
     regData = (1U << 0U);
-    testInject_setBits(0x46U, regData);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BOTH BUCK1_INT and BUCK2_INT in INT_BUCK_LDO_LS1_VMON1
     // Both trigger read of shared INT_BUCK_12_REG
@@ -2320,7 +2321,7 @@ void test_pos_irq_irqGetNextFlag_noFlagsFound(void)
     // Test coverage for line 737: Call Pmic_irqGetNextFlag with empty status
     // When no flags are set, it should return PMIC_ST_ERR_INV_IRQ_NUM
 
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t nextIrqNum = 0U;
 
     // Clear all IRQ flags first

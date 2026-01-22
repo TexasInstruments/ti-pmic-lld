@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "io_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -380,7 +381,7 @@ void io_test(void *args)
 void test_neg_io_ioTxByte_nullHandle(void)
 {
     // Pass null handle into Pmic_ioTxByte()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -403,7 +404,7 @@ void test_neg_io_ioRxByte_nullRxBuffer(void)
 void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
     // Pass null handle into Pmic_ioTxByte_CS()
-    const uint8_t regData = 0xAAU;
+    const uint8_t regData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -611,7 +612,7 @@ void test_neg_io_readWithCrcError(void)
 void test_pos_io_writeWithCrcCalculation(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t writeVal = 0xAAU;
+    uint8_t writeVal = TEST_PATTERN_AA;
     uint8_t readVal = 0U;
 
     // Enable CRC for I/O operations
@@ -629,7 +630,7 @@ void test_pos_io_writeWithCrcCalculation(void)
     PLATFORM_ASSERT(readVal == writeVal);
 
     // Test write with critical section as well
-    writeVal = 0x55U;
+    writeVal = TEST_PATTERN_55;
     status = Pmic_ioTxByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_3_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -716,25 +717,25 @@ void test_pos_io_updateByte_basic(void)
 
     // Test 1: Set bits [3:0] to 0xA using Pmic_ioUpdateByte
     // shift=0, mask=0x0F (bits 3:0), value=0xA
-    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0x0FU, 0x0AU);
+    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_LOW_NIBBLE, 0x0AU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Read back and verify only bits [3:0] were modified
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0x0FU) == 0x0AU);
-    PLATFORM_ASSERT((readVal & 0xF0U) == (initVal & 0xF0U));
+    PLATFORM_ASSERT((readVal & TEST_MASK_LOW_NIBBLE) == 0x0AU);
+    PLATFORM_ASSERT((readVal & TEST_MASK_HIGH_NIBBLE) == (initVal & TEST_MASK_HIGH_NIBBLE));
 
     // Test 2: Set bits [7:4] to 0x5 using Pmic_ioUpdateByte
     // shift=4, mask=0xF0 (bits 7:4), value=0x5
-    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 4U, 0xF0U, 0x05U);
+    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 4U, TEST_MASK_HIGH_NIBBLE, 0x05U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Read back and verify
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0xF0U) == 0x50U);
-    PLATFORM_ASSERT((readVal & 0x0FU) == 0x0AU);
+    PLATFORM_ASSERT((readVal & TEST_MASK_HIGH_NIBBLE) == 0x50U);
+    PLATFORM_ASSERT((readVal & TEST_MASK_LOW_NIBBLE) == 0x0AU);
 
     // Test 3: Modify middle bits [5:2]
     // shift=2, mask=0x3C (bits 5:2), value=0x3
@@ -754,24 +755,24 @@ void test_pos_io_updateByte_withCriticalSection(void)
 
     // Test Pmic_ioUpdateByte_CS which should invoke critical section callbacks
     // Set bits [3:0] to 0xF using critical section variant
-    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, 0U, 0x0FU, 0x0FU);
+    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, 0U, TEST_MASK_LOW_NIBBLE, TEST_MASK_LOW_NIBBLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Read back and verify
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0x0FU) == 0x0FU);
+    PLATFORM_ASSERT((readVal & TEST_MASK_LOW_NIBBLE) == TEST_MASK_LOW_NIBBLE);
 
     // Test another update with critical section
     // Set bits [7:4] to 0xC
-    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, 4U, 0xF0U, 0x0CU);
+    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, 4U, TEST_MASK_HIGH_NIBBLE, 0x0CU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Read back and verify
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0xF0U) == 0xC0U);
-    PLATFORM_ASSERT((readVal & 0x0FU) == 0x0FU);
+    PLATFORM_ASSERT((readVal & TEST_MASK_HIGH_NIBBLE) == 0xC0U);
+    PLATFORM_ASSERT((readVal & TEST_MASK_LOW_NIBBLE) == TEST_MASK_LOW_NIBBLE);
 }
 
 void test_pos_io_updateByte_booleanBit(void)
@@ -880,11 +881,11 @@ void test_neg_io_ioUpdateByte_nullHandle(void)
     int32_t status = PMIC_ST_SUCCESS;
 
     // Test 1: Pass NULL handle to Pmic_ioUpdateByte
-    status = Pmic_ioUpdateByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0xFFU, 0xAAU);
+    status = Pmic_ioUpdateByte(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_FULL_BYTE, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
     // Test 2: Pass NULL handle to Pmic_ioUpdateByte_CS
-    status = Pmic_ioUpdateByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0xFFU, 0xAAU);
+    status = Pmic_ioUpdateByte_CS(NULL, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_FULL_BYTE, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
     // Test 3: Pass NULL handle to Pmic_ioUpdateByte_b
@@ -950,7 +951,7 @@ void test_pos_io_operationsAllPages(void)
     // Test I/O operations across different register addresses
 
     // Test 1: Operations on scratchpad registers (lower address space)
-    writeVal = 0xA5U;
+    writeVal = TEST_PATTERN_A5;
     status = Pmic_ioTxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -959,7 +960,7 @@ void test_pos_io_operationsAllPages(void)
     PLATFORM_ASSERT(readVal == writeVal);
 
     // Test 2: Operations on another scratchpad register
-    writeVal = 0x5AU;
+    writeVal = TEST_PATTERN_5A;
     status = Pmic_ioTxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -986,12 +987,12 @@ void test_pos_io_operationsAllPages(void)
     PLATFORM_ASSERT(readVal == writeVal);
 
     // Test 5: UpdateByte operations across different registers
-    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, 0x0FU, 0x0FU);
+    status = Pmic_ioUpdateByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U, TEST_MASK_LOW_NIBBLE, TEST_MASK_LOW_NIBBLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0x0FU) == 0x0FU);
+    PLATFORM_ASSERT((readVal & TEST_MASK_LOW_NIBBLE) == TEST_MASK_LOW_NIBBLE);
 
     // Test 6: UpdateByte_b operations
     status = Pmic_ioUpdateByte_b(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_2_REG, 3U, true);
@@ -1002,12 +1003,12 @@ void test_pos_io_operationsAllPages(void)
     PLATFORM_ASSERT((readVal & 0x08U) == 0x08U);
 
     // Test 7: Critical section variants across registers
-    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_3_REG, 4U, 0xF0U, 0x07U);
+    status = Pmic_ioUpdateByte_CS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_3_REG, 4U, TEST_MASK_HIGH_NIBBLE, 0x07U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_ioRxByte(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_3_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readVal & 0xF0U) == 0x70U);
+    PLATFORM_ASSERT((readVal & TEST_MASK_HIGH_NIBBLE) == 0x70U);
 
     // Test 8: UpdateByte_bCS operations
     status = Pmic_ioUpdateByte_bCS(&pmicHandle, IO_TEST_SCRATCH_PAD_REG_4_REG, 6U, true);
@@ -1040,7 +1041,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     resetMockIoState();
 
     /* Configure mock to corrupt CRC on first read attempt */
-    g_mockCrcCorruptionMask = 0xFFU;  /* Corrupt CRC byte */
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;  /* Corrupt CRC byte */
 
     /* Perform read - should fail on first attempt with CRC error, succeed on retry */
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
@@ -1057,7 +1058,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 void test_pos_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t writeVal = 0xAAU;
+    uint8_t writeVal = TEST_PATTERN_AA;
     Pmic_Handle_t testHandle;
 
     /* Initialize test handle with mock functions */
@@ -1295,7 +1296,7 @@ void test_neg_io_ioTxByte_nullIoWrite(void)
     handle.ioWrite = NULL;
 
     // Try to write - should fail with PMIC_ST_ERR_NULL_FPTR
-    uint8_t data = 0xAAU;
+    uint8_t data = TEST_PATTERN_AA;
     status = Pmic_ioTxByte(&handle, PMIC_SCRATCH_PAD_REG_1, data);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -869,9 +869,10 @@ int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
 /**
  * @brief Get PMIC resource status.
  *
- * Design: PMICDRV-730
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-535, PMICDRV-536
+ * Design: PMICDRV-647
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-508, PMICDRV-511, PMICDRV-512,
+ *               PMICDRV-515, PMICDRV-516, PMICDRV-521, PMICDRV-522, PMICDRV-527,
+ *               PMICDRV-528, PMICDRV-535, PMICDRV-536, PMICDRV-551
  *
  * @param handle [IN] PMIC interface handle.
  *

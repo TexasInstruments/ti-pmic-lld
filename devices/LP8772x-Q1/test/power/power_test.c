@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "power_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -467,7 +468,11 @@
     PLATFORM_RUN_TEST(test_neg_power_pwr_setResourceCfg_excessiveNumConfigs); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setResourceCfg_zeroNumConfigs); \
     PLATFORM_RUN_TEST(test_neg_power_setPgLevel_invalidResource); \
-    PLATFORM_RUN_TEST(test_neg_power_setVoltage_invalidResource)
+    PLATFORM_RUN_TEST(test_neg_power_setVoltage_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply)
 
 #define POWER_TEST_COVERAGE() \
     POWER_TEST_POS_COVERAGE(); \
@@ -4590,4 +4595,158 @@ void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 
     status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+}
+
+/**
+ * @brief Test Pmic_pwrGetResourceCfgs() with error mid-batch
+ * Verifies that when an error occurs during batch Get operation, the output array
+ * remains unchanged (atomic behavior - all or nothing).
+ *
+ * This test creates a batch of 3 configs where the second has an invalid resource,
+ * causing the operation to fail mid-batch. The output array should remain unchanged.
+ */
+void test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged(void)
+{
+    // Create 3 configs, make the second one cause an error (invalid resource)
+    Pmic_PowerResourceCfg_t configs[3];
+
+    // Initialize with sentinel values to detect modification
+    memset(configs, TEST_PATTERN_AA, sizeof(configs));
+
+    configs[0].resource = PMIC_PWR_RSRC_BUCK1;
+    configs[0].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+
+    configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;  // Invalid - will cause error
+    configs[1].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+
+    configs[2].resource = PMIC_PWR_RSRC_BUCK3;
+    configs[2].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+
+    // Save original state
+    Pmic_PowerResourceCfg_t originalConfigs[3];
+    memcpy(originalConfigs, configs, sizeof(configs));
+
+    // Act
+    int32_t status = Pmic_pwrGetResourceCfgs(&pmicHandle, 3U, configs);
+
+    // Assert: Should fail
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Assert: Output array should be unchanged (atomic behavior)
+    PLATFORM_ASSERT(memcmp(originalConfigs, configs, sizeof(configs)) == 0);
+}
+
+/**
+ * @brief Test Pmic_pwrSetResourceCfgs() with error mid-batch
+ * Verifies behavior when an error occurs during batch Set operation.
+ *
+ * This test creates a batch of 3 configs where the second has an invalid resource.
+ * The operation should fail when it encounters the invalid config.
+ * Note: First config may have been applied before error detected.
+ */
+void test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply(void)
+{
+    // Create 3 configs, make the second one cause an error
+    Pmic_PowerResourceCfg_t configs[3];
+
+    // First config - valid
+    configs[0].resource = PMIC_PWR_RSRC_BUCK1;
+    configs[0].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[0].enable = true;
+
+    // Second config - invalid resource (will cause error)
+    configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;
+    configs[1].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[1].enable = true;
+
+    // Third config - valid but should not be applied
+    configs[2].resource = PMIC_PWR_RSRC_BUCK3;
+    configs[2].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[2].enable = true;
+
+    // Act
+    int32_t status = Pmic_pwrSetResourceCfgs(&pmicHandle, 3U, configs);
+
+    // Assert: Should fail
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Note: First config may have been applied before error detected
+    // This test documents expected behavior
+}
+
+/**
+ * @brief Test Pmic_pwrGetSequenceCfgs() with error mid-batch
+ * Verifies that when an error occurs during batch Get operation, the output array
+ * remains unchanged (atomic behavior - all or nothing).
+ *
+ * This test creates a batch of 3 configs where the second has an invalid resource,
+ * causing the operation to fail mid-batch. The output array should remain unchanged.
+ */
+void test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged(void)
+{
+    // Create 3 configs, make the second one cause an error (invalid resource)
+    Pmic_PowerSequenceCfg_t configs[3];
+
+    // Initialize with sentinel values to detect modification
+    memset(configs, TEST_PATTERN_AA, sizeof(configs));
+
+    configs[0].resource = PMIC_PWR_RSRC_BUCK1;
+    configs[0].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+
+    configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;  // Invalid - will cause error
+    configs[1].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+
+    configs[2].resource = PMIC_PWR_RSRC_BUCK3;
+    configs[2].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+
+    // Save original state
+    Pmic_PowerSequenceCfg_t originalConfigs[3];
+    memcpy(originalConfigs, configs, sizeof(configs));
+
+    // Act
+    int32_t status = Pmic_pwrGetSequenceCfgs(&pmicHandle, 3U, configs);
+
+    // Assert: Should fail
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Assert: Output array should be unchanged (atomic behavior)
+    PLATFORM_ASSERT(memcmp(originalConfigs, configs, sizeof(configs)) == 0);
+}
+
+/**
+ * @brief Test Pmic_pwrSetSequenceCfgs() with error mid-batch
+ * Verifies behavior when an error occurs during batch Set operation.
+ *
+ * This test creates a batch of 3 configs where the second has an invalid resource.
+ * The operation should fail when it encounters the invalid config.
+ * Note: First config may have been applied before error detected.
+ */
+void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void)
+{
+    // Create 3 configs, make the second one cause an error
+    Pmic_PowerSequenceCfg_t configs[3];
+
+    // First config - valid
+    configs[0].resource = PMIC_PWR_RSRC_BUCK1;
+    configs[0].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[0].startupDelay = 0U;
+
+    // Second config - invalid resource (will cause error)
+    configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;
+    configs[1].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[1].startupDelay = 0U;
+
+    // Third config - valid but should not be applied
+    configs[2].resource = PMIC_PWR_RSRC_BUCK3;
+    configs[2].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[2].startupDelay = 0U;
+
+    // Act
+    int32_t status = Pmic_pwrSetSequenceCfgs(&pmicHandle, 3U, configs);
+
+    // Assert: Should fail
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Note: First config may have been applied before error detected
+    // This test documents expected behavior
 }

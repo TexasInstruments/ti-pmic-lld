@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "irq_test.h"
 #include "test_inject.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -397,7 +398,7 @@ void test_neg_irq_irqGetMask_outOfBounds_irqNum(void)
 void test_neg_irq_irqGetStatus_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_irqGetStatus()
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = Pmic_irqGetStatus(NULL, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -420,7 +421,7 @@ void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void)
 void test_neg_irq_irqGetNextFlag_nullParam_irqNum(void)
 {
     // Pass NULL irqNum into Pmic_irqGetNextFlag()
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = Pmic_irqGetNextFlag(NULL, &irqStat, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -966,7 +967,7 @@ void test_pos_irq_irqSetGetMask_all(void)
 
 void test_pos_irq_irqGetStatus_noFlags(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -985,7 +986,7 @@ void test_pos_irq_irqGetStatus_noFlags(void)
 
 void test_pos_irq_irqGetStatus_singleFlag_L0(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     bool flag = (bool)false;
 
@@ -1004,7 +1005,7 @@ void test_pos_irq_irqGetStatus_singleFlag_L0(void)
 
 void test_pos_irq_irqGetStatus_singleFlag_L1(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1021,7 +1022,7 @@ void test_pos_irq_irqGetStatus_singleFlag_L1(void)
 
 void test_pos_irq_irqGetStatus_singleFlag_L2(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1038,7 +1039,7 @@ void test_pos_irq_irqGetStatus_singleFlag_L2(void)
 
 void test_pos_irq_irqGetStatus_multipleFlags_sameReg(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1055,7 +1056,7 @@ void test_pos_irq_irqGetStatus_multipleFlags_sameReg(void)
 
 void test_pos_irq_irqGetStatus_multipleFlags_diffRegs(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1072,7 +1073,7 @@ void test_pos_irq_irqGetStatus_multipleFlags_diffRegs(void)
 
 void test_pos_irq_irqGetStatus_hierarchyChain(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1089,7 +1090,7 @@ void test_pos_irq_irqGetStatus_hierarchyChain(void)
 
 void test_pos_irq_irqGetStatus_intrStatBitMapping(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     // Clear all PMIC IRQ flags
@@ -1108,7 +1109,7 @@ void test_pos_irq_irqGetStatus_intrStatBitMapping(void)
 
 void test_pos_irq_irqGetNextFlag_singleFlag(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1128,7 +1129,7 @@ void test_pos_irq_irqGetNextFlag_singleFlag(void)
 
 void test_pos_irq_irqGetNextFlag_multipleFlags(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t count = 0U;
@@ -1159,7 +1160,7 @@ void test_pos_irq_irqGetNextFlag_multipleFlags(void)
 
 void test_pos_irq_irqGetNextFlag_clears_intrStat(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t initialIntrStat0 = 0U;
@@ -1188,7 +1189,7 @@ void test_pos_irq_irqGetNextFlag_clears_intrStat(void)
 
 void test_pos_irq_irqGetNextFlag_highIndexIRQ(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1207,7 +1208,7 @@ void test_pos_irq_irqGetNextFlag_highIndexIRQ(void)
 
 void test_pos_irq_irqGetNextFlag_emptyIntrStat(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1222,7 +1223,7 @@ void test_pos_irq_irqGetNextFlag_emptyIntrStat(void)
 
 void test_pos_irq_irqGetNextFlag_mixed_L1_L2(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t count = 0U;
@@ -1314,7 +1315,7 @@ void test_pos_irq_irqClrFlag_preserveOthers(void)
 
 void test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1354,7 +1355,7 @@ void test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear(void)
 
 void test_pos_irq_irqMultipleSimultaneous_allRegisters(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t count = 0U;
@@ -1427,7 +1428,7 @@ void test_neg_irq_irqGetMask_numMasks_exceeds_max(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
@@ -1451,7 +1452,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
@@ -1480,7 +1481,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intBuckLdoReg = (pmicHandle.isA0) ? 0x4DU : 0x50U;
@@ -1509,7 +1510,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intMiscReg = (pmicHandle.isA0) ? 0x50U : 0x53U;
@@ -1533,7 +1534,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intModerateErrReg = (pmicHandle.isA0) ? 0x51U : 0x54U;
@@ -1557,7 +1558,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intSevereErrReg = (pmicHandle.isA0) ? 0x52U : 0x55U;
@@ -1581,7 +1582,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
@@ -1605,7 +1606,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
@@ -1634,7 +1635,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
@@ -1663,7 +1664,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 
 void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
     uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
@@ -1692,7 +1693,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 
 void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t count = 0U;
@@ -1741,7 +1742,7 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 
 void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
 {
-    Pmic_IrqStat_t irqStat = {0U};
+    Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t count = 0U;
@@ -1761,10 +1762,10 @@ void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
     status = testInject_setBits(intBuckLdoReg, (1U << 0U) | (1U << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intBuck1_2Reg, 0xFFU);
+    status = testInject_setBits(intBuck1_2Reg, TEST_MASK_FULL_BYTE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intBuck3LdoReg, 0xFFU);
+    status = testInject_setBits(intBuck3LdoReg, TEST_MASK_FULL_BYTE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger multiple L2 reads

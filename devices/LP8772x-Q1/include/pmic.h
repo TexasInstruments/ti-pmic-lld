@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -245,7 +245,7 @@ extern "C" {
  * @param commHandle0 Pointer to Handle for I2C1/SPI Main Interface. Valid only
  * when `PMIC_CFG_COMM_HANDLE_VALID` bit of `validParams` is set.
  *
- * @param pQACommHandle Pointer to Handle for I2C2-QA Interface. Valid only
+ * @param qaCommHandle Pointer to Handle for I2C2-QA Interface. Valid only
  * when `PMIC_CFG_QACOMM_HANDLE_VALID` bit of `validParams` is set.
  *
  * @param criticalSectionStart Pointer to Pmic Critical-Section Start Function.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -40,6 +40,8 @@
 #include "pmic_io.h"
 
 #include "regmap/core.h"
+
+#define PMIC_COMM_CRC_INITIAL_VALUE ((uint8_t)0xFFU)
 
 // Used in composing the I2C transmit/receive frame.
 #define I2C_TX_FRAME_LEN ((uint8_t)4U)
@@ -121,9 +123,9 @@ static const uint8_t CRC8_TABLE[] =
  *
  * @retval CRC value for data
  */
-static uint8_t getCRC8Val(const uint8_t data[], uint8_t length)
+static uint8_t getCRC8Val(const uint8_t data[PMIC_IO_FRAME_LEN_MAX], uint8_t length)
 {
-    uint8_t crc = 0xFFU;
+    uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 
     for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < length); i++)
     {

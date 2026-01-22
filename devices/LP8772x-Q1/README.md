@@ -451,7 +451,7 @@ if (status == PMIC_ST_SUCCESS) {
 #### Monitoring ESM Status
 
 ```c
-Pmic_EsmStat_t esmStat = {
+Pmic_EsmStatus_t esmStat = {
     .validParams = PMIC_ESM_STATUS_ALL_VALID
 };
 

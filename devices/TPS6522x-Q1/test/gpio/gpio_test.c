@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -40,6 +40,7 @@
 #include "../platform.h"
 #include "gpio_test.h"
 #include "pmic_gpio.h"
+#include "test_constants.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -408,7 +409,7 @@ static void test_neg_gpio_gpiosetFunction_invalidFunctionality(void)
     Pmic_GpioPinCfg_t cfg = {
         .validParams = PMIC_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
-        .fxnSel = 0xFFU  // Invalid function select value
+        .fxnSel = TEST_MASK_FULL_BYTE  // Invalid function select value
     };
 
     int32_t status = Pmic_gpioSetPinCfg(&pmicHandle, &cfg);

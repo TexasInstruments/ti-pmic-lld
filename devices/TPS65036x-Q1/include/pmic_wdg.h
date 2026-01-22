@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -106,7 +106,7 @@ extern "C" {
  * @anchor Pmic_WdgErrStatValidParams
  * @name TPS65036x Error Status Valid Parameters
  *
- * @brief Indication of which parameters are valid within the Pmic_WdgErrStat_t
+ * @brief Indication of which parameters are valid within the Pmic_WdgErrStatus_t
  * struct.
  *
  * @details For more information on the parameters, refer to @ref Pmic_WdgErrStat.
@@ -138,7 +138,7 @@ extern "C" {
  * @name TPS65036x Watchdog Fail Count Status Valid Parameters
  *
  * @brief Indication of which parameters are valid within the
- * Pmic_WdgFailCntStat_t struct.
+ * Pmic_WdgFailCntStatus_t struct.
  *
  * @details For more information on the parameters, refer to
  * @ref Pmic_WdgFailCntStat.
@@ -319,7 +319,7 @@ typedef struct Pmic_WdgCfg_s
  * @param longWinTimeoutInt Status/indication of whether the PMIC has undergone
  * warm reset due to elapse of Long Window.
  */
-typedef struct Pmic_WdgErrStat_s
+typedef struct Pmic_WdgErrStatus_s
 {
     uint32_t validParams;
 
@@ -331,7 +331,7 @@ typedef struct Pmic_WdgErrStat_s
     bool trigEarlyErr;
     bool timeoutErr;
     bool longWinTimeoutInt;
-} Pmic_WdgErrStat_t;
+} Pmic_WdgErrStatus_t;
 
 /**
  * @anchor Pmic_WdgFailCntStat
@@ -350,7 +350,7 @@ typedef struct Pmic_WdgErrStat_s
  *
  * @param failCnt Current value of the watchdog fail counter.
  */
-typedef struct Pmic_WdgFailCntStat_s
+typedef struct Pmic_WdgFailCntStatus_s
 {
     uint32_t validParams;
 
@@ -358,7 +358,7 @@ typedef struct Pmic_WdgFailCntStat_s
     bool goodEvent;
 
     uint8_t failCnt;
-} Pmic_WdgFailCntStat_t;
+} Pmic_WdgFailCntStatus_t;
 
 /*==========================================================================  */
 /*                             Function Declarations                          */
@@ -378,7 +378,7 @@ typedef struct Pmic_WdgFailCntStat_s
  * When set to `PMIC_DISABLE`, the watchdog is disabled.
  *
  * @return Success code if the PMIC watchdog has been enabled/disabled, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgSetEnableState(const Pmic_Handle_t *handle, bool enable);
 
@@ -392,7 +392,7 @@ int32_t Pmic_wdgSetEnableState(const Pmic_Handle_t *handle, bool enable);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC watchdog has been enabled, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgEnable(const Pmic_Handle_t *handle);
 
@@ -405,7 +405,7 @@ int32_t Pmic_wdgEnable(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC watchdog has been disabled, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgDisable(const Pmic_Handle_t *handle);
 
@@ -421,7 +421,7 @@ int32_t Pmic_wdgDisable(const Pmic_Handle_t *handle);
  * watchdog is enabled, else the value is set to false.
  *
  * @return Success code if the PMIC watchdog enable status has been obtained,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *handle, bool *wdgEnabled);
 
@@ -453,7 +453,7 @@ int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *handle, bool *wdgEnabled);
  * @param wdgCfg [IN] Watchdog configurations to write to PMIC.
  *
  * @return Success code if PMIC watchdog configurations have been set, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
 
@@ -469,7 +469,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
  * @param wdgCfg [OUT] Watchdog configurations obtained from PMIC.
  *
  * @return Success code if PMIC watchdog configurations have been obtained,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg);
 
@@ -487,7 +487,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg);
  * will be set to 0 (allowing the watchdog to exit Long Window).
  *
  * @return Success code the WD_PWRHOLD bit is set, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgSetPowerHold(const Pmic_Handle_t *handle, bool pwrHold);
 
@@ -505,7 +505,7 @@ int32_t Pmic_wdgSetPowerHold(const Pmic_Handle_t *handle, bool pwrHold);
  * is 1, else WD_PWRHOLD is 0.
  *
  * @return Success code if the status of WD_PWRHOLD has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetPowerHold(const Pmic_Handle_t *handle, bool *pwrHoldStat);
 
@@ -524,7 +524,7 @@ int32_t Pmic_wdgGetPowerHold(const Pmic_Handle_t *handle, bool *pwrHoldStat);
  * the watchdog to continue sequences after the current sequence).
  *
  * @return Success code if WD_RETURN_LONGWIN bit is set, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_Handle_t *handle, bool retLongWin);
 
@@ -541,7 +541,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_Handle_t *handle, bool retLongW
  * WD_RETURN_LONGWIN is 1, else WD_RETURN_LONGWIN is 0.
  *
  * @return success code if the status of WD_RETURN_LONGWIN has been obtained,
- * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *retLongWinStat);
 
@@ -564,7 +564,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *retLong
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if software trigger has been sent, error code otherwise.
- * For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgSendSwTrigger(const Pmic_Handle_t *handle);
 
@@ -585,7 +585,7 @@ int32_t Pmic_wdgSendSwTrigger(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if Q&A answer byte has been sent to the PMIC, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle);
 
@@ -623,14 +623,14 @@ int32_t Pmic_wdgQaWriteAnswer(const Pmic_Handle_t *handle);
  * which watchdog error status(es) to clear.
  *
  * @return Success code if watchdog error status(es) have been cleared, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStat_t *wdgErrStat);
+int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatus_t *wdgErrStat);
 
 /**
  * @brief Clear all PMIC watchdog error statuses. Provided as a convenience,
  * however, it is recommended to process watchdog statuses via
- * `Pmic_wdgGetErrStatusus()` and `Pmic_wdgClrErrStatus()` APIs.
+ * `Pmic_wdgGetErrStatus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
  * Design: PMICDRV-674
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
@@ -643,7 +643,7 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStat_
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if all watchdog error statuses have been cleared, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle);
 
@@ -659,9 +659,9 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle);
  * @param wdgErrStat [OUT] Struct containing watchdog error statuses of the PMIC.
  *
  * @return Success code if watchdog error status(es) have been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStat_t *wdgErrStat);
+int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *wdgErrStat);
 
 /**
  * @brief Get PMIC watchdog fail counter statuses.
@@ -683,9 +683,9 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStat_t *wdg
  *
  * @return Success code if the watchdog fail counter status(es) have been
  * obtained, error code otherwise. For valid success/error codes, refer to
- * @ref Pmic_errorCodes.
+ * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStat_t *wdgFailCntStat);
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStatus_t *wdgFailCntStat);
 
 #ifdef __cplusplus
 }

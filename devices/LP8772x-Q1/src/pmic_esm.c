@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -565,7 +565,7 @@ int32_t Pmic_esmStop(const Pmic_Handle_t *handle)
     return Pmic_esmSetStartState(handle, false);
 }
 
-int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat)
+int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
@@ -605,7 +605,7 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStat_t *esmStat)
     return status;
 }
 
-int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStat_t *esmStat)
+int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);

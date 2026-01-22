@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "io_test.h"
+#include "test_constants.h"
 #include "regmap/core.h"
 #include "pmic_mock_core.h"
 
@@ -51,7 +52,7 @@
 /* Test bit field positions for RMW tests */
 #define IO_TEST_BIT_POS_0           (0U)
 #define IO_TEST_BIT_POS_4           (4U)
-#define IO_TEST_BIT_MASK_NIBBLE     (0x0FU)
+#define IO_TEST_BIT_MASK_NIBBLE     TEST_MASK_LOW_NIBBLE
 #define IO_TEST_BIT_MASK_SINGLE     (0x01U)
 
 /* ========================================================================== */
@@ -327,7 +328,7 @@ void io_test(void *args)
     (void)args;
     int32_t status = PMIC_ST_SUCCESS;
     /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-    static uint32_t dummyCommHandle = 0x12345678U;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |
@@ -378,7 +379,7 @@ void io_test(void *args)
 
 void test_neg_io_ioTxByte_nullHandle(void)
 {
-    uint8_t txData = 0xAAU;
+    uint8_t txData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte(NULL, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -392,7 +393,7 @@ void test_neg_io_ioRxByte_nullHandle(void)
 
 void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
-    uint8_t txData = 0xAAU;
+    uint8_t txData = TEST_PATTERN_AA;
     int32_t status = Pmic_ioTxByte_CS(NULL, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -467,7 +468,7 @@ void test_neg_io_ioTxWordSeq_invalidCount(void)
 void test_pos_io_ioTxByte_scratchpad1(void)
 {
     int32_t status;
-    uint8_t writeData = 0xA5U;
+    uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
     /* Write test pattern */
@@ -483,7 +484,7 @@ void test_pos_io_ioTxByte_scratchpad1(void)
 void test_pos_io_ioRxByte_scratchpad1(void)
 {
     int32_t status;
-    uint8_t writeData = 0xA5U;
+    uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
     /* Write test pattern */
@@ -499,7 +500,7 @@ void test_pos_io_ioRxByte_scratchpad1(void)
 void test_pos_io_ioTxByte_scratchpad2(void)
 {
     int32_t status;
-    uint8_t writeData = 0x5AU;
+    uint8_t writeData = TEST_PATTERN_5A;
     uint8_t readData = 0U;
 
     /* Write test pattern */
@@ -515,7 +516,7 @@ void test_pos_io_ioTxByte_scratchpad2(void)
 void test_pos_io_ioRxByte_scratchpad2(void)
 {
     int32_t status;
-    uint8_t writeData = 0x5AU;
+    uint8_t writeData = TEST_PATTERN_5A;
     uint8_t readData = 0U;
 
     /* Write test pattern */
@@ -636,7 +637,7 @@ void test_pos_io_ioTxRxWordSeq_2bytes(void)
 void test_pos_io_ioUpdateByte_singleBitField(void)
 {
     int32_t status;
-    uint8_t initialValue = 0xF0U;
+    uint8_t initialValue = TEST_MASK_HIGH_NIBBLE;
     uint8_t readData = 0U;
     uint8_t expectedValue;
 
@@ -704,7 +705,7 @@ void test_pos_io_ioUpdateByte_b_setBit(void)
 void test_pos_io_ioUpdateByte_b_clearBit(void)
 {
     int32_t status;
-    uint8_t initialValue = 0xFFU;
+    uint8_t initialValue = TEST_MASK_FULL_BYTE;
     uint8_t readData = 0U;
 
     /* Initialize register with all bits set */
@@ -725,7 +726,7 @@ void test_pos_io_ioUpdateByte_b_clearBit(void)
 void test_pos_io_ioUpdateByte_CS_singleBitField(void)
 {
     int32_t status;
-    uint8_t initialValue = 0x55U;
+    uint8_t initialValue = TEST_PATTERN_55;
     uint8_t readData = 0U;
     uint8_t expectedValue;
 
@@ -748,7 +749,7 @@ void test_pos_io_ioUpdateByte_CS_singleBitField(void)
 void test_pos_io_ioUpdateByte_bCS_setBit(void)
 {
     int32_t status;
-    uint8_t initialValue = 0xAAU;
+    uint8_t initialValue = TEST_PATTERN_AA;
     uint8_t readData = 0U;
 
     /* Initialize register */
@@ -907,7 +908,7 @@ void test_neg_io_ioRxByte_crcError(void)
 void test_pos_io_write_with_crc_calculation(void)
 {
     int32_t status;
-    uint8_t testPatterns[] = {0xAAU, 0x55U, 0xF0U, 0x0FU};
+    uint8_t testPatterns[] = {TEST_PATTERN_AA, TEST_PATTERN_55, TEST_MASK_HIGH_NIBBLE, TEST_MASK_LOW_NIBBLE};
 
     /* TPS65386x-Q1 calculates CRC for write operations in Pmic_ioTxByte (line 221 of pmic_io.c)
      * spiBuf[3] = getCRC8Val(spiBuf, bufLen) where bufLen=3
@@ -956,7 +957,7 @@ void test_pos_io_crc_enable_disable_transitions(void)
      */
 
     /* Perform operations to verify CRC is consistently active */
-    uint8_t writeData1 = 0xA5U;
+    uint8_t writeData1 = TEST_PATTERN_A5;
     uint8_t readData1 = 0U;
 
     /* Write and read with CRC active */
@@ -979,7 +980,7 @@ void test_pos_io_crc_enable_disable_transitions(void)
     PLATFORM_ASSERT((readData2 & 0x01U) == 0x01U);
 
     /* Perform critical section operations to verify CRC during protected operations */
-    uint8_t writeData3 = 0x5AU;
+    uint8_t writeData3 = TEST_PATTERN_5A;
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData3);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1016,7 +1017,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     resetMockIoState();
 
     /* TPS65386x-Q1 always has CRC enabled in SPI protocol */
-    g_mockCrcCorruptionMask = 0xFFU;
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;
 
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1026,7 +1027,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 void test_neg_io_ioTxByte_withRetryOnFailure(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t writeVal = 0xAAU;
+    uint8_t writeVal = TEST_PATTERN_AA;
     Pmic_Handle_t testHandle;
 
     (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
@@ -1232,7 +1233,7 @@ void test_neg_io_nullIoFptrs(void)
 {
     Pmic_Handle_t testHandle;
     uint8_t rxData = 0U;
-    uint8_t txData = 0xAAU;
+    uint8_t txData = TEST_PATTERN_AA;
 
     // Test NULL ioRead
     (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));

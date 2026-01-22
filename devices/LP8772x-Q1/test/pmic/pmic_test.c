@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,7 @@
 
 #include "pmic_test.h"
 #include "regmap/core.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -130,10 +131,10 @@
     PMIC_TEST_RUN_NEGATIVE()
 
 /* Used in certain unit tests to validate driver initialization status */
-#define PMIC_TEST_DRV_INIT_STATUS (0x504D4943U) /* "PMIC" in ASCII */
+#define PMIC_TEST_DRV_INIT_STATUS TEST_PMIC_INIT_MAGIC /* "PMIC" in ASCII */
 
 /* Arbitrary value used for testing purposes */
-#define PMIC_TEST_ARBITARY_VALUE (0xAAU)
+#define PMIC_TEST_ARBITRARY_VALUE TEST_PATTERN_AA
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -209,8 +210,8 @@ static inline void pmicInitTest_initCoreCfg(Pmic_HandleCfg_t *coreCfg)
                            PMIC_IRQ_RESPONSE_CALLBACK_VALID;
     coreCfg->commMode = PMIC_INTF_I2C_SINGLE;
     coreCfg->i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
-    coreCfg->i2cAddr1 = PMIC_TEST_ARBITARY_VALUE;   // Not needed to be specified for Coach
-    coreCfg->i2cAddr2 = PMIC_TEST_ARBITARY_VALUE;  // Not needed to be specified for Coach
+    coreCfg->i2cAddr1 = PMIC_TEST_ARBITRARY_VALUE;   // Not needed to be specified for Coach
+    coreCfg->i2cAddr2 = PMIC_TEST_ARBITRARY_VALUE;  // Not needed to be specified for Coach
     coreCfg->crcEnable = PMIC_DISABLE;
     coreCfg->configCrcEnable = PMIC_DISABLE;
     coreCfg->commHandle0 = platform_getCommHandle();
@@ -398,8 +399,8 @@ void test_pos_pmic_init(void)
     PLATFORM_ASSERT(pmicHandle.drvInitStat == (uint32_t)(PMIC_TEST_DRV_INIT_STATUS | (uint8_t)0U));
     PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_I2C_SINGLE);
     PLATFORM_ASSERT(pmicHandle.i2cAddr0 == PLATFORM_TARGET_I2C_ADDR);
-    PLATFORM_ASSERT(pmicHandle.i2cAddr1 == PMIC_TEST_ARBITARY_VALUE);
-    PLATFORM_ASSERT(pmicHandle.i2cAddr2 == PMIC_TEST_ARBITARY_VALUE);
+    PLATFORM_ASSERT(pmicHandle.i2cAddr1 == PMIC_TEST_ARBITRARY_VALUE);
+    PLATFORM_ASSERT(pmicHandle.i2cAddr2 == PMIC_TEST_ARBITRARY_VALUE);
     PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
     PLATFORM_ASSERT(pmicHandle.configCrcEnable == PMIC_DISABLE);
     PLATFORM_ASSERT(pmicHandle.commHandle0 == platform_getCommHandle());
@@ -702,7 +703,7 @@ void test_pos_pmic_checkHandle_validations(void)
     uint32_t validInitStat = handle.drvInitStat;
 
     // Test 2: Invalid drvInitStat should fail
-    handle.drvInitStat = 0xDEADBEEFU;
+    handle.drvInitStat = TEST_INVALID_MAGIC;
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 
@@ -847,7 +848,7 @@ void test_neg_pmic_checkHandle_invalidCommMode(void)
 
     // Now try to use the handle with an API that calls Pmic_checkHandle
     // For example, Pmic_setScratchPadValue
-    status = Pmic_setScratchPadValue(&handle, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    status = Pmic_setScratchPadValue(&handle, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
     // No need to deinit corrupted handle
@@ -875,7 +876,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     handle.timerWaitMs = NULL;
 
     // Now call an API that uses Pmic_checkHandle
-    status = Pmic_setScratchPadValue(&handle, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    status = Pmic_setScratchPadValue(&handle, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
     // No need to deinit corrupted handle

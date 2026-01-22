@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "core_test.h"
+#include "test_constants.h"
 
 #ifdef BUILD_MOCK
 #include "test_inject.h"
@@ -231,8 +232,8 @@
     CORE_TEST_RUN_POSITIVE(); \
     CORE_TEST_RUN_NEGATIVE()
 
-#define CORE_TEST_CALCUL_CONFIG_CRC_1_REG (0x61U)
-#define CORE_TEST_CALCUL_CONFIG_CRC_2_REG (0x62U)
+#define CORE_TEST_CALCUL_CONFIG_CRC_1_REG TEST_REG_CALCUL_CRC_1
+#define CORE_TEST_CALCUL_CONFIG_CRC_2_REG TEST_REG_CALCUL_CRC_2
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -298,14 +299,14 @@ void core_test(void *args)
 void test_neg_core_setScratchPadValue_nullHandle(void)
 {
     // Pass null handle into Pmic_setScratchPadValue()
-    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_core_setScratchPadValue_outOfBounds(void)
 {
     // Pass out of bounds scratchpad register number into Pmic_setScratchPadValue()
-    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -661,7 +662,7 @@ void test_neg_core_configCrcEnable_alreadyEnabled(void)
     // it should return PMIC_ST_ERR_NOT_SUPPORTED
 
     int32_t status = PMIC_ST_SUCCESS;
-    const uint16_t CONFIG_CRC_CONFIG_REG = 0x60U;  // CONFIG_CRC_CONFIG register address
+    const uint16_t CONFIG_CRC_CONFIG_REG = TEST_REG_CONFIG_CRC_CONFIG;  // CONFIG_CRC_CONFIG register address
     const uint8_t CONFIG_CRC_EN_SHIFT = 0U;         // CONFIG_CRC_EN bit position
 
     // First ensure CRC is disabled

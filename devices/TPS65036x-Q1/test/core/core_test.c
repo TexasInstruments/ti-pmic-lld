@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "core_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -343,14 +344,14 @@ void test_neg_core_getABISTStat_nullParam_isActive(void)
 void test_neg_core_setScratchPadValue_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setScratchPadValue()
-    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(NULL, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void)
 {
     // Pass out of bounds scratchPadRegNum into Pmic_setScratchPadValue()
-    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, 0xAAU);
+    int32_t status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -522,7 +523,7 @@ void test_pos_core_setGetRegLock(void)
 
     // Verify registers are actually writable after unlock (functional test)
     // Use scratch pad register which is lock-protected and safe to modify
-    uint8_t testVal = 0xAA;
+    uint8_t testVal = TEST_PATTERN_AA;
     status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, testVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 

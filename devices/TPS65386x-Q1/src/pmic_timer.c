@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2026 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -55,15 +55,15 @@
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-static inline void TIMER_copyTimerCfg(const Pmic_timerCfg_t *src, Pmic_timerCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_timerCfg_t));
+static inline void TIMER_copyTimerCfg(const Pmic_TimerCfg_t *src, Pmic_TimerCfg_t *dst) {
+    memmove((void *)dst, (const void *)src, sizeof(Pmic_TimerCfg_t));
 }
 
-int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    Pmic_timerCfg_t localTimerCfg;
+    Pmic_TimerCfg_t localTimerCfg;
 
     // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
@@ -124,11 +124,11 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_timerCfg_t *tim
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_timerCfg_t *timerCfg)
+int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_TimerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    Pmic_timerCfg_t localTimerCfg;
+    Pmic_TimerCfg_t localTimerCfg;
 
     // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
