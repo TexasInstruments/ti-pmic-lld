@@ -233,24 +233,24 @@
     WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
 
 /* ========================================================================== */
-/*              API-Specific Test Macros - wdgGetErrorStatus                  */
+/*              API-Specific Test Macros - wdgGetErrStatus                  */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGGETERRORSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_afterAnswerError); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_timeout); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_longWindowTimeout); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_answerEarlyError); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_sequenceErr); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_answerErr); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_triggerEarly); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_th1Int); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_th2Int); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_allFlags)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_afterAnswerError); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_timeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_longWindowTimeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerEarlyError); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_sequenceErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_triggerEarly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_th1Int); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_th2Int); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_allFlags)
 
 #define WDG_TEST_NEG_WDGGETERRORSTATUS() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrorStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrorStatus_nullParam)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullParam)
 
 #define WDG_TEST_WDGGETERRORSTATUS() \
     WDG_TEST_POS_WDGGETERRORSTATUS(); \
@@ -998,7 +998,7 @@ void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void)
 /**
  * @brief Test getting error status after answer error (using test injection)
  */
-void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void)
+void test_pos_wdg_wdgGetErrStatus_afterAnswerError(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1026,7 +1026,7 @@ void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void)
 /**
  * @brief Test getting timeout error status
  */
-void test_pos_wdg_wdgGetErrorStatus_timeout(void)
+void test_pos_wdg_wdgGetErrStatus_timeout(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1052,7 +1052,7 @@ void test_pos_wdg_wdgGetErrorStatus_timeout(void)
 /**
  * @brief Test getting long window timeout error status
  */
-void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
+void test_pos_wdg_wdgGetErrStatus_longWindowTimeout(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1072,7 +1072,7 @@ void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
 /**
  * @brief Test getting answer early error status
  */
-void test_pos_wdg_wdgGetErrorStatus_answerEarlyError(void)
+void test_pos_wdg_wdgGetErrStatus_answerEarlyError(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1095,7 +1095,7 @@ void test_pos_wdg_wdgGetErrorStatus_answerEarlyError(void)
 /**
  * @brief Test getting sequence error status
  */
-void test_pos_wdg_wdgGetErrorStatus_sequenceErr(void)
+void test_pos_wdg_wdgGetErrStatus_sequenceErr(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1118,7 +1118,7 @@ void test_pos_wdg_wdgGetErrorStatus_sequenceErr(void)
 /**
  * @brief Test getting answer error status
  */
-void test_pos_wdg_wdgGetErrorStatus_answerErr(void)
+void test_pos_wdg_wdgGetErrStatus_answerErr(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1141,7 +1141,7 @@ void test_pos_wdg_wdgGetErrorStatus_answerErr(void)
 /**
  * @brief Test getting trigger early error status (TPS65386x unique)
  */
-void test_pos_wdg_wdgGetErrorStatus_triggerEarly(void)
+void test_pos_wdg_wdgGetErrStatus_triggerEarly(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1164,7 +1164,7 @@ void test_pos_wdg_wdgGetErrorStatus_triggerEarly(void)
 /**
  * @brief Test getting threshold 1 interrupt error status
  */
-void test_pos_wdg_wdgGetErrorStatus_th1Int(void)
+void test_pos_wdg_wdgGetErrStatus_th1Int(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1187,7 +1187,7 @@ void test_pos_wdg_wdgGetErrorStatus_th1Int(void)
 /**
  * @brief Test getting threshold 2 interrupt error status
  */
-void test_pos_wdg_wdgGetErrorStatus_th2Int(void)
+void test_pos_wdg_wdgGetErrStatus_th2Int(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -1210,7 +1210,7 @@ void test_pos_wdg_wdgGetErrorStatus_th2Int(void)
 /**
  * @brief Test getting all error flags at once
  */
-void test_pos_wdg_wdgGetErrorStatus_allFlags(void)
+void test_pos_wdg_wdgGetErrStatus_allFlags(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -2141,7 +2141,7 @@ void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void)
 /**
  * @brief Test Pmic_wdgGetErrStatus with NULL handle
  */
-void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
+void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
 {
     Pmic_WdgErrStatus_t errors = {0};
     errors.validParams = PMIC_CFG_WD_TIMEOUT_ERR_VALID;
@@ -2152,7 +2152,7 @@ void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetErrStatus with NULL output parameter
  */
-void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
+void test_neg_wdg_wdgGetErrStatus_nullParam(void)
 {
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);

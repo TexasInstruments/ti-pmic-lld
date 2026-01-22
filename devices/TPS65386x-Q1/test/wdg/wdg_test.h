@@ -161,20 +161,20 @@ void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void);
 void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void);
 
 /* ========================================================================== */
-/*                      wdgGetErrorStatus API Tests                           */
+/*                      wdgGetErrStatus API Tests                           */
 /* ========================================================================== */
-void test_pos_wdg_wdgGetErrorStatus_afterAnswerError(void);
-void test_pos_wdg_wdgGetErrorStatus_timeout(void);
-void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void);
-void test_pos_wdg_wdgGetErrorStatus_answerEarlyError(void);
-void test_pos_wdg_wdgGetErrorStatus_sequenceErr(void);
-void test_pos_wdg_wdgGetErrorStatus_answerErr(void);
-void test_pos_wdg_wdgGetErrorStatus_triggerEarly(void);
-void test_pos_wdg_wdgGetErrorStatus_th1Int(void);
-void test_pos_wdg_wdgGetErrorStatus_th2Int(void);
-void test_pos_wdg_wdgGetErrorStatus_allFlags(void);
-void test_neg_wdg_wdgGetErrorStatus_nullHandle(void);
-void test_neg_wdg_wdgGetErrorStatus_nullParam(void);
+void test_pos_wdg_wdgGetErrStatus_afterAnswerError(void);
+void test_pos_wdg_wdgGetErrStatus_timeout(void);
+void test_pos_wdg_wdgGetErrStatus_longWindowTimeout(void);
+void test_pos_wdg_wdgGetErrStatus_answerEarlyError(void);
+void test_pos_wdg_wdgGetErrStatus_sequenceErr(void);
+void test_pos_wdg_wdgGetErrStatus_answerErr(void);
+void test_pos_wdg_wdgGetErrStatus_triggerEarly(void);
+void test_pos_wdg_wdgGetErrStatus_th1Int(void);
+void test_pos_wdg_wdgGetErrStatus_th2Int(void);
+void test_pos_wdg_wdgGetErrStatus_allFlags(void);
+void test_neg_wdg_wdgGetErrStatus_nullHandle(void);
+void test_neg_wdg_wdgGetErrStatus_nullParam(void);
 
 /* ========================================================================== */
 /*                      wdgClrErrStatus API Tests                             */

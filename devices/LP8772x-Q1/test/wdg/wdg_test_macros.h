@@ -170,18 +170,18 @@
     WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
 
 /* ========================================================================== */
-/*              API-Specific Test Macros - wdgGetErrorStatus                  */
+/*              API-Specific Test Macros - wdgGetErrStatus                  */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGGETERRORSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_timeout); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_longWindowTimeout); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_answerEarly); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_answerError)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_timeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_longWindowTimeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerEarly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerError)
 
 #define WDG_TEST_NEG_WDGGETERRORSTATUS() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrorStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrorStatus_nullParam)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullParam)
 
 #define WDG_TEST_WDGGETERRORSTATUS() \
     WDG_TEST_POS_WDGGETERRORSTATUS(); \

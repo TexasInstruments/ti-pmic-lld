@@ -304,11 +304,11 @@
     WDG_TEST_POS_WDGQASEQUENCE()
 
 /* ========================================================================== */
-/*               API-Specific Test Macros - wdgGetErrorStatus                 */
+/*               API-Specific Test Macros - wdgGetErrStatus                 */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGGETERRORSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrorStatus_answerError)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerError)
 
 #define WDG_TEST_WDGGETERRORSTATUS() \
     WDG_TEST_POS_WDGGETERRORSTATUS()

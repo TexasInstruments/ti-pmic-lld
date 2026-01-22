@@ -1727,7 +1727,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_pos_wdg_wdgGetErrorStatus_answerError(void)
+void test_pos_wdg_wdgGetErrStatus_answerError(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};

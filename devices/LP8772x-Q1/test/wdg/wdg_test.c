@@ -333,7 +333,7 @@ void test_neg_wdg_wdgGetReturnToLongWindow_nullParam(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
+void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
 {
     // Pass NULL handle into Pmic_wdgGetErrStatus()
     Pmic_WdgErrStatus_t wdgErrStat = {0U};
@@ -341,7 +341,7 @@ void test_neg_wdg_wdgGetErrorStatus_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_wdg_wdgGetErrorStatus_nullParam(void)
+void test_neg_wdg_wdgGetErrStatus_nullParam(void)
 {
     // Pass NULL errors into Pmic_wdgGetErrStatus()
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, NULL);
@@ -821,7 +821,7 @@ void test_pos_wdg_wdgQaSequence_noErrors(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_pos_wdg_wdgGetErrorStatus_timeout(void)
+void test_pos_wdg_wdgGetErrStatus_timeout(void)
 {
 #ifdef BUILD_MOCK
     TEST_IGNORE_MESSAGE("Requires hardware timer (mock limitation - timer-based WDG behavior not emulated)");
@@ -1798,7 +1798,7 @@ void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
 #endif
 }
 
-void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
+void test_pos_wdg_wdgGetErrStatus_longWindowTimeout(void)
 {
     // Test coverage for lines 666-667: Get long window timeout error status
 
@@ -1820,7 +1820,7 @@ void test_pos_wdg_wdgGetErrorStatus_longWindowTimeout(void)
     // We don't assert a specific value as it depends on device state
 }
 
-void test_pos_wdg_wdgGetErrorStatus_answerEarly(void)
+void test_pos_wdg_wdgGetErrStatus_answerEarly(void)
 {
     // Test coverage for lines 674-675: Get answer early error status
 
@@ -1841,7 +1841,7 @@ void test_pos_wdg_wdgGetErrorStatus_answerEarly(void)
     // The answerEarlyError field should be populated
 }
 
-void test_pos_wdg_wdgGetErrorStatus_answerError(void)
+void test_pos_wdg_wdgGetErrStatus_answerError(void)
 {
     // Test coverage for lines 682-683: Get answer error status
 

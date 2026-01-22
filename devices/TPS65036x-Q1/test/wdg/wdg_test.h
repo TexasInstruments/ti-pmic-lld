@@ -141,7 +141,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void);
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void);
 void test_pos_wdg_wdgGetErrStatus_allFields(void);
 void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void);
-void test_pos_wdg_wdgGetErrorStatus_answerError(void);
+void test_pos_wdg_wdgGetErrStatus_answerError(void);
 
 #ifdef __cplusplus
 }
