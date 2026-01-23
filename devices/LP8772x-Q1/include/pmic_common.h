@@ -98,7 +98,7 @@ extern "C" {
  * 16 bits indicate the status type and the least significant 16 bits indicate the
  * status ID.
  */
-#define PMIC_STATUS(type, id) ((int32_t)((type << PMIC_ST_TYPE_SHIFT) | (id << PMIC_ST_ID_SHIFT)))
+#define PMIC_STATUS(type, id) ((int32_t)(((type) << PMIC_ST_TYPE_SHIFT) | ((id) << PMIC_ST_ID_SHIFT)))
 
 /**
  * @anchor Pmic_ErrorCodes
