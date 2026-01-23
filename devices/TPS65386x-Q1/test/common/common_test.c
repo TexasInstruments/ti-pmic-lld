@@ -1320,6 +1320,191 @@ void test_neg_common_clrDiagnosticsAll_nullHandle(void)
 }
 
 /* ========================================================================== */
+/*                      Boundary Condition Tests                              */
+/* ========================================================================== */
+
+/* logStatus Boundary Tests */
+void test_pos_common_logStatus_maxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    /* Test with maximum valid error ID (15) */
+    int32_t maxErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX);
+    status = Pmic_logStatus(&handle, maxErrorCode);
+    PLATFORM_ASSERT(status == maxErrorCode);
+
+    /* Verify it was logged correctly */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = maxErrorCode;
+    status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diag.cnt == 1U);
+}
+
+void test_pos_common_logStatus_maxWarningId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    /* Test with maximum valid warning ID (1) */
+    int32_t maxWarningCode = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX);
+    status = Pmic_logStatus(&handle, maxWarningCode);
+    PLATFORM_ASSERT(status == maxWarningCode);
+
+    /* Verify it was logged correctly */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = maxWarningCode;
+    status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diag.cnt == 1U);
+}
+
+void test_neg_common_logStatus_exceedsMaxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    /* Test with error ID beyond maximum (16, when max is 15) */
+    int32_t invalidErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+    int32_t status = Pmic_logStatus(&handle, invalidErrorCode);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/* getDiagnostic Boundary Tests */
+void test_pos_common_getDiagnostic_maxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    /* Log an error at max ID */
+    int32_t maxErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX);
+    Pmic_logStatus(&handle, maxErrorCode);
+
+    /* Retrieve diagnostic for max error ID */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = maxErrorCode;
+    status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diag.cnt == 1U);
+}
+
+void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    /* Attempt to get diagnostic for error ID beyond maximum */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    /* Attempt to get diagnostic for warning ID beyond maximum */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/* clrDiagnostic Boundary Tests */
+void test_pos_common_clrDiagnostic_maxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    /* Log an error at max ID */
+    int32_t maxErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX);
+    Pmic_logStatus(&handle, maxErrorCode);
+
+    /* Clear diagnostic for max error ID */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = maxErrorCode;
+    status = Pmic_clrDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify it was cleared */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = maxErrorCode;
+    status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diag.cnt == 0U);
+}
+
+void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    /* Attempt to clear diagnostic for error ID beyond maximum */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+
+    int32_t status = Pmic_clrDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    /* Attempt to clear diagnostic for warning ID beyond maximum */
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
+
+    int32_t status = Pmic_clrDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/* ========================================================================== */
 /*                        Test Suite Entry Point                              */
 /* ========================================================================== */
 

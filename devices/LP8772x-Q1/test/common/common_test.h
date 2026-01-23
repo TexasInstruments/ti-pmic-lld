@@ -93,7 +93,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_logStatus_success); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_validError); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_validWarning); \
-    PLATFORM_RUN_TEST(test_pos_common_logStatus_allErrorCodes)
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_allErrorCodes); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_maxErrorId); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_maxWarningId)
 
 #define COMMON_TEST_NEG_LOGSTATUS() \
     PLATFORM_RUN_TEST(test_neg_common_logStatus_nullHandle); \
@@ -101,7 +103,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusType); \
     PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusId); \
     PLATFORM_RUN_TEST(test_neg_common_logStatus_invalidStatusNullHandle); \
-    PLATFORM_RUN_TEST(test_neg_common_logStatus_warningTypeInvalidId)
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_warningTypeInvalidId); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_exceedsMaxErrorId)
 
 #define COMMON_TEST_LOGSTATUS() \
     COMMON_TEST_POS_LOGSTATUS(); \
@@ -115,14 +118,17 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_errorCnt); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_errorFlag); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningCnt); \
-    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningFlag)
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningFlag); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_maxErrorId)
 
 #define COMMON_TEST_NEG_GETDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullDiagnostic); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidStatusCode); \
-    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_successType)
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_successType); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId)
 
 #define COMMON_TEST_GETDIAGNOSTIC() \
     COMMON_TEST_POS_GETDIAGNOSTIC(); \
@@ -158,14 +164,17 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorCnt); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningCnt); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorFlagOnly); \
-    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningFlagOnly)
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningFlagOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_maxErrorId)
 
 #define COMMON_TEST_NEG_CLRDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullDiagnostic); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_invalidStatusCode); \
-    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_successType)
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_successType); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId)
 
 #define COMMON_TEST_CLRDIAGNOSTIC() \
     COMMON_TEST_POS_CLRDIAGNOSTIC(); \
@@ -434,6 +443,17 @@ void test_pos_common_overflow_retryCnt(void);
 void test_pos_common_irqResponseCallback_validCall(void);
 void test_neg_common_irqResponseCallback_nullHandle(void);
 void test_neg_common_irqResponseCallback_nullCallback(void);
+
+/* Boundary Condition Tests */
+void test_pos_common_logStatus_maxErrorId(void);
+void test_pos_common_logStatus_maxWarningId(void);
+void test_pos_common_getDiagnostic_maxErrorId(void);
+void test_pos_common_clrDiagnostic_maxErrorId(void);
+void test_neg_common_logStatus_exceedsMaxErrorId(void);
+void test_neg_common_getDiagnostic_exceedsMaxErrorId(void);
+void test_neg_common_getDiagnostic_exceedsMaxWarningId(void);
+void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void);
+void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void);
 
 #ifdef __cplusplus
 }

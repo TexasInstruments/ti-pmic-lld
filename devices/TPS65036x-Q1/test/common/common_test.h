@@ -83,7 +83,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_logStatus_allErrorCodes); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_invalidStatusNullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_successTypeInvalidId); \
-    PLATFORM_RUN_TEST(test_pos_common_logStatus_warningTypeInvalidId)
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_warningTypeInvalidId); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_maxErrorId); \
+    PLATFORM_RUN_TEST(test_pos_common_logStatus_maxWarningId); \
+    PLATFORM_RUN_TEST(test_neg_common_logStatus_exceedsMaxErrorId)
 
 /* ========================================================================================================== */
 /* API-Specific Test Macros - getDiagnostic, getDiagnostics, clrDiagnostic, clrDiagnostics, clrDiagnosticsAll */
@@ -98,6 +101,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningCnt); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningFlag); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_successType); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_maxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_multiple); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_zeroCount); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_exceedsMax); \
@@ -115,6 +121,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_successType); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorFlagOnly); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningFlagOnly); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_maxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_multiple); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullDiagnosticArray); \
@@ -249,6 +258,17 @@ void test_pos_common_getRetryCntOverflow_nullHandle(void);
 void test_pos_common_getRetryCntOverflow_nullOutput(void);
 void test_pos_common_clrRetryCntOverflow_nullHandle(void);
 void test_pos_common_overflow_retryCnt(void);
+
+/* Boundary Condition Tests */
+void test_pos_common_logStatus_maxErrorId(void);
+void test_pos_common_logStatus_maxWarningId(void);
+void test_pos_common_getDiagnostic_maxErrorId(void);
+void test_pos_common_clrDiagnostic_maxErrorId(void);
+void test_neg_common_logStatus_exceedsMaxErrorId(void);
+void test_neg_common_getDiagnostic_exceedsMaxErrorId(void);
+void test_neg_common_getDiagnostic_exceedsMaxWarningId(void);
+void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void);
+void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void);
 
 #ifdef __cplusplus
 }
