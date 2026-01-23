@@ -46,16 +46,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-void pmic_test(void *args);
-
 /* ========================================================================== */
-/*                      Three-Level Test Macro Hierarchy                      */
+/*                     API-Specific Test Macros - init                        */
 /* ========================================================================== */
-
-/* API-Specific Test Macros - Pmic_init */
 #define PMIC_TEST_POS_INIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_init_spiMode); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_validateHandle); \
@@ -107,7 +103,9 @@ void pmic_test(void *args);
     PMIC_TEST_POS_INIT(); \
     PMIC_TEST_NEG_INIT()
 
-/* API-Specific Test Macros - Pmic_deinit */
+/* ========================================================================== */
+/*                     API-Specific Test Macros - deinit                      */
+/* ========================================================================== */
 #define PMIC_TEST_POS_DEINIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_deinit_clearsHandle); \
     PLATFORM_RUN_TEST(test_pos_pmic_deinit_success_comprehensive)
@@ -119,7 +117,9 @@ void pmic_test(void *args);
     PMIC_TEST_POS_DEINIT(); \
     PMIC_TEST_NEG_DEINIT()
 
-/* API-Specific Test Macros - Pmic_checkHandle */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - checkHandle                    */
+/* ========================================================================== */
 #define PMIC_TEST_POS_CHECKHANDLE() \
     PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_validHandle); \
     PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_afterInit); \
@@ -139,7 +139,9 @@ void pmic_test(void *args);
     PMIC_TEST_POS_CHECKHANDLE(); \
     PMIC_TEST_NEG_CHECKHANDLE()
 
-/* Aggregate Test Runners */
+/* ========================================================================== */
+/*                            Aggregate Test Runners                          */
+/* ========================================================================== */
 #define PMIC_TEST_RUN_POSITIVE() \
     PMIC_TEST_POS_INIT(); \
     PMIC_TEST_POS_DEINIT(); \
@@ -153,6 +155,12 @@ void pmic_test(void *args);
 #define PMIC_TEST_RUN_ALL() \
     PMIC_TEST_RUN_POSITIVE(); \
     PMIC_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+void pmic_test(void *args);
 
 /* ========================================================================== */
 /*                       Pmic_init Test Declarations                          */

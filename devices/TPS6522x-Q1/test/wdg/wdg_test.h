@@ -39,12 +39,9 @@
 extern "C" {
 #endif
 
-/**
- * @brief Entry point for watchdog module tests.
- *
- * @param args [IN] Optional arguments (unused).
- */
-void wdg_test(void *args);
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
 
 /* ========================================================================== */
 /*                 API-Specific Test Macros - wdgSetEnableState               */
@@ -250,7 +247,7 @@ void wdg_test(void *args);
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
 
 /* ========================================================================== */
-/*                 API-Specific Test Macros - wdgSetEnDrvSel                  */
+/*               API-Specific Test Macros - Pmic_wdgSetCfg                    */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGSETENDRVSEL() \
@@ -260,7 +257,7 @@ void wdg_test(void *args);
     WDG_TEST_POS_WDGSETENDRVSEL()
 
 /* ========================================================================== */
-/*                 API-Specific Test Macros - wdgGetEnDrvSel                  */
+/*                 API-Specific Test Macros - Pmic_wdgGetCfg                  */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGGETENDRVSEL() \
@@ -307,6 +304,13 @@ void wdg_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+/**
+ * @brief Entry point for watchdog module tests.
+ *
+ * @param args [IN] Optional arguments (unused).
+ */
+void wdg_test(void *args);
 
 /* Negative test functions */
 void test_neg_wdg_wdgSetEnableState_nullHandle(void);

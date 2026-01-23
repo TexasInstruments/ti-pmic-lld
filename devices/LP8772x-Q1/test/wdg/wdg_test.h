@@ -46,16 +46,9 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-
-/* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
-
-void wdg_test(void *args);
 /* ========================================================================== */
 /*                    API-Specific Test Macros - wdgEnable                    */
 /* ========================================================================== */
@@ -275,9 +268,9 @@ void wdg_test(void *args);
     WDG_TEST_POS_WDGQAWRITEANSWER(); \
     WDG_TEST_NEG_WDGQAWRITEANSWER()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - wdgQaSequence Tests                */
-/* ========================================================================== */
+/* ===================================================================================================================================== */
+/* API-Specific Test Macros - Pmic_wdgEnable, Pmic_wdgSetCfg, Pmic_wdgSetPowerHold, Pmic_wdgSetReturnToLongWindow, Pmic_wdgQaWriteAnswer */
+/* ===================================================================================================================================== */
 
 #define WDG_TEST_POS_WDGQASEQUENCE() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaSequence_noErrors); \
@@ -293,9 +286,9 @@ void wdg_test(void *args);
 #define WDG_TEST_WDGQASEQUENCE() \
     WDG_TEST_POS_WDGQASEQUENCE()
 
-/* ========================================================================== */
-/*           API-Specific Test Macros - LP8772x-Q1 Specific Tests             */
-/* ========================================================================== */
+/* ================================================================================================================================= */
+/* API-Specific Test Macros - wdgGetFdbkRegData, wdgExtractFdbk, wdgGetAnsCntAndQuesRegData, wdgExtractAnsCntAndQues, wdgWriteAnswer */
+/* ================================================================================================================================= */
 
 #define WDG_TEST_POS_LP8772X_SPECIFIC() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFdbkRegData_nullHandle); \
@@ -350,6 +343,8 @@ void wdg_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+void wdg_test(void *args);
 
 /* Negative Test Functions */
 void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void);

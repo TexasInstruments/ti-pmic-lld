@@ -47,7 +47,11 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                API-Specific Test Macros - irqSetCfg/irqGetCfg             */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - irqSetCfg                    */
 /* ========================================================================== */
 
 #define IRQ_TEST_POS_IRQSETCFG() \
@@ -117,6 +121,10 @@ extern "C" {
     IRQ_TEST_POS_IRQSETCFG(); \
     IRQ_TEST_NEG_IRQSETCFG()
 
+/* ========================================================================== */
+/*                    API-Specific Test Macros - irqGetCfg                    */
+/* ========================================================================== */
+
 #define IRQ_TEST_POS_IRQGETCFG() \
     /* Positive tests for irqGetCfg are combined with irqSetCfg tests */
 
@@ -131,7 +139,7 @@ extern "C" {
     IRQ_TEST_NEG_IRQGETCFG()
 
 /* ========================================================================== */
-/*               API-Specific Test Macros - irqSetCfgs/irqGetCfgs            */
+/*                 API-Specific Test Macros - irqSetCfgs                      */
 /* ========================================================================== */
 
 #define IRQ_TEST_POS_IRQSETCFGS() \
@@ -147,6 +155,10 @@ extern "C" {
 #define IRQ_TEST_IRQSETCFGS() \
     IRQ_TEST_POS_IRQSETCFGS(); \
     IRQ_TEST_NEG_IRQSETCFGS()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - irqGetCfgs                       */
+/* ========================================================================== */
 
 #define IRQ_TEST_POS_IRQGETCFGS() \
     /* Positive tests for irqGetCfgs are combined with irqSetCfgs tests */

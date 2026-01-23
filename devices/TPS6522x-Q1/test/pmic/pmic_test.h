@@ -46,16 +46,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-void pmic_test(void *args);
-
 /* ========================================================================== */
-/*                        Test Organization Macros                            */
+/*                  API-Specific Test Macros - init                           */
 /* ========================================================================== */
-
-/* Pmic_init Tests */
 #define PMIC_TEST_POS_PMICINIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_validConfig); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_reinit); \
@@ -96,7 +92,9 @@ void pmic_test(void *args);
     PMIC_TEST_POS_PMICINIT(); \
     PMIC_TEST_NEG_PMICINIT()
 
-/* Pmic_deinit Tests */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - deinit                         */
+/* ========================================================================== */
 #define PMIC_TEST_POS_PMICDEINIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicDeinit_afterInit); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicDeinit_success_path)
@@ -108,7 +106,9 @@ void pmic_test(void *args);
     PMIC_TEST_POS_PMICDEINIT(); \
     PMIC_TEST_NEG_PMICDEINIT()
 
-/* Pmic_checkHandle Tests */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - checkHandle                    */
+/* ========================================================================== */
 #define PMIC_TEST_POS_PMICCHECKHANDLE() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicCheckHandle_validHandle); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicCheckHandle_invalidHandle); \
@@ -142,6 +142,8 @@ void pmic_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+void pmic_test(void *args);
 
 /* Negative test functions */
 void test_neg_pmic_pmicInit_nullHandle(void);

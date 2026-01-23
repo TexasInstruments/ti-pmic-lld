@@ -36,16 +36,10 @@
 #define ESM_TEST_H
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/**
- * @brief Entry point for ESM module tests.
- *
- * @param args [IN] Test arguments (unused).
- */
-void esm_test(void *args);
-
+/* ========================================================================== */
 /*                    API-Specific Test Macros - esmClrStatus                 */
 /* ========================================================================== */
 
@@ -224,7 +218,7 @@ void esm_test(void *args);
 /* ========================================================================== */
 
 #define ESM_TEST_POS_ESMSETSTARTSTATE() \
-    /* Positive tests combined with esmGetStartState */
+    /* None */
 
 #define ESM_TEST_NEG_ESMSETSTARTSTATE() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_ioReadFailure); \
@@ -301,6 +295,13 @@ void esm_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+/**
+ * @brief Entry point for ESM module tests.
+ *
+ * @param args [IN] Test arguments (unused).
+ */
+void esm_test(void *args);
 
 /* ========================================================================== */
 /*                  esmClrStatus API Tests                                    */

@@ -36,21 +36,12 @@
 #define ESM_TEST_H
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/**
- * @brief Entry point for ESM module tests.
- *
- * @param args [IN] Test arguments (unused).
- */
-void esm_test(void *args);
-
 /* ========================================================================== */
-/*                         Test Execution Macros                              */
+/*          API-Specific Test Macros - esmSetEnableState, esmGetEnableState   */
 /* ========================================================================== */
-
-/* Pmic_esmSetEnableState / Pmic_esmGetEnableState Tests */
 #define ESM_TEST_POS_SETENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_esm_setGetEnableState)
 
@@ -63,7 +54,9 @@ void esm_test(void *args);
     ESM_TEST_POS_SETENABLESTATE(); \
     ESM_TEST_NEG_SETENABLESTATE()
 
-/* Pmic_esmSetStartState / Pmic_esmGetStartState Tests */
+/* ========================================================================== */
+/*          API-Specific Test Macros - esmSetStartState, esmGetStartState     */
+/* ========================================================================== */
 #define ESM_TEST_POS_SETSTARTSTATE() \
     PLATFORM_RUN_TEST(test_pos_esm_setGetStartState)
 
@@ -76,7 +69,9 @@ void esm_test(void *args);
     ESM_TEST_POS_SETSTARTSTATE(); \
     ESM_TEST_NEG_SETSTARTSTATE()
 
-/* Pmic_esmSetCfg / Pmic_esmGetCfg Tests */
+/* ========================================================================== */
+/*            API-Specific Test Macros - esmSetCfg, esmGetCfg                 */
+/* ========================================================================== */
 #define ESM_TEST_POS_SETCFG() \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_mode); \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_errCntThr); \
@@ -105,7 +100,9 @@ void esm_test(void *args);
     ESM_TEST_POS_SETCFG(); \
     ESM_TEST_NEG_SETCFG()
 
-/* Pmic_esmGetErrCnt Tests */
+/* ========================================================================== */
+/*               API-Specific Test Macros - esmGetErrCnt                      */
+/* ========================================================================== */
 #define ESM_TEST_POS_GETERRCNT() \
     PLATFORM_RUN_TEST(test_pos_esm_getErrCnt)
 
@@ -117,12 +114,16 @@ void esm_test(void *args);
     ESM_TEST_POS_GETERRCNT(); \
     ESM_TEST_NEG_GETERRCNT()
 
-/* Integration Tests */
+/* ========================================================================== */
+/*                         Integration Tests                                  */
+/* ========================================================================== */
 #define ESM_TEST_INTEGRATION() \
     PLATFORM_RUN_TEST(test_pos_esm_completeSequence); \
     PLATFORM_RUN_TEST(test_pos_esm_enableCfgStartSequence)
 
-/* Aggregate Test Macros */
+/* ========================================================================== */
+/*                        Aggregate Test Macros                               */
+/* ========================================================================== */
 #define ESM_TEST_RUN_POSITIVE() \
     ESM_TEST_POS_SETENABLESTATE(); \
     ESM_TEST_POS_SETSTARTSTATE(); \
@@ -146,6 +147,13 @@ void esm_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+/**
+ * @brief Entry point for ESM module tests.
+ *
+ * @param args [IN] Test arguments (unused).
+ */
+void esm_test(void *args);
 
 /* Negative test functions */
 void test_neg_esm_setEnableState_nullHandle(void);

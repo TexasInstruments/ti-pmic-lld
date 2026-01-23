@@ -49,17 +49,11 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                           Function Declarations                            */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/**
- * @brief Run all core tests
- * @param args Test arguments (unused)
- */
-void core_test(void *args);
-
 /* ========================================================================== */
-/*        API-Specific Test Macros - setScratchPadValue/getScratchPadValue   */
+/*                API-Specific Test Macros - setScratchPadValue               */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_SETSCRATCHPADVALUE() \
@@ -72,6 +66,10 @@ void core_test(void *args);
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - getScratchPadValue               */
+/* ========================================================================== */
 
 #define CORE_TEST_POS_GETSCRATCHPADVALUE() \
     /* Positive tests for getScratchPadValue are combined with setScratchPadValue tests */
@@ -86,7 +84,7 @@ void core_test(void *args);
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - setRegLockState/getRegLockState       */
+/*                API-Specific Test Macros - setRegLockState                  */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_SETREGLOCKSTATE() \
@@ -98,6 +96,10 @@ void core_test(void *args);
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - getRegLockState                  */
+/* ========================================================================== */
 
 #define CORE_TEST_POS_GETREGLOCKSTATE() \
     /* Positive tests for getRegLockState are combined with setRegLockState tests */
@@ -111,7 +113,7 @@ void core_test(void *args);
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - setCntLockState/getCntLockState       */
+/*                  API-Specific Test Macros - setCntLockState                */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_SETCNTLOCKSTATE() \
@@ -125,6 +127,10 @@ void core_test(void *args);
     CORE_TEST_POS_SETCNTLOCKSTATE(); \
     CORE_TEST_NEG_SETCNTLOCKSTATE()
 
+/* ========================================================================== */
+/*                  API-Specific Test Macros - getCntLockState                */
+/* ========================================================================== */
+
 #define CORE_TEST_POS_GETCNTLOCKSTATE() \
     /* Positive tests for getCntLockState are combined with setCntLockState tests */
 
@@ -137,7 +143,7 @@ void core_test(void *args);
     CORE_TEST_NEG_GETCNTLOCKSTATE()
 
 /* ========================================================================== */
-/*               API-Specific Test Macros - setLockCfg/getLockCfg            */
+/*                  API-Specific Test Macros - setLockCfg                     */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_SETLOCKCFG() \
@@ -150,6 +156,10 @@ void core_test(void *args);
 #define CORE_TEST_SETLOCKCFG() \
     CORE_TEST_POS_SETLOCKCFG(); \
     CORE_TEST_NEG_SETLOCKCFG()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - getLockCfg                     */
+/* ========================================================================== */
 
 #define CORE_TEST_POS_GETLOCKCFG() \
     /* Positive tests for getLockCfg are combined with setLockCfg tests */
@@ -208,7 +218,7 @@ void core_test(void *args);
     CORE_TEST_NEG_GETCOMMONSTAT()
 
 /* ========================================================================== */
-/*         API-Specific Test Macros - diagSetOutCtrlCfg/diagGetOutCtrlCfg    */
+/*               API-Specific Test Macros - diagSetOutCtrlCfg                 */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_DIAGSETOUTCTRLCFG() \
@@ -220,6 +230,10 @@ void core_test(void *args);
 #define CORE_TEST_DIAGSETOUTCTRLCFG() \
     CORE_TEST_POS_DIAGSETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGSETOUTCTRLCFG()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - diagGetOutCtrlCfg                 */
+/* ========================================================================== */
 
 #define CORE_TEST_POS_DIAGGETOUTCTRLCFG() \
     /* Positive tests for diagGetOutCtrlCfg are combined with diagSetOutCtrlCfg tests */
@@ -233,7 +247,7 @@ void core_test(void *args);
     CORE_TEST_NEG_DIAGGETOUTCTRLCFG()
 
 /* ========================================================================== */
-/*            API-Specific Test Macros - diagSetAmuxCfg/diagGetAmuxCfg       */
+/*                  API-Specific Test Macros - diagSetAmuxCfg                 */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_DIAGSETAMUXCFG() \
@@ -247,6 +261,10 @@ void core_test(void *args);
     CORE_TEST_POS_DIAGSETAMUXCFG(); \
     CORE_TEST_NEG_DIAGSETAMUXCFG()
 
+/* ========================================================================== */
+/*                  API-Specific Test Macros - diagGetAmuxCfg                 */
+/* ========================================================================== */
+
 #define CORE_TEST_POS_DIAGGETAMUXCFG() \
     /* Positive tests for diagGetAmuxCfg are combined with diagSetAmuxCfg tests */
 
@@ -259,7 +277,7 @@ void core_test(void *args);
     CORE_TEST_NEG_DIAGGETAMUXCFG()
 
 /* ========================================================================== */
-/*            API-Specific Test Macros - diagSetDmuxCfg/diagGetDmuxCfg       */
+/*                  API-Specific Test Macros - diagSetDmuxCfg                 */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_DIAGSETDMUXCFG() \
@@ -272,6 +290,10 @@ void core_test(void *args);
 #define CORE_TEST_DIAGSETDMUXCFG() \
     CORE_TEST_POS_DIAGSETDMUXCFG(); \
     CORE_TEST_NEG_DIAGSETDMUXCFG()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - diagGetDmuxCfg                 */
+/* ========================================================================== */
 
 #define CORE_TEST_POS_DIAGGETDMUXCFG() \
     /* Positive tests for diagGetDmuxCfg are combined with diagSetDmuxCfg tests */
@@ -329,6 +351,16 @@ void core_test(void *args);
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
     CORE_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
+/*                           Function Declarations                            */
+/* ========================================================================== */
+
+/**
+ * @brief Run all core tests
+ * @param args Test arguments (unused)
+ */
+void core_test(void *args);
 
 /* ========================================================================== */
 /*                Negative Tests - setScratchPadValue                         */

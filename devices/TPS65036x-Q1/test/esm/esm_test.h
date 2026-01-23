@@ -50,14 +50,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                           Macro Definitions                                */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*                  Pmic_esmSetCfg / Pmic_esmGetCfg                           */
+/*            API-Specific Test Macros - esmSetCfg, esmGetCfg                 */
 /* ========================================================================== */
-
-/* Positive tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
 #define ESM_TEST_POS_ESMSETGETCFG() \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_enable); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_level); \
@@ -70,7 +68,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_lmax); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_lmin)
 
-/* Negative tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
 #define ESM_TEST_NEG_ESMSETGETCFG() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullEsmCfg); \
@@ -81,23 +78,19 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullEsmCfg); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams)
 
-/* All tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
 #define ESM_TEST_ESMSETGETCFG() \
     ESM_TEST_NEG_ESMSETGETCFG(); \
     ESM_TEST_POS_ESMSETGETCFG()
 
 /* ========================================================================== */
-/*              Pmic_esmStart / Pmic_esmStop / Start State                    */
+/*       API-Specific Test Macros - esmStart, esmStop, esmGetStartState       */
 /* ========================================================================== */
-
-/* Positive tests for Pmic_esmStart / Pmic_esmStop */
 #define ESM_TEST_POS_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStart); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState)
 
-/* Negative tests for Pmic_esmStart / Pmic_esmStop */
 #define ESM_TEST_NEG_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmStart_nullHandle); \
@@ -105,21 +98,17 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullStarted)
 
-/* All tests for Pmic_esmStart / Pmic_esmStop */
 #define ESM_TEST_ESMSTARTSTOP() \
     ESM_TEST_NEG_ESMSTARTSTOP(); \
     ESM_TEST_POS_ESMSTARTSTOP()
 
 /* ========================================================================== */
-/*              Pmic_esmGetStatus / Pmic_esmClrStatus                         */
+/*            API-Specific Test Macros - esmGetStatus, esmClrStatus           */
 /* ========================================================================== */
-
-/* Positive tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
 #define ESM_TEST_POS_ESMSTATUS() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus); \
     PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus)
 
-/* Negative tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
 #define ESM_TEST_NEG_ESMSTATUS() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullEsmStat); \
@@ -130,25 +119,20 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_zero); \
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds)
 
-/* All tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
 #define ESM_TEST_ESMSTATUS() \
     ESM_TEST_NEG_ESMSTATUS(); \
     ESM_TEST_POS_ESMSTATUS()
 
 /* ========================================================================== */
-/*                      Pmic_esmGetErrCnt                                     */
+/*                 API-Specific Test Macros - esmGetErrCnt                    */
 /* ========================================================================== */
-
-/* Positive tests for Pmic_esmGetErrCnt */
 #define ESM_TEST_POS_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt)
 
-/* Negative tests for Pmic_esmGetErrCnt */
 #define ESM_TEST_NEG_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullErrCnt)
 
-/* All tests for Pmic_esmGetErrCnt */
 #define ESM_TEST_ESMGETERRCNT() \
     ESM_TEST_NEG_ESMGETERRCNT(); \
     ESM_TEST_POS_ESMGETERRCNT()

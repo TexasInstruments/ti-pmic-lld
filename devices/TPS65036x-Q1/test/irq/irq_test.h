@@ -46,14 +46,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                           Macro Definitions                                */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*             irqSetMask / irqSetMasks / irqGetMask API Tests                */
-/* ========================================================================== */
-
-/* Positive tests for irqSetMask / irqSetMasks / irqGetMask */
+/* =========================================================================================== */
+/*         API-Specific Test Macros - irqSetMask, irqSetMasks, irqGetMask, irqGetMasks         */
+/* =========================================================================================== */
 #define IRQ_TEST_POS_IRQSETGETMASK() \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK2_OVP_INT); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_BUCK2_UV_INT); \
@@ -84,7 +82,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_ESM_MCU_PIN_INT); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_all)
 
-/* Negative tests for irqSetMask / irqSetMasks / irqGetMask */
 #define IRQ_TEST_NEG_IRQSETGETMASK() \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_outOfBounds_irqNum); \
@@ -114,16 +111,13 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_numMasks_exceeds_max); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_numMasks_exceeds_max)
 
-/* All tests for irqSetMask / irqSetMasks / irqGetMask */
 #define IRQ_TEST_IRQSETGETMASK() \
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_NEG_IRQSETGETMASK()
 
 /* ========================================================================== */
-/*                      irqGetStatus API Tests                                */
+/*                 API-Specific Test Macros - irqGetStatus                    */
 /* ========================================================================== */
-
-/* Positive tests for irqGetStatus */
 #define IRQ_TEST_POS_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_noFlags); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_singleFlag_L0); \
@@ -146,21 +140,17 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_full_hierarchy_cascade); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_all_L2_interrupts)
 
-/* Negative tests for irqGetStatus */
 #define IRQ_TEST_NEG_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_irqStat)
 
-/* All tests for irqGetStatus */
 #define IRQ_TEST_IRQGETSTATUS() \
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
 
 /* ========================================================================== */
-/*                     irqGetNextFlag API Tests                               */
+/*                 API-Specific Test Macros - irqGetNextFlag                  */
 /* ========================================================================== */
-
-/* Positive tests for irqGetNextFlag */
 #define IRQ_TEST_POS_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_singleFlag); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlags); \
@@ -169,62 +159,51 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_emptyIntrStat); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_mixed_L1_L2)
 
-/* Negative tests for irqGetNextFlag */
 #define IRQ_TEST_NEG_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqNum)
 
-/* All tests for irqGetNextFlag */
 #define IRQ_TEST_IRQGETNEXTFLAG() \
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
 
 /* ========================================================================== */
-/*                       irqGetFlag API Tests                                 */
+/*                 API-Specific Test Macros - irqGetFlag                      */
 /* ========================================================================== */
-
-/* Positive tests for irqGetFlag */
 #define IRQ_TEST_POS_IRQGETFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetFlag_flagSet); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetFlag_flagClear)
 
-/* Negative tests for irqGetFlag */
 #define IRQ_TEST_NEG_IRQGETFLAG() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_outOfBounds_irqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_flag)
 
-/* All tests for irqGetFlag */
 #define IRQ_TEST_IRQGETFLAG() \
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
 
 /* ========================================================================== */
-/*                 irqClrFlag / irqClrAllFlags API Tests                      */
+/*          API-Specific Test Macros - irqClrAllFlags, irqClrFlag             */
 /* ========================================================================== */
-
-/* Positive tests for irqClrFlag / irqClrAllFlags */
 #define IRQ_TEST_POS_IRQCLRFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers)
 
-/* Negative tests for irqClrFlag / irqClrAllFlags */
 #define IRQ_TEST_NEG_IRQCLRFLAG() \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_outOfBounds_irqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
 
-/* All tests for irqClrFlag / irqClrAllFlags */
 #define IRQ_TEST_IRQCLRFLAG() \
     IRQ_TEST_POS_IRQCLRFLAG(); \
     IRQ_TEST_NEG_IRQCLRFLAG()
 
-/* ========================================================================== */
-/*                       Integration Tests                                    */
-/* ========================================================================== */
+/* ======================================================================================================================== */
+/* API-Specific Test Macros - Pmic_irqClrAllFlags, Pmic_irqSetMask, Pmic_irqGetStatus, Pmic_irqGetNextFlag, Pmic_irqClrFlag */
+/* ======================================================================================================================== */
 
-/* Integration tests */
 #define IRQ_TEST_IRQINTEGRATION() \
     PLATFORM_RUN_TEST(test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear); \
     PLATFORM_RUN_TEST(test_pos_irq_irqMultipleSimultaneous_allRegisters)

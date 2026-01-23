@@ -445,9 +445,9 @@ extern "C" {
 #define POWER_TEST_PWRGETSEQUENCECFGS() \
     POWER_TEST_NEG_PWRGETSEQUENCECFGS()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - Coverage                     */
-/* ========================================================================== */
+/* =========================================================================================================================== */
+/* API-Specific Test Macros - Pmic_pwrSetResourceCfg, Pmic_pwrGetResourceCfg, Pmic_pwrSetResourceCfgs, Pmic_pwrGetResourceCfgs */
+/* =========================================================================================================================== */
 
 #define POWER_TEST_POS_COVERAGE() \
     PLATFORM_RUN_TEST(test_pos_power_powerGetPgoodLevel_validBuck); \

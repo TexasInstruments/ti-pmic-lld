@@ -52,7 +52,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - gpioSetCfg                             */
+/*                   API-Specific Test Macros - gpioSetCfg                    */
 /* ========================================================================== */
 
 #define GPIO_TEST_POS_GPIOSETCFG() \
@@ -110,7 +110,7 @@ extern "C" {
     GPIO_TEST_NEG_GPIOSETCFG()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - gpioGetCfg                             */
+/*                API-Specific Test Macros - gpioGetCfg                       */
 /* ========================================================================== */
 
 #define GPIO_TEST_POS_GPIOGETCFG() \

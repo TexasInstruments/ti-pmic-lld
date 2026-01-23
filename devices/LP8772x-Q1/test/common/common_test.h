@@ -52,9 +52,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - criticalSectionStart/Stop            */
-/* ========================================================================== */
+/* ============================================================================== */
+/* API-Specific Test Macros - Pmic_criticalSectionStart, Pmic_criticalSectionStop */
+/* ============================================================================== */
 
 #define COMMON_TEST_POS_CRITICALSECTION() \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_communication); \
@@ -208,9 +208,9 @@ extern "C" {
     COMMON_TEST_POS_CLRDIAGNOSTICSALL(); \
     COMMON_TEST_NEG_CLRDIAGNOSTICSALL()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - Diagnostic Overflow                */
-/* ========================================================================== */
+/* ========================================================================================= */
+/* API-Specific Test Macros - Pmic_getDiagnostic, Pmic_getRetryCnt, Pmic_getRetryCntOverflow */
+/* ========================================================================================= */
 
 #define COMMON_TEST_POS_OVERFLOW() \
     PLATFORM_RUN_TEST(test_pos_common_overflow_errorCnt); \

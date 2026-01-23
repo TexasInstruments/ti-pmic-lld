@@ -39,19 +39,12 @@
 extern "C" {
 #endif
 
-/**
- * @brief Execute all power module tests.
- *
- * @param args [IN] Unused parameter.
- */
-void power_test(void *args);
-
 /* ========================================================================== */
-/*                         Test Execution Macros                              */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetBuckCfg / Pmic_pwrGetBuckCfg    */
+/*          API-Specific Test Macros - pwrSetBuckCfg, pwrGetBuckCfg           */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_SETGETBUCKCFG() \
@@ -76,8 +69,12 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_buck1_grpSel); \
     PLATFORM_RUN_TEST(test_pos_power_buck_combinedConfig)
 
+#define POWER_TEST_SETGETBUCKCFG() \
+    POWER_TEST_NEG_SETGETBUCKCFG(); \
+    POWER_TEST_POS_SETGETBUCKCFG()
+
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetLdoCfg / Pmic_pwrGetLdoCfg      */
+/*         API-Specific Test Macros - pwrSetLdoCfg, pwrGetLdoCfg              */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_SETGETLDOCFG() \
@@ -101,8 +98,12 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
     PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig)
 
+#define POWER_TEST_SETGETLDOCFG() \
+    POWER_TEST_NEG_SETGETLDOCFG(); \
+    POWER_TEST_POS_SETGETLDOCFG()
+
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetVccaVmonCfg / Pmic_pwrGetVccaVmonCfg */
+/*      API-Specific Test Macros - pwrSetVccaVmonCfg, pwrGetVccaVmonCfg       */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_SETGETVCCAVMONCFG() \
@@ -130,8 +131,12 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_vmon2_enableDisable); \
     PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig)
 
+#define POWER_TEST_SETGETVCCAVMONCFG() \
+    POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
+    POWER_TEST_POS_SETGETVCCAVMONCFG()
+
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetGlobalVmonDegl                  */
+/*            API-Specific Test Macros - pwrSetGlobalVmonDegl                 */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_SETGLOBALVMONDEGL() \
@@ -141,8 +146,12 @@ void power_test(void *args);
 #define POWER_TEST_POS_SETGLOBALVMONDEGL() \
     PLATFORM_RUN_TEST(test_pos_power_globalVmonDegl_allValues)
 
+#define POWER_TEST_SETGLOBALVMONDEGL() \
+    POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
+    POWER_TEST_POS_SETGLOBALVMONDEGL()
+
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetThermalCfg / Pmic_pwrGetThermalCfg */
+/*       API-Specific Test Macros - pwrSetThermalCfg, pwrGetThermalCfg        */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_SETGETTHERMALCFG() \
@@ -160,9 +169,13 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_thermal_tsdOrdLvl); \
     PLATFORM_RUN_TEST(test_pos_power_thermal_combinedConfig)
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetSpreadSpectrumCfg / Pmic_pwrGetSpreadSpectrumCfg */
-/* ========================================================================== */
+#define POWER_TEST_SETGETTHERMALCFG() \
+    POWER_TEST_NEG_SETGETTHERMALCFG(); \
+    POWER_TEST_POS_SETGETTHERMALCFG()
+
+/* ============================================================================ */
+/* API-Specific Test Macros - pwrSetSpreadSpectrumCfg, pwrGetSpreadSpectrumCfg */
+/* ============================================================================ */
 
 #define POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullHandle); \
@@ -177,8 +190,12 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_depth); \
     PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_combinedConfig)
 
+#define POWER_TEST_SETGETSPREADSPECTRUMCFG() \
+    POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
+    POWER_TEST_POS_SETGETSPREADSPECTRUMCFG()
+
 /* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrGetRsrcStatus                      */
+/*          API-Specific Test Macros - Pmic_pwrGetRsrcStatus                  */
 /* ========================================================================== */
 
 #define POWER_TEST_NEG_GETRSRCSTATUS() \
@@ -191,8 +208,12 @@ void power_test(void *args);
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_ldoUVOV); \
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV)
 
+#define POWER_TEST_GETRSRCSTATUS() \
+    POWER_TEST_NEG_GETRSRCSTATUS(); \
+    POWER_TEST_POS_GETRSRCSTATUS()
+
 /* ========================================================================== */
-/*     Property Tests (BUILD_MOCK)                                           */
+/*                     Property Tests (BUILD_MOCK)                            */
 /* ========================================================================== */
 
 #ifdef BUILD_MOCK
@@ -204,7 +225,7 @@ void power_test(void *args);
 #endif
 
 /* ========================================================================== */
-/*     Combined Test Macros                                                  */
+/*                          Aggregate Test Macros                             */
 /* ========================================================================== */
 
 #define POWER_TEST_RUN_POSITIVE() \
@@ -246,6 +267,13 @@ void power_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+/**
+ * @brief Execute all power module tests.
+ *
+ * @param args [IN] Unused parameter.
+ */
+void power_test(void *args);
 
 /* Negative test functions */
 void test_neg_power_setBuckCfg_nullHandle(void);

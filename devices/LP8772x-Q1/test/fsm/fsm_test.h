@@ -46,10 +46,9 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-void fsm_test(void *args);
 /* ========================================================================== */
 /*               API-Specific Test Macros - fsmClrRecovCnt                    */
 /* ========================================================================== */
@@ -199,6 +198,8 @@ void fsm_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+void fsm_test(void *args);
 
 void test_neg_fsm_fsmClrRecovCnt_nullHandle(void);
 void test_neg_fsm_fsmClrResetCnt_nullHandle(void);

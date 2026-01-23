@@ -35,13 +35,13 @@
 #ifndef IRQ_TEST_H
 #define IRQ_TEST_H
 
-void irq_test(void *args);
-
 /* ========================================================================== */
-/*                         Test Execution Macros                              */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Pmic_irqSetMask / Pmic_irqSetMasks / Pmic_irqGetMask Tests */
+/* =============================================================================== */
+/*        API-Specific Test Macros - irqSetMask, irqSetMasks, irqGetMask           */
+/* =============================================================================== */
 #define IRQ_TEST_POS_IRQSETGETMASK() \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_single); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetMasks_multiple); \
@@ -75,7 +75,9 @@ void irq_test(void *args);
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_NEG_IRQSETGETMASK()
 
-/* Pmic_irqGetStatus Tests */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - irqGetStatus                   */
+/* ========================================================================== */
 #define IRQ_TEST_POS_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_read); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_withActiveFlags); \
@@ -89,7 +91,9 @@ void irq_test(void *args);
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
 
-/* Pmic_irqGetNextFlag Tests */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - irqGetNextFlag                 */
+/* ========================================================================== */
 #define IRQ_TEST_POS_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_iteration); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlags); \
@@ -104,7 +108,9 @@ void irq_test(void *args);
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
 
-/* Pmic_irqGetFlag Tests */
+/* ========================================================================== */
+/*                  API-Specific Test Macros - irqGetFlag                     */
+/* ========================================================================== */
 #define IRQ_TEST_POS_IRQGETFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetClrFlag_single)
 
@@ -118,7 +124,9 @@ void irq_test(void *args);
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
 
-/* Pmic_irqClrFlag / Pmic_irqClrAllFlags Tests */
+/* ================================================================================ */
+/*                  API-Specific Test Macros - irqClrFlag, irqClrAllFlags           */
+/* ================================================================================ */
 #define IRQ_TEST_POS_IRQCLRFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags)
 
@@ -132,7 +140,9 @@ void irq_test(void *args);
     IRQ_TEST_POS_IRQCLRFLAG(); \
     IRQ_TEST_NEG_IRQCLRFLAG()
 
-/* Aggregate Test Macros */
+/* ========================================================================== */
+/*                          Aggregate Test Macros                             */
+/* ========================================================================== */
 #define IRQ_TEST_RUN_POSITIVE() \
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_POS_IRQGETSTATUS(); \
@@ -157,6 +167,8 @@ void irq_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+void irq_test(void *args);
 
 /* Negative test functions */
 void test_neg_irq_irqSetMask_nullHandle(void);

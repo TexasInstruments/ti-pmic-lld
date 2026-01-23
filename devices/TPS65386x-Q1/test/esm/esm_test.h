@@ -124,7 +124,7 @@ extern "C" {
     ESM_TEST_NEG_ESMGETCFG()
 
 /* ========================================================================== */
-/*              API-Specific Test Macros - esmSetEnableState                  */
+/*              API-Specific Test Macros - Pmic_esmSetStartState              */
 /* ========================================================================== */
 
 #define ESM_TEST_POS_ESMSETENABLESTATE() \
@@ -138,7 +138,7 @@ extern "C" {
     ESM_TEST_NEG_ESMSETENABLESTATE()
 
 /* ========================================================================== */
-/*              API-Specific Test Macros - esmGetEnableState                  */
+/*              API-Specific Test Macros - Pmic_esmGetStartState              */
 /* ========================================================================== */
 
 #define ESM_TEST_POS_ESMGETENABLESTATE() \

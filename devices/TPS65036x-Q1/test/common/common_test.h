@@ -52,20 +52,26 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* Critical Section Tests */
+/* ============================================================================== */
+/*      API-Specific Test Macros - criticalSectionStart, criticalSectionStop      */
+/* ============================================================================== */
 #define COMMON_TEST_RUN_CRITICAL_SECTION() \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_nullCallback); \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_communication); \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_diagnostic)
 
-/* Timer Tests */
+/* ========================================================================== */
+/*                 API-Specific Test Macros - timerWaitMs                     */
+/* ========================================================================== */
 #define COMMON_TEST_RUN_TIMER() \
     PLATFORM_RUN_TEST(test_pos_common_timerWait_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_timerWait_nullCallback); \
     PLATFORM_RUN_TEST(test_pos_common_timerWait_validCall)
 
-/* Pmic_logStatus Tests */
+/* ========================================================================== */
+/*                 API-Specific Test Macros - logStatus                       */
+/* ========================================================================== */
 #define COMMON_TEST_RUN_LOG_STATUS() \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_success); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_nullHandle); \
@@ -79,7 +85,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_logStatus_successTypeInvalidId); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_warningTypeInvalidId)
 
-/* Diagnostic Get/Clear Tests */
+/* ========================================================================================================== */
+/* API-Specific Test Macros - getDiagnostic, getDiagnostics, clrDiagnostic, clrDiagnostics, clrDiagnosticsAll */
+/* ========================================================================================================== */
 #define COMMON_TEST_RUN_DIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullDiagnostic); \
@@ -125,7 +133,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_warningCntOnly); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_warningFlagOnly)
 
-/* Retry Counter Tests */
+/* ================================================================================================================== */
+/* API-Specific Test Macros - getRetryCnt, incrementRetryCnt, clearRetryCnt, getRetryCntOverflow, clrRetryCntOverflow */
+/* ================================================================================================================== */
 #define COMMON_TEST_RUN_RETRY_CNT() \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullOutput); \
@@ -140,7 +150,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCntOverflow_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)
 
-/* Run all common tests */
+/* ========================================================================== */
+/*                           Aggregate Test Runners                           */
+/* ========================================================================== */
 #define COMMON_TEST_RUN_ALL() \
     COMMON_TEST_RUN_CRITICAL_SECTION(); \
     COMMON_TEST_RUN_TIMER(); \

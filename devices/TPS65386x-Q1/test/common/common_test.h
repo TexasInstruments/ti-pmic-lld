@@ -52,9 +52,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - criticalSection                        */
-/* ========================================================================== */
+/* ============================================================================== */
+/* API-Specific Test Macros - Pmic_criticalSectionStart, Pmic_criticalSectionStop */
+/* ============================================================================== */
 
 #define COMMON_TEST_POS_CRITICALSECTION() \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_communication); \
@@ -69,7 +69,7 @@ extern "C" {
     COMMON_TEST_NEG_CRITICALSECTION()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - timerWait                              */
+/*            API-Specific Test Macros - Pmic_timerWaitMs                     */
 /* ========================================================================== */
 
 #define COMMON_TEST_POS_TIMERWAIT() \
@@ -84,7 +84,7 @@ extern "C" {
     COMMON_TEST_NEG_TIMERWAIT()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - logStatus                              */
+/*                 API-Specific Test Macros - logStatus                       */
 /* ========================================================================== */
 
 #define COMMON_TEST_POS_LOGSTATUS() \
@@ -107,7 +107,7 @@ extern "C" {
     COMMON_TEST_NEG_LOGSTATUS()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - getDiagnostic                          */
+/*          API-Specific Test Macros - getDiagnostic, getDiagnostics          */
 /* ========================================================================== */
 
 #define COMMON_TEST_POS_GETDIAGNOSTIC() \
@@ -137,9 +137,9 @@ extern "C" {
     COMMON_TEST_POS_GETDIAGNOSTIC(); \
     COMMON_TEST_NEG_GETDIAGNOSTIC()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - clrDiagnostic                          */
-/* ========================================================================== */
+/* =========================================================================== */
+/* API-Specific Test Macros - clrDiagnostic, clrDiagnostics, clrDiagnosticsAll */
+/* =========================================================================== */
 
 #define COMMON_TEST_POS_CLRDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorCnt); \

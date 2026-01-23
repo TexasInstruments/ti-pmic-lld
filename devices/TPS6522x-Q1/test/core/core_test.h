@@ -46,16 +46,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-void core_test(void *args);
-
 /* ========================================================================== */
-/*                        Test Organization Macros                            */
+/*             API-Specific Test Macros - getSiliconRev                       */
 /* ========================================================================== */
-
-/* getSiliconRev API */
 #define CORE_TEST_POS_COREGETSILREV() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetSilRev)
 
@@ -67,7 +63,9 @@ void core_test(void *args);
     CORE_TEST_POS_COREGETSILREV(); \
     CORE_TEST_NEG_COREGETSILREV()
 
-/* getNvmRev API */
+/* ========================================================================== */
+/*               API-Specific Test Macros - getNvmRev                         */
+/* ========================================================================== */
 #define CORE_TEST_POS_COREGETNVMREV() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetNvmRev)
 
@@ -79,7 +77,9 @@ void core_test(void *args);
     CORE_TEST_POS_COREGETNVMREV(); \
     CORE_TEST_NEG_COREGETNVMREV()
 
-/* getRegLockState API */
+/* ========================================================================== */
+/*           API-Specific Test Macros - getRegLockState                       */
+/* ========================================================================== */
 #define CORE_TEST_POS_COREGETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetRegLockState)
 
@@ -91,7 +91,9 @@ void core_test(void *args);
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_COREGETREGLOCKSTATE()
 
-/* setScratchPadValue API */
+/* ========================================================================== */
+/*           API-Specific Test Macros - setScratchPadValue                    */
+/* ========================================================================== */
 #define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg1); \
     PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg3); \
@@ -105,7 +107,9 @@ void core_test(void *args);
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE()
 
-/* getScratchPadValue API */
+/* ========================================================================== */
+/*          API-Specific Test Macros - getScratchPadValue                     */
+/* ========================================================================== */
 #define CORE_TEST_POS_COREGETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg2); \
     PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg4)
@@ -143,6 +147,8 @@ void core_test(void *args);
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+void core_test(void *args);
 
 /* Negative test functions */
 void test_neg_core_coreGetSilRev_nullParam_handle(void);
