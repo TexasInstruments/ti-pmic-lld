@@ -82,15 +82,15 @@ extern "C" {
  * @{
  */
 #define PMIC_FSM_ERR_INT_SHIFT              ((uint8_t)7U)
-#define PMIC_FSM_ERR_INT_MASK               ((uint8_t)1U << PMIC_FSM_ERR_INT_SHIFT)
+#define PMIC_FSM_ERR_INT_MASK               ((uint8_t)1UL << PMIC_FSM_ERR_INT_SHIFT)
 #define PMIC_SEVERE_ERR_INT_SHIFT           ((uint8_t)6U)
-#define PMIC_SEVERE_ERR_INT_MASK            ((uint8_t)1U << PMIC_SEVERE_ERR_INT_SHIFT)
+#define PMIC_SEVERE_ERR_INT_MASK            ((uint8_t)1UL << PMIC_SEVERE_ERR_INT_SHIFT)
 #define PMIC_MODERATE_ERR_INT_SHIFT         ((uint8_t)5U)
-#define PMIC_MODERATE_ERR_INT_MASK          ((uint8_t)1U << PMIC_MODERATE_ERR_INT_SHIFT)
+#define PMIC_MODERATE_ERR_INT_MASK          ((uint8_t)1UL << PMIC_MODERATE_ERR_INT_SHIFT)
 #define PMIC_MISC_INT_SHIFT                 ((uint8_t)4U)
-#define PMIC_MISC_INT_MASK                  ((uint8_t)1U << PMIC_MISC_INT_SHIFT)
+#define PMIC_MISC_INT_MASK                  ((uint8_t)1UL << PMIC_MISC_INT_SHIFT)
 #define PMIC_BUCK_LDO_INT_SHIFT             ((uint8_t)0U)
-#define PMIC_BUCK_LDO_INT_MASK              ((uint8_t)1U << PMIC_BUCK_LDO_INT_SHIFT)
+#define PMIC_BUCK_LDO_INT_MASK              ((uint8_t)1UL << PMIC_BUCK_LDO_INT_SHIFT)
 /** @} */
 
 /**

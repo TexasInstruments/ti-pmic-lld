@@ -451,13 +451,13 @@ void test_pos_io_ioUpdateByte_singleBitField(void)
 
     /* Modify single bit (bit 0) */
     status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
-                               IO_TEST_BIT_POS_0, (1U << IO_TEST_BIT_POS_0), 1U);
+                               IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify modification */
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    expectedValue = initialValue | (1U << IO_TEST_BIT_POS_0);
+    expectedValue = initialValue | (1UL << IO_TEST_BIT_POS_0);
     PLATFORM_ASSERT(readData == expectedValue);
 }
 
@@ -503,7 +503,7 @@ void test_pos_io_ioUpdateByte_b_setBit(void)
     /* Verify bit is set */
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readData & (1U << IO_TEST_BIT_POS_4)) != 0U);
+    PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) != 0U);
 }
 
 void test_pos_io_ioUpdateByte_b_clearBit(void)
@@ -524,7 +524,7 @@ void test_pos_io_ioUpdateByte_b_clearBit(void)
     /* Verify bit is cleared */
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readData & (1U << IO_TEST_BIT_POS_4)) == 0U);
+    PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) == 0U);
 }
 
 void test_pos_io_ioUpdateByte_CS_singleBitField(void)
@@ -540,13 +540,13 @@ void test_pos_io_ioUpdateByte_CS_singleBitField(void)
 
     /* Modify bit field with critical section */
     status = Pmic_ioUpdateByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG,
-                                  IO_TEST_BIT_POS_0, (1U << IO_TEST_BIT_POS_0), 0U);
+                                  IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 0U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify modification */
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    expectedValue = initialValue & ~(1U << IO_TEST_BIT_POS_0);
+    expectedValue = initialValue & ~(1UL << IO_TEST_BIT_POS_0);
     PLATFORM_ASSERT(readData == expectedValue);
 }
 
@@ -568,7 +568,7 @@ void test_pos_io_ioUpdateByte_bCS_setBit(void)
     /* Verify bit is set */
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readData & (1U << IO_TEST_BIT_POS_4)) != 0U);
+    PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) != 0U);
 }
 
 /* ========================================================================== */
@@ -774,7 +774,7 @@ void test_pos_io_crc_enable_disable_transitions(void)
 
     /* Perform read-modify-write operation to verify CRC during complex operations */
     status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
-                               IO_TEST_BIT_POS_0, (1U << IO_TEST_BIT_POS_0), 1U);
+                               IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify modified value */
@@ -802,7 +802,7 @@ void test_pos_io_crc_enable_disable_transitions(void)
     uint8_t readData4 = 0U;
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData4);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((readData4 & (1U << IO_TEST_BIT_POS_4)) != 0U);
+    PLATFORM_ASSERT((readData4 & (1UL << IO_TEST_BIT_POS_4)) != 0U);
 }
 
 void test_pos_io_ioRxByte_withRetryOnCrcError(void)

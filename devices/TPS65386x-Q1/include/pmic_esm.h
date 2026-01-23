@@ -68,18 +68,18 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_ESM_ENABLE_VALID       (1U << 0U)
-#define PMIC_CFG_ESM_MODE_VALID         (1U << 1U)
-#define PMIC_CFG_ESM_ERR_THR_VALID      (1U << 2U)
-#define PMIC_CFG_ESM_POLARITY_VALID     (1U << 3U)
-#define PMIC_CFG_ESM_DEGLITCH_VALID     (1U << 4U)
-#define PMIC_CFG_ESM_TIME_BASE_VALID    (1U << 5U)
-#define PMIC_CFG_ESM_DELAY1_VALID       (1U << 6U)
-#define PMIC_CFG_ESM_DELAY2_VALID       (1U << 7U)
-#define PMIC_CFG_ESM_HMAX_VALID         (1U << 8U)
-#define PMIC_CFG_ESM_HMIN_VALID         (1U << 9U)
-#define PMIC_CFG_ESM_LMAX_VALID         (1U << 10U)
-#define PMIC_CFG_ESM_LMIN_VALID         (1U << 11U)
+#define PMIC_CFG_ESM_ENABLE_VALID       (1UL << 0U)
+#define PMIC_CFG_ESM_MODE_VALID         (1UL << 1U)
+#define PMIC_CFG_ESM_ERR_THR_VALID      (1UL << 2U)
+#define PMIC_CFG_ESM_POLARITY_VALID     (1UL << 3U)
+#define PMIC_CFG_ESM_DEGLITCH_VALID     (1UL << 4U)
+#define PMIC_CFG_ESM_TIME_BASE_VALID    (1UL << 5U)
+#define PMIC_CFG_ESM_DELAY1_VALID       (1UL << 6U)
+#define PMIC_CFG_ESM_DELAY2_VALID       (1UL << 7U)
+#define PMIC_CFG_ESM_HMAX_VALID         (1UL << 8U)
+#define PMIC_CFG_ESM_HMIN_VALID         (1UL << 9U)
+#define PMIC_CFG_ESM_LMAX_VALID         (1UL << 10U)
+#define PMIC_CFG_ESM_LMIN_VALID         (1UL << 11U)
 /** @} */
 
 
@@ -91,10 +91,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_ERR_VALID          (1U << 0U)
-#define PMIC_ESM_DELAY1_ERR_VALID   (1U << 1U)
-#define PMIC_ESM_DELAY2_ERR_VALID   (1U << 2U)
-#define PMIC_ESM_ERR_CNT_VALID      (1U << 3U)
+#define PMIC_ESM_ERR_VALID          (1UL << 0U)
+#define PMIC_ESM_DELAY1_ERR_VALID   (1UL << 1U)
+#define PMIC_ESM_DELAY2_ERR_VALID   (1UL << 2U)
+#define PMIC_ESM_ERR_CNT_VALID      (1UL << 3U)
 /** @} */
 
 

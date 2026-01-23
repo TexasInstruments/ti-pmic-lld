@@ -81,8 +81,8 @@ extern "C" {
 #define ESM_MCU_MODE_SHIFT       (7U)
 #define ESM_MCU_EN_SHIFT         (6U)
 #define ESM_MCU_ERR_CNT_TH_SHIFT (0U)
-#define ESM_MCU_MODE_MASK        (0x01U << ESM_MCU_MODE_SHIFT)
-#define ESM_MCU_EN_MASK          (0x01U << ESM_MCU_EN_SHIFT)
+#define ESM_MCU_MODE_MASK        (0x01UL << ESM_MCU_MODE_SHIFT)
+#define ESM_MCU_EN_MASK          (0x01UL << ESM_MCU_EN_SHIFT)
 #define ESM_MCU_ERR_CNT_TH_MASK  (0x0FU << ESM_MCU_ERR_CNT_TH_SHIFT)
 
 // ESM_MCU_HMAX_REG

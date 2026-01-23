@@ -146,11 +146,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_FSM_SEVERE_ERR_TRIG_VALID   (1U << 0U)
-#define PMIC_FSM_OTHER_RAIL_TRIG_VALID   (1U << 1U)
-#define PMIC_FSM_SOC_RAIL_TRIG_VALID     (1U << 2U)
-#define PMIC_FSM_MCU_RAIL_TRIG_VALID     (1U << 3U)
-#define PMIC_FSM_MODERATE_ERR_TRIG_VALID (1U << 4U)
+#define PMIC_FSM_SEVERE_ERR_TRIG_VALID   (1UL << 0U)
+#define PMIC_FSM_OTHER_RAIL_TRIG_VALID   (1UL << 1U)
+#define PMIC_FSM_SOC_RAIL_TRIG_VALID     (1UL << 2U)
+#define PMIC_FSM_MCU_RAIL_TRIG_VALID     (1UL << 3U)
+#define PMIC_FSM_MODERATE_ERR_TRIG_VALID (1UL << 4U)
 /** @} */
 
 /**
@@ -163,8 +163,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_FSM_MASK_VALID     (1U << 0U)
-#define PMIC_FSM_MASK_POL_VALID (1U << 1U)
+#define PMIC_FSM_MASK_VALID     (1UL << 0U)
+#define PMIC_FSM_MASK_POL_VALID (1UL << 1U)
 /** @} */
 
 /* ========================================================================== */

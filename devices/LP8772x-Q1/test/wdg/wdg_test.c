@@ -1472,7 +1472,7 @@ void test_pos_wdg_wdgQaSequence_withIrqCallback(void)
 
     // Test 1: Pmic_wdgExtractAnsCntAndQues path (lines 832-835)
     // Manually inject INT_TOP_STATUS bit (bit 7) in WD_QA_CNT register to simulate pending interrupt
-    regData |= (1U << PMIC_INT_TOP_STATUS_SHIFT);
+    regData |= (1UL << PMIC_INT_TOP_STATUS_SHIFT);
 
     // Call Pmic_wdgExtractAnsCntAndQues which should detect INT_TOP_STATUS and invoke callback
     status = Pmic_wdgExtractAnsCntAndQues(&pmicHandle, regData, &wdgAnsInfo);
@@ -1480,7 +1480,7 @@ void test_pos_wdg_wdgQaSequence_withIrqCallback(void)
 
     // Test 2: Pmic_wdgQaWriteAnswer path which calls WDG_getQuestionAndAnswer (lines 342-344)
     // Set INT_TOP_STATUS bit in the register so when Pmic_wdgQaWriteAnswer reads it, the bit is set
-    regData |= (1U << PMIC_INT_TOP_STATUS_SHIFT);
+    regData |= (1UL << PMIC_INT_TOP_STATUS_SHIFT);
     status = platform_txByte(&pmicHandle, 0U, PMIC_WD_QA_CNT_REG, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1490,7 +1490,7 @@ void test_pos_wdg_wdgQaSequence_withIrqCallback(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Clear the INT_TOP_STATUS bit for cleanup
-    regData &= ~(1U << PMIC_INT_TOP_STATUS_SHIFT);
+    regData &= ~(1UL << PMIC_INT_TOP_STATUS_SHIFT);
     status = platform_txByte(&pmicHandle, 0U, PMIC_WD_QA_CNT_REG, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
@@ -1783,7 +1783,7 @@ void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
 
 #ifdef BUILD_MOCK
     // Inject INT_TOP_STATUS bit (bit 7) in WD_QA_CNT register
-    uint8_t regData = (1U << PMIC_INT_TOP_STATUS_SHIFT);
+    uint8_t regData = (1UL << PMIC_INT_TOP_STATUS_SHIFT);
     testInject_setBits(PMIC_WD_QA_CNT_REG, regData);
 #endif
 

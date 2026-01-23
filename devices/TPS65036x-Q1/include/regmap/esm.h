@@ -75,7 +75,7 @@ extern "C" {
  * @{
  */
 #define PMIC_ESM_MCU_START_SHIFT            ((uint8_t)0U)
-#define PMIC_ESM_MCU_START_MASK             ((uint8_t)1U << PMIC_ESM_MCU_START_SHIFT)
+#define PMIC_ESM_MCU_START_MASK             ((uint8_t)1UL << PMIC_ESM_MCU_START_SHIFT)
 /** @} */
 
 /**
@@ -111,9 +111,9 @@ extern "C" {
  * @{
  */
 #define PMIC_ESM_MCU_MODE_SHIFT             ((uint8_t)7U)
-#define PMIC_ESM_MCU_MODE_MASK              ((uint8_t)1U << PMIC_ESM_MCU_MODE_SHIFT)
+#define PMIC_ESM_MCU_MODE_MASK              ((uint8_t)1UL << PMIC_ESM_MCU_MODE_SHIFT)
 #define PMIC_ESM_MCU_EN_SHIFT               ((uint8_t)6U)
-#define PMIC_ESM_MCU_EN_MASK                ((uint8_t)1U << PMIC_ESM_MCU_EN_SHIFT)
+#define PMIC_ESM_MCU_EN_MASK                ((uint8_t)1UL << PMIC_ESM_MCU_EN_SHIFT)
 #define PMIC_ESM_MCU_ERR_CNT_TH_SHIFT       ((uint8_t)0U)
 #define PMIC_ESM_MCU_ERR_CNT_TH_MASK        ((uint8_t)0x0FU << PMIC_ESM_MCU_ERR_CNT_TH_SHIFT)
 /** @} */
@@ -187,11 +187,11 @@ extern "C" {
  * @{
  */
 #define PMIC_ESM_MCU_RST_INT_SHIFT          ((uint8_t)5U)
-#define PMIC_ESM_MCU_RST_INT_MASK           ((uint8_t)1U << PMIC_ESM_MCU_RST_INT_SHIFT)
+#define PMIC_ESM_MCU_RST_INT_MASK           ((uint8_t)1UL << PMIC_ESM_MCU_RST_INT_SHIFT)
 #define PMIC_ESM_MCU_FAIL_INT_SHIFT         ((uint8_t)4U)
-#define PMIC_ESM_MCU_FAIL_INT_MASK          ((uint8_t)1U << PMIC_ESM_MCU_FAIL_INT_SHIFT)
+#define PMIC_ESM_MCU_FAIL_INT_MASK          ((uint8_t)1UL << PMIC_ESM_MCU_FAIL_INT_SHIFT)
 #define PMIC_ESM_MCU_PIN_INT_SHIFT          ((uint8_t)3U)
-#define PMIC_ESM_MCU_PIN_INT_MASK           ((uint8_t)1U << PMIC_ESM_MCU_PIN_INT_SHIFT)
+#define PMIC_ESM_MCU_PIN_INT_MASK           ((uint8_t)1UL << PMIC_ESM_MCU_PIN_INT_SHIFT)
 /** @} */
 
 #ifdef __cplusplus

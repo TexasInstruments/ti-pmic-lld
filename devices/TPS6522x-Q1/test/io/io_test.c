@@ -462,7 +462,7 @@ void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void)
     /* Read back and verify bit 5 is set */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_1_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & (1U << 5U)) != 0U);
+    PLATFORM_ASSERT((modifiedData & (1UL << 5U)) != 0U);
 
     /* Clear bit 5 to 0 */
     status = Pmic_ioUpdateByte_b(&pmicHandle, SCRATCH_PAD_REG_1_REG, 5U, false);
@@ -471,7 +471,7 @@ void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void)
     /* Read back and verify bit 5 is cleared */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_1_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & (1U << 5U)) == 0U);
+    PLATFORM_ASSERT((modifiedData & (1UL << 5U)) == 0U);
 }
 
 /**
@@ -494,7 +494,7 @@ void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void)
     /* Read back and verify bit 3 is set */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_2_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & (1U << 3U)) != 0U);
+    PLATFORM_ASSERT((modifiedData & (1UL << 3U)) != 0U);
 
     /* Clear bit 3 to 0 with critical section */
     status = Pmic_ioUpdateByte_bCS(&pmicHandle, SCRATCH_PAD_REG_2_REG, 3U, false);
@@ -503,7 +503,7 @@ void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void)
     /* Read back and verify bit 3 is cleared */
     status = Pmic_ioRxByte(&pmicHandle, SCRATCH_PAD_REG_2_REG, &modifiedData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((modifiedData & (1U << 3U)) == 0U);
+    PLATFORM_ASSERT((modifiedData & (1UL << 3U)) == 0U);
 }
 
 /**

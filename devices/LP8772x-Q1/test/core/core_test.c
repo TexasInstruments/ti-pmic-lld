@@ -509,7 +509,7 @@ void test_neg_core_configCrcEnable_calcBitHigh(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject CONFIG_CRC_CALC bit as high (bit 1)
-    regData = (1U << CONFIG_CRC_CALC_SHIFT);
+    regData = (1UL << CONFIG_CRC_CALC_SHIFT);
     testInject_setBits(CONFIG_CRC_CONFIG_REG, regData);
 
     // Now call Pmic_configCrcCalculate() - it should detect the bit is high
@@ -544,7 +544,7 @@ void test_neg_core_configCrcEnable_crcMismatch(void)
     // Inject CONFIG_CRC_STATUS bit (bit 2) into CONFIG_CRC_CONFIG_REG (0x60)
     // to simulate a CRC mismatch. This will be read at line 307 during
     // Pmic_configCrcCalculate() and checked at line 319
-    regData = (1U << CONFIG_CRC_STATUS_SHIFT);
+    regData = (1UL << CONFIG_CRC_STATUS_SHIFT);
     testInject_setBits(CONFIG_CRC_CONFIG_REG, regData);
 
     // Call Pmic_configCrcCalculate() which will trigger lines 319-321

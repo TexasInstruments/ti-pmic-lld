@@ -88,29 +88,29 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_ENABLE_VALID                      (1U << 0U)
-#define PMIC_BUCK_PLDN_EN_VALID                     (1U << 1U)
-#define PMIC_BUCK_FPWM_EN_VALID                     (1U << 2U)
-#define PMIC_BUCK_UV_THR_VALID                      (1U << 3U)
-#define PMIC_BUCK_OV_THR_VALID                      (1U << 4U)
-#define PMIC_BUCK_ILIM_SEL_VALID                    (1U << 5U)
-#define PMIC_BUCK_OVP_SEL_VALID                     (1U << 6U)
-#define PMIC_BUCK_OV_SEL_VALID                      (1U << 7U)
-#define PMIC_BUCK_UV_SEL_VALID                      (1U << 8U)
-#define PMIC_BUCK_SC_SEL_VALID                      (1U << 9U)
-#define PMIC_BUCK_RV_CONF_VALID                     (1U << 10U)
-#define PMIC_BUCK_SLEW_RATE_VALID                   (1U << 11U)
-#define PMIC_BUCK_DEGLITCH_SEL_VALID                (1U << 12U)
-#define PMIC_BUCK_DISCHARGE_SEL_VALID               (1U << 13U)
-#define PMIC_BUCK_SS_EN_VALID                       (1U << 14U)
-#define PMIC_BUCK_SSM_SEL_VALID                     (1U << 15U)
-#define PMIC_BUCK_VSET_VALID                        (1U << 16U)
-#define PMIC_BUCK_UVLO_RISING_VALID                 (1U << 17U)
-#define PMIC_BUCK_UVLO_FALLING_VALID                (1U << 18U)
-#define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         (1U << 19U)
-#define PMIC_BUCK_VSET_ACTIVE_VALID                 (1U << 20U)
-#define PMIC_BUCK_VSET_LPWR_VALID                   (1U << 21U)
-#define PMIC_BUCK_VMON_ONLY_VALID                   (1U << 22U)
+#define PMIC_BUCK_ENABLE_VALID                      (1UL << 0U)
+#define PMIC_BUCK_PLDN_EN_VALID                     (1UL << 1U)
+#define PMIC_BUCK_FPWM_EN_VALID                     (1UL << 2U)
+#define PMIC_BUCK_UV_THR_VALID                      (1UL << 3U)
+#define PMIC_BUCK_OV_THR_VALID                      (1UL << 4U)
+#define PMIC_BUCK_ILIM_SEL_VALID                    (1UL << 5U)
+#define PMIC_BUCK_OVP_SEL_VALID                     (1UL << 6U)
+#define PMIC_BUCK_OV_SEL_VALID                      (1UL << 7U)
+#define PMIC_BUCK_UV_SEL_VALID                      (1UL << 8U)
+#define PMIC_BUCK_SC_SEL_VALID                      (1UL << 9U)
+#define PMIC_BUCK_RV_CONF_VALID                     (1UL << 10U)
+#define PMIC_BUCK_SLEW_RATE_VALID                   (1UL << 11U)
+#define PMIC_BUCK_DEGLITCH_SEL_VALID                (1UL << 12U)
+#define PMIC_BUCK_DISCHARGE_SEL_VALID               (1UL << 13U)
+#define PMIC_BUCK_SS_EN_VALID                       (1UL << 14U)
+#define PMIC_BUCK_SSM_SEL_VALID                     (1UL << 15U)
+#define PMIC_BUCK_VSET_VALID                        (1UL << 16U)
+#define PMIC_BUCK_UVLO_RISING_VALID                 (1UL << 17U)
+#define PMIC_BUCK_UVLO_FALLING_VALID                (1UL << 18U)
+#define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         (1UL << 19U)
+#define PMIC_BUCK_VSET_ACTIVE_VALID                 (1UL << 20U)
+#define PMIC_BUCK_VSET_LPWR_VALID                   (1UL << 21U)
+#define PMIC_BUCK_VMON_ONLY_VALID                   (1UL << 22U)
 #define PMIC_BUCK_CTRL_ALL_VALID                    (PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID | \
                                                      PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | \
                                                      PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID)
@@ -129,21 +129,21 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_LDO_ENABLE_VALID                       (1U << 0U)
-#define PMIC_LDO_MODE_VALID                         (1U << 1U)
-#define PMIC_LDO_VSET_VALID                         (1U << 2U)
-#define PMIC_LDO_VMON_ONLY_VALID                    (1U << 3U)
-#define PMIC_LDO_DISCHARGE_EN_VALID                 (1U << 4U)
-#define PMIC_LDO_DISCHARGE_SEL_VALID                (1U << 5U)
-#define PMIC_LDO_DEGLITCH_SEL_VALID                 (1U << 6U)
-#define PMIC_LDO_UV_THR_VALID                       (1U << 7U)
-#define PMIC_LDO_OV_THR_VALID                       (1U << 8U)
-#define PMIC_LDO_ILIM_SEL_VALID                     (1U << 9U)
-#define PMIC_LDO_OVP_SEL_VALID                      (1U << 10U)
-#define PMIC_LDO_OV_SEL_VALID                       (1U << 11U)
-#define PMIC_LDO_UV_SEL_VALID                       (1U << 12U)
-#define PMIC_LDO_SC_SEL_VALID                       (1U << 13U)
-#define PMIC_LDO_RV_CONF_VALID                      (1U << 14U)
+#define PMIC_LDO_ENABLE_VALID                       (1UL << 0U)
+#define PMIC_LDO_MODE_VALID                         (1UL << 1U)
+#define PMIC_LDO_VSET_VALID                         (1UL << 2U)
+#define PMIC_LDO_VMON_ONLY_VALID                    (1UL << 3U)
+#define PMIC_LDO_DISCHARGE_EN_VALID                 (1UL << 4U)
+#define PMIC_LDO_DISCHARGE_SEL_VALID                (1UL << 5U)
+#define PMIC_LDO_DEGLITCH_SEL_VALID                 (1UL << 6U)
+#define PMIC_LDO_UV_THR_VALID                       (1UL << 7U)
+#define PMIC_LDO_OV_THR_VALID                       (1UL << 8U)
+#define PMIC_LDO_ILIM_SEL_VALID                     (1UL << 9U)
+#define PMIC_LDO_OVP_SEL_VALID                      (1UL << 10U)
+#define PMIC_LDO_OV_SEL_VALID                       (1UL << 11U)
+#define PMIC_LDO_UV_SEL_VALID                       (1UL << 12U)
+#define PMIC_LDO_SC_SEL_VALID                       (1UL << 13U)
+#define PMIC_LDO_RV_CONF_VALID                      (1UL << 14U)
 #define PMIC_LDO_CTRL_ALL_VALID                     (PMIC_LDO_VMON_ONLY_VALID | PMIC_LDO_DISCHARGE_SEL_VALID | \
                                                      PMIC_LDO_DISCHARGE_EN_VALID | PMIC_LDO_ENABLE_VALID)
 /** @} */
@@ -161,9 +161,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_TWARN_STAY_IN_SAFE_STATE_VALID         (1U << 0U)
-#define PMIC_TSD_IMM_LEVEL_VALID                    (1U << 1U)
-#define PMIC_TWARN_LEVEL_VALID                      (1U << 2U)
+#define PMIC_TWARN_STAY_IN_SAFE_STATE_VALID         (1UL << 0U)
+#define PMIC_TSD_IMM_LEVEL_VALID                    (1UL << 1U)
+#define PMIC_TWARN_LEVEL_VALID                      (1UL << 2U)
 /** @} */
 
 /**
@@ -244,8 +244,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_SEQ_DLY_OFF_VALID                      ((uint32_t)1U << 0U)
-#define PMIC_SEQ_DLY_ON_VALID                       ((uint32_t)1U << 1U)
+#define PMIC_SEQ_DLY_OFF_VALID                      ((uint32_t)1UL << 0U)
+#define PMIC_SEQ_DLY_ON_VALID                       ((uint32_t)1UL << 1U)
 /** @} */
 
 /**

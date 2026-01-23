@@ -155,9 +155,9 @@ extern "C" {
 #define ESM_MCU_PIN_INT_SHIFT        ((uint8_t)3U)
 #define ESM_MCU_FAIL_INT_SHIFT       ((uint8_t)4U)
 #define ESM_MCU_RST_INT_SHIFT        ((uint8_t)5U)
-#define ESM_MCU_PIN_INT_MASK         (0x01U << ESM_MCU_PIN_INT_SHIFT)
-#define ESM_MCU_FAIL_INT_MASK        (0x01U << ESM_MCU_FAIL_INT_SHIFT)
-#define ESM_MCU_RST_INT_MASK         (0x01U << ESM_MCU_RST_INT_SHIFT)
+#define ESM_MCU_PIN_INT_MASK         (0x01UL << ESM_MCU_PIN_INT_SHIFT)
+#define ESM_MCU_FAIL_INT_MASK        (0x01UL << ESM_MCU_FAIL_INT_SHIFT)
+#define ESM_MCU_RST_INT_MASK         (0x01UL << ESM_MCU_RST_INT_SHIFT)
 
 // INT_FSM_ERR_REG Bitfields
 #define IMM_SHUTDOWN_INT_SHIFT       ((uint8_t)0U)

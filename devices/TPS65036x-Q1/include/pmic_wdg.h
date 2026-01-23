@@ -70,17 +70,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WD_RST_EN_VALID                    (1U << 0U)
-#define PMIC_WD_MODE_VALID                      (1U << 1U)
-#define PMIC_WD_TRIG_SEL_VALID                  (1U << 2U)
-#define PMIC_WD_FAIL_THR_VALID                  (1U << 3U)
-#define PMIC_WD_RST_THR_VALID                   (1U << 4U)
-#define PMIC_WD_LONG_WIN_DURATION_VALID         (1U << 5U)
-#define PMIC_WD_WIN1_DURATION_VALID             (1U << 6U)
-#define PMIC_WD_WIN2_DURATION_VALID             (1U << 7U)
-#define PMIC_WD_QA_FDBK_VALID                   (1U << 8U)
-#define PMIC_WD_QA_LFSR_VALID                   (1U << 9U)
-#define PMIC_WD_QA_SEED_VALID                   (1U << 10U)
+#define PMIC_WD_RST_EN_VALID                    (1UL << 0U)
+#define PMIC_WD_MODE_VALID                      (1UL << 1U)
+#define PMIC_WD_TRIG_SEL_VALID                  (1UL << 2U)
+#define PMIC_WD_FAIL_THR_VALID                  (1UL << 3U)
+#define PMIC_WD_RST_THR_VALID                   (1UL << 4U)
+#define PMIC_WD_LONG_WIN_DURATION_VALID         (1UL << 5U)
+#define PMIC_WD_WIN1_DURATION_VALID             (1UL << 6U)
+#define PMIC_WD_WIN2_DURATION_VALID             (1UL << 7U)
+#define PMIC_WD_QA_FDBK_VALID                   (1UL << 8U)
+#define PMIC_WD_QA_LFSR_VALID                   (1UL << 9U)
+#define PMIC_WD_QA_SEED_VALID                   (1UL << 10U)
 #define PMIC_WD_QA_CFG_ALL_VALID                (PMIC_WD_QA_FDBK_VALID | PMIC_WD_QA_LFSR_VALID | PMIC_WD_QA_SEED_VALID)
 #define PMIC_WD_CFG_TRIGGER_VALID_ALL           (PMIC_WD_RST_EN_VALID | \
                                                  PMIC_WD_MODE_VALID | \
@@ -115,14 +115,14 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WDG_RST_INT_VALID                  (1U << 0U)
-#define PMIC_WDG_FAIL_INT_VALID                 (1U << 1U)
-#define PMIC_WDG_ANSW_ERR_VALID                 (1U << 2U)
-#define PMIC_WDG_SEQ_ERR_VALID                  (1U << 3U)
-#define PMIC_WDG_ANSW_EARLY_ERR_VALID           (1U << 4U)
-#define PMIC_WDG_TRIG_EARLY_ERR_VALID           (1U << 5U)
-#define PMIC_WDG_TIMEOUT_ERR_VALID              (1U << 6U)
-#define PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID      (1U << 7U)
+#define PMIC_WDG_RST_INT_VALID                  (1UL << 0U)
+#define PMIC_WDG_FAIL_INT_VALID                 (1UL << 1U)
+#define PMIC_WDG_ANSW_ERR_VALID                 (1UL << 2U)
+#define PMIC_WDG_SEQ_ERR_VALID                  (1UL << 3U)
+#define PMIC_WDG_ANSW_EARLY_ERR_VALID           (1UL << 4U)
+#define PMIC_WDG_TRIG_EARLY_ERR_VALID           (1UL << 5U)
+#define PMIC_WDG_TIMEOUT_ERR_VALID              (1UL << 6U)
+#define PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID      (1UL << 7U)
 #define PMIC_WDG_ERR_STAT_ALL_VALID             (PMIC_WDG_RST_INT_VALID        | \
                                                 PMIC_WDG_FAIL_INT_VALID        | \
                                                 PMIC_WDG_ANSW_ERR_VALID        | \
@@ -147,9 +147,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BAD_EVENT_VALID                    (1U << 0U)
-#define PMIC_GOOD_EVENT_VALID                   (1U << 1U)
-#define PMIC_FAIL_CNT_VALID                     (1U << 2U)
+#define PMIC_BAD_EVENT_VALID                    (1UL << 0U)
+#define PMIC_GOOD_EVENT_VALID                   (1UL << 1U)
+#define PMIC_FAIL_CNT_VALID                     (1UL << 2U)
 /** @} */
 
 /**

@@ -58,7 +58,7 @@ extern "C" {
 #define TMR_CLR_SHIFT  (5U)
 #define TMR_CFG_MASK   (7U << TMR_CFG_SHIFT)
 #define TMR_PS_MASK    (3U << TMR_PS_SHIFT)
-#define TMR_CLR_MASK   (1U << TMR_CLR_SHIFT)
+#define TMR_CLR_MASK   (1UL << TMR_CLR_SHIFT)
 
 /** @brief TMR_LP_WAKE0 - Timer Low Power Wake 0 */
 #define TMR_LP_WAKE_B0_SHIFT  (0U)

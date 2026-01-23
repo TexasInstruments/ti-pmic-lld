@@ -802,7 +802,7 @@ void test_pos_irq_irqGetMask_nonMaskable(void)
  * This test specifically exercises the IRQ status array indexing:
  * - arrayIndex = irqNum / 32U
  * - bitIndex = irqNum % 32U
- * - intrStat[arrayIndex] |= (1U << bitIndex)
+ * - intrStat[arrayIndex] |= (1UL << bitIndex)
  */
 void test_pos_irq_irqGetNextFlag_fromArray(void)
 {

@@ -391,10 +391,10 @@ void test_pos_irq_irqClrAllFlags(void)
     // Validate that all IRQ flags have been cleared
     status = platform_rxByte(&pmicHandle, 0x00U, intTopReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((regData == 0U) || (regData == (1U << 7U))); // All flags cleared or only FSM_ERR_INT flag set
+    PLATFORM_ASSERT((regData == 0U) || (regData == (1UL << 7U))); // All flags cleared or only FSM_ERR_INT flag set
     status = platform_rxByte(&pmicHandle, 0x00U, intFsmErrReg, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((regData == 0U) || (regData == (1U << 4U))); // All flags cleared or only WD_FIRST_NOK_INT flag set
+    PLATFORM_ASSERT((regData == 0U) || (regData == (1UL << 4U))); // All flags cleared or only WD_FIRST_NOK_INT flag set
 }
 
 static int32_t irqTest_setGetMask(uint8_t irqNum, bool shouldMask)
@@ -765,7 +765,7 @@ void test_pos_irq_irqGetStatus_noFlags(void)
 
     // Verify intrStat is cleared (may have WD_FIRST_NOK_INT bit set)
     // Since WDG is not being serviced, WD_FIRST_NOK_INT (bit 30) may remain set
-    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1U << 30U)));
+    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1UL << 30U)));
     PLATFORM_ASSERT(irqStat.intrStat[1] == 0U);
 }
 
@@ -819,7 +819,7 @@ void test_pos_irq_irqGetStatus_singleFlag_L2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify intrStat structure is valid
-    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1U << 30U)));
+    PLATFORM_ASSERT((irqStat.intrStat[0] == 0U) || (irqStat.intrStat[0] == (1UL << 30U)));
 }
 
 void test_pos_irq_irqGetStatus_multipleFlags_sameReg(void)
@@ -980,7 +980,7 @@ void test_pos_irq_irqGetNextFlag_highIndexIRQ(void)
 
     // Manually set a high index IRQ in intrStat[1] (IRQ 32+)
     // PMIC_WARM_RESET_NMI is IRQ 32, bit 0 in intrStat[1]
-    irqStat.intrStat[1] = (1U << 0U);
+    irqStat.intrStat[1] = (1UL << 0U);
 
     // Get next flag - should return IRQ 32
     status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
@@ -1015,8 +1015,8 @@ void test_pos_irq_irqGetNextFlag_mixed_L1_L2(void)
 
     // Set mix of L1 and L2 IRQs in intrStat
     // L1: PMIC_TWARN_INT (16), L2: PMIC_MCU_COMM_ERR_INT (35)
-    irqStat.intrStat[0] = (1U << 16U);  // TWARN_INT
-    irqStat.intrStat[1] = (1U << 3U);   // MCU_COMM_ERR_INT (35-32=3)
+    irqStat.intrStat[0] = (1UL << 16U);  // TWARN_INT
+    irqStat.intrStat[1] = (1UL << 3U);   // MCU_COMM_ERR_INT (35-32=3)
 
     // Iterate through flags
     while ((status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum)) == PMIC_ST_SUCCESS)
@@ -1223,11 +1223,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_INT flag in INT_TOP register
-    status = testInject_setBits(intTopReg, (1U << 0U));
+    status = testInject_setBits(intTopReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK1_INT flag in INT_BUCK_LDO register
-    status = testInject_setBits(intBuckLdoReg, (1U << 0U));
+    status = testInject_setBits(intBuckLdoReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL1IntBuckLdo
@@ -1248,15 +1248,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 0U));
+    status = testInject_setBits(intTopReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK1_INT in INT_BUCK_LDO
-    status = testInject_setBits(intBuckLdoReg, (1U << 0U));
+    status = testInject_setBits(intBuckLdoReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK1_OVP_INT in INT_BUCK1_2
-    status = testInject_setBits(intBuck1_2Reg, (1U << 2U));
+    status = testInject_setBits(intBuck1_2Reg, (1UL << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL2IntBuck1_2
@@ -1277,15 +1277,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 0U));
+    status = testInject_setBits(intTopReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK3_INT in INT_BUCK_LDO
-    status = testInject_setBits(intBuckLdoReg, (1U << 2U));
+    status = testInject_setBits(intBuckLdoReg, (1UL << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK3_OVP_INT in INT_BUCK3_LDO
-    status = testInject_setBits(intBuck3LdoReg, (1U << 2U));
+    status = testInject_setBits(intBuck3LdoReg, (1UL << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL2IntBuck3Ldo
@@ -1305,11 +1305,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject MISC_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 4U));
+    status = testInject_setBits(intTopReg, (1UL << 4U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject TWARN_INT in INT_MISC
-    status = testInject_setBits(intMiscReg, (1U << 7U));
+    status = testInject_setBits(intMiscReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL1IntMisc
@@ -1329,11 +1329,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject MODERATE_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 5U));
+    status = testInject_setBits(intTopReg, (1UL << 5U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject CONFIG_CRC_INT in INT_MODERATE_ERR
-    status = testInject_setBits(intModerateErrReg, (1U << 3U));
+    status = testInject_setBits(intModerateErrReg, (1UL << 3U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL1IntModerateErr
@@ -1353,11 +1353,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject SEVERE_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 6U));
+    status = testInject_setBits(intTopReg, (1UL << 6U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject TSD_IMM_INT in INT_SEVERE_ERR
-    status = testInject_setBits(intSevereErrReg, (1U << 0U));
+    status = testInject_setBits(intSevereErrReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL1IntSevereErr
@@ -1377,11 +1377,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 7U));
+    status = testInject_setBits(intTopReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject WARM_RESET_INT in INT_FSM_ERR
-    status = testInject_setBits(intFsmErrReg, (1U << 2U));
+    status = testInject_setBits(intFsmErrReg, (1UL << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL1IntFsmErr
@@ -1402,15 +1402,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 7U));
+    status = testInject_setBits(intTopReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject WD_INT in INT_FSM_ERR
-    status = testInject_setBits(intFsmErrReg, (1U << 7U));
+    status = testInject_setBits(intFsmErrReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject WD_RST_INT in WD_ERR_STATUS
-    status = testInject_setBits(wdErrStatusReg, (1U << 7U));
+    status = testInject_setBits(wdErrStatusReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL2WdErrStatus
@@ -1431,15 +1431,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 7U));
+    status = testInject_setBits(intTopReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject COMM_ERR_INT in INT_FSM_ERR
-    status = testInject_setBits(intFsmErrReg, (1U << 6U));
+    status = testInject_setBits(intFsmErrReg, (1UL << 6U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject MCU_COMM_ERR_INT in INT_COMM_ERR
-    status = testInject_setBits(intCommErrReg, (1U << 4U));
+    status = testInject_setBits(intCommErrReg, (1UL << 4U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL2IntCommErr
@@ -1460,15 +1460,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP
-    status = testInject_setBits(intTopReg, (1U << 7U));
+    status = testInject_setBits(intTopReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject ESM_MCU_INT in INT_FSM_ERR
-    status = testInject_setBits(intFsmErrReg, (1U << 5U));
+    status = testInject_setBits(intFsmErrReg, (1UL << 5U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject ESM_MCU_PIN_INT in INT_ESM
-    status = testInject_setBits(intEsmReg, (1U << 3U));
+    status = testInject_setBits(intEsmReg, (1UL << 3U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger IRQ_readL2IntEsm
@@ -1493,19 +1493,19 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Setup a full cascade: L0 -> L1 (FSM_ERR) -> L2 (WD, COMM_ERR, ESM)
-    status = testInject_setBits(intTopReg, (1U << 7U));
+    status = testInject_setBits(intTopReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intFsmErrReg, (1U << 7U) | (1U << 6U) | (1U << 5U));
+    status = testInject_setBits(intFsmErrReg, (1UL << 7U) | (1UL << 6U) | (1UL << 5U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(wdErrStatusReg, (1U << 7U));
+    status = testInject_setBits(wdErrStatusReg, (1UL << 7U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intCommErrReg, (1U << 4U));
+    status = testInject_setBits(intCommErrReg, (1UL << 4U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intEsmReg, (1U << 3U));
+    status = testInject_setBits(intEsmReg, (1UL << 3U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get IRQ status - should trigger full hierarchy
@@ -1541,10 +1541,10 @@ void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Set up multiple L2 interrupts
-    status = testInject_setBits(intTopReg, (1U << 0U));
+    status = testInject_setBits(intTopReg, (1UL << 0U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = testInject_setBits(intBuckLdoReg, (1U << 0U) | (1U << 2U));
+    status = testInject_setBits(intBuckLdoReg, (1UL << 0U) | (1UL << 2U));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = testInject_setBits(intBuck1_2Reg, TEST_MASK_FULL_BYTE);

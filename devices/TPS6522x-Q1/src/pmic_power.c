@@ -722,7 +722,7 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
 
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField_b(&regData, vmonEnShift, (uint8_t)(1U << vmonEnShift), vccaVmonCfg->vmonEn);
+            Pmic_setBitField_b(&regData, vmonEnShift, (uint8_t)(1UL << vmonEnShift), vccaVmonCfg->vmonEn);
             status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REG, regData);
         }
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);

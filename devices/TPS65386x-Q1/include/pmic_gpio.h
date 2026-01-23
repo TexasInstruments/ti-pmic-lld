@@ -108,12 +108,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_GPI1_VALID (1U << 0U)
-#define PMIC_CFG_GPI4_VALID (1U << 1U)
-#define PMIC_CFG_GPO1_VALID (1U << 2U)
-#define PMIC_CFG_GPO2_VALID (1U << 3U)
-#define PMIC_CFG_GPO3_VALID (1U << 4U)
-#define PMIC_CFG_GPO4_VALID (1U << 5U)
+#define PMIC_CFG_GPI1_VALID (1UL << 0U)
+#define PMIC_CFG_GPI4_VALID (1UL << 1U)
+#define PMIC_CFG_GPO1_VALID (1UL << 2U)
+#define PMIC_CFG_GPO2_VALID (1UL << 3U)
+#define PMIC_CFG_GPO3_VALID (1UL << 4U)
+#define PMIC_CFG_GPO4_VALID (1UL << 5U)
 /** @} */
 
 /**

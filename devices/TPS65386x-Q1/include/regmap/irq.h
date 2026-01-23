@@ -193,7 +193,7 @@ extern "C" {
 
 // SAFETY_CFG_REG Bit Shifts
 #define CFG_REG_CRC_INT_CFG_SHIFT       (6U)
-#define CFG_REG_CRC_INT_CFG_MASK        (1U << CFG_REG_CRC_INT_CFG_SHIFT)
+#define CFG_REG_CRC_INT_CFG_MASK        (1UL << CFG_REG_CRC_INT_CFG_SHIFT)
 
 // RDBK_INT_MASK_CFG_REG Bit Shifts
 #define NRST_RDBK_INT_MASK_SHIFT        (0U)
@@ -316,12 +316,12 @@ extern "C" {
 #define LDO4_ILIM_CFG_SHIFT             (3U)
 #define PLDO1_ILIM_CFG_SHIFT            (4U)
 #define PLDO2_ILIM_CFG_SHIFT            (5U)
-#define LDO1_ILIM_CFG_MASK              (1U << LDO1_ILIM_CFG_SHIFT)
-#define LDO2_ILIM_CFG_MASK              (1U << LDO2_ILIM_CFG_SHIFT)
-#define LDO3_ILIM_CFG_MASK              (1U << LDO3_ILIM_CFG_SHIFT)
-#define LDO4_ILIM_CFG_MASK              (1U << LDO4_ILIM_CFG_SHIFT)
-#define PLDO1_ILIM_CFG_MASK             (1U << PLDO1_ILIM_CFG_SHIFT)
-#define PLDO2_ILIM_CFG_MASK             (1U << PLDO2_ILIM_CFG_SHIFT)
+#define LDO1_ILIM_CFG_MASK              (1UL << LDO1_ILIM_CFG_SHIFT)
+#define LDO2_ILIM_CFG_MASK              (1UL << LDO2_ILIM_CFG_SHIFT)
+#define LDO3_ILIM_CFG_MASK              (1UL << LDO3_ILIM_CFG_SHIFT)
+#define LDO4_ILIM_CFG_MASK              (1UL << LDO4_ILIM_CFG_SHIFT)
+#define PLDO1_ILIM_CFG_MASK             (1UL << PLDO1_ILIM_CFG_SHIFT)
+#define PLDO2_ILIM_CFG_MASK             (1UL << PLDO2_ILIM_CFG_SHIFT)
 
 // CM_COMP_INT_MASK_CFG_REG Bit Masks and Shifts
 #define COMP1_INT_MASK_SHIFT            (0U)
@@ -350,14 +350,14 @@ extern "C" {
 #define COMP2P_OV_INT_CFG_SHIFT         (5U)
 #define COMP2N_UV_INT_CFG_SHIFT         (6U)
 #define COMP2N_OV_INT_CFG_SHIFT         (7U)
-#define COMP1P_UV_INT_CFG_MASK          (1U << COMP1P_UV_INT_CFG_SHIFT)
-#define COMP1P_OV_INT_CFG_MASK          (1U << COMP1P_OV_INT_CFG_SHIFT)
-#define COMP1N_UV_INT_CFG_MASK          (1U << COMP1N_UV_INT_CFG_SHIFT)
-#define COMP1N_OV_INT_CFG_MASK          (1U << COMP1N_OV_INT_CFG_SHIFT)
-#define COMP2P_UV_INT_CFG_MASK          (1U << COMP2P_UV_INT_CFG_SHIFT)
-#define COMP2P_OV_INT_CFG_MASK          (1U << COMP2P_OV_INT_CFG_SHIFT)
-#define COMP2N_UV_INT_CFG_MASK          (1U << COMP2N_UV_INT_CFG_SHIFT)
-#define COMP2N_OV_INT_CFG_MASK          (1U << COMP2N_OV_INT_CFG_SHIFT)
+#define COMP1P_UV_INT_CFG_MASK          (1UL << COMP1P_UV_INT_CFG_SHIFT)
+#define COMP1P_OV_INT_CFG_MASK          (1UL << COMP1P_OV_INT_CFG_SHIFT)
+#define COMP1N_UV_INT_CFG_MASK          (1UL << COMP1N_UV_INT_CFG_SHIFT)
+#define COMP1N_OV_INT_CFG_MASK          (1UL << COMP1N_OV_INT_CFG_SHIFT)
+#define COMP2P_UV_INT_CFG_MASK          (1UL << COMP2P_UV_INT_CFG_SHIFT)
+#define COMP2P_OV_INT_CFG_MASK          (1UL << COMP2P_OV_INT_CFG_SHIFT)
+#define COMP2N_UV_INT_CFG_MASK          (1UL << COMP2N_UV_INT_CFG_SHIFT)
+#define COMP2N_OV_INT_CFG_MASK          (1UL << COMP2N_OV_INT_CFG_SHIFT)
 
 #ifdef __cplusplus
 }

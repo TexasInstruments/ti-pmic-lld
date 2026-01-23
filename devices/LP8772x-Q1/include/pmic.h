@@ -113,21 +113,21 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_COMM_MODE_VALID              (1U << 0U)
-#define PMIC_I2C_ADDR0_VALID              (1U << 1U)
-#define PMIC_I2C_ADDR1_VALID              (1U << 2U)
-#define PMIC_I2C_ADDR2_VALID              (1U << 3U)
-#define PMIC_COMM_HANDLE_0_VALID          (1U << 4U)
-#define PMIC_IO_READ_VALID                (1U << 5U)
-#define PMIC_IO_WRITE_VALID               (1U << 6U)
-#define PMIC_CRITICAL_SECTION_START_VALID (1U << 7U)
-#define PMIC_CRITICAL_SECTION_STOP_VALID  (1U << 8U)
-#define PMIC_CRC_ENABLE_VALID             (1U << 9U)
-#define PMIC_CONFIG_CRC_ENABLE_VALID      (1U << 10U)
-#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1U << 11U)
-#define PMIC_RETRY_CNT_VALID              (1U << 12U)
-#define PMIC_RETRY_INTERVAL_MS_VALID      (1U << 13U)
-#define PMIC_TIMER_WAIT_MS_VALID          (1U << 14U)
+#define PMIC_COMM_MODE_VALID              (1UL << 0U)
+#define PMIC_I2C_ADDR0_VALID              (1UL << 1U)
+#define PMIC_I2C_ADDR1_VALID              (1UL << 2U)
+#define PMIC_I2C_ADDR2_VALID              (1UL << 3U)
+#define PMIC_COMM_HANDLE_0_VALID          (1UL << 4U)
+#define PMIC_IO_READ_VALID                (1UL << 5U)
+#define PMIC_IO_WRITE_VALID               (1UL << 6U)
+#define PMIC_CRITICAL_SECTION_START_VALID (1UL << 7U)
+#define PMIC_CRITICAL_SECTION_STOP_VALID  (1UL << 8U)
+#define PMIC_CRC_ENABLE_VALID             (1UL << 9U)
+#define PMIC_CONFIG_CRC_ENABLE_VALID      (1UL << 10U)
+#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1UL << 11U)
+#define PMIC_RETRY_CNT_VALID              (1UL << 12U)
+#define PMIC_RETRY_INTERVAL_MS_VALID      (1UL << 13U)
+#define PMIC_TIMER_WAIT_MS_VALID          (1UL << 14U)
 /** @} */
 
 /**

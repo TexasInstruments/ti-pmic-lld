@@ -205,7 +205,7 @@ static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
         // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
         // At an index, the IRQ is stored at its corresponding bit
         // (e.g., IRQ 49's status will be stored at bit 17 at index 1)
-        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT_ELEM] |= ((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT_ELEM));
+        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT_ELEM] |= ((uint32_t)1UL << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT_ELEM));
     }
 }
 
@@ -236,7 +236,7 @@ static int32_t IRQ_setMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool sho
 
     if (status == PMIC_ST_SUCCESS) {
         // Modify IRQ mask bit field and write new register value back to PMIC
-        Pmic_setBitField_b(&regData, irqMaskBitShift, (uint8_t)(1U << irqMaskBitShift), shouldMask);
+        Pmic_setBitField_b(&regData, irqMaskBitShift, (uint8_t)(1UL << irqMaskBitShift), shouldMask);
         status = Pmic_ioTxByte(handle, irqMaskRegAddr, regData);
     }
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
@@ -291,7 +291,7 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
         for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) {
             const uint8_t irqNum = masks[i].irqNum;
             const Pmic_IrqInfo_t *pIrq = &pmicIRQs[irqNum];
-            const uint8_t userMask = (uint8_t)(1U << pIrq->bitShift);
+            const uint8_t userMask = (uint8_t)(1UL << pIrq->bitShift);
 
             // If the current mask setting isn't targeted at the register we are
             // currently building, skip it
@@ -780,7 +780,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat)
         // For each bit in the element...
         for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT_ELEM; bitPos++)
         {
-            const uint32_t mask = (1U << bitPos);
+            const uint32_t mask = (uint32_t)(1UL << bitPos);
             // If the bit is set...
             if ((irqStat->intrStat[idx] & mask) != 0U)
             {
@@ -872,7 +872,7 @@ int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // IRQ statuses are W1C - write 1 to clear
-        Pmic_setBitField(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1U << pmicIRQs[irqNum].bitShift), 1U);
+        Pmic_setBitField(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1UL << pmicIRQs[irqNum].bitShift), 1U);
 
         // Write data to PMIC
         status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);

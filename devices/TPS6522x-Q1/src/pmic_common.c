@@ -105,11 +105,12 @@ static SystemDiagnostics_t sysDiagnostics = {0U};
 /* ========================================================================== */
 
 static inline uint16_t getStatusCodeType(int32_t status) {
-    return (uint16_t)(((uint32_t)status & PMIC_ST_TYPE_MASK) >> PMIC_ST_TYPE_SHIFT);
+    uint32_t shifted = (uint32_t)status >> PMIC_ST_TYPE_SHIFT;
+    return (uint16_t)(shifted & 0xFFFFU);
 }
 
 static inline uint16_t getStatusCodeId(int32_t status) {
-    return (uint16_t)(((uint32_t)status & PMIC_ST_ID_MASK) >> PMIC_ST_ID_SHIFT);
+    return (uint16_t)((uint32_t)status & 0xFFFFU);
 }
 
 /*

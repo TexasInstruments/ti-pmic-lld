@@ -4131,7 +4131,7 @@ void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // LDO_LS1_VMON1_SEL is bit 3, LDO_LS1_LSW_CONFIG is bit 2 of FUNC_CONF_REG
-    status = testInject_setRegister(FUNC_CONF_REG, (1U << 3U));  /* vmon1Sel=1, lswConfig=0 */
+    status = testInject_setRegister(FUNC_CONF_REG, (1UL << 3U));  /* vmon1Sel=1, lswConfig=0 */
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Try to get resource config - should fail with invalid combination

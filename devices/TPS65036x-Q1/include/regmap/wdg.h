@@ -78,9 +78,9 @@ extern "C" {
  * @{
  */
 #define PMIC_WD_RST_EN_SHIFT                    ((uint8_t)1U)
-#define PMIC_WD_RST_EN_MASK                     ((uint8_t)1U << PMIC_WD_RST_EN_SHIFT)
+#define PMIC_WD_RST_EN_MASK                     ((uint8_t)1UL << PMIC_WD_RST_EN_SHIFT)
 #define PMIC_WD_EN_SHIFT                        ((uint8_t)0U)
-#define PMIC_WD_EN_MASK                         ((uint8_t)1U << PMIC_WD_EN_SHIFT)
+#define PMIC_WD_EN_MASK                         ((uint8_t)1UL << PMIC_WD_EN_SHIFT)
 /** @} */
 
 /**
@@ -92,9 +92,9 @@ extern "C" {
  * @{
  */
 #define PMIC_WD_PWRHOLD_SHIFT                   ((uint8_t)2U)
-#define PMIC_WD_PWRHOLD_MASK                    ((uint8_t)1U << PMIC_WD_PWRHOLD_SHIFT)
+#define PMIC_WD_PWRHOLD_MASK                    ((uint8_t)1UL << PMIC_WD_PWRHOLD_SHIFT)
 #define PMIC_WD_RETURN_LONGWIN_SHIFT            ((uint8_t)0U)
-#define PMIC_WD_RETURN_LONGWIN_MASK             ((uint8_t)1U << PMIC_WD_RETURN_LONGWIN_SHIFT)
+#define PMIC_WD_RETURN_LONGWIN_MASK             ((uint8_t)1UL << PMIC_WD_RETURN_LONGWIN_SHIFT)
 /** @} */
 
 /**
@@ -106,9 +106,9 @@ extern "C" {
  * @{
  */
 #define PMIC_WD_TRIGGER_SEL_SHIFT               ((uint8_t)1U)
-#define PMIC_WD_TRIGGER_SEL_MASK                ((uint8_t)1U << PMIC_WD_TRIGGER_SEL_SHIFT)
+#define PMIC_WD_TRIGGER_SEL_MASK                ((uint8_t)1UL << PMIC_WD_TRIGGER_SEL_SHIFT)
 #define PMIC_WD_MODE_SELECT_SHIFT               ((uint8_t)0U)
-#define PMIC_WD_MODE_SELECT_MASK                ((uint8_t)1U << PMIC_WD_MODE_SELECT_SHIFT)
+#define PMIC_WD_MODE_SELECT_MASK                ((uint8_t)1UL << PMIC_WD_MODE_SELECT_SHIFT)
 /** @} */
 
 /**
@@ -175,7 +175,7 @@ extern "C" {
  * @{
  */
 #define PMIC_INT_TOP_STATUS_SHIFT               ((uint8_t)7U)
-#define PMIC_INT_TOP_STATUS_MASK                ((uint8_t)1U << PMIC_INT_TOP_STATUS_SHIFT)
+#define PMIC_INT_TOP_STATUS_MASK                ((uint8_t)1UL << PMIC_INT_TOP_STATUS_SHIFT)
 #define PMIC_WD_ANSW_CNT_SHIFT                  ((uint8_t)4U)
 #define PMIC_WD_ANSW_CNT_MASK                   ((uint8_t)3U << PMIC_WD_ANSW_CNT_SHIFT)
 #define PMIC_WD_QUESTION_SHIFT                  ((uint8_t)0U)
@@ -192,21 +192,21 @@ extern "C" {
  * @{
  */
 #define PMIC_WD_RST_INT_SHIFT                   ((uint8_t)7U)
-#define PMIC_WD_RST_INT_MASK                    ((uint8_t)1U << PMIC_WD_RST_INT_SHIFT)
+#define PMIC_WD_RST_INT_MASK                    ((uint8_t)1UL << PMIC_WD_RST_INT_SHIFT)
 #define PMIC_WD_FAIL_INT_SHIFT                  ((uint8_t)6U)
-#define PMIC_WD_FAIL_INT_MASK                   ((uint8_t)1U << PMIC_WD_FAIL_INT_SHIFT)
+#define PMIC_WD_FAIL_INT_MASK                   ((uint8_t)1UL << PMIC_WD_FAIL_INT_SHIFT)
 #define PMIC_WD_ANSW_ERR_SHIFT                  ((uint8_t)5U)
-#define PMIC_WD_ANSW_ERR_MASK                   ((uint8_t)1U << PMIC_WD_ANSW_ERR_SHIFT)
+#define PMIC_WD_ANSW_ERR_MASK                   ((uint8_t)1UL << PMIC_WD_ANSW_ERR_SHIFT)
 #define PMIC_WD_SEQ_ERR_SHIFT                   ((uint8_t)4U)
-#define PMIC_WD_SEQ_ERR_MASK                    ((uint8_t)1U << PMIC_WD_SEQ_ERR_SHIFT)
+#define PMIC_WD_SEQ_ERR_MASK                    ((uint8_t)1UL << PMIC_WD_SEQ_ERR_SHIFT)
 #define PMIC_WD_ANSW_EARLY_SHIFT                ((uint8_t)3U)
-#define PMIC_WD_ANSW_EARLY_MASK                 ((uint8_t)1U << PMIC_WD_ANSW_EARLY_SHIFT)
+#define PMIC_WD_ANSW_EARLY_MASK                 ((uint8_t)1UL << PMIC_WD_ANSW_EARLY_SHIFT)
 #define PMIC_WD_TRIG_EARLY_SHIFT                ((uint8_t)2U)
-#define PMIC_WD_TRIG_EARLY_MASK                 ((uint8_t)1U << PMIC_WD_TRIG_EARLY_SHIFT)
+#define PMIC_WD_TRIG_EARLY_MASK                 ((uint8_t)1UL << PMIC_WD_TRIG_EARLY_SHIFT)
 #define PMIC_WD_TIMEOUT_SHIFT                   ((uint8_t)1U)
-#define PMIC_WD_TIMEOUT_MASK                    ((uint8_t)1U << PMIC_WD_TIMEOUT_SHIFT)
+#define PMIC_WD_TIMEOUT_MASK                    ((uint8_t)1UL << PMIC_WD_TIMEOUT_SHIFT)
 #define PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT       ((uint8_t)0U)
-#define PMIC_WD_LONGWIN_TIMEOUT_INT_MASK        ((uint8_t)1U << PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT)
+#define PMIC_WD_LONGWIN_TIMEOUT_INT_MASK        ((uint8_t)1UL << PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT)
 /** @} */
 
 /**
@@ -219,9 +219,9 @@ extern "C" {
  * @{
  */
 #define PMIC_WD_BAD_EVENT_SHIFT                 ((uint8_t)6U)
-#define PMIC_WD_BAD_EVENT_MASK                  ((uint8_t)1U << PMIC_WD_BAD_EVENT_SHIFT)
+#define PMIC_WD_BAD_EVENT_MASK                  ((uint8_t)1UL << PMIC_WD_BAD_EVENT_SHIFT)
 #define PMIC_WD_FIRST_OK_SHIFT                  ((uint8_t)5U)
-#define PMIC_WD_FIRST_OK_MASK                   ((uint8_t)1U << PMIC_WD_FIRST_OK_SHIFT)
+#define PMIC_WD_FIRST_OK_MASK                   ((uint8_t)1UL << PMIC_WD_FIRST_OK_SHIFT)
 #define PMIC_WD_FAIL_CNT_SHIFT                  ((uint8_t)0U)
 #define PMIC_WD_FAIL_CNT_MASK                   ((uint8_t)0xFU << PMIC_WD_FAIL_CNT_SHIFT)
 /** @} */

@@ -99,7 +99,7 @@ extern "C" {
  * 16 bits indicate the status type and the least significant 16 bits indicate the
  * status ID.
  */
-#define PMIC_STATUS(type, id) ((int32_t)(((type) << PMIC_ST_TYPE_SHIFT) | ((id) << PMIC_ST_ID_SHIFT)))
+#define PMIC_STATUS(type, id) ((int32_t)(((uint32_t)(type) << PMIC_ST_TYPE_SHIFT) | ((uint32_t)(id) << PMIC_ST_ID_SHIFT)))
 
 /**
  * @anchor Pmic_ErrorCodes
@@ -234,8 +234,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_DIAGNOSTIC_CNT_VALID  (1U << 0U)
-#define PMIC_DIAGNOSTIC_FLAG_VALID (1U << 1U)
+#define PMIC_DIAGNOSTIC_CNT_VALID  (1UL << 0U)
+#define PMIC_DIAGNOSTIC_FLAG_VALID (1UL << 1U)
 #define PMIC_DIAGNOSTIC_VALID_ALL  (PMIC_DIAGNOSTIC_CNT_VALID | PMIC_DIAGNOSTIC_FLAG_VALID)
 /** @} */
 
@@ -608,7 +608,7 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, u
  */
 static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
 {
-    const uint8_t bitVal = ((regData & (1U << regFieldShift)) >> regFieldShift);
+    const uint8_t bitVal = ((regData & (uint8_t)(1U << (regFieldShift & 0x07U))) >> regFieldShift);
 
     return (bitVal == 1U);
 }

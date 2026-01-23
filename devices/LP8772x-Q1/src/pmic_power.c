@@ -1088,7 +1088,7 @@ static int32_t PWR_getRvReactionParamLoc(uint8_t resource, uint8_t *regAddr, uin
     }
 
     // For all resources, this is a 1-bit control, set the mask accordingly
-    *mask = (uint8_t)(0x1U << *shift);
+    *mask = (uint8_t)(0x1UL << *shift);
 
     return status;
 }

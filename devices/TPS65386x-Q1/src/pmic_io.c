@@ -45,7 +45,7 @@
 /*========================================================================== */
 #define PMIC_IO_BUF_SIZE (4U)
 #define PMIC_IO_FRAME_LEN_MAX ((uint8_t)8U)  /* Max frame length for CRC loops */
-#define PMIC_IO_REQ_RW   ((uint8_t)(1U << 4U))  /* Read request: R/W=1 */
+#define PMIC_IO_REQ_RW   ((uint8_t)(1UL << 4U))  /* Read request: R/W=1 */
 #define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
 
 /* SPI frame length constants */
@@ -170,7 +170,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxB
 
     // spiBuf[1] = page, R/W, reserved bits
     // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-    spiBuf[1U] = (uint8_t)(((uint8_t)((uint8_t)(regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK)) << SPI_PAGE_SHIFT);
+    spiBuf[1U] = (uint8_t)(((((uint16_t)regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK)) << SPI_PAGE_SHIFT);
     spiBuf[1U] |= PMIC_IO_REQ_RW;
     bufLen = 3U;
 
@@ -245,7 +245,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
 
     // spiBuf[1] = page, R/W, reserved bits
     // bits 7:5 -> page, bit 4 -> R/W, bit 3:0 -> reserved bits
-    spiBuf[1U] = (uint8_t)(((uint8_t)((uint8_t)(regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK)) << SPI_PAGE_SHIFT);
+    spiBuf[1U] = (uint8_t)(((((uint16_t)regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK)) << SPI_PAGE_SHIFT);
     spiBuf[1U] &= (uint8_t)(~PMIC_IO_REQ_RW);
 
     // spiBuf[2] = WDATA[7:0]
@@ -318,7 +318,7 @@ int32_t Pmic_ioUpdateByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8
 
 int32_t Pmic_ioUpdateByte_b(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value)
 {
-    return Pmic_ioUpdateByte(handle, regAddr, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
+    return Pmic_ioUpdateByte(handle, regAddr, shift, (uint8_t)(1UL << shift), value ? 1U : 0U);
 }
 
 int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t shift, bool value)

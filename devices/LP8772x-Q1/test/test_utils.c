@@ -49,7 +49,7 @@
 #define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
 
 // BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
-#define DEVICE_PG_IDENTIFIER_MASK (1U << 3U)
+#define DEVICE_PG_IDENTIFIER_MASK (1UL << 3U)
 
 /* ========================================================================== */
 /*                           Function Definitions                             */

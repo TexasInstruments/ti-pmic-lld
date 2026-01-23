@@ -720,7 +720,7 @@ void test_pos_core_runABIST(void)
     // Unmask ABIST_DONE_MASK
     status = platform_rxByte(&pmicHandle, 0U, maskMiscRegAddr, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    Pmic_setBitField(&regData, abistDoneShift, 1U << abistDoneShift, 0U);
+    Pmic_setBitField(&regData, abistDoneShift, 1UL << abistDoneShift, 0U);
     status = platform_txByte(&pmicHandle, 0U, maskMiscRegAddr, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -767,7 +767,7 @@ static int32_t coreTest_clrResetCnt(void)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, resetCntClrShift = 1U, resetCntClrMask = 1U << 1U;
+    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, resetCntClrShift = 1U, resetCntClrMask = 1UL << 1U;
 
     // Read RECOV_CNT_CONTROL
     status = platform_rxByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);
@@ -786,7 +786,7 @@ static int32_t coreTest_clrRecovCnt(void)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, recovCntClrShift = 0U, recovCntClrMask = 1U << 0U;
+    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, recovCntClrShift = 0U, recovCntClrMask = 1UL << 0U;
 
     // Read RECOV_CNT_CONTROL
     status = platform_rxByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);

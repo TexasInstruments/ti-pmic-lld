@@ -267,12 +267,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPIO_FXN_SEL_VALID     (1U << 0U)
-#define PMIC_GPIO_PU_SEL_VALID      (1U << 1U)
-#define PMIC_GPIO_TYPE_VALID        (1U << 2U)
-#define PMIC_GPIO_DIR_VALID         (1U << 3U)
-#define PMIC_GPIO_DEGL_EN_VALID     (1U << 4U)
-#define PMIC_GPIO_RESISTOR_EN_VALID (1U << 5U)
+#define PMIC_GPIO_FXN_SEL_VALID     (1UL << 0U)
+#define PMIC_GPIO_PU_SEL_VALID      (1UL << 1U)
+#define PMIC_GPIO_TYPE_VALID        (1UL << 2U)
+#define PMIC_GPIO_DIR_VALID         (1UL << 3U)
+#define PMIC_GPIO_DEGL_EN_VALID     (1UL << 4U)
+#define PMIC_GPIO_RESISTOR_EN_VALID (1UL << 5U)
 /** @} */
 
 /**
@@ -285,8 +285,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID    (1U << 0U)
-#define PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID (1U << 1U)
+#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID    (1UL << 0U)
+#define PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID (1UL << 1U)
 /** @} */
 
 /**
@@ -299,8 +299,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID        (1U << 0U)
-#define PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID (1U << 1U)
+#define PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID        (1UL << 0U)
+#define PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID (1UL << 1U)
 /** @} */
 
 /**
@@ -311,9 +311,9 @@ extern "C" {
  * Set the `validParams` member of `Pmic_GpioEnPbVSenseStatus_t` equal to a combination
  * of these defines by using the `OR` operator.
  */
-#define PMIC_GPIO_PB_LVL_HIGH_VALID     (1U << 0U)
-#define PMIC_GPIO_EN_LVL_HIGH_VALID     (1U << 1U)
-#define PMIC_GPIO_VSENSE_LVL_HIGH_VALID (1U << 2U)
+#define PMIC_GPIO_PB_LVL_HIGH_VALID     (1UL << 0U)
+#define PMIC_GPIO_EN_LVL_HIGH_VALID     (1UL << 1U)
+#define PMIC_GPIO_VSENSE_LVL_HIGH_VALID (1UL << 2U)
 /** @} */
 
 /* ========================================================================== */

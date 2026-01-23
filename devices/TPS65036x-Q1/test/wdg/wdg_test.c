@@ -2037,14 +2037,14 @@ void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
 
     // Inject INT_TOP_STATUS bit in WD_QUESTION_ANSW_CNT_REG (bit 7)
     // This will trigger the IRQ response callback path
-    testInject_setBits(0x61U, (1U << 7U));
+    testInject_setBits(0x61U, (1UL << 7U));
 
     // Now call Q&A write - this should detect INT_TOP_STATUS and call callback
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Clear the injected bit
-    testInject_clearBits(0x61U, (1U << 7U));
+    testInject_clearBits(0x61U, (1UL << 7U));
 
     status = Pmic_wdgDisable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

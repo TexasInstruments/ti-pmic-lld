@@ -328,7 +328,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
                 // Set the corresponding bit in the status array
                 uint8_t arrayIndex = irqNum / 32U;
                 uint8_t bitIndex = irqNum % 32U;
-                irqStatLocal.intrStat[arrayIndex] |= (1U << bitIndex);
+                irqStatLocal.intrStat[arrayIndex] |= (1UL << bitIndex);
             }
         }
     }
@@ -360,11 +360,11 @@ int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqSt
             uint8_t arrayIndex = i / 32U;
             uint8_t bitIndex = i % 32U;
 
-            if ((irqStat->intrStat[arrayIndex] & (1U << bitIndex)) != 0U)
+            if ((irqStat->intrStat[arrayIndex] & (1UL << bitIndex)) != 0U)
             {
                 *irqNum = i;
                 // Clear this bit so next call returns the next flag
-                irqStat->intrStat[arrayIndex] &= ~(1U << bitIndex);
+                irqStat->intrStat[arrayIndex] &= ~(1UL << bitIndex);
                 foundFlag = true;
                 break;
             }
@@ -420,7 +420,7 @@ int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // Set the bit to 1 to clear (write-1-to-clear)
-        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1U << pmicIRQs[irqNum].bitShift), true);
+        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1UL << pmicIRQs[irqNum].bitShift), true);
         status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);
     }
 

@@ -70,11 +70,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_LPM_PIN_DETECTION_VALID        (1U << 0U)
-#define PMIC_LPM_DETECTION_DELAY_VALID      (1U << 1U)
-#define PMIC_LPM_VMON_EN_VALID              (1U << 2U)
-#define PMIC_LPM_ESM_EN_VALID               (1U << 3U)
-#define PMIC_LPM_WDG_EN_VALID               (1U << 4U)
+#define PMIC_LPM_PIN_DETECTION_VALID        (1UL << 0U)
+#define PMIC_LPM_DETECTION_DELAY_VALID      (1UL << 1U)
+#define PMIC_LPM_VMON_EN_VALID              (1UL << 2U)
+#define PMIC_LPM_ESM_EN_VALID               (1UL << 3U)
+#define PMIC_LPM_WDG_EN_VALID               (1UL << 4U)
 #define PMIC_LPM_ENABLE_ALL_VALID           (PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID)
 /** @} */
 
@@ -91,8 +91,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CRC16_ENABLE_VALID             (1U << 0U)
-#define PMIC_CRC16_ACTIVATE_CALC_VALID      (1U << 1U)
+#define PMIC_CRC16_ENABLE_VALID             (1UL << 0U)
+#define PMIC_CRC16_ACTIVATE_CALC_VALID      (1UL << 1U)
 /** @} */
 
 /**

@@ -61,15 +61,15 @@ extern "C" {
 
 /** @brief PMIC Watchdog Enable Register (WD_ENABLE_REG) */
 #define PMIC_WD_EN_SHIFT             (0U)
-#define PMIC_WD_EN_MASK              (uint8_t)(1U << PMIC_WD_EN_SHIFT)
+#define PMIC_WD_EN_MASK              (uint8_t)(1UL << PMIC_WD_EN_SHIFT)
 #define PMIC_WD_RST_EN_SHIFT         (1U)
-#define PMIC_WD_RST_EN_MASK          (uint8_t)(1U << PMIC_WD_RST_EN_SHIFT)
+#define PMIC_WD_RST_EN_MASK          (uint8_t)(1UL << PMIC_WD_RST_EN_SHIFT)
 
 /** @brief PMIC Watchdog Configuration Register (WD_MODE_REG) */
 #define PMIC_WD_RETURN_LONGWIN_SHIFT (0U)
-#define PMIC_WD_RETURN_LONGWIN_MASK  (uint8_t)(1U << PMIC_WD_RETURN_LONGWIN_SHIFT)
+#define PMIC_WD_RETURN_LONGWIN_MASK  (uint8_t)(1UL << PMIC_WD_RETURN_LONGWIN_SHIFT)
 #define PMIC_WD_PWRHOLD_SHIFT        (2U)
-#define PMIC_WD_PWRHOLD_MASK         (uint8_t)(1U << PMIC_WD_PWRHOLD_SHIFT)
+#define PMIC_WD_PWRHOLD_MASK         (uint8_t)(1UL << PMIC_WD_PWRHOLD_SHIFT)
 
 /** @brief PMIC Watchdog Window 1 Configuration Register (WD_WIN1_CFG) */
 #define PMIC_WD_WIN1_SHIFT           (0U)

@@ -107,7 +107,7 @@ extern "C" {
  * 16 bits indicate the status type and the least significant 16 bits indicate the
  * status ID.
  */
-#define PMIC_STATUS(type, id) ((int32_t)(((type) << PMIC_ST_TYPE_SHIFT) | ((id) << PMIC_ST_ID_SHIFT)))
+#define PMIC_STATUS(type, id) ((int32_t)(((uint32_t)(type) << PMIC_ST_TYPE_SHIFT) | ((uint32_t)(id) << PMIC_ST_ID_SHIFT)))
 
 /**
  * @anchor Pmic_ErrorCodes
@@ -233,8 +233,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_DIAGNOSTIC_CNT_VALID  (1U << 0U)
-#define PMIC_DIAGNOSTIC_FLAG_VALID (1U << 1U)
+#define PMIC_DIAGNOSTIC_CNT_VALID  (1UL << 0U)
+#define PMIC_DIAGNOSTIC_FLAG_VALID (1UL << 1U)
 #define PMIC_DIAGNOSTIC_VALID_ALL  (PMIC_DIAGNOSTIC_CNT_VALID | PMIC_DIAGNOSTIC_FLAG_VALID)
 /** @} */
 
@@ -544,7 +544,7 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
  */
 static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value)
 {
-    Pmic_setBitField(regData, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
+    Pmic_setBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U)), value ? 1U : 0U);
 }
 
 /**
@@ -583,7 +583,7 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
  */
 static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {
-    return Pmic_getBitField(regData, shift, (uint8_t)(1U << shift)) == 1U;
+    return Pmic_getBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U))) == 1U;
 }
 
 /**

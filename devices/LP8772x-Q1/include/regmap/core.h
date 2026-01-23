@@ -58,7 +58,7 @@ extern "C" {
 /* Register lock definitions */
 #define PMIC_REGISTER_LOCK_REG          ((uint8_t)0x09U)
 #define PMIC_REGISTER_LOCK_STATUS_SHIFT (0U)
-#define PMIC_REGISTER_LOCK_STATUS_MASK  (1U << PMIC_REGISTER_LOCK_STATUS_SHIFT)
+#define PMIC_REGISTER_LOCK_STATUS_MASK  (1UL << PMIC_REGISTER_LOCK_STATUS_SHIFT)
 
 /* CONFIG_CRC_* register definitions */
 #define CONFIG_CRC_CONFIG_REG           ((uint8_t)0x60U)

@@ -391,12 +391,12 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
     {
         if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_VALID))
         {
-            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1U << pinMap->maskShift), gpioTriggerCfgLocal.mask);
+            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1UL << pinMap->maskShift), gpioTriggerCfgLocal.mask);
         }
 
         if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            Pmic_setBitField(&regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift), gpioTriggerCfgLocal.maskPol);
+            Pmic_setBitField(&regData, pinMap->maskPolShift, (uint8_t)(1UL << pinMap->maskPolShift), gpioTriggerCfgLocal.maskPol);
         }
 
         status = Pmic_ioTxByte(handle, pinMap->regAddr, regData);
@@ -452,7 +452,7 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
 
         if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_FSM_MASK_POL_VALID))
         {
-            gpioTriggerCfgLocal.maskPol = Pmic_getBitField(regData, pinMap->maskPolShift, (uint8_t)(1U << pinMap->maskPolShift));
+            gpioTriggerCfgLocal.maskPol = Pmic_getBitField(regData, pinMap->maskPolShift, (uint8_t)(1UL << pinMap->maskPolShift));
         }
 
         FSM_copyFsmGpioTriggerCfg(&gpioTriggerCfgLocal, gpioTriggerCfg);

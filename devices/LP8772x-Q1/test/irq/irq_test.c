@@ -1244,11 +1244,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_SC_NMI in INT_BUCK_LDO_LS1_VMON1 (bit 4)
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(0x47U, regData);
 
     // Get IRQ status - triggers IRQ_getStatBucks()
@@ -1256,7 +1256,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify BUCK1_SC_NMI (IRQ 0) is set in intrStat[0]
-    expectedBit = (1U << PMIC_BUCK1_SC_NMI);
+    expectedBit = (1UL << PMIC_BUCK1_SC_NMI);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1273,11 +1273,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject LS2_VMON2_INT in INT_TOP (bit 1)
-    regData = (1U << 1U);
+    regData = (1UL << 1U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject LS2_VMON2_SC_NMI in INT_LS2_VMON2 (bit 4)
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(0x4AU, regData);
 
     // Get IRQ status - triggers IRQ_getStatLs2Vmon2()
@@ -1285,7 +1285,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_LS2_VMON2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify LS2_VMON2_SC_NMI (IRQ 20) is set in intrStat[0]
-    expectedBit = (1U << PMIC_LS2_VMON2_SC_NMI);
+    expectedBit = (1UL << PMIC_LS2_VMON2_SC_NMI);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1302,11 +1302,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject VCCA_INT in INT_TOP (bit 2)
-    regData = (1U << 2U);
+    regData = (1UL << 2U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject VCCA_OV_INT in INT_VCCA (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x4BU, regData);
 
     // Get IRQ status - triggers IRQ_getStatVccaVmon1()
@@ -1314,7 +1314,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_VCCA(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify VCCA_OV_INT (IRQ 25) is set in intrStat[0]
-    expectedBit = (1U << PMIC_VCCA_OV_INT);
+    expectedBit = (1UL << PMIC_VCCA_OV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1331,11 +1331,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject STARTUP_INT in INT_TOP (bit 3)
-    regData = (1U << 3U);
+    regData = (1UL << 3U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject STARTUP_ENABLE_INT in INT_STARTUP (bit 1)
-    regData = (1U << 1U);
+    regData = (1UL << 1U);
     testInject_setBits(0x4CU, regData);
 
     // Get IRQ status - triggers IRQ_getStatStartup()
@@ -1343,7 +1343,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_STARTUP(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify STARTUP_ENABLE_INT (IRQ 27) is set in intrStat[0]
-    expectedBit = (1U << PMIC_STARTUP_ENABLE_INT);
+    expectedBit = (1UL << PMIC_STARTUP_ENABLE_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1360,11 +1360,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject MISC_INT in INT_TOP (bit 4)
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject TWARN_INT in INT_MISC (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(0x4DU, regData);
 
     // Get IRQ status - triggers IRQ_getStatMisc()
@@ -1372,7 +1372,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify MISC_TWARN_INT (IRQ 31) is set in intrStat[0]
-    expectedBit = (1U << PMIC_MISC_TWARN_INT);
+    expectedBit = (1UL << PMIC_MISC_TWARN_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1389,11 +1389,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject MODERATE_ERR_INT in INT_TOP (bit 5)
-    regData = (1U << 5U);
+    regData = (1UL << 5U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject CONFIG_CRC_INT in INT_MODERATE_ERR (bit 3)
-    regData = (1U << 3U);
+    regData = (1UL << 3U);
     testInject_setBits(0x4EU, regData);
 
     // Get IRQ status - triggers IRQ_getStatModerate()
@@ -1401,7 +1401,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify ME_CONFIG_CRC_INT (IRQ 35) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_ME_CONFIG_CRC_INT - 32U));
+    expectedBit = (1UL << (PMIC_ME_CONFIG_CRC_INT - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1418,11 +1418,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject SEVERE_ERR_INT in INT_TOP (bit 6)
-    regData = (1U << 6U);
+    regData = (1UL << 6U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject TSD_IMM_NMI in INT_SEVERE_ERR (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x4FU, regData);
 
     // Get IRQ status - triggers IRQ_getStatSevere()
@@ -1430,7 +1430,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify SE_TSD_IMM_NMI (IRQ 38) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_SE_TSD_IMM_NMI - 32U));
+    expectedBit = (1UL << (PMIC_SE_TSD_IMM_NMI - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1447,11 +1447,11 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject FSM_IMM_SHUTDOWN_NMI in INT_FSM_ERR (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - triggers IRQ_getStatFSM()
@@ -1459,7 +1459,7 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify FSM_IMM_SHUTDOWN_NMI (IRQ 56) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
+    expectedBit = (1UL << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1478,15 +1478,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_INT in INT_BUCK_LDO_LS1_VMON1 (bit 0) → triggers L2 read
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x47U, regData);
 
     // Inject BUCK1_OV_INT in INT_BUCK_12 (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x48U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1494,7 +1494,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify BUCK1_OV_INT (IRQ 1) is set in intrStat[0]
-    expectedBit = (1U << PMIC_BUCK1_OV_INT);
+    expectedBit = (1UL << PMIC_BUCK1_OV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1511,15 +1511,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK2_INT in INT_BUCK_LDO_LS1_VMON1 (bit 1) → triggers L2 read
-    regData = (1U << 1U);
+    regData = (1UL << 1U);
     testInject_setBits(0x47U, regData);
 
     // Inject BUCK2_UV_INT in INT_BUCK_12 (bit 5)
-    regData = (1U << 5U);
+    regData = (1UL << 5U);
     testInject_setBits(0x48U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1527,7 +1527,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2_via_BUCK2(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify BUCK2_UV_INT (IRQ 7) is set in intrStat[0]
-    expectedBit = (1U << PMIC_BUCK2_UV_INT);
+    expectedBit = (1UL << PMIC_BUCK2_UV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1544,15 +1544,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK3_INT in INT_BUCK_LDO_LS1_VMON1 (bit 2) → triggers L2 read
-    regData = (1U << 2U);
+    regData = (1UL << 2U);
     testInject_setBits(0x47U, regData);
 
     // Inject BUCK3_ILIM_INT in INT_BUCK3_LDO_LS1_VMON1 (bit 3)
-    regData = (1U << 3U);
+    regData = (1UL << 3U);
     testInject_setBits(0x49U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1560,7 +1560,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_BUCK3(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify BUCK3_ILIM_INT (IRQ 14) is set in intrStat[0]
-    expectedBit = (1U << PMIC_BUCK3_ILIM_INT);
+    expectedBit = (1UL << PMIC_BUCK3_ILIM_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1577,15 +1577,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject LDO_LS1_VMON1_INT in INT_BUCK_LDO_LS1_VMON1 (bit 3) → triggers L2 read
-    regData = (1U << 3U);
+    regData = (1UL << 3U);
     testInject_setBits(0x47U, regData);
 
     // Inject LDO_LS1_VMON1_RV_INT in INT_BUCK3_LDO_LS1_VMON1 (bit 6)
-    regData = (1U << 6U);
+    regData = (1UL << 6U);
     testInject_setBits(0x49U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1593,7 +1593,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO_via_LDO(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify LDO_LS1_VMON1_RV_INT (IRQ 18) is set in intrStat[0]
-    expectedBit = (1U << PMIC_LDO_LS1_VMON1_RV_INT);
+    expectedBit = (1UL << PMIC_LDO_LS1_VMON1_RV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 
@@ -1610,15 +1610,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject ESM_MCU_INT in INT_FSM_ERR (bit 5) → triggers INT_ESM_REG read
-    regData = (1U << 5U);
+    regData = (1UL << 5U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject ESM_MCU_FAIL_INT in INT_ESM (bit 4)
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(0x52U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1626,7 +1626,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify ESM_MCU_FAIL_INT (IRQ 45) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_ESM_MCU_FAIL_INT - 32U));
+    expectedBit = (1UL << (PMIC_ESM_MCU_FAIL_INT - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1643,15 +1643,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject COMM_ERR_INT in INT_FSM_ERR (bit 6) → triggers INT_COMM_ERR read
-    regData = (1U << 6U);
+    regData = (1UL << 6U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject COMM_CRC_ERR_INT in INT_COMM_ERR (bit 1)
-    regData = (1U << 1U);
+    regData = (1UL << 1U);
     testInject_setBits(0x51U, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1659,7 +1659,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify COMM_CRC_ERR_INT (IRQ 41) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_COMM_CRC_ERR_INT - 32U));
+    expectedBit = (1UL << (PMIC_COMM_CRC_ERR_INT - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1676,15 +1676,15 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject WD_INT in INT_FSM_ERR (bit 7) → triggers WD_ERR_STAT read
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Inject WDG_TIMEOUT_NMI in WD_ERR_STAT (bit 1)
-    regData = (1U << 1U);
+    regData = (1UL << 1U);
     testInject_setBits(TEST_REG_WD_ERR_STATUS, regData);
 
     // Get IRQ status - triggers L0→L1→L2 cascade
@@ -1692,7 +1692,7 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STAT(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify WDG_TIMEOUT_NMI (IRQ 49) is set in intrStat[1]
-    expectedBit = (1U << (PMIC_WDG_TIMEOUT_NMI - 32U));
+    expectedBit = (1UL << (PMIC_WDG_TIMEOUT_NMI - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1709,23 +1709,23 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject multiple L0 bits: BUCK_LDO (bit 0) + FSM_ERR (bit 7)
-    regData = (1U << 0U) | (1U << 7U);
+    regData = (1UL << 0U) | (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // L1: Inject BUCK1_INT in INT_BUCK_LDO_LS1_VMON1
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x47U, regData);
 
     // L2: Inject BUCK1_OV_INT in INT_BUCK_12
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x48U, regData);
 
     // L1: Inject ESM_MCU_INT in INT_FSM_ERR
-    regData = (1U << 5U);
+    regData = (1UL << 5U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // L2: Inject ESM_MCU_FAIL_INT in INT_ESM
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(0x52U, regData);
 
     // Get IRQ status - triggers multiple L0→L1→L2 cascades
@@ -1733,11 +1733,11 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify BUCK1_OV_INT (IRQ 1) is set
-    expectedBit = (1U << PMIC_BUCK1_OV_INT);
+    expectedBit = (1UL << PMIC_BUCK1_OV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 
     // Verify ESM_MCU_FAIL_INT (IRQ 45) is set
-    expectedBit = (1U << (PMIC_ESM_MCU_FAIL_INT - 32U));
+    expectedBit = (1UL << (PMIC_ESM_MCU_FAIL_INT - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 }
 
@@ -1759,23 +1759,23 @@ void test_pos_irq_irqGetNextFlag_L2_populated_intrStat(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject L0→L1→L2 cascade for BUCK1_OV_INT
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x47U, regData);
 
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(0x48U, regData);
 
     // Inject L0→L1→L2 cascade for ESM_MCU_FAIL_INT
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
-    regData = (1U << 5U);
+    regData = (1UL << 5U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
-    regData = (1U << 4U);
+    regData = (1UL << 4U);
     testInject_setBits(0x52U, regData);
 
     // Get IRQ status - populates intrStat with L2 IRQs
@@ -1827,15 +1827,15 @@ void test_pos_irq_irqGetNextFlag_mixed_L1_L2_flags(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject L0 bit
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject both L1 direct NMI + L1 indicator for L2 read
-    regData = (1U << 4U) | (1U << 0U);  // BUCK1_SC_NMI (bit 4) + BUCK1_INT (bit 0)
+    regData = (1UL << 4U) | (1UL << 0U);  // BUCK1_SC_NMI (bit 4) + BUCK1_INT (bit 0)
     testInject_setBits(0x47U, regData);
 
     // Inject L2 flag
-    regData = (1U << 0U);  // BUCK1_OV_INT
+    regData = (1UL << 0U);  // BUCK1_OV_INT
     testInject_setBits(0x48U, regData);
 
     // Get IRQ status
@@ -1886,11 +1886,11 @@ void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject FSM_ERR_INT in INT_TOP (bit 7)
-    regData = (1U << 7U);
+    regData = (1UL << 7U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject FSM_IMM_SHUTDOWN_NMI (IRQ 56) in INT_FSM_ERR (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - populates intrStat[1] (IRQ 32+)
@@ -1898,7 +1898,7 @@ void test_pos_irq_irqGetNextFlag_highIndex_IRQs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify intrStat[1] bit is set
-    uint32_t expectedBit = (1U << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
+    uint32_t expectedBit = (uint32_t)(1UL << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
     PLATFORM_ASSERT((irqStat.intrStat[1] & expectedBit) != 0U);
 
     // Iterate through all flags
@@ -1939,11 +1939,11 @@ void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BUCK1_INT (bit 0) and BUCK1_SC_NMI (bit 4) in INT_BUCK_LDO_LS1_VMON1
-    regData = (1U << 0U) | (1U << 4U);
+    regData = (1UL << 0U) | (1UL << 4U);
     testInject_setBits(0x47U, regData);
 
     // DO NOT inject any L2 flags - INT_BUCK_12 remains 0x00
@@ -1954,14 +1954,14 @@ void test_pos_irq_irqGetStatus_L1_set_but_L2_empty(void)
 
     // Verify no false positives - only BUCK1_SC_NMI (L1 direct) should be set
     // BUCK1_SC_NMI is at bit 4, BUCK1_INT indicator is at bit 0
-    uint32_t expectedBit = (1U << PMIC_BUCK1_SC_NMI);
+    uint32_t expectedBit = (uint32_t)(1UL << PMIC_BUCK1_SC_NMI);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 
     // Verify no L2 BUCK1 IRQs are set (IRQ 1-4)
-    uint32_t buck1L2Mask = ((1U << PMIC_BUCK1_OV_INT) |
-                             (1U << PMIC_BUCK1_UV_INT) |
-                             (1U << PMIC_BUCK1_RV_INT) |
-                             (1U << PMIC_BUCK1_ILIM_INT));
+    uint32_t buck1L2Mask = (uint32_t)((1UL << PMIC_BUCK1_OV_INT) |
+                                       (1UL << PMIC_BUCK1_UV_INT) |
+                                       (1UL << PMIC_BUCK1_RV_INT) |
+                                       (1UL << PMIC_BUCK1_ILIM_INT));
     PLATFORM_ASSERT((irqStat.intrStat[0] & buck1L2Mask) == 0U);
 }
 
@@ -1981,28 +1981,28 @@ void test_pos_irq_irqGetStatus_all_L0_categories_set(void)
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject one flag in each L1 category register
-    regData = (1U << 0U);  // BUCK1_SC_NMI
+    regData = (1UL << 0U);  // BUCK1_SC_NMI
     testInject_setBits(0x47U, regData);
 
-    regData = (1U << 0U);  // LS2_VMON2_SC_NMI
+    regData = (1UL << 0U);  // LS2_VMON2_SC_NMI
     testInject_setBits(0x4AU, regData);
 
-    regData = (1U << 0U);  // VCCA_OV_INT
+    regData = (1UL << 0U);  // VCCA_OV_INT
     testInject_setBits(0x4BU, regData);
 
-    regData = (1U << 0U);  // STARTUP_ENABLE_INT
+    regData = (1UL << 0U);  // STARTUP_ENABLE_INT
     testInject_setBits(0x4CU, regData);
 
-    regData = (1U << 0U);  // ABIST_FAIL_INT
+    regData = (1UL << 0U);  // ABIST_FAIL_INT
     testInject_setBits(0x4DU, regData);
 
-    regData = (1U << 0U);  // TSD_ORD_NMI
+    regData = (1UL << 0U);  // TSD_ORD_NMI
     testInject_setBits(0x4EU, regData);
 
-    regData = (1U << 0U);  // TSD_IMM_NMI
+    regData = (1UL << 0U);  // TSD_IMM_NMI
     testInject_setBits(0x4FU, regData);
 
-    regData = (1U << 0U);  // FSM_IMM_SHUTDOWN_NMI
+    regData = (1UL << 0U);  // FSM_IMM_SHUTDOWN_NMI
     testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
 
     // Get IRQ status - all category read functions execute
@@ -2026,16 +2026,16 @@ void test_pos_irq_irqGetStatus_multiple_L2_same_category(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Inject BUCK_LDO_LS1_VMON1_INT in INT_TOP (bit 0)
-    regData = (1U << 0U);
+    regData = (1UL << 0U);
     testInject_setBits(TEST_REG_INT_TOP, regData);
 
     // Inject BOTH BUCK1_INT and BUCK2_INT in INT_BUCK_LDO_LS1_VMON1
     // Both trigger read of shared INT_BUCK_12_REG
-    regData = (1U << 0U) | (1U << 1U);
+    regData = (1UL << 0U) | (1UL << 1U);
     testInject_setBits(0x47U, regData);
 
     // Inject multiple flags in shared INT_BUCK_12 register
-    regData = (1U << 0U) | (1U << 5U);  // BUCK1_OV + BUCK2_UV
+    regData = (1UL << 0U) | (1UL << 5U);  // BUCK1_OV + BUCK2_UV
     testInject_setBits(0x48U, regData);
 
     // Get IRQ status - INT_BUCK_12 read once, handles both L1 indicators
@@ -2043,10 +2043,10 @@ void test_pos_irq_irqGetStatus_multiple_L2_same_category(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify both BUCK1_OV_INT and BUCK2_UV_INT are captured
-    expectedBit = (1U << PMIC_BUCK1_OV_INT);
+    expectedBit = (1UL << PMIC_BUCK1_OV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 
-    expectedBit = (1U << PMIC_BUCK2_UV_INT);
+    expectedBit = (1UL << PMIC_BUCK2_UV_INT);
     PLATFORM_ASSERT((irqStat.intrStat[0] & expectedBit) != 0U);
 }
 

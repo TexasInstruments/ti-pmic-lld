@@ -69,15 +69,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_ENABLE_VALID               ((uint32_t)1U << 0U)
-#define PMIC_ESM_MODE_VALID                 ((uint32_t)1U << 1U)
-#define PMIC_ESM_ERR_CNT_THR_VALID          ((uint32_t)1U << 2U)
-#define PMIC_ESM_DELAY1_VALID               ((uint32_t)1U << 3U)
-#define PMIC_ESM_DELAY2_VALID               ((uint32_t)1U << 4U)
-#define PMIC_ESM_HMAX_VALID                 ((uint32_t)1U << 5U)
-#define PMIC_ESM_HMIN_VALID                 ((uint32_t)1U << 6U)
-#define PMIC_ESM_LMAX_VALID                 ((uint32_t)1U << 7U)
-#define PMIC_ESM_LMIN_VALID                 ((uint32_t)1U << 8U)
+#define PMIC_ESM_ENABLE_VALID               ((uint32_t)1UL << 0U)
+#define PMIC_ESM_MODE_VALID                 ((uint32_t)1UL << 1U)
+#define PMIC_ESM_ERR_CNT_THR_VALID          ((uint32_t)1UL << 2U)
+#define PMIC_ESM_DELAY1_VALID               ((uint32_t)1UL << 3U)
+#define PMIC_ESM_DELAY2_VALID               ((uint32_t)1UL << 4U)
+#define PMIC_ESM_HMAX_VALID                 ((uint32_t)1UL << 5U)
+#define PMIC_ESM_HMIN_VALID                 ((uint32_t)1UL << 6U)
+#define PMIC_ESM_LMAX_VALID                 ((uint32_t)1UL << 7U)
+#define PMIC_ESM_LMIN_VALID                 ((uint32_t)1UL << 8U)
 /** @} */
 
 /**
@@ -92,9 +92,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_RST_INT_VALID              ((uint32_t)1U << 0U)
-#define PMIC_ESM_FAIL_INT_VALID             ((uint32_t)1U << 1U)
-#define PMIC_ESM_PIN_INT_VALID              ((uint32_t)1U << 2U)
+#define PMIC_ESM_RST_INT_VALID              ((uint32_t)1UL << 0U)
+#define PMIC_ESM_FAIL_INT_VALID             ((uint32_t)1UL << 1U)
+#define PMIC_ESM_PIN_INT_VALID              ((uint32_t)1UL << 2U)
 #define PMIC_ESM_STATUS_ALL_VALID           (PMIC_ESM_RST_INT_VALID | \
                                             PMIC_ESM_FAIL_INT_VALID | \
                                             PMIC_ESM_PIN_INT_VALID)

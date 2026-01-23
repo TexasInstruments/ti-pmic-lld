@@ -228,17 +228,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_ENABLE_VALID              (1U << 0U)
-#define PMIC_PWR_CFG_MODE_VALID                (1U << 1U)
-#define PMIC_PWR_CFG_ILIM_VALID                (1U << 2U)
-#define PMIC_PWR_CFG_VOLTAGE_VALID             (1U << 3U)
-#define PMIC_PWR_CFG_DEGLITCH_VALID            (1U << 4U)
-#define PMIC_PWR_CFG_UV_THRESH_VALID           (1U << 5U)
-#define PMIC_PWR_CFG_OV_THRESH_VALID           (1U << 6U)
-#define PMIC_PWR_CFG_UV_REACT_VALID            (1U << 7U)
-#define PMIC_PWR_CFG_OV_REACT_VALID            (1U << 8U)
-#define PMIC_PWR_CFG_RV_REACT_VALID            (1U << 9U)
-#define PMIC_PWR_CFG_SC_REACT_VALID            (1U << 10U)
+#define PMIC_PWR_CFG_ENABLE_VALID              (1UL << 0U)
+#define PMIC_PWR_CFG_MODE_VALID                (1UL << 1U)
+#define PMIC_PWR_CFG_ILIM_VALID                (1UL << 2U)
+#define PMIC_PWR_CFG_VOLTAGE_VALID             (1UL << 3U)
+#define PMIC_PWR_CFG_DEGLITCH_VALID            (1UL << 4U)
+#define PMIC_PWR_CFG_UV_THRESH_VALID           (1UL << 5U)
+#define PMIC_PWR_CFG_OV_THRESH_VALID           (1UL << 6U)
+#define PMIC_PWR_CFG_UV_REACT_VALID            (1UL << 7U)
+#define PMIC_PWR_CFG_OV_REACT_VALID            (1UL << 8U)
+#define PMIC_PWR_CFG_RV_REACT_VALID            (1UL << 9U)
+#define PMIC_PWR_CFG_SC_REACT_VALID            (1UL << 10U)
 /** @} */
 
 /**
@@ -269,8 +269,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_SEQ_STARTUP_VALID             (1U << 0U)
-#define PMIC_PWR_SEQ_SHUTDOWN_VALID            (1U << 1U)
+#define PMIC_PWR_SEQ_STARTUP_VALID             (1UL << 0U)
+#define PMIC_PWR_SEQ_SHUTDOWN_VALID            (1UL << 1U)
 /** @} */
 
 /**

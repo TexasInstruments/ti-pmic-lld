@@ -149,7 +149,7 @@ static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
         // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
         // At an index, the IRQ is stored at its corresponding bit
         // (e.g., IRQ 49's status will be stored at bit 17 at index 1)
-        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT] |= ((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT));
+        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT] |= ((uint32_t)1UL << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT));
     }
 }
 
@@ -237,7 +237,7 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
         for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) {
             const uint8_t irqNum = masks[i].irqNum;
             const Pmic_IrqInfo_t *pIrq = &pmicIRQs[irqNum];
-            const uint8_t userMask = (uint8_t)(1U << pIrq->shift);
+            const uint8_t userMask = (uint8_t)(1UL << pIrq->shift);
 
             // If the current mask setting isn't targeted at the register we are
             // currently building, skip it
@@ -726,7 +726,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
         // For each bit in the element...
         for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT; bitPos++) {
             // If the bit is set...
-            const uint32_t mask = ((uint32_t)1U << bitPos);
+            const uint32_t mask = ((uint32_t)1UL << bitPos);
             if ((irqStat->intrStat[index] & mask) != 0U) {
                 // Clear bit in intrStat element and exit loop
                 irqStat->intrStat[index] &= ~mask;

@@ -53,23 +53,23 @@ extern "C" {
 
 /** @brief ESM_CTRL - ESM Control */
 #define ESM_START_SHIFT    (0U)
-#define ESM_START_MASK     (1U << ESM_START_SHIFT)
+#define ESM_START_MASK     (1UL << ESM_START_SHIFT)
 
 /** @brief ESM_CFG1 - ESM Configuration 1 */
 #define ESM_ERR_TH_SHIFT   (0U)
 #define ESM_EN_SHIFT       (6U)
 #define ESM_CFG_SHIFT      (7U)
 #define ESM_ERR_TH_MASK    (0xFU << ESM_ERR_TH_SHIFT)
-#define ESM_EN_MASK        (1U << ESM_EN_SHIFT)
-#define ESM_CFG_MASK       (1U << ESM_CFG_SHIFT)
+#define ESM_EN_MASK        (1UL << ESM_EN_SHIFT)
+#define ESM_CFG_MASK       (1UL << ESM_CFG_SHIFT)
 
 /** @brief ESM_CFG2 - ESM Configuration 2 */
 #define ESM_TIME_CFG_SHIFT (0U)
 #define ESM_DGL_SHIFT      (3U)
 #define ESM_LVL_POL_SHIFT  (4U)
 #define ESM_TIME_CFG_MASK  (7U << ESM_TIME_CFG_SHIFT)
-#define ESM_DGL_MASK       (1U << ESM_DGL_SHIFT)
-#define ESM_LVL_POL_MASK   (1U << ESM_LVL_POL_SHIFT)
+#define ESM_DGL_MASK       (1UL << ESM_DGL_SHIFT)
+#define ESM_LVL_POL_MASK   (1UL << ESM_LVL_POL_SHIFT)
 
 /** @brief ESM_DELAY1 - ESM Delay 1 */
 #define ESM_DLY1_SHIFT (0U)
@@ -101,9 +101,9 @@ extern "C" {
 #define ESM_DLY1_ERR_SHIFT (6U)
 #define ESM_DLY2_ERR_SHIFT (7U)
 #define ESM_ERR_CNT_MASK   (0x1FU << ESM_ERR_CNT_SHIFT)
-#define ESM_ERR_MASK       (1U << ESM_ERR_SHIFT)
-#define ESM_DLY1_ERR_MASK  (1U << ESM_DLY1_ERR_SHIFT)
-#define ESM_DLY2_ERR_MASK  (1U << ESM_DLY2_ERR_SHIFT)
+#define ESM_ERR_MASK       (1UL << ESM_ERR_SHIFT)
+#define ESM_DLY1_ERR_MASK  (1UL << ESM_DLY1_ERR_SHIFT)
+#define ESM_DLY2_ERR_MASK  (1UL << ESM_DLY2_ERR_SHIFT)
 
 #ifdef __cplusplus
 }

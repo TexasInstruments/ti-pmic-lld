@@ -118,7 +118,7 @@ static void GPIO_getOutMask(uint8_t pinNum, uint8_t *bitMask)
 {
     uint8_t bitShift;
     GPIO_getOutShift(pinNum, &bitShift);
-    *bitMask = (uint8_t)(0x01U << bitShift);
+    *bitMask = (uint8_t)(0x01UL << bitShift);
 }
 
 /* Get GPIO input bit shift for a given pin (1-6). */

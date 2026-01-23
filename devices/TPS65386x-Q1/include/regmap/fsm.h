@@ -60,25 +60,25 @@ extern "C" {
 #define AUTO_BIST_EN_SHIFT         (5U)
 #define CFG_REG_CRC_INT_CFG_SHIFT  (6U)
 #define PWD_TH_MASK                (0x1FU << PWD_TH_SHIFT)
-#define AUTO_BIST_EN_MASK          (1U << AUTO_BIST_EN_SHIFT)
-#define CFG_REG_CRC_INT_CFG_MASK   (1U << CFG_REG_CRC_INT_CFG_SHIFT)
+#define AUTO_BIST_EN_MASK          (1UL << AUTO_BIST_EN_SHIFT)
+#define CFG_REG_CRC_INT_CFG_MASK   (1UL << CFG_REG_CRC_INT_CFG_SHIFT)
 
 /** @brief WAKE_CFG - Wake Configuration */
 #define WAKE1_DGL_CFG_SHIFT    (0U)
 #define WAKE2_DGL_CFG_SHIFT    (1U)
 #define WAKE1_STBY_CFG_SHIFT   (4U)
 #define WAKE2_STBY_CFG_SHIFT   (5U)
-#define WAKE1_DGL_CFG_MASK     (1U << WAKE1_DGL_CFG_SHIFT)
-#define WAKE2_DGL_CFG_MASK     (1U << WAKE2_DGL_CFG_SHIFT)
-#define WAKE1_STBY_CFG_MASK    (1U << WAKE1_STBY_CFG_SHIFT)
-#define WAKE2_STBY_CFG_MASK    (1U << WAKE2_STBY_CFG_SHIFT)
+#define WAKE1_DGL_CFG_MASK     (1UL << WAKE1_DGL_CFG_SHIFT)
+#define WAKE2_DGL_CFG_MASK     (1UL << WAKE2_DGL_CFG_SHIFT)
+#define WAKE1_STBY_CFG_MASK    (1UL << WAKE1_STBY_CFG_SHIFT)
+#define WAKE2_STBY_CFG_MASK    (1UL << WAKE2_STBY_CFG_SHIFT)
 
 /** @brief WAKE_STAT - Wake Status */
 #define WAKE1_LVL_DGL_SHIFT    (0U)
 #define WAKE2_LVL_DGL_SHIFT    (1U)
 #define WAKE_SOURCE_SHIFT      (4U)
-#define WAKE1_LVL_DGL_MASK     (1U << WAKE1_LVL_DGL_SHIFT)
-#define WAKE2_LVL_DGL_MASK     (1U << WAKE2_LVL_DGL_SHIFT)
+#define WAKE1_LVL_DGL_MASK     (1UL << WAKE1_LVL_DGL_SHIFT)
+#define WAKE2_LVL_DGL_MASK     (1UL << WAKE2_LVL_DGL_SHIFT)
 #define WAKE_SOURCE_MASK       (0xFU << WAKE_SOURCE_SHIFT)
 
 /** @brief PWRL_CFG - Power Latch Configuration */
@@ -86,9 +86,9 @@ extern "C" {
 #define WAKE2_PWRL_EN_SHIFT        (1U)
 #define STBY_ERR_WK_PWRL_EN_SHIFT  (5U)
 #define PWRD_DLY_CFG_SHIFT         (6U)
-#define WAKE1_PWRL_EN_MASK         (1U << WAKE1_PWRL_EN_SHIFT)
-#define WAKE2_PWRL_EN_MASK         (1U << WAKE2_PWRL_EN_SHIFT)
-#define STBY_ERR_WK_PWRL_EN_MASK   (1U << STBY_ERR_WK_PWRL_EN_SHIFT)
+#define WAKE1_PWRL_EN_MASK         (1UL << WAKE1_PWRL_EN_SHIFT)
+#define WAKE2_PWRL_EN_MASK         (1UL << WAKE2_PWRL_EN_SHIFT)
+#define STBY_ERR_WK_PWRL_EN_MASK   (1UL << STBY_ERR_WK_PWRL_EN_SHIFT)
 #define PWRD_DLY_CFG_MASK          (3U << PWRD_DLY_CFG_SHIFT)
 
 /** @brief PWRL_CTRL - Power Latch Control */
@@ -97,11 +97,11 @@ extern "C" {
 #define M_PMIC_WK_PWRL_SHIFT   (4U)
 #define TMR_WK_PWRL_SHIFT      (5U)
 #define STBY_ERR_WK_PWRL_SHIFT (7U)
-#define WAKE1_PWRL_MASK        (1U << WAKE1_PWRL_SHIFT)
-#define WAKE2_PWRL_MASK        (1U << WAKE2_PWRL_SHIFT)
-#define M_PMIC_WK_PWRL_MASK    (1U << M_PMIC_WK_PWRL_SHIFT)
-#define TMR_WK_PWRL_MASK       (1U << TMR_WK_PWRL_SHIFT)
-#define STBY_ERR_WK_PWRL_MASK  (1U << STBY_ERR_WK_PWRL_SHIFT)
+#define WAKE1_PWRL_MASK        (1UL << WAKE1_PWRL_SHIFT)
+#define WAKE2_PWRL_MASK        (1UL << WAKE2_PWRL_SHIFT)
+#define M_PMIC_WK_PWRL_MASK    (1UL << M_PMIC_WK_PWRL_SHIFT)
+#define TMR_WK_PWRL_MASK       (1UL << TMR_WK_PWRL_SHIFT)
+#define STBY_ERR_WK_PWRL_MASK  (1UL << STBY_ERR_WK_PWRL_SHIFT)
 
 /** @brief STATE_CTRL - State Control */
 #define STATE_REQ_SHIFT    (0U)
@@ -112,8 +112,8 @@ extern "C" {
 #define PWRD_DLY_ACTV_SHIFT    (4U)
 #define RST_MCU_RQ_FLAG_SHIFT  (5U)
 #define STATE_MASK             (0xFU << STATE_SHIFT)
-#define PWRD_DLY_ACTV_MASK     (1U << PWRD_DLY_ACTV_SHIFT)
-#define RST_MCU_RQ_FLAG_MASK   (1U << RST_MCU_RQ_FLAG_SHIFT)
+#define PWRD_DLY_ACTV_MASK     (1UL << PWRD_DLY_ACTV_SHIFT)
+#define RST_MCU_RQ_FLAG_MASK   (1UL << RST_MCU_RQ_FLAG_SHIFT)
 
 /** @brief RST_MCU_TMR_REG - Reset MCU Timer Register */
 #define RST_MCU_TMR_SHIFT  (0U)
@@ -125,9 +125,9 @@ extern "C" {
 #define STBY_EN_SHIFT              (4U)
 #define NRST_EN_STBY_SHIFT         (5U)
 #define VBAT_STBY_ENTRY_TH_MASK    (7U << VBAT_STBY_ENTRY_TH_SHIFT)
-#define VBAT_STBY_EXIT_TH_MASK     (1U << VBAT_STBY_EXIT_TH_SHIFT)
-#define STBY_EN_MASK               (1U << STBY_EN_SHIFT)
-#define NRST_EN_STBY_MASK          (1U << NRST_EN_STBY_SHIFT)
+#define VBAT_STBY_EXIT_TH_MASK     (1UL << VBAT_STBY_EXIT_TH_SHIFT)
+#define STBY_EN_MASK               (1UL << STBY_EN_SHIFT)
+#define NRST_EN_STBY_MASK          (1UL << NRST_EN_STBY_SHIFT)
 
 /** @brief RST_MCU_CFG - Reset MCU Configuration */
 #define NRST_EXT_SHIFT         (0U)
@@ -145,7 +145,7 @@ extern "C" {
 #define DEV_ERR_CNT_SHIFT          (0U)
 #define SAFE_ST_TMO_RST_ERR_SHIFT  (7U)
 #define DEV_ERR_CNT_MASK           (0x1FU << DEV_ERR_CNT_SHIFT)
-#define SAFE_ST_TMO_RST_ERR_MASK   (1U << SAFE_ST_TMO_RST_ERR_SHIFT)
+#define SAFE_ST_TMO_RST_ERR_MASK   (1UL << SAFE_ST_TMO_RST_ERR_SHIFT)
 
 #ifdef __cplusplus
 }

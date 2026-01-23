@@ -84,7 +84,7 @@ extern "C" {
 #define LDO_LS1_VMON1_PG_SET_SHIFT    (0U)
 #define LDO_LS1_BYP_CONFIG_SHIFT      (7U)
 #define LDO_LS1_VMON1_PG_SET_MASK     (0x7FU << LDO_LS1_VMON1_PG_SET_SHIFT)
-#define LDO_LS1_BYP_CONFIG_MASK       (0x1U << LDO_LS1_BYP_CONFIG_SHIFT)
+#define LDO_LS1_BYP_CONFIG_MASK       (0x1UL << LDO_LS1_BYP_CONFIG_SHIFT)
 
 // BUCK1_MON_CONF_REG, BUCK2_MON_CONF_REG, BUCK3_MON_CONF_REG Bitfields
 #define BUCKx_ILIM_SHIFT              (0U)
@@ -92,7 +92,7 @@ extern "C" {
 #define BUCKx_OV_THR_SHIFT            (4U)
 #define BUCKx_UV_THR_SHIFT            (6U)
 #define BUCKx_ILIM_MASK               (0x7U << BUCKx_ILIM_SHIFT)
-#define BUCKx_RV_CONF_MASK            (0x1U << BUCKx_RV_CONF_SHIFT)
+#define BUCKx_RV_CONF_MASK            (0x1UL << BUCKx_RV_CONF_SHIFT)
 #define BUCKx_OV_THR_MASK             (0x3U << BUCKx_OV_THR_SHIFT)
 #define BUCKx_UV_THR_MASK             (0x3U << BUCKx_UV_THR_SHIFT)
 
@@ -102,9 +102,9 @@ extern "C" {
 #define LDO_LS12_VMON_DIS_PD_SHIFT    (3U)
 #define LDO_LS12_VMON_OV_THR_SHIFT    (4U)
 #define LDO_LS12_VMON_UV_THR_SHIFT    (6U)
-#define LDO_LS12_VMON_RV_CONF_MASK    (0x1U << LDO_LS12_VMON_RV_CONF_SHIFT)
-#define LDO_LS12_VMON_EN_MASK         (0x1U << LDO_LS12_VMON_EN_SHIFT)
-#define LDO_LS12_VMON_DIS_PD_MASK     (0x1U << LDO_LS12_VMON_DIS_PD_SHIFT)
+#define LDO_LS12_VMON_RV_CONF_MASK    (0x1UL << LDO_LS12_VMON_RV_CONF_SHIFT)
+#define LDO_LS12_VMON_EN_MASK         (0x1UL << LDO_LS12_VMON_EN_SHIFT)
+#define LDO_LS12_VMON_DIS_PD_MASK     (0x1UL << LDO_LS12_VMON_DIS_PD_SHIFT)
 #define LDO_LS12_VMON_OV_THR_MASK     (0x3U << LDO_LS12_VMON_OV_THR_SHIFT)
 #define LDO_LS12_VMON_UV_THR_MASK     (0x3U << LDO_LS12_VMON_UV_THR_SHIFT)
 
@@ -113,10 +113,10 @@ extern "C" {
 #define LDO_LS1_LSW_CONFIG_SHIFT      (1U)
 #define LS2_VMON2_GPO_SEL_SHIFT       (4U)
 #define NINT_GPO_SEL_SHIFT            (6U)
-#define LDO_LS1_VMON1_SEL_MASK        (0x1U << LDO_LS1_VMON1_SEL_SHIFT)
-#define LDO_LS1_LSW_CONFIG_MASK       (0x1U << LDO_LS1_LSW_CONFIG_SHIFT)
+#define LDO_LS1_VMON1_SEL_MASK        (0x1UL << LDO_LS1_VMON1_SEL_SHIFT)
+#define LDO_LS1_LSW_CONFIG_MASK       (0x1UL << LDO_LS1_LSW_CONFIG_SHIFT)
 #define LS2_VMON2_GPO_SEL_MASK        (0x3U << LS2_VMON2_GPO_SEL_SHIFT)
-#define NINT_GPO_SEL_MASK             (0x1U << NINT_GPO_SEL_SHIFT)
+#define NINT_GPO_SEL_MASK             (0x1UL << NINT_GPO_SEL_SHIFT)
 
 // All sequence register bitfields, including:
 // - BUCK1_SEQUENCE_REG
@@ -152,7 +152,7 @@ extern "C" {
 #define PWRERR_OSD_SEL_SHIFT          (7U)
 #define VCCA_OV_SEL_MASK              (0x3U << VCCA_UV_SEL_SHIFT)
 #define LS2_VMON2_OV_SEL_MASK         (0x3U << LS2_VMON2_UV_SEL_SHIFT)
-#define PWRERR_OSD_SEL_MASK           (0x1U << PWRERR_OSD_SEL_SHIFT)
+#define PWRERR_OSD_SEL_MASK           (0x1UL << PWRERR_OSD_SEL_SHIFT)
 
 // REG_UV_CONF_REG Bitfields
 //

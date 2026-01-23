@@ -54,10 +54,10 @@ extern "C" {
 #define GPO2_RDBK_LVL_SHIFT    (4U)
 #define GPO3_RDBK_LVL_SHIFT    (5U)
 #define GPO4_RDBK_LVL_SHIFT    (6U)
-#define GPO1_RDBK_LVL_MASK     ((uint8_t)(1U << GPO1_RDBK_LVL_SHIFT))
-#define GPO2_RDBK_LVL_MASK     ((uint8_t)(1U << GPO2_RDBK_LVL_SHIFT))
-#define GPO3_RDBK_LVL_MASK     ((uint8_t)(1U << GPO3_RDBK_LVL_SHIFT))
-#define GPO4_RDBK_LVL_MASK     ((uint8_t)(1U << GPO4_RDBK_LVL_SHIFT))
+#define GPO1_RDBK_LVL_MASK     ((uint8_t)(1UL << GPO1_RDBK_LVL_SHIFT))
+#define GPO2_RDBK_LVL_MASK     ((uint8_t)(1UL << GPO2_RDBK_LVL_SHIFT))
+#define GPO3_RDBK_LVL_MASK     ((uint8_t)(1UL << GPO3_RDBK_LVL_SHIFT))
+#define GPO4_RDBK_LVL_MASK     ((uint8_t)(1UL << GPO4_RDBK_LVL_SHIFT))
 
 /** @brief PMIC General Purpose Outout Configuration 1 (GPO_CFG1) */
 #define GPO1_CFG_SHIFT         (0U)
@@ -65,7 +65,7 @@ extern "C" {
 #define M_PMIC_CFG_SHIFT       (6U)
 #define GPO1_CFG_MASK          ((uint8_t)(7U << GPO1_CFG_SHIFT))
 #define GPO2_CFG_MASK          ((uint8_t)(7U << GPO2_CFG_SHIFT))
-#define M_PMIC_CFG_MASK        ((uint8_t)(1U << M_PMIC_CFG_SHIFT))
+#define M_PMIC_CFG_MASK        ((uint8_t)(1UL << M_PMIC_CFG_SHIFT))
 
 /** @brief PMIC General Purpose Output configuration 2 (GPO_CFG2) */
 #define GPO3_CFG_SHIFT         (0U)
@@ -78,7 +78,7 @@ extern "C" {
 /** @brief PMIC General Purpose Input Configuration (GPI_CFG) */
 #define GPI1_CFG_SHIFT         (0U)
 #define GPI4_CFG_SHIFT         (1U)
-#define GPI1_CFG_MASK          ((uint8_t)(1U << GPI1_CFG_SHIFT))
+#define GPI1_CFG_MASK          ((uint8_t)(1UL << GPI1_CFG_SHIFT))
 #define GPI4_CFG_MASK          ((uint8_t)(3U << GPI4_CFG_SHIFT))
 
 /** @brief PMIC Readback Deglitch Configuration 1 (RDBK_DGL_CFG1) */

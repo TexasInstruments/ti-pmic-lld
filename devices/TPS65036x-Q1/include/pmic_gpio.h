@@ -69,10 +69,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_FUNCTIONALITY_VALID    ((uint32_t)(1U << 0U))
-#define PMIC_POLARITY_VALID         ((uint32_t)(1U << 1U))
-#define PMIC_PU_PD_CFG_VALID        ((uint32_t)(1U << 2U))
-#define PMIC_OD_PP_CFG_VALID        ((uint32_t)(1U << 3U))
+#define PMIC_FUNCTIONALITY_VALID    ((uint32_t)(1UL << 0U))
+#define PMIC_POLARITY_VALID         ((uint32_t)(1UL << 1U))
+#define PMIC_PU_PD_CFG_VALID        ((uint32_t)(1UL << 2U))
+#define PMIC_OD_PP_CFG_VALID        ((uint32_t)(1UL << 3U))
 /** @} */
 
 /**

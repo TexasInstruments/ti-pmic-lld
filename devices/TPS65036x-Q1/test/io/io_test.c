@@ -492,7 +492,7 @@ void test_pos_io_ioUpdateByte_b_modifySingleBit(void)
     // Verify bit 3 is set
     status = Pmic_ioRxByte(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((actVal & (1U << 3U)) != 0U);
+    PLATFORM_ASSERT((actVal & (1UL << 3U)) != 0U);
 
     // Clear bit 3 to 0
     status = Pmic_ioUpdateByte_b(&pmicHandle, testReg, 3U, PMIC_DISABLE);
@@ -501,7 +501,7 @@ void test_pos_io_ioUpdateByte_b_modifySingleBit(void)
     // Verify bit 3 is cleared
     status = Pmic_ioRxByte(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((actVal & (1U << 3U)) == 0U);
+    PLATFORM_ASSERT((actVal & (1UL << 3U)) == 0U);
 
     // Restore initial value
     status = Pmic_ioTxByte(&pmicHandle, testReg, initVal);
@@ -525,7 +525,7 @@ void test_pos_io_ioUpdateByte_bCS_modifySingleBit(void)
     // Verify bit 5 is set
     status = Pmic_ioRxByte_CS(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((actVal & (1U << 5U)) != 0U);
+    PLATFORM_ASSERT((actVal & (1UL << 5U)) != 0U);
 
     // Clear bit 5 to 0
     status = Pmic_ioUpdateByte_bCS(&pmicHandle, testReg, 5U, PMIC_DISABLE);
@@ -534,7 +534,7 @@ void test_pos_io_ioUpdateByte_bCS_modifySingleBit(void)
     // Verify bit 5 is cleared
     status = Pmic_ioRxByte_CS(&pmicHandle, testReg, &actVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((actVal & (1U << 5U)) == 0U);
+    PLATFORM_ASSERT((actVal & (1UL << 5U)) == 0U);
 
     // Restore initial value
     status = Pmic_ioTxByte_CS(&pmicHandle, testReg, initVal);

@@ -67,8 +67,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_TMR_PRESCALE_VALID (1U << 0U)
-#define PMIC_CFG_TMR_MODE_VALID     (1U << 1U)
+#define PMIC_CFG_TMR_PRESCALE_VALID (1UL << 0U)
+#define PMIC_CFG_TMR_MODE_VALID     (1UL << 1U)
 /** @} */
 
 

@@ -157,15 +157,15 @@ extern "C" {
 #define PMIC_BUCK1_EN_HS_ON_SR_SHIFT            ((uint8_t)6U)
 #define PMIC_BUCK1_EN_HS_ON_SR_MASK             ((uint8_t)3U << PMIC_BUCK1_EN_HS_ON_SR_SHIFT)
 #define PMIC_BUCK1_DISCHARGE_SEL_SHIFT          ((uint8_t)5U)
-#define PMIC_BUCK1_DISCHARGE_SEL_MASK           ((uint8_t)1U << PMIC_BUCK1_DISCHARGE_SEL_SHIFT)
+#define PMIC_BUCK1_DISCHARGE_SEL_MASK           ((uint8_t)1UL << PMIC_BUCK1_DISCHARGE_SEL_SHIFT)
 #define PMIC_BUCK1_PLDN_SHIFT                   ((uint8_t)4U)
-#define PMIC_BUCK1_PLDN_MASK                    ((uint8_t)1U << PMIC_BUCK1_PLDN_SHIFT)
+#define PMIC_BUCK1_PLDN_MASK                    ((uint8_t)1UL << PMIC_BUCK1_PLDN_SHIFT)
 #define PMIC_BUCK1_SLEW_RATE_SHIFT              ((uint8_t)2U)
 #define PMIC_BUCK1_SLEW_RATE_MASK               ((uint8_t)3U << PMIC_BUCK1_SLEW_RATE_SHIFT)
 #define PMIC_BUCK1_FPWM_SHIFT                   ((uint8_t)1U)
-#define PMIC_BUCK1_FPWM_MASK                    ((uint8_t)1U << PMIC_BUCK1_FPWM_SHIFT)
+#define PMIC_BUCK1_FPWM_MASK                    ((uint8_t)1UL << PMIC_BUCK1_FPWM_SHIFT)
 #define PMIC_BUCK1_EN_SHIFT                     ((uint8_t)0U)
-#define PMIC_BUCK1_EN_MASK                      ((uint8_t)1U << PMIC_BUCK1_EN_SHIFT)
+#define PMIC_BUCK1_EN_MASK                      ((uint8_t)1UL << PMIC_BUCK1_EN_SHIFT)
 /** @} */
 
 /**
@@ -178,17 +178,17 @@ extern "C" {
  * @{
  */
 #define PMIC_BUCK2_3_VMON_ONLY_SHIFT            ((uint8_t)6U)
-#define PMIC_BUCK2_3_VMON_ONLY_MASK             ((uint8_t)1U << PMIC_BUCK2_3_VMON_ONLY_SHIFT)
+#define PMIC_BUCK2_3_VMON_ONLY_MASK             ((uint8_t)1UL << PMIC_BUCK2_3_VMON_ONLY_SHIFT)
 #define PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT        ((uint8_t)5U)
-#define PMIC_BUCK2_3_DISCHARGE_SEL_MASK         ((uint8_t)1U << PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT)
+#define PMIC_BUCK2_3_DISCHARGE_SEL_MASK         ((uint8_t)1UL << PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT)
 #define PMIC_BUCK2_3_PLDN_SHIFT                 ((uint8_t)4U)
-#define PMIC_BUCK2_3_PLDN_MASK                  ((uint8_t)1U << PMIC_BUCK2_3_PLDN_SHIFT)
+#define PMIC_BUCK2_3_PLDN_MASK                  ((uint8_t)1UL << PMIC_BUCK2_3_PLDN_SHIFT)
 #define PMIC_BUCK2_3_SLEW_RATE_SHIFT            ((uint8_t)2U)
 #define PMIC_BUCK2_3_SLEW_RATE_MASK             ((uint8_t)3U << PMIC_BUCK2_3_SLEW_RATE_SHIFT)
 #define PMIC_BUCK2_3_FPWM_SHIFT                 ((uint8_t)1U)
-#define PMIC_BUCK2_3_FPWM_MASK                  ((uint8_t)1U << PMIC_BUCK2_3_FPWM_SHIFT)
+#define PMIC_BUCK2_3_FPWM_MASK                  ((uint8_t)1UL << PMIC_BUCK2_3_FPWM_SHIFT)
 #define PMIC_BUCK2_3_EN_SHIFT                   ((uint8_t)0U)
-#define PMIC_BUCK2_3_EN_MASK                    ((uint8_t)1U << PMIC_BUCK2_3_EN_SHIFT)
+#define PMIC_BUCK2_3_EN_MASK                    ((uint8_t)1UL << PMIC_BUCK2_3_EN_SHIFT)
 /** @} */
 
 /**
@@ -214,7 +214,7 @@ extern "C" {
  * @{
  */
 #define PMIC_LDO_BYP_CONFIG_SHIFT               ((uint8_t)7U)
-#define PMIC_LDO_BYP_CONFIG_MASK                ((uint8_t)1U << PMIC_LDO_BYP_CONFIG_SHIFT)
+#define PMIC_LDO_BYP_CONFIG_MASK                ((uint8_t)1UL << PMIC_LDO_BYP_CONFIG_SHIFT)
 #define PMIC_LDO_VSET_SHIFT                     ((uint8_t)0U)
 #define PMIC_LDO_VSET_MASK                      ((uint8_t)0x7FU << PMIC_LDO_VSET_SHIFT)
 /** @} */
@@ -228,13 +228,13 @@ extern "C" {
  * @{
  */
 #define PMIC_LDO_VMON_ONLY_SHIFT                ((uint8_t)7U)
-#define PMIC_LDO_VMON_ONLY_MASK                 ((uint8_t)1U << PMIC_LDO_VMON_ONLY_SHIFT)
+#define PMIC_LDO_VMON_ONLY_MASK                 ((uint8_t)1UL << PMIC_LDO_VMON_ONLY_SHIFT)
 #define PMIC_LDO_DISCHARGE_SEL_SHIFT            ((uint8_t)5U)
 #define PMIC_LDO_DISCHARGE_SEL_MASK             ((uint8_t)3U << PMIC_LDO_DISCHARGE_SEL_SHIFT)
 #define PMIC_LDO_DISCHARGE_EN_SHIFT             ((uint8_t)4U)
-#define PMIC_LDO_DISCHARGE_EN_MASK              ((uint8_t)1U << PMIC_LDO_DISCHARGE_EN_SHIFT)
+#define PMIC_LDO_DISCHARGE_EN_MASK              ((uint8_t)1UL << PMIC_LDO_DISCHARGE_EN_SHIFT)
 #define PMIC_LDO_EN_SHIFT                       ((uint8_t)0U)
-#define PMIC_LDO_EN_MASK                        ((uint8_t)1U << PMIC_LDO_EN_SHIFT)
+#define PMIC_LDO_EN_MASK                        ((uint8_t)1UL << PMIC_LDO_EN_SHIFT)
 /** @} */
 
 /**
@@ -251,9 +251,9 @@ extern "C" {
 #define PMIC_BUCK_OV_THR_SHIFT                 ((uint8_t)4U)
 #define PMIC_BUCK_OV_THR_MASK                  ((uint8_t)3U << PMIC_BUCK_OV_THR_SHIFT)
 #define PMIC_BUCK_RV_CONF_SHIFT                ((uint8_t)3U)
-#define PMIC_BUCK_RV_CONF_MASK                 ((uint8_t)1U << PMIC_BUCK_RV_CONF_SHIFT)
+#define PMIC_BUCK_RV_CONF_MASK                 ((uint8_t)1UL << PMIC_BUCK_RV_CONF_SHIFT)
 #define PMIC_BUCK_ILIM_SEL_SHIFT               ((uint8_t)2U)
-#define PMIC_BUCK_ILIM_SEL_MASK                ((uint8_t)1U << PMIC_BUCK_ILIM_SEL_SHIFT)
+#define PMIC_BUCK_ILIM_SEL_MASK                ((uint8_t)1UL << PMIC_BUCK_ILIM_SEL_SHIFT)
 #define PMIC_BUCK_DEGLITCH_SEL_SHIFT           ((uint8_t)0U)
 #define PMIC_BUCK_DEGLITCH_SEL_MASK            ((uint8_t)3U << PMIC_BUCK_DEGLITCH_SEL_SHIFT)
 /** @} */
@@ -271,9 +271,9 @@ extern "C" {
 #define PMIC_LDO_OV_THR_SHIFT                 ((uint8_t)4U)
 #define PMIC_LDO_OV_THR_MASK                  ((uint8_t)3U << PMIC_LDO_OV_THR_SHIFT)
 #define PMIC_LDO_RV_CONF_SHIFT                ((uint8_t)3U)
-#define PMIC_LDO_RV_CONF_MASK                 ((uint8_t)1U << PMIC_LDO_RV_CONF_SHIFT)
+#define PMIC_LDO_RV_CONF_MASK                 ((uint8_t)1UL << PMIC_LDO_RV_CONF_SHIFT)
 #define PMIC_LDO_ILIM_SEL_SHIFT               ((uint8_t)2U)
-#define PMIC_LDO_ILIM_SEL_MASK                ((uint8_t)1U << PMIC_LDO_ILIM_SEL_SHIFT)
+#define PMIC_LDO_ILIM_SEL_MASK                ((uint8_t)1UL << PMIC_LDO_ILIM_SEL_SHIFT)
 #define PMIC_LDO_DEGLITCH_SEL_SHIFT           ((uint8_t)0U)
 #define PMIC_LDO_DEGLITCH_SEL_MASK            ((uint8_t)3U << PMIC_LDO_DEGLITCH_SEL_SHIFT)
 /** @} */
@@ -287,17 +287,17 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_ON_BIT_BUCK1_SHIFT         ((uint8_t)5U)
-#define PMIC_PWR_ON_BIT_BUCK1_MASK          ((uint8_t)1U << PMIC_PWR_ON_BIT_BUCK1_SHIFT)
+#define PMIC_PWR_ON_BIT_BUCK1_MASK          ((uint8_t)1UL << PMIC_PWR_ON_BIT_BUCK1_SHIFT)
 #define PMIC_LDO_PG_BUCK1_SHIFT             ((uint8_t)4U)
-#define PMIC_LDO_PG_BUCK1_MASK              ((uint8_t)1U << PMIC_LDO_PG_BUCK1_SHIFT)
+#define PMIC_LDO_PG_BUCK1_MASK              ((uint8_t)1UL << PMIC_LDO_PG_BUCK1_SHIFT)
 #define PMIC_BUCK3_PG_BUCK1_SHIFT           ((uint8_t)3U)
-#define PMIC_BUCK3_PG_BUCK1_MASK            ((uint8_t)1U << PMIC_BUCK3_PG_BUCK1_SHIFT)
+#define PMIC_BUCK3_PG_BUCK1_MASK            ((uint8_t)1UL << PMIC_BUCK3_PG_BUCK1_SHIFT)
 #define PMIC_BUCK2_PG_BUCK1_SHIFT           ((uint8_t)2U)
-#define PMIC_BUCK2_PG_BUCK1_MASK            ((uint8_t)1U << PMIC_BUCK2_PG_BUCK1_SHIFT)
+#define PMIC_BUCK2_PG_BUCK1_MASK            ((uint8_t)1UL << PMIC_BUCK2_PG_BUCK1_SHIFT)
 #define PMIC_GPIO_PIN_BUCK1_SHIFT           ((uint8_t)1U)
-#define PMIC_GPIO_PIN_BUCK1_MASK            ((uint8_t)1U << PMIC_GPIO_PIN_BUCK1_SHIFT)
+#define PMIC_GPIO_PIN_BUCK1_MASK            ((uint8_t)1UL << PMIC_GPIO_PIN_BUCK1_SHIFT)
 #define PMIC_SEQ_PIN_BUCK1_SHIFT            ((uint8_t)0U)
-#define PMIC_SEQ_PIN_BUCK1_MASK             ((uint8_t)1U << PMIC_SEQ_PIN_BUCK1_SHIFT)
+#define PMIC_SEQ_PIN_BUCK1_MASK             ((uint8_t)1UL << PMIC_SEQ_PIN_BUCK1_SHIFT)
 /** @} */
 
 /**
@@ -309,17 +309,17 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_ON_BIT_BUCK2_SHIFT         ((uint8_t)5U)
-#define PMIC_PWR_ON_BIT_BUCK2_MASK          ((uint8_t)1U << PMIC_PWR_ON_BIT_BUCK2_SHIFT)
+#define PMIC_PWR_ON_BIT_BUCK2_MASK          ((uint8_t)1UL << PMIC_PWR_ON_BIT_BUCK2_SHIFT)
 #define PMIC_LDO_PG_BUCK2_SHIFT             ((uint8_t)4U)
-#define PMIC_LDO_PG_BUCK2_MASK              ((uint8_t)1U << PMIC_LDO_PG_BUCK2_SHIFT)
+#define PMIC_LDO_PG_BUCK2_MASK              ((uint8_t)1UL << PMIC_LDO_PG_BUCK2_SHIFT)
 #define PMIC_BUCK3_PG_BUCK2_SHIFT           ((uint8_t)3U)
-#define PMIC_BUCK3_PG_BUCK2_MASK            ((uint8_t)1U << PMIC_BUCK3_PG_BUCK2_SHIFT)
+#define PMIC_BUCK3_PG_BUCK2_MASK            ((uint8_t)1UL << PMIC_BUCK3_PG_BUCK2_SHIFT)
 #define PMIC_BUCK1_PG_BUCK2_SHIFT           ((uint8_t)2U)
-#define PMIC_BUCK1_PG_BUCK2_MASK            ((uint8_t)1U << PMIC_BUCK1_PG_BUCK2_SHIFT)
+#define PMIC_BUCK1_PG_BUCK2_MASK            ((uint8_t)1UL << PMIC_BUCK1_PG_BUCK2_SHIFT)
 #define PMIC_GPIO_PIN_BUCK2_SHIFT           ((uint8_t)1U)
-#define PMIC_GPIO_PIN_BUCK2_MASK            ((uint8_t)1U << PMIC_GPIO_PIN_BUCK2_SHIFT)
+#define PMIC_GPIO_PIN_BUCK2_MASK            ((uint8_t)1UL << PMIC_GPIO_PIN_BUCK2_SHIFT)
 #define PMIC_SEQ_PIN_BUCK2_SHIFT            ((uint8_t)0U)
-#define PMIC_SEQ_PIN_BUCK2_MASK             ((uint8_t)1U << PMIC_SEQ_PIN_BUCK2_SHIFT)
+#define PMIC_SEQ_PIN_BUCK2_MASK             ((uint8_t)1UL << PMIC_SEQ_PIN_BUCK2_SHIFT)
 /** @} */
 
 /**
@@ -331,17 +331,17 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_ON_BIT_BUCK3_SHIFT         ((uint8_t)5U)
-#define PMIC_PWR_ON_BIT_BUCK3_MASK          ((uint8_t)1U << PMIC_PWR_ON_BIT_BUCK3_SHIFT)
+#define PMIC_PWR_ON_BIT_BUCK3_MASK          ((uint8_t)1UL << PMIC_PWR_ON_BIT_BUCK3_SHIFT)
 #define PMIC_LDO_PG_BUCK3_SHIFT             ((uint8_t)4U)
-#define PMIC_LDO_PG_BUCK3_MASK              ((uint8_t)1U << PMIC_LDO_PG_BUCK3_SHIFT)
+#define PMIC_LDO_PG_BUCK3_MASK              ((uint8_t)1UL << PMIC_LDO_PG_BUCK3_SHIFT)
 #define PMIC_BUCK2_PG_BUCK3_SHIFT           ((uint8_t)3U)
-#define PMIC_BUCK2_PG_BUCK3_MASK            ((uint8_t)1U << PMIC_BUCK2_PG_BUCK3_SHIFT)
+#define PMIC_BUCK2_PG_BUCK3_MASK            ((uint8_t)1UL << PMIC_BUCK2_PG_BUCK3_SHIFT)
 #define PMIC_BUCK1_PG_BUCK3_SHIFT           ((uint8_t)2U)
-#define PMIC_BUCK1_PG_BUCK3_MASK            ((uint8_t)1U << PMIC_BUCK1_PG_BUCK3_SHIFT)
+#define PMIC_BUCK1_PG_BUCK3_MASK            ((uint8_t)1UL << PMIC_BUCK1_PG_BUCK3_SHIFT)
 #define PMIC_GPIO_PIN_BUCK3_SHIFT           ((uint8_t)1U)
-#define PMIC_GPIO_PIN_BUCK3_MASK            ((uint8_t)1U << PMIC_GPIO_PIN_BUCK3_SHIFT)
+#define PMIC_GPIO_PIN_BUCK3_MASK            ((uint8_t)1UL << PMIC_GPIO_PIN_BUCK3_SHIFT)
 #define PMIC_SEQ_PIN_BUCK3_SHIFT            ((uint8_t)0U)
-#define PMIC_SEQ_PIN_BUCK3_MASK             ((uint8_t)1U << PMIC_SEQ_PIN_BUCK3_SHIFT)
+#define PMIC_SEQ_PIN_BUCK3_MASK             ((uint8_t)1UL << PMIC_SEQ_PIN_BUCK3_SHIFT)
 /** @} */
 
 /**
@@ -353,17 +353,17 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_ON_BIT_LDO_SHIFT           ((uint8_t)5U)
-#define PMIC_PWR_ON_BIT_LDO_MASK            ((uint8_t)1U << PMIC_PWR_ON_BIT_LDO_SHIFT)
+#define PMIC_PWR_ON_BIT_LDO_MASK            ((uint8_t)1UL << PMIC_PWR_ON_BIT_LDO_SHIFT)
 #define PMIC_BUCK3_PG_LDO_SHIFT             ((uint8_t)4U)
-#define PMIC_BUCK3_PG_LDO_MASK              ((uint8_t)1U << PMIC_BUCK3_PG_LDO_SHIFT)
+#define PMIC_BUCK3_PG_LDO_MASK              ((uint8_t)1UL << PMIC_BUCK3_PG_LDO_SHIFT)
 #define PMIC_BUCK2_PG_LDO_SHIFT             ((uint8_t)3U)
-#define PMIC_BUCK2_PG_LDO_MASK              ((uint8_t)1U << PMIC_BUCK2_PG_LDO_SHIFT)
+#define PMIC_BUCK2_PG_LDO_MASK              ((uint8_t)1UL << PMIC_BUCK2_PG_LDO_SHIFT)
 #define PMIC_BUCK1_PG_LDO_SHIFT             ((uint8_t)2U)
-#define PMIC_BUCK1_PG_LDO_MASK              ((uint8_t)1U << PMIC_BUCK1_PG_LDO_SHIFT)
+#define PMIC_BUCK1_PG_LDO_MASK              ((uint8_t)1UL << PMIC_BUCK1_PG_LDO_SHIFT)
 #define PMIC_GPIO_PIN_LDO_SHIFT             ((uint8_t)1U)
-#define PMIC_GPIO_PIN_LDO_MASK              ((uint8_t)1U << PMIC_GPIO_PIN_LDO_SHIFT)
+#define PMIC_GPIO_PIN_LDO_MASK              ((uint8_t)1UL << PMIC_GPIO_PIN_LDO_SHIFT)
 #define PMIC_SEQ_PIN_LDO_SHIFT              ((uint8_t)0U)
-#define PMIC_SEQ_PIN_LDO_MASK               ((uint8_t)1U << PMIC_SEQ_PIN_LDO_SHIFT)
+#define PMIC_SEQ_PIN_LDO_MASK               ((uint8_t)1UL << PMIC_SEQ_PIN_LDO_SHIFT)
 /** @} */
 
 /**
@@ -462,17 +462,17 @@ extern "C" {
  * @{
  */
 #define PMIC_BUCK2_OVP_STAT_SHIFT       ((uint8_t)6U)
-#define PMIC_BUCK2_OVP_STAT_MASK        ((uint8_t)1U << PMIC_BUCK2_OVP_STAT_SHIFT)
+#define PMIC_BUCK2_OVP_STAT_MASK        ((uint8_t)1UL << PMIC_BUCK2_OVP_STAT_SHIFT)
 #define PMIC_BUCK2_UV_STAT_SHIFT        ((uint8_t)5U)
-#define PMIC_BUCK2_UV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK2_UV_STAT_SHIFT)
+#define PMIC_BUCK2_UV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK2_UV_STAT_SHIFT)
 #define PMIC_BUCK2_OV_STAT_SHIFT        ((uint8_t)4U)
-#define PMIC_BUCK2_OV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK2_OV_STAT_SHIFT)
+#define PMIC_BUCK2_OV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK2_OV_STAT_SHIFT)
 #define PMIC_BUCK1_OVP_STAT_SHIFT       ((uint8_t)2U)
-#define PMIC_BUCK1_OVP_STAT_MASK        ((uint8_t)1U << PMIC_BUCK1_OVP_STAT_SHIFT)
+#define PMIC_BUCK1_OVP_STAT_MASK        ((uint8_t)1UL << PMIC_BUCK1_OVP_STAT_SHIFT)
 #define PMIC_BUCK1_UV_STAT_SHIFT        ((uint8_t)1U)
-#define PMIC_BUCK1_UV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK1_UV_STAT_SHIFT)
+#define PMIC_BUCK1_UV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK1_UV_STAT_SHIFT)
 #define PMIC_BUCK1_OV_STAT_SHIFT        ((uint8_t)0U)
-#define PMIC_BUCK1_OV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK1_OV_STAT_SHIFT)
+#define PMIC_BUCK1_OV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK1_OV_STAT_SHIFT)
 /** @} */
 
 /**
@@ -484,17 +484,17 @@ extern "C" {
  * @{
  */
 #define PMIC_LDO_OVP_STAT_SHIFT         ((uint8_t)6U)
-#define PMIC_LDO_OVP_STAT_MASK          ((uint8_t)1U << PMIC_LDO_OVP_STAT_SHIFT)
+#define PMIC_LDO_OVP_STAT_MASK          ((uint8_t)1UL << PMIC_LDO_OVP_STAT_SHIFT)
 #define PMIC_LDO_UV_STAT_SHIFT          ((uint8_t)5U)
-#define PMIC_LDO_UV_STAT_MASK           ((uint8_t)1U << PMIC_LDO_UV_STAT_SHIFT)
+#define PMIC_LDO_UV_STAT_MASK           ((uint8_t)1UL << PMIC_LDO_UV_STAT_SHIFT)
 #define PMIC_LDO_OV_STAT_SHIFT          ((uint8_t)4U)
-#define PMIC_LDO_OV_STAT_MASK           ((uint8_t)1U << PMIC_LDO_OV_STAT_SHIFT)
+#define PMIC_LDO_OV_STAT_MASK           ((uint8_t)1UL << PMIC_LDO_OV_STAT_SHIFT)
 #define PMIC_BUCK3_OVP_STAT_SHIFT       ((uint8_t)2U)
-#define PMIC_BUCK3_OVP_STAT_MASK        ((uint8_t)1U << PMIC_BUCK3_OVP_STAT_SHIFT)
+#define PMIC_BUCK3_OVP_STAT_MASK        ((uint8_t)1UL << PMIC_BUCK3_OVP_STAT_SHIFT)
 #define PMIC_BUCK3_UV_STAT_SHIFT        ((uint8_t)1U)
-#define PMIC_BUCK3_UV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK3_UV_STAT_SHIFT)
+#define PMIC_BUCK3_UV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK3_UV_STAT_SHIFT)
 #define PMIC_BUCK3_OV_STAT_SHIFT        ((uint8_t)0U)
-#define PMIC_BUCK3_OV_STAT_MASK         ((uint8_t)1U << PMIC_BUCK3_OV_STAT_SHIFT)
+#define PMIC_BUCK3_OV_STAT_MASK         ((uint8_t)1UL << PMIC_BUCK3_OV_STAT_SHIFT)
 /** @} */
 
 #ifdef __cplusplus

@@ -177,8 +177,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_IRQ_CFG_MASK_VALID         (1U << 0U)
-#define PMIC_IRQ_CFG_CONFIG_VALID       (1U << 1U)
+#define PMIC_IRQ_CFG_MASK_VALID         (1UL << 0U)
+#define PMIC_IRQ_CFG_CONFIG_VALID       (1UL << 1U)
 /** @} */
 
 /**

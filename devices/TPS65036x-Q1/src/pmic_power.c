@@ -2824,7 +2824,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuc
                 if (status == PMIC_ST_SUCCESS)
                 {
                     // Modify sequence trigger exclude/include bit
-                    Pmic_setBitField_b(&regData, bitPos, (uint8_t)(1U << bitPos), localSeqTrigCfg[i].exclude);
+                    Pmic_setBitField_b(&regData, bitPos, (uint8_t)(1UL << bitPos), localSeqTrigCfg[i].exclude);
 
                     // Write new register value back to PMIC
                     status = Pmic_ioTxByte(handle, regAddr, regData);
