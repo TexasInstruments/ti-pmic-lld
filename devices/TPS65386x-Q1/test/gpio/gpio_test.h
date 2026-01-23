@@ -48,6 +48,153 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - gpioSetCfg                             */
+/* ========================================================================== */
+
+#define GPIO_TEST_POS_GPIOSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi1_esmIn); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi1_wdIn); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi4_comparator); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi4_wdIn); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi4_cosN); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_lowLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_highLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_hiz); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_nint); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_enOut); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_enOut2); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo1_sinNO); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGpo1Hiz_duplicate); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_lowLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_highLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_hiz); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_comp1Out); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_enOut2); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_syncClkOut); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_pgood); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo2_sinPO); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_lowLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_highLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_hiz); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_pgood); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_comp2Out); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_enOut2); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_safeOut2); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo3_cosPO); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_lowLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_highLvl); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_hiz); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_safeOut2); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_enOut); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_nint); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_pgood); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpo4_cosNO)
+
+#define GPIO_TEST_NEG_GPIOSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullParam_gpioCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidParam_validParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpi1); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpi4); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo1); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo2); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo3); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo4)
+
+#define GPIO_TEST_GPIOSETCFG() \
+    GPIO_TEST_POS_GPIOSETCFG(); \
+    GPIO_TEST_NEG_GPIOSETCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - gpioGetCfg                             */
+/* ========================================================================== */
+
+#define GPIO_TEST_POS_GPIOGETCFG() \
+    /* Positive tests combined with gpioSetCfg */
+
+#define GPIO_TEST_NEG_GPIOGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullParam_gpioCfg); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidParam_validParams)
+
+#define GPIO_TEST_GPIOGETCFG() \
+    GPIO_TEST_POS_GPIOGETCFG(); \
+    GPIO_TEST_NEG_GPIOGETCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - gpioGetOutputValue                     */
+/* ========================================================================== */
+
+#define GPIO_TEST_POS_GPIOGETOUTPUTVALUE() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGetOutputValue_allGpos)
+
+#define GPIO_TEST_NEG_GPIOGETOUTPUTVALUE() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetOutputValue_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetOutputValue_nullParam_high); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetOutputValue_invalidParam_gpo)
+
+#define GPIO_TEST_GPIOGETOUTPUTVALUE() \
+    GPIO_TEST_POS_GPIOGETOUTPUTVALUE(); \
+    GPIO_TEST_NEG_GPIOGETOUTPUTVALUE()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - gpioSetSafeOutCfg                      */
+/* ========================================================================== */
+
+#define GPIO_TEST_POS_GPIOSETSAFEOUTCFG() \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOutSetGet); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOut_individual)
+
+#define GPIO_TEST_NEG_GPIOSETSAFEOUTCFG() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_invalidParam_validParams)
+
+#define GPIO_TEST_GPIOSETSAFEOUTCFG() \
+    GPIO_TEST_POS_GPIOSETSAFEOUTCFG(); \
+    GPIO_TEST_NEG_GPIOSETSAFEOUTCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - gpioGetSafeOutCfg                      */
+/* ========================================================================== */
+
+#define GPIO_TEST_POS_GPIOGETSAFEOUTCFG() \
+    /* Positive tests combined with gpioSetSafeOutCfg */
+
+#define GPIO_TEST_NEG_GPIOGETSAFEOUTCFG() \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetSafeOutCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetSafeOutCfg_nullParam_config)
+
+#define GPIO_TEST_GPIOGETSAFEOUTCFG() \
+    GPIO_TEST_POS_GPIOGETSAFEOUTCFG(); \
+    GPIO_TEST_NEG_GPIOGETSAFEOUTCFG()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define GPIO_TEST_RUN_POSITIVE() \
+    GPIO_TEST_POS_GPIOSETCFG(); \
+    GPIO_TEST_POS_GPIOGETCFG(); \
+    GPIO_TEST_POS_GPIOGETOUTPUTVALUE(); \
+    GPIO_TEST_POS_GPIOSETSAFEOUTCFG(); \
+    GPIO_TEST_POS_GPIOGETSAFEOUTCFG()
+
+#define GPIO_TEST_RUN_NEGATIVE() \
+    GPIO_TEST_NEG_GPIOSETCFG(); \
+    GPIO_TEST_NEG_GPIOGETCFG(); \
+    GPIO_TEST_NEG_GPIOGETOUTPUTVALUE(); \
+    GPIO_TEST_NEG_GPIOSETSAFEOUTCFG(); \
+    GPIO_TEST_NEG_GPIOGETSAFEOUTCFG()
+
+#define GPIO_TEST_RUN_ALL() \
+    GPIO_TEST_RUN_POSITIVE(); \
+    GPIO_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 

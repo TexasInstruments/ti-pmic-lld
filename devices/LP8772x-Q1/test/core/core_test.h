@@ -50,6 +50,198 @@ extern "C" {
 /* ========================================================================== */
 
 void core_test(void *args);
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcCalculate                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
+
+#define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailure)
+
+#define CORE_TEST_CONFIGCRCCALCULATE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcDisable                    */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcDisable_disable)
+
+#define CORE_TEST_NEG_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
+
+#define CORE_TEST_CONFIGCRCDISABLE() \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - configCrcEnable                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly)
+
+#define CORE_TEST_NEG_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_alreadyEnabled); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_calcBitHigh); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_crcMismatch); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_error)
+
+#define CORE_TEST_CONFIGCRCENABLE() \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE()
+
+/* ========================================================================== */
+/*           API-Specific Test Macros - configCrcGetFromDevice                */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCGETFROMDEVICE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcGetFromDevice_getCrc)
+
+#define CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullCrc)
+
+#define CORE_TEST_CONFIGCRCGETFROMDEVICE() \
+    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getConfigCrcStatus                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
+    /* Positive tests combined with other CRC tests */
+
+#define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus)
+
+#define CORE_TEST_GETCONFIGCRCSTATUS() \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getRegLockState                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETREGLOCKSTATE() \
+    /* Positive tests combined with setRegLockState */
+
+#define CORE_TEST_NEG_GETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
+
+#define CORE_TEST_GETREGLOCKSTATE() \
+    CORE_TEST_POS_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - getScratchPadValue                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_reg1to4)
+
+#define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
+    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds)
+
+#define CORE_TEST_GETSCRATCHPADVALUE() \
+    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - init                                */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_INIT() \
+    /* Positive init tests in main setup */
+
+#define CORE_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_core_init_invalidDeviceType)
+
+#define CORE_TEST_INIT() \
+    CORE_TEST_POS_INIT(); \
+    CORE_TEST_NEG_INIT()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - setRegLockState                     */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_setRegLockState_enableDisable)
+
+#define CORE_TEST_NEG_SETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
+
+#define CORE_TEST_SETREGLOCKSTATE() \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE()
+
+/* ========================================================================== */
+/*             API-Specific Test Macros - setScratchPadValue                  */
+/* ========================================================================== */
+
+#define CORE_TEST_POS_SETSCRATCHPADVALUE() \
+    /* Positive tests combined with getScratchPadValue */
+
+#define CORE_TEST_NEG_SETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds)
+
+#define CORE_TEST_SETSCRATCHPADVALUE() \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define CORE_TEST_RUN_POSITIVE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_POS_GETREGLOCKSTATE(); \
+    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_INIT(); \
+    CORE_TEST_POS_SETREGLOCKSTATE(); \
+    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_multipleErrors); \
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_specificError)
+
+#define CORE_TEST_RUN_NEGATIVE() \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETREGLOCKSTATE(); \
+    CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_INIT(); \
+    CORE_TEST_NEG_SETREGLOCKSTATE(); \
+    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+
+#define CORE_TEST_RUN_ALL() \
+    CORE_TEST_RUN_POSITIVE(); \
+    CORE_TEST_RUN_NEGATIVE()
+
+#define CORE_TEST_CALCUL_CONFIG_CRC_1_REG TEST_REG_CALCUL_CRC_1
+#define CORE_TEST_CALCUL_CONFIG_CRC_2_REG TEST_REG_CALCUL_CRC_2
+
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
 
 /* ========================================================================== */
 /*                  setScratchPadValue API Tests                              */

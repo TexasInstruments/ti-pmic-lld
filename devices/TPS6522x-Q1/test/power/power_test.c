@@ -48,7 +48,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /**
  * @brief Test Pmic_pwrSetBuckCfg with NULL handle
  */
-static void test_neg_power_setBuckCfg_nullHandle(void)
+void test_neg_power_setBuckCfg_nullHandle(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = PMIC_POWER_BUCK_EN_VALID, .resource = PMIC_POWER_RESOURCE_BUCK1, .buckEn = true};
     int32_t status = Pmic_pwrSetBuckCfg(NULL, &buckCfg);
@@ -58,7 +58,7 @@ static void test_neg_power_setBuckCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with NULL buckCfg parameter
  */
-static void test_neg_power_setBuckCfg_nullBuckCfg(void)
+void test_neg_power_setBuckCfg_nullBuckCfg(void)
 {
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -67,7 +67,7 @@ static void test_neg_power_setBuckCfg_nullBuckCfg(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid validParams
  */
-static void test_neg_power_setBuckCfg_invalidValidParams(void)
+void test_neg_power_setBuckCfg_invalidValidParams(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_BUCK1};
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -77,7 +77,7 @@ static void test_neg_power_setBuckCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid resource
  */
-static void test_neg_power_setBuckCfg_invalidResource(void)
+void test_neg_power_setBuckCfg_invalidResource(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = PMIC_POWER_BUCK_EN_VALID, .resource = PMIC_POWER_RESOURCE_LDO1, .buckEn = true};
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -87,7 +87,7 @@ static void test_neg_power_setBuckCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid slew rate
  */
-static void test_neg_power_setBuckCfg_invalidSlewRate(void)
+void test_neg_power_setBuckCfg_invalidSlewRate(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_POWER_BUCK_SLEW_RATE_VALID,
@@ -101,7 +101,7 @@ static void test_neg_power_setBuckCfg_invalidSlewRate(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid vset for BUCK1
  */
-static void test_neg_power_setBuckCfg_invalidVsetBuck1(void)
+void test_neg_power_setBuckCfg_invalidVsetBuck1(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_POWER_BUCK_VSET_VALID,
@@ -115,7 +115,7 @@ static void test_neg_power_setBuckCfg_invalidVsetBuck1(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid vmon threshold
  */
-static void test_neg_power_setBuckCfg_invalidVmonThr(void)
+void test_neg_power_setBuckCfg_invalidVmonThr(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_POWER_BUCK_VMON_THR_VALID,
@@ -129,7 +129,7 @@ static void test_neg_power_setBuckCfg_invalidVmonThr(void)
 /**
  * @brief Test Pmic_pwrSetBuckCfg with invalid group select
  */
-static void test_neg_power_setBuckCfg_invalidGrpSel(void)
+void test_neg_power_setBuckCfg_invalidGrpSel(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_POWER_BUCK_GRP_SEL_VALID,
@@ -143,7 +143,7 @@ static void test_neg_power_setBuckCfg_invalidGrpSel(void)
 /**
  * @brief Test Pmic_pwrGetBuckCfg with NULL handle
  */
-static void test_neg_power_getBuckCfg_nullHandle(void)
+void test_neg_power_getBuckCfg_nullHandle(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = PMIC_POWER_BUCK_EN_VALID, .resource = PMIC_POWER_RESOURCE_BUCK1};
     int32_t status = Pmic_pwrGetBuckCfg(NULL, &buckCfg);
@@ -153,7 +153,7 @@ static void test_neg_power_getBuckCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetBuckCfg with NULL buckCfg parameter
  */
-static void test_neg_power_getBuckCfg_nullBuckCfg(void)
+void test_neg_power_getBuckCfg_nullBuckCfg(void)
 {
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -162,7 +162,7 @@ static void test_neg_power_getBuckCfg_nullBuckCfg(void)
 /**
  * @brief Test Pmic_pwrGetBuckCfg with invalid validParams
  */
-static void test_neg_power_getBuckCfg_invalidValidParams(void)
+void test_neg_power_getBuckCfg_invalidValidParams(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_BUCK1};
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
@@ -172,7 +172,7 @@ static void test_neg_power_getBuckCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrGetBuckCfg with invalid resource
  */
-static void test_neg_power_getBuckCfg_invalidResource(void)
+void test_neg_power_getBuckCfg_invalidResource(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {.validParams = PMIC_POWER_BUCK_EN_VALID, .resource = PMIC_POWER_RESOURCE_LDO2};
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
@@ -182,7 +182,7 @@ static void test_neg_power_getBuckCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with NULL handle
  */
-static void test_neg_power_setLdoCfg_nullHandle(void)
+void test_neg_power_setLdoCfg_nullHandle(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = PMIC_POWER_LDO_EN_VALID, .resource = PMIC_POWER_RESOURCE_LDO1, .ldoEn = true};
     int32_t status = Pmic_pwrSetLdoCfg(NULL, &ldoCfg);
@@ -192,7 +192,7 @@ static void test_neg_power_setLdoCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with NULL ldoCfg parameter
  */
-static void test_neg_power_setLdoCfg_nullLdoCfg(void)
+void test_neg_power_setLdoCfg_nullLdoCfg(void)
 {
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -201,7 +201,7 @@ static void test_neg_power_setLdoCfg_nullLdoCfg(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with invalid validParams
  */
-static void test_neg_power_setLdoCfg_invalidValidParams(void)
+void test_neg_power_setLdoCfg_invalidValidParams(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_LDO1};
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfg);
@@ -211,7 +211,7 @@ static void test_neg_power_setLdoCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with invalid resource
  */
-static void test_neg_power_setLdoCfg_invalidResource(void)
+void test_neg_power_setLdoCfg_invalidResource(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = PMIC_POWER_LDO_EN_VALID, .resource = PMIC_POWER_RESOURCE_BUCK1, .ldoEn = true};
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfg);
@@ -221,7 +221,7 @@ static void test_neg_power_setLdoCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with invalid vset for LDO1
  */
-static void test_neg_power_setLdoCfg_invalidVsetLdo1(void)
+void test_neg_power_setLdoCfg_invalidVsetLdo1(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
         .validParams = PMIC_POWER_LDO_VSET_VALID,
@@ -235,7 +235,7 @@ static void test_neg_power_setLdoCfg_invalidVsetLdo1(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with invalid vmon threshold
  */
-static void test_neg_power_setLdoCfg_invalidVmonThr(void)
+void test_neg_power_setLdoCfg_invalidVmonThr(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
         .validParams = PMIC_POWER_LDO_VMON_THR_VALID,
@@ -249,7 +249,7 @@ static void test_neg_power_setLdoCfg_invalidVmonThr(void)
 /**
  * @brief Test Pmic_pwrSetLdoCfg with invalid group select
  */
-static void test_neg_power_setLdoCfg_invalidGrpSel(void)
+void test_neg_power_setLdoCfg_invalidGrpSel(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
         .validParams = PMIC_POWER_LDO_GRP_SEL_VALID,
@@ -263,7 +263,7 @@ static void test_neg_power_setLdoCfg_invalidGrpSel(void)
 /**
  * @brief Test Pmic_pwrGetLdoCfg with NULL handle
  */
-static void test_neg_power_getLdoCfg_nullHandle(void)
+void test_neg_power_getLdoCfg_nullHandle(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = PMIC_POWER_LDO_EN_VALID, .resource = PMIC_POWER_RESOURCE_LDO1};
     int32_t status = Pmic_pwrGetLdoCfg(NULL, &ldoCfg);
@@ -273,7 +273,7 @@ static void test_neg_power_getLdoCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetLdoCfg with NULL ldoCfg parameter
  */
-static void test_neg_power_getLdoCfg_nullLdoCfg(void)
+void test_neg_power_getLdoCfg_nullLdoCfg(void)
 {
     int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -282,7 +282,7 @@ static void test_neg_power_getLdoCfg_nullLdoCfg(void)
 /**
  * @brief Test Pmic_pwrGetLdoCfg with invalid validParams
  */
-static void test_neg_power_getLdoCfg_invalidValidParams(void)
+void test_neg_power_getLdoCfg_invalidValidParams(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_LDO2};
     int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfg);
@@ -292,7 +292,7 @@ static void test_neg_power_getLdoCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrGetLdoCfg with invalid resource
  */
-static void test_neg_power_getLdoCfg_invalidResource(void)
+void test_neg_power_getLdoCfg_invalidResource(void)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {.validParams = PMIC_POWER_LDO_EN_VALID, .resource = PMIC_POWER_RESOURCE_VMON1};
     int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfg);
@@ -302,7 +302,7 @@ static void test_neg_power_getLdoCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with NULL handle
  */
-static void test_neg_power_setVccaVmonCfg_nullHandle(void)
+void test_neg_power_setVccaVmonCfg_nullHandle(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = PMIC_POWER_VCCA_VMON_EN_VALID, .resource = PMIC_POWER_RESOURCE_VCCA_VMON, .vmonEn = true};
     int32_t status = Pmic_pwrSetVccaVmonCfg(NULL, &vccaVmonCfg);
@@ -312,7 +312,7 @@ static void test_neg_power_setVccaVmonCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with NULL vccaVmonCfg parameter
  */
-static void test_neg_power_setVccaVmonCfg_nullVccaVmonCfg(void)
+void test_neg_power_setVccaVmonCfg_nullVccaVmonCfg(void)
 {
     int32_t status = Pmic_pwrSetVccaVmonCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -321,7 +321,7 @@ static void test_neg_power_setVccaVmonCfg_nullVccaVmonCfg(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with invalid validParams
  */
-static void test_neg_power_setVccaVmonCfg_invalidValidParams(void)
+void test_neg_power_setVccaVmonCfg_invalidValidParams(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_VMON1};
     int32_t status = Pmic_pwrSetVccaVmonCfg(&pmicHandle, &vccaVmonCfg);
@@ -331,7 +331,7 @@ static void test_neg_power_setVccaVmonCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with invalid resource
  */
-static void test_neg_power_setVccaVmonCfg_invalidResource(void)
+void test_neg_power_setVccaVmonCfg_invalidResource(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = PMIC_POWER_VCCA_VMON_EN_VALID, .resource = PMIC_POWER_RESOURCE_BUCK1, .vmonEn = true};
     int32_t status = Pmic_pwrSetVccaVmonCfg(&pmicHandle, &vccaVmonCfg);
@@ -341,7 +341,7 @@ static void test_neg_power_setVccaVmonCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with invalid pgSet for VCCA
  */
-static void test_neg_power_setVccaVmonCfg_invalidPgSetVcca(void)
+void test_neg_power_setVccaVmonCfg_invalidPgSetVcca(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {
         .validParams = PMIC_POWER_VCCA_VMON_PG_SET_VALID,
@@ -355,7 +355,7 @@ static void test_neg_power_setVccaVmonCfg_invalidPgSetVcca(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with invalid threshold for VCCA
  */
-static void test_neg_power_setVccaVmonCfg_invalidThrVcca(void)
+void test_neg_power_setVccaVmonCfg_invalidThrVcca(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {
         .validParams = PMIC_POWER_VCCA_VMON_THR_VALID,
@@ -369,7 +369,7 @@ static void test_neg_power_setVccaVmonCfg_invalidThrVcca(void)
 /**
  * @brief Test Pmic_pwrSetVccaVmonCfg with invalid group select
  */
-static void test_neg_power_setVccaVmonCfg_invalidGrpSel(void)
+void test_neg_power_setVccaVmonCfg_invalidGrpSel(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {
         .validParams = PMIC_POWER_VCCA_VMON_GRP_SEL_VALID,
@@ -383,7 +383,7 @@ static void test_neg_power_setVccaVmonCfg_invalidGrpSel(void)
 /**
  * @brief Test Pmic_pwrGetVccaVmonCfg with NULL handle
  */
-static void test_neg_power_getVccaVmonCfg_nullHandle(void)
+void test_neg_power_getVccaVmonCfg_nullHandle(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = PMIC_POWER_VCCA_VMON_EN_VALID, .resource = PMIC_POWER_RESOURCE_VCCA_VMON};
     int32_t status = Pmic_pwrGetVccaVmonCfg(NULL, &vccaVmonCfg);
@@ -393,7 +393,7 @@ static void test_neg_power_getVccaVmonCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetVccaVmonCfg with NULL vccaVmonCfg parameter
  */
-static void test_neg_power_getVccaVmonCfg_nullVccaVmonCfg(void)
+void test_neg_power_getVccaVmonCfg_nullVccaVmonCfg(void)
 {
     int32_t status = Pmic_pwrGetVccaVmonCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -402,7 +402,7 @@ static void test_neg_power_getVccaVmonCfg_nullVccaVmonCfg(void)
 /**
  * @brief Test Pmic_pwrGetVccaVmonCfg with invalid validParams
  */
-static void test_neg_power_getVccaVmonCfg_invalidValidParams(void)
+void test_neg_power_getVccaVmonCfg_invalidValidParams(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = 0U, .resource = PMIC_POWER_RESOURCE_VMON1};
     int32_t status = Pmic_pwrGetVccaVmonCfg(&pmicHandle, &vccaVmonCfg);
@@ -412,7 +412,7 @@ static void test_neg_power_getVccaVmonCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrGetVccaVmonCfg with invalid resource
  */
-static void test_neg_power_getVccaVmonCfg_invalidResource(void)
+void test_neg_power_getVccaVmonCfg_invalidResource(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {.validParams = PMIC_POWER_VCCA_VMON_EN_VALID, .resource = PMIC_POWER_RESOURCE_LDO1};
     int32_t status = Pmic_pwrGetVccaVmonCfg(&pmicHandle, &vccaVmonCfg);
@@ -422,7 +422,7 @@ static void test_neg_power_getVccaVmonCfg_invalidResource(void)
 /**
  * @brief Test Pmic_pwrSetGlobalVmonDegl with NULL handle
  */
-static void test_neg_power_setGlobalVmonDegl_nullHandle(void)
+void test_neg_power_setGlobalVmonDegl_nullHandle(void)
 {
     int32_t status = Pmic_pwrSetGlobalVmonDegl(NULL, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -431,7 +431,7 @@ static void test_neg_power_setGlobalVmonDegl_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetGlobalVmonDegl with invalid value
  */
-static void test_neg_power_setGlobalVmonDegl_invalidValue(void)
+void test_neg_power_setGlobalVmonDegl_invalidValue(void)
 {
     int32_t status = Pmic_pwrSetGlobalVmonDegl(&pmicHandle, PMIC_POWER_VMON_DEGL_SEL_MAX + 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -440,7 +440,7 @@ static void test_neg_power_setGlobalVmonDegl_invalidValue(void)
 /**
  * @brief Test Pmic_pwrSetThermalCfg with NULL handle
  */
-static void test_neg_power_setThermalCfg_nullHandle(void)
+void test_neg_power_setThermalCfg_nullHandle(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = PMIC_POWER_TWARN_LEVEL_VALID, .twarnLvl = PMIC_POWER_TWARN_LEVEL_130C};
     int32_t status = Pmic_pwrSetThermalCfg(NULL, &thermalCfg);
@@ -450,7 +450,7 @@ static void test_neg_power_setThermalCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetThermalCfg with NULL thermalCfg parameter
  */
-static void test_neg_power_setThermalCfg_nullThermalCfg(void)
+void test_neg_power_setThermalCfg_nullThermalCfg(void)
 {
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -459,7 +459,7 @@ static void test_neg_power_setThermalCfg_nullThermalCfg(void)
 /**
  * @brief Test Pmic_pwrSetThermalCfg with invalid validParams
  */
-static void test_neg_power_setThermalCfg_invalidValidParams(void)
+void test_neg_power_setThermalCfg_invalidValidParams(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = 0U};
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
@@ -469,7 +469,7 @@ static void test_neg_power_setThermalCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrSetThermalCfg with invalid twarnLvl
  */
-static void test_neg_power_setThermalCfg_invalidTwarnLvl(void)
+void test_neg_power_setThermalCfg_invalidTwarnLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = PMIC_POWER_TWARN_LEVEL_VALID, .twarnLvl = PMIC_POWER_TWARN_LEVEL_MAX + 1U};
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
@@ -479,7 +479,7 @@ static void test_neg_power_setThermalCfg_invalidTwarnLvl(void)
 /**
  * @brief Test Pmic_pwrSetThermalCfg with invalid tsdOrdLvl
  */
-static void test_neg_power_setThermalCfg_invalidTsdOrdLvl(void)
+void test_neg_power_setThermalCfg_invalidTsdOrdLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID, .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_MAX + 1U};
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
@@ -489,7 +489,7 @@ static void test_neg_power_setThermalCfg_invalidTsdOrdLvl(void)
 /**
  * @brief Test Pmic_pwrGetThermalCfg with NULL handle
  */
-static void test_neg_power_getThermalCfg_nullHandle(void)
+void test_neg_power_getThermalCfg_nullHandle(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = PMIC_POWER_TWARN_LEVEL_VALID};
     int32_t status = Pmic_pwrGetThermalCfg(NULL, &thermalCfg);
@@ -499,7 +499,7 @@ static void test_neg_power_getThermalCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetThermalCfg with NULL thermalCfg parameter
  */
-static void test_neg_power_getThermalCfg_nullThermalCfg(void)
+void test_neg_power_getThermalCfg_nullThermalCfg(void)
 {
     int32_t status = Pmic_pwrGetThermalCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -508,7 +508,7 @@ static void test_neg_power_getThermalCfg_nullThermalCfg(void)
 /**
  * @brief Test Pmic_pwrGetThermalCfg with invalid validParams
  */
-static void test_neg_power_getThermalCfg_invalidValidParams(void)
+void test_neg_power_getThermalCfg_invalidValidParams(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {.validParams = 0U};
     int32_t status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfg);
@@ -518,7 +518,7 @@ static void test_neg_power_getThermalCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrSetSpreadSpectrumCfg with NULL handle
  */
-static void test_neg_power_setSpreadSpectrumCfg_nullHandle(void)
+void test_neg_power_setSpreadSpectrumCfg_nullHandle(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfg = {.validParams = PMIC_POWER_SS_EN_VALID, .ssEn = true};
     int32_t status = Pmic_pwrSetSpreadSpectrumCfg(NULL, &ssCfg);
@@ -528,7 +528,7 @@ static void test_neg_power_setSpreadSpectrumCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrSetSpreadSpectrumCfg with NULL ssCfg parameter
  */
-static void test_neg_power_setSpreadSpectrumCfg_nullSsCfg(void)
+void test_neg_power_setSpreadSpectrumCfg_nullSsCfg(void)
 {
     int32_t status = Pmic_pwrSetSpreadSpectrumCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -537,7 +537,7 @@ static void test_neg_power_setSpreadSpectrumCfg_nullSsCfg(void)
 /**
  * @brief Test Pmic_pwrSetSpreadSpectrumCfg with invalid validParams
  */
-static void test_neg_power_setSpreadSpectrumCfg_invalidValidParams(void)
+void test_neg_power_setSpreadSpectrumCfg_invalidValidParams(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfg = {.validParams = 0U};
     int32_t status = Pmic_pwrSetSpreadSpectrumCfg(&pmicHandle, &ssCfg);
@@ -547,7 +547,7 @@ static void test_neg_power_setSpreadSpectrumCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrGetSpreadSpectrumCfg with NULL handle
  */
-static void test_neg_power_getSpreadSpectrumCfg_nullHandle(void)
+void test_neg_power_getSpreadSpectrumCfg_nullHandle(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfg = {.validParams = PMIC_POWER_SS_EN_VALID};
     int32_t status = Pmic_pwrGetSpreadSpectrumCfg(NULL, &ssCfg);
@@ -557,7 +557,7 @@ static void test_neg_power_getSpreadSpectrumCfg_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetSpreadSpectrumCfg with NULL ssCfg parameter
  */
-static void test_neg_power_getSpreadSpectrumCfg_nullSsCfg(void)
+void test_neg_power_getSpreadSpectrumCfg_nullSsCfg(void)
 {
     int32_t status = Pmic_pwrGetSpreadSpectrumCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -566,7 +566,7 @@ static void test_neg_power_getSpreadSpectrumCfg_nullSsCfg(void)
 /**
  * @brief Test Pmic_pwrGetSpreadSpectrumCfg with invalid validParams
  */
-static void test_neg_power_getSpreadSpectrumCfg_invalidValidParams(void)
+void test_neg_power_getSpreadSpectrumCfg_invalidValidParams(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfg = {.validParams = 0U};
     int32_t status = Pmic_pwrGetSpreadSpectrumCfg(&pmicHandle, &ssCfg);
@@ -576,7 +576,7 @@ static void test_neg_power_getSpreadSpectrumCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_pwrGetRsrcStatus with NULL handle
  */
-static void test_neg_power_getRsrcStatus_nullHandle(void)
+void test_neg_power_getRsrcStatus_nullHandle(void)
 {
     Pmic_PwrRsrcStatus_t rsrcStatus = {.validParams = PMIC_POWER_BUCK1_UVOV_VALID};
     int32_t status = Pmic_pwrGetRsrcStatus(NULL, &rsrcStatus);
@@ -586,7 +586,7 @@ static void test_neg_power_getRsrcStatus_nullHandle(void)
 /**
  * @brief Test Pmic_pwrGetRsrcStatus with NULL rsrcStatus parameter
  */
-static void test_neg_power_getRsrcStatus_nullRsrcStatus(void)
+void test_neg_power_getRsrcStatus_nullRsrcStatus(void)
 {
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -595,7 +595,7 @@ static void test_neg_power_getRsrcStatus_nullRsrcStatus(void)
 /**
  * @brief Test Pmic_pwrGetRsrcStatus with invalid validParams
  */
-static void test_neg_power_getRsrcStatus_invalidValidParams(void)
+void test_neg_power_getRsrcStatus_invalidValidParams(void)
 {
     Pmic_PwrRsrcStatus_t rsrcStatus = {.validParams = 0U};
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
@@ -609,7 +609,7 @@ static void test_neg_power_getRsrcStatus_invalidValidParams(void)
 /**
  * @brief Test BUCK1 enable and disable
  */
-static void test_pos_power_buck1_enableDisable(void)
+void test_pos_power_buck1_enableDisable(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_EN_VALID,
@@ -641,7 +641,7 @@ static void test_pos_power_buck1_enableDisable(void)
 /**
  * @brief Test BUCK2 voltage set and get
  */
-static void test_pos_power_buck2_vset(void)
+void test_pos_power_buck2_vset(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_VSET_VALID,
@@ -665,7 +665,7 @@ static void test_pos_power_buck2_vset(void)
 /**
  * @brief Test BUCK3 slew rate configuration
  */
-static void test_pos_power_buck3_slewRate(void)
+void test_pos_power_buck3_slewRate(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_SLEW_RATE_VALID,
@@ -689,7 +689,7 @@ static void test_pos_power_buck3_slewRate(void)
 /**
  * @brief Test BUCK4 VMON threshold
  */
-static void test_pos_power_buck4_vmonThr(void)
+void test_pos_power_buck4_vmonThr(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_VMON_THR_VALID,
@@ -713,7 +713,7 @@ static void test_pos_power_buck4_vmonThr(void)
 /**
  * @brief Test BUCK1 group select
  */
-static void test_pos_power_buck1_grpSel(void)
+void test_pos_power_buck1_grpSel(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_GRP_SEL_VALID,
@@ -737,7 +737,7 @@ static void test_pos_power_buck1_grpSel(void)
 /**
  * @brief Test LDO1 enable and disable
  */
-static void test_pos_power_ldo1_enableDisable(void)
+void test_pos_power_ldo1_enableDisable(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_EN_VALID,
@@ -769,7 +769,7 @@ static void test_pos_power_ldo1_enableDisable(void)
 /**
  * @brief Test LDO2 voltage set and get
  */
-static void test_pos_power_ldo2_vset(void)
+void test_pos_power_ldo2_vset(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_VSET_VALID,
@@ -793,7 +793,7 @@ static void test_pos_power_ldo2_vset(void)
 /**
  * @brief Test LDO3 bypass enable
  */
-static void test_pos_power_ldo3_bypassEn(void)
+void test_pos_power_ldo3_bypassEn(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_BYP_EN_VALID,
@@ -817,7 +817,7 @@ static void test_pos_power_ldo3_bypassEn(void)
 /**
  * @brief Test LDO1 VMON threshold
  */
-static void test_pos_power_ldo1_vmonThr(void)
+void test_pos_power_ldo1_vmonThr(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_VMON_THR_VALID,
@@ -841,7 +841,7 @@ static void test_pos_power_ldo1_vmonThr(void)
 /**
  * @brief Test LDO2 group select
  */
-static void test_pos_power_ldo2_grpSel(void)
+void test_pos_power_ldo2_grpSel(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_GRP_SEL_VALID,
@@ -865,7 +865,7 @@ static void test_pos_power_ldo2_grpSel(void)
 /**
  * @brief Test VCCA enable and disable
  */
-static void test_pos_power_vcca_enableDisable(void)
+void test_pos_power_vcca_enableDisable(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_EN_VALID,
@@ -897,7 +897,7 @@ static void test_pos_power_vcca_enableDisable(void)
 /**
  * @brief Test VCCA PG set configuration
  */
-static void test_pos_power_vcca_pgSet(void)
+void test_pos_power_vcca_pgSet(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_PG_SET_VALID,
@@ -921,7 +921,7 @@ static void test_pos_power_vcca_pgSet(void)
 /**
  * @brief Test VCCA threshold configuration
  */
-static void test_pos_power_vcca_threshold(void)
+void test_pos_power_vcca_threshold(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_THR_VALID,
@@ -945,7 +945,7 @@ static void test_pos_power_vcca_threshold(void)
 /**
  * @brief Test VCCA group select
  */
-static void test_pos_power_vcca_grpSel(void)
+void test_pos_power_vcca_grpSel(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_GRP_SEL_VALID,
@@ -969,7 +969,7 @@ static void test_pos_power_vcca_grpSel(void)
 /**
  * @brief Test VMON1 enable and disable
  */
-static void test_pos_power_vmon1_enableDisable(void)
+void test_pos_power_vmon1_enableDisable(void)
 {
     Pmic_PwrVccaVmonCfg_t vmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_EN_VALID,
@@ -993,7 +993,7 @@ static void test_pos_power_vmon1_enableDisable(void)
 /**
  * @brief Test VMON2 PG set configuration
  */
-static void test_pos_power_vmon2_pgSet(void)
+void test_pos_power_vmon2_pgSet(void)
 {
     Pmic_PwrVccaVmonCfg_t vmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_PG_SET_VALID,
@@ -1017,7 +1017,7 @@ static void test_pos_power_vmon2_pgSet(void)
 /**
  * @brief Test VMON1 PG set configuration
  */
-static void test_pos_power_vmon1_pgSet(void)
+void test_pos_power_vmon1_pgSet(void)
 {
     Pmic_PwrVccaVmonCfg_t vmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_PG_SET_VALID,
@@ -1041,7 +1041,7 @@ static void test_pos_power_vmon1_pgSet(void)
 /**
  * @brief Test VMON2 enable configuration
  */
-static void test_pos_power_vmon2_enableDisable(void)
+void test_pos_power_vmon2_enableDisable(void)
 {
     Pmic_PwrVccaVmonCfg_t vmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_EN_VALID,
@@ -1065,7 +1065,7 @@ static void test_pos_power_vmon2_enableDisable(void)
 /**
  * @brief Test VMON1 invalid PG set configuration
  */
-static void test_neg_power_setVccaVmonCfg_invalidPgSetVmon1(void)
+void test_neg_power_setVccaVmonCfg_invalidPgSetVmon1(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfg = {
         .validParams = PMIC_POWER_VCCA_VMON_PG_SET_VALID,
@@ -1079,7 +1079,7 @@ static void test_neg_power_setVccaVmonCfg_invalidPgSetVmon1(void)
 /**
  * @brief Test global VMON deglitch setting for all valid values
  */
-static void test_pos_power_globalVmonDegl_allValues(void)
+void test_pos_power_globalVmonDegl_allValues(void)
 {
     int32_t status;
 
@@ -1094,7 +1094,7 @@ static void test_pos_power_globalVmonDegl_allValues(void)
 /**
  * @brief Test thermal warning level set and get
  */
-static void test_pos_power_thermal_twarnLvl(void)
+void test_pos_power_thermal_twarnLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
         .validParams = PMIC_POWER_TWARN_LEVEL_VALID,
@@ -1116,7 +1116,7 @@ static void test_pos_power_thermal_twarnLvl(void)
 /**
  * @brief Test thermal orderly shutdown level set and get
  */
-static void test_pos_power_thermal_tsdOrdLvl(void)
+void test_pos_power_thermal_tsdOrdLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
         .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID,
@@ -1138,7 +1138,7 @@ static void test_pos_power_thermal_tsdOrdLvl(void)
 /**
  * @brief Test spread spectrum enable and disable
  */
-static void test_pos_power_spreadSpectrum_enableDisable(void)
+void test_pos_power_spreadSpectrum_enableDisable(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfgSet = {
         .validParams = PMIC_POWER_SS_EN_VALID,
@@ -1168,7 +1168,7 @@ static void test_pos_power_spreadSpectrum_enableDisable(void)
 /**
  * @brief Test spread spectrum depth configuration
  */
-static void test_pos_power_spreadSpectrum_depth(void)
+void test_pos_power_spreadSpectrum_depth(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfgSet = {
         .validParams = PMIC_POWER_SS_DEPTH_VALID,
@@ -1190,7 +1190,7 @@ static void test_pos_power_spreadSpectrum_depth(void)
 /**
  * @brief Test get all BUCK UVOV status
  */
-static void test_pos_power_rsrcStatus_buckUVOV(void)
+void test_pos_power_rsrcStatus_buckUVOV(void)
 {
     Pmic_PwrRsrcStatus_t rsrcStatus = {
         .validParams = PMIC_POWER_BUCK1_UVOV_VALID | PMIC_POWER_BUCK2_UVOV_VALID |
@@ -1205,7 +1205,7 @@ static void test_pos_power_rsrcStatus_buckUVOV(void)
 /**
  * @brief Test get all LDO UVOV status
  */
-static void test_pos_power_rsrcStatus_ldoUVOV(void)
+void test_pos_power_rsrcStatus_ldoUVOV(void)
 {
     Pmic_PwrRsrcStatus_t rsrcStatus = {
         .validParams = PMIC_POWER_LDO1_UVOV_VALID | PMIC_POWER_LDO2_UVOV_VALID |
@@ -1220,7 +1220,7 @@ static void test_pos_power_rsrcStatus_ldoUVOV(void)
 /**
  * @brief Test get all VMON UVOV status
  */
-static void test_pos_power_rsrcStatus_vmonUVOV(void)
+void test_pos_power_rsrcStatus_vmonUVOV(void)
 {
     Pmic_PwrRsrcStatus_t rsrcStatus = {
         .validParams = PMIC_POWER_VMON1_UVOV_VALID | PMIC_POWER_VMON2_UVOV_VALID |
@@ -1235,7 +1235,7 @@ static void test_pos_power_rsrcStatus_vmonUVOV(void)
 /**
  * @brief Test BUCK combined configuration
  */
-static void test_pos_power_buck_combinedConfig(void)
+void test_pos_power_buck_combinedConfig(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_EN_VALID | PMIC_POWER_BUCK_PLDN_EN_VALID |
@@ -1265,7 +1265,7 @@ static void test_pos_power_buck_combinedConfig(void)
 /**
  * @brief Test LDO combined configuration
  */
-static void test_pos_power_ldo_combinedConfig(void)
+void test_pos_power_ldo_combinedConfig(void)
 {
     Pmic_PwrLdoCfg_t ldoCfgSet = {
         .validParams = PMIC_POWER_LDO_EN_VALID | PMIC_POWER_LDO_VMON_EN_VALID |
@@ -1294,7 +1294,7 @@ static void test_pos_power_ldo_combinedConfig(void)
 /**
  * @brief Test VMON combined configuration
  */
-static void test_pos_power_vmon_combinedConfig(void)
+void test_pos_power_vmon_combinedConfig(void)
 {
     Pmic_PwrVccaVmonCfg_t vmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_EN_VALID | PMIC_POWER_VCCA_VMON_THR_VALID |
@@ -1322,7 +1322,7 @@ static void test_pos_power_vmon_combinedConfig(void)
 /**
  * @brief Test thermal combined configuration
  */
-static void test_pos_power_thermal_combinedConfig(void)
+void test_pos_power_thermal_combinedConfig(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
         .validParams = PMIC_POWER_TWARN_LEVEL_VALID | PMIC_POWER_TSD_ORD_LEVEL_VALID,
@@ -1346,7 +1346,7 @@ static void test_pos_power_thermal_combinedConfig(void)
 /**
  * @brief Test spread spectrum combined configuration
  */
-static void test_pos_power_spreadSpectrum_combinedConfig(void)
+void test_pos_power_spreadSpectrum_combinedConfig(void)
 {
     Pmic_PwrSpreadSpectrumCfg_t ssCfgSet = {
         .validParams = PMIC_POWER_SS_EN_VALID | PMIC_POWER_SS_DEPTH_VALID,
@@ -1376,7 +1376,7 @@ static void test_pos_power_spreadSpectrum_combinedConfig(void)
 /**
  * @brief Property test: BUCK voltage bounds
  */
-static void test_pos_power_property_buckVoltageBounds(void)
+void test_pos_power_property_buckVoltageBounds(void)
 {
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_VSET_VALID,
@@ -1395,7 +1395,7 @@ static void test_pos_power_property_buckVoltageBounds(void)
 /**
  * @brief Property test: VMON threshold enumeration exhaustion
  */
-static void test_pos_power_property_vmonThresholdEnumeration(void)
+void test_pos_power_property_vmonThresholdEnumeration(void)
 {
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_THR_VALID,
@@ -1413,183 +1413,6 @@ static void test_pos_power_property_vmonThresholdEnumeration(void)
 
 #endif
 
-/* ========================================================================== */
-/*                         Test Execution Macros                              */
-/* ========================================================================== */
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetBuckCfg / Pmic_pwrGetBuckCfg    */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_nullBuckCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidResource); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidSlewRate); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidVsetBuck1); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidVmonThr); \
-    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidGrpSel); \
-    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullBuckCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidResource)
-
-#define POWER_TEST_POS_SETGETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_buck1_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_buck2_vset); \
-    PLATFORM_RUN_TEST(test_pos_power_buck3_slewRate); \
-    PLATFORM_RUN_TEST(test_pos_power_buck4_vmonThr); \
-    PLATFORM_RUN_TEST(test_pos_power_buck1_grpSel); \
-    PLATFORM_RUN_TEST(test_pos_power_buck_combinedConfig)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetLdoCfg / Pmic_pwrGetLdoCfg      */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGETLDOCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_nullLdoCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidResource); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidVsetLdo1); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidVmonThr); \
-    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidGrpSel); \
-    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullLdoCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidResource)
-
-#define POWER_TEST_POS_SETGETLDOCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_ldo1_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo2_vset); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo3_bypassEn); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo1_vmonThr); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetVccaVmonCfg / Pmic_pwrGetVccaVmonCfg */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGETVCCAVMONCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_nullVccaVmonCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidResource); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidPgSetVcca); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidPgSetVmon1); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidThrVcca); \
-    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidGrpSel); \
-    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullVccaVmonCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidResource)
-
-#define POWER_TEST_POS_SETGETVCCAVMONCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_vcca_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_vcca_pgSet); \
-    PLATFORM_RUN_TEST(test_pos_power_vcca_threshold); \
-    PLATFORM_RUN_TEST(test_pos_power_vcca_grpSel); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon1_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon1_pgSet); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon2_pgSet); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon2_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetGlobalVmonDegl                  */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGLOBALVMONDEGL() \
-    PLATFORM_RUN_TEST(test_neg_power_setGlobalVmonDegl_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setGlobalVmonDegl_invalidValue)
-
-#define POWER_TEST_POS_SETGLOBALVMONDEGL() \
-    PLATFORM_RUN_TEST(test_pos_power_globalVmonDegl_allValues)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetThermalCfg / Pmic_pwrGetThermalCfg */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGETTHERMALCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_nullThermalCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidTwarnLvl); \
-    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidTsdOrdLvl); \
-    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_nullThermalCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_invalidValidParams)
-
-#define POWER_TEST_POS_SETGETTHERMALCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_thermal_twarnLvl); \
-    PLATFORM_RUN_TEST(test_pos_power_thermal_tsdOrdLvl); \
-    PLATFORM_RUN_TEST(test_pos_power_thermal_combinedConfig)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrSetSpreadSpectrumCfg / Pmic_pwrGetSpreadSpectrumCfg */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullSsCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_nullSsCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_invalidValidParams)
-
-#define POWER_TEST_POS_SETGETSPREADSPECTRUMCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_depth); \
-    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_combinedConfig)
-
-/* ========================================================================== */
-/*     API-Specific Test Macros - Pmic_pwrGetRsrcStatus                      */
-/* ========================================================================== */
-
-#define POWER_TEST_NEG_GETRSRCSTATUS() \
-    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullRsrcStatus); \
-    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_invalidValidParams)
-
-#define POWER_TEST_POS_GETRSRCSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_buckUVOV); \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_ldoUVOV); \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV)
-
-/* ========================================================================== */
-/*     Property Tests (BUILD_MOCK)                                           */
-/* ========================================================================== */
-
-#ifdef BUILD_MOCK
-#define POWER_TEST_POS_PROPERTY() \
-    PLATFORM_RUN_TEST(test_pos_power_property_buckVoltageBounds); \
-    PLATFORM_RUN_TEST(test_pos_power_property_vmonThresholdEnumeration)
-#else
-#define POWER_TEST_POS_PROPERTY()
-#endif
-
-/* ========================================================================== */
-/*     Combined Test Macros                                                  */
-/* ========================================================================== */
-
-#define POWER_TEST_RUN_ALL() \
-    POWER_TEST_NEG_SETGETBUCKCFG(); \
-    POWER_TEST_POS_SETGETBUCKCFG(); \
-    POWER_TEST_NEG_SETGETLDOCFG(); \
-    POWER_TEST_POS_SETGETLDOCFG(); \
-    POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
-    POWER_TEST_POS_SETGETVCCAVMONCFG(); \
-    POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
-    POWER_TEST_POS_SETGLOBALVMONDEGL(); \
-    POWER_TEST_NEG_SETGETTHERMALCFG(); \
-    POWER_TEST_POS_SETGETTHERMALCFG(); \
-    POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
-    POWER_TEST_POS_SETGETSPREADSPECTRUMCFG(); \
-    POWER_TEST_NEG_GETRSRCSTATUS(); \
-    POWER_TEST_POS_GETRSRCSTATUS(); \
-    POWER_TEST_POS_PROPERTY()
 /* ========================================================================== */
 /*                         Entry Point Function                               */
 /* ========================================================================== */

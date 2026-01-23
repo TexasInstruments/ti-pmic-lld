@@ -58,7 +58,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* Positive tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
-#define ESM_TEST_POS_SETGETCFG() \
+#define ESM_TEST_POS_ESMSETGETCFG() \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_enable); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_level); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_pwm); \
@@ -71,7 +71,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_lmin)
 
 /* Negative tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
-#define ESM_TEST_NEG_SETGETCFG() \
+#define ESM_TEST_NEG_ESMSETGETCFG() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullEsmCfg); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidValidParams); \
@@ -82,23 +82,23 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams)
 
 /* All tests for Pmic_esmSetCfg / Pmic_esmGetCfg */
-#define ESM_TEST_SETGETCFG() \
-    ESM_TEST_NEG_SETGETCFG(); \
-    ESM_TEST_POS_SETGETCFG()
+#define ESM_TEST_ESMSETGETCFG() \
+    ESM_TEST_NEG_ESMSETGETCFG(); \
+    ESM_TEST_POS_ESMSETGETCFG()
 
 /* ========================================================================== */
 /*              Pmic_esmStart / Pmic_esmStop / Start State                    */
 /* ========================================================================== */
 
 /* Positive tests for Pmic_esmStart / Pmic_esmStop */
-#define ESM_TEST_POS_STARTSTOP() \
+#define ESM_TEST_POS_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStart); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState)
 
 /* Negative tests for Pmic_esmStart / Pmic_esmStop */
-#define ESM_TEST_NEG_STARTSTOP() \
+#define ESM_TEST_NEG_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmStart_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmStop_nullHandle); \
@@ -106,21 +106,21 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullStarted)
 
 /* All tests for Pmic_esmStart / Pmic_esmStop */
-#define ESM_TEST_STARTSTOP() \
-    ESM_TEST_NEG_STARTSTOP(); \
-    ESM_TEST_POS_STARTSTOP()
+#define ESM_TEST_ESMSTARTSTOP() \
+    ESM_TEST_NEG_ESMSTARTSTOP(); \
+    ESM_TEST_POS_ESMSTARTSTOP()
 
 /* ========================================================================== */
 /*              Pmic_esmGetStatus / Pmic_esmClrStatus                         */
 /* ========================================================================== */
 
 /* Positive tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
-#define ESM_TEST_POS_STATUS() \
+#define ESM_TEST_POS_ESMSTATUS() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus); \
     PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus)
 
 /* Negative tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
-#define ESM_TEST_NEG_STATUS() \
+#define ESM_TEST_NEG_ESMSTATUS() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullEsmStat); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_invalidValidParams_zero); \
@@ -131,27 +131,27 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds)
 
 /* All tests for Pmic_esmGetStatus / Pmic_esmClrStatus */
-#define ESM_TEST_STATUS() \
-    ESM_TEST_NEG_STATUS(); \
-    ESM_TEST_POS_STATUS()
+#define ESM_TEST_ESMSTATUS() \
+    ESM_TEST_NEG_ESMSTATUS(); \
+    ESM_TEST_POS_ESMSTATUS()
 
 /* ========================================================================== */
 /*                      Pmic_esmGetErrCnt                                     */
 /* ========================================================================== */
 
 /* Positive tests for Pmic_esmGetErrCnt */
-#define ESM_TEST_POS_ERRCNT() \
+#define ESM_TEST_POS_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt)
 
 /* Negative tests for Pmic_esmGetErrCnt */
-#define ESM_TEST_NEG_ERRCNT() \
+#define ESM_TEST_NEG_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullErrCnt)
 
 /* All tests for Pmic_esmGetErrCnt */
-#define ESM_TEST_ERRCNT() \
-    ESM_TEST_NEG_ERRCNT(); \
-    ESM_TEST_POS_ERRCNT()
+#define ESM_TEST_ESMGETERRCNT() \
+    ESM_TEST_NEG_ESMGETERRCNT(); \
+    ESM_TEST_POS_ESMGETERRCNT()
 
 /* ========================================================================== */
 /*                     Aggregate Test Macros                                  */
@@ -159,24 +159,24 @@ extern "C" {
 
 /* Run all ESM positive tests */
 #define ESM_TEST_RUN_POSITIVE() \
-    ESM_TEST_POS_SETGETCFG(); \
-    ESM_TEST_POS_STARTSTOP(); \
-    ESM_TEST_POS_STATUS(); \
-    ESM_TEST_POS_ERRCNT()
+    ESM_TEST_POS_ESMSETGETCFG(); \
+    ESM_TEST_POS_ESMSTARTSTOP(); \
+    ESM_TEST_POS_ESMSTATUS(); \
+    ESM_TEST_POS_ESMGETERRCNT()
 
 /* Run all ESM negative tests */
 #define ESM_TEST_RUN_NEGATIVE() \
-    ESM_TEST_NEG_SETGETCFG(); \
-    ESM_TEST_NEG_STARTSTOP(); \
-    ESM_TEST_NEG_STATUS(); \
-    ESM_TEST_NEG_ERRCNT()
+    ESM_TEST_NEG_ESMSETGETCFG(); \
+    ESM_TEST_NEG_ESMSTARTSTOP(); \
+    ESM_TEST_NEG_ESMSTATUS(); \
+    ESM_TEST_NEG_ESMGETERRCNT()
 
 /* Run all ESM tests */
 #define ESM_TEST_RUN_ALL() \
-    ESM_TEST_SETGETCFG(); \
-    ESM_TEST_STARTSTOP(); \
-    ESM_TEST_STATUS(); \
-    ESM_TEST_ERRCNT()
+    ESM_TEST_ESMSETGETCFG(); \
+    ESM_TEST_ESMSTARTSTOP(); \
+    ESM_TEST_ESMSTATUS(); \
+    ESM_TEST_ESMGETERRCNT()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

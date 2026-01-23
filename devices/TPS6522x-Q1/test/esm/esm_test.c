@@ -48,7 +48,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /**
  * @brief Test Pmic_esmSetEnableState with NULL handle
  */
-static void test_neg_esm_setEnableState_nullHandle(void)
+void test_neg_esm_setEnableState_nullHandle(void)
 {
     int32_t status = Pmic_esmSetEnableState(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -57,7 +57,7 @@ static void test_neg_esm_setEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetEnableState with NULL handle
  */
-static void test_neg_esm_getEnableState_nullHandle(void)
+void test_neg_esm_getEnableState_nullHandle(void)
 {
     bool isEnabled = false;
     int32_t status = Pmic_esmGetEnableState(NULL, &isEnabled);
@@ -67,7 +67,7 @@ static void test_neg_esm_getEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetEnableState with NULL isEnabled parameter
  */
-static void test_neg_esm_getEnableState_nullIsEnabled(void)
+void test_neg_esm_getEnableState_nullIsEnabled(void)
 {
     int32_t status = Pmic_esmGetEnableState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -76,7 +76,7 @@ static void test_neg_esm_getEnableState_nullIsEnabled(void)
 /**
  * @brief Test Pmic_esmSetStartState with NULL handle
  */
-static void test_neg_esm_setStartState_nullHandle(void)
+void test_neg_esm_setStartState_nullHandle(void)
 {
     int32_t status = Pmic_esmSetStartState(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -85,7 +85,7 @@ static void test_neg_esm_setStartState_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetStartState with NULL handle
  */
-static void test_neg_esm_getStartState_nullHandle(void)
+void test_neg_esm_getStartState_nullHandle(void)
 {
     bool started = false;
     int32_t status = Pmic_esmGetStartState(NULL, &started);
@@ -95,7 +95,7 @@ static void test_neg_esm_getStartState_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetStartState with NULL started parameter
  */
-static void test_neg_esm_getStartState_nullStarted(void)
+void test_neg_esm_getStartState_nullStarted(void)
 {
     int32_t status = Pmic_esmGetStartState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -104,7 +104,7 @@ static void test_neg_esm_getStartState_nullStarted(void)
 /**
  * @brief Test Pmic_esmSetCfg with NULL handle
  */
-static void test_neg_esm_setCfg_nullHandle(void)
+void test_neg_esm_setCfg_nullHandle(void)
 {
     Pmic_EsmCfg_t esmCfg = {0};
     int32_t status = Pmic_esmSetCfg(NULL, &esmCfg);
@@ -114,7 +114,7 @@ static void test_neg_esm_setCfg_nullHandle(void)
 /**
  * @brief Test Pmic_esmSetCfg with NULL esmCfg parameter
  */
-static void test_neg_esm_setCfg_nullEsmCfg(void)
+void test_neg_esm_setCfg_nullEsmCfg(void)
 {
     int32_t status = Pmic_esmSetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -123,7 +123,7 @@ static void test_neg_esm_setCfg_nullEsmCfg(void)
 /**
  * @brief Test Pmic_esmSetCfg with invalid validParams (zero)
  */
-static void test_neg_esm_setCfg_invalidValidParams(void)
+void test_neg_esm_setCfg_invalidValidParams(void)
 {
     Pmic_EsmCfg_t esmCfg = {
         .validParams = 0U
@@ -135,7 +135,7 @@ static void test_neg_esm_setCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_esmSetCfg with invalid mode value
  */
-static void test_neg_esm_setCfg_invalidMode(void)
+void test_neg_esm_setCfg_invalidMode(void)
 {
     Pmic_EsmCfg_t esmCfg = {
         .validParams = PMIC_ESM_MODE_VALID,
@@ -148,7 +148,7 @@ static void test_neg_esm_setCfg_invalidMode(void)
 /**
  * @brief Test Pmic_esmSetCfg with invalid errCntThr value
  */
-static void test_neg_esm_setCfg_invalidErrCntThr(void)
+void test_neg_esm_setCfg_invalidErrCntThr(void)
 {
     Pmic_EsmCfg_t esmCfg = {
         .validParams = PMIC_ESM_ERR_CNT_THR_VALID,
@@ -161,7 +161,7 @@ static void test_neg_esm_setCfg_invalidErrCntThr(void)
 /**
  * @brief Test Pmic_esmGetCfg with NULL handle
  */
-static void test_neg_esm_getCfg_nullHandle(void)
+void test_neg_esm_getCfg_nullHandle(void)
 {
     Pmic_EsmCfg_t esmCfg = {0};
     int32_t status = Pmic_esmGetCfg(NULL, &esmCfg);
@@ -171,7 +171,7 @@ static void test_neg_esm_getCfg_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetCfg with NULL esmCfg parameter
  */
-static void test_neg_esm_getCfg_nullEsmCfg(void)
+void test_neg_esm_getCfg_nullEsmCfg(void)
 {
     int32_t status = Pmic_esmGetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -180,7 +180,7 @@ static void test_neg_esm_getCfg_nullEsmCfg(void)
 /**
  * @brief Test Pmic_esmGetCfg with invalid validParams (zero)
  */
-static void test_neg_esm_getCfg_invalidValidParams(void)
+void test_neg_esm_getCfg_invalidValidParams(void)
 {
     Pmic_EsmCfg_t esmCfg = {
         .validParams = 0U
@@ -192,7 +192,7 @@ static void test_neg_esm_getCfg_invalidValidParams(void)
 /**
  * @brief Test Pmic_esmGetErrCnt with NULL handle
  */
-static void test_neg_esm_getErrCnt_nullHandle(void)
+void test_neg_esm_getErrCnt_nullHandle(void)
 {
     uint8_t errCnt = 0U;
     int32_t status = Pmic_esmGetErrCnt(NULL, &errCnt);
@@ -202,7 +202,7 @@ static void test_neg_esm_getErrCnt_nullHandle(void)
 /**
  * @brief Test Pmic_esmGetErrCnt with NULL esmErrCnt parameter
  */
-static void test_neg_esm_getErrCnt_nullEsmErrCnt(void)
+void test_neg_esm_getErrCnt_nullEsmErrCnt(void)
 {
     int32_t status = Pmic_esmGetErrCnt(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -215,7 +215,7 @@ static void test_neg_esm_getErrCnt_nullEsmErrCnt(void)
 /**
  * @brief Test ESM enable and disable functionality
  */
-static void test_pos_esm_setGetEnableState(void)
+void test_pos_esm_setGetEnableState(void)
 {
     bool isEnabled = false;
     int32_t status;
@@ -242,7 +242,7 @@ static void test_pos_esm_setGetEnableState(void)
 /**
  * @brief Test ESM start and stop functionality
  */
-static void test_pos_esm_setGetStartState(void)
+void test_pos_esm_setGetStartState(void)
 {
     bool started = false;
     int32_t status;
@@ -269,7 +269,7 @@ static void test_pos_esm_setGetStartState(void)
 /**
  * @brief Test ESM configuration set and get for mode
  */
-static void test_pos_esm_setCfg_mode(void)
+void test_pos_esm_setCfg_mode(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_MODE_VALID,
@@ -303,7 +303,7 @@ static void test_pos_esm_setCfg_mode(void)
 /**
  * @brief Test ESM configuration set and get for error count threshold
  */
-static void test_pos_esm_setCfg_errCntThr(void)
+void test_pos_esm_setCfg_errCntThr(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_ERR_CNT_THR_VALID
@@ -329,7 +329,7 @@ static void test_pos_esm_setCfg_errCntThr(void)
 /**
  * @brief Test ESM configuration set and get for delay1
  */
-static void test_pos_esm_setCfg_delay1(void)
+void test_pos_esm_setCfg_delay1(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_DELAY1_VALID
@@ -355,7 +355,7 @@ static void test_pos_esm_setCfg_delay1(void)
 /**
  * @brief Test ESM configuration set and get for delay2
  */
-static void test_pos_esm_setCfg_delay2(void)
+void test_pos_esm_setCfg_delay2(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_DELAY2_VALID
@@ -381,7 +381,7 @@ static void test_pos_esm_setCfg_delay2(void)
 /**
  * @brief Test ESM configuration set and get for hmax
  */
-static void test_pos_esm_setCfg_hmax(void)
+void test_pos_esm_setCfg_hmax(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_HMAX_VALID
@@ -407,7 +407,7 @@ static void test_pos_esm_setCfg_hmax(void)
 /**
  * @brief Test ESM configuration set and get for hmin
  */
-static void test_pos_esm_setCfg_hmin(void)
+void test_pos_esm_setCfg_hmin(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_HMIN_VALID
@@ -433,7 +433,7 @@ static void test_pos_esm_setCfg_hmin(void)
 /**
  * @brief Test ESM configuration set and get for lmax
  */
-static void test_pos_esm_setCfg_lmax(void)
+void test_pos_esm_setCfg_lmax(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_LMAX_VALID
@@ -459,7 +459,7 @@ static void test_pos_esm_setCfg_lmax(void)
 /**
  * @brief Test ESM configuration set and get for lmin
  */
-static void test_pos_esm_setCfg_lmin(void)
+void test_pos_esm_setCfg_lmin(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_LMIN_VALID
@@ -485,7 +485,7 @@ static void test_pos_esm_setCfg_lmin(void)
 /**
  * @brief Test ESM configuration set and get for clrEnDrvOnFailInt
  */
-static void test_pos_esm_setCfg_clrEnDrvOnFailInt(void)
+void test_pos_esm_setCfg_clrEnDrvOnFailInt(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_ESM_CLR_EN_DRV_ON_FAIL_INT_VALID,
@@ -519,7 +519,7 @@ static void test_pos_esm_setCfg_clrEnDrvOnFailInt(void)
 /**
  * @brief Test ESM error count read functionality
  */
-static void test_pos_esm_getErrCnt(void)
+void test_pos_esm_getErrCnt(void)
 {
     uint8_t errCnt = 0U;
     int32_t status;
@@ -532,7 +532,7 @@ static void test_pos_esm_getErrCnt(void)
 /**
  * @brief Test combined configuration parameters
  */
-static void test_pos_esm_setCfg_combined(void)
+void test_pos_esm_setCfg_combined(void)
 {
     int32_t status;
 
@@ -570,7 +570,7 @@ static void test_pos_esm_setCfg_combined(void)
 /**
  * @brief Test PWM mode configuration with timing parameters
  */
-static void test_pos_esm_setCfg_pwmMode(void)
+void test_pos_esm_setCfg_pwmMode(void)
 {
     int32_t status;
 
@@ -608,7 +608,7 @@ static void test_pos_esm_setCfg_pwmMode(void)
 /**
  * @brief Test complete ESM configuration and enable sequence
  */
-static void test_pos_esm_completeSequence(void)
+void test_pos_esm_completeSequence(void)
 {
     int32_t status;
     bool isEnabled = false;
@@ -666,7 +666,7 @@ static void test_pos_esm_completeSequence(void)
 /**
  * @brief Test ESM configuration readback verification
  */
-static void test_pos_esm_getCfg_readback(void)
+void test_pos_esm_getCfg_readback(void)
 {
     int32_t status;
 
@@ -714,7 +714,7 @@ static void test_pos_esm_getCfg_readback(void)
 /**
  * @brief Test ESM enable, configure, and start combined sequence
  */
-static void test_pos_esm_enableCfgStartSequence(void)
+void test_pos_esm_enableCfgStartSequence(void)
 {
     int32_t status;
     bool isEnabled = false;
@@ -753,103 +753,6 @@ static void test_pos_esm_enableCfgStartSequence(void)
     status = Pmic_esmSetEnableState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
-
-/* ========================================================================== */
-/*                         Test Execution Macros                              */
-/* ========================================================================== */
-
-/* Pmic_esmSetEnableState / Pmic_esmGetEnableState Tests */
-#define ESM_TEST_POS_SETENABLESTATE() \
-    RUN_TEST(test_pos_esm_setGetEnableState)
-
-#define ESM_TEST_NEG_SETENABLESTATE() \
-    RUN_TEST(test_neg_esm_setEnableState_nullHandle); \
-    RUN_TEST(test_neg_esm_getEnableState_nullHandle); \
-    RUN_TEST(test_neg_esm_getEnableState_nullIsEnabled)
-
-#define ESM_TEST_SETENABLESTATE() \
-    ESM_TEST_POS_SETENABLESTATE(); \
-    ESM_TEST_NEG_SETENABLESTATE()
-
-/* Pmic_esmSetStartState / Pmic_esmGetStartState Tests */
-#define ESM_TEST_POS_SETSTARTSTATE() \
-    RUN_TEST(test_pos_esm_setGetStartState)
-
-#define ESM_TEST_NEG_SETSTARTSTATE() \
-    RUN_TEST(test_neg_esm_setStartState_nullHandle); \
-    RUN_TEST(test_neg_esm_getStartState_nullHandle); \
-    RUN_TEST(test_neg_esm_getStartState_nullStarted)
-
-#define ESM_TEST_SETSTARTSTATE() \
-    ESM_TEST_POS_SETSTARTSTATE(); \
-    ESM_TEST_NEG_SETSTARTSTATE()
-
-/* Pmic_esmSetCfg / Pmic_esmGetCfg Tests */
-#define ESM_TEST_POS_SETCFG() \
-    RUN_TEST(test_pos_esm_setCfg_mode); \
-    RUN_TEST(test_pos_esm_setCfg_errCntThr); \
-    RUN_TEST(test_pos_esm_setCfg_delay1); \
-    RUN_TEST(test_pos_esm_setCfg_delay2); \
-    RUN_TEST(test_pos_esm_setCfg_hmax); \
-    RUN_TEST(test_pos_esm_setCfg_hmin); \
-    RUN_TEST(test_pos_esm_setCfg_lmax); \
-    RUN_TEST(test_pos_esm_setCfg_lmin); \
-    RUN_TEST(test_pos_esm_setCfg_clrEnDrvOnFailInt); \
-    RUN_TEST(test_pos_esm_setCfg_combined); \
-    RUN_TEST(test_pos_esm_setCfg_pwmMode); \
-    RUN_TEST(test_pos_esm_getCfg_readback)
-
-#define ESM_TEST_NEG_SETCFG() \
-    RUN_TEST(test_neg_esm_setCfg_nullHandle); \
-    RUN_TEST(test_neg_esm_setCfg_nullEsmCfg); \
-    RUN_TEST(test_neg_esm_setCfg_invalidValidParams); \
-    RUN_TEST(test_neg_esm_setCfg_invalidMode); \
-    RUN_TEST(test_neg_esm_setCfg_invalidErrCntThr); \
-    RUN_TEST(test_neg_esm_getCfg_nullHandle); \
-    RUN_TEST(test_neg_esm_getCfg_nullEsmCfg); \
-    RUN_TEST(test_neg_esm_getCfg_invalidValidParams)
-
-#define ESM_TEST_SETCFG() \
-    ESM_TEST_POS_SETCFG(); \
-    ESM_TEST_NEG_SETCFG()
-
-/* Pmic_esmGetErrCnt Tests */
-#define ESM_TEST_POS_GETERRCNT() \
-    RUN_TEST(test_pos_esm_getErrCnt)
-
-#define ESM_TEST_NEG_GETERRCNT() \
-    RUN_TEST(test_neg_esm_getErrCnt_nullHandle); \
-    RUN_TEST(test_neg_esm_getErrCnt_nullEsmErrCnt)
-
-#define ESM_TEST_GETERRCNT() \
-    ESM_TEST_POS_GETERRCNT(); \
-    ESM_TEST_NEG_GETERRCNT()
-
-/* Integration Tests */
-#define ESM_TEST_INTEGRATION() \
-    RUN_TEST(test_pos_esm_completeSequence); \
-    RUN_TEST(test_pos_esm_enableCfgStartSequence)
-
-/* Aggregate Test Macros */
-#define ESM_TEST_RUN_POSITIVE() \
-    ESM_TEST_POS_SETENABLESTATE(); \
-    ESM_TEST_POS_SETSTARTSTATE(); \
-    ESM_TEST_POS_SETCFG(); \
-    ESM_TEST_POS_GETERRCNT(); \
-    ESM_TEST_INTEGRATION()
-
-#define ESM_TEST_RUN_NEGATIVE() \
-    ESM_TEST_NEG_SETENABLESTATE(); \
-    ESM_TEST_NEG_SETSTARTSTATE(); \
-    ESM_TEST_NEG_SETCFG(); \
-    ESM_TEST_NEG_GETERRCNT()
-
-#define ESM_TEST_RUN_ALL() \
-    ESM_TEST_SETENABLESTATE(); \
-    ESM_TEST_SETSTARTSTATE(); \
-    ESM_TEST_SETCFG(); \
-    ESM_TEST_GETERRCNT(); \
-    ESM_TEST_INTEGRATION()
 
 /* ========================================================================== */
 /*                         Entry Point Function                               */

@@ -40,6 +40,7 @@
 #include "pmic.h"
 #include "pmic_adc.h"
 #include "test_constants.h"
+#include "adc_test.h"
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -59,113 +60,6 @@
 #define ADC_RESULT_MAX          (0x0FFFU)  /* 12-bit max value */
 
 /* ========================================================================= */
-/*                             Test Execution Macros                         */
-/* ========================================================================= */
-
-/* ========================================================================= */
-/*     API-Specific Test Macros - Pmic_adcSetCfg / Pmic_adcGetCfg           */
-/* ========================================================================= */
-
-#define ADC_TEST_NEG_SETGETCFG() \
-    PLATFORM_RUN_TEST(test_neg_adc_setCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_adc_setCfg_nullConfig); \
-    PLATFORM_RUN_TEST(test_neg_adc_getCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_adc_getCfg_nullConfig); \
-    PLATFORM_RUN_TEST(test_neg_adc_setCfg_invalidSrcSel); \
-    PLATFORM_RUN_TEST(test_neg_adc_setCfg_zeroValidParams)
-
-#define ADC_TEST_POS_SETGETCFG() \
-    PLATFORM_RUN_TEST(test_pos_adc_setCfg_resistorDivider); \
-    PLATFORM_RUN_TEST(test_pos_adc_getCfg_resistorDivider); \
-    PLATFORM_RUN_TEST(test_pos_adc_setGetCfg_resistorDividerConsistency); \
-    PLATFORM_RUN_TEST(test_pos_adc_setCfg_continuousMode); \
-    PLATFORM_RUN_TEST(test_pos_adc_getCfg_continuousMode); \
-    PLATFORM_RUN_TEST(test_pos_adc_setGetCfg_continuousModeConsistency); \
-    PLATFORM_RUN_TEST(test_pos_adc_setCfg_srcSelExternal); \
-    PLATFORM_RUN_TEST(test_pos_adc_setCfg_srcSelThermal); \
-    PLATFORM_RUN_TEST(test_pos_adc_getCfg_srcSelection)
-
-/* ========================================================================= */
-/*     API-Specific Test Macros - Pmic_adcStartSingleConversion             */
-/* ========================================================================= */
-
-#define ADC_TEST_NEG_STARTSINGLECONVERSION() \
-    PLATFORM_RUN_TEST(test_neg_adc_startSingleConversion_nullHandle)
-
-#define ADC_TEST_POS_STARTSINGLECONVERSION() \
-    PLATFORM_RUN_TEST(test_pos_adc_startSingleConversion_success)
-
-/* ========================================================================= */
-/*     API-Specific Test Macros - Pmic_adcStartSingleConversionBlocking     */
-/* ========================================================================= */
-
-#define ADC_TEST_NEG_STARTSINGLECONVERSIONBLOCKING() \
-    PLATFORM_RUN_TEST(test_neg_adc_startSingleConversionBlocking_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_adc_maxLoopCntFail)
-
-#define ADC_TEST_POS_STARTSINGLECONVERSIONBLOCKING() \
-    PLATFORM_RUN_TEST(test_pos_adc_startSingleConversionBlocking_success)
-
-/* ========================================================================= */
-/*     API-Specific Test Macros - Pmic_adcGetStatus                         */
-/* ========================================================================= */
-
-#define ADC_TEST_NEG_GETSTATUS() \
-    PLATFORM_RUN_TEST(test_neg_adc_getStatus_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_adc_getStatus_nullStatusPtr)
-
-#define ADC_TEST_POS_GETSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_adc_getStatus_idle)
-
-/* ========================================================================= */
-/*     API-Specific Test Macros - Pmic_adcGetResultCode                     */
-/* ========================================================================= */
-
-#define ADC_TEST_NEG_GETRESULTCODE() \
-    PLATFORM_RUN_TEST(test_neg_adc_getResultCode_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_adc_getResultCode_nullResultPtr)
-
-#define ADC_TEST_POS_GETRESULTCODE() \
-    PLATFORM_RUN_TEST(test_pos_adc_getResultCode_success)
-
-/* ========================================================================= */
-/*     Integration Tests                                                    */
-/* ========================================================================= */
-
-#define ADC_TEST_POS_INTEGRATION() \
-    PLATFORM_RUN_TEST(test_pos_adc_fullSequence_configStartPollRead); \
-    PLATFORM_RUN_TEST(test_pos_adc_multipleConversions_independence)
-
-/* ========================================================================= */
-/*     Property Tests (BUILD_MOCK)                                          */
-/* ========================================================================= */
-
-#ifdef BUILD_MOCK
-#define ADC_TEST_POS_PROPERTY() \
-    PLATFORM_RUN_TEST(test_pos_adc_property_randomChannelConfigurations)
-#else
-#define ADC_TEST_POS_PROPERTY()
-#endif
-
-/* ========================================================================= */
-/*     Combined Test Macros                                                 */
-/* ========================================================================= */
-
-#define ADC_TEST_RUN_ALL() \
-    ADC_TEST_NEG_SETGETCFG(); \
-    ADC_TEST_POS_SETGETCFG(); \
-    ADC_TEST_NEG_STARTSINGLECONVERSION(); \
-    ADC_TEST_POS_STARTSINGLECONVERSION(); \
-    ADC_TEST_NEG_STARTSINGLECONVERSIONBLOCKING(); \
-    ADC_TEST_POS_STARTSINGLECONVERSIONBLOCKING(); \
-    ADC_TEST_NEG_GETSTATUS(); \
-    ADC_TEST_POS_GETSTATUS(); \
-    ADC_TEST_NEG_GETRESULTCODE(); \
-    ADC_TEST_POS_GETRESULTCODE(); \
-    ADC_TEST_POS_INTEGRATION(); \
-    ADC_TEST_POS_PROPERTY()
-
-/* ========================================================================= */
 /*                             Global Variables                              */
 /* ========================================================================= */
 
@@ -181,40 +75,40 @@ static Pmic_Handle_t pmicHandle = {0};
 /* Note: setUp/tearDown provided by test_runner.c */
 
 /* Negative tests */
-static void test_neg_adc_setCfg_nullHandle(void);
-static void test_neg_adc_setCfg_nullConfig(void);
-static void test_neg_adc_getCfg_nullHandle(void);
-static void test_neg_adc_getCfg_nullConfig(void);
-static void test_neg_adc_startSingleConversion_nullHandle(void);
-static void test_neg_adc_startSingleConversionBlocking_nullHandle(void);
-static void test_neg_adc_getStatus_nullHandle(void);
-static void test_neg_adc_getStatus_nullStatusPtr(void);
-static void test_neg_adc_getResultCode_nullHandle(void);
-static void test_neg_adc_getResultCode_nullResultPtr(void);
-static void test_neg_adc_setCfg_invalidSrcSel(void);
-static void test_neg_adc_setCfg_zeroValidParams(void);
+void test_neg_adc_adcSetCfg_nullHandle(void);
+void test_neg_adc_adcSetCfg_nullConfig(void);
+void test_neg_adc_adcGetCfg_nullHandle(void);
+void test_neg_adc_adcGetCfg_nullConfig(void);
+void test_neg_adc_adcStartSingleConversion_nullHandle(void);
+void test_neg_adc_adcStartSingleConversionBlocking_nullHandle(void);
+void test_neg_adc_adcGetStatus_nullHandle(void);
+void test_neg_adc_adcGetStatus_nullStatusPtr(void);
+void test_neg_adc_adcGetResultCode_nullHandle(void);
+void test_neg_adc_adcGetResultCode_nullResultPtr(void);
+void test_neg_adc_adcSetCfg_invalidSrcSel(void);
+void test_neg_adc_adcSetCfg_zeroValidParams(void);
 void test_neg_adc_maxLoopCntFail(void);
 
 /* Positive tests */
-static void test_pos_adc_setCfg_resistorDivider(void);
-static void test_pos_adc_getCfg_resistorDivider(void);
-static void test_pos_adc_setGetCfg_resistorDividerConsistency(void);
-static void test_pos_adc_setCfg_continuousMode(void);
-static void test_pos_adc_getCfg_continuousMode(void);
-static void test_pos_adc_setGetCfg_continuousModeConsistency(void);
-static void test_pos_adc_setCfg_srcSelExternal(void);
-static void test_pos_adc_setCfg_srcSelThermal(void);
-static void test_pos_adc_getCfg_srcSelection(void);
-static void test_pos_adc_startSingleConversion_success(void);
-static void test_pos_adc_startSingleConversionBlocking_success(void);
-static void test_pos_adc_getStatus_idle(void);
-static void test_pos_adc_getResultCode_success(void);
-static void test_pos_adc_fullSequence_configStartPollRead(void);
-static void test_pos_adc_multipleConversions_independence(void);
+void test_pos_adc_adcSetCfg_resistorDivider(void);
+void test_pos_adc_adcGetCfg_resistorDivider(void);
+void test_pos_adc_adcSetGetCfg_resistorDividerConsistency(void);
+void test_pos_adc_adcSetCfg_continuousMode(void);
+void test_pos_adc_adcGetCfg_continuousMode(void);
+void test_pos_adc_adcSetGetCfg_continuousModeConsistency(void);
+void test_pos_adc_adcSetCfg_srcSelExternal(void);
+void test_pos_adc_adcSetCfg_srcSelThermal(void);
+void test_pos_adc_adcGetCfg_srcSelection(void);
+void test_pos_adc_adcStartSingleConversion_success(void);
+void test_pos_adc_adcStartSingleConversionBlocking_success(void);
+void test_pos_adc_adcGetStatus_idle(void);
+void test_pos_adc_adcGetResultCode_success(void);
+void test_pos_adc_fullSequence_configStartPollRead(void);
+void test_pos_adc_multipleConversions_independence(void);
 
 #ifdef BUILD_MOCK
 /* Property test */
-static void test_pos_adc_property_randomChannelConfigurations(void);
+void test_pos_adc_property_randomChannelConfigurations(void);
 static uint8_t getRandomBool(void);
 static uint8_t getRandomSrcSel(void);
 #endif
@@ -268,7 +162,7 @@ void adc_test(void *args)
 /*                          Negative Test Cases                              */
 /* ========================================================================= */
 
-static void test_neg_adc_setCfg_nullHandle(void)
+void test_neg_adc_adcSetCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -281,7 +175,7 @@ static void test_neg_adc_setCfg_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_setCfg_nullConfig(void)
+void test_neg_adc_adcSetCfg_nullConfig(void)
 {
     int32_t status;
 
@@ -289,7 +183,7 @@ static void test_neg_adc_setCfg_nullConfig(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getCfg_nullHandle(void)
+void test_neg_adc_adcGetCfg_nullHandle(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -300,7 +194,7 @@ static void test_neg_adc_getCfg_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getCfg_nullConfig(void)
+void test_neg_adc_adcGetCfg_nullConfig(void)
 {
     int32_t status;
 
@@ -308,7 +202,7 @@ static void test_neg_adc_getCfg_nullConfig(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_startSingleConversion_nullHandle(void)
+void test_neg_adc_adcStartSingleConversion_nullHandle(void)
 {
     int32_t status;
 
@@ -316,7 +210,7 @@ static void test_neg_adc_startSingleConversion_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_startSingleConversionBlocking_nullHandle(void)
+void test_neg_adc_adcStartSingleConversionBlocking_nullHandle(void)
 {
     int32_t status;
 
@@ -324,7 +218,7 @@ static void test_neg_adc_startSingleConversionBlocking_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getStatus_nullHandle(void)
+void test_neg_adc_adcGetStatus_nullHandle(void)
 {
     int32_t status;
     bool adcBusy;
@@ -333,7 +227,7 @@ static void test_neg_adc_getStatus_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getStatus_nullStatusPtr(void)
+void test_neg_adc_adcGetStatus_nullStatusPtr(void)
 {
     int32_t status;
 
@@ -341,7 +235,7 @@ static void test_neg_adc_getStatus_nullStatusPtr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getResultCode_nullHandle(void)
+void test_neg_adc_adcGetResultCode_nullHandle(void)
 {
     int32_t status;
     uint16_t result;
@@ -350,7 +244,7 @@ static void test_neg_adc_getResultCode_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_getResultCode_nullResultPtr(void)
+void test_neg_adc_adcGetResultCode_nullResultPtr(void)
 {
     int32_t status;
 
@@ -358,7 +252,7 @@ static void test_neg_adc_getResultCode_nullResultPtr(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-static void test_neg_adc_setCfg_invalidSrcSel(void)
+void test_neg_adc_adcSetCfg_invalidSrcSel(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -371,7 +265,7 @@ static void test_neg_adc_setCfg_invalidSrcSel(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-static void test_neg_adc_setCfg_zeroValidParams(void)
+void test_neg_adc_adcSetCfg_zeroValidParams(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -387,7 +281,7 @@ static void test_neg_adc_setCfg_zeroValidParams(void)
 /*                          Positive Test Cases                              */
 /* ========================================================================= */
 
-static void test_pos_adc_setCfg_resistorDivider(void)
+void test_pos_adc_adcSetCfg_resistorDivider(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -400,7 +294,7 @@ static void test_pos_adc_setCfg_resistorDivider(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_getCfg_resistorDivider(void)
+void test_pos_adc_adcGetCfg_resistorDivider(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -411,7 +305,7 @@ static void test_pos_adc_getCfg_resistorDivider(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_setGetCfg_resistorDividerConsistency(void)
+void test_pos_adc_adcSetGetCfg_resistorDividerConsistency(void)
 {
     int32_t status;
     Pmic_AdcCfg_t setCfg, getCfg;
@@ -444,7 +338,7 @@ static void test_pos_adc_setGetCfg_resistorDividerConsistency(void)
     PLATFORM_ASSERT(getCfg.rDivEn == false);
 }
 
-static void test_pos_adc_setCfg_continuousMode(void)
+void test_pos_adc_adcSetCfg_continuousMode(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -457,7 +351,7 @@ static void test_pos_adc_setCfg_continuousMode(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_getCfg_continuousMode(void)
+void test_pos_adc_adcGetCfg_continuousMode(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -468,7 +362,7 @@ static void test_pos_adc_getCfg_continuousMode(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_setGetCfg_continuousModeConsistency(void)
+void test_pos_adc_adcSetGetCfg_continuousModeConsistency(void)
 {
     int32_t status;
     Pmic_AdcCfg_t setCfg, getCfg;
@@ -506,7 +400,7 @@ static void test_pos_adc_setGetCfg_continuousModeConsistency(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_setCfg_srcSelExternal(void)
+void test_pos_adc_adcSetCfg_srcSelExternal(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -519,7 +413,7 @@ static void test_pos_adc_setCfg_srcSelExternal(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_setCfg_srcSelThermal(void)
+void test_pos_adc_adcSetCfg_srcSelThermal(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -532,7 +426,7 @@ static void test_pos_adc_setCfg_srcSelThermal(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_getCfg_srcSelection(void)
+void test_pos_adc_adcGetCfg_srcSelection(void)
 {
     int32_t status;
     Pmic_AdcCfg_t setCfg, getCfg;
@@ -565,7 +459,7 @@ static void test_pos_adc_getCfg_srcSelection(void)
     PLATFORM_ASSERT(getCfg.srcSel == PMIC_ADC_SRC_SEL_THERMAL_SENSOR);
 }
 
-static void test_pos_adc_startSingleConversion_success(void)
+void test_pos_adc_adcStartSingleConversion_success(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -583,7 +477,7 @@ static void test_pos_adc_startSingleConversion_success(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_startSingleConversionBlocking_success(void)
+void test_pos_adc_adcStartSingleConversionBlocking_success(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -604,7 +498,7 @@ static void test_pos_adc_startSingleConversionBlocking_success(void)
     platform_timerWaitMs(50);
 }
 
-static void test_pos_adc_getStatus_idle(void)
+void test_pos_adc_adcGetStatus_idle(void)
 {
     int32_t status;
     bool adcBusy;
@@ -614,7 +508,7 @@ static void test_pos_adc_getStatus_idle(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-static void test_pos_adc_getResultCode_success(void)
+void test_pos_adc_adcGetResultCode_success(void)
 {
     int32_t status;
     uint16_t result;
@@ -642,7 +536,7 @@ static void test_pos_adc_getResultCode_success(void)
     PLATFORM_ASSERT(result <= ADC_RESULT_MAX);
 }
 
-static void test_pos_adc_fullSequence_configStartPollRead(void)
+void test_pos_adc_fullSequence_configStartPollRead(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -680,7 +574,7 @@ static void test_pos_adc_fullSequence_configStartPollRead(void)
     PLATFORM_ASSERT(result <= ADC_RESULT_MAX);
 }
 
-static void test_pos_adc_multipleConversions_independence(void)
+void test_pos_adc_multipleConversions_independence(void)
 {
     int32_t status;
     Pmic_AdcCfg_t adcCfg;
@@ -764,7 +658,7 @@ static uint8_t getRandomSrcSel(void)
     return (uint8_t)(rand() % (PMIC_ADC_SRC_SEL_MAX + 1));
 }
 
-static void test_pos_adc_property_randomChannelConfigurations(void)
+void test_pos_adc_property_randomChannelConfigurations(void)
 {
     int32_t status;
     Pmic_AdcCfg_t setCfg, getCfg;

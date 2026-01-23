@@ -46,6 +46,298 @@ extern "C" {
  */
 void power_test(void *args);
 
+/* ========================================================================== */
+/*                         Test Execution Macros                              */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetBuckCfg / Pmic_pwrGetBuckCfg    */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGETBUCKCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_nullBuckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidSlewRate); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidVsetBuck1); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidVmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_invalidGrpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullBuckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidResource)
+
+#define POWER_TEST_POS_SETGETBUCKCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_buck1_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_buck2_vset); \
+    PLATFORM_RUN_TEST(test_pos_power_buck3_slewRate); \
+    PLATFORM_RUN_TEST(test_pos_power_buck4_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_buck1_grpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buck_combinedConfig)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetLdoCfg / Pmic_pwrGetLdoCfg      */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGETLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_nullLdoCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidVsetLdo1); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidVmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidGrpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullLdoCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidResource)
+
+#define POWER_TEST_POS_SETGETLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_ldo1_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_ldo2_vset); \
+    PLATFORM_RUN_TEST(test_pos_power_ldo3_bypassEn); \
+    PLATFORM_RUN_TEST(test_pos_power_ldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetVccaVmonCfg / Pmic_pwrGetVccaVmonCfg */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGETVCCAVMONCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_nullVccaVmonCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidPgSetVcca); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidPgSetVmon1); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidThrVcca); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_invalidGrpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullVccaVmonCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidResource)
+
+#define POWER_TEST_POS_SETGETVCCAVMONCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_vcca_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_vcca_pgSet); \
+    PLATFORM_RUN_TEST(test_pos_power_vcca_threshold); \
+    PLATFORM_RUN_TEST(test_pos_power_vcca_grpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon1_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon1_pgSet); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon2_pgSet); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon2_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetGlobalVmonDegl                  */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGLOBALVMONDEGL() \
+    PLATFORM_RUN_TEST(test_neg_power_setGlobalVmonDegl_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setGlobalVmonDegl_invalidValue)
+
+#define POWER_TEST_POS_SETGLOBALVMONDEGL() \
+    PLATFORM_RUN_TEST(test_pos_power_globalVmonDegl_allValues)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetThermalCfg / Pmic_pwrGetThermalCfg */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGETTHERMALCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_nullThermalCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidTwarnLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_invalidTsdOrdLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_nullThermalCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_getThermalCfg_invalidValidParams)
+
+#define POWER_TEST_POS_SETGETTHERMALCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_twarnLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_tsdOrdLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_combinedConfig)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrSetSpreadSpectrumCfg / Pmic_pwrGetSpreadSpectrumCfg */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullSsCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_nullSsCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_getSpreadSpectrumCfg_invalidValidParams)
+
+#define POWER_TEST_POS_SETGETSPREADSPECTRUMCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_enableDisable); \
+    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_depth); \
+    PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_combinedConfig)
+
+/* ========================================================================== */
+/*     API-Specific Test Macros - Pmic_pwrGetRsrcStatus                      */
+/* ========================================================================== */
+
+#define POWER_TEST_NEG_GETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullRsrcStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_invalidValidParams)
+
+#define POWER_TEST_POS_GETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_buckUVOV); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_ldoUVOV); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV)
+
+/* ========================================================================== */
+/*     Property Tests (BUILD_MOCK)                                           */
+/* ========================================================================== */
+
+#ifdef BUILD_MOCK
+#define POWER_TEST_POS_PROPERTY() \
+    PLATFORM_RUN_TEST(test_pos_power_property_buckVoltageBounds); \
+    PLATFORM_RUN_TEST(test_pos_power_property_vmonThresholdEnumeration)
+#else
+#define POWER_TEST_POS_PROPERTY()
+#endif
+
+/* ========================================================================== */
+/*     Combined Test Macros                                                  */
+/* ========================================================================== */
+
+#define POWER_TEST_RUN_POSITIVE() \
+    POWER_TEST_POS_SETGETBUCKCFG(); \
+    POWER_TEST_POS_SETGETLDOCFG(); \
+    POWER_TEST_POS_SETGETVCCAVMONCFG(); \
+    POWER_TEST_POS_SETGLOBALVMONDEGL(); \
+    POWER_TEST_POS_SETGETTHERMALCFG(); \
+    POWER_TEST_POS_SETGETSPREADSPECTRUMCFG(); \
+    POWER_TEST_POS_GETRSRCSTATUS(); \
+    POWER_TEST_POS_PROPERTY()
+
+#define POWER_TEST_RUN_NEGATIVE() \
+    POWER_TEST_NEG_SETGETBUCKCFG(); \
+    POWER_TEST_NEG_SETGETLDOCFG(); \
+    POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
+    POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
+    POWER_TEST_NEG_SETGETTHERMALCFG(); \
+    POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
+    POWER_TEST_NEG_GETRSRCSTATUS()
+
+#define POWER_TEST_RUN_ALL() \
+    POWER_TEST_NEG_SETGETBUCKCFG(); \
+    POWER_TEST_POS_SETGETBUCKCFG(); \
+    POWER_TEST_NEG_SETGETLDOCFG(); \
+    POWER_TEST_POS_SETGETLDOCFG(); \
+    POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
+    POWER_TEST_POS_SETGETVCCAVMONCFG(); \
+    POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
+    POWER_TEST_POS_SETGLOBALVMONDEGL(); \
+    POWER_TEST_NEG_SETGETTHERMALCFG(); \
+    POWER_TEST_POS_SETGETTHERMALCFG(); \
+    POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
+    POWER_TEST_POS_SETGETSPREADSPECTRUMCFG(); \
+    POWER_TEST_NEG_GETRSRCSTATUS(); \
+    POWER_TEST_POS_GETRSRCSTATUS(); \
+    POWER_TEST_POS_PROPERTY()
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+/* Negative test functions */
+void test_neg_power_setBuckCfg_nullHandle(void);
+void test_neg_power_setBuckCfg_nullBuckCfg(void);
+void test_neg_power_setBuckCfg_invalidValidParams(void);
+void test_neg_power_setBuckCfg_invalidResource(void);
+void test_neg_power_setBuckCfg_invalidSlewRate(void);
+void test_neg_power_setBuckCfg_invalidVsetBuck1(void);
+void test_neg_power_setBuckCfg_invalidVmonThr(void);
+void test_neg_power_setBuckCfg_invalidGrpSel(void);
+void test_neg_power_getBuckCfg_nullHandle(void);
+void test_neg_power_getBuckCfg_nullBuckCfg(void);
+void test_neg_power_getBuckCfg_invalidValidParams(void);
+void test_neg_power_getBuckCfg_invalidResource(void);
+void test_neg_power_setLdoCfg_nullHandle(void);
+void test_neg_power_setLdoCfg_nullLdoCfg(void);
+void test_neg_power_setLdoCfg_invalidValidParams(void);
+void test_neg_power_setLdoCfg_invalidResource(void);
+void test_neg_power_setLdoCfg_invalidVsetLdo1(void);
+void test_neg_power_setLdoCfg_invalidVmonThr(void);
+void test_neg_power_setLdoCfg_invalidGrpSel(void);
+void test_neg_power_getLdoCfg_nullHandle(void);
+void test_neg_power_getLdoCfg_nullLdoCfg(void);
+void test_neg_power_getLdoCfg_invalidValidParams(void);
+void test_neg_power_getLdoCfg_invalidResource(void);
+void test_neg_power_setVccaVmonCfg_nullHandle(void);
+void test_neg_power_setVccaVmonCfg_nullVccaVmonCfg(void);
+void test_neg_power_setVccaVmonCfg_invalidValidParams(void);
+void test_neg_power_setVccaVmonCfg_invalidResource(void);
+void test_neg_power_setVccaVmonCfg_invalidPgSetVcca(void);
+void test_neg_power_setVccaVmonCfg_invalidThrVcca(void);
+void test_neg_power_setVccaVmonCfg_invalidGrpSel(void);
+void test_neg_power_getVccaVmonCfg_nullHandle(void);
+void test_neg_power_getVccaVmonCfg_nullVccaVmonCfg(void);
+void test_neg_power_getVccaVmonCfg_invalidValidParams(void);
+void test_neg_power_getVccaVmonCfg_invalidResource(void);
+void test_neg_power_setGlobalVmonDegl_nullHandle(void);
+void test_neg_power_setGlobalVmonDegl_invalidValue(void);
+void test_neg_power_setThermalCfg_nullHandle(void);
+void test_neg_power_setThermalCfg_nullThermalCfg(void);
+void test_neg_power_setThermalCfg_invalidValidParams(void);
+void test_neg_power_setThermalCfg_invalidTwarnLvl(void);
+void test_neg_power_setThermalCfg_invalidTsdOrdLvl(void);
+void test_neg_power_getThermalCfg_nullHandle(void);
+void test_neg_power_getThermalCfg_nullThermalCfg(void);
+void test_neg_power_getThermalCfg_invalidValidParams(void);
+void test_neg_power_setSpreadSpectrumCfg_nullHandle(void);
+void test_neg_power_setSpreadSpectrumCfg_nullSsCfg(void);
+void test_neg_power_setSpreadSpectrumCfg_invalidValidParams(void);
+void test_neg_power_getSpreadSpectrumCfg_nullHandle(void);
+void test_neg_power_getSpreadSpectrumCfg_nullSsCfg(void);
+void test_neg_power_getSpreadSpectrumCfg_invalidValidParams(void);
+void test_neg_power_getRsrcStatus_nullHandle(void);
+void test_neg_power_getRsrcStatus_nullRsrcStatus(void);
+void test_neg_power_getRsrcStatus_invalidValidParams(void);
+void test_neg_power_setVccaVmonCfg_invalidPgSetVmon1(void);
+
+/* Positive test functions */
+void test_pos_power_buck1_enableDisable(void);
+void test_pos_power_buck2_vset(void);
+void test_pos_power_buck3_slewRate(void);
+void test_pos_power_buck4_vmonThr(void);
+void test_pos_power_buck1_grpSel(void);
+void test_pos_power_ldo1_enableDisable(void);
+void test_pos_power_ldo2_vset(void);
+void test_pos_power_ldo3_bypassEn(void);
+void test_pos_power_ldo1_vmonThr(void);
+void test_pos_power_ldo2_grpSel(void);
+void test_pos_power_vcca_enableDisable(void);
+void test_pos_power_vcca_pgSet(void);
+void test_pos_power_vcca_threshold(void);
+void test_pos_power_vcca_grpSel(void);
+void test_pos_power_vmon1_enableDisable(void);
+void test_pos_power_vmon2_pgSet(void);
+void test_pos_power_vmon1_pgSet(void);
+void test_pos_power_vmon2_enableDisable(void);
+void test_pos_power_globalVmonDegl_allValues(void);
+void test_pos_power_thermal_twarnLvl(void);
+void test_pos_power_thermal_tsdOrdLvl(void);
+void test_pos_power_spreadSpectrum_enableDisable(void);
+void test_pos_power_spreadSpectrum_depth(void);
+void test_pos_power_rsrcStatus_buckUVOV(void);
+void test_pos_power_rsrcStatus_ldoUVOV(void);
+void test_pos_power_rsrcStatus_vmonUVOV(void);
+void test_pos_power_buck_combinedConfig(void);
+void test_pos_power_ldo_combinedConfig(void);
+void test_pos_power_vmon_combinedConfig(void);
+void test_pos_power_thermal_combinedConfig(void);
+void test_pos_power_spreadSpectrum_combinedConfig(void);
+void test_pos_power_property_buckVoltageBounds(void);
+void test_pos_power_property_vmonThresholdEnumeration(void);
+
 #ifdef __cplusplus
 }
 #endif

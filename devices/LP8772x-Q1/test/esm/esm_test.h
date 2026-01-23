@@ -46,6 +46,262 @@
  */
 void esm_test(void *args);
 
+/*                    API-Specific Test Macros - esmClrStatus                 */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMCLRSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_allFields); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_failInt); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_pinInt); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_rstInt)
+
+#define ESM_TEST_NEG_ESMCLRSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_ioWriteFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_nullEsmStat); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_zeroValidParams)
+
+#define ESM_TEST_ESMCLRSTATUS() \
+    ESM_TEST_POS_ESMCLRSTATUS(); \
+    ESM_TEST_NEG_ESMCLRSTATUS()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmGetCfg                    */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMGETCFG() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_delay1); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_delay2); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_delay2Only); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_errCntThr); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_hmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_hmin); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_hminOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_lmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_lmin); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_lminOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_mode)
+
+#define ESM_TEST_NEG_ESMGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cascadeFailure_delayToHmax); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cascadeFailure_modeToDelay); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay1ReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_modeCfgReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullEsmCfg); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullHandle)
+
+#define ESM_TEST_ESMGETCFG() \
+    ESM_TEST_POS_ESMGETCFG(); \
+    ESM_TEST_NEG_ESMGETCFG()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmGetEnableState            */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMGETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetEnableState_enableDisable)
+
+#define ESM_TEST_NEG_ESMGETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetEnableState_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetEnableState_nullIsEnabled)
+
+#define ESM_TEST_ESMGETENABLESTATE() \
+    ESM_TEST_POS_ESMGETENABLESTATE(); \
+    ESM_TEST_NEG_ESMGETENABLESTATE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmGetErrCnt                 */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMGETERRCNT() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt_getCount)
+
+#define ESM_TEST_NEG_ESMGETERRCNT() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullEsmErrCnt); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle)
+
+#define ESM_TEST_ESMGETERRCNT() \
+    ESM_TEST_POS_ESMGETERRCNT(); \
+    ESM_TEST_NEG_ESMGETERRCNT()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmGetStartState             */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMGETSTARTSTATE() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState_startStop)
+
+#define ESM_TEST_NEG_ESMGETSTARTSTATE() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullStarted)
+
+#define ESM_TEST_ESMGETSTARTSTATE() \
+    ESM_TEST_POS_ESMGETSTARTSTATE(); \
+    ESM_TEST_NEG_ESMGETSTARTSTATE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmGetStatus                 */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMGETSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus_allFields); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus_failInt); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus_pinInt); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus_rstInt)
+
+#define ESM_TEST_NEG_ESMGETSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullEsmStat); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_zeroValidParams)
+
+#define ESM_TEST_ESMGETSTATUS() \
+    ESM_TEST_POS_ESMGETSTATUS(); \
+    ESM_TEST_NEG_ESMGETSTATUS()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmSetCfg                    */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_combinedConfiguration); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_configurationReadbackVerification); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_delay1); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_delay2); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_delay2Only); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_errCntThr); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_hmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_hmin); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_hminOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_lmax); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_lmin); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_lminOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_mode); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_pwmModeConfiguration)
+
+#define ESM_TEST_NEG_ESMSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cascadeFailure_delayToHmax); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cascadeFailure_hmaxToLmax); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay1ReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidErrCntThr); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidMode); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_modeCfgReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullEsmCfg); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle)
+
+#define ESM_TEST_ESMSETCFG() \
+    ESM_TEST_POS_ESMSETCFG(); \
+    ESM_TEST_NEG_ESMSETCFG()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmSetEnableState            */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMSETENABLESTATE() \
+    /* Positive tests combined with esmGetEnableState */
+
+#define ESM_TEST_NEG_ESMSETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetEnableState_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetEnableState_nullHandle)
+
+#define ESM_TEST_ESMSETENABLESTATE() \
+    ESM_TEST_POS_ESMSETENABLESTATE(); \
+    ESM_TEST_NEG_ESMSETENABLESTATE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmSetStartState             */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMSETSTARTSTATE() \
+    /* Positive tests combined with esmGetStartState */
+
+#define ESM_TEST_NEG_ESMSETSTARTSTATE() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_ioReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle)
+
+#define ESM_TEST_ESMSETSTARTSTATE() \
+    ESM_TEST_POS_ESMSETSTARTSTATE(); \
+    ESM_TEST_NEG_ESMSETSTARTSTATE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmStart                     */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMSTART() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmStart_start)
+
+#define ESM_TEST_NEG_ESMSTART() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmStart_nullHandle)
+
+#define ESM_TEST_ESMSTART() \
+    ESM_TEST_POS_ESMSTART(); \
+    ESM_TEST_NEG_ESMSTART()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - esmStop                      */
+/* ========================================================================== */
+
+#define ESM_TEST_POS_ESMSTOP() \
+    PLATFORM_RUN_TEST(test_pos_esm_esmStop_stop)
+
+#define ESM_TEST_NEG_ESMSTOP() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmStop_nullHandle)
+
+#define ESM_TEST_ESMSTOP() \
+    ESM_TEST_POS_ESMSTOP(); \
+    ESM_TEST_NEG_ESMSTOP()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define ESM_TEST_RUN_POSITIVE() \
+    ESM_TEST_POS_ESMCLRSTATUS(); \
+    ESM_TEST_POS_ESMGETCFG(); \
+    ESM_TEST_POS_ESMGETENABLESTATE(); \
+    ESM_TEST_POS_ESMGETERRCNT(); \
+    ESM_TEST_POS_ESMGETSTARTSTATE(); \
+    ESM_TEST_POS_ESMGETSTATUS(); \
+    ESM_TEST_POS_ESMSETCFG(); \
+    ESM_TEST_POS_ESMSETENABLESTATE(); \
+    ESM_TEST_POS_ESMSETSTARTSTATE(); \
+    ESM_TEST_POS_ESMSTART(); \
+    ESM_TEST_POS_ESMSTOP(); \
+    PLATFORM_RUN_TEST(test_pos_esm_integration_completeConfigurationSequence); \
+    PLATFORM_RUN_TEST(test_pos_esm_integration_enableConfigureStartSequence)
+
+#define ESM_TEST_RUN_NEGATIVE() \
+    ESM_TEST_NEG_ESMCLRSTATUS(); \
+    ESM_TEST_NEG_ESMGETCFG(); \
+    ESM_TEST_NEG_ESMGETENABLESTATE(); \
+    ESM_TEST_NEG_ESMGETERRCNT(); \
+    ESM_TEST_NEG_ESMGETSTARTSTATE(); \
+    ESM_TEST_NEG_ESMGETSTATUS(); \
+    ESM_TEST_NEG_ESMSETCFG(); \
+    ESM_TEST_NEG_ESMSETENABLESTATE(); \
+    ESM_TEST_NEG_ESMSETSTARTSTATE(); \
+    ESM_TEST_NEG_ESMSTART(); \
+    ESM_TEST_NEG_ESMSTOP()
+
+#define ESM_TEST_RUN_ALL() \
+    ESM_TEST_RUN_POSITIVE(); \
+    ESM_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
 /* ========================================================================== */
 /*                  esmClrStatus API Tests                                    */
 /* ========================================================================== */
@@ -180,5 +436,6 @@ void test_neg_esm_esmStop_nullHandle(void);
 /* ========================================================================== */
 void test_pos_esm_integration_completeConfigurationSequence(void);
 void test_pos_esm_integration_enableConfigureStartSequence(void);
+
 
 #endif /* ESM_TEST_H */

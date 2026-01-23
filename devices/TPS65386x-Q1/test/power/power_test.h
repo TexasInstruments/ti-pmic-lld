@@ -56,6 +56,394 @@ extern "C" {
 void power_test(void *args);
 
 /* ========================================================================== */
+/*                      Three-Level Test Macro Hierarchy                      */
+/* ========================================================================== */
+
+/* API-Specific Test Macros - pwrSetBuckBoostCfg */
+#define POWER_TEST_POS_PWRSETBUCKBOOSTCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_stbyLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_boostTmo); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_ssEn); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_allCfg)
+
+#define POWER_TEST_NEG_PWRSETBUCKBOOSTCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_stbyLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_zeroValidParams)
+
+#define POWER_TEST_PWRSETBUCKBOOSTCFG() \
+    POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRSETBUCKBOOSTCFG()
+
+/* API-Specific Test Macros - pwrGetBuckBoostCfg */
+#define POWER_TEST_POS_PWRGETBUCKBOOSTCFG() \
+    /* Positive tests for pwrGetBuckBoostCfg are combined with pwrSetBuckBoostCfg tests */
+
+#define POWER_TEST_NEG_PWRGETBUCKBOOSTCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_zeroValidParams)
+
+#define POWER_TEST_PWRGETBUCKBOOSTCFG() \
+    POWER_TEST_POS_PWRGETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRGETBUCKBOOSTCFG()
+
+/* API-Specific Test Macros - pwrSetLdoCfg */
+#define POWER_TEST_POS_PWRSETLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo3_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo4_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_allLdos_allCfg)
+
+#define POWER_TEST_NEG_PWRSETLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo3_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo3_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidParam_ldo4_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidLdoId)
+
+#define POWER_TEST_PWRSETLDOCFG() \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
+    POWER_TEST_NEG_PWRSETLDOCFG()
+
+/* API-Specific Test Macros - pwrGetLdoCfg */
+#define POWER_TEST_POS_PWRGETLDOCFG() \
+    /* Positive tests for pwrGetLdoCfg are combined with pwrSetLdoCfg tests */
+
+#define POWER_TEST_NEG_PWRGETLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_invalidLdoId)
+
+#define POWER_TEST_PWRGETLDOCFG() \
+    POWER_TEST_POS_PWRGETLDOCFG(); \
+    POWER_TEST_NEG_PWRGETLDOCFG()
+
+/* API-Specific Test Macros - pwrSetPldoCfg */
+#define POWER_TEST_POS_PWRSETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_trackingMode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_vtrackRange); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_trackingMode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_lvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_vtrackRange); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_disableDischarge); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_allPldos_allCfg)
+
+#define POWER_TEST_NEG_PWRSETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidParam_pldo1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_vtrackRange); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo1_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidParam_pldo2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_lvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_ilimDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_vtrackRange); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_rampTime); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidPldoId)
+
+#define POWER_TEST_PWRSETPLDOCFG() \
+    POWER_TEST_POS_PWRSETPLDOCFG(); \
+    POWER_TEST_NEG_PWRSETPLDOCFG()
+
+/* API-Specific Test Macros - pwrGetPldoCfg */
+#define POWER_TEST_POS_PWRGETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_pwrGetPldoCfg_redundantModeConversion)
+
+#define POWER_TEST_NEG_PWRGETPLDOCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_invalidPldoId)
+
+#define POWER_TEST_PWRGETPLDOCFG() \
+    POWER_TEST_POS_PWRGETPLDOCFG(); \
+    POWER_TEST_NEG_PWRGETPLDOCFG()
+
+/* API-Specific Test Macros - pwrSetExtVmonCfg */
+#define POWER_TEST_POS_PWRSETEXTVMONCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_vmonThr); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon2_includeOvUvStatInPGood); \
+    PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_allVmons_allCfg)
+
+#define POWER_TEST_NEG_PWRSETEXTVMONCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon1_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon1_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidParam_vmon2_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId)
+
+#define POWER_TEST_PWRSETEXTVMONCFG() \
+    POWER_TEST_POS_PWRSETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRSETEXTVMONCFG()
+
+/* API-Specific Test Macros - pwrGetExtVmonCfg */
+#define POWER_TEST_POS_PWRGETEXTVMONCFG() \
+    /* Positive tests for pwrGetExtVmonCfg are combined with pwrSetExtVmonCfg tests */
+
+#define POWER_TEST_NEG_PWRGETEXTVMONCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId)
+
+#define POWER_TEST_PWRGETEXTVMONCFG() \
+    POWER_TEST_POS_PWRGETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRGETEXTVMONCFG()
+
+/* API-Specific Test Macros - pwrGetRsrcStatus */
+#define POWER_TEST_POS_PWRGETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo3); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo4); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon1); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon2); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbLite); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbIlimLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_bbMode); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_pldo_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_extVmon_ovErr)
+
+#define POWER_TEST_NEG_PWRGETRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_invalidResourceType); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedBbResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedLdoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedPldoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbLite); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbIlimLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_ldo_unsupportedBbMode); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_pldo_unsupportedBbLite); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedIlimErr); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn)
+
+#define POWER_TEST_PWRGETRSRCSTATUS() \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRGETRSRCSTATUS()
+
+/* API-Specific Test Macros - pwrClrRsrcStatus */
+#define POWER_TEST_POS_PWRCLRRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_bbMode); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_ilimErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo3_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo4_tsdWarn); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_ldo_allStatus); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo_tsdErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_pldo_allStatus); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon1_uvErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon2_ovErr); \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_extVmon_allStatus)
+
+#define POWER_TEST_NEG_PWRCLRRSRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_invalidResourceType); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedBbResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedLdoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedPldoResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource); \
+    PLATFORM_RUN_TEST(test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn)
+
+#define POWER_TEST_PWRCLRRSRCSTATUS() \
+    POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUS()
+
+/* API-Specific Test Macros - pwrClrRsrcStatusAll */
+#define POWER_TEST_POS_PWRCLRRSRCSTATUSALL() \
+    PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatusAll)
+
+#define POWER_TEST_NEG_PWRCLRRSRCSTATUSALL() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatusAll_nullHandle)
+
+#define POWER_TEST_PWRCLRRSRCSTATUSALL() \
+    POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUSALL()
+
+/* API-Specific Test Macros - pwrSetPGoodInStby */
+#define POWER_TEST_POS_PWRSETPGOODINSTBY() \
+    PLATFORM_RUN_TEST(test_pos_power_setGetPGoodInStby)
+
+#define POWER_TEST_NEG_PWRSETPGOODINSTBY() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetPGoodInStby_nullHandle)
+
+#define POWER_TEST_PWRSETPGOODINSTBY() \
+    POWER_TEST_POS_PWRSETPGOODINSTBY(); \
+    POWER_TEST_NEG_PWRSETPGOODINSTBY()
+
+/* API-Specific Test Macros - pwrGetPGoodInStby */
+#define POWER_TEST_POS_PWRGETPGOODINSTBY() \
+    /* Positive tests for pwrGetPGoodInStby are combined with pwrSetPGoodInStby tests */
+
+#define POWER_TEST_NEG_PWRGETPGOODINSTBY() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullIsEnabled)
+
+#define POWER_TEST_PWRGETPGOODINSTBY() \
+    POWER_TEST_POS_PWRGETPGOODINSTBY(); \
+    POWER_TEST_NEG_PWRGETPGOODINSTBY()
+
+/* Aggregate Test Runners */
+#define POWER_TEST_RUN_POSITIVE() \
+    POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_POS_PWRGETBUCKBOOSTCFG(); \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
+    POWER_TEST_POS_PWRGETLDOCFG(); \
+    POWER_TEST_POS_PWRSETPLDOCFG(); \
+    POWER_TEST_POS_PWRGETPLDOCFG(); \
+    POWER_TEST_POS_PWRSETEXTVMONCFG(); \
+    POWER_TEST_POS_PWRGETEXTVMONCFG(); \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
+    POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_POS_PWRSETPGOODINSTBY(); \
+    POWER_TEST_POS_PWRGETPGOODINSTBY()
+
+#define POWER_TEST_RUN_NEGATIVE() \
+    POWER_TEST_NEG_PWRSETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRGETBUCKBOOSTCFG(); \
+    POWER_TEST_NEG_PWRSETLDOCFG(); \
+    POWER_TEST_NEG_PWRGETLDOCFG(); \
+    POWER_TEST_NEG_PWRSETPLDOCFG(); \
+    POWER_TEST_NEG_PWRGETPLDOCFG(); \
+    POWER_TEST_NEG_PWRSETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRGETEXTVMONCFG(); \
+    POWER_TEST_NEG_PWRGETRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRCLRRSRCSTATUSALL(); \
+    POWER_TEST_NEG_PWRSETPGOODINSTBY(); \
+    POWER_TEST_NEG_PWRGETPGOODINSTBY()
+
+#define POWER_TEST_RUN_ALL() \
+    POWER_TEST_RUN_POSITIVE(); \
+    POWER_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
 /*               pwrSetBuckBoostCfg / pwrGetBuckBoostCfg API Tests            */
 /* ========================================================================== */
 

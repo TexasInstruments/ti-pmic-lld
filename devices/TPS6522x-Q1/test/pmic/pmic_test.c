@@ -112,7 +112,7 @@ static inline void pmicInitTest_initHandleCfg(Pmic_HandleCfg_t *handleCfg)
 /*                         Negative Test Functions                            */
 /* ========================================================================== */
 
-void test_neg_pmic_init_nullHandle(void)
+void test_neg_pmic_pmicInit_nullHandle(void)
 {
     // Pass NULL handle into Pmic_init()
     Pmic_HandleCfg_t handleCfg = {0};
@@ -121,7 +121,7 @@ void test_neg_pmic_init_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_init_nullConfig(void)
+void test_neg_pmic_pmicInit_nullConfig(void)
 {
     // Pass NULL config into Pmic_init()
     Pmic_Handle_t handle = {0};
@@ -129,21 +129,21 @@ void test_neg_pmic_init_nullConfig(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_deinit_nullHandle(void)
+void test_neg_pmic_pmicDeinit_nullHandle(void)
 {
     // Pass NULL handle into Pmic_deinit()
     int32_t status = Pmic_deinit(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_checkHandle_nullHandle(void)
+void test_neg_pmic_pmicCheckHandle_nullHandle(void)
 {
     // Pass NULL handle into Pmic_checkHandle()
     int32_t status = Pmic_checkHandle(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_init_invalidCommMode(void)
+void test_neg_pmic_pmicInit_invalidCommMode(void)
 {
     // Pass invalid commMode into Pmic_init()
     Pmic_HandleCfg_t handleCfg = {0};
@@ -155,7 +155,7 @@ void test_neg_pmic_init_invalidCommMode(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_neg_pmic_init_nullCommHandle(void)
+void test_neg_pmic_pmicInit_nullCommHandle(void)
 {
     // Pass NULL commHandle0 with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -168,7 +168,7 @@ void test_neg_pmic_init_nullCommHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_init_nullTaskHandle(void)
+void test_neg_pmic_pmicInit_nullTaskHandle(void)
 {
     // Pass NULL taskHandle with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -181,7 +181,7 @@ void test_neg_pmic_init_nullTaskHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_pmic_init_nullIoRead(void)
+void test_neg_pmic_pmicInit_nullIoRead(void)
 {
     // Pass NULL ioRead with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -194,7 +194,7 @@ void test_neg_pmic_init_nullIoRead(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullIoWrite(void)
+void test_neg_pmic_pmicInit_nullIoWrite(void)
 {
     // Pass NULL ioWrite with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -207,7 +207,7 @@ void test_neg_pmic_init_nullIoWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullAsyncRxStart(void)
+void test_neg_pmic_pmicInit_nullAsyncRxStart(void)
 {
     // Pass NULL asyncRxStart with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -220,7 +220,7 @@ void test_neg_pmic_init_nullAsyncRxStart(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullAsyncTxStart(void)
+void test_neg_pmic_pmicInit_nullAsyncTxStart(void)
 {
     // Pass NULL asyncTxStart with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -233,7 +233,7 @@ void test_neg_pmic_init_nullAsyncTxStart(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullAsyncRxAwait(void)
+void test_neg_pmic_pmicInit_nullAsyncRxAwait(void)
 {
     // Pass NULL asyncRxAwait with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -246,7 +246,7 @@ void test_neg_pmic_init_nullAsyncRxAwait(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullAsyncTxAwait(void)
+void test_neg_pmic_pmicInit_nullAsyncTxAwait(void)
 {
     // Pass NULL asyncTxAwait with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -259,7 +259,7 @@ void test_neg_pmic_init_nullAsyncTxAwait(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullCritSecStart(void)
+void test_neg_pmic_pmicInit_nullCritSecStart(void)
 {
     // Pass NULL criticalSectionStart with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -272,7 +272,7 @@ void test_neg_pmic_init_nullCritSecStart(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullCritSecStop(void)
+void test_neg_pmic_pmicInit_nullCritSecStop(void)
 {
     // Pass NULL criticalSectionStop with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -285,7 +285,7 @@ void test_neg_pmic_init_nullCritSecStop(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_nullIrqCallback(void)
+void test_neg_pmic_pmicInit_nullIrqCallback(void)
 {
     // Pass NULL irqResponseCallback with valid param flag set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -298,7 +298,7 @@ void test_neg_pmic_init_nullIrqCallback(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_pmic_init_timerWaitNull(void)
+void test_neg_pmic_pmicInit_timerWaitNull(void)
 {
     // Pass NULL timerWaitMs with non-zero retryIntervalMs
     // Covers line 449 in pmic.c
@@ -318,7 +318,7 @@ void test_neg_pmic_init_timerWaitNull(void)
 /*                         Positive Test Functions                            */
 /* ========================================================================== */
 
-void test_pos_pmic_init_validConfig(void)
+void test_pos_pmic_pmicInit_validConfig(void)
 {
     // Initialize PMIC LLD with valid Burton configuration
     Pmic_HandleCfg_t handleCfg = {0};
@@ -335,7 +335,7 @@ void test_pos_pmic_init_validConfig(void)
     PLATFORM_ASSERT(pmicHandle.irqResponseCallback == &platform_irqResponse);
 }
 
-void test_pos_pmic_deinit_afterInit(void)
+void test_pos_pmic_pmicDeinit_afterInit(void)
 {
     // Deinitialize PMIC LLD after successful init
     int32_t status = Pmic_deinit(&pmicHandle);
@@ -353,7 +353,7 @@ void test_pos_pmic_deinit_afterInit(void)
     PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
-void test_pos_pmic_checkHandle_validHandle(void)
+void test_pos_pmic_pmicCheckHandle_validHandle(void)
 {
     // Initialize handle first, then check it
     Pmic_HandleCfg_t handleCfg = {0};
@@ -369,7 +369,7 @@ void test_pos_pmic_checkHandle_validHandle(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_checkHandle_invalidHandle(void)
+void test_pos_pmic_pmicCheckHandle_invalidHandle(void)
 {
     // Check uninitialized handle (should fail check)
     Pmic_Handle_t uninitHandle = {0};
@@ -377,7 +377,7 @@ void test_pos_pmic_checkHandle_invalidHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
-void test_pos_pmic_init_reinit(void)
+void test_pos_pmic_pmicInit_reinit(void)
 {
     // Initialize, deinitialize, then re-initialize
     Pmic_HandleCfg_t handleCfg = {0};
@@ -400,7 +400,7 @@ void test_pos_pmic_init_reinit(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_with_crc_enabled(void)
+void test_pos_pmic_pmicInit_with_crc_enabled(void)
 {
     // Initialize PMIC with CRC enabled
     Pmic_HandleCfg_t handleCfg = {0};
@@ -420,7 +420,7 @@ void test_pos_pmic_init_with_crc_enabled(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_with_both_crc_flags(void)
+void test_pos_pmic_pmicInit_with_both_crc_flags(void)
 {
     // Initialize with CRC enabled in both valid params and config
     Pmic_HandleCfg_t handleCfg = {0};
@@ -441,7 +441,7 @@ void test_pos_pmic_init_with_both_crc_flags(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_crc_disabled(void)
+void test_pos_pmic_pmicInit_crc_disabled(void)
 {
     // Initialize with CRC explicitly disabled
     Pmic_HandleCfg_t handleCfg = {0};
@@ -461,7 +461,7 @@ void test_pos_pmic_init_crc_disabled(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_verify_crc_state(void)
+void test_pos_pmic_pmicInit_verify_crc_state(void)
 {
     // Initialize and verify CRC state can be read
     Pmic_HandleCfg_t handleCfg = {0};
@@ -489,7 +489,7 @@ void test_pos_pmic_init_verify_crc_state(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_complete_flow(void)
+void test_pos_pmic_pmicInit_complete_flow(void)
 {
     // Test complete initialization flow with device info retrieval and comm validation
     Pmic_HandleCfg_t handleCfg = {0};
@@ -515,7 +515,7 @@ void test_pos_pmic_init_complete_flow(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_i2c_single_mode(void)
+void test_pos_pmic_pmicInit_i2c_single_mode(void)
 {
     // Initialize with I2C single mode (mock mode - no timer/retry needed)
     Pmic_HandleCfg_t handleCfg = {0};
@@ -552,7 +552,7 @@ void test_pos_pmic_init_i2c_single_mode(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_i2c_dual_mode(void)
+void test_pos_pmic_pmicInit_i2c_dual_mode(void)
 {
     // Initialize with I2C dual mode (mock mode - no timer/retry needed)
     Pmic_HandleCfg_t handleCfg = {0};
@@ -589,7 +589,7 @@ void test_pos_pmic_init_i2c_dual_mode(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_device_info_retrieval(void)
+void test_pos_pmic_pmicInit_device_info_retrieval(void)
 {
     // Initialize and verify device info fields are populated
     Pmic_HandleCfg_t handleCfg = {0};
@@ -607,7 +607,7 @@ void test_pos_pmic_init_device_info_retrieval(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_deinit_success_path(void)
+void test_pos_pmic_pmicDeinit_success_path(void)
 {
     // Test complete deinit success path
     Pmic_HandleCfg_t handleCfg = {0};
@@ -647,7 +647,7 @@ void test_pos_pmic_deinit_success_path(void)
     PLATFORM_ASSERT(pmicHandle.irqResponseCallback == NULL);
 }
 
-void test_pos_pmic_checkHandle_all_validations(void)
+void test_pos_pmic_pmicCheckHandle_all_validations(void)
 {
     // Test all validation paths in Pmic_checkHandle
 
@@ -712,7 +712,7 @@ void test_pos_pmic_checkHandle_all_validations(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_async_mode(void)
+void test_pos_pmic_pmicInit_async_mode(void)
 {
     // Initialize with async mode enabled
     // Note: Even in async mode, synchronous I/O is needed for initialization (getPmicInfo)
@@ -765,7 +765,7 @@ void test_pos_pmic_init_async_mode(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_with_i2c_addresses(void)
+void test_pos_pmic_pmicInit_with_i2c_addresses(void)
 {
     // Test initialization with all three I2C addresses configured (mock mode - no timer/retry needed)
     Pmic_HandleCfg_t handleCfg = {0};
@@ -804,7 +804,7 @@ void test_pos_pmic_init_with_i2c_addresses(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_with_task_handle(void)
+void test_pos_pmic_pmicInit_with_task_handle(void)
 {
     // Test initialization with task handle configured (for RTOS environments)
     Pmic_HandleCfg_t handleCfg = {0};
@@ -837,7 +837,7 @@ void test_pos_pmic_init_with_task_handle(void)
     Pmic_deinit(&pmicHandle);
 }
 
-void test_pos_pmic_init_withRetryCnt(void)
+void test_pos_pmic_pmicInit_withRetryCnt(void)
 {
     // Initialize with PMIC_RETRY_CNT_VALID set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -860,7 +860,7 @@ void test_pos_pmic_init_withRetryCnt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_pos_pmic_init_withRetryInterval(void)
+void test_pos_pmic_pmicInit_withRetryInterval(void)
 {
     // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
     Pmic_HandleCfg_t handleCfg = {0};
@@ -885,7 +885,7 @@ void test_pos_pmic_init_withRetryInterval(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_pos_pmic_init_withTimerWaitMs(void)
+void test_pos_pmic_pmicInit_withTimerWaitMs(void)
 {
     // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
     Pmic_HandleCfg_t handleCfg = {0};
@@ -908,7 +908,7 @@ void test_pos_pmic_init_withTimerWaitMs(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_neg_pmic_init_timerWaitMsCallbackNull(void)
+void test_neg_pmic_pmicInit_timerWaitMsCallbackNull(void)
 {
     // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_HandleCfg_t handleCfg = {0};

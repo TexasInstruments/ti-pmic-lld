@@ -47,6 +47,230 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                API-Specific Test Macros - irqSetCfg/irqGetCfg             */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_bb_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_bb_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo1_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo1_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo2_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo2_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo3_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo3_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo4_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_ldo4_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_pldo1_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_pldo1_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_pldo2_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_pldo2_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_extVmon1_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_extVmon1_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_extVmon2_uvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_extVmon2_ovErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_wdTh1Err_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_wdTh2Err_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_esmDly1Err_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_esmDly2Err_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_nrstRdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_safeOut1RdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_enOutRdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_gpo1RdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_gpo2RdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_gpo3RdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_gpo4RdbkErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp1pUvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp1pOvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp1nUvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp1nOvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2pUvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2pOvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2nUvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2nOvErr_mask); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_configValue)
+
+#define IRQ_TEST_NEG_IRQSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_nullParam_irqCfg); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidParam_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_nonMaskableIrq); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_nonConfigurableIrq_ABIST_ERR); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidConfig_cfgRegCrcErr); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidConfig_comp1pUvErr); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidConfig_comp2nOvErr); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidConfig_otherIrq); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_OFF_INT_EVT_ERR_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_OFF_PROT_EVT_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_FIRST_PWR_ON_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_CLK_ERR_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_INTERNAL_OV_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_INIT_AN_TMO_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_WD_TMO_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_WD_TRIG_EARLY_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_mask); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_viaMask); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_config)
+
+#define IRQ_TEST_IRQSETCFG() \
+    IRQ_TEST_POS_IRQSETCFG(); \
+    IRQ_TEST_NEG_IRQSETCFG()
+
+#define IRQ_TEST_POS_IRQGETCFG() \
+    /* Positive tests for irqGetCfg are combined with irqSetCfg tests */
+
+#define IRQ_TEST_NEG_IRQGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfg_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfg_nullParam_irqCfg); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfg_invalidParam_irqNum); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfg_nonConfigurableIrq)
+
+#define IRQ_TEST_IRQGETCFG() \
+    IRQ_TEST_POS_IRQGETCFG(); \
+    IRQ_TEST_NEG_IRQGETCFG()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - irqSetCfgs/irqGetCfgs            */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQSETCFGS() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_multipleMasks); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_batchConfigValues)
+
+#define IRQ_TEST_NEG_IRQSETCFGS() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_nullParam_irqCfg); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_invalidParam_numIrqs); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_invalidConfigInBatch)
+
+#define IRQ_TEST_IRQSETCFGS() \
+    IRQ_TEST_POS_IRQSETCFGS(); \
+    IRQ_TEST_NEG_IRQSETCFGS()
+
+#define IRQ_TEST_POS_IRQGETCFGS() \
+    /* Positive tests for irqGetCfgs are combined with irqSetCfgs tests */
+
+#define IRQ_TEST_NEG_IRQGETCFGS() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfgs_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfgs_nullParam_irqCfgs); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfgs_invalidParam_numIrqs); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetCfgs_nonConfigurableInBatch)
+
+#define IRQ_TEST_IRQGETCFGS() \
+    IRQ_TEST_POS_IRQGETCFGS(); \
+    IRQ_TEST_NEG_IRQGETCFGS()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - irqGetStatus                    */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQGETSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_allIrqs)
+
+#define IRQ_TEST_NEG_IRQGETSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_irqStat)
+
+#define IRQ_TEST_IRQGETSTATUS() \
+    IRQ_TEST_POS_IRQGETSTATUS(); \
+    IRQ_TEST_NEG_IRQGETSTATUS()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - irqGetNextFlag                  */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQGETNEXTFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_singleFlag); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlagsSet)
+
+#define IRQ_TEST_NEG_IRQGETNEXTFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqNum)
+
+#define IRQ_TEST_IRQGETNEXTFLAG() \
+    IRQ_TEST_POS_IRQGETNEXTFLAG(); \
+    IRQ_TEST_NEG_IRQGETNEXTFLAG()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - irqGetFlag                     */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQGETFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetFlag_andClrFlag)
+
+#define IRQ_TEST_NEG_IRQGETFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_flag); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_invalidParam_irqNum)
+
+#define IRQ_TEST_IRQGETFLAG() \
+    IRQ_TEST_POS_IRQGETFLAG(); \
+    IRQ_TEST_NEG_IRQGETFLAG()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - irqClrFlag                     */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQCLRFLAG() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_offStateStat1Register); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_offStateStat2Register)
+
+#define IRQ_TEST_NEG_IRQCLRFLAG() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_invalidParam_irqNum)
+
+#define IRQ_TEST_IRQCLRFLAG() \
+    IRQ_TEST_POS_IRQCLRFLAG(); \
+    IRQ_TEST_NEG_IRQCLRFLAG()
+
+/* ========================================================================== */
+/*                API-Specific Test Macros - irqClrAllFlags                   */
+/* ========================================================================== */
+
+#define IRQ_TEST_POS_IRQCLRALLFLAGS() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_basic); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_devErrStatPreservation); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_ioFailureMidLoop)
+
+#define IRQ_TEST_NEG_IRQCLRALLFLAGS() \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
+
+#define IRQ_TEST_IRQCLRALLFLAGS() \
+    IRQ_TEST_POS_IRQCLRALLFLAGS(); \
+    IRQ_TEST_NEG_IRQCLRALLFLAGS()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define IRQ_TEST_RUN_POSITIVE() \
+    IRQ_TEST_POS_IRQSETCFG(); \
+    IRQ_TEST_POS_IRQGETCFG(); \
+    IRQ_TEST_POS_IRQSETCFGS(); \
+    IRQ_TEST_POS_IRQGETCFGS(); \
+    IRQ_TEST_POS_IRQGETSTATUS(); \
+    IRQ_TEST_POS_IRQGETNEXTFLAG(); \
+    IRQ_TEST_POS_IRQGETFLAG(); \
+    IRQ_TEST_POS_IRQCLRFLAG(); \
+    IRQ_TEST_POS_IRQCLRALLFLAGS()
+
+#define IRQ_TEST_RUN_NEGATIVE() \
+    IRQ_TEST_NEG_IRQSETCFG(); \
+    IRQ_TEST_NEG_IRQGETCFG(); \
+    IRQ_TEST_NEG_IRQSETCFGS(); \
+    IRQ_TEST_NEG_IRQGETCFGS(); \
+    IRQ_TEST_NEG_IRQGETSTATUS(); \
+    IRQ_TEST_NEG_IRQGETNEXTFLAG(); \
+    IRQ_TEST_NEG_IRQGETFLAG(); \
+    IRQ_TEST_NEG_IRQCLRFLAG(); \
+    IRQ_TEST_NEG_IRQCLRALLFLAGS()
+
+#define IRQ_TEST_RUN_ALL() \
+    IRQ_TEST_RUN_POSITIVE(); \
+    IRQ_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 

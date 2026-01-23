@@ -34,7 +34,6 @@
 
 #include "../platform.h"
 #include "wdg_test.h"
-#include "wdg_test_macros.h"
 
 /*                            Global Variables                                */
 static Pmic_Handle_t pmicHandle = {0};
@@ -42,7 +41,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /**
  * @brief Test Pmic_wdgSetEnableState with NULL handle
  */
-static void test_neg_wdg_wdgSetEnableState_nullHandle(void)
+void test_neg_wdg_wdgSetEnableState_nullHandle(void)
 {
     int32_t status = Pmic_wdgSetEnableState(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -50,7 +49,7 @@ static void test_neg_wdg_wdgSetEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetEnableState with NULL handle
  */
-static void test_neg_wdg_wdgGetEnableState_nullHandle(void)
+void test_neg_wdg_wdgGetEnableState_nullHandle(void)
 {
     bool isEnabled = false;
     int32_t status = Pmic_wdgGetEnableState(NULL, &isEnabled);
@@ -59,7 +58,7 @@ static void test_neg_wdg_wdgGetEnableState_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetEnableState with NULL isEnabled parameter
  */
-static void test_neg_wdg_wdgGetEnableState_nullIsEnabled(void)
+void test_neg_wdg_wdgGetEnableState_nullIsEnabled(void)
 {
     int32_t status = Pmic_wdgGetEnableState(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -67,7 +66,7 @@ static void test_neg_wdg_wdgGetEnableState_nullIsEnabled(void)
 /**
  * @brief Test Pmic_wdgSetCfg with NULL handle
  */
-static void test_neg_wdg_wdgSetCfg_nullHandle(void)
+void test_neg_wdg_wdgSetCfg_nullHandle(void)
 {
     Pmic_WdgCfg_t wdgCfg = {0};
     int32_t status = Pmic_wdgSetCfg(NULL, &wdgCfg);
@@ -76,7 +75,7 @@ static void test_neg_wdg_wdgSetCfg_nullHandle(void)
 /**
  * @brief Test Pmic_wdgSetCfg with NULL wdgCfg parameter
  */
-static void test_neg_wdg_wdgSetCfg_nullWdgCfg(void)
+void test_neg_wdg_wdgSetCfg_nullWdgCfg(void)
 {
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -84,7 +83,7 @@ static void test_neg_wdg_wdgSetCfg_nullWdgCfg(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid mode value
  */
-static void test_neg_wdg_wdgSetCfg_invalidMode(void)
+void test_neg_wdg_wdgSetCfg_invalidMode(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_MODE_SEL_VALID,
@@ -96,7 +95,7 @@ static void test_neg_wdg_wdgSetCfg_invalidMode(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid win1Code value
  */
-static void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
+void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_WIN1_CODE_VALID,
@@ -108,7 +107,7 @@ static void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid win2Code value
  */
-static void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
+void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_WIN2_CODE_VALID,
@@ -120,7 +119,7 @@ static void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid qaFdbk value
  */
-static void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
+void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_QA_FDBK_VALID,
@@ -132,7 +131,7 @@ static void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid qaLfsr value
  */
-static void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
+void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_QA_LFSR_VALID,
@@ -144,7 +143,7 @@ static void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid qaSeed value
  */
-static void test_neg_wdg_wdgSetCfg_invalidQaSeed(void)
+void test_neg_wdg_wdgSetCfg_invalidQaSeed(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_QA_SEED_VALID,
@@ -156,7 +155,7 @@ static void test_neg_wdg_wdgSetCfg_invalidQaSeed(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid failThr value
  */
-static void test_neg_wdg_wdgSetCfg_invalidFailThr(void)
+void test_neg_wdg_wdgSetCfg_invalidFailThr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_FAIL_THR_VALID,
@@ -168,7 +167,7 @@ static void test_neg_wdg_wdgSetCfg_invalidFailThr(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid rstThr value
  */
-static void test_neg_wdg_wdgSetCfg_invalidRstThr(void)
+void test_neg_wdg_wdgSetCfg_invalidRstThr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_RST_THR_VALID,
@@ -180,7 +179,7 @@ static void test_neg_wdg_wdgSetCfg_invalidRstThr(void)
 /**
  * @brief Test Pmic_wdgSetCfg with invalid cntSel value
  */
-static void test_neg_wdg_wdgSetCfg_invalidCntSel(void)
+void test_neg_wdg_wdgSetCfg_invalidCntSel(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
         .validParams = PMIC_WDG_CNT_SEL_VALID,
@@ -192,7 +191,7 @@ static void test_neg_wdg_wdgSetCfg_invalidCntSel(void)
 /**
  * @brief Test Pmic_wdgGetCfg with NULL handle
  */
-static void test_neg_wdg_wdgGetCfg_nullHandle(void)
+void test_neg_wdg_wdgGetCfg_nullHandle(void)
 {
     Pmic_WdgCfg_t wdgCfg = {0};
     int32_t status = Pmic_wdgGetCfg(NULL, &wdgCfg);
@@ -201,7 +200,7 @@ static void test_neg_wdg_wdgGetCfg_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetCfg with NULL wdgCfg parameter
  */
-static void test_neg_wdg_wdgGetCfg_nullWdgCfg(void)
+void test_neg_wdg_wdgGetCfg_nullWdgCfg(void)
 {
     int32_t status = Pmic_wdgGetCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -209,7 +208,7 @@ static void test_neg_wdg_wdgGetCfg_nullWdgCfg(void)
 /**
  * @brief Test Pmic_wdgSetPowerHold with NULL handle
  */
-static void test_neg_wdg_wdgSetPowerHold_nullHandle(void)
+void test_neg_wdg_wdgSetPowerHold_nullHandle(void)
 {
     int32_t status = Pmic_wdgSetPowerHold(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -217,7 +216,7 @@ static void test_neg_wdg_wdgSetPowerHold_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetPowerHold with NULL handle
  */
-static void test_neg_wdg_wdgGetPowerHold_nullHandle(void)
+void test_neg_wdg_wdgGetPowerHold_nullHandle(void)
 {
     bool isEnabled = false;
     int32_t status = Pmic_wdgGetPowerHold(NULL, &isEnabled);
@@ -226,7 +225,7 @@ static void test_neg_wdg_wdgGetPowerHold_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetPowerHold with NULL isEnabled parameter
  */
-static void test_neg_wdg_wdgGetPowerHold_nullIsEnabled(void)
+void test_neg_wdg_wdgGetPowerHold_nullIsEnabled(void)
 {
     int32_t status = Pmic_wdgGetPowerHold(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -234,7 +233,7 @@ static void test_neg_wdg_wdgGetPowerHold_nullIsEnabled(void)
 /**
  * @brief Test Pmic_wdgSetReturnToLongWindow with NULL handle
  */
-static void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void)
+void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void)
 {
     int32_t status = Pmic_wdgSetReturnToLongWindow(NULL, true);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -242,7 +241,7 @@ static void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetReturnToLongWindow with NULL handle
  */
-static void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void)
+void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void)
 {
     bool isEnabled = false;
     int32_t status = Pmic_wdgGetReturnToLongWindow(NULL, &isEnabled);
@@ -251,7 +250,7 @@ static void test_neg_wdg_wdgGetReturnToLongWindow_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetReturnToLongWindow with NULL isEnabled parameter
  */
-static void test_neg_wdg_wdgGetReturnToLongWindow_nullIsEnabled(void)
+void test_neg_wdg_wdgGetReturnToLongWindow_nullIsEnabled(void)
 {
     int32_t status = Pmic_wdgGetReturnToLongWindow(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -259,7 +258,7 @@ static void test_neg_wdg_wdgGetReturnToLongWindow_nullIsEnabled(void)
 /**
  * @brief Test Pmic_wdgQaWriteAnswer with NULL handle
  */
-static void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void)
+void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void)
 {
     int32_t status = Pmic_wdgQaWriteAnswer(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -267,7 +266,7 @@ static void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void)
 /**
  * @brief Test Pmic_wdgClrErrStatus with NULL handle
  */
-static void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
+void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 {
     Pmic_WdgErrStatus_t errStatus = {0};
     int32_t status = Pmic_wdgClrErrStatus(NULL, &errStatus);
@@ -276,7 +275,7 @@ static void test_neg_wdg_wdgClrErrStatus_nullHandle(void)
 /**
  * @brief Test Pmic_wdgClrErrStatus with NULL errStatus parameter
  */
-static void test_neg_wdg_wdgClrErrStatus_nullErrStatus(void)
+void test_neg_wdg_wdgClrErrStatus_nullErrStatus(void)
 {
     int32_t status = Pmic_wdgClrErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -284,7 +283,7 @@ static void test_neg_wdg_wdgClrErrStatus_nullErrStatus(void)
 /**
  * @brief Test Pmic_wdgClrErrStatusAll with NULL handle
  */
-static void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
+void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
 {
     int32_t status = Pmic_wdgClrErrStatusAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -292,7 +291,7 @@ static void test_neg_wdg_wdgClrErrStatusAll_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetErrStatus with NULL handle
  */
-static void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
+void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
 {
     Pmic_WdgErrStatus_t errStatus = {0};
     int32_t status = Pmic_wdgGetErrStatus(NULL, &errStatus);
@@ -301,7 +300,7 @@ static void test_neg_wdg_wdgGetErrStatus_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetErrStatus with NULL errStatus parameter
  */
-static void test_neg_wdg_wdgGetErrStatus_nullErrStatus(void)
+void test_neg_wdg_wdgGetErrStatus_nullErrStatus(void)
 {
     int32_t status = Pmic_wdgGetErrStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -309,7 +308,7 @@ static void test_neg_wdg_wdgGetErrStatus_nullErrStatus(void)
 /**
  * @brief Test Pmic_wdgGetFailCntStatus with NULL handle
  */
-static void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
+void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
     Pmic_WdgFailCntStatus_t failCntStatus = {0};
     int32_t status = Pmic_wdgGetFailCntStatus(NULL, &failCntStatus);
@@ -318,7 +317,7 @@ static void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 /**
  * @brief Test Pmic_wdgGetFailCntStatus with NULL failCntStatus parameter
  */
-static void test_neg_wdg_wdgGetFailCntStatus_nullFailCntStatus(void)
+void test_neg_wdg_wdgGetFailCntStatus_nullFailCntStatus(void)
 {
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -327,7 +326,7 @@ static void test_neg_wdg_wdgGetFailCntStatus_nullFailCntStatus(void)
 /**
  * @brief Test watchdog enable and disable functionality
  */
-static void test_pos_wdg_wdgSetEnableState_enableDisable(void)
+void test_pos_wdg_wdgSetEnableState_enableDisable(void)
 {
     bool isEnabled = false;
     int32_t status;
@@ -349,7 +348,7 @@ static void test_pos_wdg_wdgSetEnableState_enableDisable(void)
 /**
  * @brief Test power hold enable and disable
  */
-static void test_pos_wdg_wdgSetPowerHold_powerHold(void)
+void test_pos_wdg_wdgSetPowerHold_powerHold(void)
 {
     bool isEnabled = false;
     int32_t status;
@@ -371,7 +370,7 @@ static void test_pos_wdg_wdgSetPowerHold_powerHold(void)
 /**
  * @brief Test return to long window enable and disable
  */
-static void test_pos_wdg_wdgSetReturnToLongWindow_returnToLongWindow(void)
+void test_pos_wdg_wdgSetReturnToLongWindow_returnToLongWindow(void)
 {
     bool isEnabled = false;
     int32_t status;
@@ -393,7 +392,7 @@ static void test_pos_wdg_wdgSetReturnToLongWindow_returnToLongWindow(void)
 /**
  * @brief Test watchdog configuration set and get for rstEn
  */
-static void test_pos_wdg_wdgSetCfg_rstEn(void)
+void test_pos_wdg_wdgSetCfg_rstEn(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_RST_EN_VALID,
@@ -422,7 +421,7 @@ static void test_pos_wdg_wdgSetCfg_rstEn(void)
 /**
  * @brief Test watchdog configuration set and get for mode
  */
-static void test_pos_wdg_wdgSetCfg_mode(void)
+void test_pos_wdg_wdgSetCfg_mode(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_MODE_SEL_VALID,
@@ -451,7 +450,7 @@ static void test_pos_wdg_wdgSetCfg_mode(void)
 /**
  * @brief Test watchdog configuration set and get for win1Code
  */
-static void test_pos_wdg_wdgSetCfg_win1Code(void)
+void test_pos_wdg_wdgSetCfg_win1Code(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_WIN1_CODE_VALID
@@ -474,7 +473,7 @@ static void test_pos_wdg_wdgSetCfg_win1Code(void)
 /**
  * @brief Test watchdog configuration set and get for win2Code
  */
-static void test_pos_wdg_wdgSetCfg_win2Code(void)
+void test_pos_wdg_wdgSetCfg_win2Code(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_WIN2_CODE_VALID
@@ -497,7 +496,7 @@ static void test_pos_wdg_wdgSetCfg_win2Code(void)
 /**
  * @brief Test watchdog configuration set and get for longWinCode
  */
-static void test_pos_wdg_wdgSetCfg_longWinCode(void)
+void test_pos_wdg_wdgSetCfg_longWinCode(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_LONG_WIN_CODE_VALID
@@ -520,7 +519,7 @@ static void test_pos_wdg_wdgSetCfg_longWinCode(void)
 /**
  * @brief Test watchdog configuration set and get for qaFdbk
  */
-static void test_pos_wdg_wdgSetCfg_qaFdbk(void)
+void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_FDBK_VALID
@@ -542,7 +541,7 @@ static void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 /**
  * @brief Test watchdog configuration set and get for qaLfsr
  */
-static void test_pos_wdg_wdgSetCfg_qaLfsr(void)
+void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_LFSR_VALID
@@ -564,7 +563,7 @@ static void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 /**
  * @brief Test watchdog configuration set and get for qaSeed
  */
-static void test_pos_wdg_wdgSetCfg_qaSeed(void)
+void test_pos_wdg_wdgSetCfg_qaSeed(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_SEED_VALID
@@ -586,7 +585,7 @@ static void test_pos_wdg_wdgSetCfg_qaSeed(void)
 /**
  * @brief Test watchdog configuration set and get for failThr
  */
-static void test_pos_wdg_wdgSetCfg_failThr(void)
+void test_pos_wdg_wdgSetCfg_failThr(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_FAIL_THR_VALID
@@ -608,7 +607,7 @@ static void test_pos_wdg_wdgSetCfg_failThr(void)
 /**
  * @brief Test watchdog configuration set and get for rstThr
  */
-static void test_pos_wdg_wdgSetCfg_rstThr(void)
+void test_pos_wdg_wdgSetCfg_rstThr(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_RST_THR_VALID
@@ -630,7 +629,7 @@ static void test_pos_wdg_wdgSetCfg_rstThr(void)
 /**
  * @brief Test watchdog configuration set and get for cntSel
  */
-static void test_pos_wdg_wdgSetCfg_cntSel(void)
+void test_pos_wdg_wdgSetCfg_cntSel(void)
 {
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_CNT_SEL_VALID
@@ -652,7 +651,7 @@ static void test_pos_wdg_wdgSetCfg_cntSel(void)
 /**
  * @brief Test Q&A sequence with correct answers (no errors)
  */
-static void test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers(void)
 {
     int32_t status;
     /* Configure watchdog for Q&A mode with long timeouts */
@@ -702,7 +701,7 @@ static void test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers(void)
 /**
  * @brief Test error status get and clear functionality
  */
-static void test_pos_wdg_wdgGetErrStatus_errorStatusGetClear(void)
+void test_pos_wdg_wdgGetErrStatus_errorStatusGetClear(void)
 {
     int32_t status;
     /* Clear all error statuses */
@@ -721,7 +720,7 @@ static void test_pos_wdg_wdgGetErrStatus_errorStatusGetClear(void)
 /**
  * @brief Test fail counter status read functionality
  */
-static void test_pos_wdg_wdgGetFailCntStatus_failCounterStatus(void)
+void test_pos_wdg_wdgGetFailCntStatus_failCounterStatus(void)
 {
     int32_t status;
     /* Read fail counter status */
@@ -735,7 +734,7 @@ static void test_pos_wdg_wdgGetFailCntStatus_failCounterStatus(void)
 /**
  * @brief Test combined configuration parameters
  */
-static void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
+void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
 {
     int32_t status;
     /* Set multiple configuration parameters at once */
@@ -770,7 +769,7 @@ static void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
 /**
  * @brief Test Q&A write answer with qaFdbk=0 (tests mux_4x1 case 0)
  */
-static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
 {
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=0 */
@@ -798,7 +797,7 @@ static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
 /**
  * @brief Test Q&A write answer with qaFdbk=1 (tests mux_4x1 case 1)
  */
-static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
 {
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=1 */
@@ -826,7 +825,7 @@ static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
 /**
  * @brief Test Q&A write answer with qaFdbk=2 (tests mux_4x1 case 2)
  */
-static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
 {
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=2 */
@@ -854,7 +853,7 @@ static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
 /**
  * @brief Test Q&A write answer with qaFdbk=3 (tests mux_4x1 default case)
  */
-static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
+void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 {
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=3 */
@@ -882,7 +881,7 @@ static void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 /**
  * @brief Test clearing only RST_INT error (first threshold error)
  */
-static void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
     int32_t status;
     /* Clear only the RST_INT (first threshold) error status */
@@ -901,7 +900,7 @@ static void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 /**
  * @brief Test clearing only FAIL_INT error (second threshold error)
  */
-static void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
     int32_t status;
     /* Clear only the FAIL_INT (second threshold) error status */
@@ -920,7 +919,7 @@ static void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 /**
  * @brief Test clearing only SEQ_ERR error (sequence error)
  */
-static void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
+void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
     int32_t status;
     /* Clear only the sequence error status */
@@ -939,7 +938,7 @@ static void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 /**
  * @brief Test getting fail count status with only failCnt parameter
  */
-static void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
+void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 {
     int32_t status;
     /* Read only the fail count value */
@@ -953,7 +952,7 @@ static void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
 /**
  * @brief Test getting fail count status with only badEvent parameter
  */
-static void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
+void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
 {
     int32_t status;
     /* Read only the bad event status */
@@ -968,7 +967,7 @@ static void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
  * @brief Test Pmic_wdgSetCfg with EN_DRV_SEL configuration
  * Covers lines 263-264 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel(void)
+void test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
@@ -987,7 +986,7 @@ static void test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel(void)
  * @brief Test Pmic_wdgGetCfg with EN_DRV_SEL configuration
  * Covers lines 381-382 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel(void)
+void test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
@@ -1000,7 +999,7 @@ static void test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel(void)
  * @brief Test Pmic_wdgClrErrStatus to clear WD_ANSW_ERR bit
  * Covers lines 747-748 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgClrErrStatus_clrAnswErr(void)
+void test_pos_wdg_wdgClrErrStatus_clrAnswErr(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errStatus = {
@@ -1014,7 +1013,7 @@ static void test_pos_wdg_wdgClrErrStatus_clrAnswErr(void)
  * @brief Test Pmic_wdgClrErrStatus to clear WD_ANSW_EARLY bit
  * Covers lines 757-758 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgClrErrStatus_clrAnswEarlyErr(void)
+void test_pos_wdg_wdgClrErrStatus_clrAnswEarlyErr(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errStatus = {
@@ -1028,7 +1027,7 @@ static void test_pos_wdg_wdgClrErrStatus_clrAnswEarlyErr(void)
  * @brief Test Pmic_wdgClrErrStatus to clear WD_TRIG_EARLY bit
  * Covers lines 762-763 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgClrErrStatus_clrTrigEarlyErr(void)
+void test_pos_wdg_wdgClrErrStatus_clrTrigEarlyErr(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errStatus = {
@@ -1042,7 +1041,7 @@ static void test_pos_wdg_wdgClrErrStatus_clrTrigEarlyErr(void)
  * @brief Test Pmic_wdgClrErrStatus to clear WD_TIMEOUT bit
  * Covers lines 767-768 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgClrErrStatus_clrTimeoutErr(void)
+void test_pos_wdg_wdgClrErrStatus_clrTimeoutErr(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errStatus = {
@@ -1056,7 +1055,7 @@ static void test_pos_wdg_wdgClrErrStatus_clrTimeoutErr(void)
  * @brief Test Pmic_wdgClrErrStatus to clear WD_LONGWIN_TIMEOUT_INT bit
  * Covers lines 772-773 in pmic_wdg.c
  */
-static void test_pos_wdg_wdgClrErrStatus_clrLongWinTimeoutErr(void)
+void test_pos_wdg_wdgClrErrStatus_clrLongWinTimeoutErr(void)
 {
     int32_t status;
     Pmic_WdgErrStatus_t errStatus = {

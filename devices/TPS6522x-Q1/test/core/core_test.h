@@ -52,151 +52,119 @@ extern "C" {
 void core_test(void *args);
 
 /* ========================================================================== */
-/*                       getSiliconRev Test Declarations                      */
-/* ========================================================================== */
-
-/* Negative Tests */
-void test_neg_core_getSiliconRev_nullParam_handle(void);
-void test_neg_core_getSiliconRev_nullParam_siliconRev(void);
-
-/* Positive Tests */
-void test_pos_core_getSiliconRev(void);
-
-/* ========================================================================== */
-/*                        getNvmRev Test Declarations                         */
-/* ========================================================================== */
-
-/* Negative Tests */
-void test_neg_core_getNvmRev_nullParam_handle(void);
-void test_neg_core_getNvmRev_nullParam_nvmRev(void);
-
-/* Positive Tests */
-void test_pos_core_getNvmRev(void);
-
-/* ========================================================================== */
-/*                     getRegLockState Test Declarations                      */
-/* ========================================================================== */
-
-/* Negative Tests */
-void test_neg_core_getRegLockState_nullParam_handle(void);
-void test_neg_core_getRegLockState_nullParam_lockState(void);
-
-/* Positive Tests */
-void test_pos_core_getRegLockState(void);
-
-/* ========================================================================== */
-/*                   setScratchPadValue Test Declarations                     */
-/* ========================================================================== */
-
-/* Negative Tests */
-void test_neg_core_setScratchPadValue_nullParam_handle(void);
-void test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum(void);
-
-/* Positive Tests */
-void test_pos_core_setScratchPadValue_reg1(void);
-void test_pos_core_setScratchPadValue_reg3(void);
-void test_pos_core_scratchPadValue_boundary(void);
-
-/* ========================================================================== */
-/*                   getScratchPadValue Test Declarations                     */
-/* ========================================================================== */
-
-/* Negative Tests */
-void test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
-void test_neg_core_getScratchPadValue_nullValue(void);
-
-/* Positive Tests */
-void test_pos_core_getScratchPadValue_reg2(void);
-void test_pos_core_getScratchPadValue_reg4(void);
-
-/* ========================================================================== */
 /*                        Test Organization Macros                            */
 /* ========================================================================== */
 
 /* getSiliconRev API */
-#define CORE_TEST_POS_GETSILICONREV() \
-    PLATFORM_RUN_TEST(test_pos_core_getSiliconRev)
+#define CORE_TEST_POS_COREGETSILREV() \
+    PLATFORM_RUN_TEST(test_pos_core_coreGetSilRev)
 
-#define CORE_TEST_NEG_GETSILICONREV() \
-    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_siliconRev)
+#define CORE_TEST_NEG_COREGETSILREV() \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_siliconRev)
 
-#define CORE_TEST_GETSILICONREV() \
-    CORE_TEST_POS_GETSILICONREV(); \
-    CORE_TEST_NEG_GETSILICONREV()
+#define CORE_TEST_COREGETSILREV() \
+    CORE_TEST_POS_COREGETSILREV(); \
+    CORE_TEST_NEG_COREGETSILREV()
 
 /* getNvmRev API */
-#define CORE_TEST_POS_GETNVMREV() \
-    PLATFORM_RUN_TEST(test_pos_core_getNvmRev)
+#define CORE_TEST_POS_COREGETNVMREV() \
+    PLATFORM_RUN_TEST(test_pos_core_coreGetNvmRev)
 
-#define CORE_TEST_NEG_GETNVMREV() \
-    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_nvmRev)
+#define CORE_TEST_NEG_COREGETNVMREV() \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetNvmRev_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetNvmRev_nullParam_nvmRev)
 
-#define CORE_TEST_GETNVMREV() \
-    CORE_TEST_POS_GETNVMREV(); \
-    CORE_TEST_NEG_GETNVMREV()
+#define CORE_TEST_COREGETNVMREV() \
+    CORE_TEST_POS_COREGETNVMREV(); \
+    CORE_TEST_NEG_COREGETNVMREV()
 
 /* getRegLockState API */
-#define CORE_TEST_POS_GETREGLOCKSTATE() \
-    PLATFORM_RUN_TEST(test_pos_core_getRegLockState)
+#define CORE_TEST_POS_COREGETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_coreGetRegLockState)
 
-#define CORE_TEST_NEG_GETREGLOCKSTATE() \
-    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_lockState)
+#define CORE_TEST_NEG_COREGETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetRegLockState_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetRegLockState_nullParam_lockState)
 
-#define CORE_TEST_GETREGLOCKSTATE() \
-    CORE_TEST_POS_GETREGLOCKSTATE(); \
-    CORE_TEST_NEG_GETREGLOCKSTATE()
+#define CORE_TEST_COREGETREGLOCKSTATE() \
+    CORE_TEST_POS_COREGETREGLOCKSTATE(); \
+    CORE_TEST_NEG_COREGETREGLOCKSTATE()
 
 /* setScratchPadValue API */
-#define CORE_TEST_POS_SETSCRATCHPADVALUE() \
-    PLATFORM_RUN_TEST(test_pos_core_setScratchPadValue_reg1); \
-    PLATFORM_RUN_TEST(test_pos_core_setScratchPadValue_reg3); \
+#define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg1); \
+    PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg3); \
     PLATFORM_RUN_TEST(test_pos_core_scratchPadValue_boundary)
 
-#define CORE_TEST_NEG_SETSCRATCHPADVALUE() \
-    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum)
+#define CORE_TEST_NEG_CORESETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_coreSetScratchPadValue_nullParam_handle); \
+    PLATFORM_RUN_TEST(test_neg_core_coreSetScratchPadValue_outOfBounds_scratchPadRegNum)
 
-#define CORE_TEST_SETSCRATCHPADVALUE() \
-    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_SETSCRATCHPADVALUE()
+#define CORE_TEST_CORESETSCRATCHPADVALUE() \
+    CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_CORESETSCRATCHPADVALUE()
 
 /* getScratchPadValue API */
-#define CORE_TEST_POS_GETSCRATCHPADVALUE() \
-    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_reg2); \
-    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_reg4)
+#define CORE_TEST_POS_COREGETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg2); \
+    PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg4)
 
-#define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
-    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum); \
-    PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue)
+#define CORE_TEST_NEG_COREGETSCRATCHPADVALUE() \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetScratchPadValue_outOfBounds_scratchPadRegNum); \
+    PLATFORM_RUN_TEST(test_neg_core_coreGetScratchPadValue_nullValue)
 
-#define CORE_TEST_GETSCRATCHPADVALUE() \
-    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+#define CORE_TEST_COREGETSCRATCHPADVALUE() \
+    CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
 
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */
 /* ========================================================================== */
 
 #define CORE_TEST_RUN_POSITIVE() \
-    CORE_TEST_POS_GETSILICONREV(); \
-    CORE_TEST_POS_GETNVMREV(); \
-    CORE_TEST_POS_GETREGLOCKSTATE(); \
-    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_GETSCRATCHPADVALUE()
+    CORE_TEST_POS_COREGETSILREV(); \
+    CORE_TEST_POS_COREGETNVMREV(); \
+    CORE_TEST_POS_COREGETREGLOCKSTATE(); \
+    CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_COREGETSCRATCHPADVALUE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
-    CORE_TEST_NEG_GETSILICONREV(); \
-    CORE_TEST_NEG_GETNVMREV(); \
-    CORE_TEST_NEG_GETREGLOCKSTATE(); \
-    CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_GETSCRATCHPADVALUE()
+    CORE_TEST_NEG_COREGETSILREV(); \
+    CORE_TEST_NEG_COREGETNVMREV(); \
+    CORE_TEST_NEG_COREGETREGLOCKSTATE(); \
+    CORE_TEST_NEG_CORESETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
     CORE_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+/* Negative test functions */
+void test_neg_core_coreGetSilRev_nullParam_handle(void);
+void test_neg_core_coreGetSilRev_nullParam_siliconRev(void);
+void test_neg_core_coreGetNvmRev_nullParam_handle(void);
+void test_neg_core_coreGetNvmRev_nullParam_nvmRev(void);
+void test_neg_core_coreGetRegLockState_nullParam_handle(void);
+void test_neg_core_coreGetRegLockState_nullParam_lockState(void);
+void test_neg_core_coreSetScratchPadValue_nullParam_handle(void);
+void test_neg_core_coreSetScratchPadValue_outOfBounds_scratchPadRegNum(void);
+void test_neg_core_coreGetScratchPadValue_outOfBounds_scratchPadRegNum(void);
+void test_neg_core_coreGetScratchPadValue_nullValue(void);
+
+/* Positive test functions */
+void test_pos_core_coreGetSilRev(void);
+void test_pos_core_coreGetNvmRev(void);
+void test_pos_core_coreGetRegLockState(void);
+void test_pos_core_coreSetScratchPadValue_reg1(void);
+void test_pos_core_coreGetScratchPadValue_reg2(void);
+void test_pos_core_coreSetScratchPadValue_reg3(void);
+void test_pos_core_coreGetScratchPadValue_reg4(void);
+void test_pos_core_scratchPadValue_boundary(void);
 
 #ifdef __cplusplus
 }

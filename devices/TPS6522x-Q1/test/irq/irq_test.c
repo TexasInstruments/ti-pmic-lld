@@ -51,7 +51,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /**
  * @brief Test Pmic_irqSetMask with NULL handle
  */
-static void test_neg_irq_setMask_nullHandle(void)
+void test_neg_irq_irqSetMask_nullHandle(void)
 {
     int32_t status = Pmic_irqSetMask(NULL, PMIC_IRQ_ADC_CONV_READY_INT, PMIC_IRQ_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -60,7 +60,7 @@ static void test_neg_irq_setMask_nullHandle(void)
 /**
  * @brief Test Pmic_irqSetMask with invalid IRQ number
  */
-static void test_neg_irq_setMask_invalidIrqNum(void)
+void test_neg_irq_irqSetMask_invalidIrqNum(void)
 {
     int32_t status = Pmic_irqSetMask(&pmicHandle, PMIC_IRQ_INT_MAX + 1, PMIC_IRQ_MASK);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -69,7 +69,7 @@ static void test_neg_irq_setMask_invalidIrqNum(void)
 /**
  * @brief Test Pmic_irqSetMasks with NULL handle
  */
-static void test_neg_irq_setMasks_nullHandle(void)
+void test_neg_irq_irqSetMasks_nullHandle(void)
 {
     Pmic_IrqMask_t irqMasks[2] = {
         {.irqNum = PMIC_IRQ_ADC_CONV_READY_INT, .mask = PMIC_IRQ_MASK},
@@ -82,7 +82,7 @@ static void test_neg_irq_setMasks_nullHandle(void)
 /**
  * @brief Test Pmic_irqSetMasks with NULL irqMasks pointer
  */
-static void test_neg_irq_setMasks_nullIrqMasks(void)
+void test_neg_irq_irqSetMasks_nullIrqMasks(void)
 {
     int32_t status = Pmic_irqSetMasks(&pmicHandle, 2, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -91,7 +91,7 @@ static void test_neg_irq_setMasks_nullIrqMasks(void)
 /**
  * @brief Test Pmic_irqSetMasks with zero count
  */
-static void test_neg_irq_setMasks_zeroCount(void)
+void test_neg_irq_irqSetMasks_zeroCount(void)
 {
     Pmic_IrqMask_t irqMasks[1] = {{.irqNum = PMIC_IRQ_ADC_CONV_READY_INT, .mask = PMIC_IRQ_MASK}};
     int32_t status = Pmic_irqSetMasks(&pmicHandle, 0, irqMasks);
@@ -101,7 +101,7 @@ static void test_neg_irq_setMasks_zeroCount(void)
 /**
  * @brief Test Pmic_irqGetMask with NULL handle
  */
-static void test_neg_irq_getMask_nullHandle(void)
+void test_neg_irq_irqGetMask_nullHandle(void)
 {
     Pmic_IrqMask_t irqMasks[1] = {{.irqNum = PMIC_IRQ_ADC_CONV_READY_INT}};
     int32_t status = Pmic_irqGetMask(NULL, 1, irqMasks);
@@ -111,7 +111,7 @@ static void test_neg_irq_getMask_nullHandle(void)
 /**
  * @brief Test Pmic_irqGetMask with NULL irqMasks pointer
  */
-static void test_neg_irq_getMask_nullIrqMasks(void)
+void test_neg_irq_irqGetMask_nullIrqMasks(void)
 {
     int32_t status = Pmic_irqGetMask(&pmicHandle, 1, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -120,7 +120,7 @@ static void test_neg_irq_getMask_nullIrqMasks(void)
 /**
  * @brief Test Pmic_irqGetMask with zero count
  */
-static void test_neg_irq_getMask_zeroCount(void)
+void test_neg_irq_irqGetMask_zeroCount(void)
 {
     Pmic_IrqMask_t irqMasks[1] = {{.irqNum = PMIC_IRQ_ADC_CONV_READY_INT}};
     int32_t status = Pmic_irqGetMask(&pmicHandle, 0, irqMasks);
@@ -130,7 +130,7 @@ static void test_neg_irq_getMask_zeroCount(void)
 /**
  * @brief Test Pmic_irqGetStatus with NULL handle
  */
-static void test_neg_irq_getStatus_nullHandle(void)
+void test_neg_irq_irqGetStatus_nullHandle(void)
 {
     Pmic_IrqStatus_t irqStat = {0};
     int32_t status = Pmic_irqGetStatus(NULL, &irqStat);
@@ -140,7 +140,7 @@ static void test_neg_irq_getStatus_nullHandle(void)
 /**
  * @brief Test Pmic_irqGetStatus with NULL irqStat pointer
  */
-static void test_neg_irq_getStatus_nullIrqStat(void)
+void test_neg_irq_irqGetStatus_nullIrqStat(void)
 {
     int32_t status = Pmic_irqGetStatus(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -149,7 +149,7 @@ static void test_neg_irq_getStatus_nullIrqStat(void)
 /**
  * @brief Test Pmic_irqGetNextFlag with NULL irqStat pointer
  */
-static void test_neg_irq_getNextFlag_nullIrqStat(void)
+void test_neg_irq_irqGetNextFlag_nullIrqStat(void)
 {
     uint8_t irqNum = 0;
     int32_t status = Pmic_irqGetNextFlag(NULL, NULL, &irqNum);
@@ -159,7 +159,7 @@ static void test_neg_irq_getNextFlag_nullIrqStat(void)
 /**
  * @brief Test Pmic_irqGetNextFlag with NULL irqNum pointer
  */
-static void test_neg_irq_getNextFlag_nullIrqNum(void)
+void test_neg_irq_irqGetNextFlag_nullIrqNum(void)
 {
     Pmic_IrqStatus_t irqStat = {0};
     int32_t status = Pmic_irqGetNextFlag(NULL, &irqStat, NULL);
@@ -169,7 +169,7 @@ static void test_neg_irq_getNextFlag_nullIrqNum(void)
 /**
  * @brief Test Pmic_irqGetFlag with NULL handle
  */
-static void test_neg_irq_getFlag_nullHandle(void)
+void test_neg_irq_irqGetFlag_nullHandle(void)
 {
     bool flag = false;
     int32_t status = Pmic_irqGetFlag(NULL, PMIC_IRQ_ADC_CONV_READY_INT, &flag);
@@ -179,7 +179,7 @@ static void test_neg_irq_getFlag_nullHandle(void)
 /**
  * @brief Test Pmic_irqGetFlag with NULL flag pointer
  */
-static void test_neg_irq_getFlag_nullFlag(void)
+void test_neg_irq_irqGetFlag_nullFlag(void)
 {
     int32_t status = Pmic_irqGetFlag(&pmicHandle, PMIC_IRQ_ADC_CONV_READY_INT, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -188,7 +188,7 @@ static void test_neg_irq_getFlag_nullFlag(void)
 /**
  * @brief Test Pmic_irqGetFlag with invalid IRQ number
  */
-static void test_neg_irq_getFlag_invalidIrqNum(void)
+void test_neg_irq_irqGetFlag_invalidIrqNum(void)
 {
     bool flag = false;
     int32_t status = Pmic_irqGetFlag(&pmicHandle, PMIC_IRQ_INT_MAX + 1, &flag);
@@ -198,7 +198,7 @@ static void test_neg_irq_getFlag_invalidIrqNum(void)
 /**
  * @brief Test Pmic_irqClrFlag with NULL handle
  */
-static void test_neg_irq_clrFlag_nullHandle(void)
+void test_neg_irq_irqClrFlag_nullHandle(void)
 {
     int32_t status = Pmic_irqClrFlag(NULL, PMIC_IRQ_ADC_CONV_READY_INT);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -207,7 +207,7 @@ static void test_neg_irq_clrFlag_nullHandle(void)
 /**
  * @brief Test Pmic_irqClrFlag with invalid IRQ number
  */
-static void test_neg_irq_clrFlag_invalidIrqNum(void)
+void test_neg_irq_irqClrFlag_invalidIrqNum(void)
 {
     int32_t status = Pmic_irqClrFlag(&pmicHandle, PMIC_IRQ_INT_MAX + 1);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -216,7 +216,7 @@ static void test_neg_irq_clrFlag_invalidIrqNum(void)
 /**
  * @brief Test Pmic_irqClrAllFlags with NULL handle
  */
-static void test_neg_irq_clrAllFlags_nullHandle(void)
+void test_neg_irq_irqClrAllFlags_nullHandle(void)
 {
     int32_t status = Pmic_irqClrAllFlags(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -229,7 +229,7 @@ static void test_neg_irq_clrAllFlags_nullHandle(void)
 /**
  * @brief Test single IRQ mask set and get
  */
-static void test_pos_irq_setGetMask_single(void)
+void test_pos_irq_irqSetGetMask_single(void)
 {
     int32_t status;
     Pmic_IrqMask_t irqMask = {.irqNum = PMIC_IRQ_ADC_CONV_READY_INT};
@@ -256,7 +256,7 @@ static void test_pos_irq_setGetMask_single(void)
 /**
  * @brief Test multiple IRQ masks set at once
  */
-static void test_pos_irq_setMasks_multiple(void)
+void test_pos_irq_irqSetMasks_multiple(void)
 {
     int32_t status;
     Pmic_IrqMask_t irqMasksSet[4] = {
@@ -298,7 +298,7 @@ static void test_pos_irq_setMasks_multiple(void)
 /**
  * @brief Test IRQ status reading
  */
-static void test_pos_irq_getStatus_read(void)
+void test_pos_irq_irqGetStatus_read(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -310,7 +310,7 @@ static void test_pos_irq_getStatus_read(void)
 /**
  * @brief Test IRQ flag get and clear
  */
-static void test_pos_irq_getClrFlag_single(void)
+void test_pos_irq_irqGetClrFlag_single(void)
 {
     int32_t status;
     bool flag = false;
@@ -327,7 +327,7 @@ static void test_pos_irq_getClrFlag_single(void)
 /**
  * @brief Test IRQ clear all flags
  */
-static void test_pos_irq_clrAllFlags(void)
+void test_pos_irq_irqClrAllFlags(void)
 {
     int32_t status;
 
@@ -338,7 +338,7 @@ static void test_pos_irq_clrAllFlags(void)
 /**
  * @brief Test IRQ next flag iteration
  */
-static void test_pos_irq_getNextFlag_iteration(void)
+void test_pos_irq_irqGetNextFlag_iteration(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -357,7 +357,7 @@ static void test_pos_irq_getNextFlag_iteration(void)
 /**
  * @brief Test masking all maskable interrupts
  */
-static void test_pos_irq_setMask_allMaskable(void)
+void test_pos_irq_irqSetMask_allMaskable(void)
 {
     int32_t status;
 
@@ -424,7 +424,7 @@ static void test_pos_irq_setMask_allMaskable(void)
 /**
  * @brief Test GPIO interrupt masks
  */
-static void test_pos_irq_setGetMask_gpioInt(void)
+void test_pos_irq_irqSetGetMask_gpioInt(void)
 {
     int32_t status;
     uint8_t gpioIrqs[] = {
@@ -469,7 +469,7 @@ static void test_pos_irq_setGetMask_gpioInt(void)
 /**
  * @brief Test power rail UVOV interrupt masks
  */
-static void test_pos_irq_setGetMask_powerUvov(void)
+void test_pos_irq_irqSetGetMask_powerUvov(void)
 {
     int32_t status;
     uint8_t powerIrqs[] = {
@@ -503,7 +503,7 @@ static void test_pos_irq_setGetMask_powerUvov(void)
 /**
  * @brief Test ESM interrupt masks
  */
-static void test_pos_irq_setGetMask_esmInt(void)
+void test_pos_irq_irqSetGetMask_esmInt(void)
 {
     int32_t status;
 
@@ -530,7 +530,7 @@ static void test_pos_irq_setGetMask_esmInt(void)
 /**
  * @brief Test FSM error interrupt masks
  */
-static void test_pos_irq_setGetMask_fsmErrorInt(void)
+void test_pos_irq_irqSetGetMask_fsmErrorInt(void)
 {
     int32_t status;
     uint8_t fsmIrqs[] = {
@@ -560,7 +560,7 @@ static void test_pos_irq_setGetMask_fsmErrorInt(void)
 /**
  * @brief Test miscellaneous interrupt masks
  */
-static void test_pos_irq_setGetMask_miscInt(void)
+void test_pos_irq_irqSetGetMask_miscInt(void)
 {
     int32_t status;
     uint8_t miscIrqs[] = {
@@ -597,7 +597,7 @@ static void test_pos_irq_setGetMask_miscInt(void)
 /**
  * @brief Test thermal warning interrupt
  */
-static void test_pos_irq_setGetMask_thermalWarning(void)
+void test_pos_irq_irqSetGetMask_thermalWarning(void)
 {
     int32_t status;
 
@@ -616,7 +616,7 @@ static void test_pos_irq_setGetMask_thermalWarning(void)
 /**
  * @brief Test ADC conversion ready interrupt
  */
-static void test_pos_irq_setGetMask_adcConvReady(void)
+void test_pos_irq_irqSetGetMask_adcConvReady(void)
 {
     int32_t status;
 
@@ -635,7 +635,7 @@ static void test_pos_irq_setGetMask_adcConvReady(void)
 /**
  * @brief Test push button interrupts
  */
-static void test_pos_irq_setGetMask_pushButton(void)
+void test_pos_irq_irqSetGetMask_pushButton(void)
 {
     int32_t status;
     uint8_t pbIrqs[] = {
@@ -661,7 +661,7 @@ static void test_pos_irq_setGetMask_pushButton(void)
 /**
  * @brief Test negative case: attempt to mask non-maskable interrupt
  */
-static void test_neg_irq_setMask_nonMaskable(void)
+void test_neg_irq_irqSetMask_nonMaskable(void)
 {
     int32_t status;
 
@@ -705,7 +705,7 @@ static void test_neg_irq_setMask_nonMaskable(void)
 /**
  * @brief Test positive case: IRQ status with active flags
  */
-static void test_pos_irq_getStatus_withActiveFlags(void)
+void test_pos_irq_irqGetStatus_withActiveFlags(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -722,7 +722,7 @@ static void test_pos_irq_getStatus_withActiveFlags(void)
 /**
  * @brief Test positive case: IRQ next flag iteration with multiple flags
  */
-static void test_pos_irq_getNextFlag_multipleFlags(void)
+void test_pos_irq_irqGetNextFlag_multipleFlags(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -771,7 +771,7 @@ static void test_pos_irq_getNextFlag_multipleFlags(void)
 /**
  * @brief Test reading mask for non-maskable interrupts
  */
-static void test_pos_irq_getMask_nonMaskable(void)
+void test_pos_irq_irqGetMask_nonMaskable(void)
 {
     int32_t status;
     Pmic_IrqMask_t irqMasks[9] = {
@@ -804,7 +804,7 @@ static void test_pos_irq_getMask_nonMaskable(void)
  * - bitIndex = irqNum % 32U
  * - intrStat[arrayIndex] |= (1U << bitIndex)
  */
-static void test_pos_irq_getNextFlag_fromArray(void)
+void test_pos_irq_irqGetNextFlag_fromArray(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -855,7 +855,7 @@ static void test_pos_irq_getNextFlag_fromArray(void)
  * @brief Test negative case: setMask with invalid IRQ number beyond PMIC_IRQ_INT_MAX
  * This ensures bounds checking for IRQ numbers > 48
  */
-static void test_neg_irq_setMask_invalidIrqNumBeyondMax(void)
+void test_neg_irq_irqSetMask_invalidIrqNumBeyondMax(void)
 {
     /* Try to set mask for an IRQ number that's way out of range */
     int32_t status = Pmic_irqSetMask(&pmicHandle, 100U, PMIC_IRQ_MASK);
@@ -870,7 +870,7 @@ static void test_neg_irq_setMask_invalidIrqNumBeyondMax(void)
  * @brief Test negative case: Pmic_irqGetFlag with invalid IRQ number
  * Tests error path for irqNum > PMIC_IRQ_INT_MAX (lines 391-393)
  */
-static void test_neg_irq_getFlag_invalidIrqNumBeyondMax(void)
+void test_neg_irq_irqGetFlag_invalidIrqNumBeyondMax(void)
 {
     bool flag = false;
     /* Try to get flag for IRQ number 50 (beyond max 48) */
@@ -882,7 +882,7 @@ static void test_neg_irq_getFlag_invalidIrqNumBeyondMax(void)
  * @brief Test negative case: Pmic_irqClrFlag with invalid IRQ number
  * Tests error path for irqNum > PMIC_IRQ_INT_MAX (lines 414-416)
  */
-static void test_neg_irq_clrFlag_invalidIrqNumBeyondMax(void)
+void test_neg_irq_irqClrFlag_invalidIrqNumBeyondMax(void)
 {
     /* Try to clear flag for IRQ number 60 (beyond max 48) */
     int32_t status = Pmic_irqClrFlag(&pmicHandle, 60U);
@@ -893,7 +893,7 @@ static void test_neg_irq_clrFlag_invalidIrqNumBeyondMax(void)
  * @brief Test positive case: Mask a specific interrupt
  * Tests masking and verifying specific interrupt (covers lines 439-448)
  */
-static void test_pos_irq_setMask_specific(void)
+void test_pos_irq_irqSetMask_specific(void)
 {
     int32_t status;
 
@@ -912,7 +912,7 @@ static void test_pos_irq_setMask_specific(void)
  * @brief Test positive case: Unmask a specific interrupt
  * Tests unmasking specific interrupt (covers lines 499-502, 512-516)
  */
-static void test_pos_irq_setMask_unmaskSpecific(void)
+void test_pos_irq_irqSetMask_unmaskSpecific(void)
 {
     int32_t status;
 
@@ -935,7 +935,7 @@ static void test_pos_irq_setMask_unmaskSpecific(void)
  * @brief Test Pmic_irqGetMask with invalid IRQ number in masks array
  * Covers lines 250-251 in pmic_irq.c
  */
-static void test_neg_irq_getMask_invalidIrqInArray(void)
+void test_neg_irq_irqGetMask_invalidIrqInArray(void)
 {
     Pmic_IrqMask_t irqMasks[2] = {
         {.irqNum = PMIC_IRQ_ADC_CONV_READY_INT},  /* Valid */
@@ -950,7 +950,7 @@ static void test_neg_irq_getMask_invalidIrqInArray(void)
  * @brief Test Pmic_irqGetStatus with set flags
  * Covers lines 325-331 in pmic_irq.c (flag detection and array population)
  */
-static void test_pos_irq_getStatus_withSetFlag(void)
+void test_pos_irq_irqGetStatus_withSetFlag(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -977,7 +977,7 @@ static void test_pos_irq_getStatus_withSetFlag(void)
  * @brief Test Pmic_irqGetNextFlag with set flags
  * Covers lines 362-368 in pmic_irq.c (flag iteration logic)
  */
-static void test_pos_irq_getNextFlag_withSetFlag(void)
+void test_pos_irq_irqGetNextFlag_withSetFlag(void)
 {
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
@@ -1013,123 +1013,6 @@ static void test_pos_irq_getNextFlag_withSetFlag(void)
     status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 }
-
-/* ========================================================================== */
-/*                         Test Execution Macros                              */
-/* ========================================================================== */
-
-/* Pmic_irqSetMask / Pmic_irqSetMasks / Pmic_irqGetMask Tests */
-#define IRQ_TEST_POS_SETGETMASK() \
-    RUN_TEST(test_pos_irq_setGetMask_single); \
-    RUN_TEST(test_pos_irq_setMasks_multiple); \
-    RUN_TEST(test_pos_irq_setMask_allMaskable); \
-    RUN_TEST(test_pos_irq_setGetMask_gpioInt); \
-    RUN_TEST(test_pos_irq_setGetMask_powerUvov); \
-    RUN_TEST(test_pos_irq_setGetMask_esmInt); \
-    RUN_TEST(test_pos_irq_setGetMask_fsmErrorInt); \
-    RUN_TEST(test_pos_irq_setGetMask_miscInt); \
-    RUN_TEST(test_pos_irq_setGetMask_thermalWarning); \
-    RUN_TEST(test_pos_irq_setGetMask_adcConvReady); \
-    RUN_TEST(test_pos_irq_setGetMask_pushButton); \
-    RUN_TEST(test_pos_irq_getMask_nonMaskable); \
-    RUN_TEST(test_pos_irq_setMask_specific); \
-    RUN_TEST(test_pos_irq_setMask_unmaskSpecific)
-
-#define IRQ_TEST_NEG_SETGETMASK() \
-    RUN_TEST(test_neg_irq_setMask_nullHandle); \
-    RUN_TEST(test_neg_irq_setMask_invalidIrqNum); \
-    RUN_TEST(test_neg_irq_setMask_nonMaskable); \
-    RUN_TEST(test_neg_irq_setMask_invalidIrqNumBeyondMax); \
-    RUN_TEST(test_neg_irq_setMasks_nullHandle); \
-    RUN_TEST(test_neg_irq_setMasks_nullIrqMasks); \
-    RUN_TEST(test_neg_irq_setMasks_zeroCount); \
-    RUN_TEST(test_neg_irq_getMask_nullHandle); \
-    RUN_TEST(test_neg_irq_getMask_nullIrqMasks); \
-    RUN_TEST(test_neg_irq_getMask_zeroCount); \
-    RUN_TEST(test_neg_irq_getMask_invalidIrqInArray)
-
-#define IRQ_TEST_SETGETMASK() \
-    IRQ_TEST_POS_SETGETMASK(); \
-    IRQ_TEST_NEG_SETGETMASK()
-
-/* Pmic_irqGetStatus Tests */
-#define IRQ_TEST_POS_GETSTATUS() \
-    RUN_TEST(test_pos_irq_getStatus_read); \
-    RUN_TEST(test_pos_irq_getStatus_withActiveFlags); \
-    RUN_TEST(test_pos_irq_getStatus_withSetFlag)
-
-#define IRQ_TEST_NEG_GETSTATUS() \
-    RUN_TEST(test_neg_irq_getStatus_nullHandle); \
-    RUN_TEST(test_neg_irq_getStatus_nullIrqStat)
-
-#define IRQ_TEST_GETSTATUS() \
-    IRQ_TEST_POS_GETSTATUS(); \
-    IRQ_TEST_NEG_GETSTATUS()
-
-/* Pmic_irqGetNextFlag Tests */
-#define IRQ_TEST_POS_GETNEXTFLAG() \
-    RUN_TEST(test_pos_irq_getNextFlag_iteration); \
-    RUN_TEST(test_pos_irq_getNextFlag_multipleFlags); \
-    RUN_TEST(test_pos_irq_getNextFlag_fromArray); \
-    RUN_TEST(test_pos_irq_getNextFlag_withSetFlag)
-
-#define IRQ_TEST_NEG_GETNEXTFLAG() \
-    RUN_TEST(test_neg_irq_getNextFlag_nullIrqStat); \
-    RUN_TEST(test_neg_irq_getNextFlag_nullIrqNum)
-
-#define IRQ_TEST_GETNEXTFLAG() \
-    IRQ_TEST_POS_GETNEXTFLAG(); \
-    IRQ_TEST_NEG_GETNEXTFLAG()
-
-/* Pmic_irqGetFlag Tests */
-#define IRQ_TEST_POS_GETFLAG() \
-    RUN_TEST(test_pos_irq_getClrFlag_single)
-
-#define IRQ_TEST_NEG_GETFLAG() \
-    RUN_TEST(test_neg_irq_getFlag_nullHandle); \
-    RUN_TEST(test_neg_irq_getFlag_nullFlag); \
-    RUN_TEST(test_neg_irq_getFlag_invalidIrqNum); \
-    RUN_TEST(test_neg_irq_getFlag_invalidIrqNumBeyondMax)
-
-#define IRQ_TEST_GETFLAG() \
-    IRQ_TEST_POS_GETFLAG(); \
-    IRQ_TEST_NEG_GETFLAG()
-
-/* Pmic_irqClrFlag / Pmic_irqClrAllFlags Tests */
-#define IRQ_TEST_POS_CLRFLAG() \
-    RUN_TEST(test_pos_irq_clrAllFlags)
-
-#define IRQ_TEST_NEG_CLRFLAG() \
-    RUN_TEST(test_neg_irq_clrFlag_nullHandle); \
-    RUN_TEST(test_neg_irq_clrFlag_invalidIrqNum); \
-    RUN_TEST(test_neg_irq_clrFlag_invalidIrqNumBeyondMax); \
-    RUN_TEST(test_neg_irq_clrAllFlags_nullHandle)
-
-#define IRQ_TEST_CLRFLAG() \
-    IRQ_TEST_POS_CLRFLAG(); \
-    IRQ_TEST_NEG_CLRFLAG()
-
-/* Aggregate Test Macros */
-#define IRQ_TEST_RUN_POSITIVE() \
-    IRQ_TEST_POS_SETGETMASK(); \
-    IRQ_TEST_POS_GETSTATUS(); \
-    IRQ_TEST_POS_GETNEXTFLAG(); \
-    IRQ_TEST_POS_GETFLAG(); \
-    IRQ_TEST_POS_CLRFLAG()
-
-#define IRQ_TEST_RUN_NEGATIVE() \
-    IRQ_TEST_NEG_SETGETMASK(); \
-    IRQ_TEST_NEG_GETSTATUS(); \
-    IRQ_TEST_NEG_GETNEXTFLAG(); \
-    IRQ_TEST_NEG_GETFLAG(); \
-    IRQ_TEST_NEG_CLRFLAG()
-
-#define IRQ_TEST_RUN_ALL() \
-    IRQ_TEST_SETGETMASK(); \
-    IRQ_TEST_GETSTATUS(); \
-    IRQ_TEST_GETNEXTFLAG(); \
-    IRQ_TEST_GETFLAG(); \
-    IRQ_TEST_CLRFLAG()
 
 /* ========================================================================== */
 /*                         Entry Point Function                               */

@@ -42,60 +42,7 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - init/deinit                       */
-/* ========================================================================== */
-
-#define PMIC_TEST_POS_INIT() \
-    PLATFORM_RUN_TEST(test_pos_pmic_init); \
-    PLATFORM_RUN_TEST(test_pos_pmic_deinit); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
-
-#define PMIC_TEST_NEG_INIT() \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullPmicCfg); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCommHandle); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoRead); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIoWrite); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStop); \
-    PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqResponseCallback)
-
-#define PMIC_TEST_INIT() \
-    PMIC_TEST_POS_INIT(); \
-    PMIC_TEST_NEG_INIT()
-
-/* ========================================================================== */
-/*               API-Specific Test Macros - checkHandle                       */
-/* ========================================================================== */
-
-#define PMIC_TEST_NEG_CHECKHANDLE() \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCommHandle); \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullFptrs); \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidDrvInitStat)
-
-#define PMIC_TEST_CHECKHANDLE() \
-    PMIC_TEST_NEG_CHECKHANDLE()
-
-/* ========================================================================== */
-/*                        Aggregate Test Macros                               */
-/* ========================================================================== */
-
-#define PMIC_TEST_RUN_POSITIVE() \
-    PMIC_TEST_POS_INIT()
-
-#define PMIC_TEST_RUN_NEGATIVE() \
-    PMIC_TEST_NEG_INIT(); \
-    PMIC_TEST_NEG_CHECKHANDLE()
-
-#define PMIC_TEST_RUN_ALL() \
-    PMIC_TEST_INIT(); \
-    PMIC_TEST_CHECKHANDLE()
+/* Test macros moved to pmic_test.h */
 
 /* ========================================================================== */
 /*                           Function Declarations                            */

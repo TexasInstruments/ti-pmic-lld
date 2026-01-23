@@ -49,6 +49,243 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgSetEnableState                      */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGSETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgEnable_enableDisable)
+
+#define WDG_TEST_NEG_WDGSETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgEnable_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgDisable_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_nullHandle)
+
+#define WDG_TEST_WDGSETENABLESTATE() \
+    WDG_TEST_POS_WDGSETENABLESTATE(); \
+    WDG_TEST_NEG_WDGSETENABLESTATE()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgGetEnableState                      */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGGETENABLESTATE() \
+    /* Positive tests combined with wdgSetEnableState */
+
+#define WDG_TEST_NEG_WDGGETENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullParam)
+
+#define WDG_TEST_WDGGETENABLESTATE() \
+    WDG_TEST_POS_WDGGETENABLESTATE(); \
+    WDG_TEST_NEG_WDGGETENABLESTATE()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgSetCfg                              */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGSETCFG() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_longWindowDuration); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_window1Duration); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_window2Duration); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_failThreshold); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_resetThreshold); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_threshold1IntBehavior); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_wdgMode); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_threshold2IntBehavior); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_returnLongWindow); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_QA_feedback); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_QA_LFSR); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_QA_questionSeed); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_timeBase)
+
+#define WDG_TEST_NEG_WDGSETCFG() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidMode); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidTimeBase); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold1); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold2); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaFdbk); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaLfsr); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaQuesSeed); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold1IntBehavior); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_zeroValidParams)
+
+#define WDG_TEST_WDGSETCFG() \
+    WDG_TEST_POS_WDGSETCFG(); \
+    WDG_TEST_NEG_WDGSETCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgGetCfg                              */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGGETCFG() \
+    /* Positive tests combined with wdgSetCfg */
+
+#define WDG_TEST_NEG_WDGGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig)
+
+#define WDG_TEST_WDGGETCFG() \
+    WDG_TEST_POS_WDGGETCFG(); \
+    WDG_TEST_NEG_WDGGETCFG()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgSetAnswerCnt                        */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGSETANSWERCNT() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_fullSequence); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk0); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk1); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk2); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk3); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_differentSeeds); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_differentLfsr)
+
+#define WDG_TEST_NEG_WDGSETANSWERCNT() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
+
+#define WDG_TEST_WDGSETANSWERCNT() \
+    WDG_TEST_POS_WDGSETANSWERCNT(); \
+    WDG_TEST_NEG_WDGSETANSWERCNT()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgGetAnswerCnt                        */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGGETANSWERCNT() \
+    /* No dedicated positive tests - covered by wdgSetAnswerCnt tests */
+
+#define WDG_TEST_NEG_WDGGETANSWERCNT() \
+    /* No dedicated negative tests */
+
+#define WDG_TEST_WDGGETANSWERCNT() \
+    WDG_TEST_POS_WDGGETANSWERCNT(); \
+    WDG_TEST_NEG_WDGGETANSWERCNT()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgGetErrCnt                           */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGGETERRCNT() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_badEvent); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_goodEvent); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_wdFailCnt); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_allFields); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_failCntOnly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_badCntOnly)
+
+#define WDG_TEST_NEG_WDGGETERRCNT() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullParam)
+
+#define WDG_TEST_WDGGETERRCNT() \
+    WDG_TEST_POS_WDGGETERRCNT(); \
+    WDG_TEST_NEG_WDGGETERRCNT()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgTrigger                             */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGTRIGGER() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetMode_triggerMode); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetMode_qAndAMode)
+
+#define WDG_TEST_NEG_WDGTRIGGER() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_invalidMode)
+
+#define WDG_TEST_WDGTRIGGER() \
+    WDG_TEST_POS_WDGTRIGGER(); \
+    WDG_TEST_NEG_WDGTRIGGER()
+
+/* ========================================================================== */
+/*          API-Specific Test Macros - wdgGetStatus                           */
+/* ========================================================================== */
+
+#define WDG_TEST_POS_WDGGETSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_afterAnswerError); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_timeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_longWindowTimeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerEarlyError); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_sequenceErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_triggerEarly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_th1Int); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_th2Int); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_allFlags); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_timeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_longWindowTimeout); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_answerEarlyError); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_sequenceErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_answerErr); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_triggerEarly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_th1ErrorOnly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_th2ErrorOnly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_seqErrorOnly); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatusAll_whenNoErrors)
+
+#define WDG_TEST_NEG_WDGGETSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullParam); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_nullParam); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatusAll_nullHandle)
+
+#define WDG_TEST_WDGGETSTATUS() \
+    WDG_TEST_POS_WDGGETSTATUS(); \
+    WDG_TEST_NEG_WDGGETSTATUS()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define WDG_TEST_RUN_POSITIVE() \
+    PLATFORM_RUN_TEST(test_pos_wdg_testInject_debug); \
+    WDG_TEST_POS_WDGSETENABLESTATE(); \
+    WDG_TEST_POS_WDGGETENABLESTATE(); \
+    WDG_TEST_POS_WDGSETCFG(); \
+    WDG_TEST_POS_WDGGETCFG(); \
+    WDG_TEST_POS_WDGSETANSWERCNT(); \
+    WDG_TEST_POS_WDGGETANSWERCNT(); \
+    WDG_TEST_POS_WDGGETERRCNT(); \
+    WDG_TEST_POS_WDGTRIGGER(); \
+    WDG_TEST_POS_WDGGETSTATUS(); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_enable); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_disable); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_enable); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_disable)
+
+#define WDG_TEST_RUN_NEGATIVE() \
+    WDG_TEST_NEG_WDGSETENABLESTATE(); \
+    WDG_TEST_NEG_WDGGETENABLESTATE(); \
+    WDG_TEST_NEG_WDGSETCFG(); \
+    WDG_TEST_NEG_WDGGETCFG(); \
+    WDG_TEST_NEG_WDGSETANSWERCNT(); \
+    WDG_TEST_NEG_WDGGETANSWERCNT(); \
+    WDG_TEST_NEG_WDGGETERRCNT(); \
+    WDG_TEST_NEG_WDGTRIGGER(); \
+    WDG_TEST_NEG_WDGGETSTATUS(); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullParam); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullParam); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullParam)
+
+#define WDG_TEST_RUN_ALL() \
+    WDG_TEST_RUN_POSITIVE(); \
+    WDG_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 

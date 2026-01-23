@@ -50,6 +50,155 @@ extern "C" {
 /* ========================================================================== */
 
 void fsm_test(void *args);
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmClrRecovCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMCLRRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
+
+#define FSM_TEST_FSMCLRRECOVCNT() \
+    FSM_TEST_NEG_FSMCLRRECOVCNT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmClrResetCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMCLRRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmClrResetCnt_nullHandle)
+
+#define FSM_TEST_FSMCLRRESETCNT() \
+    FSM_TEST_NEG_FSMCLRRESETCNT()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmGetRecovCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMGETRECOVCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullRecovCnt)
+
+#define FSM_TEST_FSMGETRECOVCNT() \
+    FSM_TEST_NEG_FSMGETRECOVCNT()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmGetRecovCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
+
+#define FSM_TEST_NEG_FSMGETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
+
+#define FSM_TEST_FSMGETRECOVCNTTHR() \
+    FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRECOVCNTTHR()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmGetResetCnt                    */
+/* ========================================================================== */
+
+#define FSM_TEST_NEG_FSMGETRESETCNT() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullResetCnt)
+
+#define FSM_TEST_FSMGETRESETCNT() \
+    FSM_TEST_NEG_FSMGETRESETCNT()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmGetResetCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMGETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)
+
+#define FSM_TEST_NEG_FSMGETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullResetCntThr)
+
+#define FSM_TEST_FSMGETRESETCNTTHR() \
+    FSM_TEST_POS_FSMGETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRESETCNTTHR()
+
+/* ========================================================================== */
+/*               API-Specific Test Macros - fsmSetDevState                    */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_coldBootReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_offReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_safeRecovReq); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_warmResetReq)
+
+#define FSM_TEST_NEG_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidCmd); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle)
+
+#define FSM_TEST_FSMSETDEVSTATE() \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
+    FSM_TEST_NEG_FSMSETDEVSTATE()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmSetRecovCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
+
+#define FSM_TEST_NEG_FSMSETRECOVCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr)
+
+#define FSM_TEST_FSMSETRECOVCNTTHR() \
+    FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRECOVCNTTHR()
+
+/* ========================================================================== */
+/*              API-Specific Test Macros - fsmSetResetCntThr                  */
+/* ========================================================================== */
+
+#define FSM_TEST_POS_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)
+
+#define FSM_TEST_NEG_FSMSETRESETCNTTHR() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr)
+
+#define FSM_TEST_FSMSETRESETCNTTHR() \
+    FSM_TEST_POS_FSMSETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRESETCNTTHR()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define FSM_TEST_RUN_POSITIVE() \
+    FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_POS_FSMGETRESETCNTTHR(); \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
+    FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_POS_FSMSETRESETCNTTHR()
+
+#define FSM_TEST_RUN_NEGATIVE() \
+    FSM_TEST_NEG_FSMCLRRECOVCNT(); \
+    FSM_TEST_NEG_FSMCLRRESETCNT(); \
+    FSM_TEST_NEG_FSMGETRECOVCNT(); \
+    FSM_TEST_NEG_FSMGETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMGETRESETCNT(); \
+    FSM_TEST_NEG_FSMGETRESETCNTTHR(); \
+    FSM_TEST_NEG_FSMSETDEVSTATE(); \
+    FSM_TEST_NEG_FSMSETRECOVCNTTHR(); \
+    FSM_TEST_NEG_FSMSETRESETCNTTHR()
+
+#define FSM_TEST_RUN_ALL() \
+    FSM_TEST_RUN_POSITIVE(); \
+    FSM_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
 
 void test_neg_fsm_fsmClrRecovCnt_nullHandle(void);
 void test_neg_fsm_fsmClrResetCnt_nullHandle(void);

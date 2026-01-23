@@ -58,29 +58,29 @@ extern "C" {
 /* ========================================================================== */
 
 /* Positive tests for GPIO pin configuration */
-#define GPIO_TEST_POS_SETGETCFG_GPIO() \
+#define GPIO_TEST_POS_GPIOSETGETCFG_GPIO() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_functionality); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_polarity); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_all_params)
 
 /* Negative tests for GPIO pin configuration */
-#define GPIO_TEST_NEG_SETGETCFG_GPIO() \
+#define GPIO_TEST_NEG_GPIOSETGETCFG_GPIO() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_invalidValidParams)
 
 /* All tests for GPIO pin configuration */
-#define GPIO_TEST_SETGETCFG_GPIO() \
-    GPIO_TEST_NEG_SETGETCFG_GPIO(); \
-    GPIO_TEST_POS_SETGETCFG_GPIO()
+#define GPIO_TEST_GPIOSETGETCFG_GPIO() \
+    GPIO_TEST_NEG_GPIOSETGETCFG_GPIO(); \
+    GPIO_TEST_POS_GPIOSETGETCFG_GPIO()
 
 /* ========================================================================== */
 /*            Pmic_gpioSetCfg / Pmic_gpioGetCfg - NINT_GPI Pin                */
 /* ========================================================================== */
 
 /* Positive tests for NINT_GPI pin configuration */
-#define GPIO_TEST_POS_SETGETCFG_NINTGPI() \
+#define GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg); \
@@ -88,7 +88,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params)
 
 /* Negative tests for NINT_GPI pin configuration */
-#define GPIO_TEST_NEG_SETGETCFG_NINTGPI() \
+#define GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity); \
@@ -97,20 +97,20 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams)
 
 /* All tests for NINT_GPI pin configuration */
-#define GPIO_TEST_SETGETCFG_NINTGPI() \
-    GPIO_TEST_NEG_SETGETCFG_NINTGPI(); \
-    GPIO_TEST_POS_SETGETCFG_NINTGPI()
+#define GPIO_TEST_GPIOSETGETCFG_NINTGPI() \
+    GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI(); \
+    GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI()
 
 /* ========================================================================== */
 /*          Pmic_gpioSetCfg / Pmic_gpioGetCfg - Common Tests                  */
 /* ========================================================================== */
 
 /* Positive tests for common GPIO operations */
-#define GPIO_TEST_POS_SETGETCFG_COMMON() \
+#define GPIO_TEST_POS_GPIOSETGETCFG_COMMON() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpio_nIntGpi_repeatedFunctionality)
 
 /* Negative tests for common GPIO operations */
-#define GPIO_TEST_NEG_SETGETCFG_COMMON() \
+#define GPIO_TEST_NEG_GPIOSETGETCFG_COMMON() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nullGpioCfg); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidGpioPin); \
@@ -121,21 +121,21 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_zeroValidParams)
 
 /* All tests for common GPIO operations */
-#define GPIO_TEST_SETGETCFG_COMMON() \
-    GPIO_TEST_NEG_SETGETCFG_COMMON(); \
-    GPIO_TEST_POS_SETGETCFG_COMMON()
+#define GPIO_TEST_GPIOSETGETCFG_COMMON() \
+    GPIO_TEST_NEG_GPIOSETGETCFG_COMMON(); \
+    GPIO_TEST_POS_GPIOSETGETCFG_COMMON()
 
 /* ========================================================================== */
 /*                        GPIO Activation State                               */
 /* ========================================================================== */
 
 /* Positive tests for GPIO activation state */
-#define GPIO_TEST_POS_ACTIVATION() \
+#define GPIO_TEST_POS_GPIOACTIVATION() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioActivateDeactivate); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetActivationState)
 
 /* Negative tests for GPIO activation state */
-#define GPIO_TEST_NEG_ACTIVATION() \
+#define GPIO_TEST_NEG_GPIOACTIVATION() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetActivationState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioActivate_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioDeactivate_nullHandle); \
@@ -143,9 +143,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_nullActivated)
 
 /* All tests for GPIO activation state */
-#define GPIO_TEST_ACTIVATION() \
-    GPIO_TEST_NEG_ACTIVATION(); \
-    GPIO_TEST_POS_ACTIVATION()
+#define GPIO_TEST_GPIOACTIVATION() \
+    GPIO_TEST_NEG_GPIOACTIVATION(); \
+    GPIO_TEST_POS_GPIOACTIVATION()
 
 /* ========================================================================== */
 /*                     Aggregate Test Macros                                  */
@@ -153,24 +153,24 @@ extern "C" {
 
 /* Run all GPIO positive tests */
 #define GPIO_TEST_RUN_POSITIVE() \
-    GPIO_TEST_POS_SETGETCFG_GPIO(); \
-    GPIO_TEST_POS_SETGETCFG_NINTGPI(); \
-    GPIO_TEST_POS_SETGETCFG_COMMON(); \
-    GPIO_TEST_POS_ACTIVATION()
+    GPIO_TEST_POS_GPIOSETGETCFG_GPIO(); \
+    GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI(); \
+    GPIO_TEST_POS_GPIOSETGETCFG_COMMON(); \
+    GPIO_TEST_POS_GPIOACTIVATION()
 
 /* Run all GPIO negative tests */
 #define GPIO_TEST_RUN_NEGATIVE() \
-    GPIO_TEST_NEG_SETGETCFG_GPIO(); \
-    GPIO_TEST_NEG_SETGETCFG_NINTGPI(); \
-    GPIO_TEST_NEG_SETGETCFG_COMMON(); \
-    GPIO_TEST_NEG_ACTIVATION()
+    GPIO_TEST_NEG_GPIOSETGETCFG_GPIO(); \
+    GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI(); \
+    GPIO_TEST_NEG_GPIOSETGETCFG_COMMON(); \
+    GPIO_TEST_NEG_GPIOACTIVATION()
 
 /* Run all GPIO tests */
 #define GPIO_TEST_RUN_ALL() \
-    GPIO_TEST_SETGETCFG_GPIO(); \
-    GPIO_TEST_SETGETCFG_NINTGPI(); \
-    GPIO_TEST_SETGETCFG_COMMON(); \
-    GPIO_TEST_ACTIVATION()
+    GPIO_TEST_GPIOSETGETCFG_GPIO(); \
+    GPIO_TEST_GPIOSETGETCFG_NINTGPI(); \
+    GPIO_TEST_GPIOSETGETCFG_COMMON(); \
+    GPIO_TEST_GPIOACTIVATION()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

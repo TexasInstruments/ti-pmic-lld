@@ -51,6 +51,12 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/* Note: Test macros defined at end of header file */
+
+/* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 void power_test(void *args);
@@ -386,6 +392,8 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 #endif
 
 #ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /* ========================================================================== */
 /*                          Test Execution Macros                             */
@@ -396,52 +404,52 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRSETLDOCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_enable) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_mode) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vset) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vmonOnly) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeEn) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_deglitchSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvThr) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovThr) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ilimSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovpSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_scSel) \
-    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_rvConf)
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_mode); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vset); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_vmonOnly); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeEn); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_dischargeSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_deglitchSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovThr); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ilimSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_ovSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_uvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_scSel); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_rvConf);
 
 #define POWER_TEST_NEG_PWRSETLDOCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_ldoCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_mode) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_vset) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_dischargeSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_deglitchSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvThr) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovThr) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ilimSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovpSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_scSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_nullParam_ldoCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_mode); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_vset); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_dischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_deglitchSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ilimSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ovSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_scSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setLdoCfg_zeroValidParams)
 
 #define POWER_TEST_POS_PWRGETLDOCFG()  /* All positive tests covered by SET */
 
 #define POWER_TEST_NEG_PWRGETLDOCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getLdoCfg_zeroValidParams)
 
 #define POWER_TEST_PWRSETLDOCFG() \
-    POWER_TEST_POS_PWRSETLDOCFG() \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
 
 #define POWER_TEST_PWRGETLDOCFG() \
-    POWER_TEST_POS_PWRGETLDOCFG() \
+    POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
 
 /* ========================================================================== */
@@ -449,91 +457,91 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRSETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_active) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_active) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_active) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck2) \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_fpwmEn_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_pldnEn_disable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_active); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_enable_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck3)
 
 #define POWER_TEST_POS_PWRGETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck2) \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_uvSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_scSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_rvConf_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck3)
 
 #ifdef BUILD_MOCK
 #define POWER_TEST_NEG_PWRSETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_buckCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_invalidParam_resource) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_zeroValidParams) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vset) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_scSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate) \
-    PLATFORM_RUN_TEST(test_neg_power_buckSetCfg_ssmSel_outOfBounds) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetActiveNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetLpwrNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_vsetNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_vsetNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vmonOnlyNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidDischargeSel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidSlewRate) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_buckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_invalidParam_resource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vset); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_scSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate); \
+    PLATFORM_RUN_TEST(test_neg_power_buckSetCfg_ssmSel_outOfBounds); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetActiveNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vsetLpwrNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck1_vmonOnlyNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidDischargeSel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidSlewRate); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setUvlo_invalidBuck)
 #else
 #define POWER_TEST_NEG_PWRSETBUCKCFG()
@@ -541,16 +549,16 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 
 #ifdef BUILD_MOCK
 #define POWER_TEST_NEG_PWRGETBUCKCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_nullParam_buckCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_invalidParam_resource) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_zeroValidParams) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetActiveNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetLpwrNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_vsetNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_vsetNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_nullParam_buckCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_invalidParam_resource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetActiveNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vsetLpwrNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_vsetNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getUvlo_invalidBuck)
 #else
 #define POWER_TEST_NEG_PWRGETBUCKCFG()
@@ -558,119 +566,119 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 
 #ifdef BUILD_MOCK
 #define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED() \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck1_ignore) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck1_ignore) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck1_ignore) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck2_assertNint) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck3_allResponses) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck1_wait) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck2_ignore) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck3_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_mid) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_low) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_high) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_mid) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_mid) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val0) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val0) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val0) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val0) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck1_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck2_minMax) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck3_minMax) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_deglitchSel_allBucks) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvpSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvpSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2UvSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3UvSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2ScSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3ScSel) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1RvConf) \
-    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1IlimSel) \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck2Enable) \
-    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck2Enable) \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck2Voltage) \
-    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck2Voltage) \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck3Enable) \
-    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck3Enable) \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck3Voltage) \
-    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck3Voltage) \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck2) \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck3_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck1_ignore); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck1_ignore); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck1_ignore); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck2_assertNint); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck3_allResponses); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck1_wait); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck2_ignore); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_rvConf_buck3_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_low); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vset_buck1_boundary_high); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck1_val1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck2_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvThr_buck3_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck1_val1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck2_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val0); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ovThr_buck3_val3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck2_minMax); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_slewRate_buck3_minMax); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_deglitchSel_allBucks); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssmSel_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2OvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3OvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2UvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3UvSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck2ScSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck3ScSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1RvConf); \
+    PLATFORM_RUN_TEST(test_pos_power_buckSetCfg_buck1IlimSel); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck2Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck2Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck2Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck2Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetCfg_buck3Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetCfg_buck3Enable); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetVoutCfg_buck3Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck3Voltage); \
+    PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck3)
 #else
 #define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED()
 #endif
 
 #define POWER_TEST_PWRSETBUCKCFG() \
-    POWER_TEST_POS_PWRSETBUCKCFG() \
-    POWER_TEST_NEG_PWRSETBUCKCFG() \
+    POWER_TEST_POS_PWRSETBUCKCFG(); \
+    POWER_TEST_NEG_PWRSETBUCKCFG(); \
     POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED()
 
 #define POWER_TEST_PWRGETBUCKCFG() \
-    POWER_TEST_POS_PWRGETBUCKCFG() \
+    POWER_TEST_POS_PWRGETBUCKCFG(); \
     POWER_TEST_NEG_PWRGETBUCKCFG()
 
 /* ========================================================================== */
@@ -678,33 +686,33 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRSETTSDCFG() \
-    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnStayInSafeState) \
-    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_tsdImmLevel) \
-    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnLevel) \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnStayInSafeState); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_tsdImmLevel); \
+    PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnLevel); \
     PLATFORM_RUN_TEST(test_pos_power_tsdGetImmStatus)
 
 #define POWER_TEST_NEG_PWRSETTSDCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_tsdCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_tsdImmLevel) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_nullParam_tsdCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_tsdImmLevel); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setTsdCfg_zeroValidParams)
 
 #define POWER_TEST_POS_PWRGETTSDCFG()  /* All positive tests covered by SET */
 
 #define POWER_TEST_NEG_PWRGETTSDCFG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_tsdCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_tsdImmStat) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdCfg_nullParam_tsdCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_tsdImmStat); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getTsdCfg_zeroValidParams)
 
 #define POWER_TEST_PWRSETTSDCFG() \
-    POWER_TEST_POS_PWRSETTSDCFG() \
+    POWER_TEST_POS_PWRSETTSDCFG(); \
     POWER_TEST_NEG_PWRSETTSDCFG()
 
 #define POWER_TEST_PWRGETTSDCFG() \
-    POWER_TEST_POS_PWRGETTSDCFG() \
+    POWER_TEST_POS_PWRGETTSDCFG(); \
     POWER_TEST_NEG_PWRGETTSDCFG()
 
 /* ========================================================================== */
@@ -712,18 +720,18 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRGETRSRCSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck3) \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck3); \
     PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_ldo)
 
 #define POWER_TEST_NEG_PWRGETRSRCSTATUS() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_outOfBounds_resource)
 
 #define POWER_TEST_PWRGETRSRCSTATUS() \
-    POWER_TEST_POS_PWRGETRSRCSTATUS() \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()
 
 /* ========================================================================== */
@@ -731,34 +739,34 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG() \
-    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_ldo) \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_ldo); \
     PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_allResources)
 
 #define POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_zeroLen) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidPwrRsrc) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidPwrRsrc); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidBitPos)
 
 #define POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG()  /* All positive tests covered by SET */
 
 #define POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_zeroLen) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidResource) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidResource); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidBitPos)
 
 #define POWER_TEST_PWRSETBUCKLDOSEQTRIG() \
-    POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG() \
+    POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG()
 
 #define POWER_TEST_PWRGETBUCKLDOSEQTRIG() \
-    POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG() \
+    POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG()
 
 /* ========================================================================== */
@@ -766,34 +774,34 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_POS_PWRSETBUCKLDOSEQDLY() \
-    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck1) \
-    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck2) \
-    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck3) \
-    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_ldo) \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck1); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck2); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck3); \
+    PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_ldo); \
     PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_allResources)
 
 #define POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_zeroLen) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_nullParam_seqDlyCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_zeroLen); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_invalidConfig)
 
 #define POWER_TEST_POS_PWRGETBUCKLDOSEQDLY()  /* All positive tests covered by SET */
 
 #define POWER_TEST_NEG_PWRGETBUCKLDOSEQDLY() \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_pmicHandle) \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg) \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_zeroLen) \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_pmicHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_zeroLen); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_invalidConfig)
 
 #define POWER_TEST_PWRSETBUCKLDOSEQDLY() \
-    POWER_TEST_POS_PWRSETBUCKLDOSEQDLY() \
+    POWER_TEST_POS_PWRSETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY()
 
 #define POWER_TEST_PWRGETBUCKLDOSEQDLY() \
-    POWER_TEST_POS_PWRGETBUCKLDOSEQDLY() \
+    POWER_TEST_POS_PWRGETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQDLY()
 
 /* ========================================================================== */
@@ -801,35 +809,34 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
 /* ========================================================================== */
 
 #define POWER_TEST_RUN_POSITIVE() \
-    POWER_TEST_POS_PWRSETLDOCFG() \
-    POWER_TEST_POS_PWRGETLDOCFG() \
-    POWER_TEST_POS_PWRSETBUCKCFG() \
-    POWER_TEST_POS_PWRGETBUCKCFG() \
-    POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED() \
-    POWER_TEST_POS_PWRSETTSDCFG() \
-    POWER_TEST_POS_PWRGETTSDCFG() \
-    POWER_TEST_POS_PWRGETRSRCSTATUS() \
-    POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG() \
-    POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG() \
-    POWER_TEST_POS_PWRSETBUCKLDOSEQDLY() \
+    POWER_TEST_POS_PWRSETLDOCFG(); \
+    POWER_TEST_POS_PWRGETLDOCFG(); \
+    POWER_TEST_POS_PWRSETBUCKCFG(); \
+    POWER_TEST_POS_PWRGETBUCKCFG(); \
+    POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED(); \
+    POWER_TEST_POS_PWRSETTSDCFG(); \
+    POWER_TEST_POS_PWRGETTSDCFG(); \
+    POWER_TEST_POS_PWRGETRSRCSTATUS(); \
+    POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG(); \
+    POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG(); \
+    POWER_TEST_POS_PWRSETBUCKLDOSEQDLY(); \
     POWER_TEST_POS_PWRGETBUCKLDOSEQDLY()
 
 #define POWER_TEST_RUN_NEGATIVE() \
-    POWER_TEST_NEG_PWRSETLDOCFG() \
-    POWER_TEST_NEG_PWRGETLDOCFG() \
-    POWER_TEST_NEG_PWRSETBUCKCFG() \
-    POWER_TEST_NEG_PWRGETBUCKCFG() \
-    POWER_TEST_NEG_PWRSETTSDCFG() \
-    POWER_TEST_NEG_PWRGETTSDCFG() \
-    POWER_TEST_NEG_PWRGETRSRCSTATUS() \
-    POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG() \
-    POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG() \
-    POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY() \
+    POWER_TEST_NEG_PWRSETLDOCFG(); \
+    POWER_TEST_NEG_PWRGETLDOCFG(); \
+    POWER_TEST_NEG_PWRSETBUCKCFG(); \
+    POWER_TEST_NEG_PWRGETBUCKCFG(); \
+    POWER_TEST_NEG_PWRSETTSDCFG(); \
+    POWER_TEST_NEG_PWRGETTSDCFG(); \
+    POWER_TEST_NEG_PWRGETRSRCSTATUS(); \
+    POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG(); \
+    POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG(); \
+    POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQDLY()
 
 #define POWER_TEST_RUN_ALL() \
-    POWER_TEST_RUN_POSITIVE() \
+    POWER_TEST_RUN_POSITIVE(); \
     POWER_TEST_RUN_NEGATIVE()
-}
-#endif /* __cplusplus */
+
 #endif /* POWER_TEST_H */

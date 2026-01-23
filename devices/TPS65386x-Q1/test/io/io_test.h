@@ -46,6 +46,145 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+/*                    API-Specific Test Macros - ioTxByte                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOTXBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad2); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts)
+
+#define IO_TEST_NEG_IOTXBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_withRetryOnFailure)
+
+#define IO_TEST_IOTXBYTE() \
+    IO_TEST_POS_IOTXBYTE(); \
+    IO_TEST_NEG_IOTXBYTE()
+
+/* ========================================================================== */
+/*                    API-Specific Test Macros - ioRxByte                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IORXBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad2); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError)
+
+#define IO_TEST_NEG_IORXBYTE() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError)
+
+#define IO_TEST_IORXBYTE() \
+    IO_TEST_POS_IORXBYTE(); \
+    IO_TEST_NEG_IORXBYTE()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - ioTxByte_CS                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOTXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_scratchpad2)
+
+#define IO_TEST_NEG_IOTXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle)
+
+#define IO_TEST_IOTXBYTE_CS() \
+    IO_TEST_POS_IOTXBYTE_CS(); \
+    IO_TEST_NEG_IOTXBYTE_CS()
+
+/* ========================================================================== */
+/*                   API-Specific Test Macros - ioRxByte_CS                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IORXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_CS_scratchpad1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_CS_scratchpad2)
+
+#define IO_TEST_NEG_IORXBYTE_CS() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
+
+#define IO_TEST_IORXBYTE_CS() \
+    IO_TEST_POS_IORXBYTE_CS(); \
+    IO_TEST_NEG_IORXBYTE_CS()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - ioTxWordSeq                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOTXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxWordSeq_1byte); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxRxWordSeq_2bytes)
+
+#define IO_TEST_NEG_IOTXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_invalidCount)
+
+#define IO_TEST_IOTXWORDSEQ() \
+    IO_TEST_POS_IOTXWORDSEQ(); \
+    IO_TEST_NEG_IOTXWORDSEQ()
+
+/* ========================================================================== */
+/*                 API-Specific Test Macros - ioRxWordSeq                     */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IORXWORDSEQ() \
+    /* Positive tests combined with ioTxWordSeq tests */
+
+#define IO_TEST_NEG_IORXWORDSEQ() \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_nullRxData); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_invalidCount)
+
+#define IO_TEST_IORXWORDSEQ() \
+    IO_TEST_POS_IORXWORDSEQ(); \
+    IO_TEST_NEG_IORXWORDSEQ()
+
+/* ========================================================================== */
+/*                  API-Specific Test Macros - ioUpdateByte                   */
+/* ========================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_singleBitField); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_multiBitField)
+
+#define IO_TEST_NEG_IOUPDATEBYTE() \
+    /* No negative tests for ioUpdateByte */
+
+#define IO_TEST_IOUPDATEBYTE() \
+    IO_TEST_POS_IOUPDATEBYTE(); \
+    IO_TEST_NEG_IOUPDATEBYTE()
+
+/* ========================================================================== */
+/*                         Aggregate Test Runners                             */
+/* ========================================================================== */
+
+#define IO_TEST_RUN_POSITIVE() \
+    IO_TEST_POS_IOTXBYTE(); \
+    IO_TEST_POS_IORXBYTE(); \
+    IO_TEST_POS_IOTXBYTE_CS(); \
+    IO_TEST_POS_IORXBYTE_CS(); \
+    IO_TEST_POS_IOTXWORDSEQ(); \
+    IO_TEST_POS_IORXWORDSEQ()
+
+#define IO_TEST_RUN_NEGATIVE() \
+    IO_TEST_NEG_IOTXBYTE(); \
+    IO_TEST_NEG_IORXBYTE(); \
+    IO_TEST_NEG_IOTXBYTE_CS(); \
+    IO_TEST_NEG_IORXBYTE_CS(); \
+    IO_TEST_NEG_IOTXWORDSEQ(); \
+    IO_TEST_NEG_IORXWORDSEQ()
+
+#define IO_TEST_RUN_ALL() \
+    IO_TEST_RUN_POSITIVE(); \
+    IO_TEST_RUN_NEGATIVE()
+
+/* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
