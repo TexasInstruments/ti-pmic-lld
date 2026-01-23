@@ -25,6 +25,8 @@ build/
 
 # LDRA artifacts
 *.exh
+inszt_*.c
+*.backup
 
 # Documentation
 *.pdf
