@@ -117,7 +117,7 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
 
 int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
 {
-    Pmic_AdcCfg_t adcCfgLocal;
+    Pmic_AdcCfg_t adcCfgLocal = {0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 

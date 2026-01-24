@@ -2472,7 +2472,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrTsdCfg_t localTsdCfg;
+    Pmic_PwrTsdCfg_t localTsdCfg = {0};
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 
@@ -2549,7 +2549,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrTsdCfg_t localTsdCfg;
+    Pmic_PwrTsdCfg_t localTsdCfg = {0};
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 

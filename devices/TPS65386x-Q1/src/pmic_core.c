@@ -167,7 +167,7 @@ int32_t Pmic_setLockCfg(const Pmic_Handle_t *handle, const Pmic_Lock_t *config) 
 int32_t Pmic_getLockCfg(const Pmic_Handle_t *handle, Pmic_Lock_t *config) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    Pmic_Lock_t localConfig;
+    Pmic_Lock_t localConfig = {0};
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);

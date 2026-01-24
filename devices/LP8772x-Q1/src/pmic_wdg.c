@@ -850,7 +850,7 @@ int32_t Pmic_wdgGetFdbkRegData(const Pmic_Handle_t *handle, uint8_t *regData) {
 }
 
 int32_t Pmic_wdgExtractFdbk(const Pmic_Handle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
-    Pmic_WdgAnsInfo_t localWdgAnsInfo;
+    Pmic_WdgAnsInfo_t localWdgAnsInfo = {0};
     int32_t status = PMIC_ST_SUCCESS;
 
     if (wdgAnsInfo == NULL) {
@@ -880,7 +880,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(const Pmic_Handle_t *handle, uint8_t *re
 }
 
 int32_t Pmic_wdgExtractAnsCntAndQues(const Pmic_Handle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
-    Pmic_WdgAnsInfo_t localWdgAnsInfo;
+    Pmic_WdgAnsInfo_t localWdgAnsInfo = {0};
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {

@@ -246,7 +246,7 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
 
 int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpmCfg)
 {
-    Pmic_CoreLpmCfg_t localCfg;
+    Pmic_CoreLpmCfg_t localCfg = {0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -343,7 +343,7 @@ static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *handle, Pmic_CoreLpm
 
 int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
 {
-    Pmic_CoreLpmCfg_t localCfg;
+    Pmic_CoreLpmCfg_t localCfg = {0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
