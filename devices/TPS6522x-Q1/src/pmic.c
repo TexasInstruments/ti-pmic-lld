@@ -66,7 +66,7 @@
  */
 static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
 }
 
 static int32_t getPmicInfo(Pmic_Handle_t *handle)

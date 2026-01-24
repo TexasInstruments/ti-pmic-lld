@@ -61,23 +61,23 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 static inline void FSM_copyFsmCfg(const Pmic_FsmCfg_t *src, Pmic_FsmCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmCfg_t));
 }
 
 static inline void FSM_copyFsmWakeupCfg(const Pmic_FsmWakeupCfg_t *src, Pmic_FsmWakeupCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupCfg_t));
 }
 
 static inline void FSM_copyFsmWakeupStat(const Pmic_FsmWakeupStat_t *src, Pmic_FsmWakeupStat_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupStat_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmWakeupStat_t));
 }
 
 static inline void FSM_copyFsmPwrLatchCfg(const Pmic_FsmPwrLatchCfg_t *src, Pmic_FsmPwrLatchCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatchCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatchCfg_t));
 }
 
 static inline void FSM_copyFsmPwrLatch(const Pmic_FsmPwrLatch_t *src, Pmic_FsmPwrLatch_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatch_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmPwrLatch_t));
 }
 
 int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t state)

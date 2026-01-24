@@ -56,7 +56,7 @@
  */
 static inline void FSM_copyFsmTriggerCfg(const Pmic_FsmTriggerCfg_t *src, Pmic_FsmTriggerCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmTriggerCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmTriggerCfg_t));
 }
 
 /**
@@ -64,7 +64,7 @@ static inline void FSM_copyFsmTriggerCfg(const Pmic_FsmTriggerCfg_t *src, Pmic_F
  */
 static inline void FSM_copyFsmGpioTriggerCfg(const Pmic_FsmGpioTriggerCfg_t *src, Pmic_FsmGpioTriggerCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmGpioTriggerCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_FsmGpioTriggerCfg_t));
 }
 
 /* GPIO pin mapping table entry */

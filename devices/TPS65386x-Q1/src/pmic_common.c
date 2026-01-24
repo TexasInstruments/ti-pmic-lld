@@ -150,7 +150,7 @@ static inline bool isValidWarningId(uint16_t statusId) {
 }
 
 static inline void copyDiagnostic(const Pmic_Diagnostic_t *src, Pmic_Diagnostic_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_Diagnostic_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_Diagnostic_t));
 }
 
 /*
@@ -316,7 +316,7 @@ int32_t Pmic_getDiagnostic(const Pmic_Handle_t *handle, Pmic_Diagnostic_t *diagn
 
     // If status isn't valid (invalid type or ID), increment error counter and return
     if (statusCheck != PMIC_ST_SUCCESS) {
-        incrementErrCnt(statusCheck);
+        (void)incrementErrCnt(statusCheck);
         Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
         return statusCheck;
     }
@@ -401,7 +401,7 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
         // If status isn't valid (invalid type or ID), increment error counter and return
         statusCheck = statusCodeCheck(localDiagnostics[i].code);
         if (statusCheck != PMIC_ST_SUCCESS) {
-            incrementErrCnt(statusCheck);
+            (void)incrementErrCnt(statusCheck);
             Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
             return statusCheck;
         }
@@ -479,7 +479,7 @@ int32_t Pmic_clrDiagnostic(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t 
 
     // If status isn't valid (invalid type or ID), increment error counter and return
     if (statusCheck != PMIC_ST_SUCCESS) {
-        incrementErrCnt(statusCheck);
+        (void)incrementErrCnt(statusCheck);
         Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
         return statusCheck;
     }
@@ -563,7 +563,7 @@ int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t
         // If status isn't valid (invalid type or ID), increment error counter and return
         statusCheck = statusCodeCheck(localDiagnostics[i].code);
         if (statusCheck != PMIC_ST_SUCCESS) {
-            incrementErrCnt(statusCheck);
+            (void)incrementErrCnt(statusCheck);
             Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
             return statusCheck;
         }

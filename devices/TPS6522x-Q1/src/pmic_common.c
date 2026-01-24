@@ -132,7 +132,7 @@ static inline bool isValidWarningId(uint16_t statusId) {
 }
 
 static inline void copyDiagnostic(const Pmic_Diagnostic_t *src, Pmic_Diagnostic_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_Diagnostic_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_Diagnostic_t));
 }
 
 /*

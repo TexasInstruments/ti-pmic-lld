@@ -50,11 +50,11 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 static inline void ESM_copyEsmCfg(const Pmic_EsmCfg_t *src, Pmic_EsmCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmCfg_t));
 }
 
 static inline void ESM_copyEsmStatus(const Pmic_EsmStatus_t *src, Pmic_EsmStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmStatus_t));
 }
 
 int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)

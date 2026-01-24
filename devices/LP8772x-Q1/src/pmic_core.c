@@ -94,7 +94,7 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 }
 
 static inline void CORE_copyConfigCrcStat(const Pmic_ConfigCrcStat_t *src, Pmic_ConfigCrcStat_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_ConfigCrcStat_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_ConfigCrcStat_t));
 }
 
 int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t value)

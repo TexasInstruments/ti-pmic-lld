@@ -70,7 +70,7 @@
  */
 static inline void PWR_copyPwrBuckCfg(const Pmic_PwrBuckCfg_t *src, Pmic_PwrBuckCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckCfg_t));
 }
 
 /**
@@ -78,7 +78,7 @@ static inline void PWR_copyPwrBuckCfg(const Pmic_PwrBuckCfg_t *src, Pmic_PwrBuck
  */
 static inline void PWR_copyPwrLdoCfg(const Pmic_PwrLdoCfg_t *src, Pmic_PwrLdoCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
 }
 
 /**
@@ -86,7 +86,7 @@ static inline void PWR_copyPwrLdoCfg(const Pmic_PwrLdoCfg_t *src, Pmic_PwrLdoCfg
  */
 static inline void PWR_copyPwrVccaVmonCfg(const Pmic_PwrVccaVmonCfg_t *src, Pmic_PwrVccaVmonCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrVccaVmonCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrVccaVmonCfg_t));
 }
 
 /**
@@ -94,7 +94,7 @@ static inline void PWR_copyPwrVccaVmonCfg(const Pmic_PwrVccaVmonCfg_t *src, Pmic
  */
 static inline void PWR_copyPwrThermalCfg(const Pmic_PwrThermalCfg_t *src, Pmic_PwrThermalCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrThermalCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrThermalCfg_t));
 }
 
 /**
@@ -102,7 +102,7 @@ static inline void PWR_copyPwrThermalCfg(const Pmic_PwrThermalCfg_t *src, Pmic_P
  */
 static inline void PWR_copyPwrSpreadSpectrumCfg(const Pmic_PwrSpreadSpectrumCfg_t *src, Pmic_PwrSpreadSpectrumCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrSpreadSpectrumCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrSpreadSpectrumCfg_t));
 }
 
 /**
@@ -110,7 +110,7 @@ static inline void PWR_copyPwrSpreadSpectrumCfg(const Pmic_PwrSpreadSpectrumCfg_
  */
 static inline void PWR_copyPwrRsrcStatus(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
 
 // Get the resource ID from resource value

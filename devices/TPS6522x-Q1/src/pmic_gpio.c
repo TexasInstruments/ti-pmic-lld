@@ -56,7 +56,7 @@
  */
 static inline void GPIO_copyGpioPinCfg(const Pmic_GpioPinCfg_t *src, Pmic_GpioPinCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioPinCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioPinCfg_t));
 }
 
 /**
@@ -64,7 +64,7 @@ static inline void GPIO_copyGpioPinCfg(const Pmic_GpioPinCfg_t *src, Pmic_GpioPi
  */
 static inline void GPIO_copyGpioNIntEnDrvCfg(const Pmic_GpioNIntEnDrvCfg_t *src, Pmic_GpioNIntEnDrvCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioNIntEnDrvCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioNIntEnDrvCfg_t));
 }
 
 /**
@@ -72,7 +72,7 @@ static inline void GPIO_copyGpioNIntEnDrvCfg(const Pmic_GpioNIntEnDrvCfg_t *src,
  */
 static inline void GPIO_copyGpioEnPbVSenseStatus(const Pmic_GpioEnPbVSenseStatus_t *src, Pmic_GpioEnPbVSenseStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioEnPbVSenseStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioEnPbVSenseStatus_t));
 }
 
 static int32_t GPIO_validatePinNum(uint8_t pinNum);

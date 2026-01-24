@@ -117,11 +117,11 @@ typedef enum {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static inline void PWR_copyPowerSequenceCfg(const Pmic_PowerSequenceCfg_t *src, Pmic_PowerSequenceCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerSequenceCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerSequenceCfg_t));
 }
 
 static inline void PWR_copyPowerResourceCfg(const Pmic_PowerResourceCfg_t *src, Pmic_PowerResourceCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerResourceCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PowerResourceCfg_t));
 }
 
 static bool PWR_isResourceValid(const uint8_t validResources[], uint8_t numValid, uint8_t resource)

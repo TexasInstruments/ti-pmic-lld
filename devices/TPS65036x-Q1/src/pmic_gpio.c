@@ -51,7 +51,7 @@
 
 static inline void GPIO_copyGpioCfg(const Pmic_GpioCfg_t *src, Pmic_GpioCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioCfg_t));
 }
 
 /** @brief Set PMIC GPIO configuration (the GPIO pin that's not nINT_GPI) */

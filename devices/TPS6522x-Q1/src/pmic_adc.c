@@ -50,7 +50,7 @@
  */
 static inline void ADC_copyAdcCfg(const Pmic_AdcCfg_t *src, Pmic_AdcCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_AdcCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_AdcCfg_t));
 }
 
 int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)

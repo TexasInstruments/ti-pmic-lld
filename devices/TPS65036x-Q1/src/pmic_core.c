@@ -43,12 +43,12 @@
 
 static inline void CORE_copyGpioCfg(const Pmic_CoreCrc16Cfg_t *src, Pmic_CoreCrc16Cfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreCrc16Cfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreCrc16Cfg_t));
 }
 
 static inline void CORE_copyLpmCfg(const Pmic_CoreLpmCfg_t *src, Pmic_CoreLpmCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreLpmCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_CoreLpmCfg_t));
 }
 
 int32_t Pmic_getNvmRev(const Pmic_Handle_t *handle, uint8_t *nvmRev)

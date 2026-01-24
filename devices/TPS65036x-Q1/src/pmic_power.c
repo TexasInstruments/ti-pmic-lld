@@ -70,32 +70,32 @@ static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *handle, const Pmic_Pwr
 
 static inline void PWR_copyBuckCfg(const Pmic_PwrBuckCfg_t *src, Pmic_PwrBuckCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckCfg_t));
 }
 
 static inline void PWR_copyLdoCfg(const Pmic_PwrLdoCfg_t *src, Pmic_PwrLdoCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
 }
 
 static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
 
 static inline void PWR_copyTsdCfg(const Pmic_PwrTsdCfg_t *src, Pmic_PwrTsdCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrTsdCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrTsdCfg_t));
 }
 
 static inline void PWR_copyBuckLdoSeqTrig(const Pmic_PwrBuckLdoSeqTrig_t *src, Pmic_PwrBuckLdoSeqTrig_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckLdoSeqTrig_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckLdoSeqTrig_t));
 }
 
 static inline void PWR_copyBuckLdoSeqDly(const Pmic_PwrBuckLdoSeqDly_t *src, Pmic_PwrBuckLdoSeqDly_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckLdoSeqDly_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckLdoSeqDly_t));
 }
 
 static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)

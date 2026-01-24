@@ -168,7 +168,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *pRx
             break;
         }
 
-        Pmic_incrementRetryCnt(handle);
+        (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
     } while (status != PMIC_ST_SUCCESS);
 
@@ -231,7 +231,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
             break;
         }
 
-        Pmic_incrementRetryCnt(handle);
+        (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
     } while (status != PMIC_ST_SUCCESS);
 

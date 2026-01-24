@@ -62,7 +62,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 static inline void GPIO_copyGpioCfg(const Pmic_GpioCfg_t *src, Pmic_GpioCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioCfg_t));
 }
 
 static int32_t GPIO_setCfgGpi1_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)

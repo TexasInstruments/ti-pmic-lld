@@ -52,17 +52,17 @@
 
 static inline void WDG_copyWdgCfg(const Pmic_WdgCfg_t *src, Pmic_WdgCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
 }
 
 static inline void WDG_copyWdgErrStat(const Pmic_WdgErrStatus_t *src, Pmic_WdgErrStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
 }
 
 static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStatus_t *src, Pmic_WdgFailCntStatus_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
 }
 
 static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t qaFdbk)

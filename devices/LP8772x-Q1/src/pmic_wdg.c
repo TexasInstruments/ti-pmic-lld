@@ -55,19 +55,19 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static inline void WDG_copyWdgCfg(const Pmic_WdgCfg_t *src, Pmic_WdgCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgCfg_t));
 }
 
 static inline void WDG_copyWdgError(const Pmic_WdgErrStatus_t *src, Pmic_WdgErrStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgErrStatus_t));
 }
 
 static inline void WDG_copyWdgFailCntStat(const Pmic_WdgFailCntStatus_t *src, Pmic_WdgFailCntStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgFailCntStatus_t));
 }
 
 static inline void WDG_copyWdgAnsInfo(const Pmic_WdgAnsInfo_t *src, Pmic_WdgAnsInfo_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgAnsInfo_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_WdgAnsInfo_t));
 }
 
 static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {

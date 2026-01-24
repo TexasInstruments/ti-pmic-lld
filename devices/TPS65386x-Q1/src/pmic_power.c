@@ -85,23 +85,23 @@ static const uint8_t ClearableStatRegs[NUM_CLEARABLE_POWER_STAT_REGS] = {
 /*                            Function Definitions                            */
 /* ========================================================================== */
 static inline void PWR_copyBuckBoostCfg(const Pmic_PwrBuckBoostCfg_t *src, Pmic_PwrBuckBoostCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckBoostCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrBuckBoostCfg_t));
 }
 
 static inline void PWR_copyLdoCfg(const Pmic_PwrLdoCfg_t *src, Pmic_PwrLdoCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrLdoCfg_t));
 }
 
 static inline void PWR_copyPldoCfg(const Pmic_PwrPldoCfg_t *src, Pmic_PwrPldoCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrPldoCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrPldoCfg_t));
 }
 
 static inline void PWR_copyExtVmonCfg(const Pmic_PwrExtVmonCfg_t *src, Pmic_PwrExtVmonCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrExtVmonCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrExtVmonCfg_t));
 }
 
 static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
 
 // Check if power resource is buck boost

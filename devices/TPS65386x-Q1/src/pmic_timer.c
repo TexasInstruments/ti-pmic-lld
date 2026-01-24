@@ -56,7 +56,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 static inline void TIMER_copyTimerCfg(const Pmic_TimerCfg_t *src, Pmic_TimerCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_TimerCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_TimerCfg_t));
 }
 
 int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *timerCfg)

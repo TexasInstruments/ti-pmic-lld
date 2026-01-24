@@ -560,11 +560,11 @@ static const uint8_t IrqConfRegisters[] = {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static inline void IRQ_copyIrqCfg(const Pmic_IrqCfg_t *src, Pmic_IrqCfg_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqCfg_t));
 }
 
 static inline void IRQ_copyIrqStat(const Pmic_IrqStatus_t *src, Pmic_IrqStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStatus_t));
 }
 
 static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)

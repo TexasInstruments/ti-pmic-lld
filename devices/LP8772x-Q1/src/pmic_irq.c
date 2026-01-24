@@ -135,11 +135,11 @@ static const Pmic_IrqInfo_t pmicIRQs[PMIC_IRQ_NUM] = {
 };
 
 static inline void IRQ_copyIrqMask(const Pmic_IrqMask_t *src, Pmic_IrqMask_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqMask_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqMask_t));
 }
 
 static inline void IRQ_copyIrqStat(const Pmic_IrqStatus_t *src, Pmic_IrqStatus_t *dst) {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStatus_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_IrqStatus_t));
 }
 
 static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)

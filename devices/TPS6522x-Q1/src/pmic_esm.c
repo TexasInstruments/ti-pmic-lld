@@ -50,7 +50,7 @@
  */
 static inline void ESM_copyEsmCfg(const Pmic_EsmCfg_t *src, Pmic_EsmCfg_t *dst)
 {
-    memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmCfg_t));
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_EsmCfg_t));
 }
 
 static int32_t ESM_setModeCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
