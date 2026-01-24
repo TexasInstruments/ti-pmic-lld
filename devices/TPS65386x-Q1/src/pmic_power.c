@@ -64,9 +64,6 @@
 
 #define CLEAR_ALL_STAT_BITS (0xFFU)
 
-/* Power resource field width - each resource uses 2-bit field in registers */
-#define PWR_RSRC_FIELD_WIDTH_BITS  ((uint8_t)2U)
-
 /* ========================================================================== */
 /*                           Variables and Data                               */
 /* ========================================================================== */
@@ -103,6 +100,96 @@ static inline void PWR_copyExtVmonCfg(const Pmic_PwrExtVmonCfg_t *src, Pmic_PwrE
 static inline void PWR_copyRsrcStat(const Pmic_PwrRsrcStatus_t *src, Pmic_PwrRsrcStatus_t *dst) {
     (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrRsrcStatus_t));
 }
+
+/*
+ * Lookup tables for LDO register addresses and bit shift positions.
+ * Indexed by resource ID (0-3 for LDO1-LDO4).
+ * Eliminates arithmetic operations that trigger NUM.OVERFLOW.DF violations.
+ * Uses existing regmap macros - no magic numbers.
+ */
+static const uint8_t LDO_CFG_REGS[4] = {
+    LDO1_CFG_REG,
+    LDO2_CFG_REG,
+    LDO3_CFG_REG,
+    LDO4_CFG_REG
+};
+
+static const uint8_t LDO_CTRL_SHIFTS[4] = {
+    LDO1_CTRL_SHIFT,
+    LDO2_CTRL_SHIFT,
+    LDO3_CTRL_SHIFT,
+    LDO4_CTRL_SHIFT
+};
+
+static const uint8_t LDO_VMON_TH_SHIFTS[4] = {
+    LDO1_VMON_TH_SHIFT,
+    LDO2_VMON_TH_SHIFT,
+    LDO3_VMON_TH_SHIFT,
+    LDO4_VMON_TH_SHIFT
+};
+
+static const uint8_t LDO_VMON_DGL_SHIFTS[4] = {
+    LDO1_VMON_DGL_SHIFT,
+    LDO2_VMON_DGL_SHIFT,
+    LDO3_VMON_DGL_SHIFT,
+    LDO4_VMON_DGL_SHIFT
+};
+
+static const uint8_t LDO_PGOOD_CFG_SHIFTS[4] = {
+    LDO1_PGOOD_CFG_SHIFT,
+    LDO2_PGOOD_CFG_SHIFT,
+    LDO3_PGOOD_CFG_SHIFT,
+    LDO4_PGOOD_CFG_SHIFT
+};
+
+static const uint8_t LDO_DSCG_DIS_SHIFTS[4] = {
+    LDO1_DSCG_DIS_SHIFT,
+    LDO2_DSCG_DIS_SHIFT,
+    LDO3_DSCG_DIS_SHIFT,
+    LDO4_DSCG_DIS_SHIFT
+};
+
+static const uint8_t LDO_ILIM_DGL_CFG_SHIFTS[4] = {
+    LDO1_ILIM_DGL_CFG_SHIFT,
+    LDO2_ILIM_DGL_CFG_SHIFT,
+    LDO3_ILIM_DGL_CFG_SHIFT,
+    LDO4_ILIM_DGL_CFG_SHIFT
+};
+
+static const uint8_t LDO_ILIM_ERR_SHIFTS[4] = {
+    LDO1_ILIM_ERR_SHIFT,
+    LDO2_ILIM_ERR_SHIFT,
+    LDO3_ILIM_ERR_SHIFT,
+    LDO4_ILIM_ERR_SHIFT
+};
+
+static const uint8_t LDO_UV_ERR_SHIFTS[4] = {
+    LDO1_UV_ERR_SHIFT,
+    LDO2_UV_ERR_SHIFT,
+    LDO3_UV_ERR_SHIFT,
+    LDO4_UV_ERR_SHIFT
+};
+
+static const uint8_t LDO_OV_ERR_SHIFTS[4] = {
+    LDO1_OV_ERR_SHIFT,
+    LDO2_OV_ERR_SHIFT,
+    LDO3_OV_ERR_SHIFT,
+    LDO4_OV_ERR_SHIFT
+};
+
+static const uint8_t LDO_TSD_ERR_SHIFTS[4] = {
+    LDO1_TSD_ERR_SHIFT,
+    LDO2_TSD_ERR_SHIFT,
+    LDO3_TSD_ERR_SHIFT,
+    LDO4_TSD_ERR_SHIFT
+};
+
+static const uint8_t LDO_T_PRE_ERR_SHIFTS[4] = {
+    LDO1_T_PRE_ERR_SHIFT,
+    LDO2_T_PRE_ERR_SHIFT,
+    LDO3_T_PRE_ERR_SHIFT,
+    LDO4_T_PRE_ERR_SHIFT
+};
 
 // Check if power resource is buck boost
 static inline bool PWR_isBuckBoost(uint16_t pwrRsrc)
@@ -461,7 +548,7 @@ static int32_t PWR_setLdoRtLvlIlimLvl(const Pmic_Handle_t *handle, const Pmic_Pw
     uint8_t regData = 0U;
 
     // LDOx_CFG registers are contiguous in the PMIC register map
-    const uint8_t ldoCfgReg = LDO1_CFG_REG + PWR_getRsrcId(ldoCfg->ldo);
+    const uint8_t ldoCfgReg = LDO_CFG_REGS[PWR_getRsrcId(ldoCfg->ldo)];
 
     // Read LDOx_CFG
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -535,7 +622,7 @@ static int32_t PWR_setLdoMode(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_
         if (status == PMIC_ST_SUCCESS)
         {
             // Calculate LDOx_CTRL shift and mask
-            shift = LDO1_CTRL_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_CTRL_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
             mask = (uint8_t)(LDO1_CTRL_MASK << shift);
 
             // Modify LDOx_CTRL and write LDO_CTRL
@@ -561,7 +648,7 @@ static int32_t PWR_setLdoPGoodCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdo
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_PGOOD_CFG shift
-        shift = LDO1_PGOOD_CFG_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+        shift = LDO_PGOOD_CFG_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
 
         // Modify LDOx_PGOOD_CFG and write LDO_PGOOD_CFG
         Pmic_setBitField_b(&regData, shift, ldoCfg->includeOvUvStatInPGood);
@@ -591,7 +678,7 @@ static int32_t PWR_setLdoVmonThr(const Pmic_Handle_t *handle, const Pmic_PwrLdoC
         if (status == PMIC_ST_SUCCESS)
         {
             // Calculate LDOx_VMON_TH shift and mask
-            shift = LDO1_VMON_TH_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_VMON_TH_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
             mask = (uint8_t)(LDO1_VMON_TH_MASK << shift);
 
             // Modify LDOx_VMON_TH and write VMON_TH_CFG1
@@ -623,7 +710,7 @@ static int32_t PWR_setLdoVmonDgl(const Pmic_Handle_t *handle, const Pmic_PwrLdoC
         if (status == PMIC_ST_SUCCESS)
         {
             // Calculate LDOx_VMON_DGL shift and mask
-            shift = LDO1_VMON_DGL_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_VMON_DGL_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
             mask = (uint8_t)(LDO1_VMON_DGL_MASK << shift);
 
             // Modify LDOx_VMON_DGL and write VMON_DGL_CFG2
@@ -649,7 +736,7 @@ static int32_t PWR_setLdoDischargeDisable(const Pmic_Handle_t *handle, const Pmi
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_DSCG_DIS shift
-        shift = LDO1_DSCG_DIS_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+        shift = LDO_DSCG_DIS_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
 
         // Modify LDOx_DSCG_DIS and write LDO_DSCG_CFG
         Pmic_setBitField_b(&regData, shift, ldoCfg->disableDischarge);
@@ -679,7 +766,7 @@ static int32_t PWR_setLdoIlimDgl(const Pmic_Handle_t *handle, const Pmic_PwrLdoC
         if (status == PMIC_ST_SUCCESS)
         {
             // Calculate LDOx_ILIM_DGL_CFG shift and mask
-            shift = LDO1_ILIM_DGL_CFG_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+            shift = LDO_ILIM_DGL_CFG_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
             mask = (uint8_t)(LDO1_ILIM_DGL_CFG_MASK << shift);
 
             // Modify LDOx_ILIM_DGL_CFG and write ILIM_DGL_CFG
@@ -767,7 +854,7 @@ static int32_t PWR_getLdoRtLvlIlimLvl(const Pmic_Handle_t *handle, Pmic_PwrLdoCf
     uint8_t regData = 0U;
 
     // LDOx_CFG registers are contiguous in the PMIC register map
-    const uint8_t reg = LDO1_CFG_REG + PWR_getRsrcId(ldoCfg->ldo);
+    const uint8_t reg = LDO_CFG_REGS[PWR_getRsrcId(ldoCfg->ldo)];
 
     // Read LDOx_CFG
     status = Pmic_ioRxByte_CS(handle, reg, &regData);
@@ -808,7 +895,7 @@ static int32_t PWR_getLdoMode(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldo
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_CTRL shift and mask
-        shift = LDO1_CTRL_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+        shift = LDO_CTRL_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
         mask = (uint8_t)(LDO1_CTRL_MASK << shift);
 
         // Extract LDOx_CTRL
@@ -830,7 +917,7 @@ static int32_t PWR_getLdoPGoodCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_PGOOD_CFG shift
-        shift = LDO1_PGOOD_CFG_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+        shift = LDO_PGOOD_CFG_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
 
         // Extract LDOx_PGOOD_CFG
         ldoCfg->includeOvUvStatInPGood = Pmic_getBitField_b(regData, shift);
@@ -851,7 +938,7 @@ static int32_t PWR_getLdoVmonThr(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_VMON_TH shift and mask
-        shift = LDO1_VMON_TH_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+        shift = LDO_VMON_TH_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
         mask = (uint8_t)(LDO1_VMON_TH_MASK << shift);
 
         // Extract LDOx_VMON_TH
@@ -873,7 +960,7 @@ static int32_t PWR_getLdoVmonDgl(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_VMON_DGL shift and mask
-        shift = LDO1_VMON_DGL_SHIFT + (uint8_t)(PWR_getRsrcId(ldoCfg->ldo) * PWR_RSRC_FIELD_WIDTH_BITS);
+        shift = LDO_VMON_DGL_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
         mask = (uint8_t)(LDO1_VMON_DGL_MASK << shift);
 
         // Extract LDOx_VMON_DGL
@@ -895,7 +982,7 @@ static int32_t PWR_getLdoDischargeDisable(const Pmic_Handle_t *handle, Pmic_PwrL
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_DSCG_DIS shift and mask
-        shift = LDO1_DSCG_DIS_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+        shift = LDO_DSCG_DIS_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
 
         // Extract LDOx_DSCG_DIS
         ldoCfg->disableDischarge = Pmic_getBitField_b(regData, shift);
@@ -916,7 +1003,7 @@ static int32_t PWR_getLdoIlimDgl(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *
     if (status == PMIC_ST_SUCCESS)
     {
         // Calculate LDOx_ILIM_DGL_CFG shift and mask
-        shift = LDO1_ILIM_DGL_CFG_SHIFT + PWR_getRsrcId(ldoCfg->ldo);
+        shift = LDO_ILIM_DGL_CFG_SHIFTS[PWR_getRsrcId(ldoCfg->ldo)];
         mask = (uint8_t)(LDO1_ILIM_DGL_CFG_MASK << shift);
 
         // Extract LDOx_ILIM_DGL_CFG
@@ -2184,14 +2271,14 @@ static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
         // Extract LDOx_UV_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_UV_ERR_VALID))
         {
-            shift = LDO1_UV_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_UV_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             pwrRsrcStat->uvErr = Pmic_getBitField_b(regData, shift);
         }
 
         // Extract LDOx_OV_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_OV_ERR_VALID))
         {
-            shift = LDO1_OV_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_OV_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             pwrRsrcStat->ovErr = Pmic_getBitField_b(regData, shift);
         }
     }
@@ -2204,7 +2291,7 @@ static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
         // Extract LDOx_ILIM_ERR
         if (status == PMIC_ST_SUCCESS)
         {
-            shift = LDO1_ILIM_ERR_SHIFT + PWR_getRsrcId(pwrRsrcStat->pwrRsrc);
+            shift = LDO_ILIM_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             pwrRsrcStat->ilimErr = Pmic_getBitField_b(regData, shift);
         }
     }
@@ -2222,14 +2309,14 @@ static int32_t PWR_getLdoStat(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
         // Extract LDOx_TSD_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_ERR_VALID))
         {
-            shift = LDO1_TSD_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_TSD_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             pwrRsrcStat->tsdErr = Pmic_getBitField_b(regData, shift);
         }
 
         // Extract LDOx_T_PRE_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_WARN_VALID))
         {
-            shift = LDO1_T_PRE_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_T_PRE_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             pwrRsrcStat->tsdWarn = Pmic_getBitField_b(regData, shift);
         }
     }
@@ -2523,14 +2610,14 @@ static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSta
         // Clear LDOx_UV_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_UV_ERR_VALID))
         {
-            shift = LDO1_UV_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_UV_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             Pmic_setBitField_b(&regData, shift, PMIC_CLEAR_STAT);
         }
 
         // Clear LDOx_OV_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_OV_ERR_VALID))
         {
-            shift = LDO1_OV_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_OV_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             Pmic_setBitField_b(&regData, shift, PMIC_CLEAR_STAT);
         }
 
@@ -2545,7 +2632,7 @@ static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSta
     if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID))
     {
         // Clear LDOx_ILIM_ERR
-        shift = LDO1_ILIM_ERR_SHIFT + PWR_getRsrcId(pwrRsrcStat->pwrRsrc);
+        shift = LDO_ILIM_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
         Pmic_setBitField_b(&regData, shift, PMIC_CLEAR_STAT);
 
         // Write ILIM_STAT
@@ -2558,14 +2645,14 @@ static int32_t PWR_clrLdoStat(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSta
         // Clear LDOx_TSD_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_ERR_VALID))
         {
-            shift = LDO1_TSD_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_TSD_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             Pmic_setBitField_b(&regData, shift, PMIC_CLEAR_STAT);
         }
 
         // Clear LDOx_T_PRE_ERR
         if (Pmic_validParamCheck(pwrRsrcStat->validParams, PMIC_PWR_RSRC_STAT_TSD_WARN_VALID))
         {
-            shift = LDO1_T_PRE_ERR_SHIFT + (uint8_t)(PWR_getRsrcId(pwrRsrcStat->pwrRsrc) * PWR_RSRC_FIELD_WIDTH_BITS);
+            shift = LDO_T_PRE_ERR_SHIFTS[PWR_getRsrcId(pwrRsrcStat->pwrRsrc)];
             Pmic_setBitField_b(&regData, shift, PMIC_CLEAR_STAT);
         }
 

@@ -202,7 +202,8 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
 int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U, iter = 0U;
+    uint8_t regData = 0U;
+    uint32_t iter = 0U;
     bool adcBusy = true;
 
     // Wait for ADC to become idle

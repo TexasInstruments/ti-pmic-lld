@@ -894,7 +894,8 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
 
 int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t lastProcessed = 0U, totalProcessed = 0U;
+    uint8_t lastProcessed = 0U;
+    uint16_t totalProcessed = 0U;
 
     // Parameter validation
     if ((status == PMIC_ST_SUCCESS) && (irqCfgs == NULL)) {
