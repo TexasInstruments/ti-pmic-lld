@@ -613,16 +613,12 @@ int32_t Pmic_clrDiagnosticsAll(const Pmic_Handle_t *handle) {
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
 
     // Reset all error counters and flags
-    for (uint8_t i = 0U; i <= PMIC_ST_ID_ERROR_MAX; i++) {
-        sysDiagnostics.errCnt[i] = 0U;
-        sysDiagnostics.errCntOverflow[i] = (bool)false;
-    }
+    (void)memset(sysDiagnostics.errCnt, 0, sizeof(sysDiagnostics.errCnt));
+    (void)memset(sysDiagnostics.errCntOverflow, 0, sizeof(sysDiagnostics.errCntOverflow));
 
     // Reset all warning counters and flags
-    for (uint8_t i = 0U; i <= PMIC_ST_ID_WARNING_MAX; i++) {
-        sysDiagnostics.warnCnt[i] = 0U;
-        sysDiagnostics.warnCntOverflow[i] = (bool)false;
-    }
+    (void)memset(sysDiagnostics.warnCnt, 0, sizeof(sysDiagnostics.warnCnt));
+    (void)memset(sysDiagnostics.warnCntOverflow, 0, sizeof(sysDiagnostics.warnCntOverflow));
 
     // Reset retry counter and associated flag
     sysDiagnostics.retryCnt = 0U;
