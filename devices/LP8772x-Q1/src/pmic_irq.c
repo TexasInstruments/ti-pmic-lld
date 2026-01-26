@@ -212,6 +212,8 @@ static int32_t IRQ_validateMasks(uint8_t numMasks, const Pmic_IrqMask_t masks[])
             status = PMIC_ST_ERR_INV_PARAM;
         } else if (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE) {
             status = PMIC_ST_ERR_NOT_SUPPORTED;
+        } else {
+            /* IRQ number is valid and maskable - status remains SUCCESS */
         }
 
         if (status != PMIC_ST_SUCCESS) {
