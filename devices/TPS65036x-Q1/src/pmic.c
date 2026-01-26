@@ -57,23 +57,17 @@ static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *
     (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
 }
 
-static int32_t validateAndSetI2CConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+static void setI2CConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     // i2cAddr0
     if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR0_VALID))
     {
         handle->i2cAddr0 = config->i2cAddr0;
     }
-
-    return status;
 }
 
-static int32_t validateAndSetRetryConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+static void setRetryConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     // retryCnt
     if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_CNT_VALID))
     {
@@ -85,8 +79,6 @@ static int32_t validateAndSetRetryConfig(Pmic_Handle_t *handle, const Pmic_Handl
     {
         handle->retryIntervalMs = config->retryIntervalMs;
     }
-
-    return status;
 }
 
 static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
@@ -198,11 +190,11 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Validate I2C configuration
-    status = validateAndSetI2CConfig(handle, config);
+    // Set I2C configuration
+    setI2CConfig(handle, config);
 
-    // Validate retry configuration
-    status = validateAndSetRetryConfig(handle, config);
+    // Set retry configuration
+    setRetryConfig(handle, config);
 
     // Validate communication handles
     status = validateAndSetUserHandles(handle, config);
