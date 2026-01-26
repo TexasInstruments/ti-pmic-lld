@@ -581,8 +581,8 @@ void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void)
         .validParams = PMIC_FUNCTIONALITY_VALID
     };
 
-    // Inject NINT_GPI_SEL = 3 (PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT_REPEATED)
-    // This should be converted to PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT
+    // Inject NINT_GPI_SEL = 3 (PMIC_NINT_GPI_LPM_INPUT_REPEATED)
+    // This should be converted to PMIC_NINT_GPI_LPM_INPUT
     testInject_setRegister(0x25U, 0x03U);  // FUNC_CONF reg (0x25), NINT_GPI_SEL is bits [1:0]
 
     status = Pmic_gpioGetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);

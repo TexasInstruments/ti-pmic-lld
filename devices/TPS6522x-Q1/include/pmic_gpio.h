@@ -210,18 +210,18 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_GpioEnPbVSenseFxnSel
+ * @anchor Pmic_GpioEnPbVSenseFn
  * @name PMIC GPIO ENABLE/PB/VSENSE Pin Function Select
  *
  * @brief Functionalities of the ENABLE/PB/VSENSE pin.
  *
  * @{
  */
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE (0U)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB     (1U)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE (2U)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MIN    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE (0U)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_PB     (1U)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE (2U)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_MIN    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_MAX    ((uint8_t)PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE)
 /** @} */
 
 /**
@@ -285,7 +285,7 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID    (1UL << 0U)
+#define PMIC_GPIO_EN_PB_VSENSE_FN_VALID    (1UL << 0U)
 #define PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID (1UL << 1U)
 /** @} */
 

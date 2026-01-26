@@ -192,7 +192,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     return status;
 }
 
-static int32_t validateComms(Pmic_Handle_t *handle) {
+static int32_t validateComms(const Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 

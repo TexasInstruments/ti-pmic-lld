@@ -631,9 +631,9 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
     status = Pmic_ioRxByte(handle, POWER_ON_CONFIG_REG, &regData);
 
     // Set function select
-    if (Pmic_validParamStatusCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FN_VALID, status))
     {
-        if (enPbVSenseCfgLocal.fxnSel > PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_MAX)
+        if (enPbVSenseCfgLocal.fxnSel > PMIC_GPIO_EN_PB_VSENSE_FN_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -651,16 +651,16 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
 
         // Get current or new function selection to validate deglitch
         uint8_t fxnSel = Pmic_getBitField(regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK);
-        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
+        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FN_VALID))
         {
             fxnSel = enPbVSenseCfgLocal.fxnSel;
         }
 
-        if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE)
+        if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE)
         {
             validDegl = (enPbVSenseCfgLocal.enPbDegl <= PMIC_GPIO_EN_DEGL_MAX);
         }
-        else if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB)
+        else if (fxnSel == PMIC_GPIO_EN_PB_VSENSE_FN_PB)
         {
             validDegl = (enPbVSenseCfgLocal.enPbDegl <= PMIC_GPIO_PB_DEGL_MAX);
         }
@@ -721,7 +721,7 @@ int32_t Pmic_gpioGetEnPbVSenseCfg(const Pmic_Handle_t *handle, Pmic_GpioNIntEnDr
     if (status == PMIC_ST_SUCCESS)
     {
         // Get function select
-        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID))
+        if (Pmic_validParamCheck(enPbVSenseCfgLocal.validParams, PMIC_GPIO_EN_PB_VSENSE_FN_VALID))
         {
             enPbVSenseCfgLocal.fxnSel = Pmic_getBitField(regData, EN_PB_VSENSE_CONFIG_SHIFT, EN_PB_VSENSE_CONFIG_MASK);
         }
@@ -762,10 +762,8 @@ int32_t Pmic_gpioGetEnPbVSenseStatus(const Pmic_Handle_t *handle, Pmic_GpioEnPbV
     GPIO_copyGpioEnPbVSenseStatus(enPbVSenseStatus, &enPbVSenseStatusLocal);
 
     // Read STAT_STARTUP register for EN/PB/VSENSE status
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioRxByte_CS(handle, STAT_STARTUP_REG, &regData);
-    }
+    // Status guaranteed SUCCESS here due to early returns above
+    status = Pmic_ioRxByte_CS(handle, STAT_STARTUP_REG, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {

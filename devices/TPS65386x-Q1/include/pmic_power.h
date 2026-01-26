@@ -471,8 +471,8 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_PLDO_DISABLED                      (0U)
-#define PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER             (1U)
-#define PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER_AND_STBY    (2U)
+#define PMIC_PWR_PLDO_EN_LDO_OPER                   (1U)
+#define PMIC_PWR_PLDO_EN_LDO_OPER_AND_STBY          (2U)
 #define PMIC_PWR_PLDO_EN_AS_VMON_IN_OPER            (3U)
 #define PMIC_PWR_PLDO_EN_AS_ROTATION_COUNTER        (4U)
 #define PMIC_PWR_PLDO1_MODE_MAX                     (PMIC_PWR_PLDO_EN_AS_VMON_IN_OPER) // Max user-settable value

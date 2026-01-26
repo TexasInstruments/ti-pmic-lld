@@ -104,8 +104,8 @@ extern "C" {
 #define PMIC_GPIO_FUNCTIONALITY_MAX         (PMIC_GPIO_OUTPUT)
 #define PMIC_NINT_GPI_NINT                  ((uint8_t)0U)
 #define PMIC_NINT_GPI_WDG_TRIG_MODE_INPUT   ((uint8_t)1U)
-#define PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT   ((uint8_t)2U)
-#define PMIC_NINT_GPI_FUNCTIONALITY_MAX     (PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT)
+#define PMIC_NINT_GPI_LPM_INPUT             ((uint8_t)2U)
+#define PMIC_NINT_GPI_FUNCTIONALITY_MAX     (PMIC_NINT_GPI_LPM_INPUT)
 /** @} */
 
 /**

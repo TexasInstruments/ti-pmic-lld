@@ -284,10 +284,8 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_fsmSetTrigSel1(handle, &triggerCfgLocal);
-    }
+    // Status guaranteed SUCCESS here due to early return above
+    status = Pmic_fsmSetTrigSel1(handle, &triggerCfgLocal);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -323,10 +321,8 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_fsmGetTrigSel1(handle, &triggerCfgLocal);
-    }
+    // Status guaranteed SUCCESS here - all validations passed
+    status = Pmic_fsmGetTrigSel1(handle, &triggerCfgLocal);
 
     if (status == PMIC_ST_SUCCESS)
     {

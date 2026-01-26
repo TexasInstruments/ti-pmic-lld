@@ -156,7 +156,7 @@ int32_t Pmic_setLockCfg(const Pmic_Handle_t *handle, const Pmic_Lock_t *config) 
     }
 
     if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
-        status = Pmic_setCntLockState(handle, (uint8_t)localConfig.cntLock);
+        status = Pmic_setCntLockState(handle, (localConfig.cntLock != false) ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE);
     }
 
     return Pmic_logStatus(handle, status);

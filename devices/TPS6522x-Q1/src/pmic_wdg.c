@@ -252,12 +252,12 @@ static int32_t Pmic_wdgSetModeReg(const Pmic_Handle_t *handle, const Pmic_WdgCfg
     {
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_MODE_SEL_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_MODE_SELECT_SHIFT, WD_MODE_SELECT_MASK, (bool)wdgCfg->mode);
+            Pmic_setBitField_b(&regData, WD_MODE_SELECT_SHIFT, WD_MODE_SELECT_MASK, (wdgCfg->mode != 0U));
         }
 
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_CNT_SEL_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_CNT_SEL_SHIFT, WD_CNT_SEL_MASK, (bool)wdgCfg->cntSel);
+            Pmic_setBitField_b(&regData, WD_CNT_SEL_SHIFT, WD_CNT_SEL_MASK, (wdgCfg->cntSel != 0U));
         }
 
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_EN_DRV_SEL_VALID))

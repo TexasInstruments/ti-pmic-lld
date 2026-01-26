@@ -328,7 +328,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
                 // Set the corresponding bit in the status array
                 uint8_t arrayIndex = irqNum / 32U;
                 uint8_t bitIndex = irqNum % 32U;
-                irqStatLocal.intrStat[arrayIndex] |= (uint8_t)(1U << bitIndex);
+                irqStatLocal.intrStat[arrayIndex] |= ((uint32_t)1U << bitIndex);
             }
         }
     }

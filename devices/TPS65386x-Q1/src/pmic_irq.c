@@ -914,11 +914,10 @@ int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic
             break;
         }
 
-        if (status == PMIC_ST_SUCCESS) {
-            lastProcessed = 0U;
-            status = IRQ_handleRecordsForRegMask(handle, numIrqs, irqCfgs, IrqMaskRegisters[regIndex], &lastProcessed);
-            totalProcessed += lastProcessed;
-        }
+        // Status guaranteed SUCCESS here due to loop break condition above
+        lastProcessed = 0U;
+        status = IRQ_handleRecordsForRegMask(handle, numIrqs, irqCfgs, IrqMaskRegisters[regIndex], &lastProcessed);
+        totalProcessed += lastProcessed;
     }
 
     // Reset tracking variables
@@ -933,10 +932,9 @@ int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic
             break;
         }
 
-        if (status == PMIC_ST_SUCCESS) {
-            status = IRQ_handleRecordsForRegConfig(handle, numIrqs, irqCfgs, IrqConfRegisters[regIndex], &lastProcessed);
-            totalProcessed += lastProcessed;
-        }
+        // Status guaranteed SUCCESS here due to loop break condition above
+        status = IRQ_handleRecordsForRegConfig(handle, numIrqs, irqCfgs, IrqConfRegisters[regIndex], &lastProcessed);
+        totalProcessed += lastProcessed;
     }
 
     return Pmic_logStatus(handle, status);

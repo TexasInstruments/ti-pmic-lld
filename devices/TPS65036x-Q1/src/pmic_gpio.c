@@ -47,7 +47,7 @@
  * @brief The NINT_GPI_SEL bit field of FUNC_CONF register has two bit fields
  * that are the same. This define is to indicate the repeated bit field.
  */
-#define PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT_REPEATED ((uint8_t)3U)
+#define PMIC_NINT_GPI_LPM_INPUT_REPEATED ((uint8_t)3U)
 
 static inline void GPIO_copyGpioCfg(const Pmic_GpioCfg_t *src, Pmic_GpioCfg_t *dst)
 {
@@ -276,9 +276,9 @@ static int32_t GPIO_getNINTGPICfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *g
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_FUNCTIONALITY_VALID))
         {
             gpioCfg->functionality = Pmic_getBitField(regData, PMIC_NINT_GPI_SEL_SHIFT, PMIC_NINT_GPI_SEL_MASK);
-            if (gpioCfg->functionality == PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT_REPEATED)
+            if (gpioCfg->functionality == PMIC_NINT_GPI_LPM_INPUT_REPEATED)
             {
-                gpioCfg->functionality = PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT;
+                gpioCfg->functionality = PMIC_NINT_GPI_LPM_INPUT;
             }
         }
     }
