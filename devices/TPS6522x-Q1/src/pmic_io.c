@@ -231,7 +231,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 
             (void)Pmic_incrementRetryCnt(handle);
             Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-        } while (status != PMIC_ST_SUCCESS);
+        } while (true);
     }
     // I2C MODE
     else
@@ -276,7 +276,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 
             (void)Pmic_incrementRetryCnt(handle);
             Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-        } while (status != PMIC_ST_SUCCESS);
+        } while (true);
     }
 
     return status;
@@ -363,7 +363,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
 
             (void)Pmic_incrementRetryCnt(handle);
             Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-        } while (status != PMIC_ST_SUCCESS);
+        } while (true);
 
         // Save data
         if (status == PMIC_ST_SUCCESS)
@@ -416,7 +416,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
 
             (void)Pmic_incrementRetryCnt(handle);
             Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-        } while (status != PMIC_ST_SUCCESS);
+        } while (true);
 
         // Store read data
         if (status == PMIC_ST_SUCCESS)

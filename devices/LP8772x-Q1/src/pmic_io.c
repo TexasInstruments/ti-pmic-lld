@@ -170,7 +170,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *pRx
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (status != PMIC_ST_SUCCESS);
+    } while (true);
 
     // Store read data
     if (status == PMIC_ST_SUCCESS) {
@@ -233,7 +233,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (status != PMIC_ST_SUCCESS);
+    } while (true);
 
     return status;
 }

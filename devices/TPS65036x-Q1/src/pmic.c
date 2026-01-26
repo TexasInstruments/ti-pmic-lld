@@ -202,16 +202,10 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
     status = validateAndSetI2CConfig(handle, config);
 
     // Validate retry configuration
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = validateAndSetRetryConfig(handle, config);
-    }
+    status = validateAndSetRetryConfig(handle, config);
 
     // Validate communication handles
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = validateAndSetUserHandles(handle, config);
-    }
+    status = validateAndSetUserHandles(handle, config);
 
     // Validate user-implemented hooks
     if (status == PMIC_ST_SUCCESS)
