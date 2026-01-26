@@ -328,7 +328,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
                 // Set the corresponding bit in the status array
                 uint8_t arrayIndex = irqNum / 32U;
                 uint8_t bitIndex = irqNum % 32U;
-                irqStatLocal.intrStat[arrayIndex] |= (1UL << bitIndex);
+                irqStatLocal.intrStat[arrayIndex] |= (1U << bitIndex);
             }
         }
     }
@@ -364,7 +364,7 @@ int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqSt
             {
                 *irqNum = i;
                 // Clear this bit so next call returns the next flag
-                irqStat->intrStat[arrayIndex] &= ~(1UL << bitIndex);
+                irqStat->intrStat[arrayIndex] &= ~(1U << bitIndex);
                 foundFlag = true;
                 break;
             }

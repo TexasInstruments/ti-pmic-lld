@@ -750,7 +750,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
 
     if (status == PMIC_ST_SUCCESS)
     {
-        (void)memset(localStat.intrStat, 0U, sizeof(localStat.intrStat));
+        (void)memset(localStat.intrStat, 0, sizeof(localStat.intrStat));
 
         status = IRQ_readL0(handle, &localStat);
     }

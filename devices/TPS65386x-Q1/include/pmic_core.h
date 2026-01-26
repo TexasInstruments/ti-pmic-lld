@@ -169,10 +169,10 @@ typedef struct Pmic_Lock_s {
  * Used to read back pin states and register lock status
  */
 typedef struct Pmic_CommonCtrlStat_s {
-    uint8_t nRstPin;          /**< NRST pin status (readback from STAT_READBACK_ERR reg bit 0) */
-    uint8_t safeOut1Pin;      /**< SAFE_OUT1 pin status (readback from STAT_READBACK_ERR reg bit 1) */
-    uint8_t enOutPin;         /**< EN_OUT pin status (readback from STAT_READBACK_ERR reg bit 2) */
-    uint8_t cfgregLockStat;   /**< Configuration register lock status (from REG_STAT_REG bit 0) */
+    bool nRstPin;          /**< NRST pin status (readback from STAT_READBACK_ERR reg bit 0) */
+    bool safeOut1Pin;      /**< SAFE_OUT1 pin status (readback from STAT_READBACK_ERR reg bit 1) */
+    bool enOutPin;         /**< EN_OUT pin status (readback from STAT_READBACK_ERR reg bit 2) */
+    bool cfgregLockStat;   /**< Configuration register lock status (from REG_STAT_REG bit 0) */
 } Pmic_CommonCtrlStat_t;
 
 /*==========================================================================*/

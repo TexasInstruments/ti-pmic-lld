@@ -2476,24 +2476,24 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
 
     if (status == PMIC_ST_SUCCESS)
     {
-        switch (PWR_getRsrcType(localPwrRsrcStat.pwrRsrc))
+        switch ((uint8_t)PWR_getRsrcType(localPwrRsrcStat.pwrRsrc))
         {
-            case PMIC_PWR_TYPE_BUCK_BOOST:
+            case (uint8_t)PMIC_PWR_TYPE_BUCK_BOOST:
             {
                 status = PWR_getBbStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_LDO:
+            case (uint8_t)PMIC_PWR_TYPE_LDO:
             {
                 status = PWR_getLdoStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_PLDO:
+            case (uint8_t)PMIC_PWR_TYPE_PLDO:
             {
                 status = PWR_getPldoStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_EXT_VMON:
+            case (uint8_t)PMIC_PWR_TYPE_EXT_VMON:
             {
                 status = PWR_getExtVmonStat(handle, &localPwrRsrcStat);
                 break;
@@ -2800,24 +2800,24 @@ int32_t Pmic_pwrClrRsrcStatus(const Pmic_Handle_t *handle, const Pmic_PwrRsrcSta
 
     if (status == PMIC_ST_SUCCESS)
     {
-        switch (PWR_getRsrcType(localPwrRsrcStat.pwrRsrc))
+        switch ((uint8_t)PWR_getRsrcType(localPwrRsrcStat.pwrRsrc))
         {
-            case PMIC_PWR_TYPE_BUCK_BOOST:
+            case (uint8_t)PMIC_PWR_TYPE_BUCK_BOOST:
             {
                 status = PWR_clrBbStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_LDO:
+            case (uint8_t)PMIC_PWR_TYPE_LDO:
             {
                 status = PWR_clrLdoStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_PLDO:
+            case (uint8_t)PMIC_PWR_TYPE_PLDO:
             {
                 status = PWR_clrPldoStat(handle, &localPwrRsrcStat);
                 break;
             }
-            case PMIC_PWR_TYPE_EXT_VMON:
+            case (uint8_t)PMIC_PWR_TYPE_EXT_VMON:
             {
                 status = PWR_clrExtVmonStat(handle, &localPwrRsrcStat);
                 break;

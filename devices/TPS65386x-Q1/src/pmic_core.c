@@ -152,13 +152,11 @@ int32_t Pmic_setLockCfg(const Pmic_Handle_t *handle, const Pmic_Lock_t *config) 
     CORE_copyLock(config, &localConfig);
 
     if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
-        const uint8_t lockState = localConfig.cfgLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
-        status = Pmic_setRegLockState(handle, lockState);
+        status = Pmic_setRegLockState(handle, localConfig.cfgLock);
     }
 
     if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
-        const uint8_t lockState = localConfig.cntLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
-        status = Pmic_setCntLockState(handle, lockState);
+        status = Pmic_setCntLockState(handle, (uint8_t)localConfig.cntLock);
     }
 
     return Pmic_logStatus(handle, status);

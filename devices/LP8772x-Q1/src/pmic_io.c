@@ -48,7 +48,7 @@
 #define PMIC_I2C_TX_FRAME_LEN ((uint8_t)4U)
 #define PMIC_I2C_RX_FRAME_LEN ((uint8_t)5U)
 #define PMIC_IO_FRAME_LEN_MAX ((uint8_t)8U)  /* Max frame length for CRC loops */
-#define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
+#define PMIC_COMM_CRC_INITIAL_VALUE ((uint8_t)0xFFU)
 
 /* I2C protocol constants */
 #define I2C_ADDR_7BIT_MASK    ((uint8_t)0x7FU)  /* Extract 7-bit I2C address */

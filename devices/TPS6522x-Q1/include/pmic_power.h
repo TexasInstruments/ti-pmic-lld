@@ -677,7 +677,7 @@ typedef struct Pmic_PwrSpreadSpectrumCfg_s {
     uint32_t validParams;
 
     bool ssEn;
-    uint8_t ssDepth;
+    bool ssDepth;
 } Pmic_PwrSpreadSpectrumCfg_t;
 
 /* ========================================================================== */

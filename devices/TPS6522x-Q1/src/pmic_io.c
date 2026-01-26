@@ -188,7 +188,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
         return status;
     }
 
-    page = (regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK;
+    page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     // SPI MODE
     if (handle->commMode == PMIC_INTF_SPI)
@@ -310,7 +310,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    page = (regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK;
+    page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     // SPI MODE
     if (handle->commMode == PMIC_INTF_SPI)

@@ -46,7 +46,7 @@
 #define PMIC_IO_BUF_SIZE (4U)
 #define PMIC_IO_FRAME_LEN_MAX ((uint8_t)8U)  /* Max frame length for CRC loops */
 #define PMIC_IO_REQ_RW   ((uint8_t)(1UL << 4U))  /* Read request: R/W=1 */
-#define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
+#define PMIC_COMM_CRC_INITIAL_VALUE ((uint8_t)0xFFU)
 
 /* SPI frame length constants */
 #define SPI_FRAME_CRC_CALC_LEN    ((uint8_t)3U)  /* Number of bytes for CRC calculation */

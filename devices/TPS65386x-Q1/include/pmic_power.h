@@ -893,8 +893,8 @@ typedef struct Pmic_PwrRsrcStatus_s {
 
     /* Buck/Boost only */
     bool bbLite;
-    uint8_t bbIlimLvl;
-    uint8_t bbMode;
+    bool bbIlimLvl;
+    bool bbMode;
 } Pmic_PwrRsrcStatus_t;
 
 /* ========================================================================== */

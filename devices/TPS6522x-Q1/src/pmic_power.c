@@ -1310,7 +1310,7 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
     if (Pmic_validParamStatusCheck(spreadSpectrumCfgLocal.validParams, PMIC_POWER_SS_DEPTH_VALID, status))
     {
-        Pmic_setBitField(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfgLocal.ssDepth);
+        Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfgLocal.ssDepth);
     }
 
     if (status == PMIC_ST_SUCCESS)
