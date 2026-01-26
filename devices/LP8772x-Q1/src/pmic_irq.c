@@ -190,25 +190,52 @@ static int32_t IRQ_setMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool sho
     return status;
 }
 
-static int32_t IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t masks[], uint8_t regAddr, bool *anyMasks) {
+/**
+ * @brief Validates an array of IRQ masks
+ *
+ * Checks that all IRQ numbers are valid and maskable. This ensures
+ * we don't process invalid or unsupported IRQs.
+ *
+ * @param numMasks Number of masks to validate
+ * @param masks    Array of IRQ mask structures
+ *
+ * @return PMIC_ST_SUCCESS if all valid, ERR_INV_PARAM if invalid IRQ number,
+ *         ERR_NOT_SUPPORTED if non-maskable IRQ found
+ */
+static int32_t IRQ_validateMasks(uint8_t numMasks, const Pmic_IrqMask_t masks[]) {
     int32_t status = PMIC_ST_SUCCESS;
-    bool anyRegs = (bool)false;
 
-    for (uint8_t i = 0U; (i < numMasks) && !anyRegs; i++) {
+    for (uint8_t i = 0U; i < numMasks; i++) {
         const uint8_t irqNum = masks[i].irqNum;
 
         if (irqNum > PMIC_IRQ_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
-            break;
         } else if (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE) {
             status = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if (status != PMIC_ST_SUCCESS) {
             break;
-        } else {
-            anyRegs = (pmicIRQs[irqNum].maskReg == regAddr);
         }
     }
 
+    return status;
+}
+
+/**
+ * @brief Checks if any masks apply to specified register
+ *
+ * First validates all IRQ masks, then checks if any apply to the
+ * specified register address.
+ */
+static int32_t IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t masks[], uint8_t regAddr, bool *anyMasks) {
+    int32_t status = IRQ_validateMasks(numMasks, masks);
+    bool anyRegs = (bool)false;
+
     if (status == PMIC_ST_SUCCESS) {
+        for (uint8_t i = 0U; (i < numMasks) && !anyRegs; i++) {
+            anyRegs = (pmicIRQs[masks[i].irqNum].maskReg == regAddr);
+        }
         *anyMasks = anyRegs;
     }
 
