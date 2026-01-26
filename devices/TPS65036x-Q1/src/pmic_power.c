@@ -218,17 +218,23 @@ static int32_t PWR_getBuckVout(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // BUCK1 does not support active VSET or LP VSET configurations
-    const bool buck1InvalidParam = (buckCfg->resource == PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID);
-
-    // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
-    const bool buck2_3InvalidParam = (buckCfg->resource != PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID);
-
-    if (buck1InvalidParam || buck2_3InvalidParam)
+    // Check for invalid parameter combinations based on buck resource
+    if (buckCfg->resource == PMIC_BUCK1)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        // BUCK1 does not support active VSET or LP VSET configurations
+        if (Pmic_validParamCheck(buckCfg->validParams,
+                                PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -363,17 +369,22 @@ static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // BUCK1 does not have the VMON_ONLY configuration
-    const bool buck1InvalidParam = (buckCfg->resource == PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID);
-
-    // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
-    const bool buck2_3InvalidParam = (buckCfg->resource != PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID);
-
-    if (buck1InvalidParam || buck2_3InvalidParam)
+    // Check for invalid parameter combinations based on buck resource
+    if (buckCfg->resource == PMIC_BUCK1)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        // BUCK1 does not have the VMON_ONLY configuration
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -720,17 +731,23 @@ static int32_t PWR_setBuckVout(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // BUCK1 does not support active VSET or LP VSET configurations
-    const bool buck1InvalidParam = (buckCfg->resource == PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID);
-
-    // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
-    const bool buck2_3InvalidParam = (buckCfg->resource != PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID);
-
-    if (buck1InvalidParam || buck2_3InvalidParam)
+    // Check for invalid parameter combinations based on buck resource
+    if (buckCfg->resource == PMIC_BUCK1)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        // BUCK1 does not support active VSET or LP VSET configurations
+        if (Pmic_validParamCheck(buckCfg->validParams,
+                                PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -752,17 +769,22 @@ static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // BUCK1 does not have the VMON_ONLY configuration
-    const bool buck1InvalidParam = (buckCfg->resource == PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID);
-
-    // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
-    const bool buck2_3InvalidParam = (buckCfg->resource != PMIC_BUCK1) &&
-        Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID);
-
-    if (buck1InvalidParam || buck2_3InvalidParam)
+    // Check for invalid parameter combinations based on buck resource
+    if (buckCfg->resource == PMIC_BUCK1)
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        // BUCK1 does not have the VMON_ONLY configuration
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if (status == PMIC_ST_SUCCESS)

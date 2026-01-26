@@ -207,30 +207,23 @@ static int32_t statusCodeCheck(int32_t status) {
 
     switch (statusType) {
         case PMIC_ST_TYPE_SUCCESS:
-        {
             if (statusId > PMIC_ST_ID_SUCCESS_MAX) {
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
             break;
-        }
         case PMIC_ST_TYPE_ERROR:
-        {
             if (statusId > PMIC_ST_ID_ERROR_MAX) {
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
             break;
-        }
         case PMIC_ST_TYPE_WARNING:
-        {
             if (statusId > PMIC_ST_ID_WARNING_MAX) {
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
             break;
-        }
         default:
-        {
             return PMIC_ST_ERR_INV_STATUS_TYPE;
-        }
+            break;
     }
 
     return PMIC_ST_SUCCESS;

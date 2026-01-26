@@ -87,8 +87,8 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
         0x9BC5U, 0xEE9EU, 0x7173U, 0x0428U, 0x3BF2U, 0x4EA9U, 0xD144U, 0xA41FU,
     };
 
-    const uint16_t index = MIN(data ^ (uint16_t)((crc & 0xFFFFU) >> 8U), 0xFFU);
-    const uint16_t calculatedCrc = (uint16_t)(crc << 8U) ^ CRC16LUT[index];
+    const uint16_t statIndex = MIN(data ^ (uint16_t)((crc & 0xFFFFU) >> 8U), 0xFFU);
+    const uint16_t calculatedCrc = (uint16_t)(crc << 8U) ^ CRC16LUT[statIndex];
 
     return (uint16_t)(calculatedCrc & 0xFFFFU);
 }

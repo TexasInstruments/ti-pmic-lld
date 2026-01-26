@@ -591,13 +591,13 @@ static inline void IRQ_clrIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
 }
 
 static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
-    uint8_t index = 0U, bitPos = 0U;
+    uint8_t statIndex = 0U, bitPos = 0U;
     bool foundFlag = false;
 
     // For each element in struct member intrStat of irqStat...
-    for (index = 0U; index < PMIC_NUM_ELEM_IN_INTR_STAT; index++) {
+    for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) {
         // If current element has no IRQ statuses set, move onto next element
-        if (irqStat->intrStat[index] == 0U) {
+        if (irqStat->intrStat[statIndex] == 0U) {
             continue;
         }
 
@@ -605,9 +605,9 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
         for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_ELEM; bitPos++) {
             // If the bit is set...
             const uint32_t mask = (uint32_t)(1UL << bitPos);
-            if ((irqStat->intrStat[index] & mask) != 0U) {
+            if ((irqStat->intrStat[statIndex] & mask) != 0U) {
                 // Clear bit in intrStat element and exit loop
-                irqStat->intrStat[index] &= ~mask;
+                irqStat->intrStat[statIndex] &= ~mask;
                 foundFlag = true;
                 break;
             }
@@ -619,7 +619,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
     } /* LCOV_EXCL_LINE */
 
     // Return the corresponding IRQ number
-    return (bitPos + (PMIC_NUM_BITS_IN_INTR_ELEM * index));
+    return (bitPos + (PMIC_NUM_BITS_IN_INTR_ELEM * statIndex));
 }
 
 static int32_t IRQ_setMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool shouldMask) {
@@ -828,7 +828,7 @@ static int32_t IRQ_handleRecordsForRegMask(const Pmic_Handle_t *handle,
 
     // If status is still good and we did find records that apply to this
     // register, write the new value of this register back to the device
-    if ((status == PMIC_ST_SUCCESS) && *processedCfgs > 0) {
+    if ((status == PMIC_ST_SUCCESS) && (*processedCfgs > 0U)) {
         status = Pmic_ioTxByte(handle, regAddr, regData);
     }
 

@@ -1225,13 +1225,6 @@ static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCf
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
-    const bool invalidPldo1Mode = (bool)(
-        (pldoCfg->pldo == PMIC_PWR_PLDO1) &&
-        (pldoCfg->mode > PMIC_PWR_PLDO1_MODE_MAX));
-
-    const bool invalidPldo2Mode = (bool)(
-        (pldoCfg->pldo == PMIC_PWR_PLDO2) &&
-        (pldoCfg->mode > PMIC_PWR_PLDO2_MODE_MAX));
 
     // Read PLDO_EN_OUT_CTRL
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1240,24 +1233,40 @@ static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCf
     // Modify PLDOx_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
-        if (invalidPldo1Mode || invalidPldo2Mode)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
+        // Validate mode based on PLDO resource
         if (pldoCfg->pldo == PMIC_PWR_PLDO1)
         {
-            shift = PLDO1_CTRL_SHIFT;
-            mask = PLDO1_CTRL_MASK;
+            if (pldoCfg->mode > PMIC_PWR_PLDO1_MODE_MAX)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+        }
+        else if (pldoCfg->pldo == PMIC_PWR_PLDO2)
+        {
+            if (pldoCfg->mode > PMIC_PWR_PLDO2_MODE_MAX)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
         }
         else
         {
-            shift = PLDO2_CTRL_SHIFT;
-            mask = PLDO2_CTRL_MASK;
+            // Invalid PLDO identifier
+            status = PMIC_ST_ERR_INV_PARAM;
         }
 
         if (status == PMIC_ST_SUCCESS)
         {
+            if (pldoCfg->pldo == PMIC_PWR_PLDO1)
+            {
+                shift = PLDO1_CTRL_SHIFT;
+                mask = PLDO1_CTRL_MASK;
+            }
+            else
+            {
+                shift = PLDO2_CTRL_SHIFT;
+                mask = PLDO2_CTRL_MASK;
+            }
+
             Pmic_setBitField(&regData, shift, mask, pldoCfg->mode);
         }
     }

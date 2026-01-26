@@ -78,7 +78,7 @@ int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lockState) {
     uint8_t seq[2] = {0, 0};
 
     // If unlocking registers, set the correct unlock sequence.
-    if ((status == PMIC_ST_SUCCESS) && (lockState == PMIC_LOCK_DISABLE)) {
+    if ((status == PMIC_ST_SUCCESS) && (lockState == (bool)PMIC_LOCK_DISABLE)) {
         seq[0] = REG_UNLOCK_DATA1;
         seq[1] = REG_UNLOCK_DATA2;
     }

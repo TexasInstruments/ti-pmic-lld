@@ -63,6 +63,7 @@ CFLAGS = -fPIC $(INC) -Weverything \
 				 -Wno-padded \
 				 -Wno-poison-system-directories \
 				 -Wno-covered-switch-default \
+				 -Wno-unreachable-code-break \
 				 -Werror
 LDFLAGS = -shared
 LIB_DIR = lib

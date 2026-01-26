@@ -104,7 +104,7 @@ static int32_t GPIO_validatePinNum(uint8_t pinNum)
 /* Get GPIO configuration register address for a given pin (1-6). */
 static void GPIO_getConfRegAddr(uint8_t pinNum, uint8_t *regAddr)
 {
-    *regAddr = (uint8_t)(GPIO1_CONF_REG + (pinNum - PMIC_GPIO_PIN1));
+    *regAddr = (uint8_t)(GPIO1_CONF_REG + (uint8_t)(pinNum - PMIC_GPIO_PIN1));
 }
 
 /* Get GPIO output bit shift for a given pin (1-6). */
@@ -282,7 +282,7 @@ static int32_t GPIO_getPinCfgFields(const uint8_t regData, Pmic_GpioPinCfg_t *gp
 int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t *gpioPinCfg)
 {
     Pmic_GpioPinCfg_t gpioPinCfgLocal;
-    int32_t status = Pmic_checkHandle(handle);
+    int32_t status;
     uint8_t regData = 0U;
     uint8_t regAddr;
 
@@ -339,7 +339,7 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
 int32_t Pmic_gpioGetPinCfg(const Pmic_Handle_t *handle, Pmic_GpioPinCfg_t *gpioPinCfg)
 {
     Pmic_GpioPinCfg_t gpioPinCfgLocal;
-    int32_t status = Pmic_checkHandle(handle);
+    int32_t status;
     uint8_t regData = 0U;
     uint8_t regAddr;
 
