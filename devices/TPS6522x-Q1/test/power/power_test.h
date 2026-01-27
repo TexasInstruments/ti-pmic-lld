@@ -67,6 +67,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_buck3_slewRate); \
     PLATFORM_RUN_TEST(test_pos_power_buck4_vmonThr); \
     PLATFORM_RUN_TEST(test_pos_power_buck1_grpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_buck_pldnEn); \
+    PLATFORM_RUN_TEST(test_pos_power_buck_vmonEn); \
+    PLATFORM_RUN_TEST(test_pos_power_buck_fpwmEn); \
     PLATFORM_RUN_TEST(test_pos_power_buck_combinedConfig)
 
 #define POWER_TEST_SETGETBUCKCFG() \
@@ -337,6 +340,9 @@ void test_pos_power_buck2_vset(void);
 void test_pos_power_buck3_slewRate(void);
 void test_pos_power_buck4_vmonThr(void);
 void test_pos_power_buck1_grpSel(void);
+void test_pos_power_buck_pldnEn(void);
+void test_pos_power_buck_vmonEn(void);
+void test_pos_power_buck_fpwmEn(void);
 void test_pos_power_ldo1_enableDisable(void);
 void test_pos_power_ldo2_vset(void);
 void test_pos_power_ldo3_bypassEn(void);

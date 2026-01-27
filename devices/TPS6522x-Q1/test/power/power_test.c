@@ -1233,6 +1233,78 @@ void test_pos_power_rsrcStatus_vmonUVOV(void)
 }
 
 /**
+ * @brief Test BUCK Set/Get with only pldnEn parameter
+ */
+void test_pos_power_buck_pldnEn(void)
+{
+    Pmic_PwrBuckCfg_t buckCfgSet = {
+        .validParams = PMIC_POWER_BUCK_PLDN_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1,
+        .pldnEn = true
+    };
+    Pmic_PwrBuckCfg_t buckCfgGet = {
+        .validParams = PMIC_POWER_BUCK_PLDN_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1
+    };
+    int32_t status;
+
+    status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(buckCfgGet.pldnEn == true);
+}
+
+/**
+ * @brief Test BUCK Set/Get with only vmonEn parameter
+ */
+void test_pos_power_buck_vmonEn(void)
+{
+    Pmic_PwrBuckCfg_t buckCfgSet = {
+        .validParams = PMIC_POWER_BUCK_VMON_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1,
+        .vmonEn = true
+    };
+    Pmic_PwrBuckCfg_t buckCfgGet = {
+        .validParams = PMIC_POWER_BUCK_VMON_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1
+    };
+    int32_t status;
+
+    status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(buckCfgGet.vmonEn == true);
+}
+
+/**
+ * @brief Test BUCK Set/Get with only fpwmEn parameter
+ */
+void test_pos_power_buck_fpwmEn(void)
+{
+    Pmic_PwrBuckCfg_t buckCfgSet = {
+        .validParams = PMIC_POWER_BUCK_FPWM_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1,
+        .fpwmEn = true
+    };
+    Pmic_PwrBuckCfg_t buckCfgGet = {
+        .validParams = PMIC_POWER_BUCK_FPWM_EN_VALID,
+        .resource = PMIC_POWER_RESOURCE_BUCK1
+    };
+    int32_t status;
+
+    status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(buckCfgGet.fpwmEn == true);
+}
+
+/**
  * @brief Test BUCK combined configuration
  */
 void test_pos_power_buck_combinedConfig(void)

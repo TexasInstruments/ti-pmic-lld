@@ -121,7 +121,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_multiple); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_errorFlagOnly); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_warningFlagOnly); \
-    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_maxErrorId)
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_maxErrorId); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_cntOnlyError)
 
 #define COMMON_TEST_NEG_GETDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullHandle); \
@@ -129,6 +130,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_invalidStatusCode); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_successType); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullDiagnosticArray); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_zeroCount); \
@@ -137,7 +140,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_invalidStatusCodeInArray); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_successTypeInArray); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
-    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId)
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStart)
 
 #define COMMON_TEST_GETDIAGNOSTIC() \
     COMMON_TEST_POS_GETDIAGNOSTIC(); \
@@ -159,7 +163,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_clearAll); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_errorCnt); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_warningCnt); \
-    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_maxErrorId)
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_maxErrorId); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_cntOnlyError)
 
 #define COMMON_TEST_NEG_CLRDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullHandle); \
@@ -176,7 +181,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_successTypeInArray); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
-    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId)
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStart)
 
 #define COMMON_TEST_CLRDIAGNOSTIC() \
     COMMON_TEST_POS_CLRDIAGNOSTIC(); \
@@ -314,6 +320,7 @@ void test_pos_common_getDiagnostic_warningFlag(void);
 void test_pos_common_getDiagnostics_multiple(void);
 void test_pos_common_getDiagnostics_errorFlagOnly(void);
 void test_pos_common_getDiagnostics_warningFlagOnly(void);
+void test_pos_common_getDiagnostics_cntOnlyError(void);
 
 /* clrDiagnostic Tests */
 void test_pos_common_clrDiagnostic_errorCnt(void);
@@ -327,6 +334,7 @@ void test_pos_common_clrDiagnostics_warningFlagOnly(void);
 void test_pos_common_clrDiagnosticsAll_clearAll(void);
 void test_pos_common_overflow_errorCnt(void);
 void test_pos_common_overflow_warningCnt(void);
+void test_pos_common_clrDiagnostics_cntOnlyError(void);
 
 /* getRetryCnt Tests */
 void test_pos_common_getRetryCnt_initialZero(void);
@@ -368,6 +376,8 @@ void test_neg_common_getDiagnostic_nullDiagnostic(void);
 void test_neg_common_getDiagnostic_invalidValidParams(void);
 void test_neg_common_getDiagnostic_invalidStatusCode(void);
 void test_neg_common_getDiagnostic_successType(void);
+void test_neg_common_getDiagnostic_nullCritSecStart(void);
+void test_neg_common_getDiagnostic_nullCritSecStop(void);
 void test_neg_common_getDiagnostics_nullHandle(void);
 void test_neg_common_getDiagnostics_nullDiagnosticArray(void);
 void test_neg_common_getDiagnostics_zeroCount(void);
@@ -375,6 +385,7 @@ void test_neg_common_getDiagnostics_exceedsMax(void);
 void test_neg_common_getDiagnostics_zeroValidParamsInArray(void);
 void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void);
 void test_neg_common_getDiagnostics_successTypeInArray(void);
+void test_neg_common_getDiagnostics_nullCritSecStart(void);
 
 /* clrDiagnostic Tests */
 void test_neg_common_clrDiagnostic_nullHandle(void);
@@ -390,6 +401,7 @@ void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void);
 void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void);
 void test_neg_common_clrDiagnostics_successTypeInArray(void);
 void test_neg_common_clrDiagnosticsAll_nullHandle(void);
+void test_neg_common_clrDiagnostics_nullCritSecStart(void);
 
 /* getRetryCnt Tests */
 void test_neg_common_getRetryCnt_nullHandle(void);

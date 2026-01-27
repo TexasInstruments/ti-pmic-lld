@@ -467,6 +467,36 @@ void test_neg_common_getDiagnostic_successType(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
+void test_neg_common_getDiagnostic_nullCritSecStart(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = NULL;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_ST_ERR_NULL_PARAM;
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+}
+
+void test_neg_common_getDiagnostic_nullCritSecStop(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = NULL;
+
+    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_ST_ERR_NULL_PARAM;
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+}
+
 void test_pos_common_getDiagnostics_multiple(void)
 {
     Pmic_Handle_t handle = {0};
@@ -952,6 +982,44 @@ void test_neg_common_getDiagnostics_successTypeInArray(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
 }
 
+void test_neg_common_getDiagnostics_nullCritSecStart(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[2] = {0};
+
+    handle.criticalSectionStart = NULL;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_NULL_PARAM;
+
+    int32_t status = Pmic_getDiagnostics(&handle, diags, 1U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+}
+
+void test_pos_common_getDiagnostics_cntOnlyError(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[1] = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+
+    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_INV_PARAM;
+
+    status = Pmic_getDiagnostics(&handle, diags, 1U);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diags[0].cnt == 3U);
+}
+
 void test_neg_common_clrDiagnostic_nullDiagnostic(void)
 {
     Pmic_Handle_t handle = {0};
@@ -1156,6 +1224,48 @@ void test_neg_common_clrDiagnostics_successTypeInArray(void)
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_TYPE);
+}
+
+void test_neg_common_clrDiagnostics_nullCritSecStart(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[2] = {0};
+
+    handle.criticalSectionStart = NULL;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_NULL_PARAM;
+
+    int32_t status = Pmic_clrDiagnostics(&handle, diags, 1U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+}
+
+void test_pos_common_clrDiagnostics_cntOnlyError(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[1] = {0};
+    int32_t status;
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    Pmic_clrDiagnosticsAll(&handle);
+
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+    Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
+
+    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_INV_PARAM;
+
+    status = Pmic_clrDiagnostics(&handle, diags, 1U);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    status = Pmic_getDiagnostic(&handle, &diags[0]);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(diags[0].cnt == 0U);
 }
 
 void test_neg_common_getRetryCntOverflow_nullOutput(void)

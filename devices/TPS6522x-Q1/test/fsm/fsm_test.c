@@ -700,6 +700,29 @@ void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void)
 }
 
 /**
+ * @brief Test positive case: setTriggerCfg with MODERATE_ERR_TRIG_VALID only
+ */
+void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void)
+{
+    int32_t status;
+    Pmic_FsmTriggerCfg_t triggerCfgSet = {
+        .validParams = PMIC_FSM_MODERATE_ERR_TRIG_VALID,
+        .moderateErrTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR
+    };
+
+    status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_FsmTriggerCfg_t triggerCfgGet = {
+        .validParams = PMIC_FSM_MODERATE_ERR_TRIG_VALID
+    };
+
+    status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(triggerCfgGet.moderateErrTrig == triggerCfgSet.moderateErrTrig);
+}
+
+/**
  * @brief Test negative case: setStartupDest with invalid startup destination
  */
 void test_neg_fsm_fsmSetStartupDest_invalidState(void)

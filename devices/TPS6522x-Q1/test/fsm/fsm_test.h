@@ -56,7 +56,8 @@
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_combinedTriggers); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig)
 
 #define FSM_TEST_FSMSETTRIGGERCFG() \
     FSM_TEST_POS_FSMSETGETTRIGGERCFG(); \
@@ -287,6 +288,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_polarity(void);
 void test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig(void);
 void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void);
 void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void);
+void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void);
 void test_pos_fsm_fsmGetStartupDest_validRead(void);
 
 #endif /* FSM_TEST_H */
