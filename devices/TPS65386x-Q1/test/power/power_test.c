@@ -1042,7 +1042,7 @@ static void helper_setGetPldoCfg_mode(uint16_t pldo)
     Pmic_PwrPldoCfg_t setCfg = {
         .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
         .pldo = pldo,
-        .mode = PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER
+        .mode = PMIC_PWR_PLDO_EN_LDO_OPER
     };
     Pmic_PwrPldoCfg_t getCfg = {
         .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
@@ -1505,7 +1505,7 @@ void test_pos_power_setGetPldoCfg_allPldos_allCfg(void)
         Pmic_PwrPldoCfg_t setCfg = {
             .validParams = PMIC_PWR_CFG_PLDO_ALL,
             .pldo = pldos[i],
-            .mode = PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER,
+            .mode = PMIC_PWR_PLDO_EN_LDO_OPER,
             .trackingMode = false,
             .lvl = PMIC_PWR_LDO_LVL_3P3V,
             .ilimLvl = PMIC_PWR_PLDO_ILIM_LVL_OPTION_1,

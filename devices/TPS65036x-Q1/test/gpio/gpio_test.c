@@ -587,7 +587,7 @@ void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void)
 
     status = Pmic_gpioGetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(gpioCfg.functionality == PMIC_NINT_GPI_LPM_CTRL_MODE_INPUT);
+    PLATFORM_ASSERT(gpioCfg.functionality == PMIC_NINT_GPI_LPM_INPUT);
 #else
     // Cannot test mock injection on hardware
     return;

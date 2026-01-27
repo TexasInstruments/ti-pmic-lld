@@ -325,8 +325,8 @@ void test_neg_gpio_gpioGetNIntEnDrvVal_nullValue(void)
 void test_neg_gpio_gpioSetEnPbVSenseCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE
     };
 
     int32_t status = Pmic_gpioSetEnPbVSenseCfg(NULL, &cfg);
@@ -344,7 +344,7 @@ void test_neg_gpio_gpioSetEnPbVSenseCfg_nullConfig(void)
 void test_neg_gpio_gpioSetEnPbVSenseCfg_invalidFunction(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID,
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = 3U  // Invalid, max is 2
     };
 
@@ -356,7 +356,7 @@ void test_neg_gpio_gpioSetEnPbVSenseCfg_invalidFunction(void)
 void test_neg_gpio_gpioGetEnPbVSenseCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID
     };
 
     int32_t status = Pmic_gpioGetEnPbVSenseCfg(NULL, &cfg);
@@ -764,8 +764,8 @@ void test_pos_gpio_gpioSetGetNIntEnDrvCfg_getValue(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configEnable(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE
     };
 
     int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -776,8 +776,8 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configEnable(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_PB
     };
 
     int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -788,8 +788,8 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configVSense(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VSENSE
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE
     };
 
     int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -800,7 +800,7 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configVSense(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID
     };
 
     int32_t status = Pmic_gpioGetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -811,9 +811,9 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchEnable(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID |
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID |
                        PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE,
         .enPbDegl = PMIC_GPIO_EN_DEGLITCH_50_MS
     };
 
@@ -825,9 +825,9 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchEnable(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchPb(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_VALID |
+        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID |
                        PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_PB,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_PB,
         .enPbDegl = PMIC_GPIO_PB_DEGLITCH_600_MS
     };
 
@@ -1036,7 +1036,7 @@ void test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
         .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID | PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
-        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FXN_SEL_ENABLE,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE,
         .enPbDegl = PMIC_GPIO_EN_DEGL_MAX + 1  /* Invalid deglitch for EN function */
     };
 
