@@ -182,6 +182,7 @@ ifdef LDRA_INSTRUMENT
     CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
     CFLAGS := $(filter-out -Werror,$(CFLAGS))
     CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
+    CFLAGS += -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U
 endif
 
 # Build mode specific flags
