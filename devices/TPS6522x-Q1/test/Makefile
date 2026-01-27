@@ -170,6 +170,7 @@ CFLAGS = -Weverything \
          -Wno-missing-noreturn \
          -Wno-unreachable-code \
          -Wno-unreachable-code-return \
+         -Wno-unreachable-code-break \
          -Wno-covered-switch-default \
          -Wno-missing-variable-declarations \
          -Wno-sign-conversion \
