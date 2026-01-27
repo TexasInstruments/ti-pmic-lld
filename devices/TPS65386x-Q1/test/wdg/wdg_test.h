@@ -135,9 +135,9 @@ extern "C" {
     WDG_TEST_POS_WDGGETCFG(); \
     WDG_TEST_NEG_WDGGETCFG()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - wdgSetAnswerCnt                        */
-/* ========================================================================== */
+/* ================================================================================================= */
+/* API-Specific Test Macros - Pmic_wdgSetCfg, Pmic_wdgEnable, Pmic_wdgQaWriteAnswer, Pmic_wdgDisable */
+/* ================================================================================================= */
 
 #define WDG_TEST_POS_WDGSETANSWERCNT() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_fullSequence); \
@@ -156,21 +156,7 @@ extern "C" {
     WDG_TEST_NEG_WDGSETANSWERCNT()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - wdgGetAnswerCnt                        */
-/* ========================================================================== */
-
-#define WDG_TEST_POS_WDGGETANSWERCNT() \
-    /* No dedicated positive tests - covered by wdgSetAnswerCnt tests */
-
-#define WDG_TEST_NEG_WDGGETANSWERCNT() \
-    /* No dedicated negative tests */
-
-#define WDG_TEST_WDGGETANSWERCNT() \
-    WDG_TEST_POS_WDGGETANSWERCNT(); \
-    WDG_TEST_NEG_WDGGETANSWERCNT()
-
-/* ========================================================================== */
-/*          API-Specific Test Macros - wdgGetErrCnt                           */
+/*            API-Specific Test Macros - wdgGetFailCntStatus                  */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGGETERRCNT() \
@@ -190,7 +176,7 @@ extern "C" {
     WDG_TEST_NEG_WDGGETERRCNT()
 
 /* ========================================================================== */
-/*          API-Specific Test Macros - wdgTrigger                             */
+/*            API-Specific Test Macros - wdgSetMode, wdgGetMode               */
 /* ========================================================================== */
 
 #define WDG_TEST_POS_WDGTRIGGER() \
@@ -205,9 +191,9 @@ extern "C" {
     WDG_TEST_POS_WDGTRIGGER(); \
     WDG_TEST_NEG_WDGTRIGGER()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - wdgGetStatus                           */
-/* ========================================================================== */
+/* ==================================================================================== */
+/* API-Specific Test Macros - wdgGetErrStatus, wdgClrErrStatus, Pmic_wdgClrErrStatusAll */
+/* ==================================================================================== */
 
 #define WDG_TEST_POS_WDGGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_afterAnswerError); \
@@ -253,7 +239,6 @@ extern "C" {
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_POS_WDGGETCFG(); \
     WDG_TEST_POS_WDGSETANSWERCNT(); \
-    WDG_TEST_POS_WDGGETANSWERCNT(); \
     WDG_TEST_POS_WDGGETERRCNT(); \
     WDG_TEST_POS_WDGTRIGGER(); \
     WDG_TEST_POS_WDGGETSTATUS(); \
@@ -268,7 +253,6 @@ extern "C" {
     WDG_TEST_NEG_WDGSETCFG(); \
     WDG_TEST_NEG_WDGGETCFG(); \
     WDG_TEST_NEG_WDGSETANSWERCNT(); \
-    WDG_TEST_NEG_WDGGETANSWERCNT(); \
     WDG_TEST_NEG_WDGGETERRCNT(); \
     WDG_TEST_NEG_WDGTRIGGER(); \
     WDG_TEST_NEG_WDGGETSTATUS(); \
