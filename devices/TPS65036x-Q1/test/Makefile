@@ -40,13 +40,26 @@ SRC_DIR = ../src
 INC_DIR = ../include
 
 # Unity directory - uses external Unity test framework
+# Auto-detect from sibling directory (portable) or require explicit path
 ifndef UNITY_DIR
-    $(error UNITY_DIR environment variable must be set. Install Unity from https://github.com/ThrowTheSwitch/Unity.git)
+    ifeq ($(wildcard ../../../../unity/src/unity.c),../../../../unity/src/unity.c)
+        UNITY_DIR := ../../../../unity
+    else
+        $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity as sibling to pmic-lld repository)
+    endif
+else
+    # Export UNITY_DIR to ensure it's available to child processes and LDRA tools
+    export UNITY_DIR
 endif
 
 # Mock directory - uses external pmic-lld-mocking repository
+# Auto-detect from sibling directory (portable) or require explicit path
 ifndef PMIC_MOCK_DIR
-    $(error PMIC_MOCK_DIR environment variable must be set for mock builds. Set to path of pmic-lld-mocking repository)
+    ifeq ($(wildcard ../../../../pmic-lld-mocking/Makefile),../../../../pmic-lld-mocking/Makefile)
+        PMIC_MOCK_DIR := ../../../../pmic-lld-mocking
+    else
+        $(error PMIC_MOCK_DIR not found. Set PMIC_MOCK_DIR environment variable or install pmic-lld-mocking as sibling to pmic-lld repository)
+    endif
 endif
 # Normalize path: strip trailing slashes to avoid double-slash issues
 # Note: PMIC_MOCK_DIR is converted to absolute path by root Makefile if needed

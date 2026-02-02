@@ -68,13 +68,32 @@ PMIC_ROOT = ..
 TEST_ROOT = .
 
 # Unity directory - uses external Unity test framework
+# Default to common location if not set (for LDRA/automated builds)
+# Use absolute paths for LDRA compatibility
 ifndef UNITY_DIR
-    $(error UNITY_DIR environment variable must be set. Install Unity from https://github.com/ThrowTheSwitch/Unity.git)
+    ifeq ($(wildcard /home/a0509427/Projects/rtos/unity/src/unity.c),/home/a0509427/Projects/rtos/unity/src/unity.c)
+        UNITY_DIR := /home/a0509427/Projects/rtos/unity
+    else ifeq ($(wildcard /home/a0509427/rtos/unity/src/unity.c),/home/a0509427/rtos/unity/src/unity.c)
+        UNITY_DIR := /home/a0509427/rtos/unity
+    else
+        $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity from https://github.com/ThrowTheSwitch/Unity.git)
+    endif
+else
+    # Export UNITY_DIR to ensure it's available to child processes and LDRA tools
+    export UNITY_DIR
 endif
 
 # Mock directory - uses external pmic-lld-mocking repository
+# Default to common location if not set (for LDRA/automated builds)
+# Use absolute paths for LDRA compatibility
 ifndef PMIC_MOCK_DIR
-    $(error PMIC_MOCK_DIR environment variable must be set for mock builds. Set to path of pmic-lld-mocking repository)
+    ifeq ($(wildcard /home/a0509427/Projects/rtos/pmic-lld-mocking/Makefile),/home/a0509427/Projects/rtos/pmic-lld-mocking/Makefile)
+        PMIC_MOCK_DIR := /home/a0509427/Projects/rtos/pmic-lld-mocking
+    else ifeq ($(wildcard /home/a0509427/rtos/pmic-lld-mocking/Makefile),/home/a0509427/rtos/pmic-lld-mocking/Makefile)
+        PMIC_MOCK_DIR := /home/a0509427/rtos/pmic-lld-mocking
+    else
+        $(error PMIC_MOCK_DIR not found. Set PMIC_MOCK_DIR environment variable or install from pmic-lld-mocking repository)
+    endif
 endif
 # Normalize path: strip trailing slashes to avoid double-slash issues
 # Note: PMIC_MOCK_DIR is converted to absolute path by root Makefile if needed
