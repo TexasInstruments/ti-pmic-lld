@@ -59,6 +59,7 @@
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig)
 
+/* Test: TC-FSM-0015 */
 #define FSM_TEST_FSMSETTRIGGERCFG() \
     FSM_TEST_POS_FSMSETGETTRIGGERCFG(); \
     FSM_TEST_NEG_FSMSETTRIGGERCFG()
@@ -71,6 +72,7 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_nullCfg); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmgetTriggerCfg_zero_valid_params)
 
+/* Test: TC-FSM-0016 */
 #define FSM_TEST_FSMGETTRIGGERCFG() \
     FSM_TEST_NEG_FSMGETTRIGGERCFG()
 
@@ -89,6 +91,7 @@
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGpioTriggerCfg_allGpioPins); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGpioTriggerCfg_polarity)
 
+/* Test: TC-FSM-0017 */
 #define FSM_TEST_FSMSETGPIOTRIGGERCFG() \
     FSM_TEST_POS_FSMSETGETGPIOTRIGGERCFG(); \
     FSM_TEST_NEG_FSMSETGPIOTRIGGERCFG()
@@ -102,6 +105,7 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetGpioTriggerCfg_invalidPin); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmgetGpioTriggerCfg_zero_valid_params)
 
+/* Test: TC-FSM-0018 */
 #define FSM_TEST_FSMGETGPIOTRIGGERCFG() \
     FSM_TEST_NEG_FSMGETGPIOTRIGGERCFG()
 
@@ -115,6 +119,7 @@
 #define FSM_TEST_POS_FSMGETRECOVCNT() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetClrRecovCnt_readAndClear)
 
+/* Test: TC-FSM-0028 */
 #define FSM_TEST_FSMGETRECOVCNT() \
     FSM_TEST_POS_FSMGETRECOVCNT(); \
     FSM_TEST_NEG_FSMGETRECOVCNT()
@@ -125,6 +130,7 @@
 #define FSM_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
 
+/* Test: TC-FSM-0026 */
 #define FSM_TEST_FSMCLRRECOVCNT() \
     FSM_TEST_NEG_FSMCLRRECOVCNT()
 
@@ -138,6 +144,7 @@
 #define FSM_TEST_POS_FSMSETGETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetRecovCntThr_allValues)
 
+/* Test: TC-FSM-0033 */
 #define FSM_TEST_FSMSETRECOVCNTTHR() \
     FSM_TEST_POS_FSMSETGETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMSETRECOVCNTTHR()
@@ -149,6 +156,7 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
 
+/* Test: TC-FSM-0029 */
 #define FSM_TEST_FSMGETRECOVCNTTHR() \
     FSM_TEST_NEG_FSMGETRECOVCNTTHR()
 
@@ -161,6 +169,7 @@
 #define FSM_TEST_POS_FSMSENDSOFTREBOOTREQ() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSendSoftRebootReq_validRequest)
 
+/* Test: TC-FSM-0023 */
 #define FSM_TEST_FSMSENDSOFTREBOOTREQ() \
     FSM_TEST_POS_FSMSENDSOFTREBOOTREQ(); \
     FSM_TEST_NEG_FSMSENDSOFTREBOOTREQ()
@@ -177,6 +186,7 @@
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetStartupDest_allDestinations); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetStartupDest_validRead)
 
+/* Test: TC-FSM-0024 */
 #define FSM_TEST_FSMSETSTARTUPDEST() \
     FSM_TEST_POS_FSMSETGETSTARTUPDEST(); \
     FSM_TEST_NEG_FSMSETSTARTUPDEST()
@@ -188,6 +198,7 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetStartupDest_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetStartupDest_nullDestination)
 
+/* Test: TC-FSM-0025 */
 #define FSM_TEST_FSMGETSTARTUPDEST() \
     FSM_TEST_NEG_FSMGETSTARTUPDEST()
 

@@ -67,6 +67,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_invalidValidParams)
 
+/* Test: TC-GPIO-0017 */
 #define GPIO_TEST_GPIOSETGETCFG_GPIO() \
     GPIO_TEST_NEG_GPIOSETGETCFG_GPIO(); \
     GPIO_TEST_POS_GPIOSETGETCFG_GPIO()
@@ -90,6 +91,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams)
 
+/* Test: TC-GPIO-0018 */
 #define GPIO_TEST_GPIOSETGETCFG_NINTGPI() \
     GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI(); \
     GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI()
@@ -110,6 +112,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidGpioPin); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_zeroValidParams)
 
+/* Test: TC-GPIO-0019 */
 #define GPIO_TEST_GPIOSETGETCFG_COMMON() \
     GPIO_TEST_NEG_GPIOSETGETCFG_COMMON(); \
     GPIO_TEST_POS_GPIOSETGETCFG_COMMON()
@@ -128,6 +131,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_nullActivated)
 
+/* Test: TC-GPIO-0020 */
 #define GPIO_TEST_GPIOACTIVATION() \
     GPIO_TEST_NEG_GPIOACTIVATION(); \
     GPIO_TEST_POS_GPIOACTIVATION()

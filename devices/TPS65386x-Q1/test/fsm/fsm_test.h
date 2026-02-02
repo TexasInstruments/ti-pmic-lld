@@ -87,6 +87,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidState); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidStateBoundary)
 
+/* Test: TC-FSM-0032 */
 #define FSM_TEST_FSMSETDEVSTATE() \
     FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()
@@ -107,6 +108,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevState_nullPointer)
 
+/* Test: TC-FSM-0002 */
 #define FSM_TEST_FSMGETDEVSTATE() \
     FSM_TEST_POS_FSMGETDEVSTATE(); \
     FSM_TEST_NEG_FSMGETDEVSTATE()
@@ -139,6 +141,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeTmo); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeLockThr)
 
+/* Test: TC-FSM-0003 */
 #define FSM_TEST_FSMSETCFG() \
     FSM_TEST_POS_FSMSETCFG(); \
     FSM_TEST_NEG_FSMSETCFG()
@@ -156,6 +159,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_invalidParams)
 
+/* Test: TC-FSM-0004 */
 #define FSM_TEST_FSMGETCFG() \
     FSM_TEST_POS_FSMGETCFG(); \
     FSM_TEST_NEG_FSMGETCFG()
@@ -171,6 +175,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevErrCnt_outOfBounds)
 
+/* Test: TC-FSM-0005 */
 #define FSM_TEST_FSMSETDEVERRCNT() \
     FSM_TEST_POS_FSMSETDEVERRCNT(); \
     FSM_TEST_NEG_FSMSETDEVERRCNT()
@@ -186,6 +191,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullPointer)
 
+/* Test: TC-FSM-0006 */
 #define FSM_TEST_FSMGETDEVERRCNT() \
     FSM_TEST_POS_FSMGETDEVERRCNT(); \
     FSM_TEST_NEG_FSMGETDEVERRCNT()
@@ -207,6 +213,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl)
 
+/* Test: TC-FSM-0007 */
 #define FSM_TEST_FSMSETWAKEUPCFG() \
     FSM_TEST_POS_FSMSETWAKEUPCFG(); \
     FSM_TEST_NEG_FSMSETWAKEUPCFG()
@@ -224,6 +231,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_zeroValidParams)
 
+/* Test: TC-FSM-0008 */
 #define FSM_TEST_FSMGETWAKEUPCFG() \
     FSM_TEST_POS_FSMGETWAKEUPCFG(); \
     FSM_TEST_NEG_FSMGETWAKEUPCFG()
@@ -239,6 +247,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeStatus_nullPointer)
 
+/* Test: TC-FSM-0009 */
 #define FSM_TEST_FSMGETWAKESTATUS() \
     FSM_TEST_POS_FSMGETWAKESTATUS(); \
     FSM_TEST_NEG_FSMGETWAKESTATUS()
@@ -257,6 +266,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly)
 
+/* Test: TC-FSM-0010 */
 #define FSM_TEST_FSMSETPOWERLATCHCFG() \
     FSM_TEST_POS_FSMSETPOWERLATCHCFG(); \
     FSM_TEST_NEG_FSMSETPOWERLATCHCFG()
@@ -274,6 +284,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams)
 
+/* Test: TC-FSM-0011 */
 #define FSM_TEST_FSMGETPOWERLATCHCFG() \
     FSM_TEST_POS_FSMGETPOWERLATCHCFG(); \
     FSM_TEST_NEG_FSMGETPOWERLATCHCFG()
@@ -290,6 +301,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_zeroValidParams)
 
+/* Test: TC-FSM-0012 */
 #define FSM_TEST_FSMSETPOWERLATCH() \
     FSM_TEST_POS_FSMSETPOWERLATCH(); \
     FSM_TEST_NEG_FSMSETPOWERLATCH()
@@ -307,6 +319,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatch_zeroValidParams)
 
+/* Test: TC-FSM-0013 */
 #define FSM_TEST_FSMGETPOWERLATCH() \
     FSM_TEST_POS_FSMGETPOWERLATCH(); \
     FSM_TEST_NEG_FSMGETPOWERLATCH()
@@ -322,6 +335,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetLastResetMcuStateDuration_nullPointer)
 
+/* Test: TC-FSM-0014 */
 #define FSM_TEST_FSMGETLASTRESETMCUSTATEDURATION() \
     FSM_TEST_POS_FSMGETLASTRESETMCUSTATEDURATION(); \
     FSM_TEST_NEG_FSMGETLASTRESETMCUSTATEDURATION()

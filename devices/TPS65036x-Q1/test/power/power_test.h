@@ -91,6 +91,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setLdoCfg_zeroValidParams)
 
+/* Test: TC-POWER-0032 */
 #define POWER_TEST_PWRSETLDOCFG() \
     POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
@@ -106,6 +107,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getLdoCfg_zeroValidParams)
 
+/* Test: TC-POWER-0033 */
 #define POWER_TEST_PWRGETLDOCFG() \
     POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
@@ -292,6 +294,7 @@ extern "C" {
 #define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED()
 #endif
 
+/* Test: TC-POWER-0034 */
 #define POWER_TEST_PWRSETBUCKCFG() \
     POWER_TEST_POS_PWRSETBUCKCFG(); \
     POWER_TEST_NEG_PWRSETBUCKCFG(); \
@@ -338,6 +341,7 @@ extern "C" {
 #define POWER_TEST_NEG_PWRGETBUCKCFG()
 #endif
 
+/* Test: TC-POWER-0035 */
 #define POWER_TEST_PWRGETBUCKCFG() \
     POWER_TEST_POS_PWRGETBUCKCFG(); \
     POWER_TEST_NEG_PWRGETBUCKCFG()
@@ -358,6 +362,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setTsdCfg_zeroValidParams)
 
+/* Test: TC-POWER-0036 */
 #define POWER_TEST_PWRSETTSDCFG() \
     POWER_TEST_POS_PWRSETTSDCFG(); \
     POWER_TEST_NEG_PWRSETTSDCFG()
@@ -374,6 +379,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetTsdImmStatus_nullParam_tsdImmStat); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getTsdCfg_zeroValidParams)
 
+/* Test: TC-POWER-0037 */
 #define POWER_TEST_PWRGETTSDCFG() \
     POWER_TEST_POS_PWRGETTSDCFG(); \
     POWER_TEST_NEG_PWRGETTSDCFG()
@@ -392,6 +398,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_outOfBounds_resource)
 
+/* Test: TC-POWER-0038 */
 #define POWER_TEST_PWRGETRSRCSTATUS() \
     POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()
@@ -413,6 +420,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidPwrRsrc); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidBitPos)
 
+/* Test: TC-POWER-0039 */
 #define POWER_TEST_PWRSETBUCKLDOSEQTRIG() \
     POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG()
@@ -430,6 +438,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidResource); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidBitPos)
 
+/* Test: TC-POWER-0040 */
 #define POWER_TEST_PWRGETBUCKLDOSEQTRIG() \
     POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG()
@@ -452,6 +461,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_zeroLen); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_invalidConfig)
 
+/* Test: TC-POWER-0041 */
 #define POWER_TEST_PWRSETBUCKLDOSEQDLY() \
     POWER_TEST_POS_PWRSETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY()
@@ -468,6 +478,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_zeroLen); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_invalidConfig)
 
+/* Test: TC-POWER-0042 */
 #define POWER_TEST_PWRGETBUCKLDOSEQDLY() \
     POWER_TEST_POS_PWRGETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQDLY()

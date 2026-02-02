@@ -66,6 +66,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_adc_adcSetCfg_invalidSrcSel); \
     PLATFORM_RUN_TEST(test_neg_adc_adcSetCfg_zeroValidParams)
 
+/* Test: TC-ADC-0001 */
 #define ADC_TEST_ADCSETCFG() \
     ADC_TEST_POS_ADCSETCFG(); \
     ADC_TEST_NEG_ADCSETCFG()
@@ -82,6 +83,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_adc_adcGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_adc_adcGetCfg_nullConfig)
 
+/* Test: TC-ADC-0002 */
 #define ADC_TEST_ADCGETCFG() \
     ADC_TEST_POS_ADCGETCFG(); \
     ADC_TEST_NEG_ADCGETCFG()
@@ -95,6 +97,7 @@ extern "C" {
 #define ADC_TEST_NEG_ADCSTARTSINGLECONVERSION() \
     PLATFORM_RUN_TEST(test_neg_adc_adcStartSingleConversion_nullHandle)
 
+/* Test: TC-ADC-0003 */
 #define ADC_TEST_ADCSTARTSINGLECONVERSION() \
     ADC_TEST_POS_ADCSTARTSINGLECONVERSION(); \
     ADC_TEST_NEG_ADCSTARTSINGLECONVERSION()
@@ -109,6 +112,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_adc_adcStartSingleConversionBlocking_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_adc_maxLoopCntFail)
 
+/* Test: TC-ADC-0004 */
 #define ADC_TEST_ADCSTARTSINGLECONVERSIONBLOCKING() \
     ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING(); \
     ADC_TEST_NEG_ADCSTARTSINGLECONVERSIONBLOCKING()
@@ -123,6 +127,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_adc_adcGetStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_adc_adcGetStatus_nullStatusPtr)
 
+/* Test: TC-ADC-0005 */
 #define ADC_TEST_ADCGETSTATUS() \
     ADC_TEST_POS_ADCGETSTATUS(); \
     ADC_TEST_NEG_ADCGETSTATUS()
@@ -137,6 +142,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_adc_adcGetResultCode_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_adc_adcGetResultCode_nullResultPtr)
 
+/* Test: TC-ADC-0006 */
 #define ADC_TEST_ADCGETRESULTCODE() \
     ADC_TEST_POS_ADCGETRESULTCODE(); \
     ADC_TEST_NEG_ADCGETRESULTCODE()

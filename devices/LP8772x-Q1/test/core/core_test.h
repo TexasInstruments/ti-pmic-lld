@@ -60,6 +60,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailure)
 
+/* Test: TC-CORE-0023 */
 #define CORE_TEST_CONFIGCRCCALCULATE() \
     CORE_TEST_POS_CONFIGCRCCALCULATE(); \
     CORE_TEST_NEG_CONFIGCRCCALCULATE()
@@ -74,6 +75,7 @@ extern "C" {
 #define CORE_TEST_NEG_CONFIGCRCDISABLE() \
     PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
 
+/* Test: TC-CORE-0024 */
 #define CORE_TEST_CONFIGCRCDISABLE() \
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE()
@@ -92,6 +94,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_crcMismatch); \
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_error)
 
+/* Test: TC-CORE-0025 */
 #define CORE_TEST_CONFIGCRCENABLE() \
     CORE_TEST_POS_CONFIGCRCENABLE(); \
     CORE_TEST_NEG_CONFIGCRCENABLE()
@@ -107,6 +110,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullCrc)
 
+/* Test: TC-CORE-0026 */
 #define CORE_TEST_CONFIGCRCGETFROMDEVICE() \
     CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
     CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE()
@@ -122,6 +126,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus)
 
+/* Test: TC-CORE-0027 */
 #define CORE_TEST_GETCONFIGCRCSTATUS() \
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS()
@@ -137,6 +142,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
 
+/* Test: TC-CORE-0036 */
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
@@ -153,6 +159,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds)
 
+/* Test: TC-CORE-0047 */
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
@@ -167,6 +174,7 @@ extern "C" {
 #define CORE_TEST_NEG_INIT() \
     PLATFORM_RUN_TEST(test_neg_core_init_invalidDeviceType)
 
+/* Test: TC-CORE-0030 */
 #define CORE_TEST_INIT() \
     CORE_TEST_POS_INIT(); \
     CORE_TEST_NEG_INIT()
@@ -181,6 +189,7 @@ extern "C" {
 #define CORE_TEST_NEG_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
 
+/* Test: TC-CORE-0035 */
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
@@ -196,6 +205,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds)
 
+/* Test: TC-CORE-0046 */
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()

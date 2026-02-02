@@ -66,6 +66,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceEnable_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceEnable_outOfBounds_resource)
 
+/* Test: TC-POWER-0021 */
 #define POWER_TEST_PWRSETRESOURCEENABLE() \
     POWER_TEST_POS_PWRSETRESOURCEENABLE(); \
     POWER_TEST_NEG_PWRSETRESOURCEENABLE()
@@ -79,6 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceEnable_nullParam_isEnabled); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceEnable_outOfBounds_resource)
 
+/* Test: TC-POWER-0022 */
 #define POWER_TEST_PWRGETRESOURCEENABLE() \
     POWER_TEST_NEG_PWRGETRESOURCEENABLE()
 
@@ -226,6 +228,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfg_vccaVmon_rvReaction); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfg_vccaVmon_scReaction)
 
+/* Test: TC-POWER-0023 */
 #define POWER_TEST_PWRSETRESOURCECFG() \
     POWER_TEST_POS_PWRSETRESOURCECFG(); \
     POWER_TEST_NEG_PWRSETRESOURCECFG()
@@ -251,6 +254,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedScReaction)
 
+/* Test: TC-POWER-0024 */
 #define POWER_TEST_PWRGETRESOURCECFG() \
     POWER_TEST_NEG_PWRGETRESOURCECFG()
 
@@ -333,6 +337,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfgs_vccaVmon_rvReaction); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfgs_vccaVmon_scReaction)
 
+/* Test: TC-POWER-0025 */
 #define POWER_TEST_PWRSETRESOURCECFGS() \
     POWER_TEST_NEG_PWRSETRESOURCECFGS()
 
@@ -345,6 +350,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_outOfBounds_resource)
 
+/* Test: TC-POWER-0026 */
 #define POWER_TEST_PWRGETRESOURCECFGS() \
     POWER_TEST_NEG_PWRGETRESOURCECFGS()
 
@@ -386,6 +392,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfg_vccaVmon_shutdownDelay); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfg_vccaVmon_startupDelay)
 
+/* Test: TC-POWER-0027 */
 #define POWER_TEST_PWRSETSEQUENCECFG() \
     POWER_TEST_POS_PWRSETSEQUENCECFG(); \
     POWER_TEST_NEG_PWRSETSEQUENCECFG()
@@ -401,6 +408,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfg_nullParam_config); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfg_nullParam_handle)
 
+/* Test: TC-POWER-0028 */
 #define POWER_TEST_PWRGETSEQUENCECFG() \
     POWER_TEST_POS_PWRGETSEQUENCECFG(); \
     POWER_TEST_NEG_PWRGETSEQUENCECFG()
@@ -429,6 +437,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_vccaVmon_shutdownDelay); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_vccaVmon_startupDelay)
 
+/* Test: TC-POWER-0029 */
 #define POWER_TEST_PWRSETSEQUENCECFGS() \
     POWER_TEST_NEG_PWRSETSEQUENCECFGS()
 
@@ -442,6 +451,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_numConfigs_zero); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_outOfBounds_resource)
 
+/* Test: TC-POWER-0030 */
 #define POWER_TEST_PWRGETSEQUENCECFGS() \
     POWER_TEST_NEG_PWRGETSEQUENCECFGS()
 
@@ -471,6 +481,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply)
 
+/* Test: TC-POWER-0031 */
 #define POWER_TEST_COVERAGE() \
     POWER_TEST_POS_COVERAGE(); \
     POWER_TEST_NEG_COVERAGE()

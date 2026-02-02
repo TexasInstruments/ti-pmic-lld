@@ -64,6 +64,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_criticalSection_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_criticalSection_nullCallback)
 
+/* Test: TC-COMMON-0021 */
 #define COMMON_TEST_CRITICALSECTION() \
     COMMON_TEST_POS_CRITICALSECTION(); \
     COMMON_TEST_NEG_CRITICALSECTION()
@@ -79,6 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_timerWait_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_timerWait_nullCallback)
 
+/* Test: TC-COMMON-0002 */
 #define COMMON_TEST_TIMERWAIT() \
     COMMON_TEST_POS_TIMERWAIT(); \
     COMMON_TEST_NEG_TIMERWAIT()
@@ -105,6 +107,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_logStatus_warningTypeInvalidId); \
     PLATFORM_RUN_TEST(test_neg_common_logStatus_exceedsMaxErrorId)
 
+/* Test: TC-COMMON-0023 */
 #define COMMON_TEST_LOGSTATUS() \
     COMMON_TEST_POS_LOGSTATUS(); \
     COMMON_TEST_NEG_LOGSTATUS()
@@ -139,6 +142,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId)
 
+/* Test: TC-COMMON-0024 */
 #define COMMON_TEST_GETDIAGNOSTIC() \
     COMMON_TEST_POS_GETDIAGNOSTIC(); \
     COMMON_TEST_NEG_GETDIAGNOSTIC()
@@ -178,6 +182,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId)
 
+/* Test: TC-COMMON-0026 */
 #define COMMON_TEST_CLRDIAGNOSTIC() \
     COMMON_TEST_POS_CLRDIAGNOSTIC(); \
     COMMON_TEST_NEG_CLRDIAGNOSTIC()
@@ -193,6 +198,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullOutput)
 
+/* Test: TC-COMMON-0030 */
 #define COMMON_TEST_GETRETRYCNT() \
     COMMON_TEST_POS_GETRETRYCNT(); \
     COMMON_TEST_NEG_GETRETRYCNT()
@@ -208,6 +214,7 @@ extern "C" {
 #define COMMON_TEST_NEG_INCREMENTRETRYCNT() \
     PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullHandle)
 
+/* Test: TC-COMMON-0031 */
 #define COMMON_TEST_INCREMENTRETRYCNT() \
     COMMON_TEST_POS_INCREMENTRETRYCNT(); \
     COMMON_TEST_NEG_INCREMENTRETRYCNT()
@@ -222,6 +229,7 @@ extern "C" {
 #define COMMON_TEST_NEG_CLRRETRYCNT() \
     PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullHandle)
 
+/* Test: TC-COMMON-0032 */
 #define COMMON_TEST_CLRRETRYCNT() \
     COMMON_TEST_POS_CLRRETRYCNT(); \
     COMMON_TEST_NEG_CLRRETRYCNT()
@@ -234,6 +242,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullOutput)
 
+/* Test: TC-COMMON-0033 */
 #define COMMON_TEST_GETRETRYCNTOVERFLOW() \
     COMMON_TEST_NEG_GETRETRYCNTOVERFLOW()
 
@@ -247,6 +256,7 @@ extern "C" {
 #define COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW() \
     PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullHandle)
 
+/* Test: TC-COMMON-0034 */
 #define COMMON_TEST_CLRRETRYCNTOVERFLOW() \
     COMMON_TEST_POS_CLRRETRYCNTOVERFLOW(); \
     COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW()

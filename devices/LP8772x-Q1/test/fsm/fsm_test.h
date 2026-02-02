@@ -56,6 +56,7 @@ extern "C" {
 #define FSM_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
 
+/* Test: TC-FSM-0026 */
 #define FSM_TEST_FSMCLRRECOVCNT() \
     FSM_TEST_NEG_FSMCLRRECOVCNT()
 
@@ -66,6 +67,7 @@ extern "C" {
 #define FSM_TEST_NEG_FSMCLRRESETCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrResetCnt_nullHandle)
 
+/* Test: TC-FSM-0027 */
 #define FSM_TEST_FSMCLRRESETCNT() \
     FSM_TEST_NEG_FSMCLRRESETCNT()
 
@@ -77,6 +79,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullRecovCnt)
 
+/* Test: TC-FSM-0028 */
 #define FSM_TEST_FSMGETRECOVCNT() \
     FSM_TEST_NEG_FSMGETRECOVCNT()
 
@@ -91,6 +94,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
 
+/* Test: TC-FSM-0029 */
 #define FSM_TEST_FSMGETRECOVCNTTHR() \
     FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMGETRECOVCNTTHR()
@@ -103,6 +107,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullResetCnt)
 
+/* Test: TC-FSM-0030 */
 #define FSM_TEST_FSMGETRESETCNT() \
     FSM_TEST_NEG_FSMGETRESETCNT()
 
@@ -117,6 +122,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCntThr_nullResetCntThr)
 
+/* Test: TC-FSM-0031 */
 #define FSM_TEST_FSMGETRESETCNTTHR() \
     FSM_TEST_POS_FSMGETRESETCNTTHR(); \
     FSM_TEST_NEG_FSMGETRESETCNTTHR()
@@ -135,6 +141,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidCmd); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle)
 
+/* Test: TC-FSM-0032 */
 #define FSM_TEST_FSMSETDEVSTATE() \
     FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()
@@ -150,6 +157,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_outOfBoundsRecovCntThr)
 
+/* Test: TC-FSM-0033 */
 #define FSM_TEST_FSMSETRECOVCNTTHR() \
     FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMSETRECOVCNTTHR()
@@ -165,6 +173,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetResetCntThr_outOfBoundsResetCntThr)
 
+/* Test: TC-FSM-0034 */
 #define FSM_TEST_FSMSETRESETCNTTHR() \
     FSM_TEST_POS_FSMSETRESETCNTTHR(); \
     FSM_TEST_NEG_FSMSETRESETCNTTHR()

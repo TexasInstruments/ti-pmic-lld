@@ -68,6 +68,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
 
+/* Test: TC-IO-0029 */
 #define IO_TEST_IOTXRXBYTE() \
     IO_TEST_NEG_IOTXRXBYTE(); \
     IO_TEST_POS_IOTXRXBYTE()
@@ -87,6 +88,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_b_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_bCS_nullHandle)
 
+/* Test: TC-IO-0030 */
 #define IO_TEST_IOUPDATEBYTE() \
     IO_TEST_NEG_IOUPDATEBYTE(); \
     IO_TEST_POS_IOUPDATEBYTE()
@@ -108,6 +110,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioCrcEnable_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioCrcDisable_nullHandle)
 
+/* Test: TC-IO-0031 */
 #define IO_TEST_CRC() \
     IO_TEST_NEG_CRC(); \
     IO_TEST_POS_CRC()
@@ -122,6 +125,7 @@ extern "C" {
 
 #define IO_TEST_NEG_REVISION()
 
+/* Test: TC-IO-0032 */
 #define IO_TEST_REVISION() \
     IO_TEST_NEG_REVISION(); \
     IO_TEST_POS_REVISION()
@@ -140,6 +144,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
     PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry)
 
+/* Test: TC-IO-0033 */
 #define IO_TEST_RETRY() \
     IO_TEST_NEG_RETRY(); \
     IO_TEST_POS_RETRY()
@@ -153,6 +158,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_nullIoWriteFunc); \
     PLATFORM_RUN_TEST(test_neg_io_nullIoRead)
 
+/* Test: TC-IO-0034 */
 #define IO_TEST_COVERAGE() \
     IO_TEST_NEG_COVERAGE()
 

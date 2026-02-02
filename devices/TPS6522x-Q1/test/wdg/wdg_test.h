@@ -53,6 +53,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_nullHandle)
 
+/* Test: TC-WDG-0040 */
 #define WDG_TEST_WDGSETENABLESTATE() \
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_NEG_WDGSETENABLESTATE()
@@ -65,6 +66,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullIsEnabled)
 
+/* Test: TC-WDG-0043 */
 #define WDG_TEST_WDGGETENABLESTATE() \
     WDG_TEST_NEG_WDGGETENABLESTATE()
 
@@ -99,6 +101,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidRstThr); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidCntSel)
 
+/* Test: TC-WDG-0044 */
 #define WDG_TEST_WDGSETCFG() \
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_NEG_WDGSETCFG()
@@ -111,6 +114,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullWdgCfg)
 
+/* Test: TC-WDG-0045 */
 #define WDG_TEST_WDGGETCFG() \
     WDG_TEST_NEG_WDGGETCFG()
 
@@ -124,6 +128,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle)
 
+/* Test: TC-WDG-0046 */
 #define WDG_TEST_WDGSETPOWERHOLD() \
     WDG_TEST_POS_WDGSETPOWERHOLD(); \
     WDG_TEST_NEG_WDGSETPOWERHOLD()
@@ -136,6 +141,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullIsEnabled)
 
+/* Test: TC-WDG-0047 */
 #define WDG_TEST_WDGGETPOWERHOLD() \
     WDG_TEST_NEG_WDGGETPOWERHOLD()
 
@@ -149,6 +155,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle)
 
+/* Test: TC-WDG-0048 */
 #define WDG_TEST_WDGSETRETURNTOLONGWINDOW() \
     WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
     WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW()
@@ -161,6 +168,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullIsEnabled)
 
+/* Test: TC-WDG-0049 */
 #define WDG_TEST_WDGGETRETURNTOLONGWINDOW() \
     WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
 
@@ -178,6 +186,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGQAWRITEANSWER() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
 
+/* Test: TC-WDG-0051 */
 #define WDG_TEST_WDGQAWRITEANSWER() \
     WDG_TEST_POS_WDGQAWRITEANSWER(); \
     WDG_TEST_NEG_WDGQAWRITEANSWER()
@@ -200,6 +209,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_nullErrStatus)
 
+/* Test: TC-WDG-0052 */
 #define WDG_TEST_WDGCLRERRSTATUS() \
     WDG_TEST_POS_WDGCLRERRSTATUS(); \
     WDG_TEST_NEG_WDGCLRERRSTATUS()
@@ -211,6 +221,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGCLRERRSTATUSALL() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatusAll_nullHandle)
 
+/* Test: TC-WDG-0053 */
 #define WDG_TEST_WDGCLRERRSTATUSALL() \
     WDG_TEST_NEG_WDGCLRERRSTATUSALL()
 
@@ -225,6 +236,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullErrStatus)
 
+/* Test: TC-WDG-0054 */
 #define WDG_TEST_WDGGETERRSTATUS() \
     WDG_TEST_POS_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETERRSTATUS()
@@ -242,6 +254,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullFailCntStatus)
 
+/* Test: TC-WDG-0055 */
 #define WDG_TEST_WDGGETFAILCNTSTATUS() \
     WDG_TEST_POS_WDGGETFAILCNTSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
@@ -253,6 +266,7 @@ extern "C" {
 #define WDG_TEST_POS_WDGSETENDRVSEL() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel)
 
+/* Test: TC-WDG-0022 */
 #define WDG_TEST_WDGSETENDRVSEL() \
     WDG_TEST_POS_WDGSETENDRVSEL()
 
@@ -263,6 +277,7 @@ extern "C" {
 #define WDG_TEST_POS_WDGGETENDRVSEL() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel)
 
+/* Test: TC-WDG-0023 */
 #define WDG_TEST_WDGGETENDRVSEL() \
     WDG_TEST_POS_WDGGETENDRVSEL()
 

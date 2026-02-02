@@ -72,6 +72,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_buck_fpwmEn); \
     PLATFORM_RUN_TEST(test_pos_power_buck_combinedConfig)
 
+/* Test: TC-POWER-0014 */
 #define POWER_TEST_SETGETBUCKCFG() \
     POWER_TEST_NEG_SETGETBUCKCFG(); \
     POWER_TEST_POS_SETGETBUCKCFG()
@@ -101,6 +102,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
     PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig)
 
+/* Test: TC-POWER-0015 */
 #define POWER_TEST_SETGETLDOCFG() \
     POWER_TEST_NEG_SETGETLDOCFG(); \
     POWER_TEST_POS_SETGETLDOCFG()
@@ -134,6 +136,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_vmon2_enableDisable); \
     PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig)
 
+/* Test: TC-POWER-0016 */
 #define POWER_TEST_SETGETVCCAVMONCFG() \
     POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
     POWER_TEST_POS_SETGETVCCAVMONCFG()
@@ -149,6 +152,7 @@ extern "C" {
 #define POWER_TEST_POS_SETGLOBALVMONDEGL() \
     PLATFORM_RUN_TEST(test_pos_power_globalVmonDegl_allValues)
 
+/* Test: TC-POWER-0017 */
 #define POWER_TEST_SETGLOBALVMONDEGL() \
     POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
     POWER_TEST_POS_SETGLOBALVMONDEGL()
@@ -172,6 +176,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_thermal_tsdOrdLvl); \
     PLATFORM_RUN_TEST(test_pos_power_thermal_combinedConfig)
 
+/* Test: TC-POWER-0018 */
 #define POWER_TEST_SETGETTHERMALCFG() \
     POWER_TEST_NEG_SETGETTHERMALCFG(); \
     POWER_TEST_POS_SETGETTHERMALCFG()
@@ -193,6 +198,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_depth); \
     PLATFORM_RUN_TEST(test_pos_power_spreadSpectrum_combinedConfig)
 
+/* Test: TC-POWER-0019 */
 #define POWER_TEST_SETGETSPREADSPECTRUMCFG() \
     POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
     POWER_TEST_POS_SETGETSPREADSPECTRUMCFG()
@@ -211,6 +217,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_ldoUVOV); \
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV)
 
+/* Test: TC-POWER-0020 */
 #define POWER_TEST_GETRSRCSTATUS() \
     POWER_TEST_NEG_GETRSRCSTATUS(); \
     POWER_TEST_POS_GETRSRCSTATUS()

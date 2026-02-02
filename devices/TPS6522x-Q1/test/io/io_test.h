@@ -71,6 +71,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullTimerWithRetry); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncHooks)
 
+/* Test: TC-IO-0026 */
 #define IO_TEST_IOTXBYTE() \
     IO_TEST_POS_IOTXBYTE(); \
     IO_TEST_NEG_IOTXBYTE()
@@ -84,6 +85,7 @@ extern "C" {
 #define IO_TEST_NEG_IOTXBYTE_CS() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle)
 
+/* Test: TC-IO-0027 */
 #define IO_TEST_IOTXBYTE_CS() \
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_NEG_IOTXBYTE_CS()
@@ -110,6 +112,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_spiRxCrcMismatch); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_i2cRxCrcMismatch)
 
+/* Test: TC-IO-0023 */
 #define IO_TEST_IORXBYTE() \
     IO_TEST_POS_IORXBYTE(); \
     IO_TEST_NEG_IORXBYTE()
@@ -124,6 +127,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxData)
 
+/* Test: TC-IO-0024 */
 #define IO_TEST_IORXBYTE_CS() \
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_NEG_IORXBYTE_CS()
@@ -137,6 +141,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_nullHandle)
 
+/* Test: TC-IO-0030 */
 #define IO_TEST_IOUPDATEBYTE() \
     IO_TEST_POS_IOUPDATEBYTE(); \
     IO_TEST_NEG_IOUPDATEBYTE()
@@ -150,6 +155,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE_CS() \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_CS_nullHandle)
 
+/* Test: TC-IO-0013 */
 #define IO_TEST_IOUPDATEBYTE_CS() \
     IO_TEST_POS_IOUPDATEBYTE_CS(); \
     IO_TEST_NEG_IOUPDATEBYTE_CS()
@@ -163,6 +169,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE_B() \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_b_nullHandle)
 
+/* Test: TC-IO-0014 */
 #define IO_TEST_IOUPDATEBYTE_B() \
     IO_TEST_POS_IOUPDATEBYTE_B(); \
     IO_TEST_NEG_IOUPDATEBYTE_B()
@@ -176,6 +183,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE_BCS() \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_bCS_nullHandle)
 
+/* Test: TC-IO-0015 */
 #define IO_TEST_IOUPDATEBYTE_BCS() \
     IO_TEST_POS_IOUPDATEBYTE_BCS(); \
     IO_TEST_NEG_IOUPDATEBYTE_BCS()
@@ -192,6 +200,7 @@ extern "C" {
 #define IO_TEST_NEG_IOCRCENABLE() \
     PLATFORM_RUN_TEST(test_neg_io_ioCrcEnable_nullHandle)
 
+/* Test: TC-IO-0021 */
 #define IO_TEST_IOCRCENABLE() \
     IO_TEST_POS_IOCRCENABLE(); \
     IO_TEST_NEG_IOCRCENABLE()
@@ -205,6 +214,7 @@ extern "C" {
 #define IO_TEST_NEG_IOCRCDISABLE() \
     PLATFORM_RUN_TEST(test_neg_io_ioCrcDisable_nullHandle)
 
+/* Test: TC-IO-0020 */
 #define IO_TEST_IOCRCDISABLE() \
     IO_TEST_POS_IOCRCDISABLE(); \
     IO_TEST_NEG_IOCRCDISABLE()
@@ -218,6 +228,7 @@ extern "C" {
 #define IO_TEST_NEG_IOSETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_io_ioSetCrcEnableState_nullHandle)
 
+/* Test: TC-IO-0025 */
 #define IO_TEST_IOSETCRCENABLESTATE() \
     IO_TEST_POS_IOSETCRCENABLESTATE(); \
     IO_TEST_NEG_IOSETCRCENABLESTATE()
@@ -232,6 +243,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioGetCrcEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioGetCrcEnableState_nullEnabled)
 
+/* Test: TC-IO-0022 */
 #define IO_TEST_IOGETCRCENABLESTATE() \
     IO_TEST_POS_IOGETCRCENABLESTATE(); \
     IO_TEST_NEG_IOGETCRCENABLESTATE()

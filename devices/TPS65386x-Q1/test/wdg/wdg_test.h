@@ -64,6 +64,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgDisable_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_nullHandle)
 
+/* Test: TC-WDG-0040 */
 #define WDG_TEST_WDGSETENABLESTATE() \
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_NEG_WDGSETENABLESTATE()
@@ -79,6 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullParam)
 
+/* Test: TC-WDG-0043 */
 #define WDG_TEST_WDGGETENABLESTATE() \
     WDG_TEST_POS_WDGGETENABLESTATE(); \
     WDG_TEST_NEG_WDGGETENABLESTATE()
@@ -116,6 +118,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_zeroValidParams)
 
+/* Test: TC-WDG-0044 */
 #define WDG_TEST_WDGSETCFG() \
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_NEG_WDGSETCFG()
@@ -131,6 +134,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig)
 
+/* Test: TC-WDG-0045 */
 #define WDG_TEST_WDGGETCFG() \
     WDG_TEST_POS_WDGGETCFG(); \
     WDG_TEST_NEG_WDGGETCFG()
@@ -151,6 +155,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETANSWERCNT() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
 
+/* Test: TC-WDG-0005 */
 #define WDG_TEST_WDGSETANSWERCNT() \
     WDG_TEST_POS_WDGSETANSWERCNT(); \
     WDG_TEST_NEG_WDGSETANSWERCNT()
@@ -171,6 +176,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullParam)
 
+/* Test: TC-WDG-0006 */
 #define WDG_TEST_WDGGETERRCNT() \
     WDG_TEST_POS_WDGGETERRCNT(); \
     WDG_TEST_NEG_WDGGETERRCNT()
@@ -187,6 +193,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_invalidMode)
 
+/* Test: TC-WDG-0007 */
 #define WDG_TEST_WDGTRIGGER() \
     WDG_TEST_POS_WDGTRIGGER(); \
     WDG_TEST_NEG_WDGTRIGGER()
@@ -224,6 +231,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_nullParam); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatusAll_nullHandle)
 
+/* Test: TC-WDG-0008 */
 #define WDG_TEST_WDGGETSTATUS() \
     WDG_TEST_POS_WDGGETSTATUS(); \
     WDG_TEST_NEG_WDGGETSTATUS()

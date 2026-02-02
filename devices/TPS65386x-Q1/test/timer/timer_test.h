@@ -76,6 +76,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_validParamsZero)
 
+/* Test: TC-TIMER-0001 */
 #define TIMER_TEST_TIMERSETCFG() \
     TIMER_TEST_POS_TIMERSETCFG(); \
     TIMER_TEST_NEG_TIMERSETCFG()
@@ -91,6 +92,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_timer_timerGetCfg_validParamsZero)
 
+/* Test: TC-TIMER-0002 */
 #define TIMER_TEST_TIMERGETCFG() \
     TIMER_TEST_POS_TIMERGETCFG(); \
     TIMER_TEST_NEG_TIMERGETCFG()
@@ -110,6 +112,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCnt_overflowValue)
 
+/* Test: TC-TIMER-0003 */
 #define TIMER_TEST_TIMERSETCNT() \
     TIMER_TEST_POS_TIMERSETCNT(); \
     TIMER_TEST_NEG_TIMERSETCNT()
@@ -124,6 +127,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerGetCnt_nullCnt); \
     PLATFORM_RUN_TEST(test_neg_timer_timerGetCnt_nullHandle)
 
+/* Test: TC-TIMER-0004 */
 #define TIMER_TEST_TIMERGETCNT() \
     TIMER_TEST_POS_TIMERGETCNT(); \
     TIMER_TEST_NEG_TIMERGETCNT()
@@ -139,6 +143,7 @@ extern "C" {
 #define TIMER_TEST_NEG_TIMERCLR() \
     PLATFORM_RUN_TEST(test_neg_timer_timerClr_nullHandle)
 
+/* Test: TC-TIMER-0005 */
 #define TIMER_TEST_TIMERCLR() \
     TIMER_TEST_POS_TIMERCLR(); \
     TIMER_TEST_NEG_TIMERCLR()
@@ -157,6 +162,7 @@ extern "C" {
 #define TIMER_TEST_NEG_TIMERSTOP() \
     PLATFORM_RUN_TEST(test_neg_timer_timerStop_nullHandle)
 
+/* Test: TC-TIMER-0006 */
 #define TIMER_TEST_TIMERSTOP() \
     TIMER_TEST_POS_TIMERSTOP(); \
     TIMER_TEST_NEG_TIMERSTOP()
@@ -176,6 +182,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerSetWakeupValue_outOfBounds); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetWakeupValue_nullHandle)
 
+/* Test: TC-TIMER-0007 */
 #define TIMER_TEST_TIMERSETWAKEUPVALUE() \
     TIMER_TEST_POS_TIMERSETWAKEUPVALUE(); \
     TIMER_TEST_NEG_TIMERSETWAKEUPVALUE()
@@ -190,6 +197,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerGetWakeupValue_nullWakeup); \
     PLATFORM_RUN_TEST(test_neg_timer_timerGetWakeupValue_nullHandle)
 
+/* Test: TC-TIMER-0008 */
 #define TIMER_TEST_TIMERGETWAKEUPVALUE() \
     TIMER_TEST_POS_TIMERGETWAKEUPVALUE(); \
     TIMER_TEST_NEG_TIMERGETWAKEUPVALUE()

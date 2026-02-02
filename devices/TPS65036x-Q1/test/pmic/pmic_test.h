@@ -72,6 +72,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqResponseCallback)
 
+/* Test: TC-PMIC-0010 */
 #define PMIC_TEST_INIT() \
     PMIC_TEST_POS_INIT(); \
     PMIC_TEST_NEG_INIT()
@@ -86,6 +87,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidDrvInitStat)
 
+/* Test: TC-PMIC-0011 */
 #define PMIC_TEST_CHECKHANDLE() \
     PMIC_TEST_NEG_CHECKHANDLE()
 

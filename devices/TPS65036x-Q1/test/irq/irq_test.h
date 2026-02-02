@@ -111,6 +111,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqSetMasks_numMasks_exceeds_max); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_numMasks_exceeds_max)
 
+/* Test: TC-IRQ-0025 */
 #define IRQ_TEST_IRQSETGETMASK() \
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_NEG_IRQSETGETMASK()
@@ -144,6 +145,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_irqStat)
 
+/* Test: TC-IRQ-0026 */
 #define IRQ_TEST_IRQGETSTATUS() \
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
@@ -163,6 +165,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqNum)
 
+/* Test: TC-IRQ-0027 */
 #define IRQ_TEST_IRQGETNEXTFLAG() \
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
@@ -179,6 +182,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_outOfBounds_irqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_flag)
 
+/* Test: TC-IRQ-0028 */
 #define IRQ_TEST_IRQGETFLAG() \
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
@@ -196,6 +200,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_outOfBounds_irqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
 
+/* Test: TC-IRQ-0029 */
 #define IRQ_TEST_IRQCLRFLAG() \
     IRQ_TEST_POS_IRQCLRFLAG(); \
     IRQ_TEST_NEG_IRQCLRFLAG()
@@ -204,6 +209,7 @@ extern "C" {
 /* API-Specific Test Macros - Pmic_irqClrAllFlags, Pmic_irqSetMask, Pmic_irqGetStatus, Pmic_irqGetNextFlag, Pmic_irqClrFlag */
 /* ======================================================================================================================== */
 
+/* Test: TC-IRQ-0030 */
 #define IRQ_TEST_IRQINTEGRATION() \
     PLATFORM_RUN_TEST(test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear); \
     PLATFORM_RUN_TEST(test_pos_irq_irqMultipleSimultaneous_allRegisters)

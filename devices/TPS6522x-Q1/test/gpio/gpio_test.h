@@ -77,6 +77,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpiosetFunction_invalidFunctionality); \
     PLATFORM_RUN_TEST(test_neg_gpio_setPinCfg_invalidGpioPin)
 
+/* Test: TC-GPIO-0006 */
 #define GPIO_TEST_SETPINCFG() \
     GPIO_TEST_POS_SETPINCFG(); \
     GPIO_TEST_NEG_SETPINCFG()
@@ -97,6 +98,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpiogetPinCfg_zeroValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_getPinCfg_invalidGpioPin)
 
+/* Test: TC-GPIO-0007 */
 #define GPIO_TEST_GETPINCFG() \
     GPIO_TEST_POS_GETPINCFG(); \
     GPIO_TEST_NEG_GETPINCFG()
@@ -114,6 +116,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetPinVal_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetPinVal_invalidPin)
 
+/* Test: TC-GPIO-0008 */
 #define GPIO_TEST_SETPINVAL() \
     GPIO_TEST_POS_SETPINVAL(); \
     GPIO_TEST_NEG_SETPINVAL()
@@ -131,6 +134,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetPinVal_nullValue); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetPinVal_invalidPin)
 
+/* Test: TC-GPIO-0009 */
 #define GPIO_TEST_GETPINVAL() \
     GPIO_TEST_POS_GETPINVAL(); \
     GPIO_TEST_NEG_GETPINVAL()
@@ -149,6 +153,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetNIntEnDrvCfg_invalidFunction); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpiosetNIntEnDrvCfg_zeroValidParams)
 
+/* Test: TC-GPIO-0010 */
 #define GPIO_TEST_SETNINTENDDRVCFG() \
     GPIO_TEST_POS_SETNINTENDDRVCFG(); \
     GPIO_TEST_NEG_SETNINTENDDRVCFG()
@@ -165,6 +170,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNIntEnDrvCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpiogetNIntEnDrvCfg_invalidParam)
 
+/* Test: TC-GPIO-0011 */
 #define GPIO_TEST_GETNINTENDDRVCFG() \
     GPIO_TEST_POS_GETNINTENDDRVCFG(); \
     GPIO_TEST_NEG_GETNINTENDDRVCFG()
@@ -179,6 +185,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNIntEnDrvVal_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNIntEnDrvVal_nullValue)
 
+/* Test: TC-GPIO-0012 */
 #define GPIO_TEST_GETNINTENDRVVAL() \
     GPIO_TEST_POS_GETNINTENDRVVAL(); \
     GPIO_TEST_NEG_GETNINTENDRVVAL()
@@ -200,6 +207,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpiosetEnPbVSenseCfg_zeroValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch)
 
+/* Test: TC-GPIO-0013 */
 #define GPIO_TEST_SETENPBVSENSECFG() \
     GPIO_TEST_POS_SETENPBVSENSECFG(); \
     GPIO_TEST_NEG_SETENPBVSENSECFG()
@@ -216,6 +224,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpiogetEnPbVSenseCfg_invalidParam)
 
+/* Test: TC-GPIO-0014 */
 #define GPIO_TEST_GETENPBVSENSECFG() \
     GPIO_TEST_POS_GETENPBVSENSECFG(); \
     GPIO_TEST_NEG_GETENPBVSENSECFG()
@@ -231,6 +240,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseStatus_nullStatus); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpiogetEnPbVSenseStatus_zeroValidParams)
 
+/* Test: TC-GPIO-0015 */
 #define GPIO_TEST_GETENPBVSENSESTATUS() \
     GPIO_TEST_POS_GETENPBVSENSESTATUS(); \
     GPIO_TEST_NEG_GETENPBVSENSESTATUS()
@@ -245,6 +255,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNRstOutVal_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNRstOutVal_nullValue)
 
+/* Test: TC-GPIO-0016 */
 #define GPIO_TEST_GETNRSTOUTVAL() \
     GPIO_TEST_POS_GETNRSTOUTVAL(); \
     GPIO_TEST_NEG_GETNRSTOUTVAL()

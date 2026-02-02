@@ -72,6 +72,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckBoostCfg_zeroValidParams)
 
+/* Test: TC-POWER-0001 */
 #define POWER_TEST_PWRSETBUCKBOOSTCFG() \
     POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
     POWER_TEST_NEG_PWRSETBUCKBOOSTCFG()
@@ -87,6 +88,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckBoostCfg_zeroValidParams)
 
+/* Test: TC-POWER-0002 */
 #define POWER_TEST_PWRGETBUCKBOOSTCFG() \
     POWER_TEST_POS_PWRGETBUCKBOOSTCFG(); \
     POWER_TEST_NEG_PWRGETBUCKBOOSTCFG()
@@ -166,6 +168,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidLdoId)
 
+/* Test: TC-POWER-0032 */
 #define POWER_TEST_PWRSETLDOCFG() \
     POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
@@ -181,6 +184,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_invalidLdoId)
 
+/* Test: TC-POWER-0033 */
 #define POWER_TEST_PWRGETLDOCFG() \
     POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
@@ -234,6 +238,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_rampTime); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetPldoCfg_invalidPldoId)
 
+/* Test: TC-POWER-0005 */
 #define POWER_TEST_PWRSETPLDOCFG() \
     POWER_TEST_POS_PWRSETPLDOCFG(); \
     POWER_TEST_NEG_PWRSETPLDOCFG()
@@ -249,6 +254,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetPldoCfg_invalidPldoId)
 
+/* Test: TC-POWER-0006 */
 #define POWER_TEST_PWRGETPLDOCFG() \
     POWER_TEST_POS_PWRGETPLDOCFG(); \
     POWER_TEST_NEG_PWRGETPLDOCFG()
@@ -278,6 +284,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId)
 
+/* Test: TC-POWER-0007 */
 #define POWER_TEST_PWRSETEXTVMONCFG() \
     POWER_TEST_POS_PWRSETEXTVMONCFG(); \
     POWER_TEST_NEG_PWRSETEXTVMONCFG()
@@ -293,6 +300,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId)
 
+/* Test: TC-POWER-0008 */
 #define POWER_TEST_PWRGETEXTVMONCFG() \
     POWER_TEST_POS_PWRGETEXTVMONCFG(); \
     POWER_TEST_NEG_PWRGETEXTVMONCFG()
@@ -344,6 +352,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr); \
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn)
 
+/* Test: TC-POWER-0038 */
 #define POWER_TEST_PWRGETRSRCSTATUS() \
     POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()
@@ -380,6 +389,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource); \
     PLATFORM_RUN_TEST(test_neg_power_clrRsrcStatus_extVmon_unsupportedTsdWarn)
 
+/* Test: TC-POWER-0010 */
 #define POWER_TEST_PWRCLRRSRCSTATUS() \
     POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
     POWER_TEST_NEG_PWRCLRRSRCSTATUS()
@@ -393,6 +403,7 @@ extern "C" {
 #define POWER_TEST_NEG_PWRCLRRSRCSTATUSALL() \
     PLATFORM_RUN_TEST(test_neg_power_pwrClrRsrcStatusAll_nullHandle)
 
+/* Test: TC-POWER-0011 */
 #define POWER_TEST_PWRCLRRSRCSTATUSALL() \
     POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
     POWER_TEST_NEG_PWRCLRRSRCSTATUSALL()
@@ -406,6 +417,7 @@ extern "C" {
 #define POWER_TEST_NEG_PWRSETPGOODINSTBY() \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetPGoodInStby_nullHandle)
 
+/* Test: TC-POWER-0012 */
 #define POWER_TEST_PWRSETPGOODINSTBY() \
     POWER_TEST_POS_PWRSETPGOODINSTBY(); \
     POWER_TEST_NEG_PWRSETPGOODINSTBY()
@@ -420,6 +432,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetPGoodInStby_nullIsEnabled)
 
+/* Test: TC-POWER-0013 */
 #define POWER_TEST_PWRGETPGOODINSTBY() \
     POWER_TEST_POS_PWRGETPGOODINSTBY(); \
     POWER_TEST_NEG_PWRGETPGOODINSTBY()

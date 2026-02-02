@@ -50,6 +50,7 @@
     PLATFORM_RUN_TEST(test_neg_esm_getEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_getEnableState_nullIsEnabled)
 
+/* Test: TC-ESM-0010 */
 #define ESM_TEST_SETENABLESTATE() \
     ESM_TEST_POS_SETENABLESTATE(); \
     ESM_TEST_NEG_SETENABLESTATE()
@@ -65,6 +66,7 @@
     PLATFORM_RUN_TEST(test_neg_esm_getStartState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_getStartState_nullStarted)
 
+/* Test: TC-ESM-0011 */
 #define ESM_TEST_SETSTARTSTATE() \
     ESM_TEST_POS_SETSTARTSTATE(); \
     ESM_TEST_NEG_SETSTARTSTATE()
@@ -96,6 +98,7 @@
     PLATFORM_RUN_TEST(test_neg_esm_getCfg_nullEsmCfg); \
     PLATFORM_RUN_TEST(test_neg_esm_getCfg_invalidValidParams)
 
+/* Test: TC-ESM-0012 */
 #define ESM_TEST_SETCFG() \
     ESM_TEST_POS_SETCFG(); \
     ESM_TEST_NEG_SETCFG()
@@ -110,6 +113,7 @@
     PLATFORM_RUN_TEST(test_neg_esm_getErrCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_getErrCnt_nullEsmErrCnt)
 
+/* Test: TC-ESM-0013 */
 #define ESM_TEST_GETERRCNT() \
     ESM_TEST_POS_GETERRCNT(); \
     ESM_TEST_NEG_GETERRCNT()

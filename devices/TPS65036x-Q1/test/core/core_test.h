@@ -59,6 +59,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullParam_nvmRev)
 
+/* Test: TC-CORE-0033 */
 #define CORE_TEST_GETNVMREV() \
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_NEG_GETNVMREV()
@@ -73,6 +74,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullParam_siliconRev)
 
+/* Test: TC-CORE-0034 */
 #define CORE_TEST_GETSILICONREV() \
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()
@@ -88,6 +90,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_disableRegLock_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_enableRegLock_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0035 */
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
@@ -99,6 +102,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_regLockStat)
 
+/* Test: TC-CORE-0036 */
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
@@ -113,6 +117,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_ioCrcEnable_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_ioCrcDisable_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0037 */
 #define CORE_TEST_IOSETCRCENABLESTATE() \
     CORE_TEST_POS_IOSETCRCENABLESTATE(); \
     CORE_TEST_NEG_IOSETCRCENABLESTATE()
@@ -124,6 +129,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled)
 
+/* Test: TC-CORE-0038 */
 #define CORE_TEST_IOGETCRCENABLESTATE() \
     CORE_TEST_NEG_IOGETCRCENABLESTATE()
 
@@ -134,6 +140,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_invalid_fsmCmd)
 
+/* Test: TC-CORE-0039 */
 #define CORE_TEST_FSMSETDEVSTATE() \
     CORE_TEST_NEG_FSMSETDEVSTATE()
 
@@ -146,6 +153,7 @@ extern "C" {
 #define CORE_TEST_NEG_SETPWRON() \
     PLATFORM_RUN_TEST(test_neg_core_setPwrOn_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0040 */
 #define CORE_TEST_SETPWRON() \
     CORE_TEST_POS_SETPWRON(); \
     CORE_TEST_NEG_SETPWRON()
@@ -157,6 +165,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pwrOnStat)
 
+/* Test: TC-CORE-0041 */
 #define CORE_TEST_GETPWRON() \
     CORE_TEST_NEG_GETPWRON()
 
@@ -192,6 +201,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_outOfBounds_detectionDelay); \
     PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_zeroValidParams)
 
+/* Test: TC-CORE-0042 */
 #define CORE_TEST_SETLPMCFG() \
     CORE_TEST_POS_SETLPMCFG(); \
     CORE_TEST_NEG_SETLPMCFG()
@@ -213,6 +223,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_invalidParam_validParams); \
     PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_zeroValidParams)
 
+/* Test: TC-CORE-0043 */
 #define CORE_TEST_GETLPMCFG() \
     CORE_TEST_POS_GETLPMCFG(); \
     CORE_TEST_NEG_GETLPMCFG()
@@ -226,6 +237,7 @@ extern "C" {
 #define CORE_TEST_NEG_RUNABIST() \
     PLATFORM_RUN_TEST(test_neg_core_runABIST_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0044 */
 #define CORE_TEST_RUNABIST() \
     CORE_TEST_POS_RUNABIST(); \
     CORE_TEST_NEG_RUNABIST()
@@ -240,6 +252,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getABISTStat_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getABISTStat_nullParam_isActive)
 
+/* Test: TC-CORE-0045 */
 #define CORE_TEST_GETABISTSTAT() \
     CORE_TEST_POS_GETABISTSTAT(); \
     CORE_TEST_NEG_GETABISTSTAT()
@@ -254,6 +267,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds_scratchPadRegNum)
 
+/* Test: TC-CORE-0046 */
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
@@ -266,6 +280,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullParam_value)
 
+/* Test: TC-CORE-0047 */
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
@@ -279,6 +294,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold)
 
+/* Test: TC-CORE-0048 */
 #define CORE_TEST_FSMSETRECOVCNTTHR() \
     CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
     CORE_TEST_NEG_FSMSETRECOVCNTTHR()
@@ -290,6 +306,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_threshold)
 
+/* Test: TC-CORE-0049 */
 #define CORE_TEST_FSMGETRECOVCNTTHR() \
     CORE_TEST_NEG_FSMGETRECOVCNTTHR()
 
@@ -303,6 +320,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_recovCnt)
 
+/* Test: TC-CORE-0050 */
 #define CORE_TEST_FSMGETRECOVCNT() \
     CORE_TEST_POS_FSMGETRECOVCNT(); \
     CORE_TEST_NEG_FSMGETRECOVCNT()
@@ -313,6 +331,7 @@ extern "C" {
 #define CORE_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0051 */
 #define CORE_TEST_FSMCLRRECOVCNT() \
     CORE_TEST_NEG_FSMCLRRECOVCNT()
 
@@ -326,6 +345,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_outOfBounds_threshold)
 
+/* Test: TC-CORE-0052 */
 #define CORE_TEST_FSMSETRESETCNTTHR() \
     CORE_TEST_POS_FSMSETRESETCNTTHR(); \
     CORE_TEST_NEG_FSMSETRESETCNTTHR()
@@ -337,6 +357,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_threshold)
 
+/* Test: TC-CORE-0053 */
 #define CORE_TEST_FSMGETRESETCNTTHR() \
     CORE_TEST_NEG_FSMGETRESETCNTTHR()
 
@@ -350,6 +371,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_resetCnt)
 
+/* Test: TC-CORE-0054 */
 #define CORE_TEST_FSMGETRESETCNT() \
     CORE_TEST_POS_FSMGETRESETCNT(); \
     CORE_TEST_NEG_FSMGETRESETCNT()
@@ -360,6 +382,7 @@ extern "C" {
 #define CORE_TEST_NEG_FSMCLRRESETCNT() \
     PLATFORM_RUN_TEST(test_neg_core_fsmClrResetCnt_nullParam_pmicHandle)
 
+/* Test: TC-CORE-0055 */
 #define CORE_TEST_FSMCLRRESETCNT() \
     CORE_TEST_NEG_FSMCLRRESETCNT()
 
@@ -377,6 +400,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_invalidParam_validParams); \
     PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_zeroValidParams)
 
+/* Test: TC-CORE-0056 */
 #define CORE_TEST_SETCRC16CFG() \
     CORE_TEST_POS_SETCRC16CFG(); \
     CORE_TEST_NEG_SETCRC16CFG()
@@ -395,6 +419,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_invalidParam_validParams); \
     PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_zeroValidParams)
 
+/* Test: TC-CORE-0057 */
 #define CORE_TEST_GETCRC16CFG() \
     CORE_TEST_POS_GETCRC16CFG(); \
     CORE_TEST_NEG_GETCRC16CFG()
@@ -408,6 +433,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_silicon_B1_crc16_at_0x64); \
     PLATFORM_RUN_TEST(test_pos_core_init_A0_silicon_with_locked_registers)
 
+/* Test: TC-CORE-0058 */
 #define CORE_TEST_SILICON() \
     CORE_TEST_POS_SILICON()
 

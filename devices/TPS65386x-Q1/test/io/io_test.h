@@ -63,6 +63,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_withRetryOnFailure)
 
+/* Test: TC-IO-0026 */
 #define IO_TEST_IOTXBYTE() \
     IO_TEST_POS_IOTXBYTE(); \
     IO_TEST_NEG_IOTXBYTE()
@@ -82,6 +83,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError)
 
+/* Test: TC-IO-0023 */
 #define IO_TEST_IORXBYTE() \
     IO_TEST_POS_IORXBYTE(); \
     IO_TEST_NEG_IORXBYTE()
@@ -97,6 +99,7 @@ extern "C" {
 #define IO_TEST_NEG_IOTXBYTE_CS() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle)
 
+/* Test: TC-IO-0027 */
 #define IO_TEST_IOTXBYTE_CS() \
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_NEG_IOTXBYTE_CS()
@@ -113,6 +116,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
 
+/* Test: TC-IO-0024 */
 #define IO_TEST_IORXBYTE_CS() \
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_NEG_IORXBYTE_CS()
@@ -129,6 +133,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxWordSeq_invalidCount)
 
+/* Test: TC-IO-0005 */
 #define IO_TEST_IOTXWORDSEQ() \
     IO_TEST_POS_IOTXWORDSEQ(); \
     IO_TEST_NEG_IOTXWORDSEQ()
@@ -145,6 +150,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_nullRxData); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxWordSeq_invalidCount)
 
+/* Test: TC-IO-0006 */
 #define IO_TEST_IORXWORDSEQ() \
     IO_TEST_POS_IORXWORDSEQ(); \
     IO_TEST_NEG_IORXWORDSEQ()
@@ -160,6 +166,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     /* No negative tests for ioUpdateByte */
 
+/* Test: TC-IO-0030 */
 #define IO_TEST_IOUPDATEBYTE() \
     IO_TEST_POS_IOUPDATEBYTE(); \
     IO_TEST_NEG_IOUPDATEBYTE()

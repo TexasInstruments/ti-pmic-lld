@@ -55,6 +55,7 @@ extern "C" {
 /* ============================================================================== */
 /*      API-Specific Test Macros - criticalSectionStart, criticalSectionStop      */
 /* ============================================================================== */
+/* Test: TC-COMMON-0036 */
 #define COMMON_TEST_RUN_CRITICAL_SECTION() \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_nullCallback); \
@@ -64,6 +65,7 @@ extern "C" {
 /* ========================================================================== */
 /*                 API-Specific Test Macros - timerWaitMs                     */
 /* ========================================================================== */
+/* Test: TC-COMMON-0037 */
 #define COMMON_TEST_RUN_TIMER() \
     PLATFORM_RUN_TEST(test_pos_common_timerWait_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_timerWait_nullCallback); \
@@ -72,6 +74,7 @@ extern "C" {
 /* ========================================================================== */
 /*                 API-Specific Test Macros - logStatus                       */
 /* ========================================================================== */
+/* Test: TC-COMMON-0038 */
 #define COMMON_TEST_RUN_LOG_STATUS() \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_success); \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_nullHandle); \
@@ -91,6 +94,7 @@ extern "C" {
 /* ========================================================================================================== */
 /* API-Specific Test Macros - getDiagnostic, getDiagnostics, clrDiagnostic, clrDiagnostics, clrDiagnosticsAll */
 /* ========================================================================================================== */
+/* Test: TC-COMMON-0039 */
 #define COMMON_TEST_RUN_DIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullDiagnostic); \
@@ -145,6 +149,7 @@ extern "C" {
 /* ================================================================================================================== */
 /* API-Specific Test Macros - getRetryCnt, incrementRetryCnt, clearRetryCnt, getRetryCntOverflow, clrRetryCntOverflow */
 /* ================================================================================================================== */
+/* Test: TC-COMMON-0040 */
 #define COMMON_TEST_RUN_RETRY_CNT() \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullOutput); \

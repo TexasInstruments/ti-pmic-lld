@@ -63,6 +63,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_invalidRegNum)
 
+/* Test: TC-CORE-0046 */
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
@@ -79,6 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_invalidRegNum)
 
+/* Test: TC-CORE-0047 */
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
@@ -93,6 +95,7 @@ extern "C" {
 #define CORE_TEST_NEG_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
 
+/* Test: TC-CORE-0035 */
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
@@ -108,6 +111,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
 
+/* Test: TC-CORE-0036 */
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
@@ -123,6 +127,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setCntLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setCntLockState_invalidLockState)
 
+/* Test: TC-CORE-0005 */
 #define CORE_TEST_SETCNTLOCKSTATE() \
     CORE_TEST_POS_SETCNTLOCKSTATE(); \
     CORE_TEST_NEG_SETCNTLOCKSTATE()
@@ -138,6 +143,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getCntLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getCntLockState_nullLockState)
 
+/* Test: TC-CORE-0006 */
 #define CORE_TEST_GETCNTLOCKSTATE() \
     CORE_TEST_POS_GETCNTLOCKSTATE(); \
     CORE_TEST_NEG_GETCNTLOCKSTATE()
@@ -153,6 +159,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setLockCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_core_setLockCfg_invalidValidParams)
 
+/* Test: TC-CORE-0007 */
 #define CORE_TEST_SETLOCKCFG() \
     CORE_TEST_POS_SETLOCKCFG(); \
     CORE_TEST_NEG_SETLOCKCFG()
@@ -168,6 +175,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getLockCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getLockCfg_nullConfig)
 
+/* Test: TC-CORE-0008 */
 #define CORE_TEST_GETLOCKCFG() \
     CORE_TEST_POS_GETLOCKCFG(); \
     CORE_TEST_NEG_GETLOCKCFG()
@@ -183,6 +191,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullNvmRev)
 
+/* Test: TC-CORE-0033 */
 #define CORE_TEST_GETNVMREV() \
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_NEG_GETNVMREV()
@@ -198,6 +207,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullSiliconRev)
 
+/* Test: TC-CORE-0034 */
 #define CORE_TEST_GETSILICONREV() \
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()
@@ -213,6 +223,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullStat)
 
+/* Test: TC-CORE-0011 */
 #define CORE_TEST_GETCOMMONSTAT() \
     CORE_TEST_POS_GETCOMMONSTAT(); \
     CORE_TEST_NEG_GETCOMMONSTAT()
@@ -227,6 +238,7 @@ extern "C" {
 #define CORE_TEST_NEG_DIAGSETOUTCTRLCFG() \
     PLATFORM_RUN_TEST(test_neg_core_diagSetOutCtrlCfg_nullHandle)
 
+/* Test: TC-CORE-0012 */
 #define CORE_TEST_DIAGSETOUTCTRLCFG() \
     CORE_TEST_POS_DIAGSETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGSETOUTCTRLCFG()
@@ -242,6 +254,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullConfig)
 
+/* Test: TC-CORE-0013 */
 #define CORE_TEST_DIAGGETOUTCTRLCFG() \
     CORE_TEST_POS_DIAGGETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGGETOUTCTRLCFG()
@@ -257,6 +270,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_diagSetAmuxCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_diagSetAmuxCfg_invalidChannel)
 
+/* Test: TC-CORE-0014 */
 #define CORE_TEST_DIAGSETAMUXCFG() \
     CORE_TEST_POS_DIAGSETAMUXCFG(); \
     CORE_TEST_NEG_DIAGSETAMUXCFG()
@@ -272,6 +286,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_diagGetAmuxCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_diagGetAmuxCfg_nullChannel)
 
+/* Test: TC-CORE-0015 */
 #define CORE_TEST_DIAGGETAMUXCFG() \
     CORE_TEST_POS_DIAGGETAMUXCFG(); \
     CORE_TEST_NEG_DIAGGETAMUXCFG()
@@ -287,6 +302,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_diagSetDmuxCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_diagSetDmuxCfg_invalidGroup)
 
+/* Test: TC-CORE-0016 */
 #define CORE_TEST_DIAGSETDMUXCFG() \
     CORE_TEST_POS_DIAGSETDMUXCFG(); \
     CORE_TEST_NEG_DIAGSETDMUXCFG()
@@ -302,6 +318,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_diagGetDmuxCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_diagGetDmuxCfg_nullGroup)
 
+/* Test: TC-CORE-0017 */
 #define CORE_TEST_DIAGGETDMUXCFG() \
     CORE_TEST_POS_DIAGGETDMUXCFG(); \
     CORE_TEST_NEG_DIAGGETDMUXCFG()

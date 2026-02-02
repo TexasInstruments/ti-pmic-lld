@@ -105,6 +105,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo3); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo4)
 
+/* Test: TC-GPIO-0001 */
 #define GPIO_TEST_GPIOSETCFG() \
     GPIO_TEST_POS_GPIOSETCFG(); \
     GPIO_TEST_NEG_GPIOSETCFG()
@@ -121,6 +122,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullParam_gpioCfg); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidParam_validParams)
 
+/* Test: TC-GPIO-0002 */
 #define GPIO_TEST_GPIOGETCFG() \
     GPIO_TEST_POS_GPIOGETCFG(); \
     GPIO_TEST_NEG_GPIOGETCFG()
@@ -137,6 +139,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetOutputValue_nullParam_high); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetOutputValue_invalidParam_gpo)
 
+/* Test: TC-GPIO-0003 */
 #define GPIO_TEST_GPIOGETOUTPUTVALUE() \
     GPIO_TEST_POS_GPIOGETOUTPUTVALUE(); \
     GPIO_TEST_NEG_GPIOGETOUTPUTVALUE()
@@ -153,6 +156,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_invalidParam_validParams)
 
+/* Test: TC-GPIO-0004 */
 #define GPIO_TEST_GPIOSETSAFEOUTCFG() \
     GPIO_TEST_POS_GPIOSETSAFEOUTCFG(); \
     GPIO_TEST_NEG_GPIOSETSAFEOUTCFG()
@@ -168,6 +172,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetSafeOutCfg_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetSafeOutCfg_nullParam_config)
 
+/* Test: TC-GPIO-0005 */
 #define GPIO_TEST_GPIOGETSAFEOUTCFG() \
     GPIO_TEST_POS_GPIOGETSAFEOUTCFG(); \
     GPIO_TEST_NEG_GPIOGETSAFEOUTCFG()

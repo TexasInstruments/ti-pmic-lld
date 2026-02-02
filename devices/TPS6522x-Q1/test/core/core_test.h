@@ -59,6 +59,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_siliconRev)
 
+/* Test: TC-CORE-0018 */
 #define CORE_TEST_COREGETSILREV() \
     CORE_TEST_POS_COREGETSILREV(); \
     CORE_TEST_NEG_COREGETSILREV()
@@ -73,6 +74,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_coreGetNvmRev_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_core_coreGetNvmRev_nullParam_nvmRev)
 
+/* Test: TC-CORE-0019 */
 #define CORE_TEST_COREGETNVMREV() \
     CORE_TEST_POS_COREGETNVMREV(); \
     CORE_TEST_NEG_COREGETNVMREV()
@@ -87,6 +89,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_coreGetRegLockState_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_core_coreGetRegLockState_nullParam_lockState)
 
+/* Test: TC-CORE-0020 */
 #define CORE_TEST_COREGETREGLOCKSTATE() \
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_COREGETREGLOCKSTATE()
@@ -103,6 +106,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_coreSetScratchPadValue_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_core_coreSetScratchPadValue_outOfBounds_scratchPadRegNum)
 
+/* Test: TC-CORE-0021 */
 #define CORE_TEST_CORESETSCRATCHPADVALUE() \
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE()
@@ -118,6 +122,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_coreGetScratchPadValue_outOfBounds_scratchPadRegNum); \
     PLATFORM_RUN_TEST(test_neg_core_coreGetScratchPadValue_nullValue)
 
+/* Test: TC-CORE-0022 */
 #define CORE_TEST_COREGETSCRATCHPADVALUE() \
     CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
