@@ -213,7 +213,7 @@ extern "C" {
  * @anchor Pmic_IrqConfig1
  * @name Valid values of Pmic_IrqCfg_t.config for CFG_REG_CRC_INT_CFG
  *
- * @brief valid values of Pmic_IrqCfg_t.config for CFG_REG_CRC_INT_CFG bit field
+ * @brief Valid values of Pmic_IrqCfg_t.config for CFG_REG_CRC_INT_CFG bit field
  * in SAFETY_CFG register.
  *
  * @{
@@ -227,7 +227,7 @@ extern "C" {
  * @anchor Pmic_IrqConfig2
  * @name Valid values of Pmic_IrqCfg_t.config for CM_VMON_INT_CFG Register
  *
- * @brief valid values of Pmic_IrqCfg_t.config for all bits in CM_VMON_INT_CFG
+ * @brief Valid values of Pmic_IrqCfg_t.config for all bits in CM_VMON_INT_CFG
  * register.
  */
 #define PMIC_IRQ_CONFIG2_INT_SET            (0U)

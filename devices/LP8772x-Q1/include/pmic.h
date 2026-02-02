@@ -232,7 +232,7 @@ extern "C" {
  * by the driver.
  *
  * @param configCrcEnable Controls whether configuration register CRC is enabled
- * or disabled. If enabled, APIs are provided to enable, disable, and recalcuate
+ * or disabled. If enabled, APIs are provided to enable, disable, and recalculate
  * this CRC value. Otherwise, this feature is left disabled and no further user
  * input is required.
  *

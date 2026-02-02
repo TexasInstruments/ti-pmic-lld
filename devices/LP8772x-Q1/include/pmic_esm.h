@@ -37,7 +37,7 @@
  * @file pmic_esm.h
  *
  * @brief PMIC error signal monitor (ESM) interface. Contains APIs, macros/defines,
- * and data structures used to configure, control, and interact with the PMIC ADC.
+ * and data structures used to configure, control, and interact with the PMIC ESM.
  */
 
 /* ========================================================================= */

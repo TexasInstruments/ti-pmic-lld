@@ -304,7 +304,7 @@ extern "C" {
 /** @} */
 
 /**
- * @brief Pmic_GpioEnPbVSenseStatusValidParams
+ * @anchor Pmic_GpioEnPbVSenseStatusValidParams
  * @name PMIC GPIO EN/PB/VSENSE Pin Status Structure Valid Parameters
  *
  * @brief Definitions used to indicate valid parameters of `Pmic_GpioEnPbVSenseStatus_t`.
@@ -394,7 +394,7 @@ typedef struct Pmic_GpioPinCfg_s {
  * @ref Pmic_GpioEnPbVSenseCfgValidParams.
  *
  * @param fxnSel ENABLE/PB/VSENSE pin functionality selection. For valid values,
- * refer to @ref Pmic_GpioEnPbVSenseFxnSel.
+ * refer to @ref Pmic_GpioEnPbVSenseFn.
  *
  * @param enPbDegl Deglitch configuration for when the EN/PB/VSENSE pin is
  * configured to ENABLE or PB functionality. For valid values, refer to
@@ -503,7 +503,7 @@ int32_t Pmic_gpioSetPinCfg(const Pmic_Handle_t *handle, const Pmic_GpioPinCfg_t 
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param gpioPinCfg [IN] GPIO pin configurations obtained from the PMIC. For more
+ * @param gpioPinCfg [OUT] GPIO pin configurations obtained from the PMIC. For more
  * information on GPIO pin configurations, refer to @ref Pmic_GpioPinCfg.
  *
  * @return PMIC_ST_SUCCESS if PMIC GPIO pin configurations have been obtained,
@@ -561,7 +561,7 @@ int32_t Pmic_gpioGetPinVal(const Pmic_Handle_t *handle, uint8_t gpioPin, bool *h
  *
  * @param nIntEnDrvCfg [IN] Desired nINT/EN_DRV pin configurations to set. For
  * more information on nINT/EN_DRV pin configurations, refer to
- * @ref Pmic_GpioEnPbVSenseCfg.
+ * @ref Pmic_GpioNIntEnDrvCfg.
  *
  * @return PMIC_ST_SUCCESS if the nINT/EN_DRV pin has been configured, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
@@ -579,7 +579,7 @@ int32_t Pmic_gpioSetNIntEnDrvCfg(const Pmic_Handle_t *handle, const Pmic_GpioNIn
  *
  * @param nIntEnDrvCfg [OUT] nINT/EN_DRV pin configurations obtained from the PMIC.
  * For more information on nINT/EN_DRV pin configurations, refer to
- * @ref Pmic_GpioEnPbVSenseCfg.
+ * @ref Pmic_GpioNIntEnDrvCfg.
  *
  * @return PMIC_ST_SUCCESS if nINT/EN_DRV configurations have been obtained,
  * error code otherwise. For valid success/error codes, refer to
@@ -614,7 +614,7 @@ int32_t Pmic_gpioGetNIntEnDrvVal(const Pmic_Handle_t *handle, bool *high);
  *
  * @param enPbVSenseCfg [IN] Desired EN/PB/VSENSE pin configurations to set. For
  * more information on EN/PB/VSENSE pin configurations, refer to
- * @ref Pmic_GpioNIntEnDrvCfg.
+ * @ref Pmic_GpioEnPbVSenseCfg.
  *
  * @return PMIC_ST_SUCCESS if EN/PB/VSENSE pin configurations have been set,
  * error code otherwise. For valid success/error codes, refer to
@@ -632,7 +632,7 @@ int32_t Pmic_gpioSetEnPbVSenseCfg(const Pmic_Handle_t *handle, const Pmic_GpioNI
  *
  * @param enPbVSenseCfg [OUT] EN/PB/VSENSE pin configurations obtained from the
  * PMIC. For more information on EN/PB/VSENSE pin configurations, refer to
- * @ref Pmic_GpioNIntEnDrvCfg.
+ * @ref Pmic_GpioEnPbVSenseCfg.
  *
  * @return PMIC_ST_SUCCESS if EN/PB/VSENSE pin configurations have been obtained,
  * error code otherwise. For valid success/error codes, refer to

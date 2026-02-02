@@ -61,7 +61,7 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- * @anchor Pmic_EsmCfgValidParam
+ * @anchor Pmic_EsmCfgValidParams
  * @name PMIC ESM Configuration Valid Params
  *
  * @brief Valid parameters of the ESM configuration structure (Pmic_EsmCfg_t).

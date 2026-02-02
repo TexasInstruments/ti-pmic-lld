@@ -368,7 +368,7 @@ See `include/pmic_irq.h` for more information on the IRQ module and its APIs.
 
 ### Other Features
 
-Other PMIC features not pertaining to previously mentioned modules could be found
+Other PMIC features not pertaining to previously mentioned modules can be found
 in the Core module.
 
 These features include, but are not limited to, getting device information, register

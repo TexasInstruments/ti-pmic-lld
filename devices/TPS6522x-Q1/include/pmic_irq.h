@@ -119,7 +119,7 @@ extern "C" {
  * @anchor Pmic_IrqMaskControl
  * @name PMIC IRQ Mask Control
  *
- * @brief values used to mask/unmask PMIC interrupts.
+ * @brief Values used to mask/unmask PMIC interrupts.
  *
  * @{
  */

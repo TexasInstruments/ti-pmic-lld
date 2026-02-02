@@ -382,7 +382,7 @@ typedef struct Pmic_WdgFailCntStatus_s {
  * bytes.
  *
  * @param fdbk WDG Q&A feedback value.
- * @param answCnt WDG Q&A answer count value.
+ * @param ansCnt WDG Q&A answer count value.
  * @param question WDG Q&A question.
  */
 typedef struct Pmic_WdgAnsInfo_s {
@@ -772,7 +772,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(const Pmic_Handle_t *handle, uint8_t *re
  * byte to the PMIC.
  * 1. Pmic_wdgGetFdbkRegData()
  * 2. Pmic_wdgExtractFdbk()
- * 3. Pmic_wdgGetAnsntAndQuesRegData()
+ * 3. Pmic_wdgGetAnsCntAndQuesRegData()
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
