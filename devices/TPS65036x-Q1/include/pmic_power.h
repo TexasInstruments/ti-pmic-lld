@@ -911,7 +911,7 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * For more information on the buck configurations, refer to @ref Pmic_PwrBuckCfg.
  *
  * @param handle [IN]  PMIC interface handle.
- * @param buckCfg    [OUT] Buck configurations to write to PMIC.
+ * @param buckCfg    [IN]  Buck configurations to write to PMIC.
  *
  * @return Success code if PMIC buck configurations have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.

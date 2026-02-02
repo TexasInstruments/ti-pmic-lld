@@ -372,7 +372,7 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat
  * @param esmStat [IN] ESM statuses to be cleared.
  *
  * @return Success code if PMIC ESM statues have been cleared, error code
- * otherwise. for valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat);
 

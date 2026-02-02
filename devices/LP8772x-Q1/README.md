@@ -76,7 +76,7 @@ through the use of the `Pmic_HandleCfg_t` structure in `pmic.h` and the
 `Pmic_init()` API.
 
 In order to successfully create a handle, the user will need to provide an
-implementation for 4 APIs detailed below which inform the driver how to
+implementation for 5 functions detailed below which inform the driver how to
 operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
@@ -365,7 +365,7 @@ See `include/pmic_io.h` for more information on these APIs.
 
 ### Watchdog (WDG)
 
-The LP8772x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A (question and answer) mode.
+The LP8772x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A mode.
 
 See `include/pmic_wdg.h` for more information on the WDG module and its APIs.
 
@@ -373,7 +373,7 @@ See `include/pmic_wdg.h` for more information on the WDG module and its APIs.
 
 The IRQ module for the PMIC driver supports masking (disable) and un-masking
 (enable) of individual interrupt sources on the PMIC, supports reading the
-status of all interrupts using an optimal algorithm based on the heirarchical
+status of all interrupts using an optimal algorithm based on the hierarchical
 structure of the IRQs, and supports clearing individual IRQs as handled or all
 at once.
 

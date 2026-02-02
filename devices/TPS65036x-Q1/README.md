@@ -1,4 +1,4 @@
-# Texas Instruments PMIC LLD for TPS65036x-Q1
+# Texas Instruments PMIC Low-Level Driver (LLD) for TPS65036x-Q1
 
 This is a user's guide for the TPS65036x PMIC (Power Management Integrated Circuit)
 low level driver (LLD). The PMIC LLD provides application programming interfaces
@@ -26,7 +26,7 @@ Once the repository has been cloned, navigate to the TPS65036x-Q1 device directo
 
     cd devices/TPS65036x-Q1/
 
-#### Include PMIC LLD Within Your Project
+#### Including in a Project
 
 To include the PMIC driver as part of your project, do the following:
 
@@ -63,7 +63,7 @@ through the use of the `Pmic_HandleCfg_t` structure in `pmic.h` and the
 be modified directly; otherwise the end-user will risk potential driver errors.
 
 In order to successfully create a handle, the user will need to provide an
-implementation for 4 APIs detailed below which inform the driver how to
+implementation for 5 functions detailed below which inform the driver how to
 operate on the specific platform.
 
 ##### PMIC Handle User Functions: Critical Section Start/Stop
@@ -343,7 +343,7 @@ See `include/pmic_io.h` for more information on these APIs.
 
 ### Watchdog (WDG)
 
-The TPS65036x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A (question and answer) mode.
+The TPS65036x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A mode.
 
 See `include/pmic_wdg.h` for more information on the WDG module and its APIs.
 

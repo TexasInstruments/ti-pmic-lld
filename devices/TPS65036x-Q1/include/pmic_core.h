@@ -309,7 +309,7 @@ int32_t Pmic_getSiliconRev(const Pmic_Handle_t *handle, uint8_t *siliconRev);
 int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock);
 
 /**
- * @brief Unlock PMIC registers.
+ * @brief Lock PMIC registers.
  *
  * Design: PMICDRV-760
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-545
@@ -323,7 +323,7 @@ int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lock);
 int32_t Pmic_enableRegLock(const Pmic_Handle_t *handle);
 
 /**
- * @brief Lock PMIC registers.
+ * @brief Unlock PMIC registers.
  *
  * Design: PMICDRV-761
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-545
@@ -332,7 +332,7 @@ int32_t Pmic_enableRegLock(const Pmic_Handle_t *handle);
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if the register lock key has been sent to the PMIC, error
- * code otherwise. for valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_disableRegLock(const Pmic_Handle_t *handle);
 

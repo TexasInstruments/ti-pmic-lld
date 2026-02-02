@@ -400,7 +400,7 @@ extern "C" {
  * - PMIC_PWR_RSRC_LS2_VMON2
  * - PMIC_PWR_RSRC_VCCA_VMON
  *
- * @param ovThresh Se the overvoltage threshold percente. Note that overvoltage
+ * @param ovThresh Set the overvoltage threshold percentage. Note that overvoltage
  * thresholds are expressed as a percentage **above** the target voltage and
  * different power resources have different supported percentages.
  * - For BUCK1/2/3, see @ref Pmic_PwrBuckUvOvThresholds

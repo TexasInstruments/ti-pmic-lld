@@ -79,7 +79,7 @@ extern "C" {
  * @anchor Pmic_GpioPin
  * @name PMIC GPIO Pin
  *
- * @brief TPS65036x GPIO pin enumeration. The PMIC has two GPIO pins nammed GPIO
+ * @brief TPS65036x GPIO pin enumeration. The PMIC has two GPIO pins named GPIO
  * and nINT_GPI.
  *
  * @{
@@ -208,7 +208,7 @@ typedef struct Pmic_GpioCfg_s {
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpioPin [IN] PMIC GPIO pin identifier. For valid values, see
- * @ref Pmic_gpioPin.
+ * @ref Pmic_GpioPin.
  *
  * @param gpioCfg [IN] PMIC GPIO configurations to be set.
  *
@@ -227,7 +227,7 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpioPin [IN] PMIC GPIO pin identifier. For valid values, see
- * @ref Pmic_gpioPin.
+ * @ref Pmic_GpioPin.
  *
  * @param gpioCfg [OUT] GPIO configurations obtained from PMIC.
  *
