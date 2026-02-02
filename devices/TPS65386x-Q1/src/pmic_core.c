@@ -54,6 +54,10 @@
 #define CNT_UNLOCK_DATA1    (0x13U)
 #define CNT_UNLOCK_DATA2    (0x7DU)
 
+/* Multiplexer validation constants */
+#define PMIC_MUX_AMUX_CHANNEL_MAX_INTERNAL  ((uint8_t)0x1FU)
+#define PMIC_MUX_DMUX_GROUP_MAX_INTERNAL    ((uint8_t)0x1FU)
+
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
@@ -338,6 +342,187 @@ int32_t Pmic_getCommonStat(const Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *s
         localStat.enOutPin = Pmic_getBitField_b(regData1, PMIC_EN_OUT_RDBK_LVL_SHIFT);
         localStat.cfgregLockStat = Pmic_getBitField_b(regData2, CFG_REG_LOCKED_SHIFT);
         CORE_copyCommonCtrlStat(&localStat, stat);
+    }
+
+    return Pmic_logStatus(handle, status);
+}
+
+int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regDataCtrl = 0U;
+    uint8_t regDataCfg = 0U;
+    uint8_t ctrlValue = 0U;
+    bool updateCtrl = false;
+    bool updateCfg = false;
+
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Validate AMUX channel range
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+        if (config->amuxChannel > PMIC_MUX_AMUX_CHANNEL_MAX_INTERNAL) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    // Validate DMUX group range
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+        if (config->dmuxGroup > PMIC_MUX_DMUX_GROUP_MAX_INTERNAL) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+
+        // Determine which registers need to be updated
+        if (Pmic_validParamCheck(config->validParams,
+                                 PMIC_CFG_MUX_MODE_VALID |
+                                 PMIC_CFG_MUX_AMUX_EN_VALID |
+                                 PMIC_CFG_MUX_DMUX_EN_VALID |
+                                 PMIC_CFG_MUX_DMUX_GROUP_VALID)) {
+            updateCtrl = true;
+        }
+
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID)) {
+            updateCfg = true;
+        }
+
+        // Read current control register if we're updating it
+        if ((status == PMIC_ST_SUCCESS) && updateCtrl) {
+            status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regDataCtrl);
+        }
+
+        // Read current config register if we're updating it
+        if ((status == PMIC_ST_SUCCESS) && updateCfg) {
+            status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_REG, &regDataCfg);
+        }
+
+        // Process mode/enable settings for control register
+        if (status == PMIC_ST_SUCCESS) {
+            // Handle AMUX enable
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_EN_VALID, status)) {
+                if (config->amuxEnable) {
+                    ctrlValue = PMIC_DIAG_OUT_CTRL_AMUX_VALUE;
+                }
+            }
+
+            // Handle DMUX enable (overwrites AMUX if both set)
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_EN_VALID, status)) {
+                if (config->dmuxEnable) {
+                    ctrlValue = PMIC_DIAG_OUT_CTRL_DMUX_VALUE;
+                }
+            }
+
+            // Handle explicit mode value (highest priority)
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_MODE_VALID, status)) {
+                ctrlValue = config->muxMode;
+            }
+
+            // Update control register DIAG_OUT_CTRL field if needed
+            if (updateCtrl && (status == PMIC_ST_SUCCESS)) {
+                Pmic_setBitField(&regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
+                                PMIC_DIAG_OUT_CTRL_MASK, ctrlValue);
+            }
+        }
+
+        // Update DMUX group selection in control register
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+            Pmic_setBitField(&regDataCtrl, PMIC_DIAG_GRP_SEL_SHIFT,
+                            PMIC_DIAG_GRP_SEL_MASK, config->dmuxGroup);
+        }
+
+        // Update AMUX channel selection in config register
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+            Pmic_setBitField(&regDataCfg, PMIC_DIAG_CH_SEL_SHIFT,
+                            PMIC_DIAG_CH_SEL_MASK, config->amuxChannel);
+        }
+
+        // Write back control register if updated
+        if ((status == PMIC_ST_SUCCESS) && updateCtrl) {
+            status = Pmic_ioTxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, regDataCtrl);
+        }
+
+        // Write back config register if updated
+        if ((status == PMIC_ST_SUCCESS) && updateCfg) {
+            status = Pmic_ioTxByte(handle, PMIC_DIAG_OUT_CFG_REG, regDataCfg);
+        }
+
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+    }
+
+    return Pmic_logStatus(handle, status);
+}
+
+int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config) {
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regDataCtrl = 0U;
+    uint8_t regDataCfg = 0U;
+    bool readCtrl = false;
+    bool readCfg = false;
+
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        // Determine which registers need to be read
+        if (Pmic_validParamCheck(config->validParams,
+                                 PMIC_CFG_MUX_MODE_VALID |
+                                 PMIC_CFG_MUX_AMUX_EN_VALID |
+                                 PMIC_CFG_MUX_DMUX_EN_VALID |
+                                 PMIC_CFG_MUX_DMUX_GROUP_VALID)) {
+            readCtrl = true;
+        }
+
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID)) {
+            readCfg = true;
+        }
+
+        // Read control register if needed
+        if (readCtrl) {
+            status = Pmic_ioRxByte_CS(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regDataCtrl);
+        }
+
+        // Read config register if needed
+        if ((status == PMIC_ST_SUCCESS) && readCfg) {
+            status = Pmic_ioRxByte_CS(handle, PMIC_DIAG_OUT_CFG_REG, &regDataCfg);
+        }
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        // Extract mode value
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_MODE_VALID, status)) {
+            config->muxMode = Pmic_getBitField(regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
+                                              PMIC_DIAG_OUT_CTRL_MASK);
+        }
+
+        // Extract enable flags from mode
+        if (readCtrl) {
+            uint8_t mode = Pmic_getBitField(regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
+                                           PMIC_DIAG_OUT_CTRL_MASK);
+
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_EN_VALID, status)) {
+                config->amuxEnable = (mode == PMIC_DIAG_OUT_CTRL_AMUX_VALUE);
+            }
+
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_EN_VALID, status)) {
+                config->dmuxEnable = (mode == PMIC_DIAG_OUT_CTRL_DMUX_VALUE);
+            }
+        }
+
+        // Extract DMUX group
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+            config->dmuxGroup = Pmic_getBitField(regDataCtrl, PMIC_DIAG_GRP_SEL_SHIFT,
+                                                PMIC_DIAG_GRP_SEL_MASK);
+        }
+
+        // Extract AMUX channel
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+            config->amuxChannel = Pmic_getBitField(regDataCfg, PMIC_DIAG_CH_SEL_SHIFT,
+                                                  PMIC_DIAG_CH_SEL_MASK);
+        }
     }
 
     return Pmic_logStatus(handle, status);

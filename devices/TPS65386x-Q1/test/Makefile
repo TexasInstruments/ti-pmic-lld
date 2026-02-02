@@ -91,7 +91,6 @@ PMIC_SOURCES = \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic.c),inszt_pmic.c,$(if $(wildcard $(SRC_DIR)/ipmic.c),ipmic.c,pmic.c)) \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_common.c),inszt_pmic_common.c,$(if $(wildcard $(SRC_DIR)/ipmic_common.c),ipmic_common.c,pmic_common.c)) \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_core.c),inszt_pmic_core.c,$(if $(wildcard $(SRC_DIR)/ipmic_core.c),ipmic_core.c,pmic_core.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_diag.c),inszt_pmic_diag.c,$(if $(wildcard $(SRC_DIR)/ipmic_diag.c),ipmic_diag.c,pmic_diag.c)) \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_io.c),inszt_pmic_io.c,$(if $(wildcard $(SRC_DIR)/ipmic_io.c),ipmic_io.c,pmic_io.c)) \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_gpio.c),inszt_pmic_gpio.c,$(if $(wildcard $(SRC_DIR)/ipmic_gpio.c),ipmic_gpio.c,pmic_gpio.c)) \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_wdg.c),inszt_pmic_wdg.c,$(if $(wildcard $(SRC_DIR)/ipmic_wdg.c),ipmic_wdg.c,pmic_wdg.c)) \

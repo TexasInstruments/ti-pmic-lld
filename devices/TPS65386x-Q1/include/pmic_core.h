@@ -55,6 +55,12 @@
  * @brief Get (and set) identifying information on the PMIC.
  */
 
+/**
+ * @defgroup DRV_PMIC_CORE_MUX_GROUP PMIC Multiplexer Control
+ * @ingroup DRV_PMIC_CORE_MODULE
+ * @brief Control AMUX (Analog Multiplexer) and DMUX (Digital Multiplexer) for diagnostic signal observation.
+ */
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -117,6 +123,67 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_MAX (PMIC_SCRATCH_PAD_REG_2)
 /** @} */
 
+/**
+ * @anchor Pmic_MuxCfgValidParam
+ * @name PMIC Multiplexer Configuration Valid Params
+ *
+ * @brief Valid parameters of the Pmic_MuxCfg_t structure. Set the
+ * validParams member of Pmic_MuxCfg_t to indicate which members are
+ * to be set/retrieved.
+ *
+ * @{
+ */
+#define PMIC_CFG_MUX_MODE_VALID          (1UL << 0U)
+#define PMIC_CFG_MUX_AMUX_EN_VALID       (1UL << 1U)
+#define PMIC_CFG_MUX_DMUX_EN_VALID       (1UL << 2U)
+#define PMIC_CFG_MUX_AMUX_CHANNEL_VALID  (1UL << 3U)
+#define PMIC_CFG_MUX_DMUX_GROUP_VALID    (1UL << 4U)
+/** @} */
+
+/**
+ * @anchor Pmic_MuxCfgValidParamHelpers
+ * @name PMIC Multiplexer Configuration Valid Params Helpers
+ *
+ * @brief Helper macros for common combinations of valid parameters.
+ *
+ * @{
+ */
+#define PMIC_CFG_MUX_AMUX_ALL_VALID (PMIC_CFG_MUX_AMUX_EN_VALID | \
+                                     PMIC_CFG_MUX_AMUX_CHANNEL_VALID)
+#define PMIC_CFG_MUX_DMUX_ALL_VALID (PMIC_CFG_MUX_DMUX_EN_VALID | \
+                                     PMIC_CFG_MUX_DMUX_GROUP_VALID)
+#define PMIC_CFG_MUX_ALL_VALID      (PMIC_CFG_MUX_MODE_VALID | \
+                                     PMIC_CFG_MUX_AMUX_EN_VALID | \
+                                     PMIC_CFG_MUX_DMUX_EN_VALID | \
+                                     PMIC_CFG_MUX_AMUX_CHANNEL_VALID | \
+                                     PMIC_CFG_MUX_DMUX_GROUP_VALID)
+/** @} */
+
+/**
+ * @anchor Pmic_MuxMode
+ * @name PMIC Multiplexer Mode Values
+ *
+ * @brief Possible values for the muxMode member of Pmic_MuxCfg_t.
+ *
+ * @{
+ */
+#define PMIC_MUX_MODE_DISABLED  (0U)
+#define PMIC_MUX_MODE_AMUX      (1U)
+#define PMIC_MUX_MODE_DMUX      (2U)
+/** @} */
+
+/**
+ * @anchor Pmic_MuxLimits
+ * @name PMIC Multiplexer Channel and Group Limits
+ *
+ * @brief Maximum values for AMUX channel and DMUX group selection.
+ *
+ * @{
+ */
+#define PMIC_MUX_AMUX_CHANNEL_MAX  ((uint8_t)0x1FU)
+#define PMIC_MUX_DMUX_GROUP_MAX    ((uint8_t)0x1FU)
+/** @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -174,6 +241,46 @@ typedef struct Pmic_CommonCtrlStat_s {
     bool enOutPin;         /**< EN_OUT pin status (readback from STAT_READBACK_ERR reg bit 2) */
     bool cfgregLockStat;   /**< Configuration register lock status (from REG_STAT_REG bit 0) */
 } Pmic_CommonCtrlStat_t;
+
+/**
+ * @brief PMIC multiplexer configuration structure.
+ *
+ * Used to configure and read back the AMUX (Analog Multiplexer) and
+ * DMUX (Digital Multiplexer) settings for diagnostic signal observation.
+ *
+ * @note validParams is an input parameter for all Set and Get APIs. Other
+ * struct members are input params for Set APIs and output params for Get APIs.
+ *
+ * @param validParams Selection of structure parameters to be set, from
+ * @ref Pmic_MuxCfgValidParam. OR together multiple bits to set/get
+ * multiple parameters in a single call.
+ *
+ * @param muxMode Multiplexer mode selection. Valid when PMIC_CFG_MUX_MODE_VALID
+ * is set. For valid values, see @ref Pmic_MuxMode.
+ *
+ * @param amuxEnable AMUX (Analog Multiplexer) enable. Valid when
+ * PMIC_CFG_MUX_AMUX_EN_VALID is set. Set to true to enable, false to disable.
+ *
+ * @param dmuxEnable DMUX (Digital Multiplexer) enable. Valid when
+ * PMIC_CFG_MUX_DMUX_EN_VALID is set. Set to true to enable, false to disable.
+ *
+ * @param amuxChannel AMUX channel selection (0-31). Valid when
+ * PMIC_CFG_MUX_AMUX_CHANNEL_VALID is set. Selects which analog signal
+ * is routed to the AMUX output pin.
+ *
+ * @param dmuxGroup DMUX group selection (0-31). Valid when
+ * PMIC_CFG_MUX_DMUX_GROUP_VALID is set. Selects which digital signal
+ * group is routed to the DMUX output pins.
+ */
+typedef struct Pmic_MuxCfg_s {
+    uint32_t validParams;
+
+    uint8_t muxMode;
+    bool amuxEnable;
+    bool dmuxEnable;
+    uint8_t amuxChannel;
+    uint8_t dmuxGroup;
+} Pmic_MuxCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -371,6 +478,51 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  * @return PMIC_ST_SUCCESS if successful, error code otherwise.
  */
 int32_t Pmic_getCommonStat(const Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *stat);
+
+/**
+ * @ingroup DRV_PMIC_CORE_MUX_GROUP
+ * @brief Set PMIC multiplexer configuration.
+ *
+ * Design: PMICDRV-789
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-523, PMICDRV-547
+ *
+ * @details This API configures the AMUX (Analog Multiplexer) and DMUX
+ * (Digital Multiplexer) for diagnostic signal observation. The validParams
+ * member of the configuration structure determines which settings are updated.
+ * You can update a single parameter, multiple parameters, or all parameters
+ * in one call using the helper macros (PMIC_CFG_MUX_AMUX_ALL_VALID, etc.).
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN] Multiplexer configuration. Use validParams to select
+ * which members to set.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config);
+
+/**
+ * @ingroup DRV_PMIC_CORE_MUX_GROUP
+ * @brief Get PMIC multiplexer configuration.
+ *
+ * Design: PMICDRV-790
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522,
+ *               PMICDRV-528, PMICDRV-547
+ *
+ * @details This API retrieves the current AMUX and DMUX configuration from
+ * the PMIC. The validParams member of the configuration structure determines
+ * which settings are read. Use PMIC_CFG_MUX_ALL_VALID to read all settings.
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param config [IN/OUT] Multiplexer configuration. Set validParams to
+ * indicate which members to retrieve. The selected members will be populated
+ * with current PMIC values.
+ *
+ * @return PMIC_ST_SUCCESS if successful, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config);
 
 #ifdef __cplusplus
 }

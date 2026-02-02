@@ -268,108 +268,128 @@ void test_neg_core_getCommonStat_nullStat(void)
 }
 
 /**
- * @brief Test Pmic_diagSetOutCtrlCfg with NULL handle
+ * @brief Test Pmic_setMuxCfg with NULL handle
  */
 void test_neg_core_diagSetOutCtrlCfg_nullHandle(void)
 {
-    Pmic_DiagOutCfgCtrl_t config = {
-        .validParams = PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID,
-        .diagOutCtrl_AMUXEn = 1U
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_AMUX_EN_VALID,
+        .amuxEnable = true
     };
-    int32_t status = Pmic_diagSetOutCtrlCfg(NULL, &config);
+    int32_t status = Pmic_setMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetOutCtrlCfg with NULL handle
+ * @brief Test Pmic_getMuxCfg with NULL handle
  */
 void test_neg_core_diagGetOutCtrlCfg_nullHandle(void)
 {
-    Pmic_DiagOutCfgCtrl_t config = {0U};
-    int32_t status = Pmic_diagGetOutCtrlCfg(NULL, &config);
+    Pmic_MuxCfg_t config = {0U};
+    int32_t status = Pmic_getMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetOutCtrlCfg with NULL config pointer
+ * @brief Test Pmic_getMuxCfg with NULL config pointer
  */
 void test_neg_core_diagGetOutCtrlCfg_nullConfig(void)
 {
-    int32_t status = Pmic_diagGetOutCtrlCfg(&pmicHandle, NULL);
+    int32_t status = Pmic_getMuxCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagSetAmuxCfg with NULL handle
+ * @brief Test Pmic_setMuxCfg with NULL handle (AMUX channel)
  */
 void test_neg_core_diagSetAmuxCfg_nullHandle(void)
 {
-    int32_t status = Pmic_diagSetAmuxCfg(NULL, 0U);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID,
+        .amuxChannel = 0U
+    };
+    int32_t status = Pmic_setMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagSetAmuxCfg with invalid channel (out of range)
+ * @brief Test Pmic_setMuxCfg with invalid channel (out of range)
  */
 void test_neg_core_diagSetAmuxCfg_invalidChannel(void)
 {
-    int32_t status = Pmic_diagSetAmuxCfg(&pmicHandle, 0x20U);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID,
+        .amuxChannel = 0x20U
+    };
+    int32_t status = Pmic_setMuxCfg(&pmicHandle, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetAmuxCfg with NULL handle
+ * @brief Test Pmic_getMuxCfg with NULL handle (AMUX channel)
  */
 void test_neg_core_diagGetAmuxCfg_nullHandle(void)
 {
-    uint8_t channel = 0U;
-    int32_t status = Pmic_diagGetAmuxCfg(NULL, &channel);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID
+    };
+    int32_t status = Pmic_getMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetAmuxCfg with NULL channel pointer
+ * @brief Test Pmic_getMuxCfg with NULL config pointer (AMUX channel)
  */
 void test_neg_core_diagGetAmuxCfg_nullChannel(void)
 {
-    int32_t status = Pmic_diagGetAmuxCfg(&pmicHandle, NULL);
+    int32_t status = Pmic_getMuxCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagSetDmuxCfg with NULL handle
+ * @brief Test Pmic_setMuxCfg with NULL handle (DMUX group)
  */
 void test_neg_core_diagSetDmuxCfg_nullHandle(void)
 {
-    int32_t status = Pmic_diagSetDmuxCfg(NULL, 0U);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID,
+        .dmuxGroup = 0U
+    };
+    int32_t status = Pmic_setMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagSetDmuxCfg with invalid group (out of range)
+ * @brief Test Pmic_setMuxCfg with invalid group (out of range)
  */
 void test_neg_core_diagSetDmuxCfg_invalidGroup(void)
 {
-    int32_t status = Pmic_diagSetDmuxCfg(&pmicHandle, 0x20U);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID,
+        .dmuxGroup = 0x20U
+    };
+    int32_t status = Pmic_setMuxCfg(&pmicHandle, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetDmuxCfg with NULL handle
+ * @brief Test Pmic_getMuxCfg with NULL handle (DMUX group)
  */
 void test_neg_core_diagGetDmuxCfg_nullHandle(void)
 {
-    uint8_t group = 0U;
-    int32_t status = Pmic_diagGetDmuxCfg(NULL, &group);
+    Pmic_MuxCfg_t config = {
+        .validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID
+    };
+    int32_t status = Pmic_getMuxCfg(NULL, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /**
- * @brief Test Pmic_diagGetDmuxCfg with NULL group pointer
+ * @brief Test Pmic_getMuxCfg with NULL config pointer (DMUX group)
  */
 void test_neg_core_diagGetDmuxCfg_nullGroup(void)
 {
-    int32_t status = Pmic_diagGetDmuxCfg(&pmicHandle, NULL);
+    int32_t status = Pmic_getMuxCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -529,47 +549,50 @@ void test_pos_core_commonStat_get(void)
 }
 
 /**
- * @brief Test diagnostic output control set and get operations
+ * @brief Test multiplexer output control set and get operations
  */
 void test_pos_core_diagOutCtrl_setGet(void)
 {
     int32_t status;
-    Pmic_DiagOutCfgCtrl_t setCfg = {0U};
-    Pmic_DiagOutCfgCtrl_t getCfg = {0U};
+    Pmic_MuxCfg_t setCfg = {0U};
+    Pmic_MuxCfg_t getCfg = {0U};
 
     /* Enable AMUX */
-    setCfg.validParams = PMIC_DIAG_OUT_CTRL_AMUX_EN_VALID;
-    setCfg.diagOutCtrl_AMUXEn = 1U;
-    status = Pmic_diagSetOutCtrlCfg(&pmicHandle, &setCfg);
+    setCfg.validParams = PMIC_CFG_MUX_AMUX_EN_VALID;
+    setCfg.amuxEnable = true;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify AMUX is enabled */
-    status = Pmic_diagGetOutCtrlCfg(&pmicHandle, &getCfg);
+    getCfg.validParams = PMIC_CFG_MUX_AMUX_EN_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.diagOutCtrl_AMUXEn == 1U);
+    PLATFORM_ASSERT(getCfg.amuxEnable == true);
 
     /* Enable DMUX */
-    setCfg.validParams = PMIC_DIAG_OUT_CTRL_DMUX_EN_VALID;
-    setCfg.diagOutCtrl_AMUXEn = 0U;
-    setCfg.diagOutCtrl_DMUXEn = 1U;
-    status = Pmic_diagSetOutCtrlCfg(&pmicHandle, &setCfg);
+    setCfg.validParams = PMIC_CFG_MUX_DMUX_EN_VALID;
+    setCfg.amuxEnable = false;
+    setCfg.dmuxEnable = true;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify DMUX is enabled */
-    status = Pmic_diagGetOutCtrlCfg(&pmicHandle, &getCfg);
+    getCfg.validParams = PMIC_CFG_MUX_DMUX_EN_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.diagOutCtrl_DMUXEn == 1U);
+    PLATFORM_ASSERT(getCfg.dmuxEnable == true);
 
-    /* Disable diagnostic output */
-    setCfg.validParams = PMIC_DIAG_OUT_CTRL_VALID;
-    setCfg.diagOutCtrl = 0U;
-    status = Pmic_diagSetOutCtrlCfg(&pmicHandle, &setCfg);
+    /* Disable multiplexer output */
+    setCfg.validParams = PMIC_CFG_MUX_MODE_VALID;
+    setCfg.muxMode = PMIC_MUX_MODE_DISABLED;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify diagnostic output is disabled */
-    status = Pmic_diagGetOutCtrlCfg(&pmicHandle, &getCfg);
+    /* Verify multiplexer output is disabled */
+    getCfg.validParams = PMIC_CFG_MUX_MODE_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.diagOutCtrl == 0U);
+    PLATFORM_ASSERT(getCfg.muxMode == PMIC_MUX_MODE_DISABLED);
 }
 
 /**
@@ -578,29 +601,36 @@ void test_pos_core_diagOutCtrl_setGet(void)
 void test_pos_core_diagAMUX_setGet(void)
 {
     int32_t status;
-    uint8_t setChannel = 0x0AU;
-    uint8_t getChannel = 0U;
+    Pmic_MuxCfg_t setCfg = {0U};
+    Pmic_MuxCfg_t getCfg = {0U};
 
     /* Set AMUX channel */
-    status = Pmic_diagSetAmuxCfg(&pmicHandle, setChannel);
+    setCfg.validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID;
+    setCfg.amuxChannel = 0x0AU;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify AMUX channel */
-    status = Pmic_diagGetAmuxCfg(&pmicHandle, &getChannel);
+    getCfg.validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getChannel == setChannel);
+    PLATFORM_ASSERT(getCfg.amuxChannel == 0x0AU);
 
     /* Test boundary channel (max valid) */
-    setChannel = 0x1FU;
-    status = Pmic_diagSetAmuxCfg(&pmicHandle, setChannel);
+    setCfg.validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID;
+    setCfg.amuxChannel = 0x1FU;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_diagGetAmuxCfg(&pmicHandle, &getChannel);
+    getCfg.validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getChannel == setChannel);
+    PLATFORM_ASSERT(getCfg.amuxChannel == 0x1FU);
 
     /* Reset to channel 0 */
-    status = Pmic_diagSetAmuxCfg(&pmicHandle, 0U);
+    setCfg.validParams = PMIC_CFG_MUX_AMUX_CHANNEL_VALID;
+    setCfg.amuxChannel = 0U;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
@@ -610,29 +640,36 @@ void test_pos_core_diagAMUX_setGet(void)
 void test_pos_core_diagDMUX_setGet(void)
 {
     int32_t status;
-    uint8_t setGroup = 0x05U;
-    uint8_t getGroup = 0U;
+    Pmic_MuxCfg_t setCfg = {0U};
+    Pmic_MuxCfg_t getCfg = {0U};
 
     /* Set DMUX group */
-    status = Pmic_diagSetDmuxCfg(&pmicHandle, setGroup);
+    setCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
+    setCfg.dmuxGroup = 0x05U;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify DMUX group */
-    status = Pmic_diagGetDmuxCfg(&pmicHandle, &getGroup);
+    getCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getGroup == setGroup);
+    PLATFORM_ASSERT(getCfg.dmuxGroup == 0x05U);
 
     /* Test boundary group (max valid) */
-    setGroup = 0x1FU;
-    status = Pmic_diagSetDmuxCfg(&pmicHandle, setGroup);
+    setCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
+    setCfg.dmuxGroup = 0x1FU;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_diagGetDmuxCfg(&pmicHandle, &getGroup);
+    getCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
+    status = Pmic_getMuxCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getGroup == setGroup);
+    PLATFORM_ASSERT(getCfg.dmuxGroup == 0x1FU);
 
     /* Reset to group 0 */
-    status = Pmic_diagSetDmuxCfg(&pmicHandle, 0U);
+    setCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
+    setCfg.dmuxGroup = 0U;
+    status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 

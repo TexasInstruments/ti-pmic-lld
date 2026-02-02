@@ -86,7 +86,6 @@ SOURCES = \
 	src/pmic.c \
 	src/pmic_common.c \
 	src/pmic_core.c \
-	src/pmic_diag.c \
 	src/pmic_esm.c \
 	src/pmic_fsm.c \
 	src/pmic_gpio.c \
