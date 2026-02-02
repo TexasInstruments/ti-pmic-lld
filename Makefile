@@ -25,6 +25,19 @@ ifdef UNITY_DIR
     endif
 endif
 
+# Coverage tools from pmic-lld-utils
+# Auto-detect utils directory (sibling directory)
+ifndef PMIC_UTILS_DIR
+    PMIC_UTILS_DIR := $(shell test -d ../pmic-lld-utils && echo ../pmic-lld-utils)
+endif
+
+# Check if pmic-coverage is globally installed, otherwise use uv run
+PMIC_COVERAGE := $(shell command -v pmic-coverage 2>/dev/null)
+ifndef PMIC_COVERAGE
+    PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
+endif
+export PMIC_COVERAGE
+
 # List of all PMIC device variants
 DEVICES := LP8772x-Q1 TPS65036x-Q1 TPS6522x-Q1 TPS65386x-Q1
 
@@ -180,7 +193,7 @@ ifndef DEVICE
 	echo ""; \
 	echo "==================== Generating Aggregate Report ===================="; \
 	if [ -n "$$json_reports" ]; then \
-		python3 scripts/aggregate_coverage_reports.py $$json_reports; \
+		$(PMIC_COVERAGE) aggregate $$json_reports; \
 	else \
 		echo "ERROR: No coverage reports generated!"; \
 		exit 1; \

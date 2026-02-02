@@ -9,6 +9,8 @@ lib/
 *.gcov
 *.gcda
 *.gcno
+*.profraw
+*.profdata
 coverage/
 **/coverage/
 coverage_*.txt

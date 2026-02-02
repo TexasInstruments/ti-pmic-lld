@@ -14,16 +14,26 @@ BUILD ?= mock
 CC = clang
 
 # Coverage flags
-COV_FLAGS = -fprofile-arcs -ftest-coverage
+COV_FLAGS = -fprofile-instr-generate -fcoverage-mapping -fcoverage-mcdc
 
-# Coverage tool (standardized)
-GCOV = llvm-cov-14 gcov
+# Coverage tools (use Xcode version for compatibility with Apple clang)
+LLVM_PROFDATA = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-profdata
+LLVM_COV = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov
 
 # Unity source file
 UNITY_SRC = $(UNITY_DIR)/src/unity.c
 
 # Scripts directory
 SCRIPTS_DIR = ../../../scripts
+
+# Coverage tools from pmic-lld-utils (inherit from root or detect)
+ifndef PMIC_COVERAGE
+    PMIC_UTILS_DIR ?= ../../../../pmic-lld-utils
+    PMIC_COVERAGE := $(shell command -v pmic-coverage 2>/dev/null)
+    ifndef PMIC_COVERAGE
+        PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
+    endif
+endif
 
 # Directories
 SRC_DIR = ../src
@@ -183,23 +193,25 @@ test: check-mock-lib
 # Run tests with coverage (generates both text and JSON reports)
 .PHONY: coverage
 coverage: check-mock-lib
-	@echo "Building with coverage instrumentation..."
+	@echo "Building with LLVM coverage instrumentation..."
 	@echo "Compiling Unity framework (relaxed warnings)..."
 	@$(CC) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE $(COV_FLAGS) -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources (strict warnings)..."
 	@$(CC) $(CFLAGS) $(COV_FLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o test_runner $(LDFLAGS)
 	@echo "Removing previous coverage data..."
-	@rm -f *.gcda *.gcov
+	@rm -f *.profraw *.profdata *.gcov
 	@echo "Running tests..."
-	@./test_runner || echo "WARNING: Some tests failed, but continuing with coverage generation..."
+	@LLVM_PROFILE_FILE=default.profraw ./test_runner || echo "WARNING: Some tests failed, but continuing with coverage generation..."
+	@echo "Merging coverage profile data..."
+	@$(LLVM_PROFDATA) merge -sparse default.profraw -o test_runner.profdata
 	@echo "Generating coverage reports (text and JSON)..."
-	@python3 $(SCRIPTS_DIR)/generate_coverage_report.py $(PMIC_SOURCES)
+	@$(PMIC_COVERAGE) generate test_runner test_runner.profdata $(PMIC_SOURCES)
 
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
 	@rm -f $(TARGET) test_runner test_mock_demo test_hardware_demo *.o unity.o
-	@rm -f *.gcda *.gcno *.gcov
+	@rm -f *.profraw *.profdata *.gcov
 	@rm -rf coverage
 	@echo "Clean complete"
 
