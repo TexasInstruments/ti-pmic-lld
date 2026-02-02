@@ -35,6 +35,11 @@
 #include "../platform.h"
 #include "power_test.h"
 
+#ifdef BUILD_MOCK
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
+#endif
+
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -1484,6 +1489,208 @@ void test_pos_power_property_vmonThresholdEnumeration(void)
 }
 
 #endif
+
+/* ========================================================================== */
+/*                         MC/DC Coverage Tests                               */
+/* ========================================================================== */
+
+void test_pos_power_ldoValidParams_twoCondition_TT(void)
+{
+    int32_t status;
+    Pmic_PwrLdoCfg_t ldoCfg = {0};
+    ldoCfg.resource = PMIC_POWER_RESOURCE_LDO1;
+    /* Both conditions TRUE: validParams & PARAM_A && validParams & PARAM_B */
+    ldoCfg.validParams = PMIC_POWER_LDO_VSET_VALID | PMIC_POWER_LDO_VMON_THR_VALID;
+    ldoCfg.vset = 0x22U;  /* Valid LDO voltage code */
+    ldoCfg.vmonThr = PMIC_POWER_VMON_THR_6_PCT_60_MV;
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_power_ldoValidParams_twoCondition_FF(void)
+{
+    int32_t status;
+    Pmic_PwrLdoCfg_t ldoCfg = {0};
+    ldoCfg.resource = PMIC_POWER_RESOURCE_LDO1;
+    /* Both conditions FALSE: neither param A nor param B set */
+    ldoCfg.validParams = PMIC_POWER_LDO_EN_VALID;
+    ldoCfg.ldoEn = true;
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query BUCK1 status only
+ * Demonstrates independent effect of BUCK1_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_buck1Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_BUCK1_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query BUCK2 status only
+ * Demonstrates independent effect of BUCK2_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_buck2Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_BUCK2_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query BUCK3 status only
+ * Demonstrates independent effect of BUCK3_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_buck3Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_BUCK3_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query BUCK4 status only
+ * Demonstrates independent effect of BUCK4_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_buck4Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_BUCK4_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query LDO1 status only
+ * Demonstrates independent effect of LDO1_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_ldo1Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_LDO1_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query LDO2 status only
+ * Demonstrates independent effect of LDO2_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_ldo2Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_LDO2_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query LDO3 status only
+ * Demonstrates independent effect of LDO3_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_ldo3Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_LDO3_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query VMON1 status only
+ * Demonstrates independent effect of VMON1_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_vmon1Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_VMON1_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query VMON2 status only
+ * Demonstrates independent effect of VMON2_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_vmon2Only(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_VMON2_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Query VCCA status only
+ * Demonstrates independent effect of VCCA_UVOV_VALID flag in OR condition
+ */
+void test_pos_power_getRsrcStatus_vccaOnly(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_VCCA_VMON_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: No BUCK flags set (tests FALSE branch of BUCK OR)
+ * Tests that none of BUCK1-4 flags are set
+ */
+void test_pos_power_getRsrcStatus_noBucks(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_LDO1_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: No LDO/VMON flags set (tests FALSE branch of LDO/VMON OR)
+ * Tests that none of LDO/VMON flags are set
+ */
+void test_pos_power_getRsrcStatus_noLdoVmon(void)
+{
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    rsrcStatus.validParams = PMIC_POWER_BUCK1_UVOV_VALID;
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief MC/DC test: Error propagation from BUCK read to LDO/VMON read
+ * Covers line 1433: (status == PMIC_ST_SUCCESS) && (...LDO/VMON flags...)
+ * Tests that when BUCK register read fails, LDO/VMON read is skipped
+ */
+void test_neg_power_getRsrcStatus_buckReadError(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t* mockDevice = platform_getMockDevice();
+    Pmic_PwrRsrcStatus_t rsrcStatus = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    /* Set both BUCK and LDO flags to trigger both register reads */
+    rsrcStatus.validParams = PMIC_POWER_BUCK1_UVOV_VALID | PMIC_POWER_LDO1_UVOV_VALID;
+
+    /* Inject communication failure for BUCK register read (line 1406) */
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    /* Function should fail at BUCK read, and skip LDO/VMON read due to status check */
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &rsrcStatus);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    PLATFORM_ASSERT(true);
+#endif
+}
 
 /* ========================================================================== */
 /*                         Entry Point Function                               */

@@ -288,4 +288,56 @@ void test_pos_core_scratchPadValue_boundary(void)
     PLATFORM_ASSERT(readVal == writeVal);
 }
 
+/**
+ * @brief Test validatePmicHandle with NULL criticalSectionStart
+ *
+ * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
+ * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
+ * Test case: First condition TRUE, second condition FALSE
+ */
+void test_neg_core_validatePmicHandle_nullCritSecStart(void)
+{
+    Pmic_Handle_t testHandle = pmicHandle;
+    uint8_t siliconRev = 0U;
+    testHandle.criticalSectionStart = NULL;  // Set first condition to TRUE
+    // criticalSectionStop remains valid (second condition FALSE)
+
+    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test validatePmicHandle with NULL criticalSectionStop
+ *
+ * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
+ * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
+ * Test case: First condition FALSE, second condition TRUE
+ */
+void test_neg_core_validatePmicHandle_nullCritSecStop(void)
+{
+    Pmic_Handle_t testHandle = pmicHandle;
+    uint8_t siliconRev = 0U;
+    // criticalSectionStart remains valid (first condition FALSE)
+    testHandle.criticalSectionStop = NULL;  // Set second condition to TRUE
+
+    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test validatePmicHandle with valid critical section pointers
+ *
+ * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
+ * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
+ * Test case: Both conditions FALSE (positive case)
+ */
+void test_pos_core_validatePmicHandle_validCriticalSection(void)
+{
+    // Using the global pmicHandle which has valid critical section pointers
+    // This test verifies the positive path through line 422
+    uint8_t siliconRev = 0U;
+    int32_t status = Pmic_getSiliconRev(&pmicHandle, &siliconRev);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
 /* Note: setUp/tearDown removed - provided by test_runner.c for Unity */

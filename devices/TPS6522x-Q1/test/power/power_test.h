@@ -100,7 +100,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_ldo3_bypassEn); \
     PLATFORM_RUN_TEST(test_pos_power_ldo1_vmonThr); \
     PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
-    PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig)
+    PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoValidParams_twoCondition_TT); \
+    PLATFORM_RUN_TEST(test_pos_power_ldoValidParams_twoCondition_FF)
 
 /* Test: TC-POWER-0015 */
 #define POWER_TEST_SETGETLDOCFG() \
@@ -210,12 +212,25 @@ extern "C" {
 #define POWER_TEST_NEG_GETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullRsrcStatus); \
-    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_invalidValidParams)
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_buckReadError)
 
 #define POWER_TEST_POS_GETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_buckUVOV); \
     PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_ldoUVOV); \
-    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV)
+    PLATFORM_RUN_TEST(test_pos_power_rsrcStatus_vmonUVOV); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buck1Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buck2Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buck3Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buck4Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo1Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo2Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo3Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_vmon1Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_vmon2Only); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_vccaOnly); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_noBucks); \
+    PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_noLdoVmon)
 
 /* Test: TC-POWER-0020 */
 #define POWER_TEST_GETRSRCSTATUS() \
@@ -339,6 +354,7 @@ void test_neg_power_getSpreadSpectrumCfg_invalidValidParams(void);
 void test_neg_power_getRsrcStatus_nullHandle(void);
 void test_neg_power_getRsrcStatus_nullRsrcStatus(void);
 void test_neg_power_getRsrcStatus_invalidValidParams(void);
+void test_neg_power_getRsrcStatus_buckReadError(void);
 void test_neg_power_setVccaVmonCfg_invalidPgSetVmon1(void);
 
 /* Positive test functions */
@@ -378,6 +394,22 @@ void test_pos_power_thermal_combinedConfig(void);
 void test_pos_power_spreadSpectrum_combinedConfig(void);
 void test_pos_power_property_buckVoltageBounds(void);
 void test_pos_power_property_vmonThresholdEnumeration(void);
+
+/* MC/DC coverage test functions */
+void test_pos_power_ldoValidParams_twoCondition_TT(void);
+void test_pos_power_ldoValidParams_twoCondition_FF(void);
+void test_pos_power_getRsrcStatus_buck1Only(void);
+void test_pos_power_getRsrcStatus_buck2Only(void);
+void test_pos_power_getRsrcStatus_buck3Only(void);
+void test_pos_power_getRsrcStatus_buck4Only(void);
+void test_pos_power_getRsrcStatus_ldo1Only(void);
+void test_pos_power_getRsrcStatus_ldo2Only(void);
+void test_pos_power_getRsrcStatus_ldo3Only(void);
+void test_pos_power_getRsrcStatus_vmon1Only(void);
+void test_pos_power_getRsrcStatus_vmon2Only(void);
+void test_pos_power_getRsrcStatus_vccaOnly(void);
+void test_pos_power_getRsrcStatus_noBucks(void);
+void test_pos_power_getRsrcStatus_noLdoVmon(void);
 
 #ifdef __cplusplus
 }

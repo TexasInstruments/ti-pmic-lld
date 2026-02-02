@@ -287,6 +287,20 @@ extern "C" {
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
 /* ======================================================================== */
+/*                 API-Specific Test Macros - checkHandle                     */
+/* ======================================================================== */
+#define CORE_TEST_POS_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_pos_core_checkHandle_validCriticalSection)
+
+#define CORE_TEST_NEG_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_neg_core_checkHandle_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_core_checkHandle_nullCritSecStop)
+
+#define CORE_TEST_CHECKHANDLE() \
+    CORE_TEST_POS_CHECKHANDLE(); \
+    CORE_TEST_NEG_CHECKHANDLE()
+
+/* ======================================================================== */
 /*                       Test APIs: fsmSetRecovCntThr                       */
 /* ======================================================================== */
 #define CORE_TEST_POS_FSMSETRECOVCNTTHR() \
@@ -433,7 +447,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_silicon_A0_crc16_at_0x61); \
     PLATFORM_RUN_TEST(test_pos_core_silicon_B0_crc16_at_0x64); \
     PLATFORM_RUN_TEST(test_pos_core_silicon_B1_crc16_at_0x64); \
-    PLATFORM_RUN_TEST(test_pos_core_init_A0_silicon_with_locked_registers)
+    PLATFORM_RUN_TEST(test_pos_core_init_A0_silicon_with_locked_registers); \
+    PLATFORM_RUN_TEST(test_pos_core_init_B0_silicon_with_locked_registers); \
+    PLATFORM_RUN_TEST(test_pos_core_init_B0_silicon_with_unlocked_registers)
 
 /* Test: TC-CORE-0058 */
 #define CORE_TEST_SILICON() \
@@ -454,6 +470,7 @@ extern "C" {
     CORE_TEST_POS_RUNABIST(); \
     CORE_TEST_POS_GETABISTSTAT(); \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_CHECKHANDLE(); \
     CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
     CORE_TEST_POS_FSMGETRECOVCNT(); \
     CORE_TEST_POS_FSMSETRESETCNTTHR(); \
@@ -478,6 +495,7 @@ extern "C" {
     CORE_TEST_NEG_GETABISTSTAT(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_CHECKHANDLE(); \
     CORE_TEST_NEG_FSMSETRECOVCNTTHR(); \
     CORE_TEST_NEG_FSMGETRECOVCNTTHR(); \
     CORE_TEST_NEG_FSMGETRECOVCNT(); \
@@ -599,6 +617,11 @@ void test_neg_core_getScratchPadValue_nullParam_pmicHandle(void);
 void test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum(void);
 void test_neg_core_getScratchPadValue_nullParam_value(void);
 
+/* checkHandle API tests */
+void test_neg_core_checkHandle_nullCritSecStart(void);
+void test_neg_core_checkHandle_nullCritSecStop(void);
+void test_pos_core_checkHandle_validCriticalSection(void);
+
 /* fsmSetRecovCntThr API tests */
 void test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle(void);
 void test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold(void);
@@ -656,6 +679,8 @@ void test_pos_core_silicon_A0_crc16_at_0x61(void);
 void test_pos_core_silicon_B0_crc16_at_0x64(void);
 void test_pos_core_silicon_B1_crc16_at_0x64(void);
 void test_pos_core_init_A0_silicon_with_locked_registers(void);
+void test_pos_core_init_B0_silicon_with_locked_registers(void);
+void test_pos_core_init_B0_silicon_with_unlocked_registers(void);
 
 #ifdef __cplusplus
 }

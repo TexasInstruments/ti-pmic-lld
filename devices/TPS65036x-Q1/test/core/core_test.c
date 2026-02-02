@@ -378,6 +378,57 @@ void test_neg_core_getScratchPadValue_nullParam_value(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+void test_neg_core_checkHandle_nullCritSecStart(void)
+{
+    // Pass handle with NULL criticalSectionStart into Pmic_checkHandle()
+    Pmic_Handle_t testHandle = {0};
+
+    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.commHandle0 = (void*)&pmicHandle;
+    testHandle.ioRead = &platform_rxByte;
+    testHandle.ioWrite = &platform_txByte;
+    testHandle.criticalSectionStart = NULL;
+    testHandle.criticalSectionStop = &platform_critSecStop;
+    testHandle.retryIntervalMs = 0U;
+
+    int32_t status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_core_checkHandle_nullCritSecStop(void)
+{
+    // Pass handle with NULL criticalSectionStop into Pmic_checkHandle()
+    Pmic_Handle_t testHandle = {0};
+
+    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.commHandle0 = (void*)&pmicHandle;
+    testHandle.ioRead = &platform_rxByte;
+    testHandle.ioWrite = &platform_txByte;
+    testHandle.criticalSectionStart = &platform_critSecStart;
+    testHandle.criticalSectionStop = NULL;
+    testHandle.retryIntervalMs = 0U;
+
+    int32_t status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_pos_core_checkHandle_validCriticalSection(void)
+{
+    // Pass handle with valid criticalSectionStart and Stop into Pmic_checkHandle()
+    Pmic_Handle_t testHandle = {0};
+
+    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.commHandle0 = (void*)&pmicHandle;
+    testHandle.ioRead = &platform_rxByte;
+    testHandle.ioWrite = &platform_txByte;
+    testHandle.criticalSectionStart = &platform_critSecStart;
+    testHandle.criticalSectionStop = &platform_critSecStop;
+    testHandle.retryIntervalMs = 0U;
+
+    int32_t status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
 void test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmSetRecovCntThr()
@@ -1776,6 +1827,110 @@ void test_pos_core_init_A0_silicon_with_locked_registers(void)
     /* Restore mock to default B0 silicon (unlocked) for other tests */
     status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+#endif
+}
+
+/**
+ * @brief Test B0 silicon detection with locked registers
+ *
+ * Covers pmic.c:294 FALSE path: NRSTOUT_READBACK_MASK bit returns 0
+ *
+ * The mock library supports B0 silicon emulation:
+ * - B0: MASK_MODERATE_ERR (0x39) bit 5 (NRSTOUT_READBACK_MASK) is read-only
+ * - Write attempt returns 0 on read, indicating B0 silicon
+ * - platform_reinitWithSiliconLocked() keeps registers locked
+ */
+void test_pos_core_init_B0_silicon_with_locked_registers(void)
+{
+#ifdef BUILD_MOCK
+    Pmic_Handle_t testHandle = {0};
+    int32_t status;
+
+    /* Step 1: Reinitialize mock as B0 silicon with registers LOCKED */
+    status = platform_reinitWithSiliconLocked(PMIC_SILICON_REV_B0);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Step 2: Initialize PMIC - triggers B0 detection with locked registers */
+    Pmic_HandleCfg_t pmicCfg = {
+        .validParams = (PMIC_I2C_ADDR0_VALID | PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
+                       PMIC_CRITICAL_SECTION_START_VALID |
+                       PMIC_CRITICAL_SECTION_STOP_VALID),
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
+    };
+
+    status = Pmic_init(&testHandle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Step 3: Verify B0 was detected (line 294 condition = FALSE) */
+    PLATFORM_ASSERT(testHandle.isA0 == (bool)false);
+
+    /* Step 4: Verify registers were re-locked */
+    uint8_t lockStatus = 0U;
+    status = Pmic_ioRxByte(&testHandle, PMIC_REGISTER_LOCK_REG, &lockStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT((lockStatus & 0x01U) != 0U);  /* Bit 0 = locked */
+
+    /* Cleanup */
+    (void)Pmic_deinit(&testHandle);
+
+    /* Restore mock to default B0 silicon (unlocked) for other tests */
+    status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+#endif
+}
+
+/**
+ * @brief Test B0 silicon detection with unlocked registers
+ *
+ * Covers pmic.c:294 FALSE path without lock/unlock operations
+ *
+ * The mock library supports B0 silicon emulation:
+ * - B0: MASK_MODERATE_ERR (0x39) bit 5 (NRSTOUT_READBACK_MASK) is read-only
+ * - Write attempt returns 0 on read, indicating B0 silicon
+ * - platform_reinitWithSilicon() leaves registers unlocked
+ */
+void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
+{
+#ifdef BUILD_MOCK
+    Pmic_Handle_t testHandle = {0};
+    int32_t status;
+
+    /* Step 1: Reinitialize mock as B0 silicon (registers unlocked) */
+    status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Step 2: Initialize PMIC - triggers B0 detection */
+    Pmic_HandleCfg_t pmicCfg = {
+        .validParams = (PMIC_I2C_ADDR0_VALID | PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
+                       PMIC_CRITICAL_SECTION_START_VALID |
+                       PMIC_CRITICAL_SECTION_STOP_VALID),
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
+    };
+
+    status = Pmic_init(&testHandle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Step 3: Verify B0 was detected (line 294 condition = FALSE) */
+    PLATFORM_ASSERT(testHandle.isA0 == (bool)false);
+
+    /* Cleanup */
+    (void)Pmic_deinit(&testHandle);
 #else
     TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
 #endif

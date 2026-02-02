@@ -106,12 +106,16 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningCnt); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_warningFlag); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_successType); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_maxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_multiple); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_zeroCount); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_exceedsMax); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_nullDiagnosticArray); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_zeroValidParamsInArray); \
@@ -120,6 +124,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorCnt); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_warningCnt); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_nullDiagnostic); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_invalidValidParams); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_invalidStatusCode); \
@@ -130,6 +136,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_multiple); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_nullDiagnosticArray); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_zeroCount); \
@@ -139,6 +147,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_successTypeInArray); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_clearAll); \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_nullHandle); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_clrDiagnosticsAll_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_errorCnt); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_warningCnt); \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostics_errorFlagOnly); \
@@ -156,14 +166,24 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullOutput); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_initialZero); \
+    PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_once); \
     PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_multiple); \
+    PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_afterIncrement); \
+    PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCntOverflow_nullHandle); \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCntOverflow_nullOutput); \
+    PLATFORM_RUN_TEST(test_pos_common_getRetryCntOverflow_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_getRetryCntOverflow_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCntOverflow_nullHandle); \
+    PLATFORM_RUN_TEST(test_pos_common_clrRetryCntOverflow_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_pos_common_clrRetryCntOverflow_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)
 
 /* ========================================================================== */
@@ -217,9 +237,13 @@ void test_pos_common_getDiagnostic_errorFlag(void);
 void test_pos_common_getDiagnostic_warningCnt(void);
 void test_pos_common_getDiagnostic_warningFlag(void);
 void test_pos_common_getDiagnostic_successType(void);
+void test_pos_common_getDiagnostic_nullCritSecStart(void);
+void test_pos_common_getDiagnostic_nullCritSecStop(void);
 void test_pos_common_getDiagnostics_multiple(void);
 void test_pos_common_getDiagnostics_zeroCount(void);
 void test_pos_common_getDiagnostics_exceedsMax(void);
+void test_pos_common_getDiagnostics_nullCritSecStart(void);
+void test_pos_common_getDiagnostics_nullCritSecStop(void);
 void test_pos_common_getDiagnostics_nullHandle(void);
 void test_pos_common_getDiagnostics_nullDiagnosticArray(void);
 void test_pos_common_getDiagnostics_zeroValidParamsInArray(void);
@@ -228,6 +252,8 @@ void test_pos_common_getDiagnostics_successTypeInArray(void);
 void test_pos_common_clrDiagnostic_nullHandle(void);
 void test_pos_common_clrDiagnostic_errorCnt(void);
 void test_pos_common_clrDiagnostic_warningCnt(void);
+void test_pos_common_clrDiagnostic_nullCritSecStart(void);
+void test_pos_common_clrDiagnostic_nullCritSecStop(void);
 void test_pos_common_clrDiagnostic_nullDiagnostic(void);
 void test_pos_common_clrDiagnostic_invalidValidParams(void);
 void test_pos_common_clrDiagnostic_invalidStatusCode(void);
@@ -235,6 +261,8 @@ void test_pos_common_clrDiagnostic_successType(void);
 void test_pos_common_clrDiagnostic_errorFlagOnly(void);
 void test_pos_common_clrDiagnostic_warningFlagOnly(void);
 void test_pos_common_clrDiagnostics_multiple(void);
+void test_pos_common_clrDiagnostics_nullCritSecStart(void);
+void test_pos_common_clrDiagnostics_nullCritSecStop(void);
 void test_pos_common_clrDiagnostics_nullHandle(void);
 void test_pos_common_clrDiagnostics_nullDiagnosticArray(void);
 void test_pos_common_clrDiagnostics_zeroCount(void);
@@ -244,6 +272,8 @@ void test_pos_common_clrDiagnostics_invalidStatusCodeInArray(void);
 void test_pos_common_clrDiagnostics_successTypeInArray(void);
 void test_pos_common_clrDiagnosticsAll_clearAll(void);
 void test_pos_common_clrDiagnosticsAll_nullHandle(void);
+void test_pos_common_clrDiagnosticsAll_nullCritSecStart(void);
+void test_pos_common_clrDiagnosticsAll_nullCritSecStop(void);
 void test_pos_common_overflow_errorCnt(void);
 void test_pos_common_overflow_warningCnt(void);
 void test_pos_common_getDiagnostics_errorFlagOnly(void);
@@ -256,14 +286,24 @@ void test_pos_common_clrDiagnostics_warningFlagOnly(void);
 void test_pos_common_getRetryCnt_nullHandle(void);
 void test_pos_common_getRetryCnt_nullOutput(void);
 void test_pos_common_getRetryCnt_initialZero(void);
+void test_pos_common_getRetryCnt_nullCritSecStart(void);
+void test_pos_common_getRetryCnt_nullCritSecStop(void);
 void test_pos_common_incrementRetryCnt_nullHandle(void);
 void test_pos_common_incrementRetryCnt_once(void);
 void test_pos_common_incrementRetryCnt_multiple(void);
+void test_pos_common_incrementRetryCnt_nullCritSecStart(void);
+void test_pos_common_incrementRetryCnt_nullCritSecStop(void);
 void test_pos_common_clrRetryCnt_nullHandle(void);
 void test_pos_common_clrRetryCnt_afterIncrement(void);
+void test_pos_common_clrRetryCnt_nullCritSecStart(void);
+void test_pos_common_clrRetryCnt_nullCritSecStop(void);
 void test_pos_common_getRetryCntOverflow_nullHandle(void);
 void test_pos_common_getRetryCntOverflow_nullOutput(void);
+void test_pos_common_getRetryCntOverflow_nullCritSecStart(void);
+void test_pos_common_getRetryCntOverflow_nullCritSecStop(void);
 void test_pos_common_clrRetryCntOverflow_nullHandle(void);
+void test_pos_common_clrRetryCntOverflow_nullCritSecStart(void);
+void test_pos_common_clrRetryCntOverflow_nullCritSecStop(void);
 void test_pos_common_overflow_retryCnt(void);
 
 /* Boundary Condition Tests */

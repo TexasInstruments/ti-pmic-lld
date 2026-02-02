@@ -128,6 +128,20 @@ extern "C" {
     CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
 
 /* ========================================================================== */
+/*          API-Specific Test Macros - validatePmicHandle                     */
+/* ========================================================================== */
+#define CORE_TEST_POS_VALIDATEPMICHANDLE() \
+    PLATFORM_RUN_TEST(test_pos_core_validatePmicHandle_validCriticalSection)
+
+#define CORE_TEST_NEG_VALIDATEPMICHANDLE() \
+    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStop)
+
+#define CORE_TEST_VALIDATEPMICHANDLE() \
+    CORE_TEST_POS_VALIDATEPMICHANDLE(); \
+    CORE_TEST_NEG_VALIDATEPMICHANDLE()
+
+/* ========================================================================== */
 /*                        Aggregate Test Macros                               */
 /* ========================================================================== */
 
@@ -136,14 +150,16 @@ extern "C" {
     CORE_TEST_POS_COREGETNVMREV(); \
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_COREGETSCRATCHPADVALUE()
+    CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
+    CORE_TEST_POS_VALIDATEPMICHANDLE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_COREGETSILREV(); \
     CORE_TEST_NEG_COREGETNVMREV(); \
     CORE_TEST_NEG_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
+    CORE_TEST_NEG_COREGETSCRATCHPADVALUE(); \
+    CORE_TEST_NEG_VALIDATEPMICHANDLE()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
@@ -166,6 +182,8 @@ void test_neg_core_coreSetScratchPadValue_nullParam_handle(void);
 void test_neg_core_coreSetScratchPadValue_outOfBounds_scratchPadRegNum(void);
 void test_neg_core_coreGetScratchPadValue_outOfBounds_scratchPadRegNum(void);
 void test_neg_core_coreGetScratchPadValue_nullValue(void);
+void test_neg_core_validatePmicHandle_nullCritSecStart(void);
+void test_neg_core_validatePmicHandle_nullCritSecStop(void);
 
 /* Positive test functions */
 void test_pos_core_coreGetSilRev(void);
@@ -176,6 +194,7 @@ void test_pos_core_coreGetScratchPadValue_reg2(void);
 void test_pos_core_coreSetScratchPadValue_reg3(void);
 void test_pos_core_coreGetScratchPadValue_reg4(void);
 void test_pos_core_scratchPadValue_boundary(void);
+void test_pos_core_validatePmicHandle_validCriticalSection(void);
 
 #ifdef __cplusplus
 }

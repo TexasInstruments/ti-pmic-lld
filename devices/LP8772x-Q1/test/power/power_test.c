@@ -4477,3 +4477,18 @@ void test_neg_power_thermal_no_valid_params(void)
     status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
+
+/* ========================================================================== */
+/*                         MC/DC Coverage Tests                               */
+/* ========================================================================== */
+
+void test_pos_power_setGetResourceCfg_buck1_enable_mcdc(void)
+{
+    int32_t status;
+    Pmic_PowerResourceCfg_t cfg = {0};
+    cfg.resource = PMIC_PWR_RSRC_BUCK1;
+    cfg.validParams = PMIC_PWR_CFG_ENABLE_VALID;  /* IMON capable = FALSE path */
+    cfg.enable = true;
+    status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}

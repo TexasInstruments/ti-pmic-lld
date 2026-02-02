@@ -144,7 +144,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_successTypeInArray); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
-    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStart)
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStop)
 
 /* Test: TC-COMMON-0024 */
 #define COMMON_TEST_GETDIAGNOSTIC() \
@@ -186,7 +187,12 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_exceedsMaxWarningId); \
-    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStart)
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostic_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullCritSecStop)
 
 /* Test: TC-COMMON-0026 */
 #define COMMON_TEST_CLRDIAGNOSTIC() \
@@ -202,7 +208,9 @@ extern "C" {
 
 #define COMMON_TEST_NEG_GETRETRYCNT() \
     PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullOutput)
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullOutput); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCnt_nullCritSecStop)
 
 /* Test: TC-COMMON-0030 */
 #define COMMON_TEST_GETRETRYCNT() \
@@ -218,7 +226,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_multiple)
 
 #define COMMON_TEST_NEG_INCREMENTRETRYCNT() \
-    PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_incrementRetryCnt_nullCritSecStop)
 
 /* Test: TC-COMMON-0031 */
 #define COMMON_TEST_INCREMENTRETRYCNT() \
@@ -233,7 +243,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_afterIncrement)
 
 #define COMMON_TEST_NEG_CLRRETRYCNT() \
-    PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCnt_nullCritSecStop)
 
 /* Test: TC-COMMON-0032 */
 #define COMMON_TEST_CLRRETRYCNT() \
@@ -246,7 +258,9 @@ extern "C" {
 
 #define COMMON_TEST_NEG_GETRETRYCNTOVERFLOW() \
     PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullOutput)
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullOutput); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullCritSecStop)
 
 /* Test: TC-COMMON-0033 */
 #define COMMON_TEST_GETRETRYCNTOVERFLOW() \
@@ -260,7 +274,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)
 
 #define COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW() \
-    PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_common_clrRetryCntOverflow_nullCritSecStop)
 
 /* Test: TC-COMMON-0034 */
 #define COMMON_TEST_CLRRETRYCNTOVERFLOW() \
@@ -396,6 +412,7 @@ void test_neg_common_getDiagnostics_zeroValidParamsInArray(void);
 void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void);
 void test_neg_common_getDiagnostics_successTypeInArray(void);
 void test_neg_common_getDiagnostics_nullCritSecStart(void);
+void test_neg_common_getDiagnostics_nullCritSecStop(void);
 
 /* clrDiagnostic Tests */
 void test_neg_common_clrDiagnostic_nullHandle(void);
@@ -411,24 +428,39 @@ void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void);
 void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void);
 void test_neg_common_clrDiagnostics_successTypeInArray(void);
 void test_neg_common_clrDiagnosticsAll_nullHandle(void);
+void test_neg_common_clrDiagnostic_nullCritSecStart(void);
+void test_neg_common_clrDiagnostic_nullCritSecStop(void);
 void test_neg_common_clrDiagnostics_nullCritSecStart(void);
+void test_neg_common_clrDiagnostics_nullCritSecStop(void);
+void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void);
+void test_neg_common_clrDiagnosticsAll_nullCritSecStop(void);
 
 /* getRetryCnt Tests */
 void test_neg_common_getRetryCnt_nullHandle(void);
 void test_neg_common_getRetryCnt_nullOutput(void);
+void test_neg_common_getRetryCnt_nullCritSecStart(void);
+void test_neg_common_getRetryCnt_nullCritSecStop(void);
 
 /* incrementRetryCnt Tests */
 void test_neg_common_incrementRetryCnt_nullHandle(void);
+void test_neg_common_incrementRetryCnt_nullCritSecStart(void);
+void test_neg_common_incrementRetryCnt_nullCritSecStop(void);
 
 /* clrRetryCnt Tests */
 void test_neg_common_clrRetryCnt_nullHandle(void);
+void test_neg_common_clrRetryCnt_nullCritSecStart(void);
+void test_neg_common_clrRetryCnt_nullCritSecStop(void);
 
 /* getRetryCntOverflow Tests */
 void test_neg_common_getRetryCntOverflow_nullHandle(void);
 void test_neg_common_getRetryCntOverflow_nullOutput(void);
+void test_neg_common_getRetryCntOverflow_nullCritSecStart(void);
+void test_neg_common_getRetryCntOverflow_nullCritSecStop(void);
 
 /* clrRetryCntOverflow Tests */
 void test_neg_common_clrRetryCntOverflow_nullHandle(void);
+void test_neg_common_clrRetryCntOverflow_nullCritSecStart(void);
+void test_neg_common_clrRetryCntOverflow_nullCritSecStop(void);
 
 /* ========================================================================== */
 /*                      Boundary Condition Tests                              */
