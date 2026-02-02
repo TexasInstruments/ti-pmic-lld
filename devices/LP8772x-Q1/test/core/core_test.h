@@ -49,9 +49,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - configCrcCalculate                  */
-/* ========================================================================== */
+/* ==================================================================================================== */
+/* API-Specific Test Macros - configCrcCalculate, getConfigCrcStatus, configCrcEnable, configCrcDisable */
+/* ==================================================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCCALCULATE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
@@ -78,9 +78,9 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - configCrcEnable                     */
-/* ========================================================================== */
+/* ================================================================================ */
+/* API-Specific Test Macros - configCrcEnable, configCrcDisable, getConfigCrcStatus */
+/* ================================================================================ */
 
 #define CORE_TEST_POS_CONFIGCRCENABLE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly)
@@ -172,7 +172,7 @@ extern "C" {
     CORE_TEST_NEG_INIT()
 
 /* ========================================================================== */
-/*             API-Specific Test Macros - setRegLockState                     */
+/*         API-Specific Test Macros - setRegLockState, getRegLockState        */
 /* ========================================================================== */
 
 #define CORE_TEST_POS_SETREGLOCKSTATE() \

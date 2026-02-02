@@ -77,7 +77,7 @@ extern "C" {
     PMIC_TEST_NEG_INIT()
 
 /* ========================================================================== */
-/*               API-Specific Test Macros - checkHandle                       */
+/*            API-Specific Test Macros - checkHandle, init, deinit            */
 /* ========================================================================== */
 
 #define PMIC_TEST_NEG_CHECKHANDLE() \

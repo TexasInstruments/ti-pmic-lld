@@ -178,9 +178,9 @@ extern "C" {
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_NEG_IOTXBYTE_CS()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - ioUpdateByte                     */
-/* ========================================================================== */
+/* ================================================================================== */
+/* API-Specific Test Macros - ioRxByte, ioUpdateByte, ioUpdateByte_b, ioUpdateByte_CS */
+/* ================================================================================== */
 
 #define IO_TEST_POS_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_updateByte_basic); \

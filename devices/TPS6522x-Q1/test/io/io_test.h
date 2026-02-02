@@ -50,7 +50,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*                  API-Specific Test Macros - ioTxByte                       */
+/*                  API-Specific Test Macros - ioTxByte, ioRxByte             */
 /* ========================================================================== */
 #define IO_TEST_POS_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_singleRegisterWrite); \

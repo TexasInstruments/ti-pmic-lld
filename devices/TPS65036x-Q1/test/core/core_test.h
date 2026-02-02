@@ -77,9 +77,9 @@ extern "C" {
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - setRegLockState                 */
-/* ========================================================================== */
+/* ================================================================================================================================== */
+/* API-Specific Test Macros - setRegLockState, getRegLockState, setScratchPadValue, getScratchPadValue, disableRegLock, enableRegLock */
+/* ================================================================================================================================== */
 #define CORE_TEST_POS_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_setGetRegLock)
 
@@ -102,9 +102,9 @@ extern "C" {
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioSetCrcEnableState             */
-/* ========================================================================== */
+/* ============================================================================================== */
+/* API-Specific Test Macros - ioSetCrcEnableState, ioGetCrcEnableState, ioCrcEnable, ioCrcDisable */
+/* ============================================================================================== */
 #define CORE_TEST_POS_IOSETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_core_enableDisableCRC8)
 
@@ -399,9 +399,9 @@ extern "C" {
     CORE_TEST_POS_GETCRC16CFG(); \
     CORE_TEST_NEG_GETCRC16CFG()
 
-/* ========================================================================== */
-/*       API-Specific Test Macros - Pmic_setCRC16Cfg, Pmic_setCRC16Cfg        */
-/* ========================================================================== */
+/* =========================================================================== */
+/* API-Specific Test Macros - setCRC16Cfg, getCRC16Cfg, init, deinit, ioRxByte */
+/* =========================================================================== */
 #define CORE_TEST_POS_SILICON() \
     PLATFORM_RUN_TEST(test_pos_core_silicon_A0_crc16_at_0x61); \
     PLATFORM_RUN_TEST(test_pos_core_silicon_B0_crc16_at_0x64); \

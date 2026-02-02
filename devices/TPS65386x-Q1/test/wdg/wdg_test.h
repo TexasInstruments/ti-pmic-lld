@@ -52,9 +52,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - wdgSetEnableState                      */
-/* ========================================================================== */
+/* ====================================================================================== */
+/* API-Specific Test Macros - wdgEnable, wdgDisable, wdgSetEnableState, wdgGetEnableState */
+/* ====================================================================================== */
 
 #define WDG_TEST_POS_WDGSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgEnable_enableDisable)

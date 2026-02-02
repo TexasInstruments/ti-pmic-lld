@@ -82,9 +82,9 @@ extern "C" {
     ESM_TEST_NEG_ESMSETGETCFG(); \
     ESM_TEST_POS_ESMSETGETCFG()
 
-/* ========================================================================== */
-/*       API-Specific Test Macros - esmStart, esmStop, esmGetStartState       */
-/* ========================================================================== */
+/* ================================================================================ */
+/* API-Specific Test Macros - esmStart, esmStop, esmSetStartState, esmGetStartState */
+/* ================================================================================ */
 #define ESM_TEST_POS_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStart); \

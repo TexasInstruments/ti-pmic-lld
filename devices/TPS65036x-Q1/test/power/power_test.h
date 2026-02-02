@@ -343,7 +343,7 @@ extern "C" {
     POWER_TEST_NEG_PWRGETBUCKCFG()
 
 /* ========================================================================== */
-/*                  API-Specific Test Macros - pwrSetTsdCfg                   */
+/* API-Specific Test Macros - pwrSetTsdCfg, pwrGetTsdCfg, pwrGetTsdImmStatus  */
 /* ========================================================================== */
 #define POWER_TEST_POS_PWRSETTSDCFG() \
     PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnStayInSafeState); \
@@ -363,7 +363,7 @@ extern "C" {
     POWER_TEST_NEG_PWRSETTSDCFG()
 
 /* ========================================================================== */
-/*                  API-Specific Test Macros - pwrGetTsdCfg                   */
+/*        API-Specific Test Macros - pwrGetTsdCfg, pwrGetTsdImmStatus         */
 /* ========================================================================== */
 #define POWER_TEST_POS_PWRGETTSDCFG() /* All positive tests covered by SET */
 

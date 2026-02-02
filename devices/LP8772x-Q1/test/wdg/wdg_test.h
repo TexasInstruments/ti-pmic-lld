@@ -220,9 +220,9 @@ extern "C" {
     WDG_TEST_POS_WDGCLRERRSTATUS(); \
     WDG_TEST_NEG_WDGCLRERRSTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - wdgClrErrStatusAll                 */
-/* ========================================================================== */
+/* =============================================================================== */
+/* API-Specific Test Macros - wdgClrErrStatus, wdgGetErrStatus, wdgClrErrStatusAll */
+/* =============================================================================== */
 
 #define WDG_TEST_POS_WDGCLRERRSTATUSALL() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatusAll_optimization)

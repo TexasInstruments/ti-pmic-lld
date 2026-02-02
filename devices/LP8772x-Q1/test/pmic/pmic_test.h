@@ -50,7 +50,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*                API-Specific Test Macros - checkHandle                      */
+/*  API-Specific Test Macros - init, deinit, checkHandle, setScratchPadValue  */
 /* ========================================================================== */
 
 #define PMIC_TEST_POS_CHECKHANDLE() \

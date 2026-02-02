@@ -300,9 +300,9 @@ extern "C" {
     WDG_TEST_POS_WDGGETFAILCNTSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - wdgQaSequence Tests                */
-/* ========================================================================== */
+/* ================================================================================================================================================================== */
+/* API-Specific Test Macros - wdgEnable, wdgClrErrStatusAll, wdgSetCfg, wdgSetPowerHold, wdgSetReturnToLongWindow, wdgQaWriteAnswer, wdgClrErrStatus, wdgGetErrStatus */
+/* ================================================================================================================================================================== */
 
 #define WDG_TEST_POS_WDGQASEQUENCE() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaSequence_detectNoErrors); \
