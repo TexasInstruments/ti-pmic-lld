@@ -1,4 +1,4 @@
-# Texas Instruments PMIC Low-Level Driver (LLD) for Coach / LP8772X-Q1
+# Texas Instruments PMIC Low-Level Driver (LLD) for LP8772x-Q1
 
 This is an API guide for PMIC (Power Management Integrated Circuit) Driver. PMIC
 Driver is designed to power up different components on the embedded boards or
@@ -33,11 +33,9 @@ the `.` folder name, such as:
 
     git clone git@github.com:TexasInstruments/ti-pmic-lld.git .
 
-Once the repository has been cloned, check-out the LP8772X-Q1 support branch
-(to track future changes) or check out a relevant release tag (to freeze
-changes). The development branch for this device can be checked out with:
+Once the repository has been cloned, navigate to the LP8772x-Q1 device directory:
 
-    git checkout device/coach
+    cd devices/LP8772x-Q1/
 
 #### Including in a Project
 

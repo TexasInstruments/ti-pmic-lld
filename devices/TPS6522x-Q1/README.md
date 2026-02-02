@@ -1,4 +1,4 @@
-# Texas Instruments PMIC Low-Level Driver (LLD) for Burton / TPS6522x-Q1
+# Texas Instruments PMIC Low-Level Driver (LLD) for TPS6522x-Q1
 
 This is an API guide for PMIC (Power Management Integrated Circuit) Driver. PMIC
 Driver is designed to power up different components on the embedded boards or
@@ -32,11 +32,9 @@ the `.` folder name, such as:
 
     git clone git@github.com:TexasInstruments/ti-pmic-lld.git .
 
-Once the repository has been cloned, check-out the TPS6522x-Q1 support branch
-(to track future changes) or check out a relevant release tag (to freeze
-changes). The development branch for this device can be checked out with:
+Once the repository has been cloned, navigate to the TPS6522x-Q1 device directory:
 
-    git checkout device/burton
+    cd devices/TPS6522x-Q1/
 
 #### Including in a Project
 

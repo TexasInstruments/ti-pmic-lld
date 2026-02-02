@@ -27,31 +27,56 @@ without the need to worry about register and bit-field level details.
 
 ## Supported Devices
 
-Device support is subdivided based on feature set:
+This repository supports the following Power Management ICs:
 
-| Part Number | Friendly Name | Support Branch           |
-| ----------- | ------------- | ------------------------ |
-| TPS6594x    | Leo           | `device/leo-hera-burton` |
-| LP8764x     | Hera          | `device/leo-hera-burton` |
-| TPS6522x    | Burton        | `device/leo-hera-burton` |
-| TPS653860xx | Blackbird     | `device/blackbird`       |
-| LP8772X     | Coach         | `device/coach`           |
-| TPS65036x   | Derby         | `device/derby`           |
-| TPS65385xx  | Green Hornet  | `device/green-hornet`    |
+| Part Number    | Description |
+| -------------- | ----------- |
+| TPS65036x-Q1   | Power Management IC for Safety-Relevant Applications |
+| TPS6522x-Q1    | Four Buck Converters, Three LDOs, Three VMONs, Six GPIOs, ADC, Watchdog, and ESM |
+| TPS65386x-Q1   | Power Management IC for Safety-Relevant Applications |
+| LP8772x-Q1     | Three Buck Converters, one Linear Regulator and one Load Switch for AWR and IWR Radar Sensors |
+
+All device-specific drivers are located in the `devices/` directory, with each device in its own subdirectory.
 
 ## Setup Instructions
 
-To start using this repository, find the correct branch for the target device
-from the list above and clone it to your project location. A single branch can
-be cloned using the git-clone `--single-branch` argument.
+### Clone the Repository
 
-For example, to clone the support branch for TPS653860xx:
+To start using this repository, clone it to your project location:
 
-``` shell
-git clone -b device/blackbird --single-branch https://github.com/TexasInstruments/ti-pmic-lld.git
+```shell
+git clone https://github.com/TexasInstruments/ti-pmic-lld.git
 ```
 
-Alternatively, packaged releases can be found by navigating to
+Or clone into a specific directory:
+
+```shell
+git clone https://github.com/TexasInstruments/ti-pmic-lld.git <DESIRED_FOLDER_NAME>
+```
+
+### Access Device-Specific Drivers
+
+All device drivers are organized in the `devices/` directory. Navigate to your target device:
+
+```shell
+cd devices/TPS65036x-Q1/
+cd devices/TPS6522x-Q1/
+cd devices/TPS65386x-Q1/
+cd devices/LP8772x-Q1/
+```
+
+Each device directory contains:
+- `README.md` - Device-specific documentation and API guide
+- `include/` - Header files
+- `src/` - Source implementation files
+- `test/` - Comprehensive test suite
+- `Makefile` - Build configuration
+
+Refer to the device-specific README.md for detailed integration instructions.
+
+### Alternative: Packaged Releases
+
+Packaged releases can be found by navigating to
 [Releases](https://github.com/TexasInstruments/ti-pmic-lld/releases) and
 identifying the latest release for the target device. From here, expand the
 "Assets" section of the release and find downloadable source code for each

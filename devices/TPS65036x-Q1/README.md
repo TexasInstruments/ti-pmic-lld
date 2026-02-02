@@ -1,4 +1,4 @@
-# Texas Instruments PMIC LLD for Derby / TPS65036x
+# Texas Instruments PMIC LLD for TPS65036x-Q1
 
 This is a user's guide for the TPS65036x PMIC (Power Management Integrated Circuit)
 low level driver (LLD). The PMIC LLD provides application programming interfaces
@@ -22,9 +22,9 @@ To clone the repository into your current directory:
 
     git clone git@github.com:TexasInstruments/ti-pmic-lld.git .
 
-Once the repository has been cloned, check-out the TPS65036x-Q1 branch:
+Once the repository has been cloned, navigate to the TPS65036x-Q1 device directory:
 
-    git checkout device/Derby
+    cd devices/TPS65036x-Q1/
 
 #### Include PMIC LLD Within Your Project
 
