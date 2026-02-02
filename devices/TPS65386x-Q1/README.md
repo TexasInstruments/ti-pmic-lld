@@ -10,7 +10,7 @@ Modules.
 
 Supported PMIC Devices are:
 
-1. TPS653860x-Q1: Power Management IC for Safety-Relevant Applications
+1. TPS65386x-Q1: Power Management IC for Safety-Relevant Applications
 
 ## Driver Usage
 
@@ -278,7 +278,7 @@ information, the user should call `Pmic_init()` in order to convert the
 `Pmic_HandleCfg_t` into a `Pmic_Handle_t` which will be used with the rest of
 the driver APIs.
 
-A full example of what this may look like for TPS65386X-Q1 is shown below:
+A full example of what this may look like for TPS65386x-Q1 is shown below:
 
 ```c
 int32_t status;
@@ -287,7 +287,7 @@ int32_t status;
 // can manage access throughout the application, it will need to be re-used often.
 Pmic_Handle_t pmicHandle;
 
-Pmic_HandleCfg_t coreCfg = {
+Pmic_HandleCfg_t config = {
     .validParams = (
         PMIC_COMM_MODE_VALID              |
         PMIC_COMM_HANDLE_0_VALID          |
@@ -310,12 +310,34 @@ Pmic_HandleCfg_t coreCfg = {
     .retryIntervalMs = 10U,
 };
 
-status = Pmic_init(&pmicHandle, &coreCfg);
+status = Pmic_init(&pmicHandle, &config);
 
 if (status == PMIC_ST_SUCCESS) {
     // pmicHandle is now valid for use with all PMIC APIs
 }
 ```
+
+#### Using validParams
+
+The `validParams` field in `Pmic_HandleCfg_t` allows selective initialization of handle configuration parameters. Each bit in this field corresponds to a structure member:
+
+- Set a bit to 1 to indicate the corresponding parameter is valid and should be processed
+- Set a bit to 0 to indicate the corresponding parameter is invalid and should be ignored
+
+For TPS65386x-Q1, the following parameters are typically required:
+- `PMIC_COMM_MODE_VALID`
+- `PMIC_COMM_HANDLE_0_VALID`
+- `PMIC_IO_READ_VALID`
+- `PMIC_IO_WRITE_VALID`
+- `PMIC_CRITICAL_SECTION_START_VALID`
+- `PMIC_CRITICAL_SECTION_STOP_VALID`
+- `PMIC_TIMER_WAIT_MS_VALID`
+- `PMIC_RETRY_CNT_VALID`
+- `PMIC_RETRY_INTERVAL_MS_VALID`
+
+The `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
+
+Alternatively, use the convenience macro `PMIC_ALL_VALID` to enable all parameters.
 
 ### CRC Enabled I/O
 
@@ -329,13 +351,11 @@ order to ensure successful communication.
 
 See `include/pmic_io.h` for more information on these APIs.
 
-### Watchdog
+### Watchdog (WDG)
 
-The watchdog module for the PMIC driver supports configuration and status
-reporting for PMIC watchdog features, and supports calculation and response for
-Q&A watchdog mode.
+The TPS65386x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A (question and answer) mode.
 
-See `include/pmic_wdg.h` for more information on these APIs.
+See `include/pmic_wdg.h` for more information on the WDG module and its APIs.
 
 ### System Diagnostics
 

@@ -317,6 +317,28 @@ if (status == PMIC_ST_SUCCESS) {
 }
 ```
 
+#### Using validParams
+
+The `validParams` field in `Pmic_HandleCfg_t` allows selective initialization of handle configuration parameters. Each bit in this field corresponds to a structure member:
+
+- Set a bit to 1 to indicate the corresponding parameter is valid and should be processed
+- Set a bit to 0 to indicate the corresponding parameter is invalid and should be ignored
+
+For TPS6522x-Q1, the following parameters are typically required:
+- `PMIC_COMM_MODE_VALID`
+- `PMIC_COMM_HANDLE_0_VALID`
+- `PMIC_IO_READ_VALID`
+- `PMIC_IO_WRITE_VALID`
+- `PMIC_CRITICAL_SECTION_START_VALID`
+- `PMIC_CRITICAL_SECTION_STOP_VALID`
+- `PMIC_TIMER_WAIT_MS_VALID`
+- `PMIC_RETRY_CNT_VALID`
+- `PMIC_RETRY_INTERVAL_MS_VALID`
+
+The `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
+
+Alternatively, use the convenience macro `PMIC_ALL_VALID` to enable all parameters.
+
 ### CRC Enabled I/O
 
 This driver provides two APIs (`Pmic_ioRxByte()` and `Pmic_ioTxByte()`)
@@ -329,13 +351,49 @@ order to ensure successful communication.
 
 See `include/pmic_io.h` for more information on these APIs.
 
-### Watchdog
+### Watchdog (WDG)
 
-The watchdog module for the PMIC driver supports configuration and status
-reporting for PMIC watchdog features, and supports calculation and response for
-Q&A watchdog mode.
+The TPS6522x-Q1 watchdog module supports configuration and status reporting for PMIC watchdog features, including trigger mode, fail count threshold, and Q&A (question and answer) mode.
 
-See `include/pmic_wdg.h` for more information on these APIs.
+See `include/pmic_wdg.h` for more information on the WDG module and its APIs.
+
+### Error Signal Monitor (ESM)
+
+The TPS6522x-Q1 ESM helps monitor hardware errors that occur in the MCU.
+
+See `include/pmic_esm.h` for more information on the ESM module and its APIs.
+
+### Power (Regulator Control)
+
+The TPS6522x-Q1 PMIC features four buck regulators and three LDO regulators.
+
+See `include/pmic_power.h` for more information on the power module and its APIs.
+
+### Interrupt Request (IRQ)
+
+The TPS6522x-Q1 PMIC features fault/error detection and notification in the form of IRQs.
+
+See `include/pmic_irq.h` for more information on the IRQ module and its APIs.
+
+### General Purpose I/O (GPIO)
+
+The TPS6522x-Q1 PMIC features six configurable GPIO pins for control and monitoring.
+
+See `include/pmic_gpio.h` for more information on the GPIO module and its APIs.
+
+### Analog-to-Digital Converter (ADC)
+
+The TPS6522x-Q1 PMIC features an ADC for monitoring voltages and temperatures.
+
+See `include/pmic_adc.h` for more information on the ADC module and its APIs.
+
+### Other Features
+
+Other PMIC features not pertaining to previously mentioned modules can be found in the Core module.
+
+These features include, but are not limited to, getting device information, register lock/unlock, CRC enable/disable, and low power mode configurations.
+
+See `include/pmic_core.h` for more information on the Core module and its APIs.
 
 ### System Diagnostics
 
