@@ -37,6 +37,7 @@
 /* ========================================================================== */
 
 #include "pmic_test.h"
+#include "test_constants.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -418,7 +419,7 @@ void test_neg_pmic_checkHandle_invalidDrvInitStat(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 
     // Restore handle for deinit
-    handle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    handle.drvInitStat = TEST_PMIC_INIT_MAGIC;
     status = Pmic_deinit(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }

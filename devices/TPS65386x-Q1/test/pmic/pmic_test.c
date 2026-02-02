@@ -955,7 +955,7 @@ void test_pos_pmic_init_communication_validation(void)
 
     /* Verify validateComms set drvInitStat correctly */
     /* validateComms reads PMIC_WD_LONGWIN_CFG_REG to verify communication */
-    /* On success, it sets drvInitStat to PMIC_DRV_INIT_SUCCESS */
+    /* On success, it sets drvInitStat to TEST_PMIC_INIT_MAGIC */
     PLATFORM_ASSERT(handle.drvInitStat == PMIC_INIT_TEST_EXPECTED_STAT);
 
     /* Verify we can actually communicate with device after validation */

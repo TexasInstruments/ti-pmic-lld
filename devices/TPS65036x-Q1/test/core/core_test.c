@@ -383,7 +383,7 @@ void test_neg_core_checkHandle_nullCritSecStart(void)
     // Pass handle with NULL criticalSectionStart into Pmic_checkHandle()
     Pmic_Handle_t testHandle = {0};
 
-    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.drvInitStat = TEST_PMIC_INIT_MAGIC;
     testHandle.commHandle0 = (void*)&pmicHandle;
     testHandle.ioRead = &platform_rxByte;
     testHandle.ioWrite = &platform_txByte;
@@ -400,7 +400,7 @@ void test_neg_core_checkHandle_nullCritSecStop(void)
     // Pass handle with NULL criticalSectionStop into Pmic_checkHandle()
     Pmic_Handle_t testHandle = {0};
 
-    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.drvInitStat = TEST_PMIC_INIT_MAGIC;
     testHandle.commHandle0 = (void*)&pmicHandle;
     testHandle.ioRead = &platform_rxByte;
     testHandle.ioWrite = &platform_txByte;
@@ -417,7 +417,7 @@ void test_pos_core_checkHandle_validCriticalSection(void)
     // Pass handle with valid criticalSectionStart and Stop into Pmic_checkHandle()
     Pmic_Handle_t testHandle = {0};
 
-    testHandle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    testHandle.drvInitStat = TEST_PMIC_INIT_MAGIC;
     testHandle.commHandle0 = (void*)&pmicHandle;
     testHandle.ioRead = &platform_rxByte;
     testHandle.ioWrite = &platform_txByte;

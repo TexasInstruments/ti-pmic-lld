@@ -96,21 +96,6 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_drvInitVal
- * @name PMIC LLD Initialized Value
- *
- * @brief When the drvInitStat struct member of Pmic_Handle_t struct type is
- * equal to this value, the driver has been successfully initialized.
- *
- * @details The value is used to help prevent corrupt PMIC handle usage. When
- * converting to ASCII, the value reads out to be "PMIC".
- *
- * @{
- */
-#define PMIC_DRV_INIT_SUCCESS               ((uint32_t)0x504D4943U)
-/** @} */
-
-/**
  * @anchor Pmic_scratchPadRegSel
  * @name TPS65036x PMIC Scratch Pad Register Selection
  *

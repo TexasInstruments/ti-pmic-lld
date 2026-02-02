@@ -49,10 +49,12 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* PMIC driver Core Handle INIT status Magic Number. Used to validate Handle to
-   avoid corrupted PmicHandle usage. */
-#define PMIC_DRV_INIT_SUCCESS (uint32_t)(0x504D4943U) /* "PMIC" in ASCII */
-#define PMIC_DRV_INIT_UNINIT  (uint32_t)(0x00000000U)
+/**
+ * @brief PMIC driver initialization status magic numbers. Used to validate
+ * handle to avoid corrupted PMIC handle usage.
+ */
+#define PMIC_DRV_INIT_SUCCESS ((uint32_t)0x504D4943U) /* "PMIC" in ASCII */
+#define PMIC_DRV_INIT_UNINIT  ((uint32_t)0x00000000U)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */

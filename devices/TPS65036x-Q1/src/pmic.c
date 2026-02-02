@@ -45,6 +45,16 @@
 #include "regmap/core.h"
 #include "regmap/irq.h"
 
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/**
+ * @brief PMIC driver initialization status magic number. Used to validate
+ * handle to avoid corrupted PMIC handle usage.
+ */
+#define PMIC_DRV_INIT_SUCCESS ((uint32_t)0x504D4943U)
+
 // BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
 #define DEVICE_PG_IDENTIFIER (3U)
 
