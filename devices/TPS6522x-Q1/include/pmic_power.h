@@ -290,7 +290,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_pwrTwarnLvl
+ * @anchor Pmic_PwrTwarnLvl
  * @name PMIC Power Temperature Warning Level
  *
  * @brief Enumeration of PMIC temperature warning level values.
@@ -304,7 +304,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_pwrTsdOrdLvl
+ * @anchor Pmic_PwrTsdOrdLvl
  * @name PMIC Power Thermal Orderly Shutdown Level
  *
  * @brief Enumeration of PMIC thermal orderly shutdown level values.
@@ -643,10 +643,10 @@ typedef struct Pmic_PwrRsrcStatus_s {
  * @ref Pmic_PwrThermalCfgValidParams.
  *
  * @param twarnLvl Warning temperature level. For valid values, refer to
- * @ref Pmic_pwrTwarnLvl.
+ * @ref Pmic_PwrTwarnLvl.
  *
  * @param tsdOrdLvl Orderly shutdown level. For valid values, refer to
- * @ref Pmic_pwrTsdOrdLvl.
+ * @ref Pmic_PwrTsdOrdLvl.
  */
 typedef struct Pmic_PwrThermalCfg_s {
     uint32_t validParams;

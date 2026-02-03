@@ -223,6 +223,63 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_PwrThermalCfgValidParams
+ * @name PMIC Power Thermal Configuration Structure Valid Parameters
+ *
+ * @brief Definitions used to indicate valid parameters of Pmic_PwrThermalCfg_t.
+ * Set the validParams member of Pmic_PwrThermalCfg_t equal to a combination
+ * of these defines by using the OR operator.
+ *
+ * @{
+ */
+#define PMIC_POWER_TWARN_LEVEL_VALID   (1UL << 0U)
+#define PMIC_POWER_TSD_ORD_LEVEL_VALID (1UL << 1U)
+#define PMIC_POWER_TWARN_CONFIG_VALID  (1UL << 2U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrTwarnLvl
+ * @name PMIC Power Temperature Warning Level
+ *
+ * @brief Enumeration of PMIC temperature warning level values.
+ *
+ * @{
+ */
+#define PMIC_POWER_TWARN_LEVEL_140C (0U)
+#define PMIC_POWER_TWARN_LEVEL_150C (1U)
+#define PMIC_POWER_TWARN_LEVEL_MIN  ((uint8_t)PMIC_POWER_TWARN_LEVEL_140C)
+#define PMIC_POWER_TWARN_LEVEL_MAX  ((uint8_t)PMIC_POWER_TWARN_LEVEL_150C)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrTsdOrdLvl
+ * @name PMIC Power Thermal Orderly Shutdown Level
+ *
+ * @brief Enumeration of PMIC thermal orderly shutdown level values.
+ *
+ * @{
+ */
+#define PMIC_POWER_TSD_ORD_LEVEL_150C (0U)
+#define PMIC_POWER_TSD_ORD_LEVEL_155C (1U)
+#define PMIC_POWER_TSD_ORD_LEVEL_MIN  ((uint8_t)PMIC_POWER_TSD_ORD_LEVEL_150C)
+#define PMIC_POWER_TSD_ORD_LEVEL_MAX  ((uint8_t)PMIC_POWER_TSD_ORD_LEVEL_155C)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrTwarnCfg
+ * @name PMIC Power Temperature Warning Configuration
+ *
+ * @brief Enumeration for TWARN safe state behavior configuration.
+ *
+ * @{
+ */
+#define PMIC_POWER_TWARN_CONFIG_LEAVE_SAFE_STATE (0U)
+#define PMIC_POWER_TWARN_CONFIG_STAY_SAFE_STATE  (1U)
+#define PMIC_POWER_TWARN_CONFIG_MIN              ((uint8_t)PMIC_POWER_TWARN_CONFIG_LEAVE_SAFE_STATE)
+#define PMIC_POWER_TWARN_CONFIG_MAX              ((uint8_t)PMIC_POWER_TWARN_CONFIG_STAY_SAFE_STATE)
+/** @} */
+
+/**
  * @anchor Pmic_PwrResourceCfgValidParamBitPos
  * @name PMIC Power resource configuration valid params bit positions.
  *
@@ -485,6 +542,37 @@ typedef struct Pmic_PowerSequenceCfg_s {
     uint8_t shutdownDelay;
 } Pmic_PowerSequenceCfg_t;
 
+/**
+ * @anchor Pmic_PwrThermalCfg
+ * @name PMIC Power Thermal Configuration Structure
+ *
+ * @brief Structure used to set and get PMIC power thermal configurations.
+ *
+ * @param validParams Each bit in this variable corresponds to a member in this
+ * structure. Specifically, if a bit is set to 1 in this variable, the corresponding
+ * structure member is valid and will be considered by the driver API that is using
+ * this data structure. Otherwise, if a bit is set to 0, the corresponding structure
+ * member is invalid and will not be considered by the driver API that is using
+ * this data structure. For possible valid parameter values, refer to
+ * @ref Pmic_PwrThermalCfgValidParams.
+ *
+ * @param twarnLvl Warning temperature level. For valid values, refer to
+ * @ref Pmic_PwrTwarnLvl.
+ *
+ * @param tsdOrdLvl Orderly shutdown level. For valid values, refer to
+ * @ref Pmic_PwrTsdOrdLvl.
+ *
+ * @param twarnConfig Controls whether device leaves or stays in safe state when
+ * TWARN flag is active. For valid values, refer to @ref Pmic_PwrTwarnCfg.
+ */
+typedef struct Pmic_PwrThermalCfg_s {
+    uint32_t validParams;
+
+    uint8_t twarnLvl;
+    uint8_t tsdOrdLvl;
+    uint8_t twarnConfig;
+} Pmic_PwrThermalCfg_t;
+
 /* ========================================================================== */
 /*                            Function Declarations                           */
 /* ========================================================================== */
@@ -672,6 +760,40 @@ int32_t Pmic_pwrSetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_pwrGetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[]);
+
+/**
+ * @ingroup DRV_PMIC_PWR_MODULE
+ * @brief Set PMIC thermal configurations.
+ *
+ * Design: PMICDRV-726
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-535, PMICDRV-536
+ *
+ * @param handle [IN] PMIC Interface Handle
+ * @param thermalCfg [IN] Desired thermal configurations to set. For more
+ * information on thermal configurations, refer to @ref Pmic_PwrThermalCfg.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermalCfg_t *thermalCfg);
+
+/**
+ * @ingroup DRV_PMIC_PWR_MODULE
+ * @brief Get PMIC thermal configurations.
+ *
+ * Design: PMICDRV-727
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
+ *               PMICDRV-535, PMICDRV-536
+ *
+ * @param handle [IN] PMIC Interface Handle
+ * @param thermalCfg [OUT] Thermal configurations obtained from the PMIC. For more
+ * information on thermal configurations, refer to @ref Pmic_PwrThermalCfg.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t *thermalCfg);
 
 #ifdef __cplusplus
 }

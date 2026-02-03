@@ -43,6 +43,7 @@
 #include "pmic_common.h"
 #include "pmic_io.h"
 #include "pmic_power.h"
+#include "regmap/core.h"
 #include "regmap/power.h"
 
 /* ========================================================================== */
@@ -1782,6 +1783,135 @@ int32_t Pmic_pwrGetSequenceCfgs(const Pmic_Handle_t *handle, uint8_t numConfigs,
         for (uint8_t i = 0U; i < numConfigs; i++) {
             PWR_copyPowerSequenceCfg(&localConfigs[i], &config[i]);
         }
+    }
+
+    return Pmic_logStatus(handle, status);
+}
+
+/**
+ * @brief Copy Pmic_PwrThermalCfg_t structure member-wise
+ */
+static inline void PWR_copyPwrThermalCfg(const Pmic_PwrThermalCfg_t *src, Pmic_PwrThermalCfg_t *dst)
+{
+    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_PwrThermalCfg_t));
+}
+
+int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermalCfg_t *thermalCfg)
+{
+    Pmic_PwrThermalCfg_t thermalCfgLocal;
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (thermalCfg == NULL)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
+    }
+
+    if (thermalCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    PWR_copyPwrThermalCfg(thermalCfg, &thermalCfgLocal);
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, CONFIG_1_REG, &regData);
+
+    // Process TWARN_LEVEL if valid
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_LEVEL_VALID, status))
+    {
+        if (thermalCfgLocal.twarnLvl > PMIC_POWER_TWARN_LEVEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            Pmic_setBitField(&regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK, thermalCfgLocal.twarnLvl);
+        }
+    }
+
+    // Process TSD_ORD_LEVEL if valid
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TSD_ORD_LEVEL_VALID, status))
+    {
+        if (thermalCfgLocal.tsdOrdLvl > PMIC_POWER_TSD_ORD_LEVEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            Pmic_setBitField(&regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK, thermalCfgLocal.tsdOrdLvl);
+        }
+    }
+
+    // Process TWARN_CONFIG if valid
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_CONFIG_VALID, status))
+    {
+        if (thermalCfgLocal.twarnConfig > PMIC_POWER_TWARN_CONFIG_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            Pmic_setBitField(&regData, TWARN_CONFIG_SHIFT, TWARN_CONFIG_MASK, thermalCfgLocal.twarnConfig);
+        }
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte(handle, CONFIG_1_REG, regData);
+    }
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+
+    return Pmic_logStatus(handle, status);
+}
+
+int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t *thermalCfg)
+{
+    Pmic_PwrThermalCfg_t thermalCfgLocal;
+    int32_t status = Pmic_checkHandle(handle);
+    uint8_t regData = 0U;
+
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return Pmic_logStatus(handle, status);
+    }
+
+    if (thermalCfg == NULL)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
+    }
+
+    if (thermalCfg->validParams == 0U)
+    {
+        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    }
+
+    PWR_copyPwrThermalCfg(thermalCfg, &thermalCfgLocal);
+    status = Pmic_ioRxByte_CS(handle, CONFIG_1_REG, &regData);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_LEVEL_VALID))
+        {
+            thermalCfgLocal.twarnLvl = Pmic_getBitField(regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK);
+        }
+
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TSD_ORD_LEVEL_VALID))
+        {
+            thermalCfgLocal.tsdOrdLvl = Pmic_getBitField(regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK);
+        }
+
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_CONFIG_VALID))
+        {
+            thermalCfgLocal.twarnConfig = Pmic_getBitField(regData, TWARN_CONFIG_SHIFT, TWARN_CONFIG_MASK);
+        }
+
+        PWR_copyPwrThermalCfg(&thermalCfgLocal, thermalCfg);
     }
 
     return Pmic_logStatus(handle, status);

@@ -4297,3 +4297,183 @@ void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void)
     // Note: First config may have been applied before error detected
     // This test documents expected behavior
 }
+
+/* ========================================================================== */
+/*        Test Implementations: Thermal Configuration APIs                    */
+/* ========================================================================== */
+
+/**
+ * @brief Test setting and getting TWARN_LEVEL thermal configuration
+ */
+void test_pos_power_thermal_twarnLvl(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfgSet = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID,
+        .twarnLvl = PMIC_POWER_TWARN_LEVEL_150C
+    };
+    Pmic_PwrThermalCfg_t thermalCfgGet = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(thermalCfgGet.twarnLvl == PMIC_POWER_TWARN_LEVEL_150C);
+}
+
+/**
+ * @brief Test setting and getting TSD_ORD_LEVEL thermal configuration
+ */
+void test_pos_power_thermal_tsdOrdLvl(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfgSet = {
+        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID,
+        .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_155C
+    };
+    Pmic_PwrThermalCfg_t thermalCfgGet = {
+        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(thermalCfgGet.tsdOrdLvl == PMIC_POWER_TSD_ORD_LEVEL_155C);
+}
+
+/**
+ * @brief Test setting and getting TWARN_CONFIG thermal configuration
+ */
+void test_pos_power_thermal_twarnConfig(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfgSet = {
+        .validParams = PMIC_POWER_TWARN_CONFIG_VALID,
+        .twarnConfig = PMIC_POWER_TWARN_CONFIG_STAY_SAFE_STATE
+    };
+    Pmic_PwrThermalCfg_t thermalCfgGet = {
+        .validParams = PMIC_POWER_TWARN_CONFIG_VALID
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(thermalCfgGet.twarnConfig == PMIC_POWER_TWARN_CONFIG_STAY_SAFE_STATE);
+}
+
+/**
+ * @brief Test setting and getting all thermal configuration parameters
+ */
+void test_pos_power_thermal_all_params(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfgSet = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID |
+                       PMIC_POWER_TSD_ORD_LEVEL_VALID |
+                       PMIC_POWER_TWARN_CONFIG_VALID,
+        .twarnLvl = PMIC_POWER_TWARN_LEVEL_140C,
+        .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_150C,
+        .twarnConfig = PMIC_POWER_TWARN_CONFIG_LEAVE_SAFE_STATE
+    };
+    Pmic_PwrThermalCfg_t thermalCfgGet = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID |
+                       PMIC_POWER_TSD_ORD_LEVEL_VALID |
+                       PMIC_POWER_TWARN_CONFIG_VALID
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(thermalCfgGet.twarnLvl == thermalCfgSet.twarnLvl);
+    PLATFORM_ASSERT(thermalCfgGet.tsdOrdLvl == thermalCfgSet.tsdOrdLvl);
+    PLATFORM_ASSERT(thermalCfgGet.twarnConfig == thermalCfgSet.twarnConfig);
+}
+
+/**
+ * @brief Test thermal configuration with NULL handle
+ */
+void test_neg_power_thermal_null_handle(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfg = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(NULL, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+    status = Pmic_pwrGetThermalCfg(NULL, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test thermal configuration with NULL parameter
+ */
+void test_neg_power_thermal_null_param(void)
+{
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test thermal configuration with invalid TWARN_LEVEL
+ */
+void test_neg_power_thermal_invalid_twarnLvl(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfg = {
+        .validParams = PMIC_POWER_TWARN_LEVEL_VALID,
+        .twarnLvl = PMIC_POWER_TWARN_LEVEL_MAX + 1U
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test thermal configuration with invalid TSD_ORD_LEVEL
+ */
+void test_neg_power_thermal_invalid_tsdOrdLvl(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfg = {
+        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID,
+        .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_MAX + 1U
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test thermal configuration with invalid TWARN_CONFIG
+ */
+void test_neg_power_thermal_invalid_twarnConfig(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfg = {
+        .validParams = PMIC_POWER_TWARN_CONFIG_VALID,
+        .twarnConfig = PMIC_POWER_TWARN_CONFIG_MAX + 1U
+    };
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test thermal configuration with no valid parameters
+ */
+void test_neg_power_thermal_no_valid_params(void)
+{
+    Pmic_PwrThermalCfg_t thermalCfg = {.validParams = 0U};
+
+    int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}

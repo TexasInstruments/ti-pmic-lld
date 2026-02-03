@@ -81,6 +81,17 @@ extern "C" {
 #define NINT_GPO_READBACK_STAT_SHIFT    (4U)
 #define NRSTOUT_READBACK_STAT_SHIFT     (5U)
 
+/* CONFIG_1 register definitions */
+#define CONFIG_1_REG              ((uint8_t)0x36U)
+
+/* CONFIG_1 register bit fields */
+#define TWARN_LEVEL_SHIFT         (0U)
+#define TSD_ORD_LEVEL_SHIFT       (1U)
+#define TWARN_CONFIG_SHIFT        (2U)
+#define TWARN_LEVEL_MASK          (1UL << TWARN_LEVEL_SHIFT)
+#define TSD_ORD_LEVEL_MASK        (1UL << TSD_ORD_LEVEL_SHIFT)
+#define TWARN_CONFIG_MASK         (1UL << TWARN_CONFIG_SHIFT)
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

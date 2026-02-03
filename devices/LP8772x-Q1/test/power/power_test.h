@@ -490,6 +490,29 @@ extern "C" {
     POWER_TEST_POS_COVERAGE(); \
     POWER_TEST_NEG_COVERAGE()
 
+/* ======================================================================== */
+/*       Test APIs: pwrSetThermalCfg, pwrGetThermalCfg                     */
+/* ======================================================================== */
+
+#define POWER_TEST_POS_PWRSETTHERMALCFG() \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_twarnLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_tsdOrdLvl); \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_twarnConfig); \
+    PLATFORM_RUN_TEST(test_pos_power_thermal_all_params)
+
+#define POWER_TEST_NEG_PWRSETTHERMALCFG() \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_null_handle); \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_null_param); \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_twarnLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_tsdOrdLvl); \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_twarnConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_thermal_no_valid_params)
+
+/* Test: TC-POWER-0032 */
+#define POWER_TEST_PWRSETTHERMALCFG() \
+    POWER_TEST_POS_PWRSETTHERMALCFG(); \
+    POWER_TEST_NEG_PWRSETTHERMALCFG()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -499,7 +522,8 @@ extern "C" {
     POWER_TEST_POS_PWRSETRESOURCECFG(); \
     POWER_TEST_POS_PWRSETSEQUENCECFG(); \
     POWER_TEST_POS_PWRGETSEQUENCECFG(); \
-    POWER_TEST_POS_COVERAGE()
+    POWER_TEST_POS_COVERAGE(); \
+    POWER_TEST_POS_PWRSETTHERMALCFG()
 
 #define POWER_TEST_RUN_NEGATIVE() \
     POWER_TEST_NEG_PWRSETRESOURCEENABLE(); \
@@ -512,7 +536,8 @@ extern "C" {
     POWER_TEST_NEG_PWRGETSEQUENCECFG(); \
     POWER_TEST_NEG_PWRSETSEQUENCECFGS(); \
     POWER_TEST_NEG_PWRGETSEQUENCECFGS(); \
-    POWER_TEST_NEG_COVERAGE()
+    POWER_TEST_NEG_COVERAGE(); \
+    POWER_TEST_NEG_PWRSETTHERMALCFG()
 
 #define POWER_TEST_RUN_ALL() \
     POWER_TEST_RUN_POSITIVE(); \
@@ -913,6 +938,24 @@ void test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged(void);
 void test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply(void);
 void test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged(void);
 void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void);
+
+/* ========================================================================== */
+/*        pwrSetThermalCfg and pwrGetThermalCfg API Tests                    */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_power_thermal_twarnLvl(void);
+void test_pos_power_thermal_tsdOrdLvl(void);
+void test_pos_power_thermal_twarnConfig(void);
+void test_pos_power_thermal_all_params(void);
+
+/* Negative tests */
+void test_neg_power_thermal_null_handle(void);
+void test_neg_power_thermal_null_param(void);
+void test_neg_power_thermal_invalid_twarnLvl(void);
+void test_neg_power_thermal_invalid_tsdOrdLvl(void);
+void test_neg_power_thermal_invalid_twarnConfig(void);
+void test_neg_power_thermal_no_valid_params(void);
 
 #ifdef __cplusplus
 }

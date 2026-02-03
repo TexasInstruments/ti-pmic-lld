@@ -167,7 +167,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_tsdImmLevelValues
+ * @anchor Pmic_PwrTsdImmLvl
  * @name TPS65036x Immediate Thermal Shutdown Level Values
  *
  * @brief Valid values of the TSD_IMM_LEVEL bit field.
@@ -180,7 +180,7 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_twarnLevelValues
+ * @anchor Pmic_PwrTwarnLvl
  * @name TPS65036x TWARN Level Values
  *
  * @brief Valid values of the TWARN_LEVEL bit field.
@@ -808,10 +808,10 @@ typedef struct Pmic_PwrRsrcStatus_s
  * TWARN flag is active.
  *
  * @param tsdImmLevel Immediate thermal shutdown level/threshold. For valid
- * values, refer to @ref Pmic_tsdImmLevelValues.
+ * values, refer to @ref Pmic_PwrTsdImmLvl.
  *
  * @param twarnLevel Temperature warning level/threshold. For valid values,
- * refer to @ref Pmic_twarnLevelValues.
+ * refer to @ref Pmic_PwrTwarnLvl.
  */
 typedef struct Pmic_PwrTsdCfg_s
 {
