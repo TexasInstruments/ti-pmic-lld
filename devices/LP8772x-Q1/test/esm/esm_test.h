@@ -267,6 +267,22 @@
     ESM_TEST_POS_ESMSTOP(); \
     ESM_TEST_NEG_ESMSTOP()
 
+/* ======================================================================== */
+/*                       Test APIs: ESM Integration Tests                   */
+/* ======================================================================== */
+
+#define ESM_TEST_POS_INTEGRATION() \
+    PLATFORM_RUN_TEST(test_pos_esm_integration_completeConfigurationSequence); \
+    PLATFORM_RUN_TEST(test_pos_esm_integration_enableConfigureStartSequence)
+
+#define ESM_TEST_NEG_INTEGRATION() \
+    /* None */
+
+/* Test: TC-ESM-0025 */
+#define ESM_TEST_INTEGRATION() \
+    ESM_TEST_POS_INTEGRATION(); \
+    ESM_TEST_NEG_INTEGRATION()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -283,8 +299,7 @@
     ESM_TEST_POS_ESMSETSTARTSTATE(); \
     ESM_TEST_POS_ESMSTART(); \
     ESM_TEST_POS_ESMSTOP(); \
-    PLATFORM_RUN_TEST(test_pos_esm_integration_completeConfigurationSequence); \
-    PLATFORM_RUN_TEST(test_pos_esm_integration_enableConfigureStartSequence)
+    ESM_TEST_POS_INTEGRATION()
 
 #define ESM_TEST_RUN_NEGATIVE() \
     ESM_TEST_NEG_ESMCLRSTATUS(); \

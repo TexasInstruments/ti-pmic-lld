@@ -121,7 +121,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
-    /* Positive tests combined with other CRC tests */
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_multipleErrors); \
+    PLATFORM_RUN_TEST(test_pos_core_errStatus_specificError)
 
 #define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
@@ -225,9 +226,7 @@ extern "C" {
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_POS_INIT(); \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
-    CORE_TEST_POS_SETSCRATCHPADVALUE(); \
-    PLATFORM_RUN_TEST(test_pos_core_errStatus_multipleErrors); \
-    PLATFORM_RUN_TEST(test_pos_core_errStatus_specificError)
+    CORE_TEST_POS_SETSCRATCHPADVALUE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_CONFIGCRCCALCULATE(); \

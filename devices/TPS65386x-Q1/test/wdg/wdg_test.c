@@ -432,25 +432,6 @@ void test_pos_wdg_wdgSetCfg_QA_questionSeed(void)
 /**
  * @brief Test that testInject works by reading back injected value
  */
-void test_pos_wdg_testInject_debug(void)
-{
-#ifdef BUILD_MOCK
-    int32_t status;
-    uint8_t readVal = 0U;
-
-    /* Set register to known value */
-    status = testInject_setRegister(PMIC_WD_ERR_STAT_REG, 0x42U);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Read it back through the driver */
-    status = Pmic_ioRxByte(&pmicHandle, PMIC_WD_ERR_STAT_REG, &readVal);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readVal == 0x42U);
-#else
-    PLATFORM_ASSERT(true);
-#endif
-}
-
 /**
  * @brief Test Q&A write answer with full sequence in long window
  */

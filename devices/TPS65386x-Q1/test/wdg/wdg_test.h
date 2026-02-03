@@ -239,12 +239,91 @@ extern "C" {
     WDG_TEST_POS_WDGGETSTATUS(); \
     WDG_TEST_NEG_WDGGETSTATUS()
 
+/* ======================================================================== */
+/*                      Test APIs: wdgSetPowerHold                          */
+/* ======================================================================== */
+
+#define WDG_TEST_POS_WDGSETPOWERHOLD() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_enable); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_disable)
+
+#define WDG_TEST_NEG_WDGSETPOWERHOLD() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle)
+
+/* Test: TC-WDG-0009 */
+#define WDG_TEST_WDGSETPOWERHOLD() \
+    WDG_TEST_POS_WDGSETPOWERHOLD(); \
+    WDG_TEST_NEG_WDGSETPOWERHOLD()
+
+/* ======================================================================== */
+/*                      Test APIs: wdgGetPowerHold                          */
+/* ======================================================================== */
+
+#define WDG_TEST_POS_WDGGETPOWERHOLD() \
+    /* Positive tests combined with wdgSetPowerHold */
+
+#define WDG_TEST_NEG_WDGGETPOWERHOLD() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullParam)
+
+/* Test: TC-WDG-0010 */
+#define WDG_TEST_WDGGETPOWERHOLD() \
+    WDG_TEST_POS_WDGGETPOWERHOLD(); \
+    WDG_TEST_NEG_WDGGETPOWERHOLD()
+
+/* ======================================================================== */
+/*                   Test APIs: wdgSetReturnToLongWindow                    */
+/* ======================================================================== */
+
+#define WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW() \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_enable); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_disable)
+
+#define WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle)
+
+/* Test: TC-WDG-0011 */
+#define WDG_TEST_WDGSETRETURNTOLONGWINDOW() \
+    WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
+    WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW()
+
+/* ======================================================================== */
+/*                   Test APIs: wdgGetReturnToLongWindow                    */
+/* ======================================================================== */
+
+#define WDG_TEST_POS_WDGGETRETURNTOLONGWINDOW() \
+    /* Positive tests combined with wdgSetReturnToLongWindow */
+
+#define WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullParam)
+
+/* Test: TC-WDG-0012 */
+#define WDG_TEST_WDGGETRETURNTOLONGWINDOW() \
+    WDG_TEST_POS_WDGGETRETURNTOLONGWINDOW(); \
+    WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
+
+/* ======================================================================== */
+/*                         Test APIs: wdgGetMode                            */
+/* ======================================================================== */
+
+#define WDG_TEST_POS_WDGGETMODE() \
+    /* Positive tests combined with wdgSetMode in WDG_TEST_POS_WDGTRIGGER */
+
+#define WDG_TEST_NEG_WDGGETMODE() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullParam)
+
+/* Test: TC-WDG-0013 */
+#define WDG_TEST_WDGGETMODE() \
+    WDG_TEST_POS_WDGGETMODE(); \
+    WDG_TEST_NEG_WDGGETMODE()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
 
 #define WDG_TEST_RUN_POSITIVE() \
-    PLATFORM_RUN_TEST(test_pos_wdg_testInject_debug); \
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_POS_WDGGETENABLESTATE(); \
     WDG_TEST_POS_WDGSETCFG(); \
@@ -253,10 +332,10 @@ extern "C" {
     WDG_TEST_POS_WDGGETERRCNT(); \
     WDG_TEST_POS_WDGTRIGGER(); \
     WDG_TEST_POS_WDGGETSTATUS(); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_enable); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_disable); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_enable); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_disable)
+    WDG_TEST_POS_WDGSETPOWERHOLD(); \
+    WDG_TEST_POS_WDGGETPOWERHOLD(); \
+    WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
+    WDG_TEST_POS_WDGGETRETURNTOLONGWINDOW()
 
 #define WDG_TEST_RUN_NEGATIVE() \
     WDG_TEST_NEG_WDGSETENABLESTATE(); \
@@ -267,14 +346,11 @@ extern "C" {
     WDG_TEST_NEG_WDGGETERRCNT(); \
     WDG_TEST_NEG_WDGTRIGGER(); \
     WDG_TEST_NEG_WDGGETSTATUS(); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullParam); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullParam); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetMode_nullParam)
+    WDG_TEST_NEG_WDGSETPOWERHOLD(); \
+    WDG_TEST_NEG_WDGGETPOWERHOLD(); \
+    WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW(); \
+    WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW(); \
+    WDG_TEST_NEG_WDGGETMODE()
 
 #define WDG_TEST_RUN_ALL() \
     WDG_TEST_RUN_POSITIVE(); \
@@ -289,11 +365,6 @@ extern "C" {
  * @param args Test arguments (unused)
  */
 void wdg_test(void *args);
-
-/* ========================================================================== */
-/*                         Test Injection Debug                               */
-/* ========================================================================== */
-void test_pos_wdg_testInject_debug(void);
 
 /* ========================================================================== */
 /*                         wdgEnable API Tests                                */
