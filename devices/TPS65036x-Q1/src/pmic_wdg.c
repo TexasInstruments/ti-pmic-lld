@@ -122,7 +122,133 @@ static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaF
     return qaAns;
 }
 
-static int32_t WDG_setOtherCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
+/**
+ * @brief Validate parameter values before configuration
+ *
+ * Validates all parameter values in wdgCfg before attempting to configure
+ * hardware. This ensures parameter validation happens before state checks.
+ *
+ * @return PMIC_ST_SUCCESS if all parameters valid, PMIC_ST_ERR_INV_PARAM otherwise
+ */
+static int32_t WDG_validateParams(const Pmic_WdgCfg_t *wdgCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_MODE_VALID))
+    {
+        if (wdgCfg->mode > PMIC_WD_MODE_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_TRIG_SEL_VALID))
+    {
+        if (wdgCfg->trigSel > PMIC_TRIG_SEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_FAIL_THR_VALID))
+    {
+        if (wdgCfg->failThr > PMIC_WD_FAIL_THR_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_RST_THR_VALID))
+    {
+        if (wdgCfg->rstThr > PMIC_WD_RST_THR_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_LONG_WIN_DURATION_VALID))
+    {
+        if (wdgCfg->longWinDuration > PMIC_WD_LONG_WIN_DURATION_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_WIN1_DURATION_VALID))
+    {
+        if (wdgCfg->win1Duration > PMIC_WD_WIN1_DURATION_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_WIN2_DURATION_VALID))
+    {
+        if (wdgCfg->win2Duration > PMIC_WD_WIN2_DURATION_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_FDBK_VALID))
+    {
+        if (wdgCfg->qaFdbk > PMIC_WD_QA_FDBK_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_LFSR_VALID))
+    {
+        if (wdgCfg->qaLfsr > PMIC_WD_QA_LFSR_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_QA_SEED_VALID))
+    {
+        if (wdgCfg->qaSeed > PMIC_WD_QA_SEED_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    return status;
+}
+
+/**
+ * @brief Check if WDG is in valid state for configuration
+ *
+ * Validates that WDG is enabled and in Long Window mode before allowing
+ * configuration changes via Pmic_wdgSetCfg().
+ *
+ * @return PMIC_ST_SUCCESS if state is valid, PMIC_ST_ERR_NOT_SUPPORTED otherwise
+ */
+static int32_t WDG_checkCfgState(const Pmic_Handle_t *handle)
+{
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_wdgGetEnableState(handle, &isEnabled);
+    if ((status == PMIC_ST_SUCCESS) && !isEnabled)
+    {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_wdgGetReturnToLongWindow(handle, &isEnabled);
+        if ((status == PMIC_ST_SUCCESS) && !isEnabled)
+        {
+            status = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+    }
+
+    return status;
+}
+
+static int32_t WDG_setModeAndTriggerCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -137,27 +263,13 @@ static int32_t WDG_setOtherCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t 
     // Modify WD_TRIGGER_SEL bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_TRIG_SEL_VALID, status))
     {
-        if (wdgCfg->trigSel > PMIC_TRIG_SEL_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_TRIGGER_SEL_SHIFT, PMIC_WD_TRIGGER_SEL_MASK, wdgCfg->trigSel);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_TRIGGER_SEL_SHIFT, PMIC_WD_TRIGGER_SEL_MASK, wdgCfg->trigSel);
     }
 
     // Modify WD_MODE_SELECT bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_MODE_VALID, status))
     {
-        if (wdgCfg->mode > PMIC_WD_MODE_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_MODE_SELECT_SHIFT, PMIC_WD_MODE_SELECT_MASK, wdgCfg->mode);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_MODE_SELECT_SHIFT, PMIC_WD_MODE_SELECT_MASK, wdgCfg->mode);
     }
 
     // Write new WD_CONFIG register value back to PMIC
@@ -200,40 +312,19 @@ static int32_t WDG_setQaCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wd
     // Modify WD_QA_FDBK bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_QA_FDBK_VALID, status))
     {
-        if (wdgCfg->qaFdbk > PMIC_WD_QA_FDBK_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK, wdgCfg->qaFdbk);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK, wdgCfg->qaFdbk);
     }
 
     // Modify WD_QA_LFSR bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_QA_LFSR_VALID, status))
     {
-        if (wdgCfg->qaLfsr > PMIC_WD_QA_LFSR_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_QA_LFSR_SHIFT, PMIC_WD_QA_LFSR_MASK, wdgCfg->qaLfsr);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_QA_LFSR_SHIFT, PMIC_WD_QA_LFSR_MASK, wdgCfg->qaLfsr);
     }
 
     // Modify WD_QUESTION_SEED bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_QA_SEED_VALID, status))
     {
-        if (wdgCfg->qaSeed > PMIC_WD_QA_SEED_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_QUESTION_SEED_SHIFT, PMIC_WD_QUESTION_SEED_MASK, wdgCfg->qaSeed);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_QUESTION_SEED_SHIFT, PMIC_WD_QUESTION_SEED_MASK, wdgCfg->qaSeed);
     }
 
     // Write new register value back to PMIC
@@ -261,27 +352,13 @@ static int32_t WDG_setThresholds(const Pmic_Handle_t *handle, const Pmic_WdgCfg_
     // Modify WD_FAIL_TH bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_FAIL_THR_VALID, status))
     {
-        if (wdgCfg->failThr > PMIC_WD_FAIL_THR_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_FAIL_TH_SHIFT, PMIC_WD_FAIL_TH_MASK, wdgCfg->failThr);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_FAIL_TH_SHIFT, PMIC_WD_FAIL_TH_MASK, wdgCfg->failThr);
     }
 
     // Modify WD_RST_TH bit field
     if (Pmic_validParamStatusCheck(wdgCfg->validParams, PMIC_WD_RST_THR_VALID, status))
     {
-        if (wdgCfg->rstThr > PMIC_WD_RST_THR_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_WD_RST_TH_SHIFT, PMIC_WD_RST_TH_MASK, wdgCfg->rstThr);
-        }
+        Pmic_setBitField(&regData, PMIC_WD_RST_TH_SHIFT, PMIC_WD_RST_TH_MASK, wdgCfg->rstThr);
     }
 
     // Write new register value back to PMIC
@@ -303,18 +380,9 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_Handle_t *handle, const Pmi
     {
         uint8_t regData = 0U;
 
-        // Check for out of bounds Window-1 duration
-        if (wdgCfg->win1Duration > PMIC_WD_WIN1_DURATION_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
         // Read WD_WIN1_CFG register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioRxByte(handle, PMIC_WD_WIN1_CFG_REG, &regData);
-        }
+        status = Pmic_ioRxByte(handle, PMIC_WD_WIN1_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -332,18 +400,9 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_Handle_t *handle, const Pmi
     {
         uint8_t regData = 0U;
 
-        // Check for out of bounds Window-2 duration
-        if (wdgCfg->win2Duration > PMIC_WD_WIN2_DURATION_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
         // Read WD_WIN2_CFG register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioRxByte(handle, PMIC_WD_WIN2_CFG_REG, &regData);
-        }
+        status = Pmic_ioRxByte(handle, PMIC_WD_WIN2_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -365,7 +424,7 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_Handle_t *handle, const Pmi
     return status;
 }
 
-static int32_t WDG_getOtherCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
+static int32_t WDG_getModeAndTriggerCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -600,6 +659,17 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
         WDG_copyWdgCfg(wdgCfg, &localCfg);
     }
 
+    // Validate parameter values BEFORE checking state
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_validateParams(&localCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_checkCfgState(handle);
+    }
+
     // Set Long Window, Window-1, and Window-2 durations
     if (status == PMIC_ST_SUCCESS)
     {
@@ -621,7 +691,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
     // Set other configurations (WD_RST_EN, WD_TRIGGER_SEL, WD_MODE_SEL)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = WDG_setOtherCfg(handle, &localCfg);
+        status = WDG_setModeAndTriggerCfg(handle, &localCfg);
     }
 
     return Pmic_logStatus(handle, status);
@@ -668,7 +738,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
     // Get other configurations (WD_RST_EN, WD_TRIGGER_SEL, WD_MODE_SEL)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = WDG_getOtherCfg(handle, &localCfg);
+        status = WDG_getModeAndTriggerCfg(handle, &localCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)

@@ -76,6 +76,33 @@ static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {
     return status;
 }
 
+/**
+ * @brief Check if WDG is in valid state for configuration
+ *
+ * Validates that WDG is enabled and in Long Window mode before allowing
+ * configuration changes via Pmic_wdgSetCfg().
+ *
+ * @return PMIC_ST_SUCCESS if state is valid, PMIC_ST_ERR_NOT_SUPPORTED otherwise
+ */
+static int32_t WDG_checkCfgState(const Pmic_Handle_t *handle) {
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_wdgGetEnableState(handle, &isEnabled);
+    if ((status == PMIC_ST_SUCCESS) && !isEnabled) {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_wdgGetReturnToLongWindow(handle, &isEnabled);
+        if ((status == PMIC_ST_SUCCESS) && !isEnabled) {
+            status = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+    }
+
+    return status;
+}
+
 static int32_t WDG_setWindowsTimeIntervals(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -303,7 +330,7 @@ static int32_t WDG_getQAConfigurations(const Pmic_Handle_t *handle, Pmic_WdgCfg_
     return status;
 }
 
-static int32_t WDG_setOtherConfigurations(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
+static int32_t WDG_setResetEnableCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -328,7 +355,7 @@ static int32_t WDG_setOtherConfigurations(const Pmic_Handle_t *handle, const Pmi
     return status;
 }
 
-static int32_t WDG_getOtherConfigurations(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config)
+static int32_t WDG_getResetEnableCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -508,6 +535,10 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
     }
 
     if (status == PMIC_ST_SUCCESS) {
+        status = WDG_checkCfgState(handle);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
         status = WDG_setWindowsTimeIntervals(handle, &localConfig);
     }
 
@@ -521,7 +552,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
 
     // Set WD_RST_EN configuration
     if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setOtherConfigurations(handle, &localConfig);
+        status = WDG_setResetEnableCfg(handle, &localConfig);
     }
 
     return Pmic_logStatus(handle, status);
@@ -553,7 +584,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
 
     // Get WD_RST_EN configuration
     if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getOtherConfigurations(handle, &localConfig);
+        status = WDG_getResetEnableCfg(handle, &localConfig);
     }
 
     if (status == PMIC_ST_SUCCESS) {

@@ -50,6 +50,25 @@
 
 static Pmic_Handle_t pmicHandle = {0U};
 
+/**
+ * @brief Setup helper: Initialize WDG to valid configuration state
+ *
+ * Ensures WDG is enabled and in Long Window mode, which are
+ * prerequisites for calling Pmic_wdgSetCfg().
+ */
+static void wdg_setupForConfig(void)
+{
+    int32_t status;
+
+    /* Enable watchdog */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Enable return to long window */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
@@ -86,12 +105,9 @@ void test_pos_wdg_wdgEnable_enableDisable(void)
  */
 void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set long window duration */
     wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
@@ -114,12 +130,9 @@ void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
  */
 void test_pos_wdg_wdgSetCfg_window1Duration(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set window-1 duration */
     wdgCfg.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
@@ -142,12 +155,9 @@ void test_pos_wdg_wdgSetCfg_window1Duration(void)
  */
 void test_pos_wdg_wdgSetCfg_window2Duration(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set window-2 duration */
     wdgCfg.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID;
@@ -170,12 +180,9 @@ void test_pos_wdg_wdgSetCfg_window2Duration(void)
  */
 void test_pos_wdg_wdgSetCfg_failThreshold(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set fail threshold */
     wdgCfg.validParams = PMIC_CFG_WDG_THRESHOLD_1_VALID;
@@ -198,12 +205,9 @@ void test_pos_wdg_wdgSetCfg_failThreshold(void)
  */
 void test_pos_wdg_wdgSetCfg_resetThreshold(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set reset threshold */
     wdgCfg.validParams = PMIC_CFG_WDG_THRESHOLD_2_VALID;
@@ -227,12 +231,9 @@ void test_pos_wdg_wdgSetCfg_resetThreshold(void)
  */
 void test_pos_wdg_wdgSetCfg_threshold1IntBehavior(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set threshold1 interrupt behavior */
     wdgCfg.validParams = PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID;
@@ -255,12 +256,9 @@ void test_pos_wdg_wdgSetCfg_threshold1IntBehavior(void)
  */
 void test_pos_wdg_wdgSetCfg_wdgMode(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set Q&A mode */
     wdgCfg.validParams = PMIC_CFG_WDG_MODE_VALID;
@@ -299,12 +297,9 @@ void test_pos_wdg_wdgSetCfg_wdgMode(void)
  */
 void test_pos_wdg_wdgSetCfg_threshold2IntBehavior(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set threshold2 interrupt behavior */
     wdgCfg.validParams = PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID;
@@ -328,12 +323,9 @@ void test_pos_wdg_wdgSetCfg_threshold2IntBehavior(void)
  */
 void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Configure long window and verify we can return to it */
     wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
@@ -363,12 +355,9 @@ void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
  */
 void test_pos_wdg_wdgSetCfg_QA_feedback(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set Q&A feedback */
     wdgCfg.validParams = PMIC_CFG_WDG_QA_FDBK_VALID;
@@ -391,12 +380,9 @@ void test_pos_wdg_wdgSetCfg_QA_feedback(void)
  */
 void test_pos_wdg_wdgSetCfg_QA_LFSR(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set Q&A LFSR */
     wdgCfg.validParams = PMIC_CFG_WDG_QA_LFSR_VALID;
@@ -419,12 +405,9 @@ void test_pos_wdg_wdgSetCfg_QA_LFSR(void)
  */
 void test_pos_wdg_wdgSetCfg_QA_questionSeed(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set Q&A question seed */
     wdgCfg.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID;
@@ -473,6 +456,7 @@ void test_pos_wdg_testInject_debug(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -487,9 +471,6 @@ void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void)
     wdgCfg.qaQuesSeed = 0xCU;
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Write 4 answer bytes (long window requires 4) */
@@ -507,6 +488,7 @@ void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -515,9 +497,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
     wdgCfg.qaFdbk = 0U;
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -532,6 +511,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -540,9 +520,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
     wdgCfg.qaFdbk = 1U;
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -557,6 +534,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -565,9 +543,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
     wdgCfg.qaFdbk = 2U;
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -582,6 +557,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -590,9 +566,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
     wdgCfg.qaFdbk = 3U;
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -607,6 +580,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -615,9 +589,6 @@ void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void)
     wdgCfg.qaQuesSeed = 0xAU;  /* Test with seed = 10 */
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -632,6 +603,7 @@ void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
 
@@ -640,9 +612,6 @@ void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void)
     wdgCfg.qaLfsr = 0x1U;  /* Test with LFSR = 1 */
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
@@ -1321,12 +1290,9 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
  */
 void test_pos_wdg_wdgSetCfg_timeBase(void)
 {
+    wdg_setupForConfig();
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {0};
-
-    /* Enable watchdog first */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set time base to 550us */
     wdgCfg.validParams = PMIC_CFG_WDG_TIME_BASE_VALID;
@@ -1361,6 +1327,58 @@ void test_neg_wdg_wdgSetCfg_zeroValidParams(void)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_wdgSetCfg when watchdog is disabled
+ */
+void test_neg_wdg_wdgSetCfg_whenDisabled(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
+        .mode = PMIC_WDG_TRIGGER_MODE
+    };
+
+    /* Disable watchdog */
+    status = Pmic_wdgDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable watchdog for subsequent tests */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test Pmic_wdgSetCfg when not in Long Window mode
+ */
+void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
+        .mode = PMIC_WDG_TRIGGER_MODE
+    };
+
+    /* Enable watchdog but disable return to long window */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable return to long window for subsequent tests */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**

@@ -55,6 +55,25 @@
 /* ========================================================================== */
 static Pmic_Handle_t pmicHandle;
 
+/**
+ * @brief Setup helper: Initialize WDG to valid configuration state
+ *
+ * Ensures WDG is enabled and in Long Window mode, which are
+ * prerequisites for calling Pmic_wdgSetCfg().
+ */
+static void wdg_setupForConfig(void)
+{
+    int32_t status;
+
+    /* Enable watchdog */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Enable return to long window */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, PMIC_ENABLE);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
@@ -272,6 +291,58 @@ void test_neg_wdg_wdgSetCfg_invalidQaQuesSeed(void)
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_wdgSetCfg when watchdog is disabled
+ */
+void test_neg_wdg_wdgSetCfg_whenDisabled(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID,
+        .thresholdReset = 3U
+    };
+
+    /* Disable watchdog */
+    status = Pmic_wdgDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable watchdog for subsequent tests */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test Pmic_wdgSetCfg when not in Long Window mode
+ */
+void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID,
+        .thresholdReset = 3U
+    };
+
+    /* Enable watchdog but disable return to long window */
+    status = Pmic_wdgEnable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable return to long window for subsequent tests */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 void test_neg_wdg_wdgGetCfg_nullHandle(void)
@@ -534,6 +605,7 @@ void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void)
 
 void test_pos_wdg_wdgSetCfg_resetEnable(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
@@ -561,6 +633,7 @@ void test_pos_wdg_wdgSetCfg_resetEnable(void)
 
 void test_pos_wdg_wdgSetCfg_threshold2(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_RESET_VALID};
@@ -582,6 +655,7 @@ void test_pos_wdg_wdgSetCfg_threshold2(void)
 
 void test_pos_wdg_wdgSetCfg_threshold1(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_THRESHOLD_FAIL_VALID};
@@ -603,6 +677,7 @@ void test_pos_wdg_wdgSetCfg_threshold1(void)
 
 void test_pos_wdg_wdgSetCfg_longWindowCode(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
@@ -624,6 +699,7 @@ void test_pos_wdg_wdgSetCfg_longWindowCode(void)
 
 void test_pos_wdg_wdgSetCfg_win1Code(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID};
@@ -645,6 +721,7 @@ void test_pos_wdg_wdgSetCfg_win1Code(void)
 
 void test_pos_wdg_wdgSetCfg_win2Code(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID};
@@ -666,6 +743,7 @@ void test_pos_wdg_wdgSetCfg_win2Code(void)
 
 void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
@@ -687,6 +765,7 @@ void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 
 void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
@@ -708,6 +787,7 @@ void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 
 void test_pos_wdg_wdgSetCfg_qaQuesSeed(void)
 {
+    wdg_setupForConfig();
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_QUES_SEED_VALID};

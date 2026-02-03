@@ -37,6 +37,25 @@
 
 /*                            Global Variables                                */
 static Pmic_Handle_t pmicHandle = {0};
+/*                         Helper Functions                                   */
+/**
+ * @brief Setup helper: Initialize WDG to valid configuration state
+ *
+ * Ensures WDG is enabled and in Long Window mode, which are
+ * prerequisites for calling Pmic_wdgSetCfg().
+ */
+static void wdg_setupForConfig(void)
+{
+    int32_t status;
+
+    /* Enable watchdog */
+    status = Pmic_wdgSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Enable return to long window */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
 /*                       Negative Test Functions                              */
 /**
  * @brief Test Pmic_wdgSetEnableState with NULL handle
@@ -187,6 +206,56 @@ void test_neg_wdg_wdgSetCfg_invalidCntSel(void)
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+/**
+ * @brief Test Pmic_wdgSetCfg when watchdog is disabled
+ */
+void test_neg_wdg_wdgSetCfg_whenDisabled(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .mode = PMIC_WDG_TRIGGER_MODE
+    };
+
+    /* Disable watchdog */
+    status = Pmic_wdgSetEnableState(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable watchdog for subsequent tests */
+    status = Pmic_wdgSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+/**
+ * @brief Test Pmic_wdgSetCfg when not in Long Window mode
+ */
+void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void)
+{
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .mode = PMIC_WDG_TRIGGER_MODE
+    };
+
+    /* Enable watchdog but disable return to long window */
+    status = Pmic_wdgSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure - should fail */
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Re-enable return to long window for subsequent tests */
+    status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 /**
  * @brief Test Pmic_wdgGetCfg with NULL handle
@@ -394,6 +463,8 @@ void test_pos_wdg_wdgSetReturnToLongWindow_returnToLongWindow(void)
  */
 void test_pos_wdg_wdgSetCfg_rstEn(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_RST_EN_VALID,
         .rstEn = true
@@ -423,6 +494,8 @@ void test_pos_wdg_wdgSetCfg_rstEn(void)
  */
 void test_pos_wdg_wdgSetCfg_mode(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_MODE_SEL_VALID,
         .mode = PMIC_WDG_TRIGGER_MODE
@@ -452,6 +525,8 @@ void test_pos_wdg_wdgSetCfg_mode(void)
  */
 void test_pos_wdg_wdgSetCfg_win1Code(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_WIN1_CODE_VALID
     };
@@ -475,6 +550,8 @@ void test_pos_wdg_wdgSetCfg_win1Code(void)
  */
 void test_pos_wdg_wdgSetCfg_win2Code(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_WIN2_CODE_VALID
     };
@@ -498,6 +575,8 @@ void test_pos_wdg_wdgSetCfg_win2Code(void)
  */
 void test_pos_wdg_wdgSetCfg_longWinCode(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_LONG_WIN_CODE_VALID
     };
@@ -521,6 +600,8 @@ void test_pos_wdg_wdgSetCfg_longWinCode(void)
  */
 void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_FDBK_VALID
     };
@@ -543,6 +624,8 @@ void test_pos_wdg_wdgSetCfg_qaFdbk(void)
  */
 void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_LFSR_VALID
     };
@@ -565,6 +648,8 @@ void test_pos_wdg_wdgSetCfg_qaLfsr(void)
  */
 void test_pos_wdg_wdgSetCfg_qaSeed(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_QA_SEED_VALID
     };
@@ -587,6 +672,8 @@ void test_pos_wdg_wdgSetCfg_qaSeed(void)
  */
 void test_pos_wdg_wdgSetCfg_failThr(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_FAIL_THR_VALID
     };
@@ -609,6 +696,8 @@ void test_pos_wdg_wdgSetCfg_failThr(void)
  */
 void test_pos_wdg_wdgSetCfg_rstThr(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_RST_THR_VALID
     };
@@ -631,6 +720,8 @@ void test_pos_wdg_wdgSetCfg_rstThr(void)
  */
 void test_pos_wdg_wdgSetCfg_cntSel(void)
 {
+    wdg_setupForConfig();
+
     Pmic_WdgCfg_t wdgCfgSet = {
         .validParams = PMIC_WDG_CNT_SEL_VALID
     };
@@ -736,6 +827,8 @@ void test_pos_wdg_wdgGetFailCntStatus_failCounterStatus(void)
  */
 void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
 {
+    wdg_setupForConfig();
+
     int32_t status;
     /* Set multiple configuration parameters at once */
     Pmic_WdgCfg_t wdgCfgSet = {
@@ -771,6 +864,8 @@ void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
 {
+    wdg_setupForConfig();
+
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=0 */
     Pmic_WdgCfg_t wdgCfg = {
@@ -786,8 +881,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
         .qaLfsr = 1,
         .qaSeed = 2
     };
-    status = Pmic_wdgSetEnableState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Write Q&A answer - internally reads qaFdbk and exercises mux_4x1 with case 0 */
@@ -799,6 +892,8 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
 {
+    wdg_setupForConfig();
+
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=1 */
     Pmic_WdgCfg_t wdgCfg = {
@@ -814,8 +909,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
         .qaLfsr = 2,
         .qaSeed = 3
     };
-    status = Pmic_wdgSetEnableState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Write Q&A answer - internally reads qaFdbk and exercises mux_4x1 with case 1 */
@@ -827,6 +920,8 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
 {
+    wdg_setupForConfig();
+
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=2 */
     Pmic_WdgCfg_t wdgCfg = {
@@ -842,8 +937,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
         .qaLfsr = 0,
         .qaSeed = 1
     };
-    status = Pmic_wdgSetEnableState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Write Q&A answer - internally reads qaFdbk and exercises mux_4x1 with case 2 */
@@ -855,6 +948,8 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
  */
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
 {
+    wdg_setupForConfig();
+
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=3 */
     Pmic_WdgCfg_t wdgCfg = {
@@ -870,8 +965,6 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
         .qaLfsr = 3,
         .qaSeed = 0
     };
-    status = Pmic_wdgSetEnableState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Write Q&A answer - internally reads qaFdbk and exercises mux_4x1 with default case (3) */

@@ -99,7 +99,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaSeed); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidFailThr); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidRstThr); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidCntSel)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidCntSel); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
 
 /* Test: TC-WDG-0044 */
 #define WDG_TEST_WDGSETCFG() \
@@ -342,6 +344,8 @@ void test_neg_wdg_wdgSetCfg_invalidQaSeed(void);
 void test_neg_wdg_wdgSetCfg_invalidFailThr(void);
 void test_neg_wdg_wdgSetCfg_invalidRstThr(void);
 void test_neg_wdg_wdgSetCfg_invalidCntSel(void);
+void test_neg_wdg_wdgSetCfg_whenDisabled(void);
+void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void);
 void test_neg_wdg_wdgGetCfg_nullHandle(void);
 void test_neg_wdg_wdgGetCfg_nullWdgCfg(void);
 void test_neg_wdg_wdgSetPowerHold_nullHandle(void);

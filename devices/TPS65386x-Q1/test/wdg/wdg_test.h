@@ -116,7 +116,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaQuesSeed); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold1IntBehavior); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
 
 /* Test: TC-WDG-0044 */
 #define WDG_TEST_WDGSETCFG() \
@@ -343,6 +345,8 @@ void test_neg_wdg_wdgSetCfg_invalidQaQuesSeed(void);
 void test_neg_wdg_wdgSetCfg_invalidThreshold1IntBehavior(void);
 void test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior(void);
 void test_neg_wdg_wdgSetCfg_zeroValidParams(void);
+void test_neg_wdg_wdgSetCfg_whenDisabled(void);
+void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void);
 
 /* ========================================================================== */
 /*                         wdgGetCfg API Tests                                */

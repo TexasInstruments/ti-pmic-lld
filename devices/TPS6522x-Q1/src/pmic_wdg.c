@@ -238,6 +238,37 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
 }
 
 /**
+ * @brief Check if WDG is in valid state for configuration
+ *
+ * Validates that WDG is enabled and in Long Window mode before allowing
+ * configuration changes via Pmic_wdgSetCfg().
+ *
+ * @return PMIC_ST_SUCCESS if state is valid, PMIC_ST_ERR_NOT_SUPPORTED otherwise
+ */
+static int32_t WDG_checkCfgState(const Pmic_Handle_t *handle)
+{
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_wdgGetEnableState(handle, &isEnabled);
+    if ((status == PMIC_ST_SUCCESS) && !isEnabled)
+    {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_wdgGetReturnToLongWindow(handle, &isEnabled);
+        if ((status == PMIC_ST_SUCCESS) && !isEnabled)
+        {
+            status = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+    }
+
+    return status;
+}
+
+/**
  * @brief Configure WD_MODE_REG register
  */
 static int32_t Pmic_wdgSetModeReg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
@@ -513,6 +544,11 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
     {
         WDG_copyWdgCfg(wdgCfg, &wdgCfgLocal);
         status = Pmic_wdgValidateCfg(&wdgCfgLocal);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_checkCfgState(handle);
     }
 
     if (status == PMIC_ST_SUCCESS)
