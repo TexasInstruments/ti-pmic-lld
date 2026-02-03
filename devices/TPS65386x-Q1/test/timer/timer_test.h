@@ -74,7 +74,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullCfg); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_invalidMode); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_validParamsZero)
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_validParamsZero); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_prescaleWhileRunning)
 
 /* Test: TC-TIMER-0001 */
 #define TIMER_TEST_TIMERSETCFG() \
@@ -289,6 +290,7 @@ void test_neg_timer_timerSetCfg_nullCfg(void);
 void test_neg_timer_timerSetCfg_invalidMode(void);
 void test_neg_timer_timerSetCfg_nullHandle(void);
 void test_neg_timer_timerSetCfg_validParamsZero(void);
+void test_neg_timer_timerSetCfg_prescaleWhileRunning(void);
 
 /* Negative Tests - timerGetCfg */
 void test_neg_timer_timerGetCfg_nullCfg(void);

@@ -59,6 +59,27 @@ static inline void TIMER_copyTimerCfg(const Pmic_TimerCfg_t *src, Pmic_TimerCfg_
     (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_TimerCfg_t));
 }
 
+/**
+ * @brief Check if Timer is in valid state for prescale configuration
+ *
+ * Validates that Timer is stopped before allowing prescale configuration changes.
+ *
+ * @return PMIC_ST_SUCCESS if state is valid, PMIC_ST_ERR_NOT_SUPPORTED otherwise
+ */
+static int32_t TIMER_checkPrescaleCfgState(const Pmic_Handle_t *handle) {
+    int32_t status;
+    Pmic_TimerCfg_t timerCfg = {0};
+
+    timerCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
+    status = Pmic_timerGetCfg(handle, &timerCfg);
+
+    if ((status == PMIC_ST_SUCCESS) && (timerCfg.mode != PMIC_TMR_MODE_STOPPED)) {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    return status;
+}
+
 int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -79,6 +100,12 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *tim
     if (status == PMIC_ST_SUCCESS)
     {
         TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
+    {
+        status = TIMER_checkPrescaleCfgState(handle);
     }
 
     if (status == PMIC_ST_SUCCESS)

@@ -918,6 +918,31 @@ void test_neg_timer_timerSetCfg_validParamsZero(void)
 }
 
 /**
+ * @brief Test Pmic_timerSetCfg prescale configuration while timer is running
+ */
+void test_neg_timer_timerSetCfg_prescaleWhileRunning(void)
+{
+    int32_t status;
+    Pmic_TimerCfg_t cfg;
+
+    /* Start timer in operational sequence mode */
+    cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
+    cfg.mode = PMIC_TMR_MODE_OPER_SEQ;
+    status = Pmic_timerSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Attempt to configure prescale while running - should fail */
+    cfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
+    cfg.prescale = PMIC_TMR_PRESCALE_131P072_MS;
+    status = Pmic_timerSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    /* Stop timer for subsequent tests */
+    status = Pmic_timerStop(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
  * @brief Test Pmic_timerGetCfg with validParams set to zero.
  */
 void test_neg_timer_timerGetCfg_validParamsZero(void)
