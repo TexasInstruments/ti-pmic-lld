@@ -770,28 +770,30 @@ void test_neg_pmic_checkHandle_invalidCommMode(void)
 
 void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
 {
-    // Test coverage for line 242: Set retryIntervalMs != 0 with timerWaitMs == NULL
+    // Test coverage for line 451: Set retryIntervalMs != 0 with timerWaitMs == NULL
+    // Tests runtime validation in Pmic_checkHandle, not init-time validation
 
     Pmic_Handle_t handle;
     Pmic_HandleCfg_t coreCfg;
 
     // Initialize with valid configuration
     pmicInitTest_initCoreCfg(&coreCfg);
-    coreCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID;
+    coreCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
     coreCfg.retryIntervalMs = 10U;  // Non-zero retry interval
-    // Explicitly set timerWaitMs to NULL (it should not be set)
-    // Don't set PMIC_TIMER_WAIT_MS_VALID flag
+    coreCfg.timerWaitMs = &testTimerWaitWrapper;  // Provide timer during init
 
     int32_t status = Pmic_init(&handle, &coreCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // After successful init, corrupt the handle to have retryIntervalMs != 0 but NULL timer
-    handle.retryIntervalMs = 10U;
+    // NOW corrupt the handle to have retryIntervalMs != 0 but NULL timer
+    // This tests the runtime validation in Pmic_checkHandle
     handle.timerWaitMs = NULL;
 
     // Now call an API that uses Pmic_checkHandle
     status = Pmic_setScratchPadValue(&handle, PMIC_SCRATCH_PAD_REG_1, TEST_PATTERN_AA);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
-    // No need to deinit corrupted handle
+    // Restore for cleanup
+    handle.timerWaitMs = &testTimerWaitWrapper;
+    (void)Pmic_deinit(&handle);
 }

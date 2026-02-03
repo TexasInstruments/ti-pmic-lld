@@ -138,8 +138,18 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((handle->ioRead == NULL) || (handle->ioWrite == NULL)) {
-        return PMIC_ST_ERR_NULL_FPTR;
+    // Validate async hooks if async mode enabled
+    if (handle->asyncEnable) {
+        if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) ||
+            (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL)) {
+            return PMIC_ST_ERR_NULL_FPTR;
+        }
+    }
+    // Validate sync hooks
+    else {
+        if ((handle->ioRead == NULL) || (handle->ioWrite == NULL)) {
+            return PMIC_ST_ERR_NULL_FPTR;
+        }
     }
 
     if ((handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL)) {
@@ -182,7 +192,15 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxB
         attemptNum++;
 
         // User-implemented hook transmits spiBuf then overwrites spiBuf with received data
-        status = handle->ioRead(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+        if (handle->asyncEnable) {
+            status = handle->asyncRxStart(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+            if (status == PMIC_ST_SUCCESS) {
+                status = handle->asyncRxAwait(handle);
+            }
+        }
+        else {
+            status = handle->ioRead(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+        }
 
         // Validate PCRC
         if (status == PMIC_ST_SUCCESS) {
@@ -260,7 +278,15 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
         attemptNum++;
 
         // User-implemented hook transmits spiBuf
-        status = handle->ioWrite(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+        if (handle->asyncEnable) {
+            status = handle->asyncTxStart(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+            if (status == PMIC_ST_SUCCESS) {
+                status = handle->asyncTxAwait(handle);
+            }
+        }
+        else {
+            status = handle->ioWrite(handle, 0, (uint8_t)regAddr, spiBuf, bufLen);
+        }
 
         if ((status == PMIC_ST_SUCCESS) || (attemptNum > handle->retryCnt)) {
             break;

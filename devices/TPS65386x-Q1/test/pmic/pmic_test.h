@@ -97,7 +97,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingIoRead); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingIoWrite); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_insufficientCfg_missingCritSec); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull)
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncRxStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncTxStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncRxAwait); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncTxAwait)
 
 /* Test: TC-PMIC-0010 */
 #define PMIC_TEST_INIT() \
@@ -263,6 +267,10 @@ void test_pos_pmic_checkHandle_detectsUninit(void);
 void test_pos_pmic_checkHandle_detectsMissingIoRead(void);
 void test_pos_pmic_checkHandle_detectsMissingCommHandle(void);
 void test_pos_pmic_checkHandle_comprehensive(void);
+void test_neg_pmic_pmicInit_nullAsyncRxStart(void);
+void test_neg_pmic_pmicInit_nullAsyncTxStart(void);
+void test_neg_pmic_pmicInit_nullAsyncRxAwait(void);
+void test_neg_pmic_pmicInit_nullAsyncTxAwait(void);
 
 #ifdef __cplusplus
 }

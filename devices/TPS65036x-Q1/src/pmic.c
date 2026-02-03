@@ -36,6 +36,8 @@
  * @brief This file contains definitions of the PMIC LLD initialization and
  * deinitialization APIs.
  */
+#include <string.h>
+
 #include "pmic.h"
 #include "pmic_io.h"
 #include "pmic_common.h"
@@ -51,11 +53,6 @@
 
 // Used to lock PMIC registers
 #define REG_LOCK_VALUE (0xAAU)
-
-static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *dst)
-{
-    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
-}
 
 static void setI2CConfig(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
@@ -186,26 +183,21 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
     return status;
 }
 
-static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Set I2C configuration
-    setI2CConfig(handle, config);
-
-    // Set retry configuration
-    setRetryConfig(handle, config);
-
-    // Validate communication handles
-    status = validateAndSetUserHandles(handle, config);
-
-    // Validate user-implemented hooks
-    if (status == PMIC_ST_SUCCESS)
+    /* Validate sync I/O hooks */
+    if ((handle->ioRead == NULL) || (handle->ioWrite == NULL))
     {
-        status = validateAndSetUserHooks(handle, config);
+        return PMIC_ST_ERR_NULL_FPTR;
     }
 
-    return status;
+    /* Validate critical section hooks */
+    if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
+    {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    return PMIC_ST_SUCCESS;
 }
 
 static int32_t getPmicInfo(Pmic_Handle_t *handle)
@@ -308,7 +300,6 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *handle)
 
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
-    Pmic_HandleCfg_t localCfg;
     int32_t status = PMIC_ST_SUCCESS;
 
     // Check whether parameters are valid
@@ -317,15 +308,40 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    /* Initialize handle to safe defaults */
     if (status == PMIC_ST_SUCCESS)
     {
-        copyHandleCfg(config, &localCfg);
+        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
     }
 
-    // Validate and set configuration parameters
+    // Set I2C configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = validateAndSetHandleCfg(handle, &localCfg);
+        setI2CConfig(handle, config);
+    }
+
+    // Set retry configuration
+    if (status == PMIC_ST_SUCCESS)
+    {
+        setRetryConfig(handle, config);
+    }
+
+    // Validate and set user handles
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetUserHandles(handle, config);
+    }
+
+    // Validate and set user hooks
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validateAndSetUserHooks(handle, config);
+    }
+
+    /* Validate PMIC handle once configurations have been set */
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = validatePmicHandle(handle);
     }
 
     // Get PMIC info, store info in pmic handle
@@ -397,6 +413,7 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *handle)
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Validate sync hooks
     if ((handle->ioRead == NULL) || (handle->ioWrite == NULL) ||
         (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL))
     {

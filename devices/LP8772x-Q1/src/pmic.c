@@ -60,10 +60,6 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-static inline void copyHandleCfg(const Pmic_HandleCfg_t *src, Pmic_HandleCfg_t *dst) {
-    (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_HandleCfg_t));
-}
-
 static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -266,25 +262,30 @@ static int32_t configureDeviceCrc(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
     return status;
 }
 
+static int32_t validatePmicHandle(const Pmic_Handle_t *handle) {
+    /* Validate sync I/O hooks */
+    if ((handle->ioRead == NULL) || (handle->ioWrite == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    /* Validate critical section hooks */
+    if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    return PMIC_ST_SUCCESS;
+}
+
 static int32_t validateHandle(const Pmic_Handle_t *handle) {
     if (handle->commMode > PMIC_INTF_MAX) {
         return PMIC_ST_ERR_INV_PARAM;
-    }
-
-    if ((handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL)) {
-        return PMIC_ST_ERR_NULL_FPTR;
     }
 
     if (handle->commHandle0 == NULL) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((handle->ioRead == NULL)  || (handle->ioWrite == NULL) ||
-        (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
-        return PMIC_ST_ERR_NULL_FPTR;
-    }
-
-    return PMIC_ST_SUCCESS;
+    return validatePmicHandle(handle);
 }
 
 /* ========================================================================== */
@@ -292,31 +293,35 @@ static int32_t validateHandle(const Pmic_Handle_t *handle) {
 /* ========================================================================== */
 
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
-    Pmic_HandleCfg_t localConfig;
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((handle == NULL) || (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    /* Initialize handle to safe defaults */
     if (status == PMIC_ST_SUCCESS) {
-        copyHandleCfg(config, &localConfig);
+        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
     }
 
     /* Check and update PMIC Handle for device type, Comm Mode, I2C addresses */
     if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStat = PMIC_DRV_INIT_UNINIT;
-        status = initHandleBasicDevCfg(&localConfig, handle);
+        status = initHandleBasicDevCfg(config, handle);
     }
 
     /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn */
     if (status == PMIC_ST_SUCCESS) {
-        status = initCommsFunctions(&localConfig, handle);
+        status = initCommsFunctions(config, handle);
     }
 
     /* Check and update PMIC handle for Critical section Start/Stop */
     if (status == PMIC_ST_SUCCESS) {
-        status = initCritSecFunctions(&localConfig, handle);
+        status = initCritSecFunctions(config, handle);
+    }
+
+    /* Validate PMIC handle once configurations have been set */
+    if (status == PMIC_ST_SUCCESS) {
+        status = validatePmicHandle(handle);
     }
 
     // Get PMIC info, store info in pmic handle
@@ -326,12 +331,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
 
     // Initialize any other user provided callback functions
     if (status == PMIC_ST_SUCCESS) {
-        status = initCallbackFunctions(&localConfig, handle);
-    }
-
-    // Validate the handle to ensure it has necessary valid configurations
-    if (status == PMIC_ST_SUCCESS) {
-        status = validateHandle(handle);
+        status = initCallbackFunctions(config, handle);
     }
 
     // Validate communication with the device.
@@ -339,14 +339,14 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
         status = validateComms(handle);
     }
 
-    // Initialization is complete.
-    if (status == PMIC_ST_SUCCESS) {
-        handle->drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    // Set the driver initialization status (only if handle is valid)
+    if (handle != NULL) {
+        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
     }
 
     // Configure CRC for HW and PMIC handle
     if (status == PMIC_ST_SUCCESS) {
-        status = configureDeviceCrc(&localConfig, handle);
+        status = configureDeviceCrc(config, handle);
     }
 
     return status;
@@ -390,6 +390,10 @@ int32_t Pmic_checkHandle(const Pmic_Handle_t *handle) {
 
     if (handle->drvInitStat != PMIC_DRV_INIT_SUCCESS) {
         return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if ((handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
     }
 
     return validateHandle(handle);

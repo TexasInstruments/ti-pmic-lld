@@ -38,6 +38,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -151,6 +152,42 @@ static int32_t initCritSecFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_
     return status;
 }
 
+static int32_t initAsyncFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    /* Check and update async enable flag */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID, status)) {
+        handle->asyncEnable = config->asyncEnable;
+    }
+
+    /* Check and update task handle */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TASK_HANDLE_VALID, status)) {
+        handle->taskHandle = config->taskHandle;
+    }
+
+    /* Check and update async RX start function */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_START_VALID, status)) {
+        handle->asyncRxStart = config->asyncRxStart;
+    }
+
+    /* Check and update async TX start function */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_START_VALID, status)) {
+        handle->asyncTxStart = config->asyncTxStart;
+    }
+
+    /* Check and update async RX await function */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status)) {
+        handle->asyncRxAwait = config->asyncRxAwait;
+    }
+
+    /* Check and update async TX await function */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status)) {
+        handle->asyncTxAwait = config->asyncTxAwait;
+    }
+
+    return status;
+}
+
 static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -192,6 +229,29 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
     return status;
 }
 
+static int32_t validatePmicHandle(const Pmic_Handle_t *handle) {
+    /* Validate async hooks if async mode enabled */
+    if (handle->asyncEnable != false) {
+        if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) ||
+            (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL)) {
+            return PMIC_ST_ERR_NULL_FPTR;
+        }
+    }
+    /* Validate sync I/O hooks if async mode disabled */
+    else {
+        if ((handle->ioRead == NULL) || (handle->ioWrite == NULL)) {
+            return PMIC_ST_ERR_INSUFFICIENT_CFG;
+        }
+    }
+
+    /* Validate critical section hooks */
+    if ((handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
+        return PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    return PMIC_ST_SUCCESS;
+}
+
 static int32_t validateComms(const Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
@@ -212,6 +272,11 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    /* Initialize handle to safe defaults */
+    if (status == PMIC_ST_SUCCESS) {
+        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
+    }
+
     /* Check and update PMIC Handle for device type, Comm Mode, Main Slave Address
      * and NVM Slave Address */
     if (status == PMIC_ST_SUCCESS) {
@@ -228,6 +293,16 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
         status = initCritSecFunctions(config, handle);
     }
 
+    /* Check and update PMIC handle for async functions */
+    if (status == PMIC_ST_SUCCESS) {
+        status = initAsyncFunctions(config, handle);
+    }
+
+    /* Validate PMIC handle once configurations have been set */
+    if (status == PMIC_ST_SUCCESS) {
+        status = validatePmicHandle(handle);
+    }
+
     // Get PMIC info, store info in pmic handle
     if (status == PMIC_ST_SUCCESS) {
         status = getPmicInfo(handle);
@@ -237,17 +312,6 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
     if (status == PMIC_ST_SUCCESS) {
         status = validateComms(handle);
     }
-
-    /* Check for required members for I2C/SPI Main handle comm */
-    // LCOV_EXCL_START
-    if ((status == PMIC_ST_SUCCESS) &&
-         ((handle->criticalSectionStart == NULL) ||
-          (handle->criticalSectionStop == NULL) ||
-          (handle->ioRead == NULL) ||
-          (handle->ioWrite == NULL))) {
-        status = PMIC_ST_ERR_INSUFFICIENT_CFG;
-    }
-    // LCOV_EXCL_STOP
 
     // Set the driver initialization status (only if handle is valid)
     if (handle != NULL) {
@@ -270,6 +334,12 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
         handle->criticalSectionStop = NULL;
         handle->ioRead = NULL;
         handle->ioWrite = NULL;
+        handle->asyncEnable = false;
+        handle->taskHandle = NULL;
+        handle->asyncRxStart = NULL;
+        handle->asyncTxStart = NULL;
+        handle->asyncRxAwait = NULL;
+        handle->asyncTxAwait = NULL;
         handle->drvInitStat = PMIC_DRV_INIT_UNINIT;
         handle->devRev = 0U;
         handle->devSiRev = 0U;

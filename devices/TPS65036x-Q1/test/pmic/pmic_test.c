@@ -368,26 +368,32 @@ void test_neg_pmic_checkHandle_nullFptrs(void)
 
 void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
 {
-    // Test non-zero retry with NULL timer (line 422)
+    // Test runtime validation in Pmic_checkHandle for retryIntervalMs != 0 with NULL timer
+    // Tests line 425: (handle->retryIntervalMs != 0U) && (handle->timerWaitMs == NULL)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
     pmicTest_initPmicCfg(&pmicCfg);
 
+    // Initialize with VALID configuration including timer
+    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.retryIntervalMs = 10U;  // Non-zero retry interval
+    pmicCfg.timerWaitMs = &testTimerWaitWrapper;  // Provide timer during init
+
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // Set retryIntervalMs to non-zero but timerWaitMs to NULL
-    handle.retryIntervalMs = 100U;
+    // NOW corrupt the handle to have retryIntervalMs != 0 but NULL timer
+    // This tests the runtime validation in Pmic_checkHandle
     handle.timerWaitMs = NULL;
 
-    // Try to use the corrupted handle - should fail
+    // Try to use the corrupted handle - should fail at runtime
     bool wdgEnabled = false;
     status = Pmic_wdgGetEnableState(&handle, &wdgEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
     // Restore handle for deinit
-    handle.retryIntervalMs = 0U;
+    handle.timerWaitMs = &testTimerWaitWrapper;
     status = Pmic_deinit(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -415,4 +421,108 @@ void test_neg_pmic_checkHandle_invalidDrvInitStat(void)
     handle.drvInitStat = PMIC_DRV_INIT_SUCCESS;
     status = Pmic_deinit(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+/*                          Coverage Tests                                   */
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_init with NULL ioRead
+ * Tests that ioRead==NULL is detected during validation
+ *
+ * NOTE: To reach validatePmicHandle line 265, we must NOT set IO_READ_VALID flag,
+ * so validateAndSetUserHooks skips the check. Then validatePmicHandle detects
+ * that ioRead is NULL.
+ */
+void test_neg_pmic_init_syncMode_nullIoRead(void)
+{
+    Pmic_Handle_t handle;
+    Pmic_HandleCfg_t pmicCfg = {0U};
+
+    /* Initialize with minimal valid config, but omit IO_READ_VALID */
+    pmicCfg.validParams = PMIC_I2C_ADDR0_VALID |
+                          PMIC_COMM_HANDLE_0_VALID |
+                          /* PMIC_IO_READ_VALID - intentionally omitted */
+                          PMIC_IO_WRITE_VALID |
+                          PMIC_CRITICAL_SECTION_START_VALID |
+                          PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.i2cAddr0 = 0x60U;
+    pmicCfg.commHandle0 = platform_getCommHandle();
+    /* pmicCfg.ioRead = NULL; - left NULL (default) */
+    pmicCfg.ioWrite = &platform_txByte;
+    pmicCfg.criticalSectionStart = &platform_critSecStart;
+    pmicCfg.criticalSectionStop = &platform_critSecStop;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL ioWrite
+ * Tests that ioWrite==NULL is detected during validation
+ *
+ * NOTE: To reach validatePmicHandle line 265, we must NOT set IO_WRITE_VALID flag,
+ * so validateAndSetUserHooks skips the check. Then validatePmicHandle detects
+ * that ioWrite is NULL.
+ */
+void test_neg_pmic_init_syncMode_nullIoWrite(void)
+{
+    Pmic_Handle_t handle;
+    Pmic_HandleCfg_t pmicCfg = {0U};
+
+    /* Initialize with minimal valid config, but omit IO_WRITE_VALID */
+    pmicCfg.validParams = PMIC_I2C_ADDR0_VALID |
+                          PMIC_COMM_HANDLE_0_VALID |
+                          PMIC_IO_READ_VALID |
+                          /* PMIC_IO_WRITE_VALID - intentionally omitted */
+                          PMIC_CRITICAL_SECTION_START_VALID |
+                          PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.i2cAddr0 = 0x60U;
+    pmicCfg.commHandle0 = platform_getCommHandle();
+    pmicCfg.ioRead = &platform_rxByte;
+    /* pmicCfg.ioWrite = NULL; - left NULL (default) */
+    pmicCfg.criticalSectionStart = &platform_critSecStart;
+    pmicCfg.criticalSectionStop = &platform_critSecStop;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL criticalSectionStart
+ * Tests line 272 branch: criticalSectionStart==NULL
+ */
+void test_neg_pmic_init_nullCriticalSectionStart(void)
+{
+    Pmic_Handle_t handle;
+    Pmic_HandleCfg_t pmicCfg = {0U};
+
+    pmicTest_initPmicCfg(&pmicCfg);
+
+    /* NULL critical section start hook */
+    pmicCfg.validParams |= PMIC_CRITICAL_SECTION_START_VALID;
+    pmicCfg.criticalSectionStart = NULL;  /* Missing required hook */
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL criticalSectionStop
+ * Tests line 272 branch: criticalSectionStop==NULL
+ */
+void test_neg_pmic_init_nullCriticalSectionStop(void)
+{
+    Pmic_Handle_t handle;
+    Pmic_HandleCfg_t pmicCfg = {0U};
+
+    pmicTest_initPmicCfg(&pmicCfg);
+
+    /* NULL critical section stop hook */
+    pmicCfg.validParams |= PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.criticalSectionStop = NULL;  /* Missing required hook */
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }

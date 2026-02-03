@@ -360,6 +360,8 @@ typedef struct Pmic_Handle_s {
     bool crcEnable;
     bool configCrcEnable;
     void *commHandle0;
+    bool asyncEnable;
+    void *taskHandle;
     int32_t (*ioRead)(const struct Pmic_Handle_s *handle,
                       uint8_t page,
                       uint8_t regAddr,
@@ -370,6 +372,18 @@ typedef struct Pmic_Handle_s {
                        uint8_t regAddr,
                        const uint8_t *buffer,
                        uint8_t bufLen);
+    int32_t (*asyncRxStart)(const struct Pmic_Handle_s *handle,
+                            uint8_t page,
+                            uint8_t regAddr,
+                            uint8_t *buffer,
+                            uint8_t bufLen);
+    int32_t (*asyncTxStart)(const struct Pmic_Handle_s *handle,
+                            uint8_t page,
+                            uint8_t regAddr,
+                            const uint8_t *buffer,
+                            uint8_t bufLen);
+    int32_t (*asyncRxAwait)(const struct Pmic_Handle_s *handle);
+    int32_t (*asyncTxAwait)(const struct Pmic_Handle_s *handle);
     void (*criticalSectionStart)(uint8_t resource);
     void (*criticalSectionStop)(uint8_t resource);
     void (*irqResponseCallback)(void);

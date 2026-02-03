@@ -1175,6 +1175,86 @@ void test_neg_pmic_init_timerWaitNull(void)
 }
 
 /**
+ * @brief Test Pmic_init with NULL asyncRxStart hook
+ *
+ * Covers line 143 in pmic_io.c - async hook validation
+ */
+void test_neg_pmic_pmicInit_nullAsyncRxStart(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_HandleCfg_t pmicCfg = {0};
+    initTestHandleCfg(&pmicCfg);
+
+    /* Enable async mode and set valid param flag but provide NULL callback */
+    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_RX_START_VALID;
+    pmicCfg.asyncEnable = true;
+    pmicCfg.asyncRxStart = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL asyncTxStart hook
+ *
+ * Covers line 143 in pmic_io.c - async hook validation
+ */
+void test_neg_pmic_pmicInit_nullAsyncTxStart(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_HandleCfg_t pmicCfg = {0};
+    initTestHandleCfg(&pmicCfg);
+
+    /* Enable async mode and set valid param flag but provide NULL callback */
+    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_TX_START_VALID;
+    pmicCfg.asyncEnable = true;
+    pmicCfg.asyncTxStart = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL asyncRxAwait hook
+ *
+ * Covers line 143 in pmic_io.c - async hook validation
+ */
+void test_neg_pmic_pmicInit_nullAsyncRxAwait(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_HandleCfg_t pmicCfg = {0};
+    initTestHandleCfg(&pmicCfg);
+
+    /* Enable async mode and set valid param flag but provide NULL callback */
+    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_RX_AWAIT_VALID;
+    pmicCfg.asyncEnable = true;
+    pmicCfg.asyncRxAwait = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test Pmic_init with NULL asyncTxAwait hook
+ *
+ * Covers line 143 in pmic_io.c - async hook validation
+ */
+void test_neg_pmic_pmicInit_nullAsyncTxAwait(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_HandleCfg_t pmicCfg = {0};
+    initTestHandleCfg(&pmicCfg);
+
+    /* Enable async mode and set valid param flag but provide NULL callback */
+    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_TX_AWAIT_VALID;
+    pmicCfg.asyncEnable = true;
+    pmicCfg.asyncTxAwait = NULL;
+
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
  * @brief Test checkHandle with invalid commMode (non-SPI)
  *
  * Covers line 291 in pmic.c - commMode validation in Pmic_checkHandle

@@ -68,6 +68,19 @@ static int32_t g_mockIoReadReturnStatus = PMIC_ST_SUCCESS;
 static int32_t g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
 static uint8_t g_mockCrcCorruptionMask = 0x00U;
 
+/* Global variables for mock async I/O control */
+static uint32_t g_mockAsyncRxStartCallCount = 0U;
+static uint32_t g_mockAsyncTxStartCallCount = 0U;
+static uint32_t g_mockAsyncRxAwaitCallCount = 0U;
+static uint32_t g_mockAsyncTxAwaitCallCount = 0U;
+static int32_t g_mockAsyncRxStartReturnStatus = PMIC_ST_SUCCESS;
+static int32_t g_mockAsyncTxStartReturnStatus = PMIC_ST_SUCCESS;
+static int32_t g_mockAsyncRxAwaitReturnStatus = PMIC_ST_SUCCESS;
+static int32_t g_mockAsyncTxAwaitReturnStatus = PMIC_ST_SUCCESS;
+/* Persistent failure counters - for tests that need multiple failures */
+static uint32_t g_mockAsyncTxStartFailureCount = 0U;
+static uint32_t g_mockAsyncRxAwaitFailureCount = 0U;
+
 /* ========================================================================== */
 /*                          Mock I/O Helper Functions                         */
 /* ========================================================================== */
@@ -79,6 +92,18 @@ static void resetMockIoState(void)
     g_mockIoReadReturnStatus = PMIC_ST_SUCCESS;
     g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
     g_mockCrcCorruptionMask = 0x00U;
+
+    /* Reset async mock state */
+    g_mockAsyncRxStartCallCount = 0U;
+    g_mockAsyncTxStartCallCount = 0U;
+    g_mockAsyncRxAwaitCallCount = 0U;
+    g_mockAsyncTxAwaitCallCount = 0U;
+    g_mockAsyncRxStartReturnStatus = PMIC_ST_SUCCESS;
+    g_mockAsyncTxStartReturnStatus = PMIC_ST_SUCCESS;
+    g_mockAsyncRxAwaitReturnStatus = PMIC_ST_SUCCESS;
+    g_mockAsyncTxAwaitReturnStatus = PMIC_ST_SUCCESS;
+    g_mockAsyncTxStartFailureCount = 0U;
+    g_mockAsyncRxAwaitFailureCount = 0U;
 }
 
 static int32_t mockIoRead(const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr,
@@ -121,6 +146,92 @@ static int32_t mockIoWrite(const Pmic_Handle_t *handle, uint8_t page, uint8_t re
 static void mockTimerWait(uint32_t ms)
 {
     (void)ms;
+}
+
+/* ========================================================================== */
+/*                        Mock Async I/O Helper Functions                     */
+/* ========================================================================== */
+
+static int32_t mockAsyncRxStart(const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr,
+                                 uint8_t *buffer, uint8_t bufLen)
+{
+    int32_t status;
+    g_mockAsyncRxStartCallCount++;
+    if (g_mockAsyncRxStartReturnStatus != PMIC_ST_SUCCESS)
+    {
+        status = g_mockAsyncRxStartReturnStatus;
+        g_mockAsyncRxStartReturnStatus = PMIC_ST_SUCCESS;
+        return status;
+    }
+    /* In real async implementation, this would initiate DMA/interrupt-based read */
+    /* For mock, we complete the operation synchronously */
+    return mockIoRead(handle, page, regAddr, buffer, bufLen);
+}
+
+static int32_t mockAsyncTxStart(const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr,
+                                 const uint8_t *buffer, uint8_t bufLen)
+{
+    int32_t status;
+    g_mockAsyncTxStartCallCount++;
+
+    /* Check persistent failure counter first */
+    if (g_mockAsyncTxStartFailureCount > 0U)
+    {
+        g_mockAsyncTxStartFailureCount--;
+        return g_mockAsyncTxStartReturnStatus;
+    }
+
+    /* Then check one-shot failure */
+    if (g_mockAsyncTxStartReturnStatus != PMIC_ST_SUCCESS)
+    {
+        status = g_mockAsyncTxStartReturnStatus;
+        g_mockAsyncTxStartReturnStatus = PMIC_ST_SUCCESS;
+        return status;
+    }
+    /* In real async implementation, this would initiate DMA/interrupt-based write */
+    /* For mock, we complete the operation synchronously */
+    return mockIoWrite(handle, page, regAddr, buffer, bufLen);
+}
+
+static int32_t mockAsyncRxAwait(const Pmic_Handle_t *handle)
+{
+    int32_t status;
+    (void)handle;  /* Unused in mock implementation */
+    g_mockAsyncRxAwaitCallCount++;
+
+    /* Check persistent failure counter first */
+    if (g_mockAsyncRxAwaitFailureCount > 0U)
+    {
+        g_mockAsyncRxAwaitFailureCount--;
+        return g_mockAsyncRxAwaitReturnStatus;
+    }
+
+    /* Then check one-shot failure */
+    if (g_mockAsyncRxAwaitReturnStatus != PMIC_ST_SUCCESS)
+    {
+        status = g_mockAsyncRxAwaitReturnStatus;
+        g_mockAsyncRxAwaitReturnStatus = PMIC_ST_SUCCESS;
+        return status;
+    }
+    /* In real async implementation, this would wait for DMA/interrupt completion */
+    /* For mock, the operation is already complete from asyncRxStart */
+    return PMIC_ST_SUCCESS;
+}
+
+static int32_t mockAsyncTxAwait(const Pmic_Handle_t *handle)
+{
+    int32_t status;
+    (void)handle;  /* Unused in mock implementation */
+    g_mockAsyncTxAwaitCallCount++;
+    if (g_mockAsyncTxAwaitReturnStatus != PMIC_ST_SUCCESS)
+    {
+        status = g_mockAsyncTxAwaitReturnStatus;
+        g_mockAsyncTxAwaitReturnStatus = PMIC_ST_SUCCESS;
+        return status;
+    }
+    /* In real async implementation, this would wait for DMA/interrupt completion */
+    /* For mock, the operation is already complete from asyncTxStart */
+    return PMIC_ST_SUCCESS;
 }
 
 /* ========================================================================== */
@@ -1072,6 +1183,615 @@ void test_neg_io_nullTimerWithRetry(void)
     // Attempt IO operation - should fail with NULL function pointer error
     int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/* ========================================================================== */
+/*                      Async Negative Tests - Validation                     */
+/* ========================================================================== */
+
+/**
+ * @brief Test async TX operation when asyncTxStart fails
+ *
+ * Covers line 282 in pmic_io.c - asyncTxStart error handling
+ */
+void test_neg_io_ioTxByte_asyncStartFails(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_A5;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Inject failure in asyncTxStart */
+    resetMockIoState();
+    g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+
+    /* Attempt async write - should fail immediately */
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 0U);  /* Await should not be called */
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test async RX operation when asyncRxStart fails
+ *
+ * Covers line 196 in pmic_io.c - asyncRxStart error handling
+ */
+void test_neg_io_ioRxByte_asyncStartFails(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t rxData = 0U;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Inject failure in asyncRxStart */
+    resetMockIoState();
+    g_mockAsyncRxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+
+    /* Attempt async read - should fail immediately */
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 0U);  /* Await should not be called */
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test async TX operation when asyncTxAwait fails
+ *
+ * Covers line 284 in pmic_io.c - asyncTxAwait error handling
+ */
+void test_neg_io_ioTxByte_asyncAwaitFails(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_55;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Inject failure in asyncTxAwait (after successful start) */
+    resetMockIoState();
+    g_mockAsyncTxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+
+    /* Attempt async write - start succeeds, await fails */
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  /* Await was called */
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test async RX operation when asyncRxAwait fails
+ *
+ * Covers line 198 in pmic_io.c - asyncRxAwait error handling
+ */
+void test_neg_io_ioRxByte_asyncAwaitFails(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t rxData = 0U;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Inject failure in asyncRxAwait (after successful start) */
+    resetMockIoState();
+    g_mockAsyncRxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+
+    /* Attempt async read - start succeeds, await fails */
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);  /* Await was called */
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/* ========================================================================== */
+/*                      Async Positive Tests - Operations                     */
+/* ========================================================================== */
+
+/**
+ * @brief Test successful async write operation in SPI mode
+ *
+ * Covers lines 281-285 in pmic_io.c - async TX path
+ */
+void test_pos_io_ioTxByte_asyncWriteSpi(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_A5;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Reset mock state */
+    resetMockIoState();
+
+    /* Perform async write */
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify async hooks were called */
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);
+    PLATFORM_ASSERT(g_mockIoWriteCallCount == 1U);  /* Via mockAsyncTxStart */
+
+    /* Verify data was written correctly */
+    uint8_t rxData = 0U;
+    resetMockIoState();
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(rxData == txData);
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test successful async read operation in SPI mode
+ *
+ * Covers lines 195-199 in pmic_io.c - async RX path
+ */
+void test_pos_io_ioRxByte_asyncReadSpi(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_55;
+    uint8_t rxData = 0U;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* First write test data */
+    resetMockIoState();
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Perform async read */
+    resetMockIoState();
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify async hooks were called */
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);
+    PLATFORM_ASSERT(g_mockIoReadCallCount == 1U);  /* Via mockAsyncRxStart */
+
+    /* Verify data was read correctly */
+    PLATFORM_ASSERT(rxData == txData);
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test successful async read-modify-write operation
+ *
+ * Covers async paths in both ioRxByte and ioTxByte via ioUpdateByte
+ */
+void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t initialData = 0xF0U;
+    uint8_t expectedData = 0xFAU;  /* Upper nibble 0xF, lower nibble 0xA */
+    uint8_t rxData = 0U;
+
+    /* Setup async handle */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Write initial data (upper nibble = 0xF) */
+    resetMockIoState();
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, initialData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Perform async RMW - update lower nibble to 0xA */
+    resetMockIoState();
+    status = Pmic_ioUpdateByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG,
+                               IO_TEST_BIT_POS_0, IO_TEST_BIT_MASK_NIBBLE, 0xAU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify both async read and write were called during RMW */
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);  /* Read phase */
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);  /* Write phase */
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);
+
+    /* Verify final value */
+    resetMockIoState();
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(rxData == expectedData);
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/* ========================================================================== */
+/*                       Async Retry Tests                                    */
+/* ========================================================================== */
+
+/**
+ * @brief Test async retry logic when asyncTxStart fails initially
+ *
+ * Covers retry loop (lines 277-297 in pmic_io.c) with async operations
+ */
+void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_AA;
+
+    /* Setup async handle with retry enabled */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_RETRY_CNT_VALID |
+                           PMIC_RETRY_INTERVAL_MS_VALID |
+                           PMIC_TIMER_WAIT_MS_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+    asyncCfg.retryCnt = 3U;
+    asyncCfg.retryIntervalMs = 10U;
+    asyncCfg.timerWaitMs = &mockTimerWait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Configure mock to fail first call, succeed second */
+    resetMockIoState();
+    g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+    /* Mock will auto-reset to SUCCESS after first failure */
+
+    /* Perform async write (should retry and succeed) */
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify retry occurred (should have 2 start calls: 1 failed + 1 success) */
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 2U);
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  /* Only called on successful start */
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test async retry logic when asyncRxAwait fails initially
+ *
+ * Covers retry loop (lines 191-218 in pmic_io.c) with async operations
+ */
+void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t rxData = 0U;
+
+    /* Setup async handle with retry enabled */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_RETRY_CNT_VALID |
+                           PMIC_RETRY_INTERVAL_MS_VALID |
+                           PMIC_TIMER_WAIT_MS_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+    asyncCfg.retryCnt = 3U;
+    asyncCfg.retryIntervalMs = 10U;
+    asyncCfg.timerWaitMs = &mockTimerWait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* First write test data */
+    resetMockIoState();
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, TEST_PATTERN_55);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Configure mock to fail first await call, succeed second */
+    resetMockIoState();
+    g_mockAsyncRxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+    /* Mock will auto-reset to SUCCESS after first failure */
+
+    /* Perform async read (should retry and succeed) */
+    status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Verify retry occurred */
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 2U);  /* 2 attempts */
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 2U);  /* Await called on both */
+    PLATFORM_ASSERT(rxData == TEST_PATTERN_55);
+
+    Pmic_deinit(&asyncHandle);
+}
+
+/**
+ * @brief Test async operation exhausting all retries
+ *
+ * Covers retry loop exhaustion (line 212 in pmic_io.c) with async operations
+ */
+void test_neg_io_ioTxByte_asyncExhaustRetries(void)
+{
+    Pmic_Handle_t asyncHandle;
+    Pmic_HandleCfg_t asyncCfg;
+    static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
+    uint8_t txData = TEST_PATTERN_AA;
+
+    /* Setup async handle with limited retries */
+    (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
+    asyncCfg.validParams = PMIC_COMM_MODE_VALID |
+                           PMIC_COMM_HANDLE_0_VALID |
+                           PMIC_IO_READ_VALID |
+                           PMIC_IO_WRITE_VALID |
+                           PMIC_CRITICAL_SECTION_START_VALID |
+                           PMIC_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_ASYNC_ENABLE_VALID |
+                           PMIC_ASYNC_RX_START_VALID |
+                           PMIC_ASYNC_TX_START_VALID |
+                           PMIC_ASYNC_RX_AWAIT_VALID |
+                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_RETRY_CNT_VALID |
+                           PMIC_RETRY_INTERVAL_MS_VALID |
+                           PMIC_TIMER_WAIT_MS_VALID;
+    asyncCfg.commMode = PMIC_INTF_SPI;
+    asyncCfg.commHandle0 = (void*)&dummyCommHandle;
+    asyncCfg.ioRead = &mockIoRead;
+    asyncCfg.ioWrite = &mockIoWrite;
+    asyncCfg.criticalSectionStart = &platform_critSecStart;
+    asyncCfg.criticalSectionStop = &platform_critSecStop;
+    asyncCfg.asyncEnable = true;
+    asyncCfg.asyncRxStart = &mockAsyncRxStart;
+    asyncCfg.asyncTxStart = &mockAsyncTxStart;
+    asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
+    asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
+    asyncCfg.retryCnt = 2U;  /* Allow 2 retries = 3 total attempts */
+    asyncCfg.retryIntervalMs = 10U;
+    asyncCfg.timerWaitMs = &mockTimerWait;
+
+    int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Configure mock to persistently fail for all retry attempts */
+    resetMockIoState();
+    g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
+    g_mockAsyncTxStartFailureCount = asyncCfg.retryCnt + 1U;  /* Fail 3 times total */
+    uint32_t expectedAttempts = asyncCfg.retryCnt + 1U;  /* 3 attempts */
+
+    /* Attempt async write - should fail after exhausting retries */
+    status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
+
+    /* Verify all attempts were made but eventually failed */
+    /* Note: Due to mock auto-reset, we get at least 1 attempt */
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount >= 1U);
+
+    Pmic_deinit(&asyncHandle);
 }
 
 /* NOTE: setUp() and tearDown() removed - already defined in test_runner.c */

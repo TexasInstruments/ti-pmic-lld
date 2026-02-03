@@ -70,7 +70,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqResponseCallback)
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullIrqResponseCallback); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_syncMode_nullIoRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_syncMode_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCriticalSectionStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCriticalSectionStop)
 
 /* Test: TC-PMIC-0010 */
 #define PMIC_TEST_INIT() \
@@ -148,6 +152,12 @@ void test_neg_pmic_checkHandle_nullCommHandle(void);
 void test_neg_pmic_checkHandle_nullFptrs(void);
 void test_neg_pmic_checkHandle_nullTimerWithRetry(void);
 void test_neg_pmic_checkHandle_invalidDrvInitStat(void);
+
+/* Coverage Tests */
+void test_neg_pmic_init_syncMode_nullIoRead(void);
+void test_neg_pmic_init_syncMode_nullIoWrite(void);
+void test_neg_pmic_init_nullCriticalSectionStart(void);
+void test_neg_pmic_init_nullCriticalSectionStop(void);
 
 #ifdef __cplusplus
 }

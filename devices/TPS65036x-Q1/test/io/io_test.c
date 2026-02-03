@@ -71,6 +71,7 @@ static int32_t g_mockIoReadReturnStatus = PMIC_ST_SUCCESS;
 static int32_t g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
 static uint8_t g_mockCrcCorruptionMask = 0x00U;  /* XOR mask to corrupt CRC byte */
 
+
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
@@ -1076,5 +1077,44 @@ void test_neg_io_nullIoRead(void)
     // Attempt read operation - should fail on line 214
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/* ========================================================================== */
+/*                          Coverage Tests                                   */
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_ioTxByte with NULL commHandle0
+ * Tests line 141 branch: handle!=NULL but commHandle0==NULL
+ */
+void test_neg_io_ioTxByte_nullCommHandle(void)
+{
+    Pmic_Handle_t handle;
+
+    /* Create handle with NULL commHandle0 */
+    (void)memset(&handle, 0, sizeof(handle));
+    handle.commHandle0 = NULL;  /* Exercise second branch of compound condition */
+
+    /* Should fail with NULL_PARAM error */
+    int32_t status = Pmic_ioTxByte(&handle, 0x10, 0xAA);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test Pmic_ioRxByte with NULL commHandle0
+ * Tests line 220 branch: handle!=NULL && commHandle0==NULL && rxData!=NULL
+ */
+void test_neg_io_ioRxByte_nullCommHandle(void)
+{
+    Pmic_Handle_t handle;
+    uint8_t rxData;
+
+    /* Create handle with NULL commHandle0 */
+    (void)memset(&handle, 0, sizeof(handle));
+    handle.commHandle0 = NULL;  /* Exercise second branch of compound condition */
+
+    /* Should fail with NULL_PARAM error */
+    int32_t status = Pmic_ioRxByte(&handle, 0x10, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 

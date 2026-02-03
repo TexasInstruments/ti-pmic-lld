@@ -66,7 +66,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullCommHandle)
 
 /* Test: TC-IO-0029 */
 #define IO_TEST_IOTXRXBYTE() \
@@ -209,6 +211,8 @@ void test_neg_io_ioRxByte_nullRxBuffer(void);
 void test_neg_io_ioTxByte_CS_nullHandle(void);
 void test_neg_io_ioRxByte_CS_nullHandle(void);
 void test_neg_io_ioRxByte_CS_nullRxBuffer(void);
+void test_neg_io_ioTxByte_nullCommHandle(void);
+void test_neg_io_ioRxByte_nullCommHandle(void);
 
 /* Negative tests - Pmic_ioUpdateByte */
 void test_neg_io_ioUpdateByte_nullHandle(void);
@@ -255,6 +259,7 @@ void test_neg_io_nullIoRead(void);
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void);
 void test_pos_io_ioTxByte_multipleRetryAttempts(void);
+
 
 #ifdef __cplusplus
 }

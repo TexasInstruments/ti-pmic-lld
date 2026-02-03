@@ -57,11 +57,15 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad1); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_scratchpad2); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
-    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts)
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncWriteSpi); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncRetryOnStartFailure)
 
 #define IO_TEST_NEG_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_withRetryOnFailure)
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_withRetryOnFailure); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncStartFails); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncAwaitFails)
 
 /* Test: TC-IO-0026 */
 #define IO_TEST_IOTXBYTE() \
@@ -75,13 +79,18 @@ extern "C" {
 #define IO_TEST_POS_IORXBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad1); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad2); \
-    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError)
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadSpi); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncRetryOnAwaitFailure)
 
 #define IO_TEST_NEG_IORXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
-    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError)
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncStartFails); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncAwaitFails); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncExhaustRetries)
 
 /* Test: TC-IO-0023 */
 #define IO_TEST_IORXBYTE() \
@@ -161,7 +170,8 @@ extern "C" {
 
 #define IO_TEST_POS_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_singleBitField); \
-    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_multiBitField)
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_multiBitField); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_asyncReadModifyWrite)
 
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     /* No negative tests for ioUpdateByte */
@@ -181,7 +191,8 @@ extern "C" {
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_POS_IOTXWORDSEQ(); \
-    IO_TEST_POS_IORXWORDSEQ()
+    IO_TEST_POS_IORXWORDSEQ(); \
+    IO_TEST_POS_IOUPDATEBYTE()
 
 #define IO_TEST_RUN_NEGATIVE() \
     IO_TEST_NEG_IOTXBYTE(); \
@@ -189,7 +200,8 @@ extern "C" {
     IO_TEST_NEG_IOTXBYTE_CS(); \
     IO_TEST_NEG_IORXBYTE_CS(); \
     IO_TEST_NEG_IOTXWORDSEQ(); \
-    IO_TEST_NEG_IORXWORDSEQ()
+    IO_TEST_NEG_IORXWORDSEQ(); \
+    IO_TEST_NEG_IOUPDATEBYTE()
 
 #define IO_TEST_RUN_ALL() \
     IO_TEST_RUN_POSITIVE(); \
@@ -280,6 +292,22 @@ void test_pos_io_ioTxRxByte_allScratchpadRegs(void);
 void test_pos_io_read_with_crc_validation(void);
 void test_pos_io_write_with_crc_calculation(void);
 void test_pos_io_crc_enable_disable_transitions(void);
+
+/* Negative Tests - Async Operations */
+void test_neg_io_ioTxByte_asyncStartFails(void);
+void test_neg_io_ioRxByte_asyncStartFails(void);
+void test_neg_io_ioTxByte_asyncAwaitFails(void);
+void test_neg_io_ioRxByte_asyncAwaitFails(void);
+
+/* Positive Tests - Async Operations */
+void test_pos_io_ioTxByte_asyncWriteSpi(void);
+void test_pos_io_ioRxByte_asyncReadSpi(void);
+void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void);
+
+/* Async Retry Tests */
+void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void);
+void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void);
+void test_neg_io_ioTxByte_asyncExhaustRetries(void);
 
 #ifdef __cplusplus
 }

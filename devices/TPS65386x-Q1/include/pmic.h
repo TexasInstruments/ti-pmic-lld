@@ -117,6 +117,12 @@ extern "C" {
 #define PMIC_RETRY_CNT_VALID              (1UL << 10U)
 #define PMIC_RETRY_INTERVAL_MS_VALID      (1UL << 11U)
 #define PMIC_TIMER_WAIT_MS_VALID          (1UL << 12U)
+#define PMIC_ASYNC_ENABLE_VALID           (1UL << 13U)
+#define PMIC_TASK_HANDLE_VALID            (1UL << 14U)
+#define PMIC_ASYNC_RX_START_VALID         (1UL << 15U)
+#define PMIC_ASYNC_TX_START_VALID         (1UL << 16U)
+#define PMIC_ASYNC_RX_AWAIT_VALID         (1UL << 17U)
+#define PMIC_ASYNC_TX_AWAIT_VALID         (1UL << 18U)
 /** @} */
 
 /**
@@ -247,6 +253,20 @@ typedef struct Pmic_HandleCfg_s {
     void (*criticalSectionStart)(uint8_t resource);
     void (*criticalSectionStop)(uint8_t resource);
     void (*timerWaitMs)(uint32_t ms);
+    bool asyncEnable;
+    void *taskHandle;
+    int32_t (*asyncRxStart)(const struct Pmic_Handle_s *handle,
+                            uint8_t page,
+                            uint8_t regAddr,
+                            uint8_t *buffer,
+                            uint8_t bufLen);
+    int32_t (*asyncTxStart)(const struct Pmic_Handle_s *handle,
+                            uint8_t page,
+                            uint8_t regAddr,
+                            const uint8_t *buffer,
+                            uint8_t bufLen);
+    int32_t (*asyncRxAwait)(const struct Pmic_Handle_s *handle);
+    int32_t (*asyncTxAwait)(const struct Pmic_Handle_s *handle);
 } Pmic_HandleCfg_t;
 
 /*==========================================================================*/
