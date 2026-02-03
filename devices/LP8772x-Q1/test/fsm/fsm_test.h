@@ -49,9 +49,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmClrRecovCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmClrRecovCnt                         */
+/* ======================================================================== */
 
 #define FSM_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
@@ -60,9 +60,9 @@ extern "C" {
 #define FSM_TEST_FSMCLRRECOVCNT() \
     FSM_TEST_NEG_FSMCLRRECOVCNT()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmClrResetCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmClrResetCnt                         */
+/* ======================================================================== */
 
 #define FSM_TEST_NEG_FSMCLRRESETCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrResetCnt_nullHandle)
@@ -71,9 +71,9 @@ extern "C" {
 #define FSM_TEST_FSMCLRRESETCNT() \
     FSM_TEST_NEG_FSMCLRRESETCNT()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmGetRecovCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetRecovCnt                         */
+/* ======================================================================== */
 
 #define FSM_TEST_NEG_FSMGETRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullHandle); \
@@ -83,9 +83,9 @@ extern "C" {
 #define FSM_TEST_FSMGETRECOVCNT() \
     FSM_TEST_NEG_FSMGETRECOVCNT()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetRecovCntThr                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetRecovCntThr                       */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
@@ -99,9 +99,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMGETRECOVCNTTHR()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmGetResetCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetResetCnt                         */
+/* ======================================================================== */
 
 #define FSM_TEST_NEG_FSMGETRESETCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetResetCnt_nullHandle); \
@@ -111,9 +111,9 @@ extern "C" {
 #define FSM_TEST_FSMGETRESETCNT() \
     FSM_TEST_NEG_FSMGETRESETCNT()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetResetCntThr                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetResetCntThr                       */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETRESETCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)
@@ -127,9 +127,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETRESETCNTTHR(); \
     FSM_TEST_NEG_FSMGETRESETCNTTHR()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmSetDevState                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmSetDevState                         */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_coldBootReq); \
@@ -146,9 +146,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmSetRecovCntThr                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetRecovCntThr                       */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_setGetRecovCntThr)
@@ -162,9 +162,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMSETRECOVCNTTHR()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmSetResetCntThr                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetResetCntThr                       */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETRESETCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_setGetResetCntThr)

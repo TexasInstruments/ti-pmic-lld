@@ -39,9 +39,9 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* =============================================================================== */
-/*        API-Specific Test Macros - irqSetMask, irqSetMasks, irqGetMask           */
-/* =============================================================================== */
+/* ======================================================================== */
+/*              Test APIs: irqSetMask, irqSetMasks, irqGetMask              */
+/* ======================================================================== */
 #define IRQ_TEST_POS_IRQSETGETMASK() \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_single); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetMasks_multiple); \
@@ -76,9 +76,9 @@
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_NEG_IRQSETGETMASK()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - irqGetStatus                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: irqGetStatus                          */
+/* ======================================================================== */
 #define IRQ_TEST_POS_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_read); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_withActiveFlags); \
@@ -93,9 +93,9 @@
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - irqGetNextFlag                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: irqGetNextFlag                         */
+/* ======================================================================== */
 #define IRQ_TEST_POS_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_iteration); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlags); \
@@ -111,9 +111,9 @@
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - irqGetFlag                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: irqGetFlag                           */
+/* ======================================================================== */
 #define IRQ_TEST_POS_IRQGETFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetClrFlag_single)
 
@@ -128,9 +128,9 @@
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
 
-/* ================================================================================ */
-/*                  API-Specific Test Macros - irqClrFlag, irqClrAllFlags           */
-/* ================================================================================ */
+/* ======================================================================== */
+/*                  Test APIs: irqClrFlag, irqClrAllFlags                   */
+/* ======================================================================== */
 #define IRQ_TEST_POS_IRQCLRFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags)
 

@@ -49,9 +49,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrSetResourceEnable                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: pwrSetResourceEnable                      */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRSETRESOURCEENABLE() \
     PLATFORM_RUN_TEST(test_pos_power_enableDisable_buck1); \
@@ -71,9 +71,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETRESOURCEENABLE(); \
     POWER_TEST_NEG_PWRSETRESOURCEENABLE()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrGetResourceEnable                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: pwrGetResourceEnable                      */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRGETRESOURCEENABLE() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceEnable_nullParam_handle); \
@@ -84,9 +84,10 @@ extern "C" {
 #define POWER_TEST_PWRGETRESOURCEENABLE() \
     POWER_TEST_NEG_PWRGETRESOURCEENABLE()
 
-/* ======================================================================================================= */
-/* API-Specific Test Macros - pwrSetResourceCfg, pwrGetResourceCfg, pwrSetResourceCfgs, pwrGetResourceCfgs */
-/* ======================================================================================================= */
+/* ======================================================================== */
+/*   Test APIs: pwrSetResourceCfg, pwrGetResourceCfg, pwrSetResourceCfgs,   */
+/*              pwrGetResourceCfgs                                          */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRSETRESOURCECFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetResourceCfg_allRsrc_allCfg); \
@@ -233,9 +234,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETRESOURCECFG(); \
     POWER_TEST_NEG_PWRSETRESOURCECFG()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrGetResourceCfg                            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetResourceCfg                       */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRGETRESOURCECFG() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_gpo_unsupportedDeglitch); \
@@ -258,9 +259,9 @@ extern "C" {
 #define POWER_TEST_PWRGETRESOURCECFG() \
     POWER_TEST_NEG_PWRGETRESOURCECFG()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrSetResourceCfgs                           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrSetResourceCfgs                       */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRSETRESOURCECFGS() \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfgs_gpo_deglitch); \
@@ -341,9 +342,9 @@ extern "C" {
 #define POWER_TEST_PWRSETRESOURCECFGS() \
     POWER_TEST_NEG_PWRSETRESOURCECFGS()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrGetResourceCfgs                           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrGetResourceCfgs                       */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRGETRESOURCECFGS() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_nullParam_config); \
@@ -354,9 +355,10 @@ extern "C" {
 #define POWER_TEST_PWRGETRESOURCECFGS() \
     POWER_TEST_NEG_PWRGETRESOURCECFGS()
 
-/* =========================================================================================================== */
-/*     API-Specific Test Macros - pwrSetSequenceCfg, pwrGetSequenceCfg, pwrSetSequenceCfgs, pwrGetSequenceCfgs */
-/* =========================================================================================================== */
+/* ======================================================================== */
+/*   Test APIs: pwrSetSequenceCfg, pwrGetSequenceCfg, pwrSetSequenceCfgs,   */
+/*              pwrGetSequenceCfgs                                          */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRSETSEQUENCECFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetSequenceCfg_allRsrc_allCfg); \
@@ -397,9 +399,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETSEQUENCECFG(); \
     POWER_TEST_NEG_PWRSETSEQUENCECFG()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrGetSequenceCfg                            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetSequenceCfg                       */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRGETSEQUENCECFG() \
     PLATFORM_RUN_TEST(test_pos_power_getNrstoutSequence)
@@ -413,9 +415,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETSEQUENCECFG(); \
     POWER_TEST_NEG_PWRGETSEQUENCECFG()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrSetSequenceCfgs                           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrSetSequenceCfgs                       */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRSETSEQUENCECFGS() \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_nullParam_config); \
@@ -441,9 +443,9 @@ extern "C" {
 #define POWER_TEST_PWRSETSEQUENCECFGS() \
     POWER_TEST_NEG_PWRSETSEQUENCECFGS()
 
-/* ========================================================================== */
-/*     API-Specific Test Macros - pwrGetSequenceCfgs                           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrGetSequenceCfgs                       */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_PWRGETSEQUENCECFGS() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_nullParam_config); \
@@ -455,9 +457,11 @@ extern "C" {
 #define POWER_TEST_PWRGETSEQUENCECFGS() \
     POWER_TEST_NEG_PWRGETSEQUENCECFGS()
 
-/* ================================================================================================================================================================ */
-/* API-Specific Test Macros - pwrSetResourceCfgs, pwrGetResourceCfgs, pwrSetResourceCfg, pwrGetResourceCfg, SetResourceCfgs, pwrSetSequenceCfgs, pwrGetSequenceCfgs */
-/* ================================================================================================================================================================ */
+/* ======================================================================== */
+/*  Test APIs: pwrSetResourceCfgs, pwrGetResourceCfgs, pwrSetResourceCfg,   */
+/*             pwrGetResourceCfg, SetResourceCfgs, pwrSetSequenceCfgs,      */
+/*             pwrGetSequenceCfgs                                           */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_COVERAGE() \
     PLATFORM_RUN_TEST(test_pos_power_powerGetPgoodLevel_validBuck); \

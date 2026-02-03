@@ -49,9 +49,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getNvmRev                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: getNvmRev                           */
+/* ======================================================================== */
 #define CORE_TEST_POS_GETNVMREV() \
     PLATFORM_RUN_TEST(test_pos_core_getNvmRev)
 
@@ -64,9 +64,9 @@ extern "C" {
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_NEG_GETNVMREV()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getSiliconRev                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: getSiliconRev                         */
+/* ======================================================================== */
 #define CORE_TEST_POS_GETSILICONREV() \
     PLATFORM_RUN_TEST(test_pos_core_getSiliconRev)
 
@@ -79,9 +79,10 @@ extern "C" {
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()
 
-/* ================================================================================================================================== */
-/* API-Specific Test Macros - setRegLockState, getRegLockState, setScratchPadValue, getScratchPadValue, disableRegLock, enableRegLock */
-/* ================================================================================================================================== */
+/* ======================================================================== */
+/*     Test APIs: setRegLockState, getRegLockState, setScratchPadValue,     */
+/*                getScratchPadValue, disableRegLock, enableRegLock         */
+/* ======================================================================== */
 #define CORE_TEST_POS_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_setGetRegLock)
 
@@ -95,9 +96,9 @@ extern "C" {
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getRegLockState                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: getRegLockState                        */
+/* ======================================================================== */
 #define CORE_TEST_NEG_GETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullParam_regLockStat)
@@ -106,9 +107,10 @@ extern "C" {
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
-/* ============================================================================================== */
-/* API-Specific Test Macros - ioSetCrcEnableState, ioGetCrcEnableState, ioCrcEnable, ioCrcDisable */
-/* ============================================================================================== */
+/* ======================================================================== */
+/*    Test APIs: ioSetCrcEnableState, ioGetCrcEnableState, ioCrcEnable,     */
+/*               ioCrcDisable                                               */
+/* ======================================================================== */
 #define CORE_TEST_POS_IOSETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_core_enableDisableCRC8)
 
@@ -122,9 +124,9 @@ extern "C" {
     CORE_TEST_POS_IOSETCRCENABLESTATE(); \
     CORE_TEST_NEG_IOSETCRCENABLESTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioGetCrcEnableState             */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioGetCrcEnableState                      */
+/* ======================================================================== */
 #define CORE_TEST_NEG_IOGETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled)
@@ -133,9 +135,9 @@ extern "C" {
 #define CORE_TEST_IOGETCRCENABLESTATE() \
     CORE_TEST_NEG_IOGETCRCENABLESTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmSetDevState                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmSetDevState                         */
+/* ======================================================================== */
 #define CORE_TEST_NEG_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_invalid_fsmCmd)
@@ -144,9 +146,9 @@ extern "C" {
 #define CORE_TEST_FSMSETDEVSTATE() \
     CORE_TEST_NEG_FSMSETDEVSTATE()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - setPwrOn                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: setPwrOn                            */
+/* ======================================================================== */
 #define CORE_TEST_POS_SETPWRON() \
     PLATFORM_RUN_TEST(test_pos_core_setGetPwrOn)
 
@@ -158,9 +160,9 @@ extern "C" {
     CORE_TEST_POS_SETPWRON(); \
     CORE_TEST_NEG_SETPWRON()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getPwrOn                        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: getPwrOn                            */
+/* ======================================================================== */
 #define CORE_TEST_NEG_GETPWRON() \
     PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getPwrOn_nullParam_pwrOnStat)
@@ -169,9 +171,9 @@ extern "C" {
 #define CORE_TEST_GETPWRON() \
     CORE_TEST_NEG_GETPWRON()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - setLpmCfg                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: setLpmCfg                           */
+/* ======================================================================== */
 #define CORE_TEST_POS_SETLPMCFG() \
     PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_pinDetection); \
     PLATFORM_RUN_TEST(test_pos_core_setGetLpmCfg_detectionDelay); \
@@ -206,9 +208,9 @@ extern "C" {
     CORE_TEST_POS_SETLPMCFG(); \
     CORE_TEST_NEG_SETLPMCFG()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getLpmCfg                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: getLpmCfg                           */
+/* ======================================================================== */
 #define CORE_TEST_POS_GETLPMCFG() \
     PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_pinDetection); \
     PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_detectionDelay); \
@@ -228,9 +230,9 @@ extern "C" {
     CORE_TEST_POS_GETLPMCFG(); \
     CORE_TEST_NEG_GETLPMCFG()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - runABIST                        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: runABIST                            */
+/* ======================================================================== */
 #define CORE_TEST_POS_RUNABIST() \
     PLATFORM_RUN_TEST(test_pos_core_runABIST)
 
@@ -242,9 +244,9 @@ extern "C" {
     CORE_TEST_POS_RUNABIST(); \
     CORE_TEST_NEG_RUNABIST()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getABISTStat                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: getABISTStat                          */
+/* ======================================================================== */
 #define CORE_TEST_POS_GETABISTSTAT() \
     PLATFORM_RUN_TEST(test_pos_core_getABISTStat_active)
 
@@ -257,9 +259,9 @@ extern "C" {
     CORE_TEST_POS_GETABISTSTAT(); \
     CORE_TEST_NEG_GETABISTSTAT()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - setScratchPadValue              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: setScratchPadValue                       */
+/* ======================================================================== */
 #define CORE_TEST_POS_SETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_setGetScratchPadVal)
 
@@ -272,9 +274,9 @@ extern "C" {
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getScratchPadValue              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getScratchPadValue                       */
+/* ======================================================================== */
 #define CORE_TEST_NEG_GETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds_scratchPadRegNum); \
@@ -284,9 +286,9 @@ extern "C" {
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmSetRecovCntThr               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetRecovCntThr                       */
+/* ======================================================================== */
 #define CORE_TEST_POS_FSMSETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_core_setGetRecovCntThr)
 
@@ -299,9 +301,9 @@ extern "C" {
     CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
     CORE_TEST_NEG_FSMSETRECOVCNTTHR()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmGetRecovCntThr               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetRecovCntThr                       */
+/* ======================================================================== */
 #define CORE_TEST_NEG_FSMGETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_threshold)
@@ -310,9 +312,9 @@ extern "C" {
 #define CORE_TEST_FSMGETRECOVCNTTHR() \
     CORE_TEST_NEG_FSMGETRECOVCNTTHR()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmGetRecovCnt                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetRecovCnt                         */
+/* ======================================================================== */
 #define CORE_TEST_POS_FSMGETRECOVCNT() \
     PLATFORM_RUN_TEST(test_pos_core_getClrRecovCnt)
 
@@ -325,9 +327,9 @@ extern "C" {
     CORE_TEST_POS_FSMGETRECOVCNT(); \
     CORE_TEST_NEG_FSMGETRECOVCNT()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmClrRecovCnt                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmClrRecovCnt                         */
+/* ======================================================================== */
 #define CORE_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle)
 
@@ -335,9 +337,9 @@ extern "C" {
 #define CORE_TEST_FSMCLRRECOVCNT() \
     CORE_TEST_NEG_FSMCLRRECOVCNT()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmSetResetCntThr               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetResetCntThr                       */
+/* ======================================================================== */
 #define CORE_TEST_POS_FSMSETRESETCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_core_setGetResetCntThr)
 
@@ -350,9 +352,9 @@ extern "C" {
     CORE_TEST_POS_FSMSETRESETCNTTHR(); \
     CORE_TEST_NEG_FSMSETRESETCNTTHR()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - fsmGetResetCntThr                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetResetCntThr                       */
+/* ======================================================================== */
 #define CORE_TEST_NEG_FSMGETRESETCNTTHR() \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_threshold)
@@ -361,9 +363,9 @@ extern "C" {
 #define CORE_TEST_FSMGETRESETCNTTHR() \
     CORE_TEST_NEG_FSMGETRESETCNTTHR()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - fsmGetResetCnt                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetResetCnt                         */
+/* ======================================================================== */
 #define CORE_TEST_POS_FSMGETRESETCNT() \
     PLATFORM_RUN_TEST(test_pos_core_getClrResetCnt)
 
@@ -376,9 +378,9 @@ extern "C" {
     CORE_TEST_POS_FSMGETRESETCNT(); \
     CORE_TEST_NEG_FSMGETRESETCNT()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmClrResetCnt                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmClrResetCnt                         */
+/* ======================================================================== */
 #define CORE_TEST_NEG_FSMCLRRESETCNT() \
     PLATFORM_RUN_TEST(test_neg_core_fsmClrResetCnt_nullParam_pmicHandle)
 
@@ -386,9 +388,9 @@ extern "C" {
 #define CORE_TEST_FSMCLRRESETCNT() \
     CORE_TEST_NEG_FSMCLRRESETCNT()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - setCRC16Cfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: setCRC16Cfg                          */
+/* ======================================================================== */
 #define CORE_TEST_POS_SETCRC16CFG() \
     PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_enable); \
     PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_activateCalc); \
@@ -405,9 +407,9 @@ extern "C" {
     CORE_TEST_POS_SETCRC16CFG(); \
     CORE_TEST_NEG_SETCRC16CFG()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getCRC16Cfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: getCRC16Cfg                          */
+/* ======================================================================== */
 #define CORE_TEST_POS_GETCRC16CFG() \
     PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_enable); \
     PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_activateCalc); \
@@ -424,9 +426,9 @@ extern "C" {
     CORE_TEST_POS_GETCRC16CFG(); \
     CORE_TEST_NEG_GETCRC16CFG()
 
-/* =========================================================================== */
-/* API-Specific Test Macros - setCRC16Cfg, getCRC16Cfg, init, deinit, ioRxByte */
-/* =========================================================================== */
+/* ======================================================================== */
+/*       Test APIs: setCRC16Cfg, getCRC16Cfg, init, deinit, ioRxByte        */
+/* ======================================================================== */
 #define CORE_TEST_POS_SILICON() \
     PLATFORM_RUN_TEST(test_pos_core_silicon_A0_crc16_at_0x61); \
     PLATFORM_RUN_TEST(test_pos_core_silicon_B0_crc16_at_0x64); \

@@ -49,9 +49,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - gpioSetPinCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: gpioSetPinCfg                         */
+/* ======================================================================== */
 #define GPIO_TEST_POS_SETPINCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_configOutput); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_funcSdoSpi); \
@@ -82,9 +82,9 @@ extern "C" {
     GPIO_TEST_POS_SETPINCFG(); \
     GPIO_TEST_NEG_SETPINCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - gpioGetPinCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: gpioGetPinCfg                         */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETPINCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_getConfig); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio3_getConfig); \
@@ -103,9 +103,9 @@ extern "C" {
     GPIO_TEST_POS_GETPINCFG(); \
     GPIO_TEST_NEG_GETPINCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - gpioSetPinVal                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: gpioSetPinVal                         */
+/* ======================================================================== */
 #define GPIO_TEST_POS_SETPINVAL() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_setHigh); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_setLow); \
@@ -121,9 +121,9 @@ extern "C" {
     GPIO_TEST_POS_SETPINVAL(); \
     GPIO_TEST_NEG_SETPINVAL()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - gpioGetPinVal                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: gpioGetPinVal                         */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETPINVAL() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_getValue); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioGetPinVal_allPins_getValue); \
@@ -139,9 +139,9 @@ extern "C" {
     GPIO_TEST_POS_GETPINVAL(); \
     GPIO_TEST_NEG_GETPINVAL()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioSetNIntEnDrvCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: gpioSetNIntEnDrvCfg                      */
+/* ======================================================================== */
 #define GPIO_TEST_POS_SETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_configNInt); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_configEnDrv); \
@@ -158,9 +158,9 @@ extern "C" {
     GPIO_TEST_POS_SETNINTENDDRVCFG(); \
     GPIO_TEST_NEG_SETNINTENDDRVCFG()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioGetNIntEnDrvCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: gpioGetNIntEnDrvCfg                      */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_getConfig); \
     PLATFORM_RUN_TEST(test_pos_gpio_getNIntEnDrvCfg_enPuResistor)
@@ -175,9 +175,9 @@ extern "C" {
     GPIO_TEST_POS_GETNINTENDDRVCFG(); \
     GPIO_TEST_NEG_GETNINTENDDRVCFG()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioGetNIntEnDrvVal                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: gpioGetNIntEnDrvVal                      */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETNINTENDRVVAL() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_getValue)
 
@@ -190,9 +190,9 @@ extern "C" {
     GPIO_TEST_POS_GETNINTENDRVVAL(); \
     GPIO_TEST_NEG_GETNINTENDRVVAL()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioSetEnPbVSenseCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: gpioSetEnPbVSenseCfg                      */
+/* ======================================================================== */
 #define GPIO_TEST_POS_SETENPBVSENSECFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_configEnable); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb); \
@@ -212,9 +212,9 @@ extern "C" {
     GPIO_TEST_POS_SETENPBVSENSECFG(); \
     GPIO_TEST_NEG_SETENPBVSENSECFG()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioGetEnPbVSenseCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: gpioGetEnPbVSenseCfg                      */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETENPBVSENSECFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig); \
     PLATFORM_RUN_TEST(test_pos_gpio_getEnPbDegl)
@@ -229,9 +229,9 @@ extern "C" {
     GPIO_TEST_POS_GETENPBVSENSECFG(); \
     GPIO_TEST_NEG_GETENPBVSENSECFG()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioGetEnPbVSenseStatus              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                    Test APIs: gpioGetEnPbVSenseStatus                    */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETENPBVSENSESTATUS() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_getStatus)
 
@@ -245,9 +245,9 @@ extern "C" {
     GPIO_TEST_POS_GETENPBVSENSESTATUS(); \
     GPIO_TEST_NEG_GETENPBVSENSESTATUS()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioGetNRstOutVal                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: gpioGetNRstOutVal                       */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GETNRSTOUTVAL() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioGetNRstOutVal_getValue)
 

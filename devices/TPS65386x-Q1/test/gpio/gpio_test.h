@@ -51,9 +51,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - gpioSetCfg, Pmic_gpioGetCfg            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                  Test APIs: gpioSetCfg, Pmic_gpioGetCfg                  */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOSETCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpi1_esmIn); \
@@ -110,9 +110,9 @@ extern "C" {
     GPIO_TEST_POS_GPIOSETCFG(); \
     GPIO_TEST_NEG_GPIOSETCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - gpioGetCfg                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: gpioGetCfg                           */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOGETCFG() \
     /* Positive tests combined with gpioSetCfg */
@@ -127,9 +127,9 @@ extern "C" {
     GPIO_TEST_POS_GPIOGETCFG(); \
     GPIO_TEST_NEG_GPIOGETCFG()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - gpioGetOutputValue                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: gpioGetOutputValue                       */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOGETOUTPUTVALUE() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioGetOutputValue_allGpos)
@@ -144,9 +144,9 @@ extern "C" {
     GPIO_TEST_POS_GPIOGETOUTPUTVALUE(); \
     GPIO_TEST_NEG_GPIOGETOUTPUTVALUE()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - gpioSetSafeOutCfg                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: gpioSetSafeOutCfg                       */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOSETSAFEOUTCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOutSetGet); \
@@ -161,9 +161,9 @@ extern "C" {
     GPIO_TEST_POS_GPIOSETSAFEOUTCFG(); \
     GPIO_TEST_NEG_GPIOSETSAFEOUTCFG()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - gpioGetSafeOutCfg                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: gpioGetSafeOutCfg                       */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOGETSAFEOUTCFG() \
     /* Positive tests combined with gpioSetSafeOutCfg */

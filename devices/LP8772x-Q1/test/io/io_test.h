@@ -49,9 +49,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioCrcDisable                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: ioCrcDisable                          */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOCRCDISABLE() \
     PLATFORM_RUN_TEST(test_pos_io_enableDisableCrc)
@@ -64,9 +64,9 @@ extern "C" {
     IO_TEST_POS_IOCRCDISABLE(); \
     IO_TEST_NEG_IOCRCDISABLE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioCrcEnable                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: ioCrcEnable                          */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOCRCENABLE() \
     PLATFORM_RUN_TEST(test_pos_io_enableDisableCrc)
@@ -79,9 +79,9 @@ extern "C" {
     IO_TEST_POS_IOCRCENABLE(); \
     IO_TEST_NEG_IOCRCENABLE()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - ioGetCrcEnableState                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioGetCrcEnableState                      */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOGETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_io_setGetCrcEnableState)
@@ -95,9 +95,9 @@ extern "C" {
     IO_TEST_POS_IOGETCRCENABLESTATE(); \
     IO_TEST_NEG_IOGETCRCENABLESTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioRxByte                        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: ioRxByte                            */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IORXBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
@@ -117,9 +117,9 @@ extern "C" {
     IO_TEST_POS_IORXBYTE(); \
     IO_TEST_NEG_IORXBYTE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - ioRxByte_CS                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: ioRxByte_CS                          */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IORXBYTE_CS() \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4)
@@ -133,9 +133,9 @@ extern "C" {
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_NEG_IORXBYTE_CS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - ioSetCrcEnableState                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioSetCrcEnableState                      */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOSETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_io_setCrcStateErrorHandling); \
@@ -149,9 +149,9 @@ extern "C" {
     IO_TEST_POS_IOSETCRCENABLESTATE(); \
     IO_TEST_NEG_IOSETCRCENABLESTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - ioTxByte                        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: ioTxByte                            */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_crcEnableDisableTransitions); \
@@ -171,9 +171,9 @@ extern "C" {
     IO_TEST_POS_IOTXBYTE(); \
     IO_TEST_NEG_IOTXBYTE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - ioTxByte_CS                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: ioTxByte_CS                          */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOTXBYTE_CS() \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4)
@@ -186,9 +186,9 @@ extern "C" {
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_NEG_IOTXBYTE_CS()
 
-/* ================================================================================== */
-/* API-Specific Test Macros - ioRxByte, ioUpdateByte, ioUpdateByte_b, ioUpdateByte_CS */
-/* ================================================================================== */
+/* ======================================================================== */
+/*    Test APIs: ioRxByte, ioUpdateByte, ioUpdateByte_b, ioUpdateByte_CS    */
+/* ======================================================================== */
 
 #define IO_TEST_POS_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_updateByte_basic); \

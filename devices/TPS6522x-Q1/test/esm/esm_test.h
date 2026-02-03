@@ -39,9 +39,9 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - esmSetEnableState, esmGetEnableState   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*             Test APIs: esmSetEnableState, esmGetEnableState              */
+/* ======================================================================== */
 #define ESM_TEST_POS_SETENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_esm_setGetEnableState)
 
@@ -55,9 +55,9 @@
     ESM_TEST_POS_SETENABLESTATE(); \
     ESM_TEST_NEG_SETENABLESTATE()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - esmSetStartState, esmGetStartState     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*              Test APIs: esmSetStartState, esmGetStartState               */
+/* ======================================================================== */
 #define ESM_TEST_POS_SETSTARTSTATE() \
     PLATFORM_RUN_TEST(test_pos_esm_setGetStartState)
 
@@ -71,9 +71,9 @@
     ESM_TEST_POS_SETSTARTSTATE(); \
     ESM_TEST_NEG_SETSTARTSTATE()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - esmSetCfg, esmGetCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: esmSetCfg, esmGetCfg                      */
+/* ======================================================================== */
 #define ESM_TEST_POS_SETCFG() \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_mode); \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_errCntThr); \
@@ -103,9 +103,9 @@
     ESM_TEST_POS_SETCFG(); \
     ESM_TEST_NEG_SETCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - esmGetErrCnt                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: esmGetErrCnt                          */
+/* ======================================================================== */
 #define ESM_TEST_POS_GETERRCNT() \
     PLATFORM_RUN_TEST(test_pos_esm_getErrCnt)
 

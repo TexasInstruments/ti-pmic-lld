@@ -52,9 +52,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - setScratchPadValue               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: setScratchPadValue                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_scratchPad_setGet)
@@ -68,9 +68,9 @@ extern "C" {
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - getScratchPadValue               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getScratchPadValue                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETSCRATCHPADVALUE() \
     /* Positive tests for getScratchPadValue are combined with setScratchPadValue tests */
@@ -85,9 +85,9 @@ extern "C" {
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - setRegLockState                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: setRegLockState                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_regLock_setGet)
@@ -100,9 +100,9 @@ extern "C" {
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - getRegLockState                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: getRegLockState                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETREGLOCKSTATE() \
     /* Positive tests for getRegLockState are combined with setRegLockState tests */
@@ -116,9 +116,9 @@ extern "C" {
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - setCntLockState                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: setCntLockState                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETCNTLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_cntLock_setGet)
@@ -132,9 +132,9 @@ extern "C" {
     CORE_TEST_POS_SETCNTLOCKSTATE(); \
     CORE_TEST_NEG_SETCNTLOCKSTATE()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - getCntLockState                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: getCntLockState                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETCNTLOCKSTATE() \
     /* Positive tests for getCntLockState are combined with setCntLockState tests */
@@ -148,9 +148,9 @@ extern "C" {
     CORE_TEST_POS_GETCNTLOCKSTATE(); \
     CORE_TEST_NEG_GETCNTLOCKSTATE()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - setLockCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: setLockCfg                           */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETLOCKCFG() \
     PLATFORM_RUN_TEST(test_pos_core_lockCfg_setGet)
@@ -164,9 +164,9 @@ extern "C" {
     CORE_TEST_POS_SETLOCKCFG(); \
     CORE_TEST_NEG_SETLOCKCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - getLockCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: getLockCfg                           */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETLOCKCFG() \
     /* Positive tests for getLockCfg are combined with setLockCfg tests */
@@ -180,9 +180,9 @@ extern "C" {
     CORE_TEST_POS_GETLOCKCFG(); \
     CORE_TEST_NEG_GETLOCKCFG()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getNvmRev                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: getNvmRev                           */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETNVMREV() \
     PLATFORM_RUN_TEST(test_pos_core_deviceId_revision)
@@ -196,9 +196,9 @@ extern "C" {
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_NEG_GETNVMREV()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getSiliconRev                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: getSiliconRev                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETSILICONREV() \
     /* Positive tests for getSiliconRev are combined with getNvmRev tests */
@@ -212,9 +212,9 @@ extern "C" {
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - getCommonStat                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: getCommonStat                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETCOMMONSTAT() \
     PLATFORM_RUN_TEST(test_pos_core_commonStat_get)
@@ -228,9 +228,9 @@ extern "C" {
     CORE_TEST_POS_GETCOMMONSTAT(); \
     CORE_TEST_NEG_GETCOMMONSTAT()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - diagSetOutCtrlCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: diagSetOutCtrlCfg                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETOUTCTRLCFG() \
     PLATFORM_RUN_TEST(test_pos_core_diagOutCtrl_setGet)
@@ -243,9 +243,9 @@ extern "C" {
     CORE_TEST_POS_DIAGSETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGSETOUTCTRLCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - diagGetOutCtrlCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: diagGetOutCtrlCfg                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETOUTCTRLCFG() \
     /* Positive tests for diagGetOutCtrlCfg are combined with diagSetOutCtrlCfg tests */
@@ -259,9 +259,9 @@ extern "C" {
     CORE_TEST_POS_DIAGGETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGGETOUTCTRLCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - diagSetAmuxCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: diagSetAmuxCfg                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETAMUXCFG() \
     PLATFORM_RUN_TEST(test_pos_core_diagAMUX_setGet)
@@ -275,9 +275,9 @@ extern "C" {
     CORE_TEST_POS_DIAGSETAMUXCFG(); \
     CORE_TEST_NEG_DIAGSETAMUXCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - diagGetAmuxCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: diagGetAmuxCfg                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETAMUXCFG() \
     /* Positive tests for diagGetAmuxCfg are combined with diagSetAmuxCfg tests */
@@ -291,9 +291,9 @@ extern "C" {
     CORE_TEST_POS_DIAGGETAMUXCFG(); \
     CORE_TEST_NEG_DIAGGETAMUXCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - diagSetDmuxCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: diagSetDmuxCfg                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETDMUXCFG() \
     PLATFORM_RUN_TEST(test_pos_core_diagDMUX_setGet)
@@ -307,9 +307,9 @@ extern "C" {
     CORE_TEST_POS_DIAGSETDMUXCFG(); \
     CORE_TEST_NEG_DIAGSETDMUXCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - diagGetDmuxCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: diagGetDmuxCfg                         */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETDMUXCFG() \
     /* Positive tests for diagGetDmuxCfg are combined with diagSetDmuxCfg tests */

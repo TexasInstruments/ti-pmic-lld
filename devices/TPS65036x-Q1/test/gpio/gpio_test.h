@@ -53,9 +53,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioSetCfg, gpioGetCfg               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                    Test APIs: gpioSetCfg, gpioGetCfg                     */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GPIOSETGETCFG_GPIO() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_functionality); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_gpio_polarity); \
@@ -72,9 +72,9 @@ extern "C" {
     GPIO_TEST_NEG_GPIOSETGETCFG_GPIO(); \
     GPIO_TEST_POS_GPIOSETGETCFG_GPIO()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioSetCfg, gpioGetCfg               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                    Test APIs: gpioSetCfg, gpioGetCfg                     */
+/* ======================================================================== */
 
 #define GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality); \
@@ -96,9 +96,9 @@ extern "C" {
     GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI(); \
     GPIO_TEST_POS_GPIOSETGETCFG_NINTGPI()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - gpioSetCfg, gpioGetCfg               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                    Test APIs: gpioSetCfg, gpioGetCfg                     */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GPIOSETGETCFG_COMMON() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpio_nIntGpi_repeatedFunctionality)
 
@@ -117,9 +117,10 @@ extern "C" {
     GPIO_TEST_NEG_GPIOSETGETCFG_COMMON(); \
     GPIO_TEST_POS_GPIOSETGETCFG_COMMON()
 
-/* ======================================================================================================= */
-/* API-Specific Test Macros - gpioActivate, gpioDeactivate, gpioSetActivationState, gpioGetActivationState */
-/* ======================================================================================================= */
+/* ======================================================================== */
+/*     Test APIs: gpioActivate, gpioDeactivate, gpioSetActivationState,     */
+/*                gpioGetActivationState                                    */
+/* ======================================================================== */
 #define GPIO_TEST_POS_GPIOACTIVATION() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioActivateDeactivate); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetActivationState)

@@ -49,9 +49,10 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ==================================================================================================== */
-/* API-Specific Test Macros - configCrcCalculate, getConfigCrcStatus, configCrcEnable, configCrcDisable */
-/* ==================================================================================================== */
+/* ======================================================================== */
+/*   Test APIs: configCrcCalculate, getConfigCrcStatus, configCrcEnable,    */
+/*              configCrcDisable                                            */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCCALCULATE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
@@ -65,9 +66,9 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCCALCULATE(); \
     CORE_TEST_NEG_CONFIGCRCCALCULATE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - configCrcDisable                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: configCrcDisable                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCDISABLE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcDisable_disable)
@@ -80,9 +81,9 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE()
 
-/* ================================================================================ */
-/* API-Specific Test Macros - configCrcEnable, configCrcDisable, getConfigCrcStatus */
-/* ================================================================================ */
+/* ======================================================================== */
+/*     Test APIs: configCrcEnable, configCrcDisable, getConfigCrcStatus     */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCENABLE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly)
@@ -99,9 +100,9 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCENABLE(); \
     CORE_TEST_NEG_CONFIGCRCENABLE()
 
-/* ========================================================================== */
-/*           API-Specific Test Macros - configCrcGetFromDevice                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                    Test APIs: configCrcGetFromDevice                     */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCGETFROMDEVICE() \
     PLATFORM_RUN_TEST(test_pos_core_configCrcGetFromDevice_getCrc)
@@ -115,9 +116,9 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
     CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - getConfigCrcStatus                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getConfigCrcStatus                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
     /* Positive tests combined with other CRC tests */
@@ -131,9 +132,9 @@ extern "C" {
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - getRegLockState                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: getRegLockState                        */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETREGLOCKSTATE() \
     /* Positive tests combined with setRegLockState */
@@ -147,9 +148,9 @@ extern "C" {
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - getScratchPadValue                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getScratchPadValue                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_GETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_reg1to4)
@@ -164,9 +165,9 @@ extern "C" {
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - init                                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                             Test APIs: init                              */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_INIT() \
     /* Positive init tests in main setup */
@@ -179,9 +180,9 @@ extern "C" {
     CORE_TEST_POS_INIT(); \
     CORE_TEST_NEG_INIT()
 
-/* ========================================================================== */
-/*         API-Specific Test Macros - setRegLockState, getRegLockState        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*               Test APIs: setRegLockState, getRegLockState                */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_setRegLockState_enableDisable)
@@ -194,9 +195,9 @@ extern "C" {
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - setScratchPadValue                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: setScratchPadValue                       */
+/* ======================================================================== */
 
 #define CORE_TEST_POS_SETSCRATCHPADVALUE() \
     /* Positive tests combined with getScratchPadValue */

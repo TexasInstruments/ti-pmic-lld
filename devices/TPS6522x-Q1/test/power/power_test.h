@@ -43,9 +43,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - pwrSetBuckCfg, pwrGetBuckCfg           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                 Test APIs: pwrSetBuckCfg, pwrGetBuckCfg                  */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGETBUCKCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_nullHandle); \
@@ -77,9 +77,9 @@ extern "C" {
     POWER_TEST_NEG_SETGETBUCKCFG(); \
     POWER_TEST_POS_SETGETBUCKCFG()
 
-/* ========================================================================== */
-/*         API-Specific Test Macros - pwrSetLdoCfg, pwrGetLdoCfg              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                  Test APIs: pwrSetLdoCfg, pwrGetLdoCfg                   */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGETLDOCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_nullHandle); \
@@ -107,9 +107,9 @@ extern "C" {
     POWER_TEST_NEG_SETGETLDOCFG(); \
     POWER_TEST_POS_SETGETLDOCFG()
 
-/* ========================================================================== */
-/*      API-Specific Test Macros - pwrSetVccaVmonCfg, pwrGetVccaVmonCfg       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*             Test APIs: pwrSetVccaVmonCfg, pwrGetVccaVmonCfg              */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGETVCCAVMONCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_nullHandle); \
@@ -141,9 +141,9 @@ extern "C" {
     POWER_TEST_NEG_SETGETVCCAVMONCFG(); \
     POWER_TEST_POS_SETGETVCCAVMONCFG()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - pwrSetGlobalVmonDegl                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: pwrSetGlobalVmonDegl                      */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGLOBALVMONDEGL() \
     PLATFORM_RUN_TEST(test_neg_power_setGlobalVmonDegl_nullHandle); \
@@ -157,9 +157,9 @@ extern "C" {
     POWER_TEST_NEG_SETGLOBALVMONDEGL(); \
     POWER_TEST_POS_SETGLOBALVMONDEGL()
 
-/* ========================================================================== */
-/*       API-Specific Test Macros - pwrSetThermalCfg, pwrGetThermalCfg        */
-/* ========================================================================== */
+/* ======================================================================== */
+/*              Test APIs: pwrSetThermalCfg, pwrGetThermalCfg               */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGETTHERMALCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setThermalCfg_nullHandle); \
@@ -181,9 +181,9 @@ extern "C" {
     POWER_TEST_NEG_SETGETTHERMALCFG(); \
     POWER_TEST_POS_SETGETTHERMALCFG()
 
-/* ============================================================================ */
-/* API-Specific Test Macros - pwrSetSpreadSpectrumCfg, pwrGetSpreadSpectrumCfg */
-/* ============================================================================ */
+/* ======================================================================== */
+/*       Test APIs: pwrSetSpreadSpectrumCfg, pwrGetSpreadSpectrumCfg        */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG() \
     PLATFORM_RUN_TEST(test_neg_power_setSpreadSpectrumCfg_nullHandle); \
@@ -203,9 +203,9 @@ extern "C" {
     POWER_TEST_NEG_SETGETSPREADSPECTRUMCFG(); \
     POWER_TEST_POS_SETGETSPREADSPECTRUMCFG()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - Pmic_pwrGetRsrcStatus                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: Pmic_pwrGetRsrcStatus                     */
+/* ======================================================================== */
 
 #define POWER_TEST_NEG_GETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_nullHandle); \

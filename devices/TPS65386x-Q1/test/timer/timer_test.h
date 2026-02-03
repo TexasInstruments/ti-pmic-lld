@@ -53,9 +53,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                    API-Specific Test Macros - timerSetCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: timerSetCfg                          */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERSETCFG() \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale64us); \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescale16ms); \
@@ -81,9 +81,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERSETCFG(); \
     TIMER_TEST_NEG_TIMERSETCFG()
 
-/* ========================================================================== */
-/*                    API-Specific Test Macros - timerGetCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: timerGetCfg                          */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERGETCFG() \
     /* Positive tests for timerGetCfg are combined with timerSetCfg tests */
 
@@ -97,9 +97,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERGETCFG(); \
     TIMER_TEST_NEG_TIMERGETCFG()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - timerSetCnt                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: timerSetCnt                          */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERSETCNT() \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_minValueVerify); \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCnt_maxValueVerify); \
@@ -117,9 +117,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERSETCNT(); \
     TIMER_TEST_NEG_TIMERSETCNT()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - timerGetCnt                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: timerGetCnt                          */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERGETCNT() \
     /* Positive tests for timerGetCnt are combined with timerSetCnt tests */
 
@@ -132,9 +132,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERGETCNT(); \
     TIMER_TEST_NEG_TIMERGETCNT()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - timerClr                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: timerClr                            */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERCLR() \
     PLATFORM_RUN_TEST(test_pos_timer_timerClr_resetCounter); \
     PLATFORM_RUN_TEST(test_pos_timer_timerClr_verifyZero); \
@@ -148,9 +148,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERCLR(); \
     TIMER_TEST_NEG_TIMERCLR()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - timerStop                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: timerStop                           */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERSTOP() \
     PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode1); \
     PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode2); \
@@ -167,9 +167,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERSTOP(); \
     TIMER_TEST_NEG_TIMERSTOP()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - timerSetWakeupValue              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: timerSetWakeupValue                      */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERSETWAKEUPVALUE() \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_minValueVerify); \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetWakeupValue_maxValueVerify); \
@@ -187,9 +187,9 @@ extern "C" {
     TIMER_TEST_POS_TIMERSETWAKEUPVALUE(); \
     TIMER_TEST_NEG_TIMERSETWAKEUPVALUE()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - timerGetWakeupValue              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: timerGetWakeupValue                      */
+/* ======================================================================== */
 #define TIMER_TEST_POS_TIMERGETWAKEUPVALUE() \
     /* Positive tests for timerGetWakeupValue are combined with timerSetWakeupValue tests */
 

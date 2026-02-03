@@ -53,9 +53,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*  API-Specific Test Macros - ioTxByte, ioTxByte_CS, ioRxByte, ioRxByte_CS   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*         Test APIs: ioTxByte, ioTxByte_CS, ioRxByte, ioRxByte_CS          */
+/* ======================================================================== */
 #define IO_TEST_POS_IOTXRXBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_ioRxByte_writeReadScratchpadReg1To4); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_CS_ioRxByte_CS_writeReadScratchpadReg1To4)
@@ -73,9 +73,10 @@ extern "C" {
     IO_TEST_NEG_IOTXRXBYTE(); \
     IO_TEST_POS_IOTXRXBYTE()
 
-/* =============================================================================================== */
-/* API-Specific Test Macros - Pmic_ioUpdateByte, ioUpdateByte_CS, ioUpdateByte_b, ioUpdateByte_bCS */
-/* =============================================================================================== */
+/* ======================================================================== */
+/*      Test APIs: Pmic_ioUpdateByte, ioUpdateByte_CS, ioUpdateByte_b,      */
+/*                 ioUpdateByte_bCS                                         */
+/* ======================================================================== */
 #define IO_TEST_POS_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_modifyBitFields); \
     PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_CS_modifyBitFields); \
@@ -93,9 +94,11 @@ extern "C" {
     IO_TEST_NEG_IOUPDATEBYTE(); \
     IO_TEST_POS_IOUPDATEBYTE()
 
-/* ========================================================================================================================================================== */
-/* API-Specific Test Macros - ioSetCrcEnableState, ioGetCrcEnableState, ioTxByte, ioTxByte_CS, ioRxByte, ioRxByte_CS, ioUpdateByte, ioCrcEnable, ioCrcDisable */
-/* ========================================================================================================================================================== */
+/* ======================================================================== */
+/*      Test APIs: ioSetCrcEnableState, ioGetCrcEnableState, ioTxByte,      */
+/*                 ioTxByte_CS, ioRxByte, ioRxByte_CS, ioUpdateByte,        */
+/*                 ioCrcEnable, ioCrcDisable                                */
+/* ======================================================================== */
 #define IO_TEST_POS_CRC() \
     PLATFORM_RUN_TEST(test_pos_io_setGetCrcEnableState); \
     PLATFORM_RUN_TEST(test_pos_io_enableDisableCrc); \
@@ -115,9 +118,9 @@ extern "C" {
     IO_TEST_NEG_CRC(); \
     IO_TEST_POS_CRC()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - ioTxByte, ioRxByte                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioTxByte, ioRxByte                       */
+/* ======================================================================== */
 #define IO_TEST_POS_REVISION() \
     PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_A0_revisionMapping); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxRxByte_B0_revisionMapping); \
@@ -130,9 +133,9 @@ extern "C" {
     IO_TEST_NEG_REVISION(); \
     IO_TEST_POS_REVISION()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - ioTxByte, ioRxByte               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioTxByte, ioRxByte                       */
+/* ======================================================================== */
 #define IO_TEST_POS_RETRY() \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_withRetryOnFailure); \
@@ -149,9 +152,9 @@ extern "C" {
     IO_TEST_NEG_RETRY(); \
     IO_TEST_POS_RETRY()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - ioTxByte, ioRxByte                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: ioTxByte, ioRxByte                       */
+/* ======================================================================== */
 #define IO_TEST_POS_COVERAGE()
 
 #define IO_TEST_NEG_COVERAGE() \

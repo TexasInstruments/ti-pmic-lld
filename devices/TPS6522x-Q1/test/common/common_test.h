@@ -52,9 +52,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ============================================================================= */
-/*     API-Specific Test Macros - criticalSectionStart, criticalSectionStop      */
-/* ============================================================================= */
+/* ======================================================================== */
+/*           Test APIs: criticalSectionStart, criticalSectionStop           */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_CRITICALSECTIONSTART() \
     PLATFORM_RUN_TEST(test_pos_common_criticalSection_communication); \
@@ -69,9 +69,9 @@ extern "C" {
     COMMON_TEST_POS_CRITICALSECTIONSTART(); \
     COMMON_TEST_NEG_CRITICALSECTIONSTART()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - timerWaitMs                            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: timerWaitMs                          */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_TIMERWAITMS() \
     PLATFORM_RUN_TEST(test_pos_common_timerWaitMs_validCall)
@@ -85,9 +85,9 @@ extern "C" {
     COMMON_TEST_POS_TIMERWAITMS(); \
     COMMON_TEST_NEG_TIMERWAITMS()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - logStatus                              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: logStatus                           */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_LOGSTATUS() \
     PLATFORM_RUN_TEST(test_pos_common_logStatus_success); \
@@ -112,9 +112,9 @@ extern "C" {
     COMMON_TEST_POS_LOGSTATUS(); \
     COMMON_TEST_NEG_LOGSTATUS()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - getDiagnostic, getDiagnostics          */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                 Test APIs: getDiagnostic, getDiagnostics                 */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_GETDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_pos_common_getDiagnostic_errorCnt); \
@@ -151,9 +151,9 @@ extern "C" {
     COMMON_TEST_POS_GETDIAGNOSTIC(); \
     COMMON_TEST_NEG_GETDIAGNOSTIC()
 
-/* =========================================================================== */
-/* API-Specific Test Macros - clrDiagnostic, clrDiagnostics, clrDiagnosticsAll */
-/* =========================================================================== */
+/* ======================================================================== */
+/*       Test APIs: clrDiagnostic, clrDiagnostics, clrDiagnosticsAll        */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_CLRDIAGNOSTIC() \
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostic_errorCnt); \
@@ -193,9 +193,9 @@ extern "C" {
     COMMON_TEST_POS_CLRDIAGNOSTIC(); \
     COMMON_TEST_NEG_CLRDIAGNOSTIC()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - getRetryCnt                            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: getRetryCnt                          */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_GETRETRYCNT() \
     PLATFORM_RUN_TEST(test_pos_common_getRetryCnt_initialZero)
@@ -209,9 +209,9 @@ extern "C" {
     COMMON_TEST_POS_GETRETRYCNT(); \
     COMMON_TEST_NEG_GETRETRYCNT()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - incrementRetryCnt                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: incrementRetryCnt                       */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_INCREMENTRETRYCNT() \
     PLATFORM_RUN_TEST(test_pos_common_incrementRetryCnt_once); \
@@ -225,9 +225,9 @@ extern "C" {
     COMMON_TEST_POS_INCREMENTRETRYCNT(); \
     COMMON_TEST_NEG_INCREMENTRETRYCNT()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - clrRetryCnt                            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: clrRetryCnt                          */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_CLRRETRYCNT() \
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCnt_afterIncrement)
@@ -240,9 +240,9 @@ extern "C" {
     COMMON_TEST_POS_CLRRETRYCNT(); \
     COMMON_TEST_NEG_CLRRETRYCNT()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - getRetryCntOverflow                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getRetryCntOverflow                      */
+/* ======================================================================== */
 
 #define COMMON_TEST_NEG_GETRETRYCNTOVERFLOW() \
     PLATFORM_RUN_TEST(test_neg_common_getRetryCntOverflow_nullHandle); \
@@ -252,9 +252,9 @@ extern "C" {
 #define COMMON_TEST_GETRETRYCNTOVERFLOW() \
     COMMON_TEST_NEG_GETRETRYCNTOVERFLOW()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - clrRetryCntOverflow                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: clrRetryCntOverflow                      */
+/* ======================================================================== */
 
 #define COMMON_TEST_POS_CLRRETRYCNTOVERFLOW() \
     PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)

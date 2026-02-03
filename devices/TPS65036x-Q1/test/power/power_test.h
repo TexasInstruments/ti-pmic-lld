@@ -54,9 +54,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - pwrSetLdoCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrSetLdoCfg                          */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETLDOCFG() \
     PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_enable); \
     PLATFORM_RUN_TEST(test_pos_power_ldoSetGetCfg_mode); \
@@ -96,9 +96,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - pwrGetLdoCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrGetLdoCfg                          */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETLDOCFG()
     /* All positive tests covered by SET */
 
@@ -112,9 +112,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrSetBuckCfg                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrSetBuckCfg                         */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETBUCKCFG() \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck1); \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck2); \
@@ -300,9 +300,9 @@ extern "C" {
     POWER_TEST_NEG_PWRSETBUCKCFG(); \
     POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - pwrGetBuckCfg                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrGetBuckCfg                         */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRGETBUCKCFG() \
     PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ovpSel_buck1); \
@@ -346,9 +346,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETBUCKCFG(); \
     POWER_TEST_NEG_PWRGETBUCKCFG()
 
-/* ========================================================================== */
-/* API-Specific Test Macros - pwrSetTsdCfg, pwrGetTsdCfg, pwrGetTsdImmStatus  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*        Test APIs: pwrSetTsdCfg, pwrGetTsdCfg, pwrGetTsdImmStatus         */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETTSDCFG() \
     PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_twarnStayInSafeState); \
     PLATFORM_RUN_TEST(test_pos_power_tsdSetGetCfg_tsdImmLevel); \
@@ -367,9 +367,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETTSDCFG(); \
     POWER_TEST_NEG_PWRSETTSDCFG()
 
-/* ========================================================================== */
-/*        API-Specific Test Macros - pwrGetTsdCfg, pwrGetTsdImmStatus         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*               Test APIs: pwrGetTsdCfg, pwrGetTsdImmStatus                */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETTSDCFG() /* All positive tests covered by SET */
 
 #define POWER_TEST_NEG_PWRGETTSDCFG() \
@@ -384,9 +384,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETTSDCFG(); \
     POWER_TEST_NEG_PWRGETTSDCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - pwrGetRsrcStatus                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetRsrcStatus                        */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck1); \
     PLATFORM_RUN_TEST(test_pos_power_rsrcGetStatus_buck2); \
@@ -403,9 +403,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - pwrSetBuckLdoSeqTrig               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: pwrSetBuckLdoSeqTrig                      */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG() \
     PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck1); \
     PLATFORM_RUN_TEST(test_pos_power_seqTrigSetGet_buck2); \
@@ -425,9 +425,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQTRIG()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - pwrGetBuckLdoSeqTrig               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: pwrGetBuckLdoSeqTrig                      */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG()  /* All positive tests covered by SET */
 
@@ -443,9 +443,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETBUCKLDOSEQTRIG(); \
     POWER_TEST_NEG_PWRGETBUCKLDOSEQTRIG()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - pwrSetBuckLdoSeqDly                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrSetBuckLdoSeqDly                      */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETBUCKLDOSEQDLY() \
     PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck1); \
     PLATFORM_RUN_TEST(test_pos_power_seqDlySetGet_buck2); \
@@ -466,9 +466,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETBUCKLDOSEQDLY(); \
     POWER_TEST_NEG_PWRSETBUCKLDOSEQDLY()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - pwrGetBuckLdoSeqDly                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrGetBuckLdoSeqDly                      */
+/* ======================================================================== */
 
 #define POWER_TEST_POS_PWRGETBUCKLDOSEQDLY()  /* All positive tests covered by SET */
 

@@ -49,9 +49,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - getSiliconRev                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: getSiliconRev                         */
+/* ======================================================================== */
 #define CORE_TEST_POS_COREGETSILREV() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetSilRev)
 
@@ -64,9 +64,9 @@ extern "C" {
     CORE_TEST_POS_COREGETSILREV(); \
     CORE_TEST_NEG_COREGETSILREV()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - getNvmRev                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: getNvmRev                           */
+/* ======================================================================== */
 #define CORE_TEST_POS_COREGETNVMREV() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetNvmRev)
 
@@ -79,9 +79,9 @@ extern "C" {
     CORE_TEST_POS_COREGETNVMREV(); \
     CORE_TEST_NEG_COREGETNVMREV()
 
-/* ========================================================================== */
-/*           API-Specific Test Macros - getRegLockState                       */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: getRegLockState                        */
+/* ======================================================================== */
 #define CORE_TEST_POS_COREGETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetRegLockState)
 
@@ -94,9 +94,9 @@ extern "C" {
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_COREGETREGLOCKSTATE()
 
-/* ========================================================================== */
-/*           API-Specific Test Macros - setScratchPadValue                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: setScratchPadValue                       */
+/* ======================================================================== */
 #define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg1); \
     PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg3); \
@@ -111,9 +111,9 @@ extern "C" {
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - getScratchPadValue                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: getScratchPadValue                       */
+/* ======================================================================== */
 #define CORE_TEST_POS_COREGETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg2); \
     PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg4)

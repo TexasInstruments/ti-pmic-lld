@@ -37,9 +37,9 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ================================================================================ */
-/*                  API-Specific Test Macros - fsmSetTriggerCfg                     */
-/* ================================================================================ */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetTriggerCfg                        */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMSETTRIGGERCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetTriggerCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetTriggerCfg_nullCfg); \
@@ -64,9 +64,9 @@
     FSM_TEST_POS_FSMSETGETTRIGGERCFG(); \
     FSM_TEST_NEG_FSMSETTRIGGERCFG()
 
-/* ================================================================================ */
-/*                  API-Specific Test Macros - fsmGetTriggerCfg                     */
-/* ================================================================================ */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetTriggerCfg                        */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMGETTRIGGERCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_nullCfg); \
@@ -76,9 +76,9 @@
 #define FSM_TEST_FSMGETTRIGGERCFG() \
     FSM_TEST_NEG_FSMGETTRIGGERCFG()
 
-/* =============================================================================== */
-/*                 API-Specific Test Macros - fsmSetGpioTriggerCfg                 */
-/* =============================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: fsmSetGpioTriggerCfg                      */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMSETGPIOTRIGGERCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetGpioTriggerCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetGpioTriggerCfg_nullCfg); \
@@ -96,9 +96,9 @@
     FSM_TEST_POS_FSMSETGETGPIOTRIGGERCFG(); \
     FSM_TEST_NEG_FSMSETGPIOTRIGGERCFG()
 
-/* =============================================================================== */
-/*                 API-Specific Test Macros - fsmGetGpioTriggerCfg                 */
-/* =============================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: fsmGetGpioTriggerCfg                      */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMGETGPIOTRIGGERCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetGpioTriggerCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetGpioTriggerCfg_nullCfg); \
@@ -109,9 +109,9 @@
 #define FSM_TEST_FSMGETGPIOTRIGGERCFG() \
     FSM_TEST_NEG_FSMGETGPIOTRIGGERCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - fsmGetRecovCnt                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetRecovCnt                         */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMGETRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCnt_nullRecovCnt)
@@ -124,9 +124,9 @@
     FSM_TEST_POS_FSMGETRECOVCNT(); \
     FSM_TEST_NEG_FSMGETRECOVCNT()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmClrRecovCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmClrRecovCnt                         */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
 
@@ -134,9 +134,9 @@
 #define FSM_TEST_FSMCLRRECOVCNT() \
     FSM_TEST_NEG_FSMCLRRECOVCNT()
 
-/* ============================================================================= */
-/*                API-Specific Test Macros - fsmSetRecovCntThr                  */
-/* ============================================================================= */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetRecovCntThr                       */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMSETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetRecovCntThr_invalidValue)
@@ -149,9 +149,9 @@
     FSM_TEST_POS_FSMSETGETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMSETRECOVCNTTHR()
 
-/* ============================================================================= */
-/*                API-Specific Test Macros - fsmGetRecovCntThr                   */
-/* ============================================================================= */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetRecovCntThr                       */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMGETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
@@ -160,9 +160,9 @@
 #define FSM_TEST_FSMGETRECOVCNTTHR() \
     FSM_TEST_NEG_FSMGETRECOVCNTTHR()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmSendSoftRebootReq               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: fsmSendSoftRebootReq                      */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMSENDSOFTREBOOTREQ() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSendSoftRebootReq_nullHandle)
 
@@ -174,9 +174,9 @@
     FSM_TEST_POS_FSMSENDSOFTREBOOTREQ(); \
     FSM_TEST_NEG_FSMSENDSOFTREBOOTREQ()
 
-/* ================================================================================== */
-/*                  API-Specific Test Macros - fsmSetStartupDest                      */
-/* ================================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetStartupDest                       */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMSETSTARTUPDEST() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetStartupDest_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetStartupDest_invalidDest); \
@@ -191,9 +191,9 @@
     FSM_TEST_POS_FSMSETGETSTARTUPDEST(); \
     FSM_TEST_NEG_FSMSETSTARTUPDEST()
 
-/* ================================================================================== */
-/*                  API-Specific Test Macros - fsmGetStartupDest                      */
-/* ================================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetStartupDest                       */
+/* ======================================================================== */
 #define FSM_TEST_NEG_FSMGETSTARTUPDEST() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetStartupDest_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetStartupDest_nullDestination)

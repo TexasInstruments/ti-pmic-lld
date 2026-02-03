@@ -75,9 +75,9 @@ extern "C" {
 #define PMIC_CFG_WAKE1_LATCH_VALID_SHIFT PMIC_CFG_WAKE1_LATCH_VALID
 #define PMIC_CFG_WAKE2_LATCH_VALID_SHIFT PMIC_CFG_WAKE2_LATCH_VALID
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmSetDevState                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmSetDevState                         */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_validStates)
@@ -92,9 +92,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetDevState                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetDevState                         */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETDEVSTATE() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetDevState_validRange); \
@@ -113,9 +113,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETDEVSTATE(); \
     FSM_TEST_NEG_FSMGETDEVSTATE()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - fsmSetCfg                      */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: fsmSetCfg                           */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_stbyEn); \
@@ -146,9 +146,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETCFG(); \
     FSM_TEST_NEG_FSMSETCFG()
 
-/* ========================================================================== */
-/*                   API-Specific Test Macros - fsmGetCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: fsmGetCfg                           */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETCFG() \
     /* Positive tests for fsmGetCfg are combined with fsmSetCfg tests */ \
@@ -164,9 +164,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETCFG(); \
     FSM_TEST_NEG_FSMGETCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmSetDevErrCnt                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmSetDevErrCnt                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETDEVERRCNT() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevErrCnt_basic)
@@ -180,9 +180,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETDEVERRCNT(); \
     FSM_TEST_NEG_FSMSETDEVERRCNT()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - fsmGetDevErrCnt                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetDevErrCnt                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETDEVERRCNT() \
     /* Positive tests for fsmGetDevErrCnt are combined with fsmSetDevErrCnt tests */
@@ -196,9 +196,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETDEVERRCNT(); \
     FSM_TEST_NEG_FSMGETDEVERRCNT()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - fsmSetWakeupCfg                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmSetWakeupCfg                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETWAKEUPCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_basic); \
@@ -218,9 +218,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETWAKEUPCFG(); \
     FSM_TEST_NEG_FSMSETWAKEUPCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - fsmGetWakeupCfg                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: fsmGetWakeupCfg                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETWAKEUPCFG() \
     /* Positive tests for fsmGetWakeupCfg are combined with fsmSetWakeupCfg tests */ \
@@ -236,9 +236,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETWAKEUPCFG(); \
     FSM_TEST_NEG_FSMGETWAKEUPCFG()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetWakeStatus                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetWakeStatus                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETWAKESTATUS() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeStatus_basic)
@@ -252,9 +252,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETWAKESTATUS(); \
     FSM_TEST_NEG_FSMGETWAKESTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmSetPowerLatchCfg                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: fsmSetPowerLatchCfg                      */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETPOWERLATCHCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_basic); \
@@ -271,9 +271,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETPOWERLATCHCFG(); \
     FSM_TEST_NEG_FSMSETPOWERLATCHCFG()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetPowerLatchCfg                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: fsmGetPowerLatchCfg                      */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETPOWERLATCHCFG() \
     /* Positive tests for fsmGetPowerLatchCfg are combined with fsmSetPowerLatchCfg tests */ \
@@ -289,9 +289,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETPOWERLATCHCFG(); \
     FSM_TEST_NEG_FSMGETPOWERLATCHCFG()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmSetPowerLatch                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmSetPowerLatch                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETPOWERLATCH() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_basic)
@@ -306,9 +306,9 @@ extern "C" {
     FSM_TEST_POS_FSMSETPOWERLATCH(); \
     FSM_TEST_NEG_FSMSETPOWERLATCH()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - fsmGetPowerLatch                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: fsmGetPowerLatch                        */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETPOWERLATCH() \
     /* Positive tests for fsmGetPowerLatch are combined with fsmSetPowerLatch tests */ \
@@ -324,9 +324,9 @@ extern "C" {
     FSM_TEST_POS_FSMGETPOWERLATCH(); \
     FSM_TEST_NEG_FSMGETPOWERLATCH()
 
-/* ========================================================================== */
-/*        API-Specific Test Macros - fsmGetLastResetMcuStateDuration          */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                Test APIs: fsmGetLastResetMcuStateDuration                */
+/* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETLASTRESETMCUSTATEDURATION() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetLastResetMcuStateDuration_basic)

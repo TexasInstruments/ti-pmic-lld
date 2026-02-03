@@ -49,9 +49,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - pwrSetBuckBoostCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrSetBuckBoostCfg                       */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETBUCKBOOSTCFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_lvl); \
     PLATFORM_RUN_TEST(test_pos_power_setGetBuckBoostCfg_stbyLvl); \
@@ -77,9 +77,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETBUCKBOOSTCFG(); \
     POWER_TEST_NEG_PWRSETBUCKBOOSTCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - pwrGetBuckBoostCfg                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrGetBuckBoostCfg                       */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETBUCKBOOSTCFG() \
     /* Positive tests for pwrGetBuckBoostCfg are combined with pwrSetBuckBoostCfg tests */
 
@@ -93,9 +93,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETBUCKBOOSTCFG(); \
     POWER_TEST_NEG_PWRGETBUCKBOOSTCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - pwrSetLdoCfg                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrSetLdoCfg                          */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETLDOCFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_mode); \
     PLATFORM_RUN_TEST(test_pos_power_setGetLdoCfg_ldo1_lvl); \
@@ -173,9 +173,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrGetLdoCfg                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrGetLdoCfg                          */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETLDOCFG() \
     /* Positive tests for pwrGetLdoCfg are combined with pwrSetLdoCfg tests */
 
@@ -189,9 +189,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrSetPldoCfg                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrSetPldoCfg                         */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETPLDOCFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_mode); \
     PLATFORM_RUN_TEST(test_pos_power_setGetPldoCfg_pldo1_trackingMode); \
@@ -243,9 +243,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETPLDOCFG(); \
     POWER_TEST_NEG_PWRSETPLDOCFG()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - pwrGetPldoCfg                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: pwrGetPldoCfg                         */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETPLDOCFG() \
     PLATFORM_RUN_TEST(test_pos_power_pwrGetPldoCfg_redundantModeConversion)
 
@@ -259,9 +259,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETPLDOCFG(); \
     POWER_TEST_NEG_PWRGETPLDOCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrSetExtVmonCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrSetExtVmonCfg                        */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETEXTVMONCFG() \
     PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_mode); \
     PLATFORM_RUN_TEST(test_pos_power_setGetExtVmonCfg_vmon1_vmonThr); \
@@ -289,9 +289,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETEXTVMONCFG(); \
     POWER_TEST_NEG_PWRSETEXTVMONCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - pwrGetExtVmonCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetExtVmonCfg                        */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETEXTVMONCFG() \
     /* Positive tests for pwrGetExtVmonCfg are combined with pwrSetExtVmonCfg tests */
 
@@ -305,9 +305,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETEXTVMONCFG(); \
     POWER_TEST_NEG_PWRGETEXTVMONCFG()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrGetRsrcStatus                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetRsrcStatus                        */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_buckBoost); \
     PLATFORM_RUN_TEST(test_pos_power_getRsrcStatus_ldo1); \
@@ -357,9 +357,9 @@ extern "C" {
     POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - pwrClrRsrcStatus                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrClrRsrcStatus                        */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRCLRRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost); \
     PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatus_buckBoost_bbMode); \
@@ -394,9 +394,9 @@ extern "C" {
     POWER_TEST_POS_PWRCLRRSRCSTATUS(); \
     POWER_TEST_NEG_PWRCLRRSRCSTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - pwrClrRsrcStatusAll                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: pwrClrRsrcStatusAll                      */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRCLRRSRCSTATUSALL() \
     PLATFORM_RUN_TEST(test_pos_power_clrRsrcStatusAll)
 
@@ -408,9 +408,9 @@ extern "C" {
     POWER_TEST_POS_PWRCLRRSRCSTATUSALL(); \
     POWER_TEST_NEG_PWRCLRRSRCSTATUSALL()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - pwrSetPGoodInStby                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrSetPGoodInStby                       */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRSETPGOODINSTBY() \
     PLATFORM_RUN_TEST(test_pos_power_setGetPGoodInStby)
 
@@ -422,9 +422,9 @@ extern "C" {
     POWER_TEST_POS_PWRSETPGOODINSTBY(); \
     POWER_TEST_NEG_PWRSETPGOODINSTBY()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - pwrGetPGoodInStby              */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: pwrGetPGoodInStby                       */
+/* ======================================================================== */
 #define POWER_TEST_POS_PWRGETPGOODINSTBY() \
     /* Positive tests for pwrGetPGoodInStby are combined with pwrSetPGoodInStby tests */
 

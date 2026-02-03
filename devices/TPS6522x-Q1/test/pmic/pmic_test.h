@@ -49,9 +49,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - init                           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                             Test APIs: init                              */
+/* ======================================================================== */
 #define PMIC_TEST_POS_PMICINIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_validConfig); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_reinit); \
@@ -93,9 +93,9 @@ extern "C" {
     PMIC_TEST_POS_PMICINIT(); \
     PMIC_TEST_NEG_PMICINIT()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - deinit                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                            Test APIs: deinit                             */
+/* ======================================================================== */
 #define PMIC_TEST_POS_PMICDEINIT() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicDeinit_afterInit); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicDeinit_success_path)
@@ -108,9 +108,9 @@ extern "C" {
     PMIC_TEST_POS_PMICDEINIT(); \
     PMIC_TEST_NEG_PMICDEINIT()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - checkHandle                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                          Test APIs: checkHandle                          */
+/* ======================================================================== */
 #define PMIC_TEST_POS_PMICCHECKHANDLE() \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicCheckHandle_validHandle); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicCheckHandle_invalidHandle); \

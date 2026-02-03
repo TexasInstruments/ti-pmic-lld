@@ -49,9 +49,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - adcSetCfg                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: adcSetCfg                           */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCSETCFG() \
     PLATFORM_RUN_TEST(test_pos_adc_adcSetCfg_resistorDivider); \
     PLATFORM_RUN_TEST(test_pos_adc_adcSetCfg_continuousMode); \
@@ -71,9 +71,9 @@ extern "C" {
     ADC_TEST_POS_ADCSETCFG(); \
     ADC_TEST_NEG_ADCSETCFG()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - adcGetCfg                         */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: adcGetCfg                           */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCGETCFG() \
     PLATFORM_RUN_TEST(test_pos_adc_adcGetCfg_resistorDivider); \
     PLATFORM_RUN_TEST(test_pos_adc_adcGetCfg_continuousMode); \
@@ -88,9 +88,9 @@ extern "C" {
     ADC_TEST_POS_ADCGETCFG(); \
     ADC_TEST_NEG_ADCGETCFG()
 
-/* ========================================================================== */
-/*          API-Specific Test Macros - adcStartSingleConversion               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                   Test APIs: adcStartSingleConversion                    */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCSTARTSINGLECONVERSION() \
     PLATFORM_RUN_TEST(test_pos_adc_adcStartSingleConversion_success)
 
@@ -102,9 +102,9 @@ extern "C" {
     ADC_TEST_POS_ADCSTARTSINGLECONVERSION(); \
     ADC_TEST_NEG_ADCSTARTSINGLECONVERSION()
 
-/* ========================================================================== */
-/*      API-Specific Test Macros - adcStartSingleConversionBlocking           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*               Test APIs: adcStartSingleConversionBlocking                */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING() \
     PLATFORM_RUN_TEST(test_pos_adc_adcStartSingleConversionBlocking_success)
 
@@ -117,9 +117,9 @@ extern "C" {
     ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING(); \
     ADC_TEST_NEG_ADCSTARTSINGLECONVERSIONBLOCKING()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - adcGetStatus                     */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: adcGetStatus                          */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_adc_adcGetStatus_idle)
 
@@ -132,9 +132,9 @@ extern "C" {
     ADC_TEST_POS_ADCGETSTATUS(); \
     ADC_TEST_NEG_ADCGETSTATUS()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - adcGetResultCode                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: adcGetResultCode                        */
+/* ======================================================================== */
 #define ADC_TEST_POS_ADCGETRESULTCODE() \
     PLATFORM_RUN_TEST(test_pos_adc_adcGetResultCode_success)
 
@@ -147,9 +147,9 @@ extern "C" {
     ADC_TEST_POS_ADCGETRESULTCODE(); \
     ADC_TEST_NEG_ADCGETRESULTCODE()
 
-/* ======================================================================================== */
-/* API-Specific Test Macros - adcSetCfg, adcStartSingleConversionBlocking, adcGetResultCode */
-/* ======================================================================================== */
+/* ======================================================================== */
+/* Test APIs: adcSetCfg, adcStartSingleConversionBlocking, adcGetResultCode */
+/* ======================================================================== */
 #define ADC_TEST_POS_INTEGRATION() \
     PLATFORM_RUN_TEST(test_pos_adc_fullSequence_configStartPollRead); \
     PLATFORM_RUN_TEST(test_pos_adc_multipleConversions_independence)

@@ -53,9 +53,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - esmSetCfg, esmGetCfg                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                     Test APIs: esmSetCfg, esmGetCfg                      */
+/* ======================================================================== */
 #define ESM_TEST_POS_ESMSETGETCFG() \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_enable); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetGetCfg_mode_level); \
@@ -83,9 +83,9 @@ extern "C" {
     ESM_TEST_NEG_ESMSETGETCFG(); \
     ESM_TEST_POS_ESMSETGETCFG()
 
-/* ================================================================================ */
-/* API-Specific Test Macros - esmStart, esmStop, esmSetStartState, esmGetStartState */
-/* ================================================================================ */
+/* ======================================================================== */
+/*     Test APIs: esmStart, esmStop, esmSetStartState, esmGetStartState     */
+/* ======================================================================== */
 #define ESM_TEST_POS_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStart); \
@@ -104,9 +104,9 @@ extern "C" {
     ESM_TEST_NEG_ESMSTARTSTOP(); \
     ESM_TEST_POS_ESMSTARTSTOP()
 
-/* ========================================================================== */
-/*            API-Specific Test Macros - esmGetStatus, esmClrStatus           */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                  Test APIs: esmGetStatus, esmClrStatus                   */
+/* ======================================================================== */
 #define ESM_TEST_POS_ESMSTATUS() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetStatus); \
     PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus)
@@ -126,9 +126,9 @@ extern "C" {
     ESM_TEST_NEG_ESMSTATUS(); \
     ESM_TEST_POS_ESMSTATUS()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - esmGetErrCnt                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                         Test APIs: esmGetErrCnt                          */
+/* ======================================================================== */
 #define ESM_TEST_POS_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt)
 

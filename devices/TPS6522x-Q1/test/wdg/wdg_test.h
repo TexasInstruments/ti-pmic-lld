@@ -43,9 +43,9 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - wdgSetEnableState               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: wdgSetEnableState                       */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetEnableState_enableDisable)
@@ -58,9 +58,9 @@ extern "C" {
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_NEG_WDGSETENABLESTATE()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - wdgGetEnableState               */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: wdgGetEnableState                       */
+/* ======================================================================== */
 
 #define WDG_TEST_NEG_WDGGETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
@@ -70,9 +70,9 @@ extern "C" {
 #define WDG_TEST_WDGGETENABLESTATE() \
     WDG_TEST_NEG_WDGGETENABLESTATE()
 
-/* ========================================================================== */
-/*                     API-Specific Test Macros - wdgSetCfg                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: wdgSetCfg                           */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETCFG() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_rstEn); \
@@ -106,9 +106,9 @@ extern "C" {
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_NEG_WDGSETCFG()
 
-/* ========================================================================== */
-/*                     API-Specific Test Macros - wdgGetCfg                   */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                           Test APIs: wdgGetCfg                           */
+/* ======================================================================== */
 
 #define WDG_TEST_NEG_WDGGETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
@@ -118,9 +118,9 @@ extern "C" {
 #define WDG_TEST_WDGGETCFG() \
     WDG_TEST_NEG_WDGGETCFG()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - wdgSetPowerHold                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: wdgSetPowerHold                        */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_powerHold)
@@ -133,9 +133,9 @@ extern "C" {
     WDG_TEST_POS_WDGSETPOWERHOLD(); \
     WDG_TEST_NEG_WDGSETPOWERHOLD()
 
-/* ========================================================================== */
-/*                  API-Specific Test Macros - wdgGetPowerHold                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: wdgGetPowerHold                        */
+/* ======================================================================== */
 
 #define WDG_TEST_NEG_WDGGETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
@@ -145,9 +145,9 @@ extern "C" {
 #define WDG_TEST_WDGGETPOWERHOLD() \
     WDG_TEST_NEG_WDGGETPOWERHOLD()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - wdgSetReturnToLongWindow            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                   Test APIs: wdgSetReturnToLongWindow                    */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_returnToLongWindow)
@@ -160,9 +160,9 @@ extern "C" {
     WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
     WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW()
 
-/* ========================================================================== */
-/*             API-Specific Test Macros - wdgGetReturnToLongWindow            */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                   Test APIs: wdgGetReturnToLongWindow                    */
+/* ======================================================================== */
 
 #define WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
@@ -172,9 +172,9 @@ extern "C" {
 #define WDG_TEST_WDGGETRETURNTOLONGWINDOW() \
     WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
 
-/* ========================================================================== */
-/*                API-Specific Test Macros - wdgQaWriteAnswer                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                       Test APIs: wdgQaWriteAnswer                        */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGQAWRITEANSWER() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers); \
@@ -191,9 +191,9 @@ extern "C" {
     WDG_TEST_POS_WDGQAWRITEANSWER(); \
     WDG_TEST_NEG_WDGQAWRITEANSWER()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - wdgClrErrStatus                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: wdgClrErrStatus                        */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGCLRERRSTATUS() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_th1ErrorOnly); \
@@ -214,9 +214,9 @@ extern "C" {
     WDG_TEST_POS_WDGCLRERRSTATUS(); \
     WDG_TEST_NEG_WDGCLRERRSTATUS()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - wdgClrErrStatusAll                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: wdgClrErrStatusAll                       */
+/* ======================================================================== */
 
 #define WDG_TEST_NEG_WDGCLRERRSTATUSALL() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatusAll_nullHandle)
@@ -225,9 +225,9 @@ extern "C" {
 #define WDG_TEST_WDGCLRERRSTATUSALL() \
     WDG_TEST_NEG_WDGCLRERRSTATUSALL()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - wdgGetErrStatus                 */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: wdgGetErrStatus                        */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGGETERRSTATUS() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_errorStatusGetClear)
@@ -241,9 +241,9 @@ extern "C" {
     WDG_TEST_POS_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETERRSTATUS()
 
-/* ========================================================================== */
-/*              API-Specific Test Macros - wdgGetFailCntStatus                */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                      Test APIs: wdgGetFailCntStatus                      */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGGETFAILCNTSTATUS() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetFailCntStatus_failCounterStatus); \
@@ -259,9 +259,9 @@ extern "C" {
     WDG_TEST_POS_WDGGETFAILCNTSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
 
-/* ========================================================================== */
-/*               API-Specific Test Macros - Pmic_wdgSetCfg                    */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: Pmic_wdgSetCfg                         */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETENDRVSEL() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel)
@@ -270,9 +270,9 @@ extern "C" {
 #define WDG_TEST_WDGSETENDRVSEL() \
     WDG_TEST_POS_WDGSETENDRVSEL()
 
-/* ========================================================================== */
-/*                 API-Specific Test Macros - Pmic_wdgGetCfg                  */
-/* ========================================================================== */
+/* ======================================================================== */
+/*                        Test APIs: Pmic_wdgGetCfg                         */
+/* ======================================================================== */
 
 #define WDG_TEST_POS_WDGGETENDRVSEL() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel)
