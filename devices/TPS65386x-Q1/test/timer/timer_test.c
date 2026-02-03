@@ -291,6 +291,10 @@ void test_pos_timer_timerSetCfg_prescaleAndModeVerify(void)
     int32_t status;
     Pmic_TimerCfg_t setCfg, getCfg;
 
+    /* Ensure timer is stopped before configuring prescale */
+    status = Pmic_timerStop(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
     /* Set both prescale and mode */
     setCfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID | PMIC_CFG_TMR_MODE_VALID;
     setCfg.prescale = PMIC_TMR_PRESCALE_131P072_MS;
@@ -748,11 +752,15 @@ void test_pos_timer_timerStop_verifyStopped(void)
  */
 void test_neg_timer_timerSetCfg_invalidPrescale(void)
 {
+    /* Ensure timer is stopped to isolate test from previous state */
+    int32_t status = Pmic_timerStop(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
     Pmic_TimerCfg_t cfg = {
         .validParams = PMIC_CFG_TMR_PRESCALE_VALID,
         .prescale = PMIC_TMR_PRESCALE_MAX + 1
     };
-    int32_t status = Pmic_timerSetCfg(&pmicHandle, &cfg);
+    status = Pmic_timerSetCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 

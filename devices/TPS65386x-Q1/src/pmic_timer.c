@@ -102,6 +102,26 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *tim
         TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
     }
 
+    // Validate parameters first (fail fast on invalid parameters)
+    if ((status == PMIC_ST_SUCCESS) &&
+        Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
+    {
+        if (localTimerCfg.prescale > PMIC_TMR_PRESCALE_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID))
+    {
+        if (localTimerCfg.mode > PMIC_TMR_MODE_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    // Validate state after parameters are confirmed valid
     if ((status == PMIC_ST_SUCCESS) &&
         Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
     {
@@ -117,27 +137,13 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *tim
         // Modify timer prescale
         if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID, status))
         {
-            if (localTimerCfg.prescale > PMIC_TMR_PRESCALE_MAX)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-            else
-            {
-                Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, localTimerCfg.prescale);
-            }
+            Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, localTimerCfg.prescale);
         }
 
         // Modify timer mode
         if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID, status))
         {
-            if (localTimerCfg.mode > PMIC_TMR_MODE_MAX)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-            else
-            {
-                Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, localTimerCfg.mode);
-            }
+            Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, localTimerCfg.mode);
         }
 
         // Write new register value back to PMIC
