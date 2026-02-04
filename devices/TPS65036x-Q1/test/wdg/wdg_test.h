@@ -56,7 +56,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_nullHandle)
 
-/* Test: TC-WDG-0040 */
+/* Test: TC-WDG-0045 */
 #define WDG_TEST_WDGSETENABLESTATE() \
     WDG_TEST_NEG_WDGSETENABLESTATE()
 
@@ -70,7 +70,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGENABLE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgEnable_nullHandle)
 
-/* Test: TC-WDG-0041 */
+/* Test: TC-WDG-0046 */
 #define WDG_TEST_WDGENABLE() \
     WDG_TEST_POS_WDGENABLE(); \
     WDG_TEST_NEG_WDGENABLE()
@@ -82,7 +82,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGDISABLE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgDisable_nullHandle)
 
-/* Test: TC-WDG-0042 */
+/* Test: TC-WDG-0047 */
 #define WDG_TEST_WDGDISABLE() \
     WDG_TEST_NEG_WDGDISABLE()
 
@@ -94,7 +94,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullParam)
 
-/* Test: TC-WDG-0043 */
+/* Test: TC-WDG-0048 */
 #define WDG_TEST_WDGGETENABLESTATE() \
     WDG_TEST_NEG_WDGGETENABLESTATE()
 
@@ -134,7 +134,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
 
-/* Test: TC-WDG-0044 */
+/* Test: TC-WDG-0049 */
 #define WDG_TEST_WDGSETCFG() \
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_NEG_WDGSETCFG()
@@ -148,7 +148,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_invalidParam)
 
-/* Test: TC-WDG-0045 */
+/* Test: TC-WDG-0050 */
 #define WDG_TEST_WDGGETCFG() \
     WDG_TEST_NEG_WDGGETCFG()
 
@@ -162,7 +162,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle)
 
-/* Test: TC-WDG-0046 */
+/* Test: TC-WDG-0051 */
 #define WDG_TEST_WDGSETPOWERHOLD() \
     WDG_TEST_POS_WDGSETPOWERHOLD(); \
     WDG_TEST_NEG_WDGSETPOWERHOLD()
@@ -175,7 +175,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullParam)
 
-/* Test: TC-WDG-0047 */
+/* Test: TC-WDG-0052 */
 #define WDG_TEST_WDGGETPOWERHOLD() \
     WDG_TEST_NEG_WDGGETPOWERHOLD()
 
@@ -189,7 +189,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle)
 
-/* Test: TC-WDG-0048 */
+/* Test: TC-WDG-0053 */
 #define WDG_TEST_WDGSETRETURNTOLONGWINDOW() \
     WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
     WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW()
@@ -202,7 +202,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetReturnToLongWindow_nullParam)
 
-/* Test: TC-WDG-0049 */
+/* Test: TC-WDG-0054 */
 #define WDG_TEST_WDGGETRETURNTOLONGWINDOW() \
     WDG_TEST_NEG_WDGGETRETURNTOLONGWINDOW()
 
@@ -217,7 +217,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGSENDSWGRIGGER() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSendSwTrigger_nullHandle)
 
-/* Test: TC-WDG-0050 */
+/* Test: TC-WDG-0055 */
 #define WDG_TEST_WDGSENDSWGRIGGER() \
     WDG_TEST_POS_WDGSENDSWGRIGGER(); \
     WDG_TEST_NEG_WDGSENDSWGRIGGER()
@@ -236,7 +236,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGQAWRITEANSWER() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
 
-/* Test: TC-WDG-0051 */
+/* Test: TC-WDG-0056 */
 #define WDG_TEST_WDGQAWRITEANSWER() \
     WDG_TEST_POS_WDGQAWRITEANSWER(); \
     WDG_TEST_NEG_WDGQAWRITEANSWER()
@@ -265,7 +265,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_invalidParamZero); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatus_invalidParamOutOfBounds)
 
-/* Test: TC-WDG-0052 */
+/* Test: TC-WDG-0057 */
 #define WDG_TEST_WDGCLRERRSTATUS() \
     WDG_TEST_POS_WDGCLRERRSTATUS(); \
     WDG_TEST_NEG_WDGCLRERRSTATUS()
@@ -277,7 +277,7 @@ extern "C" {
 #define WDG_TEST_NEG_WDGCLRERRSTATUSALL() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgClrErrStatusAll_nullHandle)
 
-/* Test: TC-WDG-0053 */
+/* Test: TC-WDG-0058 */
 #define WDG_TEST_WDGCLRERRSTATUSALL() \
     WDG_TEST_NEG_WDGCLRERRSTATUSALL()
 
@@ -294,7 +294,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_invalidParamZero); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_invalidParamOutOfBounds)
 
-/* Test: TC-WDG-0054 */
+/* Test: TC-WDG-0059 */
 #define WDG_TEST_WDGGETERRSTATUS() \
     WDG_TEST_POS_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETERRSTATUS()
@@ -313,7 +313,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_nullParam); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetFailCntStatus_invalidParam)
 
-/* Test: TC-WDG-0055 */
+/* Test: TC-WDG-0060 */
 #define WDG_TEST_WDGGETFAILCNTSTATUS() \
     WDG_TEST_POS_WDGGETFAILCNTSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
@@ -335,7 +335,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaSequence_detectRstInt); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaSequence_qaWithIrqCallback)
 
-/* Test: TC-WDG-0056 */
+/* Test: TC-WDG-0061 */
 #define WDG_TEST_WDGQASEQUENCE() \
     WDG_TEST_POS_WDGQASEQUENCE()
 
@@ -346,7 +346,7 @@ extern "C" {
 #define WDG_TEST_POS_WDGGETERRORSTATUS() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgGetErrStatus_answerError)
 
-/* Test: TC-WDG-0057 */
+/* Test: TC-WDG-0062 */
 #define WDG_TEST_WDGGETERRORSTATUS() \
     WDG_TEST_POS_WDGGETERRORSTATUS()
 

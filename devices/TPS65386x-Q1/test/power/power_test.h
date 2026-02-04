@@ -168,7 +168,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_invalidLdoId)
 
-/* Test: TC-POWER-0032 */
+/* Test: TC-POWER-0003 */
 #define POWER_TEST_PWRSETLDOCFG() \
     POWER_TEST_POS_PWRSETLDOCFG(); \
     POWER_TEST_NEG_PWRSETLDOCFG()
@@ -184,7 +184,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullConfig); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_invalidLdoId)
 
-/* Test: TC-POWER-0033 */
+/* Test: TC-POWER-0004 */
 #define POWER_TEST_PWRGETLDOCFG() \
     POWER_TEST_POS_PWRGETLDOCFG(); \
     POWER_TEST_NEG_PWRGETLDOCFG()
@@ -352,7 +352,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdErr); \
     PLATFORM_RUN_TEST(test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn)
 
-/* Test: TC-POWER-0038 */
+/* Test: TC-POWER-0009 */
 #define POWER_TEST_PWRGETRSRCSTATUS() \
     POWER_TEST_POS_PWRGETRSRCSTATUS(); \
     POWER_TEST_NEG_PWRGETRSRCSTATUS()

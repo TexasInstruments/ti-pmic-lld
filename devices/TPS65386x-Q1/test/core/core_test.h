@@ -63,7 +63,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_invalidRegNum)
 
-/* Test: TC-CORE-0046 */
+/* Test: TC-CORE-0001 */
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()
@@ -80,7 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_invalidRegNum)
 
-/* Test: TC-CORE-0047 */
+/* Test: TC-CORE-0002 */
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
@@ -95,7 +95,7 @@ extern "C" {
 #define CORE_TEST_NEG_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
 
-/* Test: TC-CORE-0035 */
+/* Test: TC-CORE-0003 */
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
@@ -111,7 +111,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
 
-/* Test: TC-CORE-0036 */
+/* Test: TC-CORE-0004 */
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
@@ -191,7 +191,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getNvmRev_nullNvmRev)
 
-/* Test: TC-CORE-0033 */
+/* Test: TC-CORE-0009 */
 #define CORE_TEST_GETNVMREV() \
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_NEG_GETNVMREV()
@@ -207,7 +207,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getSiliconRev_nullSiliconRev)
 
-/* Test: TC-CORE-0034 */
+/* Test: TC-CORE-0010 */
 #define CORE_TEST_GETSILICONREV() \
     CORE_TEST_POS_GETSILICONREV(); \
     CORE_TEST_NEG_GETSILICONREV()

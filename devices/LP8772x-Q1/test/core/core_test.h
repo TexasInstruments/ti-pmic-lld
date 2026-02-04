@@ -144,7 +144,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getRegLockState_nullLockState)
 
-/* Test: TC-CORE-0036 */
+/* Test: TC-CORE-0028 */
 #define CORE_TEST_GETREGLOCKSTATE() \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETREGLOCKSTATE()
@@ -161,7 +161,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_nullValue); \
     PLATFORM_RUN_TEST(test_neg_core_getScratchPadValue_outOfBounds)
 
-/* Test: TC-CORE-0047 */
+/* Test: TC-CORE-0029 */
 #define CORE_TEST_GETSCRATCHPADVALUE() \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE()
@@ -191,7 +191,7 @@ extern "C" {
 #define CORE_TEST_NEG_SETREGLOCKSTATE() \
     PLATFORM_RUN_TEST(test_neg_core_setRegLockState_nullHandle)
 
-/* Test: TC-CORE-0035 */
+/* Test: TC-CORE-0031 */
 #define CORE_TEST_SETREGLOCKSTATE() \
     CORE_TEST_POS_SETREGLOCKSTATE(); \
     CORE_TEST_NEG_SETREGLOCKSTATE()
@@ -207,7 +207,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_setScratchPadValue_outOfBounds)
 
-/* Test: TC-CORE-0046 */
+/* Test: TC-CORE-0032 */
 #define CORE_TEST_SETSCRATCHPADVALUE() \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_SETSCRATCHPADVALUE()

@@ -119,7 +119,7 @@
 #define FSM_TEST_POS_FSMGETRECOVCNT() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmGetClrRecovCnt_readAndClear)
 
-/* Test: TC-FSM-0028 */
+/* Test: TC-FSM-0019 */
 #define FSM_TEST_FSMGETRECOVCNT() \
     FSM_TEST_POS_FSMGETRECOVCNT(); \
     FSM_TEST_NEG_FSMGETRECOVCNT()
@@ -130,7 +130,7 @@
 #define FSM_TEST_NEG_FSMCLRRECOVCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmClrRecovCnt_nullHandle)
 
-/* Test: TC-FSM-0026 */
+/* Test: TC-FSM-0020 */
 #define FSM_TEST_FSMCLRRECOVCNT() \
     FSM_TEST_NEG_FSMCLRRECOVCNT()
 
@@ -144,7 +144,7 @@
 #define FSM_TEST_POS_FSMSETGETRECOVCNTTHR() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetRecovCntThr_allValues)
 
-/* Test: TC-FSM-0033 */
+/* Test: TC-FSM-0021 */
 #define FSM_TEST_FSMSETRECOVCNTTHR() \
     FSM_TEST_POS_FSMSETGETRECOVCNTTHR(); \
     FSM_TEST_NEG_FSMSETRECOVCNTTHR()
@@ -156,7 +156,7 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr)
 
-/* Test: TC-FSM-0029 */
+/* Test: TC-FSM-0022 */
 #define FSM_TEST_FSMGETRECOVCNTTHR() \
     FSM_TEST_NEG_FSMGETRECOVCNTTHR()
 

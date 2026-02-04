@@ -64,7 +64,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgDisable_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_nullHandle)
 
-/* Test: TC-WDG-0040 */
+/* Test: TC-WDG-0001 */
 #define WDG_TEST_WDGSETENABLESTATE() \
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_NEG_WDGSETENABLESTATE()
@@ -80,7 +80,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullParam)
 
-/* Test: TC-WDG-0043 */
+/* Test: TC-WDG-0002 */
 #define WDG_TEST_WDGGETENABLESTATE() \
     WDG_TEST_POS_WDGGETENABLESTATE(); \
     WDG_TEST_NEG_WDGGETENABLESTATE()
@@ -120,7 +120,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
 
-/* Test: TC-WDG-0044 */
+/* Test: TC-WDG-0003 */
 #define WDG_TEST_WDGSETCFG() \
     WDG_TEST_POS_WDGSETCFG(); \
     WDG_TEST_NEG_WDGSETCFG()
@@ -136,7 +136,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig)
 
-/* Test: TC-WDG-0045 */
+/* Test: TC-WDG-0004 */
 #define WDG_TEST_WDGGETCFG() \
     WDG_TEST_POS_WDGGETCFG(); \
     WDG_TEST_NEG_WDGGETCFG()

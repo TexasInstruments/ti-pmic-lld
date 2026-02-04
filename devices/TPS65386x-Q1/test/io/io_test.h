@@ -67,7 +67,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncStartFails); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncAwaitFails)
 
-/* Test: TC-IO-0026 */
+/* Test: TC-IO-0001 */
 #define IO_TEST_IOTXBYTE() \
     IO_TEST_POS_IOTXBYTE(); \
     IO_TEST_NEG_IOTXBYTE()
@@ -92,7 +92,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncAwaitFails); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncExhaustRetries)
 
-/* Test: TC-IO-0023 */
+/* Test: TC-IO-0002 */
 #define IO_TEST_IORXBYTE() \
     IO_TEST_POS_IORXBYTE(); \
     IO_TEST_NEG_IORXBYTE()
@@ -108,7 +108,7 @@ extern "C" {
 #define IO_TEST_NEG_IOTXBYTE_CS() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_CS_nullHandle)
 
-/* Test: TC-IO-0027 */
+/* Test: TC-IO-0003 */
 #define IO_TEST_IOTXBYTE_CS() \
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_NEG_IOTXBYTE_CS()
@@ -125,7 +125,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_CS_nullRxBuffer)
 
-/* Test: TC-IO-0024 */
+/* Test: TC-IO-0004 */
 #define IO_TEST_IORXBYTE_CS() \
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_NEG_IORXBYTE_CS()
@@ -176,7 +176,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     /* No negative tests for ioUpdateByte */
 
-/* Test: TC-IO-0030 */
+/* Test: TC-IO-0007 */
 #define IO_TEST_IOUPDATEBYTE() \
     IO_TEST_POS_IOUPDATEBYTE(); \
     IO_TEST_NEG_IOUPDATEBYTE()

@@ -71,7 +71,7 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_zeroCount); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_invalidIrqInArray)
 
-/* Test: TC-IRQ-0025 */
+/* Test: TC-IRQ-0010 */
 #define IRQ_TEST_IRQSETGETMASK() \
     IRQ_TEST_POS_IRQSETGETMASK(); \
     IRQ_TEST_NEG_IRQSETGETMASK()
@@ -88,7 +88,7 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullIrqStat)
 
-/* Test: TC-IRQ-0026 */
+/* Test: TC-IRQ-0011 */
 #define IRQ_TEST_IRQGETSTATUS() \
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
@@ -106,7 +106,7 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullIrqStat); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullIrqNum)
 
-/* Test: TC-IRQ-0027 */
+/* Test: TC-IRQ-0012 */
 #define IRQ_TEST_IRQGETNEXTFLAG() \
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
@@ -123,7 +123,7 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_invalidIrqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_invalidIrqNumBeyondMax)
 
-/* Test: TC-IRQ-0028 */
+/* Test: TC-IRQ-0013 */
 #define IRQ_TEST_IRQGETFLAG() \
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
@@ -140,7 +140,7 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_invalidIrqNumBeyondMax); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullHandle)
 
-/* Test: TC-IRQ-0029 */
+/* Test: TC-IRQ-0014 */
 #define IRQ_TEST_IRQCLRFLAG() \
     IRQ_TEST_POS_IRQCLRFLAG(); \
     IRQ_TEST_NEG_IRQCLRFLAG()

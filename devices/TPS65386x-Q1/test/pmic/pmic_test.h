@@ -103,7 +103,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncRxAwait); \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullAsyncTxAwait)
 
-/* Test: TC-PMIC-0010 */
+/* Test: TC-PMIC-0001 */
 #define PMIC_TEST_INIT() \
     PMIC_TEST_POS_INIT(); \
     PMIC_TEST_NEG_INIT()
@@ -118,7 +118,7 @@ extern "C" {
 #define PMIC_TEST_NEG_DEINIT() \
     PLATFORM_RUN_TEST(test_neg_pmic_deinit_nullHandle)
 
-/* Test: TC-PMIC-0008 */
+/* Test: TC-PMIC-0002 */
 #define PMIC_TEST_DEINIT() \
     PMIC_TEST_POS_DEINIT(); \
     PMIC_TEST_NEG_DEINIT()
@@ -141,7 +141,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCritSec); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry)
 
-/* Test: TC-PMIC-0011 */
+/* Test: TC-PMIC-0003 */
 #define PMIC_TEST_CHECKHANDLE() \
     PMIC_TEST_POS_CHECKHANDLE(); \
     PMIC_TEST_NEG_CHECKHANDLE()

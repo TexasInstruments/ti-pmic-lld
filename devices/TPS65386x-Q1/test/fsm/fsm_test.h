@@ -87,7 +87,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidState); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalidStateBoundary)
 
-/* Test: TC-FSM-0032 */
+/* Test: TC-FSM-0001 */
 #define FSM_TEST_FSMSETDEVSTATE() \
     FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()

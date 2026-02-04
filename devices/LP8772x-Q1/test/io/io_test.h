@@ -199,7 +199,7 @@ extern "C" {
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_nullHandle)
 
-/* Test: TC-IO-0030 */
+/* Test: TC-IO-0028 */
 #define IO_TEST_IOUPDATEBYTE() \
     IO_TEST_POS_IOUPDATEBYTE(); \
     IO_TEST_NEG_IOUPDATEBYTE()

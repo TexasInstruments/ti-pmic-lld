@@ -123,7 +123,7 @@
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullEsmErrCnt); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle)
 
-/* Test: TC-ESM-0028 */
+/* Test: TC-ESM-0017 */
 #define ESM_TEST_ESMGETERRCNT() \
     ESM_TEST_POS_ESMGETERRCNT(); \
     ESM_TEST_NEG_ESMGETERRCNT()

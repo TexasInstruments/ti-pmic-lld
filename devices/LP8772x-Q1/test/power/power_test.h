@@ -497,7 +497,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_twarnConfig); \
     PLATFORM_RUN_TEST(test_neg_power_thermal_no_valid_params)
 
-/* Test: TC-POWER-0032 */
+/* Test: TC-POWER-0031 */
 #define POWER_TEST_PWRSETTHERMALCFG() \
     POWER_TEST_POS_PWRSETTHERMALCFG(); \
     POWER_TEST_NEG_PWRSETTHERMALCFG()

@@ -188,7 +188,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_irqStat)
 
-/* Test: TC-IRQ-0026 */
+/* Test: TC-IRQ-0005 */
 #define IRQ_TEST_IRQGETSTATUS() \
     IRQ_TEST_POS_IRQGETSTATUS(); \
     IRQ_TEST_NEG_IRQGETSTATUS()
@@ -205,7 +205,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqNum)
 
-/* Test: TC-IRQ-0027 */
+/* Test: TC-IRQ-0006 */
 #define IRQ_TEST_IRQGETNEXTFLAG() \
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_NEG_IRQGETNEXTFLAG()
@@ -222,7 +222,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_nullParam_flag); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetFlag_invalidParam_irqNum)
 
-/* Test: TC-IRQ-0028 */
+/* Test: TC-IRQ-0007 */
 #define IRQ_TEST_IRQGETFLAG() \
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_NEG_IRQGETFLAG()
@@ -239,7 +239,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_invalidParam_irqNum)
 
-/* Test: TC-IRQ-0029 */
+/* Test: TC-IRQ-0008 */
 #define IRQ_TEST_IRQCLRFLAG() \
     IRQ_TEST_POS_IRQCLRFLAG(); \
     IRQ_TEST_NEG_IRQCLRFLAG()
@@ -256,7 +256,7 @@ extern "C" {
 #define IRQ_TEST_NEG_IRQCLRALLFLAGS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
 
-/* Test: TC-IRQ-0023 */
+/* Test: TC-IRQ-0009 */
 #define IRQ_TEST_IRQCLRALLFLAGS() \
     IRQ_TEST_POS_IRQCLRALLFLAGS(); \
     IRQ_TEST_NEG_IRQCLRALLFLAGS()

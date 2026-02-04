@@ -65,7 +65,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_checkPmicCoreHandle_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkPmicCoreHandle_nullIoRead)
 
-/* Test: TC-PMIC-0011 */
+/* Test: TC-PMIC-0007 */
 #define PMIC_TEST_CHECKHANDLE() \
     PMIC_TEST_POS_CHECKHANDLE(); \
     PMIC_TEST_NEG_CHECKHANDLE()
@@ -115,7 +115,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull)
 
-/* Test: TC-PMIC-0010 */
+/* Test: TC-PMIC-0009 */
 #define PMIC_TEST_INIT() \
     PMIC_TEST_POS_INIT(); \
     PMIC_TEST_NEG_INIT()

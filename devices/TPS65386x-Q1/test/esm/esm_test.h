@@ -103,7 +103,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidDeglitch); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidTimeBase)
 
-/* Test: TC-ESM-0020 */
+/* Test: TC-ESM-0001 */
 #define ESM_TEST_ESMSETCFG() \
     ESM_TEST_POS_ESMSETCFG(); \
     ESM_TEST_NEG_ESMSETCFG()
@@ -120,7 +120,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidParams)
 
-/* Test: TC-ESM-0015 */
+/* Test: TC-ESM-0002 */
 #define ESM_TEST_ESMGETCFG() \
     ESM_TEST_POS_ESMGETCFG(); \
     ESM_TEST_NEG_ESMGETCFG()
@@ -135,7 +135,7 @@ extern "C" {
 #define ESM_TEST_NEG_ESMSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle)
 
-/* Test: TC-ESM-0021 */
+/* Test: TC-ESM-0003 */
 #define ESM_TEST_ESMSETENABLESTATE() \
     ESM_TEST_POS_ESMSETENABLESTATE(); \
     ESM_TEST_NEG_ESMSETENABLESTATE()
@@ -151,7 +151,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_nullPointer)
 
-/* Test: TC-ESM-0016 */
+/* Test: TC-ESM-0004 */
 #define ESM_TEST_ESMGETENABLESTATE() \
     ESM_TEST_POS_ESMGETENABLESTATE(); \
     ESM_TEST_NEG_ESMGETENABLESTATE()
@@ -166,7 +166,7 @@ extern "C" {
 #define ESM_TEST_NEG_ESMSTART() \
     PLATFORM_RUN_TEST(test_neg_esm_esmStart_nullHandle)
 
-/* Test: TC-ESM-0023 */
+/* Test: TC-ESM-0005 */
 #define ESM_TEST_ESMSTART() \
     ESM_TEST_POS_ESMSTART(); \
     ESM_TEST_NEG_ESMSTART()
@@ -181,7 +181,7 @@ extern "C" {
 #define ESM_TEST_NEG_ESMSTOP() \
     PLATFORM_RUN_TEST(test_neg_esm_esmStop_nullHandle)
 
-/* Test: TC-ESM-0024 */
+/* Test: TC-ESM-0006 */
 #define ESM_TEST_ESMSTOP() \
     ESM_TEST_POS_ESMSTOP(); \
     ESM_TEST_NEG_ESMSTOP()
@@ -216,7 +216,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetStatus_invalidParams)
 
-/* Test: TC-ESM-0019 */
+/* Test: TC-ESM-0008 */
 #define ESM_TEST_ESMGETSTATUS() \
     ESM_TEST_POS_ESMGETSTATUS(); \
     ESM_TEST_NEG_ESMGETSTATUS()
@@ -234,7 +234,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidParams); \
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_unsupportedErrCnt)
 
-/* Test: TC-ESM-0014 */
+/* Test: TC-ESM-0009 */
 #define ESM_TEST_ESMCLRSTATUS() \
     ESM_TEST_POS_ESMCLRSTATUS(); \
     ESM_TEST_NEG_ESMCLRSTATUS()
