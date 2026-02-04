@@ -67,13 +67,6 @@ static inline void CORE_copyLock(const Pmic_Lock_t *src, Pmic_Lock_t *dst) {
     dst->cntLock = src->cntLock;
 }
 
-static inline void CORE_copyCommonCtrlStat(const Pmic_CommonCtrlStat_t *src, Pmic_CommonCtrlStat_t *dst) {
-    dst->nRstPin = src->nRstPin;
-    dst->safeOut1Pin = src->safeOut1Pin;
-    dst->enOutPin = src->enOutPin;
-    dst->cfgregLockStat = src->cfgregLockStat;
-}
-
 int32_t Pmic_setRegLockState(const Pmic_Handle_t *handle, bool lockState) {
     int32_t status = Pmic_checkHandle(handle);
     // Holds the sequence used for register lock/unlock. For locking, writing
@@ -307,41 +300,6 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
 
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte_CS(handle, PMIC_CUSTOMER_SCRATCH1_REG + scratchPadRegNum, value);
-    }
-
-    return Pmic_logStatus(handle, status);
-}
-
-int32_t Pmic_getCommonStat(const Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *stat) {
-    int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData1 = 0U;
-    uint8_t regData2 = 0U;
-    Pmic_CommonCtrlStat_t localStat;
-
-    if ((status == PMIC_ST_SUCCESS) && (stat == NULL)) {
-        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        CORE_copyCommonCtrlStat(stat, &localStat);
-    }
-
-    // Read pin status from STAT_READBACK_ERR register
-    if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, PMIC_RDBK_ERR_STAT_REG, &regData1);
-    }
-
-    // Read lock status from REG_STAT register
-    if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, REG_STAT_REG, &regData2);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        localStat.nRstPin = Pmic_getBitField_b(regData1, PMIC_NRST_RDBK_LVL_SHIFT);
-        localStat.safeOut1Pin = Pmic_getBitField_b(regData1, PMIC_SAFE_OUT1_RDBK_LVL_SHIFT);
-        localStat.enOutPin = Pmic_getBitField_b(regData1, PMIC_EN_OUT_RDBK_LVL_SHIFT);
-        localStat.cfgregLockStat = Pmic_getBitField_b(regData2, CFG_REG_LOCKED_SHIFT);
-        CORE_copyCommonCtrlStat(&localStat, stat);
     }
 
     return Pmic_logStatus(handle, status);

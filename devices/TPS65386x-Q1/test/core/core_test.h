@@ -213,22 +213,6 @@ extern "C" {
     CORE_TEST_NEG_GETSILICONREV()
 
 /* ======================================================================== */
-/*                         Test APIs: getCommonStat                         */
-/* ======================================================================== */
-
-#define CORE_TEST_POS_GETCOMMONSTAT() \
-    PLATFORM_RUN_TEST(test_pos_core_commonStat_get)
-
-#define CORE_TEST_NEG_GETCOMMONSTAT() \
-    PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_getCommonStat_nullStat)
-
-/* Test: TC-CORE-0011 */
-#define CORE_TEST_GETCOMMONSTAT() \
-    CORE_TEST_POS_GETCOMMONSTAT(); \
-    CORE_TEST_NEG_GETCOMMONSTAT()
-
-/* ======================================================================== */
 /*                       Test APIs: diagSetOutCtrlCfg                       */
 /* ======================================================================== */
 
@@ -338,7 +322,6 @@ extern "C" {
     CORE_TEST_POS_GETLOCKCFG(); \
     CORE_TEST_POS_GETNVMREV(); \
     CORE_TEST_POS_GETSILICONREV(); \
-    CORE_TEST_POS_GETCOMMONSTAT(); \
     CORE_TEST_POS_DIAGSETOUTCTRLCFG(); \
     CORE_TEST_POS_DIAGGETOUTCTRLCFG(); \
     CORE_TEST_POS_DIAGSETAMUXCFG(); \
@@ -357,7 +340,6 @@ extern "C" {
     CORE_TEST_NEG_GETLOCKCFG(); \
     CORE_TEST_NEG_GETNVMREV(); \
     CORE_TEST_NEG_GETSILICONREV(); \
-    CORE_TEST_NEG_GETCOMMONSTAT(); \
     CORE_TEST_NEG_DIAGSETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGGETOUTCTRLCFG(); \
     CORE_TEST_NEG_DIAGSETAMUXCFG(); \
@@ -440,12 +422,6 @@ void test_neg_core_getSiliconRev_nullHandle(void);
 void test_neg_core_getSiliconRev_nullSiliconRev(void);
 
 /* ========================================================================== */
-/*                Negative Tests - getCommonStat                              */
-/* ========================================================================== */
-void test_neg_core_getCommonStat_nullHandle(void);
-void test_neg_core_getCommonStat_nullStat(void);
-
-/* ========================================================================== */
 /*                Negative Tests - diagSetOutCtrlCfg                          */
 /* ========================================================================== */
 void test_neg_core_diagSetOutCtrlCfg_nullHandle(void);
@@ -504,11 +480,6 @@ void test_pos_core_lockCfg_setGet(void);
 /*                Positive Tests - Device ID & Revision                       */
 /* ========================================================================== */
 void test_pos_core_deviceId_revision(void);
-
-/* ========================================================================== */
-/*                Positive Tests - Common Status                              */
-/* ========================================================================== */
-void test_pos_core_commonStat_get(void);
 
 /* ========================================================================== */
 /*                Positive Tests - Diagnostic Output Control                  */

@@ -231,18 +231,6 @@ typedef struct Pmic_Lock_s {
 } Pmic_Lock_t;
 
 /**
- * @brief PMIC common control status structure
- *
- * Used to read back pin states and register lock status
- */
-typedef struct Pmic_CommonCtrlStat_s {
-    bool nRstPin;          /**< NRST pin status (readback from STAT_READBACK_ERR reg bit 0) */
-    bool safeOut1Pin;      /**< SAFE_OUT1 pin status (readback from STAT_READBACK_ERR reg bit 1) */
-    bool enOutPin;         /**< EN_OUT pin status (readback from STAT_READBACK_ERR reg bit 2) */
-    bool cfgregLockStat;   /**< Configuration register lock status (from REG_STAT_REG bit 0) */
-} Pmic_CommonCtrlStat_t;
-
-/**
  * @brief PMIC multiplexer configuration structure.
  *
  * Used to configure and read back the AMUX (Analog Multiplexer) and
@@ -466,18 +454,6 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  * @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
-
-/**
- * @brief Get common control status (pin states and lock status).
- *
- * Design: PMICDRV-788
- *
- * @param handle [IN] PMIC interface handle.
- * @param stat [OUT] Common control status structure.
- *
- * @return PMIC_ST_SUCCESS if successful, error code otherwise.
- */
-int32_t Pmic_getCommonStat(const Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *stat);
 
 /**
  * @ingroup DRV_PMIC_CORE_MUX_GROUP

@@ -249,25 +249,6 @@ void test_neg_core_getSiliconRev_nullSiliconRev(void)
 }
 
 /**
- * @brief Test Pmic_getCommonStat with NULL handle
- */
-void test_neg_core_getCommonStat_nullHandle(void)
-{
-    Pmic_CommonCtrlStat_t stat = {0U};
-    int32_t status = Pmic_getCommonStat(NULL, &stat);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-/**
- * @brief Test Pmic_getCommonStat with NULL stat pointer
- */
-void test_neg_core_getCommonStat_nullStat(void)
-{
-    int32_t status = Pmic_getCommonStat(&pmicHandle, NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-/**
  * @brief Test Pmic_setMuxCfg with NULL handle
  */
 void test_neg_core_diagSetOutCtrlCfg_nullHandle(void)
@@ -532,19 +513,6 @@ void test_pos_core_deviceId_revision(void)
 
     /* Read silicon revision */
     status = Pmic_getSiliconRev(&pmicHandle, &siliconRev);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
-
-/**
- * @brief Test common status read operations
- */
-void test_pos_core_commonStat_get(void)
-{
-    int32_t status;
-    Pmic_CommonCtrlStat_t stat = {0U};
-
-    /* Read common status */
-    status = Pmic_getCommonStat(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
