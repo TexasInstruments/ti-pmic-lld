@@ -319,7 +319,7 @@ int32_t Pmic_getCommonStat(const Pmic_Handle_t *handle, Pmic_CommonCtrlStat_t *s
     Pmic_CommonCtrlStat_t localStat;
 
     if ((status == PMIC_ST_SUCCESS) && (stat == NULL)) {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -356,7 +356,7 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
     bool updateCfg = false;
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
     // Validate AMUX channel range
@@ -463,7 +463,7 @@ int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config) {
     bool readCfg = false;
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
     if (status == PMIC_ST_SUCCESS) {

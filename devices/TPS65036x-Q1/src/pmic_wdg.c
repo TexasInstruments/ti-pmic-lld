@@ -166,13 +166,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_LONG_WIN_DURATION_VALID))
-    {
-        if (wdgCfg->longWinDuration > PMIC_WD_LONG_WIN_DURATION_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
+    // longWinDuration validation removed - uint8_t type constrains range (0-255)
 
     if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfg->validParams, PMIC_WD_WIN1_DURATION_VALID))
     {
