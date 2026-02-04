@@ -459,7 +459,7 @@ int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  * @ingroup DRV_PMIC_CORE_MUX_GROUP
  * @brief Set PMIC multiplexer configuration.
  *
- * Design: PMICDRV-789
+ * Design: PMICDRV-833
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522,
  *               PMICDRV-523, PMICDRV-547
  *
@@ -482,7 +482,7 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
  * @ingroup DRV_PMIC_CORE_MUX_GROUP
  * @brief Get PMIC multiplexer configuration.
  *
- * Design: PMICDRV-790
+ * Design: PMICDRV-832
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522,
  *               PMICDRV-528, PMICDRV-547
  *
