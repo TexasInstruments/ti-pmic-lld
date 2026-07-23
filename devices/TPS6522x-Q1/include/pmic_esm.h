@@ -348,40 +348,6 @@ int32_t Pmic_esmStart(const Pmic_Handle_t *handle);
  */
 int32_t Pmic_esmStop(const Pmic_Handle_t *handle);
 
-/**
- * @brief Get PMIC ESM status flags.
- *
- * Design: PMICDRV-599
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528,
- *               PMICDRV-539
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param esmStat [OUT] PMIC ESM status flags obtained from the PMIC. For more
- * information, refer to @ref Pmic_EsmStatus.
- *
- * @return PMIC_ST_SUCCESS if PMIC ESM status has been obtained, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat);
-
-/**
- * @brief Clear PMIC ESM status flags.
- *
- * Design: PMICDRV-600
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523,
- *               PMICDRV-539
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param esmStat [IN] PMIC ESM status flags to clear. For more information,
- * refer to @ref Pmic_EsmStatus.
- *
- * @return PMIC_ST_SUCCESS if PMIC ESM status flags have been cleared, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -637,7 +637,7 @@ static inline void Pmic_criticalSectionStop(const Pmic_Handle_t *handle, uint8_t
 /**
  * @brief Execute application-specific IRQ response.
  *
- * Design: PMICDRV-683
+ * Design: PMICDRV-732
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-517, PMICDRV-521
  *               PMICDRV-522, PMICDRV-537
  *
