@@ -79,6 +79,7 @@
  * @brief Testing framework include(s).
  */
 #include "unity.h"
+#include "unity_config.h"
 
 #ifndef BUILD_MOCK
 #ifdef __cplusplus
@@ -101,8 +102,33 @@ extern "C" {
 
 /**
  * @brief Macros/defines relating to testing framework.
+ *
+ * PLATFORM_RUN_TEST wraps Unity's RUN_TEST with TEST_PROTECT to catch assertion
+ * failures and prevent hangs on embedded hardware. When an assertion fails,
+ * control returns to the test runner instead of calling abort().
  */
-#define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
+#ifndef BUILD_MOCK
+    /* Hardware build: Use TEST_PROTECT to catch assertion failures */
+    #define PLATFORM_RUN_TEST(test) \
+        do { \
+            Unity.CurrentTestName = #test; \
+            Unity.CurrentTestLineNumber = __LINE__; \
+            Unity.NumberOfTests++; \
+            if (TEST_PROTECT()) { \
+                setUp(); \
+                test(); \
+            } \
+            TEST_UNPROTECT(); \
+            tearDown(); \
+            if (Unity.CurrentTestFailed) { \
+                Unity.TestFailures++; \
+            } \
+        } while(0)
+#else
+    /* Mock build: Use standard RUN_TEST (abort() works fine on desktop) */
+    #define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
+#endif
+
 #define PLATFORM_ASSERT(condition)  TEST_ASSERT(condition)
 
 /* ========================================================================= */
@@ -235,6 +261,16 @@ int32_t platform_rxByte(const Pmic_Handle_t *handle,
  * doesn't enforce register locking.
  */
 void platform_unlockRegisters(void);
+
+/**
+ * @brief Execute test callback with platform-appropriate behavior
+ *
+ * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
+ *          Mock: Single execution, no waits
+ *
+ * @param testCallback Function that executes all test suites
+ */
+void platform_runTestLoop(void (*testCallback)(void));
 
 #ifdef __cplusplus
 }

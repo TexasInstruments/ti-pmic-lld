@@ -62,6 +62,7 @@ static void mockCritSecStart(uint8_t resource)
 
 static void mockCritSecStop(uint8_t resource)
 {
+    (void)resource;  /* Suppress unused parameter warning */
     g_critSecStopCallCount++;
 }
 
@@ -339,6 +340,7 @@ void test_pos_common_logStatus_allErrorCodes(void)
 
 void test_neg_common_getDiagnostic_nullHandle(void)
 {
+
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -349,6 +351,7 @@ void test_neg_common_getDiagnostic_nullHandle(void)
 
 void test_neg_common_getDiagnostic_nullDiagnostic(void)
 {
+
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
@@ -359,6 +362,7 @@ void test_neg_common_getDiagnostic_nullDiagnostic(void)
 
 void test_neg_common_getDiagnostic_invalidValidParams(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -374,6 +378,7 @@ void test_neg_common_getDiagnostic_invalidValidParams(void)
 
 void test_neg_common_getDiagnostic_invalidStatusCode(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -389,6 +394,7 @@ void test_neg_common_getDiagnostic_invalidStatusCode(void)
 
 void test_pos_common_getDiagnostic_errorCnt(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -411,6 +417,7 @@ void test_pos_common_getDiagnostic_errorCnt(void)
 
 void test_pos_common_getDiagnostic_errorFlag(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -429,6 +436,7 @@ void test_pos_common_getDiagnostic_errorFlag(void)
 
 void test_pos_common_getDiagnostic_warningCnt(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -450,6 +458,7 @@ void test_pos_common_getDiagnostic_warningCnt(void)
 
 void test_pos_common_getDiagnostic_warningFlag(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -468,6 +477,7 @@ void test_pos_common_getDiagnostic_warningFlag(void)
 
 void test_neg_common_getDiagnostic_successType(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -483,6 +493,7 @@ void test_neg_common_getDiagnostic_successType(void)
 
 void test_neg_common_getDiagnostic_nullCritSecStart(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -498,6 +509,7 @@ void test_neg_common_getDiagnostic_nullCritSecStart(void)
 
 void test_neg_common_getDiagnostic_nullCritSecStop(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -513,6 +525,7 @@ void test_neg_common_getDiagnostic_nullCritSecStop(void)
 
 void test_pos_common_getDiagnostics_multiple(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[3] = {0};
     int32_t status;
@@ -542,6 +555,7 @@ void test_pos_common_getDiagnostics_multiple(void)
 
 void test_neg_common_getDiagnostics_zeroCount(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -554,6 +568,7 @@ void test_neg_common_getDiagnostics_zeroCount(void)
 
 void test_neg_common_getDiagnostics_exceedsMax(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
 
@@ -566,6 +581,7 @@ void test_neg_common_getDiagnostics_exceedsMax(void)
 
 void test_neg_common_getDiagnostics_nullCritSecStart(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -581,6 +597,7 @@ void test_neg_common_getDiagnostics_nullCritSecStart(void)
 
 void test_neg_common_getDiagnostics_nullCritSecStop(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -600,6 +617,7 @@ void test_neg_common_getDiagnostics_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnostic_nullHandle(void)
 {
+
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -610,6 +628,7 @@ void test_neg_common_clrDiagnostic_nullHandle(void)
 
 void test_pos_common_clrDiagnostic_errorCnt(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -636,6 +655,7 @@ void test_pos_common_clrDiagnostic_errorCnt(void)
 
 void test_pos_common_clrDiagnostic_warningCnt(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -661,6 +681,7 @@ void test_pos_common_clrDiagnostic_warningCnt(void)
 
 void test_pos_common_clrDiagnostics_multiple(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
     int32_t status;
@@ -696,6 +717,7 @@ void test_pos_common_clrDiagnostics_multiple(void)
 
 void test_pos_common_clrDiagnosticsAll_clearAll(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -1073,6 +1095,7 @@ void test_pos_common_logStatus_successTypeInvalidId(void)
 
 void test_neg_common_getDiagnostics_nullHandle(void)
 {
+
     Pmic_Diagnostic_t diags[2] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1083,6 +1106,7 @@ void test_neg_common_getDiagnostics_nullHandle(void)
 
 void test_neg_common_getDiagnostics_nullDiagnosticArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
@@ -1093,6 +1117,7 @@ void test_neg_common_getDiagnostics_nullDiagnosticArray(void)
 
 void test_neg_common_getDiagnostics_zeroValidParamsInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
@@ -1110,6 +1135,7 @@ void test_neg_common_getDiagnostics_zeroValidParamsInArray(void)
 
 void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
@@ -1127,6 +1153,7 @@ void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
 
 void test_neg_common_getDiagnostics_successTypeInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
@@ -1142,6 +1169,7 @@ void test_neg_common_getDiagnostics_successTypeInArray(void)
 
 void test_neg_common_clrDiagnostic_nullDiagnostic(void)
 {
+
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
@@ -1152,6 +1180,7 @@ void test_neg_common_clrDiagnostic_nullDiagnostic(void)
 
 void test_neg_common_clrDiagnostic_invalidValidParams(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1167,6 +1196,7 @@ void test_neg_common_clrDiagnostic_invalidValidParams(void)
 
 void test_neg_common_clrDiagnostic_invalidStatusCode(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1182,6 +1212,7 @@ void test_neg_common_clrDiagnostic_invalidStatusCode(void)
 
 void test_neg_common_clrDiagnostic_successType(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1197,6 +1228,7 @@ void test_neg_common_clrDiagnostic_successType(void)
 
 void test_pos_common_clrDiagnostic_errorFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -1226,6 +1258,7 @@ void test_pos_common_clrDiagnostic_errorFlagOnly(void)
 
 void test_pos_common_clrDiagnostic_warningFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -1255,6 +1288,7 @@ void test_pos_common_clrDiagnostic_warningFlagOnly(void)
 
 void test_neg_common_clrDiagnostic_nullCritSecStart(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1270,6 +1304,7 @@ void test_neg_common_clrDiagnostic_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnostic_nullCritSecStop(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1285,6 +1320,7 @@ void test_neg_common_clrDiagnostic_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnostics_nullHandle(void)
 {
+
     Pmic_Diagnostic_t diags[1] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1295,6 +1331,7 @@ void test_neg_common_clrDiagnostics_nullHandle(void)
 
 void test_neg_common_clrDiagnostics_nullDiagnosticArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     handle.criticalSectionStart = mockCritSecStart;
     handle.criticalSectionStop = mockCritSecStop;
@@ -1305,6 +1342,7 @@ void test_neg_common_clrDiagnostics_nullDiagnosticArray(void)
 
 void test_neg_common_clrDiagnostics_zeroCount(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -1317,6 +1355,7 @@ void test_neg_common_clrDiagnostics_zeroCount(void)
 
 void test_neg_common_clrDiagnostics_exceedsMax(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
 
@@ -1329,6 +1368,7 @@ void test_neg_common_clrDiagnostics_exceedsMax(void)
 
 void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
@@ -1346,6 +1386,7 @@ void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void)
 
 void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
@@ -1363,6 +1404,7 @@ void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
 
 void test_neg_common_clrDiagnostics_successTypeInArray(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -1399,6 +1441,7 @@ void test_neg_common_logStatus_warningTypeInvalidId(void)
 
 void test_pos_common_getDiagnostics_errorFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
@@ -1423,6 +1466,7 @@ void test_pos_common_getDiagnostics_errorFlagOnly(void)
 
 void test_pos_common_getDiagnostics_warningFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
@@ -1447,6 +1491,7 @@ void test_pos_common_getDiagnostics_warningFlagOnly(void)
 
 void test_pos_common_clrDiagnostics_errorFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
@@ -1475,6 +1520,7 @@ void test_pos_common_clrDiagnostics_errorFlagOnly(void)
 
 void test_pos_common_clrDiagnostics_warningCntOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
@@ -1501,6 +1547,7 @@ void test_pos_common_clrDiagnostics_warningCntOnly(void)
 
 void test_pos_common_clrDiagnostics_warningFlagOnly(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
@@ -1529,6 +1576,7 @@ void test_pos_common_clrDiagnostics_warningFlagOnly(void)
 
 void test_neg_common_clrDiagnostics_nullCritSecStart(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -1544,6 +1592,7 @@ void test_neg_common_clrDiagnostics_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnostics_nullCritSecStop(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
@@ -1559,12 +1608,14 @@ void test_neg_common_clrDiagnostics_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnosticsAll_nullHandle(void)
 {
+
     int32_t status = Pmic_clrDiagnosticsAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
 void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void)
 {
+
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = NULL;
@@ -1576,6 +1627,7 @@ void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnosticsAll_nullCritSecStop(void)
 {
+
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = mockCritSecStart;
@@ -1666,6 +1718,7 @@ void test_pos_common_logStatus_maxWarningId(void)
 
 void test_pos_common_getDiagnostic_maxErrorId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -1687,6 +1740,7 @@ void test_pos_common_getDiagnostic_maxErrorId(void)
 
 void test_pos_common_clrDiagnostic_maxErrorId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
@@ -1726,6 +1780,7 @@ void test_neg_common_logStatus_exceedsMaxErrorId(void)
 
 void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1741,6 +1796,7 @@ void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
 
 void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1756,6 +1812,7 @@ void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
 
 void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1771,6 +1828,7 @@ void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
 
 void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
 {
+
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
@@ -1830,12 +1888,47 @@ void common_test(void *args)
     status = Pmic_init(&g_pmicHandle, &pmicCfg);
     if (status != PMIC_ST_SUCCESS)
     {
-        printf("ERROR: PMIC initialization failed with status: %d\r\n", status);
+        printf("ERROR: PMIC initialization failed with status: %ld\r\n", (long)status);
         platform_deinit();
         return;
     }
 
-    COMMON_TEST_RUN_ALL();
+    // Run positive tests
+    COMMON_TEST_POS_CRITICALSECTION();
+    COMMON_TEST_POS_TIMERWAITMS();
+    COMMON_TEST_POS_LOGSTATUS();
+#ifdef BUILD_MOCK
+    // Diagnostic tests disabled on hardware due to stack overflow with 272-byte arrays
+    COMMON_TEST_POS_GETDIAGNOSTIC();
+    COMMON_TEST_POS_GETDIAGNOSTICS();
+    COMMON_TEST_POS_CLRDIAGNOSTIC();
+    COMMON_TEST_POS_CLRDIAGNOSTICS();
+    COMMON_TEST_POS_CLRDIAGNOSTICSALL();
+#endif
+    COMMON_TEST_POS_OVERFLOW();
+    COMMON_TEST_POS_GETRETRYCNT();
+    COMMON_TEST_POS_INCREMENTRETRYCNT();
+    COMMON_TEST_POS_CLRRETRYCNT();
+    COMMON_TEST_POS_IRQRESPONSECALLBACK();
+
+    // Run negative tests
+    COMMON_TEST_NEG_CRITICALSECTION();
+    COMMON_TEST_NEG_TIMERWAITMS();
+    COMMON_TEST_NEG_LOGSTATUS();
+#ifdef BUILD_MOCK
+    // Diagnostic tests disabled on hardware due to stack overflow with 272-byte arrays
+    COMMON_TEST_NEG_GETDIAGNOSTIC();
+    COMMON_TEST_NEG_GETDIAGNOSTICS();
+    COMMON_TEST_NEG_CLRDIAGNOSTIC();
+    COMMON_TEST_NEG_CLRDIAGNOSTICS();
+    COMMON_TEST_NEG_CLRDIAGNOSTICSALL();
+#endif
+    COMMON_TEST_NEG_GETRETRYCNT();
+    COMMON_TEST_NEG_INCREMENTRETRYCNT();
+    COMMON_TEST_NEG_CLRRETRYCNT();
+    COMMON_TEST_NEG_GETRETRYCNTOVERFLOW();
+    COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW();
+    COMMON_TEST_NEG_IRQRESPONSECALLBACK();
 
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();

@@ -55,11 +55,16 @@
 /* ========================================================================== */
 static Pmic_Handle_t pmicHandle;
 
+/* ========================================================================== */
+/*                             Helper Functions                               */
+/* ========================================================================== */
+
 /**
  * @brief Setup helper: Initialize WDG to valid configuration state
  *
  * Ensures WDG is enabled and in Long Window mode, which are
- * prerequisites for calling Pmic_wdgSetCfg().
+ * prerequisites for calling Pmic_wdgSetCfg() and other configuration APIs.
+ * Sets PWR_HOLD to keep the watchdog in long window mode during configuration.
  */
 static void wdg_setupForConfig(void)
 {
@@ -72,6 +77,37 @@ static void wdg_setupForConfig(void)
     /* Enable return to long window */
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Set PWR_HOLD to keep WDG in long window mode during configuration */
+    status = Pmic_wdgSetPowerHold(&pmicHandle, PMIC_ENABLE);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Wait for watchdog to enter long window mode */
+    platform_timerWaitMs(100);
+}
+
+/**
+ * @brief Reset watchdog state to prevent device resets between tests
+ *
+ * Called after threshold tests to ensure watchdog doesn't trigger
+ * unexpected resets that could interfere with subsequent tests.
+ */
+static void wdg_cleanupAfterTest(void)
+{
+    int32_t status;
+
+    /* Disable watchdog to prevent any configured thresholds from triggering */
+    status = Pmic_wdgDisable(&pmicHandle);
+
+    if (status != PMIC_ST_SUCCESS) {
+        char msg[60];
+        (void)sprintf(msg, "WARNING: WDG disable failed: 0x%lX\r\n",
+                      (unsigned long)status);
+        platform_printString(msg);
+    }
+
+    /* Small delay to allow device to stabilize after disable */
+    platform_timerWaitMs(10);
 }
 
 /* ========================================================================== */
@@ -118,11 +154,15 @@ void wdg_test(void *args)
     platform_printString("WDG_TEST\r\n");
     platform_printString("-------\r\n\r\n");
 
+    platform_printString("DEBUG: About to call Pmic_init()...\r\n");
     status = Pmic_init(&pmicHandle, &coreCfg);
+    platform_printString("DEBUG: Pmic_init() returned\r\n");
 
     if (status == PMIC_ST_SUCCESS)
     {
+        platform_printString("DEBUG: About to call wdgTest_clrAllPmicIrq()...\r\n");
         status = wdgTest_clrAllPmicIrq();
+        platform_printString("DEBUG: wdgTest_clrAllPmicIrq() returned\r\n");
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -132,13 +172,13 @@ void wdg_test(void *args)
         }
         else
         {
-            (void)sprintf(msg, "Error in clearing all PMIC IRQs: %d\r\n", status);
+            (void)sprintf(msg, "Error in clearing all PMIC IRQs: %ld\r\n", (long)status);
             platform_printString(msg);
         }
     }
     else
     {
-        (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
+        (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
 
@@ -537,24 +577,39 @@ void test_neg_wdg_wdgWriteAnswer_nullParam(void)
 void test_pos_wdg_wdgEnable_enableDisable(void)
 {
     bool isEnabled = PMIC_ENABLE;
+    int32_t status;
 
-    // Disable WDG
-    int32_t status = Pmic_wdgDisable(&pmicHandle);
+    platform_printString("\r\n=== WDG Enable/Disable Test ===\r\n");
+
+    /* Setup watchdog for configuration (enables WDG, RETURN_LONGWIN, PWR_HOLD) */
+    wdg_setupForConfig();
+
+    /* Verify watchdog is enabled before testing disable */
+    status = Pmic_wdgGetEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == PMIC_ENABLE);
+
+    /* Disable watchdog */
+    status = Pmic_wdgDisable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // Get actual WDG enable state and compare expected vs. actual values
+    /* Verify watchdog is disabled */
     status = Pmic_wdgGetEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == PMIC_DISABLE);
 
-    // Enable WDG
+    /* Re-enable watchdog */
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // Get actual WDG enable state and compare expected vs. actual values
+    /* Verify watchdog is enabled */
     status = Pmic_wdgGetEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == PMIC_ENABLE);
+
+    /* Disable watchdog to prevent device reset after test completes */
+    status = Pmic_wdgDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 void test_pos_wdg_wdgSetPowerHold_enableDisable(void)
@@ -606,6 +661,7 @@ void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void)
 void test_pos_wdg_wdgSetCfg_resetEnable(void)
 {
     wdg_setupForConfig();
+
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
@@ -651,6 +707,7 @@ void test_pos_wdg_wdgSetCfg_threshold2(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(expWdgCfg.thresholdReset == actWdgCfg.thresholdReset);
     }
+    wdg_cleanupAfterTest();
 }
 
 void test_pos_wdg_wdgSetCfg_threshold1(void)
@@ -673,11 +730,13 @@ void test_pos_wdg_wdgSetCfg_threshold1(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(expWdgCfg.thresholdFail == actWdgCfg.thresholdFail);
     }
+    wdg_cleanupAfterTest();
 }
 
 void test_pos_wdg_wdgSetCfg_longWindowCode(void)
 {
     wdg_setupForConfig();
+
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID};

@@ -90,6 +90,10 @@ endif
 # Note: PMIC_MOCK_DIR is converted to absolute path by root Makefile if needed
 MOCK_DIR = $(patsubst %/,%,$(PMIC_MOCK_DIR))
 
+# Auto-discover test subdirectories (any directory with .h files)
+TEST_INCLUDE_DIRS = $(sort $(dir $(wildcard */*.h)))
+TEST_INCLUDE_FLAGS = $(addprefix -I,$(TEST_INCLUDE_DIRS))
+
 # Compiler flags (common)
 CFLAGS = $(WARN_FLAGS) \
          -Wno-documentation \
@@ -113,7 +117,7 @@ CFLAGS = $(WARN_FLAGS) \
          -Wno-unsafe-buffer-usage \
 		 -Wno-extra-semi-stmt \
          -Werror \
-         -std=c99 $(TARGET_FLAG) -I$(INC_DIR) -I. -Icore -Ifsm -Iio -Iirq -Ipmic -Ipower -Iwdg -Iesm
+         -std=c99 $(TARGET_FLAG) -I$(INC_DIR) -I. $(TEST_INCLUDE_FLAGS)
 
 # LDRA instrumentation - disable optimization for accurate coverage
 ifdef LDRA_INSTRUMENT
@@ -139,6 +143,8 @@ PMIC_SOURCES = \
 	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_esm.c),inszt_pmic_esm.c,$(if $(wildcard $(SRC_DIR)/ipmic_esm.c),ipmic_esm.c,pmic_esm.c))
 
 # Test source files
+# For hardware builds, exclude tests that require mock-specific register injection
+ifeq ($(BUILD), mock)
 TEST_SOURCES = \
 	test_runner.c \
 	test_utils.c \
@@ -151,6 +157,21 @@ TEST_SOURCES = \
 	power/power_test.c \
 	wdg/wdg_test.c \
 	esm/esm_test.c
+else
+# Hardware build - exclude tests that require mock-specific features:
+# - irq_test.c: Requires mock register injection (not possible on real hardware)
+# - power_test.c: Requires mock power state simulation (not possible on real hardware)
+TEST_SOURCES = \
+	test_runner.c \
+	test_utils.c \
+	common/common_test.c \
+	core/core_test.c \
+	fsm/fsm_test.c \
+	io/io_test.c \
+	pmic/pmic_test.c \
+	wdg/wdg_test.c \
+	esm/esm_test.c
+endif
 
 # Build-specific configuration
 ifeq ($(BUILD), mock)
@@ -171,16 +192,64 @@ ifeq ($(BUILD), mock)
 
 	PLATFORM_NAME = Mock Backend
 else
-	# Hardware build configuration
-	CFLAGS += -I/path/to/ti_drivers
+	# Hardware build configuration - Cross-compile for ARM Cortex-M4F
+	# Set TIVAWARE_DIR environment variable or update the path below
+	TIVAWARE_DIR ?= $(HOME)/TivaWare
 
-	PLATFORM_SOURCES = pmic_test_common.c
+	# Use ARM GCC toolchain for cross-compilation
+	CC = arm-none-eabi-gcc
+	OBJCOPY = arm-none-eabi-objcopy
 
-	LDFLAGS = -L/path/to/ti_drivers -lmcspi
+	# ARM Cortex-M4F compiler flags
+	ARM_FLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+	ARM_FLAGS += -ffunction-sections -fdata-sections
 
-	TARGET = test_hardware_demo
+	# Override warning flags for embedded build (simpler set)
+	WARN_FLAGS = -Wall -Wextra -Wshadow
 
-	PLATFORM_NAME = Hardware (TI Drivers)
+	# Hardware-specific defines and includes
+	CFLAGS = $(ARM_FLAGS) $(WARN_FLAGS) \
+	         -std=c99 -O2 -g \
+	         -I$(TIVAWARE_DIR) \
+	         -I$(INC_DIR) -I. $(TEST_INCLUDE_FLAGS) \
+	         -I$(UNITY_DIR)/src \
+	         -DPART_TM4C123GH6PM \
+	         -DTARGET_IS_TM4C123_RB1 \
+	         -DUNITY_INCLUDE_DOUBLE \
+	         -DPMIC_ERR_CNT_OVERFLOW_THR=100U \
+	         -DPMIC_WARN_CNT_OVERFLOW_THR=100U \
+	         -DPMIC_RETRY_CNT_OVERFLOW_THR=100U
+
+	# Optional: Enable wait for user input (for debugging)
+	# Default: auto-run for automated testing
+	ifdef WAIT_FOR_USER
+	    CFLAGS += -DPLATFORM_WAIT_FOR_USER
+	else
+	    CFLAGS += -DPLATFORM_NO_WAIT
+	endif
+
+	# Platform source (hardware abstraction layer) and syscall stubs
+	PLATFORM_SOURCES = platform.c syscalls.c
+
+	# Startup code from TivaWare (assuming GCC toolchain)
+	STARTUP_SOURCE = $(TIVAWARE_DIR)/examples/boards/ek-tm4c123gxl/project0/startup_gcc.c
+
+	# Linker script (using our custom one for proper heap/stack setup)
+	LINKER_SCRIPT = tm4c123gh6pm.ld
+
+	# Linker flags
+	LDFLAGS = -T$(LINKER_SCRIPT) \
+	          $(ARM_FLAGS) \
+	          -Wl,--gc-sections \
+	          -Wl,--entry=ResetISR \
+	          -L$(TIVAWARE_DIR)/driverlib/gcc \
+	          -ldriver -lm -lc -lgcc
+
+	# Output files
+	TARGET = test_hardware.elf
+	TARGET_BIN = test_hardware.bin
+
+	PLATFORM_NAME = Hardware (TI TivaWare ARM Cortex-M4F)
 endif
 
 # clock_gettime is in winpthread on MinGW; harmless on Linux
@@ -213,6 +282,7 @@ check-mock-lib:
 all: $(TARGET)
 
 # Build test executable
+ifeq ($(BUILD), mock)
 $(TARGET): check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Building $(TARGET) for $(PLATFORM_NAME)..."
 	@echo "Compiling Unity framework (relaxed warnings)..."
@@ -220,9 +290,29 @@ $(TARGET): check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Compiling test and PMIC sources..."
 	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
 	@echo "Build complete: $@"
+else
+$(TARGET): $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) $(STARTUP_SOURCE)
+	@echo "Building $(TARGET) for $(PLATFORM_NAME)..."
+	@echo "Checking TivaWare installation..."
+	@test -d "$(TIVAWARE_DIR)" || (echo "ERROR: TivaWare not found at $(TIVAWARE_DIR). Set TIVAWARE_DIR or install TivaWare." && exit 1)
+	@test -f "$(TIVAWARE_DIR)/driverlib/gcc/libdriver.a" || (echo "ERROR: TivaWare driverlib not built. Run: cd $(TIVAWARE_DIR)/driverlib && make" && exit 1)
+	@test -f "$(STARTUP_SOURCE)" || (echo "ERROR: Startup file not found at $(STARTUP_SOURCE)" && exit 1)
+	@test -f "$(LINKER_SCRIPT)" || (echo "ERROR: Linker script not found at $(LINKER_SCRIPT)" && exit 1)
+	@echo "Compiling Unity framework..."
+	@$(CC) $(ARM_FLAGS) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@echo "Compiling startup code..."
+	@$(CC) $(ARM_FLAGS) -I$(TIVAWARE_DIR) -c $(STARTUP_SOURCE) -o startup.o
+	@echo "Compiling test and PMIC sources..."
+	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o startup.o -o $@ $(LDFLAGS)
+	@echo "Creating binary file for flashing..."
+	@$(OBJCOPY) -O binary $(TARGET) $(TARGET_BIN)
+	@echo "Build complete: $(TARGET) and $(TARGET_BIN)"
+	@echo "Flash with: lm4flash $(TARGET_BIN)"
+endif
 
 # Run tests (always rebuild to catch compilation issues)
 .PHONY: test
+ifeq ($(BUILD), mock)
 test: check-mock-lib
 	@echo "========================================"
 	@echo "Building and running tests on $(PLATFORM_NAME)"
@@ -233,6 +323,15 @@ test: check-mock-lib
 	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests..."
 	./$(TARGET)
+else
+test: all
+	@echo "========================================"
+	@echo "Hardware build complete"
+	@echo "========================================"
+	@echo "Binary ready: $(TARGET_BIN)"
+	@echo "To flash to TIVA: lm4flash $(TARGET_BIN)"
+	@echo "Note: Hardware tests run on the device, not on host"
+endif
 
 # Run tests with coverage (generates both text and JSON reports)
 .PHONY: coverage
@@ -254,7 +353,7 @@ coverage: check-mock-lib
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
-	@rm -f $(TARGET) test_runner test_runner.exe test_hardware_demo *.o unity.o
+	@rm -f test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o unity.o startup.o
 	@rm -f *.profraw *.profdata *.gcov
 	@rm -rf coverage
 	@echo "Clean complete"
@@ -267,11 +366,11 @@ help:
 	@echo "  make [TARGET] [BUILD=mock|hardware]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all           - Build test executable (default)"
-	@echo "  test          - Build and run tests"
-	@echo "  coverage      - Run tests with coverage analysis (generates text and JSON)"
-	@echo "  clean         - Remove build artifacts"
-	@echo "  help          - Show this help message"
+	@echo "  all              - Build test executable (default)"
+	@echo "  test             - Build and run tests"
+	@echo "  coverage         - Run tests with coverage analysis (generates text and JSON)"
+	@echo "  clean            - Remove build artifacts"
+	@echo "  help             - Show this help message"
 	@echo ""
 	@echo "Build Options:"
 	@echo "  BUILD=mock       - Use mock backend (no hardware required) [default]"

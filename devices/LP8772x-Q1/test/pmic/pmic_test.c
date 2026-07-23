@@ -308,6 +308,7 @@ void test_pos_pmic_init(void)
     // Initialize PMIC LLD
     Pmic_HandleCfg_t coreCfg = {0};
     pmicInitTest_initCoreCfg(&coreCfg);
+
     int32_t status = Pmic_init(&pmicHandle, &coreCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(pmicHandle.drvInitStat == (uint32_t)(PMIC_TEST_DRV_INIT_STATUS | (uint8_t)0U));

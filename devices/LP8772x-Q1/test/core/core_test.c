@@ -96,7 +96,7 @@ void core_test(void *args)
     }
     else
     {
-        (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
+        (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
 
@@ -265,6 +265,7 @@ void test_pos_core_getScratchPadValue_reg1to4(void)
 
 void test_pos_core_configCrcEnable_enableOnly(void)
 {
+#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
     // Enable configuration register CRC
@@ -284,6 +285,9 @@ void test_pos_core_configCrcEnable_enableOnly(void)
     status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
+#else
+    TEST_IGNORE_MESSAGE("PMIC_CFG_CRC_ENABLE_ONLY requires prior Pmic_configCrcCalculate() - not supported on hardware without manual setup");
+#endif
 }
 
 void test_pos_core_configCrcEnable_recalculate(void)
@@ -353,8 +357,8 @@ void test_pos_core_configCrcDisable_disable(void)
 {
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
-    // First enable CRC
-    int32_t status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    // First enable CRC with calculation to properly initialize device
+    int32_t status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify it's enabled
@@ -444,8 +448,8 @@ void test_pos_core_errStatus_specificError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(crcStat.crcEn == PMIC_DISABLE);
 
-    // Now enable it to exercise a different code path
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    // Now enable it with calculation to exercise a different code path
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify it's enabled
@@ -561,6 +565,7 @@ void test_neg_core_configCrcEnable_crcMismatch(void)
 
 void test_neg_core_configCrcCalculate_ioFailure(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     PmicMockDevice_t *mockDevice;
 
@@ -574,4 +579,7 @@ void test_neg_core_configCrcCalculate_ioFailure(void)
 
     status = Pmic_configCrcCalculate(&pmicHandle);
     PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }

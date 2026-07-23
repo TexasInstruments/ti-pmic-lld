@@ -47,10 +47,36 @@ static Pmic_Handle_t pmicHandle;
 /*                           Function Declarations                            */
 /* ========================================================================== */
 static inline void fsmTest_assertPmicRegsLocked(bool lock);
+static int32_t fsmTest_restoreDeviceState(void);
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
+
+static int32_t fsmTest_restoreDeviceState(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    const uint8_t bufLen = 1U;
+    const uint16_t registerLockReg = 0x09U;
+    const uint8_t unlockVal = 0x9BU;
+
+    // Step 1: Unlock registers by writing 0x9B to REGISTER_LOCK
+    status = platform_txByte(&pmicHandle, 0, registerLockReg, &unlockVal, bufLen);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        return status;
+    }
+
+    // Step 2: Verify registers are now unlocked (should read 0x00)
+    status = platform_rxByte(&pmicHandle, 0, registerLockReg, &regData, bufLen);
+    if (status == PMIC_ST_SUCCESS && regData != 0U)
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
+    return status;
+}
 
 void fsm_test(void *args)
 {
@@ -96,7 +122,7 @@ void fsm_test(void *args)
     }
     else
     {
-        (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
+        (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
 

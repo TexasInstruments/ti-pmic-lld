@@ -1,0 +1,96 @@
+CompileFlags:
+  Add:
+    # ============================================================================
+    # PMIC Device Headers (all 4 devices)
+    # ============================================================================
+    - "-Idevices/LP8772x-Q1/include"
+    - "-Idevices/TPS65036x-Q1/include"
+    - "-Idevices/TPS6522x-Q1/include"
+    - "-Idevices/TPS65386x-Q1/include"
+
+    # ============================================================================
+    # Test Directories (clangd finds subdirectories via relative includes)
+    # ============================================================================
+    - "-Idevices/LP8772x-Q1/test"
+    - "-Idevices/TPS65036x-Q1/test"
+    - "-Idevices/TPS6522x-Q1/test"
+    - "-Idevices/TPS65386x-Q1/test"
+
+    # ============================================================================
+    # External Dependencies (configurable via environment variables)
+    # ============================================================================
+
+    # Unity test framework (sibling directory)
+    - "-I${env:UNITY_DIR:../unity}/src"
+
+    # PMIC mocking library for test builds
+    - "-I${env:PMIC_MOCK_DIR:../pmic-lld-mocking}/mock"
+    - "-I${env:PMIC_MOCK_DIR:../pmic-lld-mocking}/adapters"
+    - "-I${env:PMIC_MOCK_DIR:../pmic-lld-mocking}/utils"
+
+    # TivaWare (hardware builds only, uncomment if needed)
+    # - "-I${env:TIVAWARE_DIR:${HOME}/TivaWare}"
+
+    # ============================================================================
+    # Build Mode: Mock Testing (Default)
+    # ============================================================================
+    # Use mock implementations instead of real hardware
+    - "-DBUILD_MOCK"
+
+    # Unity framework configuration
+    - "-DUNITY_INCLUDE_DOUBLE"
+
+    # PMIC counter overflow thresholds
+    - "-DPMIC_ERR_CNT_OVERFLOW_THR=100U"
+    - "-DPMIC_WARN_CNT_OVERFLOW_THR=100U"
+    - "-DPMIC_RETRY_CNT_OVERFLOW_THR=100U"
+
+    # ============================================================================
+    # Hardware Build Mode (Uncomment for ARM Cortex-M4 development)
+    # ============================================================================
+    # ARM target defines
+    # - "-DPART_TM4C123GH6PM"
+    # - "-DTARGET_IS_TM4C123_RB1"
+
+    # ARM architecture flags
+    # - "-target"
+    # - "arm-none-eabi"
+    # - "-mcpu=cortex-m4"
+    # - "-mfpu=fpv4-sp-d16"
+    # - "-mfloat-abi=hard"
+    # - "-mthumb"
+
+    # ============================================================================
+    # Compiler Standard
+    # ============================================================================
+    - "-std=c99"
+
+  # Remove flags that confuse the language server
+  Remove:
+    - "-Werror"                 # Don't treat warnings as errors in editor
+    - "-mno-*"                  # Remove negative ARM flags
+    - "--specs=*"               # Remove linker specs
+    - "-ffunction-sections"
+    - "-fdata-sections"
+    - "-fprofile-instr-generate" # Remove coverage instrumentation
+    - "-fcoverage-mapping"
+    - "-fcoverage-mcdc"
+
+Diagnostics:
+  # Suppress warnings from third-party code
+  Suppress:
+    - "tivaware-*"
+    - "ti-*"
+    - "unity-*"
+
+  ClangTidy:
+    Remove:
+      - "readability-magic-numbers"
+      - "cppcoreguidelines-avoid-magic-numbers"
+      - "clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling"
+      - "cppcoreguidelines-avoid-non-const-global-variables"
+      - "readability-function-cognitive-complexity"
+
+Index:
+  # Skip indexing large third-party libraries
+  Background: Skip

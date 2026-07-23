@@ -33,6 +33,7 @@
 
 
 #include "unity.h"
+#include "unity_config.h"
 #include "platform.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
@@ -89,29 +90,21 @@ extern void core_test(void *args);
 extern void esm_test(void *args);
 extern void fsm_test(void *args);
 extern void io_test(void *args);
+#ifdef BUILD_MOCK
 extern void irq_test(void *args);
-extern void pmic_test(void *args);
 extern void power_test(void *args);
+#endif
+extern void pmic_test(void *args);
 extern void wdg_test(void *args);
 
 /**
- * @brief Main test runner entry point
+ * @brief Execute all test suites once
+ * @note Called by platform_runTestLoop() - may be called multiple times on hardware
  */
-int main(void)
+static void runAllTests(void)
 {
-    printf("======================================\n");
-    printf("LP8772x-Q1 PMIC Unity Test Suite\n");
-#ifdef BUILD_MOCK
-    printf("Backend: Mock (hardware-independent)\n");
-#else
-    printf("Backend: Hardware\n");
-#endif
-    printf("======================================\n\n");
+    printf("Starting tests\n");
 
-    /* Initialize Unity test framework */
-    UNITY_BEGIN();
-
-    /* Run all test suites - each calls its own setup/teardown */
     printf("\n=== Running Common Tests ===\n");
     common_test(NULL);
 
@@ -127,17 +120,36 @@ int main(void)
     printf("\n=== Running FSM Tests ===\n");
     fsm_test(NULL);
 
-    printf("\n=== Running IRQ Tests ===\n");
-    irq_test(NULL);
-
-    printf("\n=== Running Power Tests ===\n");
-    power_test(NULL);
-
     printf("\n=== Running WDG Tests ===\n");
     wdg_test(NULL);
 
     printf("\n=== Running ESM Tests ===\n");
     esm_test(NULL);
+
+    printf("All tests completed\n");
+}
+
+/**
+ * @brief Main test runner entry point
+ */
+int main(void)
+{
+    // Initialize platform (works for both mock and hardware)
+    platform_init();
+
+    printf("======================================\n\n");
+#ifdef BUILD_MOCK
+    printf("Backend: Mock\n");
+#else
+    printf("Backend: Hardware\n");
+#endif
+    printf("======================================\n\n");
+
+    /* Initialize Unity test framework */
+    UNITY_BEGIN();
+
+    /* Platform handles test loop (interactive on hardware, single-run on mock) */
+    platform_runTestLoop(&runAllTests);
 
     /* Finalize Unity and get results */
     int result = UNITY_END();

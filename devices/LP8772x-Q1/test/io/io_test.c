@@ -89,10 +89,10 @@ static int32_t mockIoRead(const Pmic_Handle_t *handle, uint8_t page, uint8_t reg
         return status;
     }
 
-    /* Otherwise call the real platform function */
+    /* Call the real platform I2C function */
     status = platform_rxByte(handle, page, regAddr, buffer, bufLen);
 
-    /* Apply CRC corruption if configured (only when CRC is enabled and on first call) */
+    /* Apply CRC corruption if configured (for testing retry mechanism) */
     if ((g_mockCrcCorruptionMask != 0x00U) && (bufLen == 2U) && (status == PMIC_ST_SUCCESS))
     {
         buffer[1] ^= g_mockCrcCorruptionMask;  /* Corrupt CRC byte */
@@ -175,13 +175,15 @@ void io_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        platform_printString("Starting IO tests\r\n");
         platform_setupTests();
         IO_TEST_RUN_ALL();
+        platform_printString("IO tests done\r\n");
         platform_tearDownTests();
     }
     else
     {
-        (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
+        (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
 
@@ -836,6 +838,9 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     uint8_t regData = 0U;
     Pmic_Handle_t testHandle;
 
+    /* Initialize mock state FIRST to avoid garbage values */
+    resetMockIoState();
+
     /* Initialize test handle with mock functions */
     (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
     testHandle.ioRead = &mockIoRead;
@@ -848,11 +853,18 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
     status = Pmic_ioCrcEnable(&testHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
+    /* Read back register 0x1D to verify bit 7 actually stayed set */
+    uint8_t readbackValue = 0;
+    /* Use pmicHandle (not testHandle) to avoid CRC validation on this read */
+    status = Pmic_ioRxByte(&pmicHandle, 0x1D, &readbackValue);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readbackValue & 0x80);  /* Bit 7 must be set (CRC enabled) */
+
     /* Reset mock state AFTER CRC enable to only count test reads */
     resetMockIoState();
 
     /* Configure mock to corrupt CRC on first read attempt */
-    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;  /* Corrupt CRC byte */
+    g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;
 
     /* Perform read - should fail on first attempt with CRC error, succeed on retry */
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
@@ -906,7 +918,6 @@ void test_neg_io_crcErrorExhaustsRetries(void)
     uint8_t regData = 0U;
     Pmic_Handle_t testHandle;
     uint32_t initialRetryCnt = 0U;
-    uint32_t finalRetryCnt = 0U;
 
     /* Initialize test handle with mock functions */
     (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));

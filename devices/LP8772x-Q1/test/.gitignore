@@ -1,0 +1,14 @@
+# Build artifacts
+*.bin
+*.elf
+*.o
+*.map
+*.lst
+*.d
+
+# Mock build output
+test_mock
+
+# IDE-specific settings (per-developer)
+.vscode/settings.json
+.idea/workspace.xml

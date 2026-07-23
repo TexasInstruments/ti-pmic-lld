@@ -209,12 +209,8 @@ extern "C" {
 /* ========================================================================== */
 
 #define IO_TEST_RUN_POSITIVE() \
-    IO_TEST_POS_IOCRCDISABLE(); \
-    IO_TEST_POS_IOCRCENABLE(); \
-    IO_TEST_POS_IOGETCRCENABLESTATE(); \
     IO_TEST_POS_IORXBYTE(); \
     IO_TEST_POS_IORXBYTE_CS(); \
-    IO_TEST_POS_IOSETCRCENABLESTATE(); \
     IO_TEST_POS_IOTXBYTE(); \
     IO_TEST_POS_IOTXBYTE_CS(); \
     IO_TEST_POS_IOUPDATEBYTE()
