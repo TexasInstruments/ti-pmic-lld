@@ -253,12 +253,22 @@ void test_pos_esm_esmGetEnableState_enableDisable(void)
  */
 void test_pos_esm_esmGetStartState_startStop(void)
 {
-#ifdef BUILD_HOST
-    TEST_IGNORE_MESSAGE("ESM_START not accepted by hardware - I2C validated but hw rejects write");
-#endif
-
     bool started = false;
     int32_t status;
+
+    /* Enable ESM and set level mode before starting */
+    status = Pmic_esmSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID,
+        .mode = PMIC_ESM_MODE_LEVEL
+    };
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Drive ESM_IN HIGH (no-fault level) so ESM_START is accepted */
+    platform_setEsmPin(true);
 
     /* Stop ESM */
     status = Pmic_esmSetStartState(&pmicHandle, false);
@@ -277,6 +287,12 @@ void test_pos_esm_esmGetStartState_startStop(void)
     status = Pmic_esmGetStartState(&pmicHandle, &started);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(started == true);
+
+    /* Cleanup */
+    status = Pmic_esmSetStartState(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_esmSetEnableState(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**
@@ -587,10 +603,6 @@ void test_pos_esm_esmSetCfg_pwmModeConfiguration(void)
  */
 void test_pos_esm_integration_completeConfigurationSequence(void)
 {
-#ifdef BUILD_HOST
-    TEST_IGNORE_MESSAGE("ESM_START not accepted by hardware - same root cause as startStop test");
-#endif
-
     int32_t status;
     bool isEnabled = false;
     bool started = false;
@@ -623,6 +635,9 @@ void test_pos_esm_integration_completeConfigurationSequence(void)
     status = Pmic_esmGetEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == true);
+
+    /* Drive ESM_IN HIGH (no-fault level) so ESM_START is accepted */
+    platform_setEsmPin(true);
 
     /* Start ESM */
     status = Pmic_esmSetStartState(&pmicHandle, true);
@@ -697,10 +712,6 @@ void test_pos_esm_esmSetCfg_configurationReadbackVerification(void)
  */
 void test_pos_esm_integration_enableConfigureStartSequence(void)
 {
-#ifdef BUILD_HOST
-    TEST_IGNORE_MESSAGE("ESM_START not accepted by hardware - same root cause as startStop test");
-#endif
-
     int32_t status;
     bool isEnabled = false;
     bool started = false;
@@ -723,7 +734,9 @@ void test_pos_esm_integration_enableConfigureStartSequence(void)
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 3: Start ESM */
+    /* Step 3: Drive ESM_IN HIGH (no-fault level) then start ESM */
+    platform_setEsmPin(true);
+
     status = Pmic_esmSetStartState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -746,12 +759,22 @@ void test_pos_esm_integration_enableConfigureStartSequence(void)
  */
 void test_pos_esm_esmStart_start(void)
 {
-#ifdef BUILD_HOST
-    TEST_IGNORE_MESSAGE("ESM_START not accepted by hardware - same root cause as startStop test");
-#endif
-
     int32_t status;
     bool started = false;
+
+    /* Enable ESM and set level mode before starting */
+    status = Pmic_esmSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID,
+        .mode = PMIC_ESM_MODE_LEVEL
+    };
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Drive ESM_IN HIGH (no-fault level) so ESM_START is accepted */
+    platform_setEsmPin(true);
 
     /* Call Pmic_esmStart wrapper */
     status = Pmic_esmStart(&pmicHandle);
@@ -764,6 +787,8 @@ void test_pos_esm_esmStart_start(void)
 
     /* Cleanup */
     status = Pmic_esmSetStartState(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_esmSetEnableState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 

@@ -554,6 +554,10 @@ int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config);
  * @brief Enable configuration register CRC checking on the PMIC, optionally
  * recalculating the CRC before enabling.
  *
+ * Design: PMICDRV-735
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @param handle    [IN] PMIC interface handle.
  * @param calculate [IN] If true (PMIC_CFG_CRC_RECALCULATE), calculates and
  * stores a new CRC before enabling. If false (PMIC_CFG_CRC_ENABLE_ONLY),
@@ -568,6 +572,10 @@ int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate);
 /**
  * @brief Disable configuration register CRC checking on the PMIC.
  *
+ * Design: PMICDRV-736
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return PMIC_ST_SUCCESS if configuration register CRC has been disabled,
@@ -578,6 +586,10 @@ int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle);
 
 /**
  * @brief Get the enable state of configuration register CRC checking on the PMIC.
+ *
+ * Design: PMICDRV-1871
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle    [IN]  PMIC interface handle.
  * @param isEnabled [OUT] True if configuration register CRC checking is enabled,
@@ -591,6 +603,10 @@ int32_t Pmic_getConfigCrcEnableState(const Pmic_Handle_t *handle, bool *isEnable
 
 /**
  * @brief Get configuration register CRC status from the PMIC.
+ *
+ * Design: PMICDRV-737
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @details The following statuses can be obtained:
  *
@@ -609,6 +625,10 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
  * @brief Clear specific configuration register CRC status flags on the PMIC.
  * This API clears the same status flags that are reported by `Pmic_getConfigCrcStatus()`.
  *
+ * Design: PMICDRV-1872
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @param handle        [IN] PMIC interface handle.
  * @param configCrcStat [IN] Configuration register CRC status flags to clear.
  *
@@ -620,6 +640,10 @@ int32_t Pmic_clrConfigCrcStatus(const Pmic_Handle_t *handle, const Pmic_ConfigCr
 /**
  * @brief Write a 16-bit value to the PMIC's configuration register CRC data
  * registers (CFG_REG_CRC0_REG and CFG_REG_CRC1_REG).
+ *
+ * Design: PMICDRV-1870
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle [IN] PMIC interface handle.
  * @param value  [IN] 16-bit value to write to the configuration register CRC
@@ -634,6 +658,10 @@ int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value);
  * @brief Read the 16-bit value from the PMIC's configuration register CRC data
  * registers (CFG_REG_CRC0_REG and CFG_REG_CRC1_REG).
  *
+ * Design: PMICDRV-739
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @param handle [IN]  PMIC interface handle.
  * @param value  [OUT] Value obtained from the configuration register CRC data
  * registers.
@@ -647,6 +675,10 @@ int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
  * @brief Calculate the CRC-16 over the PMIC configuration registers (0x00–0xFF),
  * write the result to CFG_REG_CRC0/CFG_REG_CRC1, and trigger a hardware
  * re-check to verify the stored value is correct.
+ *
+ * Design: PMICDRV-738
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-544, PMICDRV-545
  *
  * Polynomial : 0xBAAD (1+x^1+x^3+x^4+x^6+x^8+x^10+x^12+x^13+x^14+x^16)
  * Init       : 0xFFFF

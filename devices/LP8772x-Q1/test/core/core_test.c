@@ -201,14 +201,14 @@ void test_neg_core_configCrcCalculate_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_getConfigCrcVal_nullHandle(void)
+void test_neg_core_getConfigCrc_nullHandle(void)
 {
     uint16_t value = 0U;
     int32_t status = Pmic_getConfigCrc(NULL, &value);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_getConfigCrcVal_nullValue(void)
+void test_neg_core_getConfigCrc_nullValue(void)
 {
     int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -264,7 +264,6 @@ void test_pos_core_getScratchPadValue_reg1to4(void)
 
 void test_pos_core_configCrcEnable_enableOnly(void)
 {
-#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
     // Enable configuration register CRC
@@ -284,14 +283,10 @@ void test_pos_core_configCrcEnable_enableOnly(void)
     status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
-#else
-    TEST_IGNORE_MESSAGE("PMIC_CFG_CRC_ENABLE_ONLY requires prior Pmic_configCrcCalculate() - not supported on hardware without manual setup");
-#endif
 }
 
 void test_pos_core_configCrcEnable_recalculate(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
@@ -312,9 +307,6 @@ void test_pos_core_configCrcEnable_recalculate(void)
     status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.errorDetected == (bool)false);
-#else
-    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
-#endif
 }
 
 static int32_t coreTest_getConfigCrc(uint16_t *crc)
@@ -338,9 +330,8 @@ static int32_t coreTest_getConfigCrc(uint16_t *crc)
     return status;
 }
 
-void test_pos_core_getConfigCrcVal_readValue(void)
+void test_pos_core_getConfigCrc_readValue(void)
 {
-#ifdef BUILD_MOCK
     uint16_t expValue = 0U, actValue = 0U;
 
     // Get expected configuration CRC value from device
@@ -351,23 +342,16 @@ void test_pos_core_getConfigCrcVal_readValue(void)
     status = coreTest_getConfigCrc(&actValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(expValue == actValue);
-#else
-    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
-#endif
 }
 
-void test_pos_core_setConfigCrcVal_writeValue(void)
+void test_pos_core_setConfigCrc_writeValue(void)
 {
-#ifdef BUILD_MOCK
     // Write a known 16-bit value to the config CRC registers
     int32_t status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
-#endif
 }
 
-void test_neg_core_setConfigCrcVal_nullHandle(void)
+void test_neg_core_setConfigCrc_nullHandle(void)
 {
     int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -379,7 +363,6 @@ void test_neg_core_setConfigCrcVal_nullHandle(void)
 
 void test_pos_core_configCrcDisable_disable(void)
 {
-#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
 
     // First enable CRC with calculation to properly initialize device
@@ -399,39 +382,8 @@ void test_pos_core_configCrcDisable_disable(void)
     status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
-#else
-    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
-#endif
 }
 
-void test_neg_core_configCrcEnable_error(void)
-{
-#ifdef BUILD_MOCK
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
-    // First ensure CRC is disabled
-    status = Pmic_configCrcDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Read CONFIG_CRC_CONFIG register to check CRC_CALC bit
-    status = platform_rxByte(&pmicHandle, 0U, CORE_TEST_CALCUL_CONFIG_CRC_1_REG - 0x47U, &regData, 1U);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Now enable and calculate CRC, which should trigger CONFIG_REG_CRC error path
-    // This covers the PMIC_ST_ERR_CONFIG_REG_CRC error handling
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
-
-    // The status could be SUCCESS or CONFIG_REG_CRC error depending on device state
-    // We're mainly testing that the code path is executed
-    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_CONFIG_REG_CRC));
-
-    // Clean up - disable CRC
-    (void)Pmic_configCrcDisable(&pmicHandle);
-#else
-    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
-#endif
-}
 
 /* ========================================================================== */
 /*              LP8772x-Q1 Additional Error Handling Coverage Tests          */
@@ -500,14 +452,11 @@ void test_pos_core_errStatus_specificError(void)
 
 void test_neg_core_configCrcEnable_alreadyEnabled(void)
 {
-#ifdef BUILD_MOCK
     // Test coverage for lines 288-289: CONFIG_CRC_EN already enabled
     // When Pmic_configCrcCalculate() is called with CRC already enabled,
     // it should return PMIC_ST_ERR_NOT_SUPPORTED
 
     int32_t status = PMIC_ST_SUCCESS;
-    const uint16_t CONFIG_CRC_CONFIG_REG = TEST_REG_CONFIG_CRC_CONFIG;  // CONFIG_CRC_CONFIG register address
-    const uint8_t CONFIG_CRC_EN_SHIFT = 0U;         // CONFIG_CRC_EN bit position
 
     // First ensure CRC is disabled
     status = Pmic_configCrcDisable(&pmicHandle);
@@ -524,9 +473,6 @@ void test_neg_core_configCrcEnable_alreadyEnabled(void)
 
     // Clean up
     (void)Pmic_configCrcDisable(&pmicHandle);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
-#endif
 }
 
 void test_neg_core_configCrcEnable_calcBitHigh(void)

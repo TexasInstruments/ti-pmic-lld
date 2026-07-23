@@ -283,6 +283,13 @@ int32_t platform_rxByte(const Pmic_Handle_t *handle,
 void platform_unlockRegisters(void);
 
 /**
+ * @brief Drive the ESM_IN pin (TIVA PA2) high or low.
+ *
+ * @param high true = drive HIGH (no-fault level); false = drive LOW (fault level)
+ */
+void platform_setEsmPin(bool high);
+
+/**
  * @brief Execute test callback with platform-appropriate behavior
  *
  * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
@@ -317,6 +324,8 @@ void platform_runTestLoop(void (*testCallback)(void));
     #undef PLATFORM_RUN_TEST
     #endif
     #include "platform_mock.h"
+    /* Mock: ESM pin control is a no-op (no physical pin) */
+    #define platform_setEsmPin(high) ((void)(high))
 #endif
 
 #endif /* PMIC_TEST_PLATFORM_H */

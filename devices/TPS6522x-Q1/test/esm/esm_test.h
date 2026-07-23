@@ -122,8 +122,7 @@
 /*                         Integration Tests                                  */
 /* ========================================================================== */
 #define ESM_TEST_INTEGRATION() \
-    PLATFORM_RUN_TEST(test_pos_esm_completeSequence); \
-    PLATFORM_RUN_TEST(test_pos_esm_enableCfgStartSequence)
+    PLATFORM_RUN_TEST(test_pos_esm_completeSequence)
 
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */
@@ -194,6 +193,5 @@ void test_pos_esm_setCfg_combined(void);
 void test_pos_esm_setCfg_pwmMode(void);
 void test_pos_esm_completeSequence(void);
 void test_pos_esm_getCfg_readback(void);
-void test_pos_esm_enableCfgStartSequence(void);
 
 #endif /* ESM_TEST_H */

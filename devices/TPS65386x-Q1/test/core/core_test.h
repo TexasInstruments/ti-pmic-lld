@@ -318,7 +318,7 @@ extern "C" {
 #define CORE_TEST_NEG_CONFIGCRCENABLE() \
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle)
 
-/* Test: TC-CORE-0060 */
+/* Test: TC-CORE-0132 */
 #define CORE_TEST_CONFIGCRCENABLE() \
     CORE_TEST_POS_CONFIGCRCENABLE(); \
     CORE_TEST_NEG_CONFIGCRCENABLE()
@@ -333,7 +333,7 @@ extern "C" {
 #define CORE_TEST_NEG_CONFIGCRCDISABLE() \
     PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
 
-/* Test: TC-CORE-0061 */
+/* Test: TC-CORE-0133 */
 #define CORE_TEST_CONFIGCRCDISABLE() \
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE()
@@ -350,7 +350,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcEnableState_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcEnableState_nullIsEnabled)
 
-/* Test: TC-CORE-0062 */
+/* Test: TC-CORE-0134 */
 #define CORE_TEST_GETCONFIGCRCENABLESTATE() \
     CORE_TEST_POS_GETCONFIGCRCENABLESTATE(); \
     CORE_TEST_NEG_GETCONFIGCRCENABLESTATE()
@@ -368,7 +368,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus); \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_zeroValidParams)
 
-/* Test: TC-CORE-0063 */
+/* Test: TC-CORE-0135 */
 #define CORE_TEST_GETCONFIGCRCSTATUS() \
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS()
@@ -386,41 +386,41 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_clrConfigCrcStatus_nullStatus); \
     PLATFORM_RUN_TEST(test_neg_core_clrConfigCrcStatus_zeroValidParams)
 
-/* Test: TC-CORE-0064 */
+/* Test: TC-CORE-0136 */
 #define CORE_TEST_CLRCONFIGCRCSTATUS() \
     CORE_TEST_POS_CLRCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_CLRCONFIGCRCSTATUS()
 
 /* ======================================================================== */
-/*                      Test APIs: setConfigCrcVal                          */
+/*                      Test APIs: setConfigCrc                             */
 /* ======================================================================== */
 
-#define CORE_TEST_POS_SETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_pos_core_setConfigCrcVal_writeAndVerify)
+#define CORE_TEST_POS_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrc_writeAndVerify)
 
-#define CORE_TEST_NEG_SETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_neg_core_setConfigCrcVal_nullHandle)
+#define CORE_TEST_NEG_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_nullHandle)
 
-/* Test: TC-CORE-0065 */
-#define CORE_TEST_SETCONFIGCRCVAL() \
-    CORE_TEST_POS_SETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_SETCONFIGCRCVAL()
+/* Test: TC-CORE-0137 */
+#define CORE_TEST_SETCONFIGCRC() \
+    CORE_TEST_POS_SETCONFIGCRC(); \
+    CORE_TEST_NEG_SETCONFIGCRC()
 
 /* ======================================================================== */
-/*                      Test APIs: getConfigCrcVal                          */
+/*                      Test APIs: getConfigCrc                             */
 /* ======================================================================== */
 
-#define CORE_TEST_POS_GETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcVal_readValue)
+#define CORE_TEST_POS_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrc_readValue)
 
-#define CORE_TEST_NEG_GETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullValue)
+#define CORE_TEST_NEG_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullValue)
 
-/* Test: TC-CORE-0066 */
-#define CORE_TEST_GETCONFIGCRCVAL() \
-    CORE_TEST_POS_GETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_GETCONFIGCRCVAL()
+/* Test: TC-CORE-0138 */
+#define CORE_TEST_GETCONFIGCRC() \
+    CORE_TEST_POS_GETCONFIGCRC(); \
+    CORE_TEST_NEG_GETCONFIGCRC()
 
 /* ======================================================================== */
 /*                    Test APIs: configCrcCalculate                         */
@@ -463,8 +463,8 @@ extern "C" {
     CORE_TEST_POS_GETCONFIGCRCENABLESTATE(); \
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_POS_CLRCONFIGCRCSTATUS(); \
-    CORE_TEST_POS_SETCONFIGCRCVAL(); \
-    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_POS_SETCONFIGCRC(); \
+    CORE_TEST_POS_GETCONFIGCRC(); \
     CORE_TEST_POS_CONFIGCRCCALCULATE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
@@ -489,8 +489,8 @@ extern "C" {
     CORE_TEST_NEG_GETCONFIGCRCENABLESTATE(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_CLRCONFIGCRCSTATUS(); \
-    CORE_TEST_NEG_SETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_SETCONFIGCRC(); \
+    CORE_TEST_NEG_GETCONFIGCRC(); \
     CORE_TEST_NEG_CONFIGCRCCALCULATE()
 
 #define CORE_TEST_RUN_ALL() \
@@ -682,17 +682,17 @@ void test_neg_core_clrConfigCrcStatus_nullStatus(void);
 void test_neg_core_clrConfigCrcStatus_zeroValidParams(void);
 
 /* ========================================================================== */
-/*                setConfigCrcVal API Tests                                   */
+/*                setConfigCrc API Tests                                      */
 /* ========================================================================== */
-void test_pos_core_setConfigCrcVal_writeAndVerify(void);
-void test_neg_core_setConfigCrcVal_nullHandle(void);
+void test_pos_core_setConfigCrc_writeAndVerify(void);
+void test_neg_core_setConfigCrc_nullHandle(void);
 
 /* ========================================================================== */
-/*                getConfigCrcVal API Tests                                   */
+/*                getConfigCrc API Tests                                      */
 /* ========================================================================== */
-void test_pos_core_getConfigCrcVal_readValue(void);
-void test_neg_core_getConfigCrcVal_nullHandle(void);
-void test_neg_core_getConfigCrcVal_nullValue(void);
+void test_pos_core_getConfigCrc_readValue(void);
+void test_neg_core_getConfigCrc_nullHandle(void);
+void test_neg_core_getConfigCrc_nullValue(void);
 
 /* ========================================================================== */
 /*                configCrcCalculate API Tests                                */

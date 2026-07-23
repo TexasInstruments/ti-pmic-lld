@@ -51,7 +51,7 @@ extern "C" {
 
 /* ======================================================================== */
 /*   Test APIs: configCrcCalculate, getConfigCrcStatus, configCrcEnable,    */
-/*              configCrcDisable, getConfigCrcVal, setConfigCrcVal          */
+/*              configCrcDisable, getConfigCrc, setConfigCrc                */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCCALCULATE() \
@@ -92,8 +92,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_alreadyEnabled); \
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_calcBitHigh); \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_crcMismatch); \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_error)
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_crcMismatch)
 
 /* Test: TC-CORE-0025 */
 #define CORE_TEST_CONFIGCRCENABLE() \
@@ -101,35 +100,35 @@ extern "C" {
     CORE_TEST_NEG_CONFIGCRCENABLE()
 
 /* ======================================================================== */
-/*                       Test APIs: getConfigCrcVal                         */
+/*                       Test APIs: getConfigCrc                            */
 /* ======================================================================== */
 
-#define CORE_TEST_POS_GETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcVal_readValue)
+#define CORE_TEST_POS_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrc_readValue)
 
-#define CORE_TEST_NEG_GETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullValue)
+#define CORE_TEST_NEG_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullValue)
 
 /* Test: TC-CORE-0026 */
-#define CORE_TEST_GETCONFIGCRCVAL() \
-    CORE_TEST_POS_GETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_GETCONFIGCRCVAL()
+#define CORE_TEST_GETCONFIGCRC() \
+    CORE_TEST_POS_GETCONFIGCRC(); \
+    CORE_TEST_NEG_GETCONFIGCRC()
 
 /* ======================================================================== */
-/*                       Test APIs: setConfigCrcVal                         */
+/*                       Test APIs: setConfigCrc                            */
 /* ======================================================================== */
 
-#define CORE_TEST_POS_SETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_pos_core_setConfigCrcVal_writeValue)
+#define CORE_TEST_POS_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrc_writeValue)
 
-#define CORE_TEST_NEG_SETCONFIGCRCVAL() \
-    PLATFORM_RUN_TEST(test_neg_core_setConfigCrcVal_nullHandle)
+#define CORE_TEST_NEG_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_nullHandle)
 
-/* Test: TC-CORE-0070 */
-#define CORE_TEST_SETCONFIGCRCVAL() \
-    CORE_TEST_POS_SETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_SETCONFIGCRCVAL()
+/* Test: TC-CORE-0131 */
+#define CORE_TEST_SETCONFIGCRC() \
+    CORE_TEST_POS_SETCONFIGCRC(); \
+    CORE_TEST_NEG_SETCONFIGCRC()
 
 /* ======================================================================== */
 /*                      Test APIs: getConfigCrcStatus                       */
@@ -235,8 +234,8 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCCALCULATE(); \
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_POS_CONFIGCRCENABLE(); \
-    CORE_TEST_POS_GETCONFIGCRCVAL(); \
-    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_POS_GETCONFIGCRC(); \
+    CORE_TEST_POS_SETCONFIGCRC(); \
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
@@ -248,8 +247,8 @@ extern "C" {
     CORE_TEST_NEG_CONFIGCRCCALCULATE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCENABLE(); \
-    CORE_TEST_NEG_GETCONFIGCRCVAL(); \
-    CORE_TEST_NEG_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRC(); \
+    CORE_TEST_NEG_SETCONFIGCRC(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
@@ -306,7 +305,6 @@ void test_neg_core_configCrcEnable_nullHandle(void);
 void test_neg_core_configCrcEnable_alreadyEnabled(void);
 void test_neg_core_configCrcEnable_calcBitHigh(void);
 void test_neg_core_configCrcEnable_crcMismatch(void);
-void test_neg_core_configCrcEnable_error(void);
 
 /* ========================================================================== */
 /*                  configCrcDisable API Tests                                */
@@ -327,17 +325,17 @@ void test_neg_core_configCrcCalculate_nullHandle(void);
 void test_neg_core_configCrcCalculate_ioFailure(void);
 
 /* ========================================================================== */
-/*                   getConfigCrcVal API Tests                                */
+/*                   getConfigCrc API Tests                                   */
 /* ========================================================================== */
-void test_pos_core_getConfigCrcVal_readValue(void);
-void test_neg_core_getConfigCrcVal_nullHandle(void);
-void test_neg_core_getConfigCrcVal_nullValue(void);
+void test_pos_core_getConfigCrc_readValue(void);
+void test_neg_core_getConfigCrc_nullHandle(void);
+void test_neg_core_getConfigCrc_nullValue(void);
 
 /* ========================================================================== */
-/*                   setConfigCrcVal API Tests                                */
+/*                   setConfigCrc API Tests                                   */
 /* ========================================================================== */
-void test_pos_core_setConfigCrcVal_writeValue(void);
-void test_neg_core_setConfigCrcVal_nullHandle(void);
+void test_pos_core_setConfigCrc_writeValue(void);
+void test_neg_core_setConfigCrc_nullHandle(void);
 
 /* ========================================================================== */
 /*                  init API Tests                                            */

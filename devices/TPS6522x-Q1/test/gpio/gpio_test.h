@@ -263,9 +263,13 @@ extern "C" {
 /* ========================================================================== */
 /*                   Property tests (BUILD_MOCK only)                         */
 /* ========================================================================== */
+#ifdef BUILD_MOCK
 /* Test: TC-GPIO-0021 */
 #define GPIO_TEST_PROPERTY() \
     PLATFORM_RUN_TEST(test_pos_gpio_property_pinConfigurations)
+#else
+#define GPIO_TEST_PROPERTY()
+#endif
 
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */

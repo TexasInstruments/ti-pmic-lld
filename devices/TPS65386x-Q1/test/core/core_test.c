@@ -439,20 +439,20 @@ void test_neg_core_clrConfigCrcStatus_zeroValidParams(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-void test_neg_core_setConfigCrcVal_nullHandle(void)
+void test_neg_core_setConfigCrc_nullHandle(void)
 {
     int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_getConfigCrcVal_nullHandle(void)
+void test_neg_core_getConfigCrc_nullHandle(void)
 {
     uint16_t value = 0U;
     int32_t status = Pmic_getConfigCrc(NULL, &value);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_getConfigCrcVal_nullValue(void)
+void test_neg_core_getConfigCrc_nullValue(void)
 {
     int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -881,7 +881,7 @@ void test_pos_core_clrConfigCrcStatus_clearError(void)
 #endif
 }
 
-void test_pos_core_setConfigCrcVal_writeAndVerify(void)
+void test_pos_core_setConfigCrc_writeAndVerify(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
@@ -898,7 +898,7 @@ void test_pos_core_setConfigCrcVal_writeAndVerify(void)
 #endif
 }
 
-void test_pos_core_getConfigCrcVal_readValue(void)
+void test_pos_core_getConfigCrc_readValue(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;

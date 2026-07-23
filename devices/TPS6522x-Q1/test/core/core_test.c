@@ -40,7 +40,6 @@
 #include "pmic.h"
 #include "pmic_core.h"
 #include "pmic_io.h"
-#include "regmap/irq.h"
 #include "test_constants.h"
 
 /* ========================================================================== */
@@ -184,15 +183,6 @@ void test_neg_core_coreGetScratchPadValue_nullValue(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_setConfigCrc_nullHandle(void)
-{
-#ifdef BUILD_MOCK
-    int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
-#endif
-}
 
 /**
  * @brief Test validatePmicHandle with NULL criticalSectionStart
@@ -230,18 +220,6 @@ void test_neg_core_validatePmicHandle_nullCritSecStop(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-void test_neg_core_getConfigCrc_nullHandle(void)
-{
-    uint16_t value = 0U;
-    int32_t status = Pmic_getConfigCrc(NULL, &value);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_neg_core_getConfigCrc_nullValue(void)
-{
-    int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
 
 /* ========================================================================== */
 /*                         Positive Test Cases                                */
@@ -385,99 +363,5 @@ void test_pos_core_validatePmicHandle_validCriticalSection(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
-void test_pos_core_setConfigCrc_writeAndVerify(void)
-{
-#ifdef BUILD_MOCK
-    int32_t status;
-    uint16_t origVal = 0U;
-    uint16_t readVal = 0U;
-    uint16_t testVal = 0xA55AU;
-
-    status = Pmic_getConfigCrc(&pmicHandle, &origVal);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "getConfigCrc (read orig) failed");
-
-    status = Pmic_setConfigCrc(&pmicHandle, testVal);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "setConfigCrc (write testVal) failed");
-
-    status = Pmic_getConfigCrc(&pmicHandle, &readVal);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "getConfigCrc (read back) failed");
-    TEST_ASSERT_EQUAL_HEX16_MESSAGE(testVal, readVal, "readback value does not match written value");
-
-    status = Pmic_setConfigCrc(&pmicHandle, origVal);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "setConfigCrc (restore orig) failed");
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
-#endif
-}
-
-void test_pos_core_getConfigCrc_readValue(void)
-{
-#ifdef BUILD_MOCK
-    int32_t status;
-    uint16_t value = 0U;
-
-    status = Pmic_setConfigCrc(&pmicHandle, 0x5AA5U);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "setConfigCrc (write 0x5AA5) failed");
-
-    status = Pmic_getConfigCrc(&pmicHandle, &value);
-    TEST_ASSERT_EQUAL_INT32_MESSAGE(PMIC_ST_SUCCESS, status, "getConfigCrc (read back) failed");
-    TEST_ASSERT_EQUAL_HEX16_MESSAGE(0x5AA5U, value, "readback value does not match written value");
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
-#endif
-}
-
-/* ========================================================================== */
-/*                         configCrcRun Test Cases                            */
-/* ========================================================================== */
-
-void test_neg_core_configCrcRun_nullHandle(void)
-{
-    int32_t status = Pmic_configCrcRun(NULL, false);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_pos_core_configCrcRun_update(void)
-{
-    /* Trigger hardware CRC update (RUN_CRC_UPDATE bit); asserts the I/O write
-     * succeeds. setUp resets PMIC state before this test runs. */
-    int32_t status = Pmic_configCrcRun(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
-
-void test_pos_core_configCrcRun_bistNoError(void)
-{
-    int32_t status = 0;
-    uint8_t regData = 0U;
-    uint16_t origCrc = 0U;
-    uint16_t newCrc = 0U;
-
-    status = Pmic_configCrcRun(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    platform_timerWaitMs(25U);
-
-    status = Pmic_configCrcRun(&pmicHandle, false);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    platform_timerWaitMs(25U);
-
-    status = Pmic_ioRxByte(&pmicHandle, INT_MODERATE_ERR_REG, &regData);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((regData & (uint8_t)REG_CRC_ERR_INT_MASK) == 0U);
-}
-
-void test_pos_core_getConfigCrc_readAfterUpdate(void)
-{
-    int32_t status;
-    uint16_t value = 0U;
-
-    /* Trigger hardware CRC update so REGMAP_USER_CRC_HIGH/LOW hold a valid
-     * hardware-computed value before the read. */
-    status = Pmic_configCrcRun(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Read back the stored CRC */
-    status = Pmic_getConfigCrc(&pmicHandle, &value);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
 
 /* Note: setUp/tearDown removed - provided by test_runner.c for Unity */

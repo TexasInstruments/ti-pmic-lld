@@ -227,20 +227,12 @@ endif
 	@$(PMIC_COVERAGE) generate test_runner test_runner.profdata $(PMIC_SOURCES)
 
 # Clean build artifacts
-ifeq ($(OS),Windows_NT)
 clean:
 	@echo "Cleaning build artifacts..."
-	-@del /f /q test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o *.profraw *.profdata *.gcov 2>nul
-	-@if exist coverage rmdir /s /q coverage
-	@echo "Clean complete"
-else
-clean:
-	@echo "Cleaning build artifacts..."
-	@rm -f test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o unity.o startup.o
-	@rm -f *.profraw *.profdata *.gcov
+	@rm -fv test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o unity.o startup.o
+	@rm -fv *.profraw *.profdata *.gcov
 	@rm -rf coverage
 	@echo "Clean complete"
-endif
 
 # Convenience targets for test filtering
 # These targets provide shortcuts for common filtering scenarios

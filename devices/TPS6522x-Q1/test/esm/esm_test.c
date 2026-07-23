@@ -34,6 +34,7 @@
 
 #include "platform.h"
 #include "esm_test.h"
+#include "pmic_gpio.h"
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -610,12 +611,19 @@ void test_pos_esm_setCfg_pwmMode(void)
  */
 void test_pos_esm_completeSequence(void)
 {
-#ifndef BUILD_MOCK
-    TEST_IGNORE_MESSAGE("ESM_MCU_START readback fails on hardware; ESM start state is not reliably observable without a valid nERR_MCU signal");
-#endif
     int32_t status;
     bool isEnabled = false;
     bool started = false;
+
+    /* Configure GPIO6 as nERR_MCU and drive TIVA PA2 high. */
+    Pmic_GpioPinCfg_t gpioCfg = {
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
+        .pinNum = PMIC_GPIO_PIN6,
+        .fxnSel = PMIC_GPIO_PIN6_FXN_SEL_NERR_MCU
+    };
+    status = Pmic_gpioSetPinCfg(&pmicHandle, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    platform_setEsmPin(true);
 
     /* Enable ESM first before configuring, per datasheet sequencing. */
     status = Pmic_esmSetEnableState(&pmicHandle, true);
@@ -640,6 +648,19 @@ void test_pos_esm_completeSequence(void)
 
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_EsmCfg_t esmCfgReadback = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID |
+                       PMIC_CFG_ESM_CLR_EN_DRV_ON_FAIL_INT_VALID
+    };
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfgReadback);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(esmCfgReadback.mode == PMIC_ESM_MODE_LEVEL);
+    PLATFORM_ASSERT(esmCfgReadback.errCntThr == 0x3);
+    PLATFORM_ASSERT(esmCfgReadback.delay1 == 0x50);
+    PLATFORM_ASSERT(esmCfgReadback.delay2 == 0x30);
+    PLATFORM_ASSERT(esmCfgReadback.clrEnDrvOnFailInt == false);
 
     /* Start ESM */
     status = Pmic_esmSetStartState(&pmicHandle, true);
@@ -706,48 +727,6 @@ void test_pos_esm_getCfg_readback(void)
     PLATFORM_ASSERT(esmCfgGet.delay2 == 0x55);
 }
 
-/**
- * @brief Test ESM enable, configure, and start combined sequence
- */
-void test_pos_esm_enableCfgStartSequence(void)
-{
-    int32_t status;
-    bool isEnabled = false;
-    bool started = false;
-
-    /* Step 1: Enable ESM */
-    status = Pmic_esmSetEnableState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_esmGetEnableState(&pmicHandle, &isEnabled);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(isEnabled == true);
-
-    /* Step 2: Configure ESM */
-    Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID,
-        .mode = PMIC_ESM_MODE_LEVEL,
-        .errCntThr = 0x7
-    };
-
-    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Step 3: Start ESM */
-    status = Pmic_esmSetStartState(&pmicHandle, true);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_esmGetStartState(&pmicHandle, &started);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(started == true);
-
-    /* Cleanup: Stop and disable */
-    status = Pmic_esmSetStartState(&pmicHandle, false);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_esmSetEnableState(&pmicHandle, false);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
 
 /* ========================================================================== */
 /*                         Entry Point Function                               */

@@ -186,68 +186,6 @@ int32_t Pmic_setScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadR
  */
 int32_t Pmic_getScratchPadValue(const Pmic_Handle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
-/**
- * @brief Run CRC BIST, and depending on the input parameter, either update the
- * expected CRC value in the PMIC or check the CRC registers against the existing
- * expected CRC value.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param update [IN] If true, the expected register map CRC will be updated.
- * Otherwise, the PMIC will check the CRC registers against the existing expected
- * CRC value and report an error if there is a mismatch.
- *
- * @return PMIC_ST_SUCCESS if CRC BIST has been successfully triggered, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_configCrcRun(const Pmic_Handle_t *handle, bool update);
-
-/**
- * @brief Write the full 16-bit configuration register CRC value to the PMIC.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param value [IN] 16-bit CRC value to be written to the PMIC.
- *
- * @return PMIC_ST_SUCCESS if the CRC value has been successfully written, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value);
-
-/**
- * @brief Read the full 16-bit configuration register CRC value from the PMIC.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param value [OUT] 16-bit CRC value read from the PMIC.
- *
- * @return PMIC_ST_SUCCESS if the CRC value has been successfully read, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
-
-/**
- * @brief Calculate the CRC-16 over the PMIC configuration registers
- * (0x000-0x0EF and 0x401-0x40A), write the result to
- * REGMAP_USER_CRC_HIGH_REG/REGMAP_USER_CRC_LOW_REG, and trigger a hardware
- * BIST to verify the stored value is correct.
- *
- * Polynomial : 0x755B (x^16+x^14+x^13+x^12+x^10+x^8+x^6+x^4+x^3+x+1)
- * Init       : 0xFFFF
- * Bit order  : big-endian (RefIn/RefOut = false)
- *
- * @note The hardware BIST result is reported via REG_CRC_ERR_INT in
- * INT_MODERATE_ERR. The interrupt latch is cleared before triggering the
- * BIST and re-read immediately after.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @return PMIC_ST_SUCCESS if the CRC was calculated, stored, and verified
- * successfully. Returns PMIC_ST_ERR_CONFIG_REG_CRC if the hardware BIST
- * reports a mismatch after the CRC is written. For all valid codes, refer
- * to @ref Pmic_ErrorCodes.
- */
-int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }

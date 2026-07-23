@@ -1905,10 +1905,9 @@ void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
     Pmic_Handle_t testHandle;
     uint8_t rxData = 0U;
 
-    if (pmicHandle.commMode == PMIC_INTF_I2C_SINGLE ||
-        pmicHandle.commMode == PMIC_INTF_I2C_DUAL) {
-        TEST_IGNORE_MESSAGE("SPI CRC mismatch test not applicable in I2C mode");
-    }
+#ifndef BUILD_MOCK
+    TEST_IGNORE_MESSAGE("SPI CRC mismatch test not applicable in I2C mode");
+#endif
 
     /* Initialize test handle with SPI mode and CRC enabled */
     (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));

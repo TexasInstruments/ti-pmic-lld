@@ -284,6 +284,16 @@ void platform_unlockRegisters(void);
 void platform_softReboot(void);
 
 /**
+ * @brief Drive the nERR_MCU signal (TIVA PA2 → PMIC GPIO6) high or low.
+ *
+ * @details No-op on non-host builds. Call before enabling/starting ESM to
+ *          provide a valid level-mode signal and prevent an immediate ESM fault.
+ *
+ * @param high true = drive PA2 high; false = drive PA2 low
+ */
+void platform_setEsmPin(bool high);
+
+/**
  * @brief Setup/initialize the testing framework to begin running tests.
  */
 void platform_setupTests(void);

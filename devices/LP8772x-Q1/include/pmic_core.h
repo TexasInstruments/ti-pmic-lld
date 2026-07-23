@@ -195,7 +195,8 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, bool *lockState);
  * @brief Enables config register CRC.
  *
  * Design: PMICDRV-735
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param calculate [IN] If true (PMIC_CFG_CRC_RECALCULATE), this API will
@@ -213,7 +214,8 @@ int32_t Pmic_configCrcEnable(Pmic_Handle_t *handle, bool calculate);
  * @brief Disables config register CRC.
  *
  * Design: PMICDRV-736
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  *
@@ -227,7 +229,8 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle);
  * @brief Get configuration register CRC status.
  *
  * Design: PMICDRV-737
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle [IN] Pointer to the PMIC core handle structure.
  * @param configCrcStat [OUT] Configuration register CRC status obtained from PMIC.
@@ -260,7 +263,8 @@ int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
  * calculation or affect the CRC value provided by the MCU.
  *
  * Design: PMICDRV-739
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle [IN]  Pointer to the PMIC core handle structure.
  * @param value  [OUT] The current CRC value on device.
@@ -273,6 +277,10 @@ int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
 
 /**
  * @brief Write a 16-bit config register CRC value to the PMIC.
+ *
+ * Design: PMICDRV-1870
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle [IN] Pointer to the PMIC core handle structure.
  * @param value  [IN] 16-bit CRC value to write to CONFIG_CRC_REG_{1,2}.

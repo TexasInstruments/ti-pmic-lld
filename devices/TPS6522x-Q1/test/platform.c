@@ -210,6 +210,21 @@ void platform_init(void)
         serial_read_response(response, sizeof(response));
     }
 
+    /* Configure PA2 as GPIO output for ESM_IN (PMIC GPIO6/nERR_MCU). Drive HIGH
+     * initially to provide a valid "no fault" level-mode signal.
+     * Port A clock is already enabled by firmware (UART0 uses PA0/PA1); PA2 is free.
+     * bitmask 4 = 0x04 = PA2; pulltype 8 = GPIO_PIN_TYPE_STD; strength 1 = 2MA. */
+    memset(response, 0, sizeof(response));
+    status = serial_send_command("gpioc pa 4 o 8 1");
+    if (status == 0) {
+        serial_read_response(response, sizeof(response));
+    }
+    memset(response, 0, sizeof(response));
+    status = serial_send_command("gpiow pa 4 4 0");
+    if (status == 0) {
+        serial_read_response(response, sizeof(response));
+    }
+
     /* Only set address and state after all validation passes */
     commHandle0.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
     commHandle1.slaveAddr  = PLATFORM_I2C_ADDR_SECONDARY;
@@ -638,6 +653,23 @@ void platform_unlockRegisters(void)
     }
 #endif
     /* Mock: No-op (mock doesn't enforce register locking) */
+}
+
+void platform_setEsmPin(bool high)
+{
+#ifdef BUILD_HOST
+    char gpio_response[256];
+    int32_t rc;
+    const char *cmd = high ? "gpiow pa 4 4 0" : "gpiow pa 4 0 0";
+    rc = serial_send_command(cmd);
+    if (rc == 0)
+    {
+        (void)serial_read_response(gpio_response, sizeof(gpio_response));
+    }
+    (void)rc;
+#else
+    (void)high;
+#endif
 }
 
 void platform_runTestLoop(void (*testCallback)(void))

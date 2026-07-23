@@ -204,6 +204,17 @@ void platform_init(void)
     commHandle.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
     g_platform_initialized = true;
 
+    /* Configure ESM_IN (PA2) as GPIO output and drive HIGH (no-fault level) */
+    {
+        char gpio_response[256];
+        int32_t rc;
+        rc = serial_send_command("gpioc pa 4 o 8 1");
+        if (rc == 0) { (void)serial_read_response(gpio_response, sizeof(gpio_response)); }
+        rc = serial_send_command("gpiow pa 4 4 0");
+        if (rc == 0) { (void)serial_read_response(gpio_response, sizeof(gpio_response)); }
+        (void)rc;
+    }
+
     PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
 #endif
 }
@@ -553,6 +564,20 @@ void platform_runTestLoop(void (*testCallback)(void))
 #else
     /* Should not reach here for host build */
     testCallback();
+#endif
+}
+
+void platform_setEsmPin(bool high)
+{
+#ifdef BUILD_HOST
+    char response[256];
+    int32_t rc;
+    const char *cmd = high ? "gpiow pa 4 4 0" : "gpiow pa 4 0 0";
+    rc = serial_send_command(cmd);
+    if (rc == 0) { (void)serial_read_response(response, sizeof(response)); }
+    (void)rc;
+#else
+    (void)high;
 #endif
 }
 

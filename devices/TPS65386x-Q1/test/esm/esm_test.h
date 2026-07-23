@@ -186,20 +186,6 @@ extern "C" {
     ESM_TEST_POS_ESMSTOP(); \
     ESM_TEST_NEG_ESMSTOP()
 
-/* ======================================================================== */
-/*                         Test APIs: esmGetErrCnt                          */
-/* ======================================================================== */
-
-#define ESM_TEST_POS_ESMGETERRCNT() \
-    /* Part of esmGetStatus tests */
-
-#define ESM_TEST_NEG_ESMGETERRCNT() \
-    /* Part of esmGetStatus tests */
-
-/* Test: TC-ESM-0028 */
-#define ESM_TEST_ESMGETERRCNT() \
-    ESM_TEST_POS_ESMGETERRCNT(); \
-    ESM_TEST_NEG_ESMGETERRCNT()
 
 /* ======================================================================== */
 /*                         Test APIs: esmGetStatus                          */
@@ -250,7 +236,6 @@ extern "C" {
     ESM_TEST_POS_ESMGETENABLESTATE(); \
     ESM_TEST_POS_ESMSTART(); \
     ESM_TEST_POS_ESMSTOP(); \
-    ESM_TEST_POS_ESMGETERRCNT(); \
     ESM_TEST_POS_ESMGETSTATUS(); \
     ESM_TEST_POS_ESMCLRSTATUS()
 
@@ -261,7 +246,6 @@ extern "C" {
     ESM_TEST_NEG_ESMGETENABLESTATE(); \
     ESM_TEST_NEG_ESMSTART(); \
     ESM_TEST_NEG_ESMSTOP(); \
-    ESM_TEST_NEG_ESMGETERRCNT(); \
     ESM_TEST_NEG_ESMGETSTATUS(); \
     ESM_TEST_NEG_ESMCLRSTATUS()
 

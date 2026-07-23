@@ -85,7 +85,6 @@ extern "C" {
 #define PMIC_ST_ID_SPI_COMM_FAIL       (6U)
 #define PMIC_ST_ID_DATA_IO_CRC         (7U)
 #define PMIC_ST_ID_NOT_SUPPORTED       (8U)
-#define PMIC_ST_ID_CONFIG_REG_CRC      (9U)
 #define PMIC_ST_ID_MAX_LOOP_CNT_FAIL   (10U)
 #define PMIC_ST_ID_INV_STATUS_TYPE     (11U)
 #define PMIC_ST_ID_INV_STATUS_ID       (12U)
@@ -165,10 +164,6 @@ extern "C" {
  *
  * The following status codes are specific to the TPS6522x-Q1 device family:
  *
- * - **PMIC_ST_ERR_CONFIG_REG_CRC**: Indicates a CRC error when verifying
- *   configuration register contents. This may indicate data corruption or
- *   a hardware issue.
- *
  * - **PMIC_ST_ERR_MAX_LOOP_CNT_FAIL**: Indicates that a polling operation
  *   exceeded the maximum allowed iteration count without completing. This may
  *   indicate a hardware issue or that the PMIC is not responding as expected.
@@ -198,7 +193,6 @@ extern "C" {
 #define PMIC_ST_ERR_SPI_COMM_FAIL     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_SPI_COMM_FAIL)
 #define PMIC_ST_ERR_DATA_IO_CRC       PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_DATA_IO_CRC)
 #define PMIC_ST_ERR_NOT_SUPPORTED     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_NOT_SUPPORTED)
-#define PMIC_ST_ERR_CONFIG_REG_CRC    PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_CONFIG_REG_CRC)
 #define PMIC_ST_ERR_MAX_LOOP_CNT_FAIL PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_MAX_LOOP_CNT_FAIL)
 #define PMIC_ST_ERR_INV_STATUS_TYPE   PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_TYPE)
 #define PMIC_ST_ERR_INV_STATUS_ID     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_ID)

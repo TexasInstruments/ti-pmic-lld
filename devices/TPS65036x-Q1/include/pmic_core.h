@@ -412,6 +412,10 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg);
 /**
  * @brief Enable PMIC configuration register CRC checking.
  *
+ * Design: PMICDRV-735
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @details Optionally recalculates and writes the SW-computed CRC to the PMIC before
  * enabling continuous CRC checking. Pass `PMIC_CFG_CRC_RECALCULATE` to trigger a
  * fresh CRC computation and hardware validation before enabling. Pass
@@ -431,6 +435,10 @@ int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate);
 /**
  * @brief Disable PMIC configuration register CRC checking.
  *
+ * Design: PMICDRV-736
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if configuration CRC has been disabled, error code otherwise.
@@ -440,6 +448,10 @@ int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle);
 
 /**
  * @brief Get PMIC configuration register CRC status.
+ *
+ * Design: PMICDRV-737
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -454,6 +466,10 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
 /**
  * @brief Compute the SW configuration register CRC, write it to the PMIC, and
  * trigger a hardware validation.
+ *
+ * Design: PMICDRV-738
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-510, PMICDRV-521, PMICDRV-522, PMICDRV-523,
+ *               PMICDRV-544, PMICDRV-545
  *
  * @details Reads registers 0x14 through 0x4C, computes a CRC16 (polynomial 0x755B,
  * init 0xFFFF), writes the result to CONFIG_CRC_REG_1/2, then triggers a one-shot
@@ -470,6 +486,10 @@ int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
 /**
  * @brief Read the device-computed configuration CRC from the PMIC.
  *
+ * Design: PMICDRV-739
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544,
+ *               PMICDRV-545
+ *
  * @details Reads the CRC result stored in CALCUL_CONFIG_CRC_1/2 (0x65/0x66) by
  * the PMIC hardware after a CONFIG_CRC_CALC trigger.
  *
@@ -484,6 +504,10 @@ int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
 
 /**
  * @brief Write the SW-computed configuration CRC to the PMIC.
+ *
+ * Design: PMICDRV-1870
+ * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-544,
+ *               PMICDRV-545
  *
  * @details Writes the expected CRC to CONFIG_CRC_REG_1 (0x4D, LSB) and
  * CONFIG_CRC_REG_2 (0x4E, MSB). The PMIC hardware compares this value against
