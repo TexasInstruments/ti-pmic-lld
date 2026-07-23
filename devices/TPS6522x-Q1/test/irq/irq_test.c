@@ -1042,14 +1042,14 @@ void irq_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_INIT_MAX_LOOP_CNT_VALID,
+                       PMIC_CFG_INIT_MAX_LOOP_CNT_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable0 = false,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,

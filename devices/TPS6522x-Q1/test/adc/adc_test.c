@@ -134,7 +134,7 @@ void adc_test(void *args)
                             PMIC_CFG_INIT_IO_WRITE_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                            PMIC_INIT_MAX_LOOP_CNT_VALID;
+                            PMIC_CFG_INIT_MAX_LOOP_CNT_VALID;
     handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
     handleCfg.i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
     handleCfg.commHandle0 = platform_getCommHandle0();

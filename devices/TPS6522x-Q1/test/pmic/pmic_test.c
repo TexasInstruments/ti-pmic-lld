@@ -129,9 +129,9 @@ static void pmicTest_enableCrcInHardware(void)
 static inline void pmicInitTest_initHandleCfg(Pmic_HandleCfg_t *handleCfg)
 {
     handleCfg->validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                             PMIC_CRC_ENABLE_0_VALID |
+                             PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                              PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                             PMIC_COMM_HANDLE_1_VALID |
+                             PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                              PMIC_CFG_INIT_I2C_ADDR0_VALID |
                              PMIC_CFG_INIT_I2C_ADDR1_VALID |
                              PMIC_CFG_INIT_IO_READ_VALID |
@@ -360,12 +360,12 @@ void test_neg_pmic_pmicInit_timerWaitNull(void)
 
 void test_neg_pmic_pmicInit_nullCommHandle1(void)
 {
-    // Pass NULL commHandle1 with PMIC_COMM_HANDLE_1_VALID set
+    // Pass NULL commHandle1 with PMIC_CFG_INIT_COMM_HANDLE_1_VALID set
     Pmic_HandleCfg_t handleCfg = {0};
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_COMM_HANDLE_1_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_COMM_HANDLE_1_VALID;
     handleCfg.commHandle1 = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -373,12 +373,12 @@ void test_neg_pmic_pmicInit_nullCommHandle1(void)
 
 void test_neg_pmic_pmicInit_dualI2cMissingHandle1(void)
 {
-    // Dual I2C mode without PMIC_COMM_HANDLE_1_VALID — commHandle1 stays NULL
+    // Dual I2C mode without PMIC_CFG_INIT_COMM_HANDLE_1_VALID — commHandle1 stays NULL
     Pmic_HandleCfg_t handleCfg = {0};
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams &= ~PMIC_COMM_HANDLE_1_VALID;
+    handleCfg.validParams &= ~PMIC_CFG_INIT_COMM_HANDLE_1_VALID;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -478,7 +478,7 @@ void test_pos_pmic_pmicInit_with_crc_enabled(void)
 
     Pmic_HandleCfg_t handleCfg = {0};
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_CRC_ENABLE_0_VALID;
     handleCfg.crcEnable0 = PMIC_ENABLE;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
@@ -499,7 +499,7 @@ void test_pos_pmic_pmicInit_with_both_crc_flags(void)
 
     Pmic_HandleCfg_t handleCfg = {0};
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID | PMIC_CRC_ENABLE_1_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_CRC_ENABLE_0_VALID | PMIC_CFG_INIT_CRC_ENABLE_1_VALID;
     handleCfg.crcEnable0 = PMIC_ENABLE;
     handleCfg.crcEnable1 = PMIC_ENABLE;
 
@@ -521,7 +521,7 @@ void test_pos_pmic_pmicInit_crc_disabled(void)
     pmicInitTest_initHandleCfg(&handleCfg);
 
     // Explicitly set CRC to disabled
-    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_CRC_ENABLE_0_VALID;
     handleCfg.crcEnable0 = PMIC_DISABLE;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
@@ -567,7 +567,7 @@ void test_pos_pmic_pmicInit_i2c_single_mode(void)
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                             PMIC_CFG_INIT_I2C_ADDR0_VALID |
                             PMIC_CFG_INIT_I2C_ADDR1_VALID |
-                            PMIC_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                             PMIC_CFG_INIT_IO_READ_VALID |
                             PMIC_CFG_INIT_IO_WRITE_VALID |
@@ -604,9 +604,9 @@ void test_pos_pmic_pmicInit_i2c_dual_mode(void)
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                             PMIC_CFG_INIT_I2C_ADDR0_VALID |
                             PMIC_CFG_INIT_I2C_ADDR1_VALID |
-                            PMIC_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                            PMIC_COMM_HANDLE_1_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                             PMIC_CFG_INIT_IO_READ_VALID |
                             PMIC_CFG_INIT_IO_WRITE_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
@@ -769,7 +769,7 @@ void test_pos_pmic_pmicInit_async_mode(void)
     // Note: Even in async mode, synchronous I/O is needed for initialization (getPmicInfo)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                            PMIC_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                             PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                             PMIC_CFG_INIT_TASK_HANDLE_VALID |
@@ -827,7 +827,7 @@ void test_pos_pmic_pmicInit_with_i2c_addresses(void)
                             PMIC_CFG_INIT_I2C_ADDR0_VALID |
                             PMIC_CFG_INIT_I2C_ADDR1_VALID |
                             PMIC_CFG_INIT_I2C_ADDR2_VALID |
-                            PMIC_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                             PMIC_CFG_INIT_IO_READ_VALID |
                             PMIC_CFG_INIT_IO_WRITE_VALID |
@@ -863,7 +863,7 @@ void test_pos_pmic_pmicInit_with_task_handle(void)
     // Test initialization with task handle configured (for RTOS environments)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                            PMIC_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                             PMIC_CFG_INIT_IO_READ_VALID |
                             PMIC_CFG_INIT_IO_WRITE_VALID |

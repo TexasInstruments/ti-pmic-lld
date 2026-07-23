@@ -241,7 +241,6 @@ void platform_init(void)
      * in the buffer would corrupt the first Pmic_init I2C read. */
     serial_flush();
 
-
     PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
 #endif
 }

@@ -150,7 +150,7 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
     }
 
     // commHandle1
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_COMM_HANDLE_1_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_COMM_HANDLE_1_VALID, status))
     {
         if (config->commHandle1 == NULL)
         {
@@ -368,13 +368,13 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 
 
     // crcEnable0
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_0_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_CRC_ENABLE_0_VALID))
     {
         handle->crcEnable0 = config->crcEnable0;
     }
 
     // crcEnable1
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_1_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_CRC_ENABLE_1_VALID))
     {
         handle->crcEnable1 = config->crcEnable1;
     }
@@ -392,7 +392,7 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
     }
 
     // maxLoopCnt
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_INIT_MAX_LOOP_CNT_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_MAX_LOOP_CNT_VALID))
     {
         handle->maxLoopCnt = config->maxLoopCnt;
     }

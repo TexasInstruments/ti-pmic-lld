@@ -737,12 +737,12 @@ void test_pos_io_ioTxByte_wdgWriteWithCrc(void)
 
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_CRC_ENABLE_1_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_1_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR1_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
@@ -807,12 +807,12 @@ void test_pos_io_ioRxByte_wdgReadWithCrc(void)
 
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_CRC_ENABLE_1_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_1_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR1_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
@@ -1150,7 +1150,7 @@ void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
     /* Initialize handle with I2C mode */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
@@ -1214,7 +1214,7 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
     /* Initialize handle with SPI mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_TASK_HANDLE_VALID |
@@ -1287,7 +1287,7 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
     /* Initialize handle with I2C mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_TASK_HANDLE_VALID |
@@ -1360,7 +1360,7 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
     /* Initialize handle with SPI mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_TASK_HANDLE_VALID |
@@ -1432,7 +1432,7 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
     /* Initialize handle with I2C mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_TASK_HANDLE_VALID |
@@ -2025,7 +2025,7 @@ void io_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |

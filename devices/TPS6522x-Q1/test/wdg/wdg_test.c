@@ -1179,7 +1179,7 @@ void wdg_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |

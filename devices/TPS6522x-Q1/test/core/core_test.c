@@ -62,7 +62,7 @@ void core_test(void *args)
         .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
                         PMIC_CFG_INIT_I2C_ADDR0_VALID |
                         PMIC_CFG_INIT_I2C_ADDR1_VALID |
-                        PMIC_CRC_ENABLE_0_VALID |
+                        PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                         PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                         PMIC_CFG_INIT_IO_READ_VALID |
                         PMIC_CFG_INIT_IO_WRITE_VALID |
