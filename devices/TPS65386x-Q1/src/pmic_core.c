@@ -470,7 +470,7 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
         }
 
         // Read current control register if we're updating it
-        if ((status == PMIC_ST_SUCCESS) && updateCtrl) {
+        if (updateCtrl) {
             status = Pmic_ioRxByte(handle, PMIC_DIAG_OUT_CFG_CTRL_REG, &regDataCtrl);
         }
 
@@ -501,7 +501,7 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
             }
 
             // Update control register DIAG_OUT_CTRL field if needed
-            if (updateCtrl && (status == PMIC_ST_SUCCESS)) {
+            if (updateCtrl) {
                 Pmic_setBitField(&regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
                                 PMIC_DIAG_OUT_CTRL_MASK, ctrlValue);
             }

@@ -205,14 +205,13 @@ int32_t platform_serial_uninit(void);
  * Sends "spi 0 <speed> 0 <data>... 0 0" command
  * Format: spi <host> <speed_kHz> <cs> <data_bytes>... <read_len> <access>
  *
- * @param regAddr   Register address to write
- * @param buffer    Data buffer to write
+ * @param buffer    Data buffer to write (must already contain full SPI frame)
  * @param bufLen    Number of bytes to write
  * @param speed_khz SPI speed in kHz (e.g., 2000 for 2MHz)
  *
  * @return 0 on success, negative on error
  */
-int32_t platform_serial_write(uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen, uint32_t speed_khz);
+int32_t platform_serial_write(const uint8_t *buffer, uint8_t bufLen, uint32_t speed_khz);
 
 /**
  * @brief Read data via SPI

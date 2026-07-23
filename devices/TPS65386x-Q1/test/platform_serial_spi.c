@@ -711,11 +711,11 @@ int32_t platform_serial_uninit(void)
 /**
  * @brief Write data via SPI
  *
- * Sends "spi 0 <speed> 0 <reg_addr> <data>... 0 0" command
+ * Sends "spi 0 <speed> 0 <data>... 0 0" command
  * Format: spi <host> <speed_kHz> <cs> <data_bytes>... <read_len> <access>
  * Access mode: 0=STARTSTOP (complete transaction)
  */
-int32_t platform_serial_write(uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen, uint32_t speed_khz)
+int32_t platform_serial_write(const uint8_t *buffer, uint8_t bufLen, uint32_t speed_khz)
 {
     char cmd[SERIAL_MAX_CMD_LEN];
     char response[256];

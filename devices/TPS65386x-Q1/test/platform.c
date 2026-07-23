@@ -459,7 +459,7 @@ int32_t platform_txByte(
     }
 
     /* Write via SPI (2MHz = 2000 kHz) */
-    status = platform_serial_write(regAddr, buffer, bufLen, 2000);
+    status = platform_serial_write(buffer, bufLen, 2000);
     if (status != 0) {
         return PMIC_ST_ERR_SPI_COMM_FAIL;
     }
@@ -550,7 +550,7 @@ void platform_resetDevice(void)
     regData = (regData & ~(uint8_t)0x07U) | (uint8_t)0x05U;  /* STATE_REQ = PMIC_OFF_REQUEST */
     uint8_t wframe[4U] = {0x16U, 0x00U, regData, 0x00U};
     wframe[3U] = platform_crc8(wframe, 3U);
-    (void)platform_serial_write(0U, wframe, 4U, 2000U);
+    (void)platform_serial_write(wframe, 4U, 2000U);
 
     /* Wait for device to complete power-down sequence */
     usleep(100000U);  /* 100ms */
@@ -583,7 +583,7 @@ void platform_irqClrAll(void)
     {
         uint8_t frame[4U] = {0x11U, 0x00U, 0x01U, 0x00U};
         frame[3U] = platform_crc8(frame, 3U);
-        (void)platform_serial_write(0U, frame, 4U, 2000U);
+        (void)platform_serial_write(frame, 4U, 2000U);
     }
 
     /* Clear DEV_ERR_STAT (0x66): set bit 7 only, preserve DEV_ERR_CNT bits 0-4 */
@@ -594,7 +594,7 @@ void platform_irqClrAll(void)
             uint8_t val = (rframe[2U] & 0x1FU) | 0x80U;
             uint8_t wframe[4U] = {0x66U, 0x00U, val, 0x00U};
             wframe[3U] = platform_crc8(wframe, 3U);
-            (void)platform_serial_write(0U, wframe, 4U, 2000U);
+            (void)platform_serial_write(wframe, 4U, 2000U);
         }
     }
 
@@ -607,7 +607,7 @@ void platform_irqClrAll(void)
         }
         uint8_t frame[4U] = {reg, 0x00U, 0xFFU, 0x00U};
         frame[3U] = platform_crc8(frame, 3U);
-        (void)platform_serial_write(0U, frame, 4U, 2000U);
+        (void)platform_serial_write(frame, 4U, 2000U);
 
     }
 #endif
@@ -678,10 +678,10 @@ void platform_unlockRegisters(void)
     {
         uint8_t frame[4U] = {0x04U, 0x00U, 0x00U, 0x00U};
         frame[3U] = platform_crc8(frame, 3U);
-        (void)platform_serial_write(0U, frame, 4U, 2000U);
+        (void)platform_serial_write(frame, 4U, 2000U);
     }
     for (uint8_t i = 0U; i < 2U; i++) {
-        (void)platform_serial_write(0U, cnt_unlock[i], 4U, 2000U);
+        (void)platform_serial_write(cnt_unlock[i], 4U, 2000U);
     }
 
     /* Step 2: Re-disable CFG CRC monitoring before opening the CFG write window.
@@ -695,7 +695,7 @@ void platform_unlockRegisters(void)
             uint8_t safetyCtrl = frame[2U] & ~(uint8_t)0x01U;
             uint8_t wframe[4U] = {0x08U, 0x00U, safetyCtrl, 0x00U};
             wframe[3U] = platform_crc8(wframe, 3U);
-            (void)platform_serial_write(0U, wframe, 4U, 2000U);
+            (void)platform_serial_write(wframe, 4U, 2000U);
         }
     }
 
@@ -704,7 +704,7 @@ void platform_unlockRegisters(void)
     {
         uint8_t frame[4U] = {0x09U, 0x00U, 0x01U, 0x00U};
         frame[3U] = platform_crc8(frame, 3U);
-        (void)platform_serial_write(0U, frame, 4U, 2000U);
+        (void)platform_serial_write(frame, 4U, 2000U);
     }
 
     /* Step 4: Unlock CFG registers. Window remains open until next state
@@ -713,10 +713,10 @@ void platform_unlockRegisters(void)
     {
         uint8_t frame[4U] = {0x03U, 0x00U, 0x00U, 0x00U};
         frame[3U] = platform_crc8(frame, 3U);
-        (void)platform_serial_write(0U, frame, 4U, 2000U);
+        (void)platform_serial_write(frame, 4U, 2000U);
     }
     for (uint8_t i = 0U; i < 2U; i++) {
-        (void)platform_serial_write(0U, cfg_unlock[i], 4U, 2000U);
+        (void)platform_serial_write(cfg_unlock[i], 4U, 2000U);
     }
 #endif
     /* Mock: No-op (mock doesn't enforce register locking) */
