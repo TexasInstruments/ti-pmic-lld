@@ -808,14 +808,35 @@ void test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues(void)
 
 void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 {
+    // Set RISING to max first so all FALLING values satisfy the hardware constraint (FALLING < RISING)
+    Pmic_PwrBuckCfg_t risingCfg = {
+        .validParams = PMIC_BUCK_UVLO_RISING_VALID,
+        .resource = PMIC_BUCK1,
+        .uvloRising = PMIC_BUCK1_UVLO_RISING_MAX
+    };
+    int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &risingCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Verify RISING write landed before sweeping FALLING
+    Pmic_PwrBuckCfg_t risingCheck = {
+        .validParams = PMIC_BUCK_UVLO_RISING_VALID | PMIC_BUCK_UVLO_FALLING_VALID,
+        .resource = PMIC_BUCK1
+    };
+    status = Pmic_pwrGetBuckCfg(&pmicHandle, &risingCheck);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(risingCheck.uvloRising == PMIC_BUCK1_UVLO_RISING_MAX);
+
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
     setCfg.validParams = PMIC_BUCK_UVLO_FALLING_VALID;
 
-    for (uint8_t val = 0; val <= PMIC_BUCK1_UVLO_FALLING_MAX; val++)
+    // Hardware enforces FALLING <= RISING - 4 codes (approx 0.5V hysteresis minimum).
+    // With RISING at max (0xF), valid FALLING range is 0x0..0xB.
+    const uint8_t fallingMax = PMIC_BUCK1_UVLO_RISING_MAX - 4U;
+    for (uint8_t val = 0; val <= fallingMax; val++)
     {
         setCfg.uvloFalling = val;
-        int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &setCfg);
+        status = Pmic_pwrSetBuckCfg(&pmicHandle, &setCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
         Pmic_PwrBuckCfg_t getCfg = {0};
@@ -2568,7 +2589,6 @@ void test_pos_power_buckGetCfg_ilimSel_buck3(void)
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2590,14 +2610,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.ilimSel == ilimSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2619,14 +2635,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.ilimSel == ilimSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2648,14 +2660,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.ilimSel == ilimSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck1_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2675,14 +2683,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK1_ILIM_3P1_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck1_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2702,14 +2706,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK1_ILIM_3P6_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck2_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2729,14 +2729,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_4P5_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck2_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2756,14 +2752,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_3_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck3_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2783,14 +2775,10 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_4P5_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ilimSel_buck3_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -2810,9 +2798,6 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK2_3_ILIM_3_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -2821,7 +2806,6 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_max(void)
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2841,14 +2825,10 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2868,14 +2848,10 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2895,14 +2871,10 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2922,14 +2894,10 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2949,14 +2917,10 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -2978,9 +2942,6 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.ovpSel == ovpSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -2989,7 +2950,6 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses(void)
 
 void test_pos_power_buckSetGetCfg_ovSel_buck1_ignore(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3009,14 +2969,10 @@ void test_pos_power_buckSetGetCfg_ovSel_buck1_ignore(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3036,14 +2992,10 @@ void test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3063,14 +3015,10 @@ void test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3092,9 +3040,6 @@ void test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.ovSel == ovSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3103,7 +3048,6 @@ void test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses(void)
 
 void test_pos_power_buckSetGetCfg_uvSel_buck1_ignore(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3123,14 +3067,10 @@ void test_pos_power_buckSetGetCfg_uvSel_buck1_ignore(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3150,14 +3090,10 @@ void test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3179,14 +3115,10 @@ void test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.uvSel == uvSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3206,9 +3138,6 @@ void test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3217,7 +3146,6 @@ void test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
 
 void test_pos_power_buckSetGetCfg_scSel_buck1_ignore(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3237,14 +3165,10 @@ void test_pos_power_buckSetGetCfg_scSel_buck1_ignore(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_scSel_buck2_assertNint(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3264,14 +3188,10 @@ void test_pos_power_buckSetGetCfg_scSel_buck2_assertNint(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_scSel_buck3_allResponses(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3293,14 +3213,10 @@ void test_pos_power_buckSetGetCfg_scSel_buck3_allResponses(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.scSel == scSel);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3320,9 +3236,6 @@ void test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3331,7 +3244,6 @@ void test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown(void)
 
 void test_pos_power_buckSetGetCfg_rvConf_buck1_wait(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -3351,14 +3263,10 @@ void test_pos_power_buckSetGetCfg_rvConf_buck1_wait(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RAIL_DISCHARGE);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_rvConf_buck2_ignore(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -3378,14 +3286,10 @@ void test_pos_power_buckSetGetCfg_rvConf_buck2_ignore(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_rvConf_buck3_allValues(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -3407,9 +3311,6 @@ void test_pos_power_buckSetGetCfg_rvConf_buck3_allValues(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.rvConf == rvConf);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3418,7 +3319,6 @@ void test_pos_power_buckSetGetCfg_rvConf_buck3_allValues(void)
 
 void test_pos_power_buckSetCfg_buck2OvpSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -3438,14 +3338,10 @@ void test_pos_power_buckSetCfg_buck2OvpSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck3OvpSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -3465,14 +3361,10 @@ void test_pos_power_buckSetCfg_buck3OvpSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovpSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck2OvSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3492,14 +3384,10 @@ void test_pos_power_buckSetCfg_buck2OvSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck3OvSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -3519,14 +3407,10 @@ void test_pos_power_buckSetCfg_buck3OvSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovSel == PMIC_WARM_RESET_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck2UvSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3546,14 +3430,10 @@ void test_pos_power_buckSetCfg_buck2UvSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck3UvSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -3573,14 +3453,10 @@ void test_pos_power_buckSetCfg_buck3UvSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvSel == PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck2ScSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3600,14 +3476,10 @@ void test_pos_power_buckSetCfg_buck2ScSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck3ScSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -3627,14 +3499,10 @@ void test_pos_power_buckSetCfg_buck3ScSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.scSel == PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck1RvConf(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -3654,14 +3522,10 @@ void test_pos_power_buckSetCfg_buck1RvConf(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetCfg_buck1IlimSel(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -3681,9 +3545,6 @@ void test_pos_power_buckSetCfg_buck1IlimSel(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ilimSel == PMIC_BUCK1_ILIM_3P6_A);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3692,8 +3553,8 @@ void test_pos_power_buckSetCfg_buck1IlimSel(void)
 
 void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
+
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_VALID |
                        PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_FPWM_EN_VALID,
@@ -3720,15 +3581,12 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
     PLATFORM_ASSERT(buckCfgGet.vset == buckCfgSet.vset);
     PLATFORM_ASSERT(buckCfgGet.pldnEn == buckCfgSet.pldnEn);
     PLATFORM_ASSERT(buckCfgGet.fpwmEn == buckCfgSet.fpwmEn);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
+
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
                        PMIC_BUCK_UV_THR_VALID | PMIC_BUCK_OV_THR_VALID,
@@ -3755,14 +3613,10 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(vo
     PLATFORM_ASSERT(buckCfgGet.vsetActive == buckCfgSet.vsetActive);
     PLATFORM_ASSERT(buckCfgGet.uvThr == buckCfgSet.uvThr);
     PLATFORM_ASSERT(buckCfgGet.ovThr == buckCfgSet.ovThr);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
@@ -3796,14 +3650,10 @@ void test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
     PLATFORM_ASSERT(buckCfgGet.slewRate == buckCfgSet.slewRate);
     PLATFORM_ASSERT(buckCfgGet.deglitchSel == buckCfgSet.deglitchSel);
     PLATFORM_ASSERT(buckCfgGet.dischargeSel == buckCfgSet.dischargeSel);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID | PMIC_BUCK_OV_SEL_VALID |
@@ -3831,15 +3681,12 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
     PLATFORM_ASSERT(buckCfgGet.ovSel == buckCfgSet.ovSel);
     PLATFORM_ASSERT(buckCfgGet.uvSel == buckCfgSet.uvSel);
     PLATFORM_ASSERT(buckCfgGet.scSel == buckCfgSet.scSel);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
+
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
                        PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
@@ -3878,9 +3725,6 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
     PLATFORM_ASSERT(buckCfgGet.ilimSel == buckCfgSet.ilimSel);
     PLATFORM_ASSERT(buckCfgGet.rvConf == buckCfgSet.rvConf);
     PLATFORM_ASSERT(buckCfgGet.vmonOnly == buckCfgSet.vmonOnly);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -3890,7 +3734,6 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
 /* BUCK1 VSET Tests */
 void test_pos_power_buckSetGetCfg_vset_buck1_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -3908,14 +3751,10 @@ void test_pos_power_buckSetGetCfg_vset_buck1_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vset == 0x00);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vset_buck1_mid(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -3933,14 +3772,10 @@ void test_pos_power_buckSetGetCfg_vset_buck1_mid(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vset == 0x06);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vset_buck1_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -3958,14 +3793,10 @@ void test_pos_power_buckSetGetCfg_vset_buck1_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vset == 0x0D);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vset_buck1_boundary_low(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -3983,14 +3814,10 @@ void test_pos_power_buckSetGetCfg_vset_buck1_boundary_low(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vset == 0x01);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vset_buck1_boundary_high(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -4008,15 +3835,11 @@ void test_pos_power_buckSetGetCfg_vset_buck1_boundary_high(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vset == 0x0C);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* BUCK2/3 VSET Active Tests */
 void test_pos_power_buckSetGetCfg_vsetActive_buck2_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4034,14 +3857,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == PMIC_BUCK2_3_VSET_MIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck2_mid(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4059,14 +3878,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_mid(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x22);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck2_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4084,14 +3899,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x45);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck3_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4109,14 +3920,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == PMIC_BUCK2_3_VSET_MIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck3_mid(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4134,14 +3941,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_mid(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x22);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck3_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4159,15 +3962,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetActive == 0x45);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
+
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -4188,14 +3988,10 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.vsetActive == boundaryValues[i]);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4217,15 +4013,11 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.vsetActive == boundaryValues[i]);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* BUCK2/3 VSET LPwr Tests */
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4243,14 +4035,10 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == PMIC_BUCK2_3_VSET_MIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4268,14 +4056,10 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x45);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4293,14 +4077,10 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == PMIC_BUCK2_3_VSET_MIN);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4318,14 +4098,10 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x45);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4343,14 +4119,10 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x22);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -4368,15 +4140,11 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vsetLPwr == 0x22);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* VMON Only Tests */
 void test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VMON_ONLY_VALID,
@@ -4394,14 +4162,10 @@ void test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vmonOnly == true);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_VMON_ONLY_VALID,
@@ -4419,15 +4183,11 @@ void test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.vmonOnly == true);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* UV Threshold Tests */
 void test_pos_power_buckSetGetCfg_uvThr_buck1_val0(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4445,14 +4205,10 @@ void test_pos_power_buckSetGetCfg_uvThr_buck1_val0(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 0);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvThr_buck1_val1(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4470,14 +4226,10 @@ void test_pos_power_buckSetGetCfg_uvThr_buck1_val1(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 1);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvThr_buck2_val2(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4495,14 +4247,10 @@ void test_pos_power_buckSetGetCfg_uvThr_buck2_val2(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 2);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvThr_buck2_val3(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4520,14 +4268,10 @@ void test_pos_power_buckSetGetCfg_uvThr_buck2_val3(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 3);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvThr_buck3_val0(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4545,14 +4289,10 @@ void test_pos_power_buckSetGetCfg_uvThr_buck3_val0(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 0);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_uvThr_buck3_val3(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -4570,15 +4310,11 @@ void test_pos_power_buckSetGetCfg_uvThr_buck3_val3(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.uvThr == 3);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* OV Threshold Tests */
 void test_pos_power_buckSetGetCfg_ovThr_buck1_val0(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4596,14 +4332,10 @@ void test_pos_power_buckSetGetCfg_ovThr_buck1_val0(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 0);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovThr_buck1_val1(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4621,14 +4353,10 @@ void test_pos_power_buckSetGetCfg_ovThr_buck1_val1(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 1);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovThr_buck2_val2(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4646,14 +4374,10 @@ void test_pos_power_buckSetGetCfg_ovThr_buck2_val2(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 2);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovThr_buck2_val3(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4671,14 +4395,10 @@ void test_pos_power_buckSetGetCfg_ovThr_buck2_val3(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 3);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovThr_buck3_val0(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4696,14 +4416,10 @@ void test_pos_power_buckSetGetCfg_ovThr_buck3_val0(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 0);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_ovThr_buck3_val3(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -4721,15 +4437,11 @@ void test_pos_power_buckSetGetCfg_ovThr_buck3_val3(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.ovThr == 3);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* Slew Rate Tests */
 void test_pos_power_buckSetGetCfg_slewRate_buck1_allValues(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_SLEW_RATE_VALID,
@@ -4751,14 +4463,10 @@ void test_pos_power_buckSetGetCfg_slewRate_buck1_allValues(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.slewRate == slewRate);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_slewRate_buck2_minMax(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4780,14 +4488,10 @@ void test_pos_power_buckSetGetCfg_slewRate_buck2_minMax(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.slewRate == slewRateValues[i]);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_slewRate_buck3_minMax(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4809,15 +4513,11 @@ void test_pos_power_buckSetGetCfg_slewRate_buck3_minMax(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.slewRate == slewRateValues[i]);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* High Side Slew Rate Tests (BUCK1 only) */
 void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
@@ -4835,14 +4535,10 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.highSideSlewRate == 0);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
@@ -4860,14 +4556,10 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.highSideSlewRate == 1);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
@@ -4885,15 +4577,11 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(buckCfgGet.highSideSlewRate == PMIC_HIGH_SIDE_SLEW_RATE_SLOWEST);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* Deglitch Selection Test */
 void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
 {
-#ifdef BUILD_MOCK
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t resources[] = {PMIC_BUCK1, PMIC_BUCK2, PMIC_BUCK3};
     Pmic_PwrBuckCfg_t buckCfgSet = {
@@ -4917,9 +4605,6 @@ void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.deglitchSel == PMIC_BUCK_DEGLITCH_SEL_10_US);
     }
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -4928,7 +4613,6 @@ void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
 
 void test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle(void)
 {
-#ifdef BUILD_MOCK
     // Pass NULL pmicHandle into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -4937,36 +4621,24 @@ void test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(NULL, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_nullParam_buckCfg(void)
 {
-#ifdef BUILD_MOCK
     // Pass NULL buckCfg into Pmic_pwrSetBuckCfg()
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrGetBuckCfg_nullParam_buckCfg(void)
 {
-#ifdef BUILD_MOCK
     // Pass NULL buckCfg into Pmic_pwrGetBuckCfg()
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_invalidParam_resource(void)
 {
-#ifdef BUILD_MOCK
     // Pass invalid resource into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -4975,14 +4647,10 @@ void test_neg_power_pwrSetBuckCfg_invalidParam_resource(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrGetBuckCfg_invalidParam_resource(void)
 {
-#ifdef BUILD_MOCK
     // Pass invalid resource into Pmic_pwrGetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -4990,14 +4658,10 @@ void test_neg_power_pwrGetBuckCfg_invalidParam_resource(void)
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Pass zero validParams into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = 0U,
@@ -5006,14 +4670,10 @@ void test_neg_power_pwrSetBuckCfg_zeroValidParams(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrGetBuckCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Pass zero validParams into Pmic_pwrGetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = 0U,
@@ -5021,14 +4681,10 @@ void test_neg_power_pwrGetBuckCfg_zeroValidParams(void)
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_vset(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds vset into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_VSET_VALID,
@@ -5037,14 +4693,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vset(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds vsetActive into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -5053,14 +4705,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds vsetLPwr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_VSET_LPWR_VALID,
@@ -5069,14 +4717,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds uvThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_UV_THR_VALID,
@@ -5085,14 +4729,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds ovThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_OV_THR_VALID,
@@ -5101,14 +4741,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -5117,14 +4753,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ILIM_SEL_VALID,
@@ -5133,14 +4765,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds ovpSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_OVP_SEL_VALID,
@@ -5149,14 +4777,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds ovSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_OV_SEL_VALID,
@@ -5165,14 +4789,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds uvSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_UV_SEL_VALID,
@@ -5181,14 +4801,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_scSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds scSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_SC_SEL_VALID,
@@ -5197,14 +4813,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_scSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds rvConf into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_RV_CONF_VALID,
@@ -5213,14 +4825,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds slewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_SLEW_RATE_VALID,
@@ -5229,14 +4837,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds deglitchSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_DEGLITCH_SEL_VALID,
@@ -5245,14 +4849,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds dischargeSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
@@ -5261,14 +4861,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds uvloRising into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_UVLO_RISING_VALID,
@@ -5277,14 +4873,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds uvloFalling into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_UVLO_FALLING_VALID,
@@ -5293,14 +4885,10 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
 {
-#ifdef BUILD_MOCK
     // Pass out of bounds highSideSlewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
@@ -5309,9 +4897,6 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 /* ========================================================================== */
@@ -5320,7 +4905,6 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
 
 void test_pos_power_powerGetCfg_buck2Enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -5329,14 +4913,10 @@ void test_pos_power_powerGetCfg_buck2Enable(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerSetCfg_buck2Enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -5354,14 +4934,10 @@ void test_pos_power_powerSetCfg_buck2Enable(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.enable == true);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerGetVoutCfg_buck2Voltage(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -5370,14 +4946,10 @@ void test_pos_power_powerGetVoutCfg_buck2Voltage(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerSetVoutCfg_buck2Voltage(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -5395,14 +4967,10 @@ void test_pos_power_powerSetVoutCfg_buck2Voltage(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vsetActive == 0x20);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerGetCfg_buck3Enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -5411,14 +4979,10 @@ void test_pos_power_powerGetCfg_buck3Enable(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerSetCfg_buck3Enable(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
         .validParams = PMIC_BUCK_ENABLE_VALID,
@@ -5436,14 +5000,10 @@ void test_pos_power_powerSetCfg_buck3Enable(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.enable == true);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerGetVoutCfg_buck3Voltage(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -5452,14 +5012,10 @@ void test_pos_power_powerGetVoutCfg_buck3Voltage(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerSetVoutCfg_buck3Voltage(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
         .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
@@ -5477,14 +5033,10 @@ void test_pos_power_powerSetVoutCfg_buck3Voltage(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vsetActive == 0x30);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerGetStat_buck2(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK2
@@ -5492,14 +5044,10 @@ void test_pos_power_powerGetStat_buck2(void)
 
     status = Pmic_pwrGetRsrcStatus(&pmicHandle, &pwrRsrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_pos_power_powerGetStat_buck3(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrRsrcStatus_t pwrRsrcStat = {
         .resource = PMIC_BUCK3
@@ -5507,14 +5055,10 @@ void test_pos_power_powerGetStat_buck3(void)
 
     status = Pmic_pwrGetRsrcStatus(&pmicHandle, &pwrRsrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwr_getUvlo_invalidBuck(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid BUCK resource for UVLO (line 654)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5524,14 +5068,10 @@ void test_neg_power_pwr_getUvlo_invalidBuck(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwr_setUvlo_invalidBuck(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid BUCK resource for UVLO (line 931)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5543,14 +5083,10 @@ void test_neg_power_pwr_setUvlo_invalidBuck(void)
 
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwr_setBuck_invalidDischargeSel(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid discharge selector (lines 1358-1359)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5561,14 +5097,10 @@ void test_neg_power_pwr_setBuck_invalidDischargeSel(void)
 
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwr_setBuck_invalidSlewRate(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid slew rate (lines 1378-1379)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
@@ -5579,14 +5111,10 @@ void test_neg_power_pwr_setBuck_invalidSlewRate(void)
 
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation or mock-specific testing");
-#endif
 }
 
 void test_neg_power_pwr_setLdoCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Test zero validParams for setLdoCfg (lines 1865-1866)
     int32_t status;
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -5595,14 +5123,10 @@ void test_neg_power_pwr_setLdoCfg_zeroValidParams(void)
 
     status = Pmic_pwrSetLdoCfg(&pmicHandle, &ldoCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_getLdoCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Test zero validParams for getLdoCfg (lines 2280-2281)
     int32_t status;
     Pmic_PwrLdoCfg_t ldoCfg = {
@@ -5611,14 +5135,10 @@ void test_neg_power_pwr_getLdoCfg_zeroValidParams(void)
 
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &ldoCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setTsdCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Test zero validParams for setTsdCfg (lines 2491-2492)
     int32_t status;
     Pmic_PwrTsdCfg_t tsdCfg = {
@@ -5627,14 +5147,10 @@ void test_neg_power_pwr_setTsdCfg_zeroValidParams(void)
 
     status = Pmic_pwrSetTsdCfg(&pmicHandle, &tsdCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_getTsdCfg_zeroValidParams(void)
 {
-#ifdef BUILD_MOCK
     // Test zero validParams for getTsdCfg (lines 2568-2569)
     int32_t status;
     Pmic_PwrTsdCfg_t tsdCfg = {
@@ -5643,14 +5159,10 @@ void test_neg_power_pwr_getTsdCfg_zeroValidParams(void)
 
     status = Pmic_pwrGetTsdCfg(&pmicHandle, &tsdCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setSeqTrig_zeroLen(void)
 {
-#ifdef BUILD_MOCK
     // Test zero length for setSeqTrig (lines 2775-2778)
     int32_t status;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[1];  // Non-NULL array to test len check
@@ -5658,14 +5170,10 @@ void test_neg_power_pwr_setSeqTrig_zeroLen(void)
     // Pass zero length to the API
     status = Pmic_pwrSetBuckLdoSeqTrig(&pmicHandle, seqTrigCfg, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setSeqTrig_invalidPwrRsrc(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid power resource (lines 2715-2716)
     int32_t status;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[] = {
@@ -5677,14 +5185,10 @@ void test_neg_power_pwr_setSeqTrig_invalidPwrRsrc(void)
 
     status = Pmic_pwrSetBuckLdoSeqTrig(&pmicHandle, seqTrigCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setSeqTrig_invalidBitPos(void)
 {
-#ifdef BUILD_MOCK
     /**
      * Test invalid sequence trigger bit position
      * Covers pmic_power.c:2811-2812 (setSeqTrig) and 2724-2725 (getSeqTrig)
@@ -5710,14 +5214,10 @@ void test_neg_power_pwr_setSeqTrig_invalidBitPos(void)
     seqTrigCfg.trigger = (uint16_t)((PMIC_BUCK1 << 8U) | 0xFFU);
     status = Pmic_pwrSetBuckLdoSeqTrig(&pmicHandle, &seqTrigCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_getSeqTrig_zeroLen(void)
 {
-#ifdef BUILD_MOCK
     // Test zero length for getSeqTrig (lines 2777-2778)
     int32_t status;
     Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[1];  // Non-NULL array to test len check
@@ -5725,14 +5225,10 @@ void test_neg_power_pwr_getSeqTrig_zeroLen(void)
     // Pass zero length to the API
     status = Pmic_pwrGetBuckLdoSeqTrig(&pmicHandle, seqTrigCfg, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setSeqDelay_zeroLen(void)
 {
-#ifdef BUILD_MOCK
     // Test zero length for setSeqDelay (lines 2889-2890)
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[1];  // Non-NULL array to test len check
@@ -5740,14 +5236,10 @@ void test_neg_power_pwr_setSeqDelay_zeroLen(void)
     // Pass zero length to the API
     status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfg, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 void test_neg_power_pwr_setSeqDelay_invalidConfig(void)
 {
-#ifdef BUILD_MOCK
     // Test invalid resource or zero validParams (lines 2910-2911)
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
@@ -5759,9 +5251,6 @@ void test_neg_power_pwr_setSeqDelay_invalidConfig(void)
 
     status = Pmic_pwrSetBuckLdoSeqDly(&pmicHandle, seqDlyCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 /**
@@ -5770,7 +5259,6 @@ void test_neg_power_pwr_setSeqDelay_invalidConfig(void)
  */
 void test_neg_power_pwr_getSeqTrig_invalidResource(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     uint16_t invalidResource = (uint16_t)(PMIC_POWER_RESOURCE_MAX + 1U);
     uint16_t invalidTrigger = (uint16_t)(invalidResource << 8U);
@@ -5781,9 +5269,6 @@ void test_neg_power_pwr_getSeqTrig_invalidResource(void)
 
     status = Pmic_pwrGetBuckLdoSeqTrig(&pmicHandle, seqTrigCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 /**
@@ -5792,7 +5277,6 @@ void test_neg_power_pwr_getSeqTrig_invalidResource(void)
  */
 void test_neg_power_pwr_getSeqTrig_invalidBitPos(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     uint16_t invalidTrigger = ((uint16_t)PMIC_BUCK1 << 8U) | 6U;  // bitPos 6 > max 5
 
@@ -5802,9 +5286,6 @@ void test_neg_power_pwr_getSeqTrig_invalidBitPos(void)
 
     status = Pmic_pwrGetBuckLdoSeqTrig(&pmicHandle, seqTrigCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 /**
@@ -5813,15 +5294,11 @@ void test_neg_power_pwr_getSeqTrig_invalidBitPos(void)
  */
 void test_neg_power_pwr_getSeqDelay_zeroLen(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[1];
 
     status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfg, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 
 /**
@@ -5830,7 +5307,6 @@ void test_neg_power_pwr_getSeqDelay_zeroLen(void)
  */
 void test_neg_power_pwr_getSeqDelay_invalidConfig(void)
 {
-#ifdef BUILD_MOCK
     int32_t status;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
         {
@@ -5841,8 +5317,5 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void)
 
     status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfg, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-#else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for parameter validation");
-#endif
 }
 

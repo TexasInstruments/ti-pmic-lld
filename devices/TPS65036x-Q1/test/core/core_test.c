@@ -107,14 +107,6 @@ void core_test(void *args)
             platform_printString(msg);
         }
 
-        /* Ensure CRC is disabled to prevent state corruption between tests */
-        status = Pmic_ioSetCrcEnableState(&pmicHandle, PMIC_DISABLE);
-        if (status != PMIC_ST_SUCCESS)
-        {
-            (void)sprintf(msg, "Error disabling CRC: %d\r\n", status);
-            platform_printString(msg);
-        }
-
         platform_setupTests();
         CORE_TEST_RUN_ALL();
         platform_tearDownTests();
@@ -497,6 +489,10 @@ void test_pos_core_enableDisableCRC8(void)
     status = Pmic_ioGetCrcEnableState(&pmicHandle, &crcEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(crcEnabled == (bool)false);
+
+    // Restore CRC to enabled (NVM default) so subsequent tests are not affected
+    status = Pmic_ioSetCrcEnableState(&pmicHandle, PMIC_ENABLE);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 void test_pos_core_setGetPwrOn(void)
@@ -663,7 +659,7 @@ void test_pos_core_runABIST(void)
     status = platform_rxByte(&pmicHandle, 0U, maskMiscRegAddr, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     Pmic_setBitField(&regData, abistDoneShift, 1UL << abistDoneShift, 0U);
-    status = platform_txByte(&pmicHandle, 0U, maskMiscRegAddr, &regData, bufLen);
+    status = Pmic_ioTxByte(&pmicHandle, maskMiscRegAddr, regData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Run ABIST
@@ -715,7 +711,7 @@ static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = platform_txByte(pHandle, 0U, registerLockAddr, &regData, bufLen);
+        status = Pmic_ioTxByte(pHandle, (uint8_t)registerLockAddr, regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -723,7 +719,7 @@ static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle)
         status = platform_rxByte(pHandle, 0U, registerLockAddr, &regData, bufLen);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (regData != 0U))
+    if ((status == PMIC_ST_SUCCESS) && ((regData & PMIC_REGISTER_LOCK_STATUS_MASK) != 0U))
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }

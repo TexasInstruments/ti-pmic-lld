@@ -56,6 +56,15 @@ ifdef PMIC_DEBUG
     TEST_SOURCES += $(TEST_COMMON_DIR)/debug.c
 endif
 
+# Auto-discover pmic-tiva-host serial port when BUILD=host and PMIC_SERIAL_PORT not set.
+# Requires pmic-lld-utils to be available at ~/Projects/pmic-lld-utils.
+# Override by setting PMIC_SERIAL_PORT in the environment.
+ifeq ($(BUILD), host)
+ifndef PMIC_SERIAL_PORT
+PMIC_SERIAL_PORT := $(shell uv run --project $(HOME)/Projects/pmic-lld-utils find-pmic-port 2>/dev/null)
+endif
+endif
+
 # Build-specific configuration
 ifeq ($(BUILD), mock)
 	# Mock build configuration - uses external pmic-lld-mocking repository
@@ -145,7 +154,9 @@ test:
 	@echo "Compiling test and PMIC sources..."
 	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests (requires pmic-tiva-host firmware on TM4C123)..."
-	./$(TARGET)
+	@if [ -z "$(PMIC_SERIAL_PORT)" ]; then echo "ERROR: pmic-tiva-host port not found. Check USB connection or set PMIC_SERIAL_PORT manually."; exit 1; fi
+	@echo "Using port: $(PMIC_SERIAL_PORT)"
+	PMIC_SERIAL_PORT=$(PMIC_SERIAL_PORT) ./$(TARGET)
 endif
 
 # Run tests with debug logging enabled
@@ -183,7 +194,9 @@ test-debug:
 	@echo "Compiling test and PMIC sources with debug support..."
 	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests with debug logging (requires pmic-tiva-host firmware on TM4C123)..."
-	./$(TARGET)
+	@if [ -z "$(PMIC_SERIAL_PORT)" ]; then echo "ERROR: pmic-tiva-host port not found. Check USB connection or set PMIC_SERIAL_PORT manually."; exit 1; fi
+	@echo "Using port: $(PMIC_SERIAL_PORT)"
+	PMIC_SERIAL_PORT=$(PMIC_SERIAL_PORT) ./$(TARGET)
 endif
 
 # Code coverage target (uses clang coverage instrumentation)

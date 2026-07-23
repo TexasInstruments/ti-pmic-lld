@@ -1697,8 +1697,9 @@ void test_neg_io_ioRxByte_crcErrorExhaustsRetries(void)
     /* Should have made at least 1 attempt */
     PLATFORM_ASSERT(g_mockIoReadCallCount >= 1U);
 
-    /* Disable CRC for cleanup */
-    testHandle.crcEnable0 = PMIC_DISABLE;
+    /* Disable CRC on device — testHandle.crcEnable0 is true so the write includes CRC */
+    status = Pmic_ioCrcDisable(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**
@@ -1931,6 +1932,10 @@ void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
     /* Perform read - should fail with CRC error */
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_DATA_IO_CRC);
+
+    /* Disable CRC on device — testHandle.crcEnable0 is true so the write includes CRC */
+    status = Pmic_ioCrcDisable(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**
@@ -1965,6 +1970,10 @@ void test_neg_io_ioRxByte_i2cRxCrcMismatch(void)
     /* Perform read - should fail with CRC error */
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_DATA_IO_CRC);
+
+    /* Disable CRC on device — testHandle.crcEnable0 is true so the write includes CRC */
+    status = Pmic_ioCrcDisable(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**

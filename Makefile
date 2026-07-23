@@ -230,6 +230,13 @@ else
 	@echo "  $(DEVICE_DIR)/$(DEVICE)/test/coverage/"
 endif
 
+# Validate that all regmap header macros compile cleanly.
+# Requires pmic-lld-utils at ~/Projects/pmic-lld-utils.
+.PHONY: test-macros
+test-macros:
+	@echo "Validating regmap header macro syntax for all devices..."
+	uv run --project $(HOME)/Projects/pmic-lld-utils validate-regmap-macros $(CURDIR)
+
 # Display help information
 .PHONY: help
 help:

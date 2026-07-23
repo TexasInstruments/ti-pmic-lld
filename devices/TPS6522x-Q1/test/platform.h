@@ -150,8 +150,7 @@ void platform_setModuleName(const char* moduleName);
     /* Mock/Host build: Use standard RUN_TEST with filtering */
     #define PLATFORM_RUN_TEST(test) \
         do { \
-            if (testFilter_shouldRunModule(g_currentModuleName) && \
-                testFilter_shouldRunTestWithGroup(#test)) { \
+            if (testFilter_shouldRunTestWithGroup(#test)) { \
                 testTimer_startTest(#test); \
                 if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
                 RUN_TEST(test); \

@@ -35,11 +35,13 @@
 
 #include "unity.h"
 #include "platform.h"
+#include "debug.h"
 #include "test_filter.h"
 #include <stdio.h>
 #include "regmap/core.h"
 #include "regmap/irq.h"
 #include "regmap/wdg.h"
+#include "regmap/esm.h"
 #include "regmap/fsm.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
@@ -77,26 +79,38 @@ void setUp(void)
 #ifndef BUILD_MOCK
     platform_softReboot();
 
-    {
-        static const struct { uint8_t page; uint16_t addr; const char *name; } statusRegs[] = {
-            { PMIC_PAGE_MAIN, INT_TOP_REG,           "INT_TOP      " },
-            { PMIC_PAGE_MAIN, STAT_SEVERE_ERR_REG,   "STAT_SEVERE  " },
-            { PMIC_PAGE_MAIN, STAT_MODERATE_ERR_REG, "STAT_MODERATE" },
-            { PMIC_PAGE_MAIN, RECOV_CNT_REG_1_REG,   "RECOV_CNT    " },
-            { PMIC_PAGE_MAIN, STARTUP_CTRL_REG,      "STARTUP_CTRL " },
-        };
-        uint8_t regVal = 0U;
-        for (uint8_t i = 0U; i < (uint8_t)(sizeof(statusRegs) / sizeof(statusRegs[0])); i++) {
-            if (platform_rxByte(&h, statusRegs[i].page, statusRegs[i].addr, &regVal, 1U) == PMIC_ST_SUCCESS) {
-                if (regVal != 0U) {
-                    printf("[PMIC STATE] %s = 0x%02X\n", statusRegs[i].name, regVal);
-                }
+    static const struct { uint8_t page; uint16_t addr; const char *name; } statusRegs[] = {
+        { PMIC_PAGE_MAIN, INT_TOP_REG,           "INT_TOP      " },
+        { PMIC_PAGE_MAIN, STAT_SEVERE_ERR_REG,   "STAT_SEVERE  " },
+        { PMIC_PAGE_MAIN, STAT_MODERATE_ERR_REG, "STAT_MODERATE" },
+        { PMIC_PAGE_MAIN, RECOV_CNT_REG_1_REG,   "RECOV_CNT    " },
+        { PMIC_PAGE_MAIN, STARTUP_CTRL_REG,      "STARTUP_CTRL " },
+    };
+    uint8_t regVal = 0U;
+    for (uint8_t i = 0U; i < (uint8_t)(sizeof(statusRegs) / sizeof(statusRegs[0])); i++) {
+        if (platform_rxByte(&h, statusRegs[i].page, statusRegs[i].addr, &regVal, 1U) == PMIC_ST_SUCCESS) {
+            if (regVal != 0U) {
+                printf("[PMIC STATE] %s = 0x%02X\n", statusRegs[i].name, regVal);
             }
         }
     }
 #endif
 
     platform_unlockRegisters();
+
+#ifndef BUILD_MOCK
+    /* Freeze WDG in Long Window so config registers stay writable across tests */
+    if (platform_rxByte(&h, PMIC_PAGE_WDG, (uint8_t)(WD_MODE_REG_REG & 0xFFU), &regVal, 1U) == PMIC_ST_SUCCESS) {
+        regVal |= (uint8_t)WD_PWRHOLD_MASK;
+        (void)platform_txByte(&h, PMIC_PAGE_WDG, (uint8_t)(WD_MODE_REG_REG & 0xFFU), &regVal, 1U);
+    }
+
+    /* Clear ESM_MCU_START so ESM config registers are writable */
+    if (platform_rxByte(&h, PMIC_PAGE_MAIN, (uint8_t)(ESM_MCU_START_REG_REG & 0xFFU), &regVal, 1U) == PMIC_ST_SUCCESS) {
+        regVal &= ~(uint8_t)ESM_MCU_START_MASK;
+        (void)platform_txByte(&h, PMIC_PAGE_MAIN, (uint8_t)(ESM_MCU_START_REG_REG & 0xFFU), &regVal, 1U);
+    }
+#endif
 
     int32_t status = platform_rxByte(&h, PMIC_PAGE_MAIN, RECOV_CNT_REG_2_REG, &recov2, 1U);
     if (status != PMIC_ST_SUCCESS)
@@ -162,6 +176,46 @@ extern void io_test(void *args);
 extern void irq_test(void *args);
 extern void fsm_test(void *args);
 
+/* ========================================================================= */
+/*                         Test Module Registry                              */
+/* ========================================================================= */
+
+typedef void (*TestModuleFunc_t)(void *args);
+
+typedef struct {
+    const char *name;
+    const char *displayName;
+    TestModuleFunc_t func;
+} TestModuleEntry_t;
+
+static const TestModuleEntry_t g_testModules[] = {
+    {"common", "Common",    common_test},
+    {"pmic",   "PMIC Init", pmic_test},
+    {"core",   "Core",      core_test},
+    {"adc",    "ADC",       adc_test},
+    {"power",  "Power",     power_test},
+    {"gpio",   "GPIO",      gpio_test},
+    {"wdg",    "WDG",       wdg_test},
+    {"esm",    "ESM",       esm_test},
+    {"io",     "I/O",       io_test},
+    {"irq",    "IRQ",       irq_test},
+    {"fsm",    "FSM",       fsm_test},
+};
+
+#define NUM_TEST_MODULES (sizeof(g_testModules) / sizeof(g_testModules[0]))
+
+static void runAllTests(void)
+{
+    testFilter_printConfig();
+    for (uint32_t i = 0U; i < NUM_TEST_MODULES; i++) {
+        const TestModuleEntry_t *module = &g_testModules[i];
+        if (testFilter_shouldRunModule(module->name)) {
+            platform_setModuleName(module->displayName);
+            module->func(NULL);
+        }
+    }
+}
+
 /**
  * @brief Main entry point for test execution
  *
@@ -207,75 +261,16 @@ int main(void)
     printf("\n");
 #endif
 
+    debug_init();
     testFilter_init();
+
+    testTimer_init();
+    testTimer_startSuite();
+
     UNITY_BEGIN();
+    platform_runTestLoop(&runAllTests);
+    int result = UNITY_END();
 
-    printf("\n=== Running Common Tests ===\n");
-    common_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running Core Tests ===\n");
-    core_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running ADC Tests ===\n");
-    adc_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running Power Tests ===\n");
-    power_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running GPIO Tests ===\n");
-    gpio_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running WDG Tests ===\n");
-    wdg_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running ESM Tests ===\n");
-    esm_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running I/O Tests ===\n");
-    io_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running IRQ Tests ===\n");
-    irq_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n=== Running FSM Tests ===\n");
-    fsm_test(NULL);
-#ifndef BUILD_MOCK
-    platform_softReboot();
-#endif
-
-    printf("\n========================================\n");
-    return UNITY_END();
+    testTimer_endSuite();
+    return result;
 }

@@ -38,6 +38,7 @@
 
 #include "fsm_test.h"
 #include "test_constants.h"
+#include "regmap/core.h"
 
 
 /* ========================================================================== */
@@ -314,7 +315,7 @@ void test_pos_fsm_getClrRecovCnt(void)
     // Get new recovery count and compare initial vs. new recovery count
     status = Pmic_fsmGetRecovCnt(&pmicHandle, &newRecovCnt);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
-    PLATFORM_ASSERT(newRecovCnt = (initRecovCnt + 1U));
+    PLATFORM_ASSERT(newRecovCnt == (initRecovCnt + 1U));
 
     // Clear the recovery counter
     status = Pmic_fsmClrRecovCnt(&pmicHandle);
@@ -349,9 +350,9 @@ void test_pos_fsm_getClrResetCnt(void)
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 
     // Get new reset count and compare initial vs. new reset count
-    status = Pmic_fsmGetRecovCnt(&pmicHandle, &newResetCnt);
+    status = Pmic_fsmGetResetCnt(&pmicHandle, &newResetCnt);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
-    PLATFORM_ASSERT(newResetCnt = (initResetCnt + 1U));
+    PLATFORM_ASSERT(newResetCnt == (initResetCnt + 1U));
 
     // Clear the reset counter
     status = Pmic_fsmClrResetCnt(&pmicHandle);
@@ -365,61 +366,26 @@ void test_pos_fsm_getClrResetCnt(void)
 
 static int32_t fsmTest_clrResetCnt(void)
 {
-    uint8_t regData = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, resetCntClrShift = 1U, resetCntClrMask = 1UL << 1U;
-
-    // Read RECOV_CNT_CONTROL
-    status = platform_rxByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);
-
-    // Set RESET_CNT_CLR bit field to 1 and write RECOV_CNT_CONTROL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, resetCntClrShift, resetCntClrMask, 1U);
-        status = platform_txByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);
-    }
-
-    return status;
+    return Pmic_fsmClrResetCnt(&pmicHandle);
 }
 
 static int32_t fsmTest_clrRecovCnt(void)
 {
-    uint8_t regData = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t recovCntControlRegAddr = 0x07U, bufLen = 1U, recovCntClrShift = 0U, recovCntClrMask = 1UL << 0U;
-
-    // Read RECOV_CNT_CONTROL
-    status = platform_rxByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);
-
-    // Set RECOV_CNT_CLR bit field to 1 and write RECOV_CNT_CONTROL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField(&regData, recovCntClrShift, recovCntClrMask, 1U);
-        status = platform_txByte(&pmicHandle, 0U, recovCntControlRegAddr, &regData, bufLen);
-    }
-
-    return status;
+    return Pmic_fsmClrRecovCnt(&pmicHandle);
 }
 
 static int32_t fsmTest_unlockPmicRegs(Pmic_Handle_t *pHandle)
 {
-    uint8_t regData = 0x9BU;
-    const uint8_t bufLen = 1U;
-    const uint16_t registerLockAddr = 0x09U;
+    bool isLocked = (bool)false;
 
-    int32_t status = Pmic_checkHandle(pHandle);
+    int32_t status = Pmic_setRegLockState(pHandle, PMIC_UNLOCK);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = platform_txByte(pHandle, 0U, registerLockAddr, &regData, bufLen);
+        status = Pmic_getRegLockState(pHandle, &isLocked);
     }
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = platform_rxByte(pHandle, 0U, registerLockAddr, &regData, bufLen);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && (regData != 0U))
+    if ((status == PMIC_ST_SUCCESS) && isLocked)
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }

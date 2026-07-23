@@ -73,7 +73,7 @@ extern "C" {
 
 /** @brief ESM_DELAY1 - ESM Delay 1 */
 #define ESM_DLY1_SHIFT (0U)
-#define ESM_DLY1_MASK  (0xFFU << ESM_DLY1)
+#define ESM_DLY1_MASK  (0xFFU << ESM_DLY1_SHIFT)
 
 /** @brief ESM_DELAY2 - ESM Delay 2 */
 #define ESM_DLY2_SHIFT (0U)

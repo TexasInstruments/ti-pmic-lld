@@ -96,7 +96,7 @@ extern "C" {
  * @{
  */
 #define PMIC_REGISTER_LOCK_STATUS_SHIFT            ((uint8_t)0U)
-#define PMIC_REGISTER_LOCK_STATUS_MASK             ((uint8_t)(1UL << PMIC_REGISTER_LOCK_STATUS_SHIFT)))
+#define PMIC_REGISTER_LOCK_STATUS_MASK             ((uint8_t)(1UL << PMIC_REGISTER_LOCK_STATUS_SHIFT))
 /** @} */
 
 /**

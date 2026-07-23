@@ -283,6 +283,39 @@ int32_t platform_rxByte(const Pmic_Handle_t *handle,
 void platform_unlockRegisters(void);
 
 /**
+ * @brief Timing constants for nRSTOUT monitoring during soft reboot.
+ *
+ * INITIAL_WAIT_MS: brief delay before starting to poll, allowing the PMIC to
+ * assert nRSTOUT low after WARM_RESET_REQUEST is written.
+ * TIMEOUT_MS: maximum poll window before giving up and continuing anyway.
+ */
+#define PLATFORM_REBOOT_INITIAL_WAIT_MS (2U)
+#define PLATFORM_REBOOT_TIMEOUT_MS      (200U)
+
+/**
+ * @brief Trigger a PMIC WARM_RESET and wait for the device to come back up.
+ *
+ * @details Writes WARM_RESET_REQUEST (0xCC) to FSM_COMMAND_REG (0x05) then
+ * polls nRSTOUT (PB5, bitmask 32) until it goes high, indicating the device
+ * has completed its reset sequence and is ready for I2C communication.
+ * Calls platform_unlockRegisters() on return since WARM_RESET re-locks
+ * configuration registers.
+ *
+ * No-op on BUILD_MOCK.
+ */
+void platform_softReboot(void);
+
+/**
+ * @brief Write a register with automatic CRC byte when I2C CRC is enabled.
+ *
+ * @param regAddr [IN] Target PMIC register address.
+ * @param data    [IN] Byte value to write.
+ */
+#ifdef BUILD_HOST
+void platform_writeReg(uint8_t regAddr, uint8_t data);
+#endif
+
+/**
  * @brief Execute test callback with platform-appropriate behavior
  *
  * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
