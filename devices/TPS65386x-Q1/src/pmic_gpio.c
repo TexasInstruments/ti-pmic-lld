@@ -441,7 +441,7 @@ int32_t Pmic_gpioSetSafeOutCfg(const Pmic_Handle_t *handle, const Pmic_GpioSafeO
 
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_BIST_CTRL_REG, &regData);
 
         if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_GPIO_SAFEOUT1_EN_VALID, status)) {
             Pmic_setBitField_b(&regData, PMIC_SAFE_OUT1_EN_SHIFT, config->safeOut1En);
@@ -452,7 +452,7 @@ int32_t Pmic_gpioSetSafeOutCfg(const Pmic_Handle_t *handle, const Pmic_GpioSafeO
         }
 
         if (status == PMIC_ST_SUCCESS) {
-            status = Pmic_ioTxByte(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, regData);
+            status = Pmic_ioTxByte(handle, PMIC_BIST_CTRL_REG, regData);
         }
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
@@ -469,7 +469,7 @@ int32_t Pmic_gpioGetSafeOutCfg(const Pmic_Handle_t *handle, Pmic_GpioSafeOutCfg_
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, PMIC_SAFE_OUT_CFG_CTRL_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_BIST_CTRL_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {

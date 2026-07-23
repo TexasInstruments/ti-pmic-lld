@@ -38,6 +38,7 @@
 /* ========================================================================== */
 #include "esm_test.h"
 #include "test_constants.h"
+#include "pmic_gpio.h"
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -52,7 +53,28 @@ void test_pos_esm_esmSetGetStartState(void)
 {
     int32_t status;
     bool startSet, startGet;
+    Pmic_GpioCfg_t gpioCfg = {0};
+    Pmic_EsmCfg_t esmCfg = {0};
 
+    /* Configure GPI1 as ESM_IN */
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
+    gpioCfg.gpi1 = PMIC_GPI1_ESM_IN;
+    status = Pmic_gpioSetCfg(&pmicHandle, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Drive TIVA PA2 high — provides a valid level-mode "good" signal
+     * (HIGH_GOOD polarity: HIGH = no fault while ESM is running) */
+    platform_setEsmPin(true);
+
+    /* Enable ESM in level mode with HIGH_GOOD polarity before starting */
+    esmCfg.validParams = PMIC_CFG_ESM_ENABLE_VALID |
+                         PMIC_CFG_ESM_MODE_VALID |
+                         PMIC_CFG_ESM_POLARITY_VALID;
+    esmCfg.enable = true;
+    esmCfg.mode = PMIC_ESM_LEVEL_MODE;
+    esmCfg.polarity = PMIC_ESM_POLARITY_HIGH_GOOD;
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Test: Start ESM */
     startSet = true;
@@ -78,7 +100,25 @@ void test_pos_esm_esmStart(void)
 {
     int32_t status;
     bool startState;
+    Pmic_GpioCfg_t gpioCfg = {0};
+    Pmic_EsmCfg_t esmCfg = {0};
 
+    /* Configure GPI1 as ESM_IN, drive PA2 high, enable ESM */
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
+    gpioCfg.gpi1 = PMIC_GPI1_ESM_IN;
+    status = Pmic_gpioSetCfg(&pmicHandle, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    platform_setEsmPin(true);
+
+    esmCfg.validParams = PMIC_CFG_ESM_ENABLE_VALID |
+                         PMIC_CFG_ESM_MODE_VALID |
+                         PMIC_CFG_ESM_POLARITY_VALID;
+    esmCfg.enable = true;
+    esmCfg.mode = PMIC_ESM_LEVEL_MODE;
+    esmCfg.polarity = PMIC_ESM_POLARITY_HIGH_GOOD;
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_esmStart(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -93,7 +133,25 @@ void test_pos_esm_esmStop(void)
 {
     int32_t status;
     bool startState;
+    Pmic_GpioCfg_t gpioCfg = {0};
+    Pmic_EsmCfg_t esmCfg = {0};
 
+    /* Configure GPI1 as ESM_IN, drive PA2 high, enable ESM */
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
+    gpioCfg.gpi1 = PMIC_GPI1_ESM_IN;
+    status = Pmic_gpioSetCfg(&pmicHandle, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    platform_setEsmPin(true);
+
+    esmCfg.validParams = PMIC_CFG_ESM_ENABLE_VALID |
+                         PMIC_CFG_ESM_MODE_VALID |
+                         PMIC_CFG_ESM_POLARITY_VALID;
+    esmCfg.enable = true;
+    esmCfg.mode = PMIC_ESM_LEVEL_MODE;
+    esmCfg.polarity = PMIC_ESM_POLARITY_HIGH_GOOD;
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Start ESM first */
     status = Pmic_esmStart(&pmicHandle);

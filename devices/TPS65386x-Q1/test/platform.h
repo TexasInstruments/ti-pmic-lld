@@ -333,6 +333,17 @@ void platform_irqClrAll(void);
  */
 void platform_checkDevState(const char *testName);
 
+/**
+ * @brief Drive the ESM_IN signal (TIVA PA2 → PMIC GPI1) high or low.
+ *
+ * @details No-op on non-host builds. Call before enabling/starting ESM to
+ *          provide a valid level-mode signal and prevent an immediate ESM fault.
+ *
+ * @param high true = drive PA2 high (pin at "good" level with HIGH_GOOD polarity)
+ *             false = drive PA2 low
+ */
+void platform_setEsmPin(bool high);
+
 #endif /* !BUILD_MOCK - End of function declarations */
 
 #if !defined(BUILD_MOCK) && !defined(BUILD_HOST)

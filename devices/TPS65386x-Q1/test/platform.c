@@ -261,6 +261,35 @@ void platform_init(void)
     }
     usleep(100000);  /* 100ms for device to wake from STANDBY and stabilize */
 
+    /* Configure PA2 as GPIO output for ESM_IN (PMIC GPI1). Drive HIGH initially
+     * to provide a valid "good" level-mode signal when ESM is enabled.
+     * Port A is already enabled by firmware (UART0 uses PA0/PA1); PA2 is free.
+     *   bitmask 4 = 0x04 = PA2 (decimal required)
+     */
+    printf("Configuring ESM_IN (PA2) high...\n");
+    {
+        char gpio_response[256];
+        int32_t rc;
+
+        rc = serial_send_command("gpioc pa 4 o 8 1");
+        if (rc != 0 ||
+                (rc = serial_read_response(gpio_response, sizeof(gpio_response))) < 0 ||
+                strstr(gpio_response, "STATUS: OK") == NULL) {
+            fprintf(stderr, "ERROR: gpioc pa 4 o 8 1 failed (rc=%d): %s\n", rc, gpio_response);
+            serial_close();
+            exit(1);
+        }
+
+        rc = serial_send_command("gpiow pa 4 4 0");
+        if (rc != 0 ||
+                (rc = serial_read_response(gpio_response, sizeof(gpio_response))) < 0 ||
+                strstr(gpio_response, "STATUS: OK") == NULL) {
+            fprintf(stderr, "ERROR: gpiow pa 4 4 0 failed (rc=%d): %s\n", rc, gpio_response);
+            serial_close();
+            exit(1);
+        }
+    }
+
     printf("Host-controlled platform initialized successfully\n\n");
 
     /* Set initialization state before CRC disable so platform helpers work */
@@ -312,6 +341,24 @@ void platform_wakeFromStandby(void)
         (void)serial_read_response(gpio_response, sizeof(gpio_response));
     }
     (void)rc;
+#endif
+}
+
+void platform_setEsmPin(bool high)
+{
+#ifdef BUILD_HOST
+    char gpio_response[256];
+    int32_t rc;
+    const char *cmd = high ? "gpiow pa 4 4 0" : "gpiow pa 4 0 0";
+
+    rc = serial_send_command(cmd);
+    if (rc == 0)
+    {
+        (void)serial_read_response(gpio_response, sizeof(gpio_response));
+    }
+    (void)rc;
+#else
+    (void)high;
 #endif
 }
 

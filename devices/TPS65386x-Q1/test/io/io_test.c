@@ -1669,6 +1669,7 @@ void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
  */
 void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
 {
+#ifdef BUILD_MOCK
     Pmic_Handle_t asyncHandle;
     Pmic_HandleCfg_t asyncCfg;
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
@@ -1728,6 +1729,9 @@ void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
     PLATFORM_ASSERT(rxData == TEST_PATTERN_55);
 
     Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for async await failure injection");
+#endif
 }
 
 /**

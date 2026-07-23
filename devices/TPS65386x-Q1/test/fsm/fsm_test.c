@@ -402,6 +402,13 @@ void test_pos_fsm_fsmSetDevErrCnt_basic(void)
     uint8_t errCntSet, errCntGet;
     uint8_t testValues[] = {0x00, 0x10, 0x1F};
 
+    /* Set PWD_TH to max so writing DEV_ERR_CNT never crosses the power-down
+     * threshold and corrupts the SPI response. */
+    Pmic_FsmCfg_t pwdCfg = {0};
+    pwdCfg.validParams = PMIC_CFG_FSM_PWD_THR_VALID;
+    pwdCfg.pwdThr = PMIC_PWD_THR_MAX;
+    status = Pmic_fsmSetCfg(&pmicHandle, &pwdCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
@@ -1297,6 +1304,9 @@ void test_pos_fsm_fsmGetDevState_validRead(void)
     /* Send RESET MCU request and verify state can be read */
     status = Pmic_fsmSetDevState(&pmicHandle, PMIC_ACTIVE_OR_SAFE_TO_RESET_MCU_REQUEST);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Wait for PMIC to complete RESET_MCU transition before reading state */
+    platform_timerWaitMs(50U);
 
     status = Pmic_fsmGetDevState(&pmicHandle, &state);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

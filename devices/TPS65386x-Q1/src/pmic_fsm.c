@@ -641,17 +641,7 @@ int32_t Pmic_fsmSetDevErrCnt(const Pmic_Handle_t *handle, uint8_t devErrCnt)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Read DEV_ERR_STAT
-        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, DEV_ERR_STAT_REG, &regData);
-
-        // Extract DEV_ERR_CNT and write DEV_ERR_STAT
-        if (status == PMIC_ST_SUCCESS)
-        {
-            Pmic_setBitField(&regData, DEV_ERR_CNT_SHIFT, DEV_ERR_CNT_MASK, devErrCnt);
-            status = Pmic_ioTxByte(handle, DEV_ERR_STAT_REG, regData);
-        }
-        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioUpdateByte_CS(handle, DEV_ERR_STAT_REG, DEV_ERR_CNT_SHIFT, DEV_ERR_CNT_MASK, devErrCnt);
     }
 
     return Pmic_logStatus(handle, status);

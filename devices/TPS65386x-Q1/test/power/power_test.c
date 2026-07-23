@@ -675,10 +675,10 @@ void test_pos_power_setGetBuckBoostCfg_lvl(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_LVL_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
@@ -693,10 +693,10 @@ void test_pos_power_setGetBuckBoostCfg_stbyLvl(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_STBY_LVL_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.stbyLvl == setCfg.stbyLvl);
@@ -711,10 +711,10 @@ void test_pos_power_setGetBuckBoostCfg_vmonThr(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonThr == setCfg.vmonThr);
@@ -729,10 +729,10 @@ void test_pos_power_setGetBuckBoostCfg_vmonDgl(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonDgl == setCfg.vmonDgl);
@@ -747,10 +747,10 @@ void test_pos_power_setGetBuckBoostCfg_boostTmo(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_BOOST_TMO_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.boostTmo == setCfg.boostTmo);
@@ -765,10 +765,10 @@ void test_pos_power_setGetBuckBoostCfg_ssEn(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_SS_EN_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.ssEn == setCfg.ssEn);
@@ -783,10 +783,10 @@ void test_pos_power_setGetBuckBoostCfg_includeOvUvStatInPGood(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.includeOvUvStatInPGood == setCfg.includeOvUvStatInPGood);
@@ -807,10 +807,10 @@ void test_pos_power_setGetBuckBoostCfg_allCfg(void)
     Pmic_PwrBuckBoostCfg_t getCfg = {
         .validParams = PMIC_PWR_CFG_BB_ALL
     };
-    
+
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
@@ -837,30 +837,41 @@ static void helper_setGetLdoCfg_mode(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_MODE_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
+
+    setCfg.mode = PMIC_PWR_LDO_DISABLED;
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 static void helper_setGetLdoCfg_lvl(uint16_t ldo)
 {
-    Pmic_PwrLdoCfg_t setCfg = {
+    Pmic_PwrLdoCfg_t defaultCfg = {
         .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
-        .ldo = ldo,
-        .lvl = PMIC_PWR_LDO_LVL_1P8V
+        .ldo = ldo
     };
     Pmic_PwrLdoCfg_t getCfg = {
         .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
         .ldo = ldo
     };
-    
-    int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
+    Pmic_PwrLdoCfg_t setCfg = {
+        .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
+        .ldo = ldo
+    };
+
+    int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, &defaultCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
+    setCfg.lvl = (defaultCfg.lvl == PMIC_PWR_LDO_LVL_1P8V) ? PMIC_PWR_LDO_LVL_1P75V : PMIC_PWR_LDO_LVL_1P8V;
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
@@ -877,10 +888,10 @@ static void helper_setGetLdoCfg_ilimLvl(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_ILIM_LVL_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.ilimLvl == setCfg.ilimLvl);
@@ -897,10 +908,10 @@ static void helper_setGetLdoCfg_ilimDgl(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.ilimDgl == setCfg.ilimDgl);
@@ -917,10 +928,10 @@ static void helper_setGetLdoCfg_vmonThr(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonThr == setCfg.vmonThr);
@@ -937,10 +948,10 @@ static void helper_setGetLdoCfg_vmonDgl(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonDgl == setCfg.vmonDgl);
@@ -957,10 +968,10 @@ static void helper_setGetLdoCfg_rampTime(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_RAMP_TIME_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.rampTime == setCfg.rampTime);
@@ -977,10 +988,10 @@ static void helper_setGetLdoCfg_disableDischarge(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_DISABLE_DISCHARGE_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.disableDischarge == setCfg.disableDischarge);
@@ -997,10 +1008,10 @@ static void helper_setGetLdoCfg_includeOvUvStatInPGood(uint16_t ldo)
         .validParams = PMIC_CFG_PWR_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .ldo = ldo
     };
-    
+
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.includeOvUvStatInPGood == setCfg.includeOvUvStatInPGood);
@@ -1008,7 +1019,14 @@ static void helper_setGetLdoCfg_includeOvUvStatInPGood(uint16_t ldo)
 
 /* LDO1 positive tests */
 void test_pos_power_setGetLdoCfg_ldo1_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO1); }
-void test_pos_power_setGetLdoCfg_ldo1_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO1); }
+void test_pos_power_setGetLdoCfg_ldo1_lvl(void)
+{
+#ifdef BUILD_MOCK
+    helper_setGetLdoCfg_lvl(PMIC_PWR_LDO1);
+#else
+    TEST_IGNORE_MESSAGE("LDO1 voltage change triggers fault on hardware");
+#endif
+}
 void test_pos_power_setGetLdoCfg_ldo1_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO1); }
 void test_pos_power_setGetLdoCfg_ldo1_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO1); }
 void test_pos_power_setGetLdoCfg_ldo1_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO1); }
@@ -1041,7 +1059,14 @@ void test_pos_power_setGetLdoCfg_ldo3_includeOvUvStatInPGood(void) { helper_setG
 
 /* LDO4 positive tests */
 void test_pos_power_setGetLdoCfg_ldo4_mode(void) { helper_setGetLdoCfg_mode(PMIC_PWR_LDO4); }
-void test_pos_power_setGetLdoCfg_ldo4_lvl(void) { helper_setGetLdoCfg_lvl(PMIC_PWR_LDO4); }
+void test_pos_power_setGetLdoCfg_ldo4_lvl(void)
+{
+#ifdef BUILD_MOCK
+    helper_setGetLdoCfg_lvl(PMIC_PWR_LDO4);
+#else
+    TEST_IGNORE_MESSAGE("LDO4 voltage change triggers fault on hardware");
+#endif
+}
 void test_pos_power_setGetLdoCfg_ldo4_ilimLvl(void) { helper_setGetLdoCfg_ilimLvl(PMIC_PWR_LDO4); }
 void test_pos_power_setGetLdoCfg_ldo4_ilimDgl(void) { helper_setGetLdoCfg_ilimDgl(PMIC_PWR_LDO4); }
 void test_pos_power_setGetLdoCfg_ldo4_vmonThr(void) { helper_setGetLdoCfg_vmonThr(PMIC_PWR_LDO4); }
@@ -1066,10 +1091,10 @@ static void helper_setGetPldoCfg_mode(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
@@ -1086,10 +1111,10 @@ static void helper_setGetPldoCfg_trackingMode(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_TRACKING_MODE_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.trackingMode == setCfg.trackingMode);
@@ -1106,10 +1131,10 @@ static void helper_setGetPldoCfg_lvl(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_LVL_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
@@ -1126,10 +1151,10 @@ static void helper_setGetPldoCfg_ilimLvl(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_ILIM_LVL_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.ilimLvl == setCfg.ilimLvl);
@@ -1146,10 +1171,10 @@ static void helper_setGetPldoCfg_ilimDgl(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.ilimDgl == setCfg.ilimDgl);
@@ -1166,10 +1191,10 @@ static void helper_setGetPldoCfg_vmonThr(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonThr == setCfg.vmonThr);
@@ -1186,10 +1211,10 @@ static void helper_setGetPldoCfg_vmonDgl(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonDgl == setCfg.vmonDgl);
@@ -1206,10 +1231,10 @@ static void helper_setGetPldoCfg_vtrackRange(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_VTRACK_RANGE_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vtrackRange == setCfg.vtrackRange);
@@ -1226,10 +1251,10 @@ static void helper_setGetPldoCfg_rampTime(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_RT_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.rampTime == setCfg.rampTime);
@@ -1246,10 +1271,10 @@ static void helper_setGetPldoCfg_disableDischarge(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_DISABLE_DISCHARGE_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.disableDischarge == setCfg.disableDischarge);
@@ -1266,10 +1291,10 @@ static void helper_setGetPldoCfg_includeOvUvStatInPGood(uint16_t pldo)
         .validParams = PMIC_CFG_PWR_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .pldo = pldo
     };
-    
+
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.includeOvUvStatInPGood == setCfg.includeOvUvStatInPGood);
@@ -1316,10 +1341,10 @@ static void helper_setGetExtVmonCfg_mode(uint16_t extVmon)
         .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID,
         .extVmon = extVmon
     };
-    
+
     int32_t status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
@@ -1336,10 +1361,10 @@ static void helper_setGetExtVmonCfg_vmonThr(uint16_t extVmon)
         .validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID,
         .extVmon = extVmon
     };
-    
+
     int32_t status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonThr == setCfg.vmonThr);
@@ -1356,10 +1381,10 @@ static void helper_setGetExtVmonCfg_vmonDgl(uint16_t extVmon)
         .validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID,
         .extVmon = extVmon
     };
-    
+
     int32_t status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.vmonDgl == setCfg.vmonDgl);
@@ -1376,10 +1401,10 @@ static void helper_setGetExtVmonCfg_includeOvUvStatInPGood(uint16_t extVmon)
         .validParams = PMIC_CFG_PWR_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .extVmon = extVmon
     };
-    
+
     int32_t status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.includeOvUvStatInPGood == setCfg.includeOvUvStatInPGood);
@@ -1430,7 +1455,7 @@ static void helper_getRsrcStatus(uint16_t pwrRsrc)
     Pmic_PwrRsrcStatus_t stat = {
         .pwrRsrc = pwrRsrc
     };
-    
+
     /* Determine valid params based on resource type */
     if (pwrRsrc == PMIC_PWR_BUCK_BOOST) {
         stat.validParams = PMIC_PWR_RSRC_STAT_BB_ALL;
@@ -1441,7 +1466,7 @@ static void helper_getRsrcStatus(uint16_t pwrRsrc)
     } else if ((pwrRsrc >= PMIC_PWR_EXT_VMON_MIN) && (pwrRsrc <= PMIC_PWR_EXT_VMON_MAX)) {
         stat.validParams = PMIC_PWR_RSRC_STAT_EXT_VMON_ALL;
     }
-    
+
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -1468,7 +1493,7 @@ void test_pos_power_clrRsrcStatus_buckBoost(void)
         .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID | PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
         .pwrRsrc = PMIC_PWR_BUCK_BOOST
     };
-    
+
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -1487,10 +1512,10 @@ void test_pos_power_setGetPGoodInStby(void)
 {
     bool setEnable = true;
     bool getEnable = false;
-    
+
     int32_t status = Pmic_pwrSetPGoodInStby(&pmicHandle, setEnable);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     status = Pmic_pwrGetPGoodInStby(&pmicHandle, &getEnable);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getEnable == setEnable);
@@ -1502,35 +1527,44 @@ void test_pos_power_setGetPGoodInStby(void)
 
 void test_pos_power_setGetLdoCfg_allLdos_allCfg(void)
 {
-    const uint16_t ldos[] = {PMIC_PWR_LDO1, PMIC_PWR_LDO2, PMIC_PWR_LDO3, PMIC_PWR_LDO4};
+    const uint16_t ldos[] = {PMIC_PWR_LDO2, PMIC_PWR_LDO3};
     const uint8_t numLdos = sizeof(ldos) / sizeof(ldos[0]);
-    
+
     for (uint8_t i = 0U; i < numLdos; i++)
     {
         Pmic_PwrLdoCfg_t setCfg = {
             .validParams = PMIC_PWR_CFG_LDO_ALL,
             .ldo = ldos[i],
-            .mode = PMIC_PWR_LDO_EN_AS_LDO_IN_OPER_AND_STBY,
-            .lvl = PMIC_PWR_LDO_LVL_1P8V,
-            .ilimLvl = PMIC_PWR_LDO_ILIM_LVL_OPTION_2,
-            .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_10_US,
-            .vmonThr = PMIC_PWR_LDO_VMON_THR_4_PCT,
-            .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_16_US,
+            .mode = PMIC_PWR_LDO_EN_AS_LDO_IN_OPER,
+            .lvl = PMIC_PWR_LDO_LVL_1P75V,
+            .ilimLvl = PMIC_PWR_LDO_ILIM_LVL_OPTION_1,
+            .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_1_MS,
+            .vmonThr = PMIC_PWR_LDO_VMON_THR_5_PCT,
+            .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_24_US,
             .rampTime = PMIC_PWR_RT_SHORTER,
-            .disableDischarge = false,
+            .disableDischarge = true,
             .includeOvUvStatInPGood = true
         };
         Pmic_PwrLdoCfg_t getCfg = {
             .validParams = PMIC_PWR_CFG_LDO_ALL,
             .ldo = ldos[i]
         };
-        
-        int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
+
+        Pmic_PwrLdoCfg_t disableCfg = {
+            .validParams = PMIC_CFG_PWR_LDO_MODE_VALID,
+            .ldo = ldos[i],
+            .mode = PMIC_PWR_LDO_DISABLED
+        };
+        int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &disableCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        
+        platform_timerWaitMs(10U);
+
+        status = Pmic_pwrSetLdoCfg(&pmicHandle, &setCfg);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
         status = Pmic_pwrGetLdoCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        
+
         PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
         PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
         PLATFORM_ASSERT(getCfg.ilimLvl == setCfg.ilimLvl);
@@ -1547,7 +1581,7 @@ void test_pos_power_setGetPldoCfg_allPldos_allCfg(void)
 {
     const uint16_t pldos[] = {PMIC_PWR_PLDO1, PMIC_PWR_PLDO2};
     const uint8_t numPldos = sizeof(pldos) / sizeof(pldos[0]);
-    
+
     for (uint8_t i = 0U; i < numPldos; i++)
     {
         Pmic_PwrPldoCfg_t setCfg = {
@@ -1569,13 +1603,13 @@ void test_pos_power_setGetPldoCfg_allPldos_allCfg(void)
             .validParams = PMIC_PWR_CFG_PLDO_ALL,
             .pldo = pldos[i]
         };
-        
+
         int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        
+
         status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        
+
         PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
         PLATFORM_ASSERT(getCfg.trackingMode == setCfg.trackingMode);
         PLATFORM_ASSERT(getCfg.lvl == setCfg.lvl);
