@@ -65,7 +65,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_with_task_handle); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_withRetryCnt); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_withTimerWaitMs)
+    PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_withTimerWaitMs); \
+    PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_noCommModeValidBit)
 
 #define PMIC_TEST_NEG_PMICINIT() \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullHandle); \
@@ -85,7 +86,15 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_timerWaitNull); \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_timerWaitMsCallbackNull); \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullCommHandle1); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_dualI2cMissingHandle1)
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_dualI2cMissingHandle1); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noIoReadValidBit); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noCritSecStartValidBit); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noCommHandle0ValidBit); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_firstReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_secondReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_thirdReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_fourthReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_syncCrcEnableFromHw_fail)
 
 /* Test: TC-PMIC-0004 */
 #define PMIC_TEST_PMICINIT() \
@@ -116,42 +125,14 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_pmicCheckHandle_all_validations)
 
 #define PMIC_TEST_NEG_PMICCHECKHANDLE() \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicCheckHandle_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicCheckHandle_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle1); \
+    PLATFORM_RUN_TEST(test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle2)
 
 /* Test: TC-PMIC-0006 */
 #define PMIC_TEST_PMICCHECKHANDLE() \
     PMIC_TEST_POS_PMICCHECKHANDLE(); \
     PMIC_TEST_NEG_PMICCHECKHANDLE()
-
-/* ======================================================================== */
-/*      Dynamic Analysis: getPmicInfo / syncCrcEnableFromHw (BUILD_MOCK)   */
-/* ======================================================================== */
-#ifdef BUILD_MOCK
-#define PMIC_TEST_NEG_PMICINIT_IO_FAILURES() \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_firstReadFail); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_secondReadFail); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_thirdReadFail); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_getPmicInfo_fourthReadFail); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_syncCrcEnableFromHw_fail)
-#else
-#define PMIC_TEST_NEG_PMICINIT_IO_FAILURES()
-#endif
-
-/* ======================================================================== */
-
-/* ======================================================================== */
-#define PMIC_TEST_PMICINIT_VALID_PARAMS_BRANCHES() \
-    PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_noCommModeValidBit); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noIoReadValidBit); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noCritSecStartValidBit); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_noCommHandle0ValidBit)
-
-/* ======================================================================== */
-/*  Dynamic Analysis: validatePmicHandle dual-I2C commHandle1 NULL branch   */
-/* ======================================================================== */
-#define PMIC_TEST_NEG_VALIDATEPMICHANDLE_DUAL_I2C() \
-    PLATFORM_RUN_TEST(test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle1); \
-    PLATFORM_RUN_TEST(test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle2)
 
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */
@@ -169,10 +150,7 @@ extern "C" {
 
 #define PMIC_TEST_RUN_ALL() \
     PMIC_TEST_RUN_POSITIVE(); \
-    PMIC_TEST_RUN_NEGATIVE(); \
-    PMIC_TEST_NEG_PMICINIT_IO_FAILURES(); \
-    PMIC_TEST_PMICINIT_VALID_PARAMS_BRANCHES(); \
-    PMIC_TEST_NEG_VALIDATEPMICHANDLE_DUAL_I2C()
+    PMIC_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

@@ -100,7 +100,12 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidRstThr); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidCntSel); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_modeRegReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thrCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getEnableStateReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getReturnToLongWindowReadFail)
 
 /* Test: TC-WDG-0016 */
 #define WDG_TEST_WDGSETCFG() \
@@ -111,23 +116,18 @@ extern "C" {
 /*                           Test APIs: wdgGetCfg                           */
 /* ======================================================================== */
 
-#ifdef BUILD_MOCK
 #define WDG_TEST_POS_WDGGETCFG_MOCK_ONLY() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_ioRxByteCSFail)
-#else
-#define WDG_TEST_POS_WDGGETCFG_MOCK_ONLY()
-#endif
 
-#ifdef BUILD_MOCK
 #define WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_secondReadFail)
-#else
-#define WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY()
-#endif
 
 #define WDG_TEST_NEG_WDGGETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullWdgCfg); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_modeRegReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_qaCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrCfgReadFail)
     WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY()
 
 /* Test: TC-WDG-0017 */
@@ -345,29 +345,6 @@ extern "C" {
     WDG_TEST_NEG_WDGCLRERRSTATUSALL(); \
     WDG_TEST_NEG_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
-
-/* ========================================================================== */
-/*              Static Helper Coverage Tests (BUILD_MOCK only)                */
-/* ========================================================================== */
-
-#ifdef BUILD_MOCK
-#define WDG_TEST_STATIC_HELPER_COVERAGE() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_modeRegReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaCfgReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thrCfgReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_modeRegReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_qaCfgReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrCfgReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getEnableStateReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getReturnToLongWindowReadFail)
-#else
-#define WDG_TEST_STATIC_HELPER_COVERAGE()
-#endif
-
-#define WDG_TEST_RUN_ALL() \
-    WDG_TEST_RUN_POSITIVE(); \
-    WDG_TEST_RUN_NEGATIVE(); \
-    WDG_TEST_STATIC_HELPER_COVERAGE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

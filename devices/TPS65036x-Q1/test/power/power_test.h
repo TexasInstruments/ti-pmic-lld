@@ -58,7 +58,7 @@ extern "C" {
 /* Mirrors the internal bounds defined in pmic_power.c; kept out of the public
  * pmic_power.h since they are implementation details, not part of the API. */
 /** @brief Maximum sequence trigger bit position per power resource (bits 0-5) */
-#define PMIC_PWR_SEQ_TRIG_BIT_POS_MAX       5U
+#define PMIC_PWR_SEQ_TRIG_BIT_POS_MAX       (5U)
 
 /** @brief Maximum number of sequence trigger configurations that can be processed
  *  Derived: PMIC_POWER_RESOURCE_MAX (4) × 6 bits = 24 */

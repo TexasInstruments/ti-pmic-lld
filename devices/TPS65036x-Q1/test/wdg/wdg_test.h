@@ -38,7 +38,6 @@
 /* ========================================================================== */
 
 #include "test_utils.h"
-// Test comment to verify editing works
 
 #ifdef __cplusplus
 extern "C" {
