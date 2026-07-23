@@ -374,6 +374,96 @@ void test_neg_core_diagGetDmuxCfg_nullGroup(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+void test_neg_core_configCrcEnable_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcEnable(NULL, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_configCrcDisable_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcDisable(NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcEnableState_nullHandle(void)
+{
+    bool isEnabled = false;
+    int32_t status = Pmic_getConfigCrcEnableState(NULL, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcEnableState_nullIsEnabled(void)
+{
+    int32_t status = Pmic_getConfigCrcEnableState(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcStatus_nullHandle(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID };
+    int32_t status = Pmic_getConfigCrcStatus(NULL, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcStatus_nullStatus(void)
+{
+    int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcStatus_zeroValidParams(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = 0U };
+    int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_core_clrConfigCrcStatus_nullHandle(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID };
+    int32_t status = Pmic_clrConfigCrcStatus(NULL, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_clrConfigCrcStatus_nullStatus(void)
+{
+    int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_clrConfigCrcStatus_zeroValidParams(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = 0U };
+    int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_core_setConfigCrcVal_nullHandle(void)
+{
+    int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcVal_nullHandle(void)
+{
+    uint16_t value = 0U;
+    int32_t status = Pmic_getConfigCrc(NULL, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcVal_nullValue(void)
+{
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_configCrcCalculate_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcCalculate(NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
 /* ========================================================================== */
 /*                           Positive Test Functions                          */
 /* ========================================================================== */
@@ -638,6 +728,152 @@ void test_pos_core_diagDMUX_setGet(void)
     setCfg.validParams = PMIC_CFG_MUX_DMUX_GROUP_VALID;
     setCfg.dmuxGroup = 0U;
     status = Pmic_setMuxCfg(&pmicHandle, &setCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_configCrcEnable_enableOnly(void)
+{
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == true);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_configCrcEnable_recalculate(void)
+{
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == true);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_configCrcDisable_disable(void)
+{
+    int32_t status;
+    bool isEnabled = true;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == false);
+}
+
+void test_pos_core_getConfigCrcEnableState_enabled(void)
+{
+    int32_t status;
+    bool isEnabled = false;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == true);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_getConfigCrcEnableState_disabled(void)
+{
+    int32_t status;
+    bool isEnabled = true;
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(isEnabled == false);
+}
+
+void test_pos_core_getConfigCrcStatus_calcDone(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID };
+    int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_getConfigCrcStatus_error(void)
+{
+    Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_ERROR_VALID };
+    int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_clrConfigCrcStatus_clearCalcDone(void)
+{
+    Pmic_ConfigCrcStat_t stat = {
+        .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID,
+        .calcDone = true
+    };
+    int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_clrConfigCrcStatus_clearError(void)
+{
+    Pmic_ConfigCrcStat_t stat = {
+        .validParams = PMIC_CONFIG_CRC_STAT_ERROR_VALID,
+        .error = true
+    };
+    int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_setConfigCrcVal_writeAndVerify(void)
+{
+    int32_t status;
+    uint16_t readBack = 0U;
+
+    status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrc(&pmicHandle, &readBack);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readBack == 0xA55AU);
+}
+
+void test_pos_core_getConfigCrcVal_readValue(void)
+{
+    int32_t status;
+    uint16_t value = 0U;
+
+    status = Pmic_setConfigCrc(&pmicHandle, 0x5AA5U);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrc(&pmicHandle, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(value == 0x5AA5U);
+}
+
+void test_pos_core_configCrcCalculate_calculate(void)
+{
+    int32_t status = Pmic_configCrcCalculate(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 

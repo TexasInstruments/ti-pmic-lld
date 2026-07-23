@@ -262,14 +262,26 @@ int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
  * Design: PMICDRV-739
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
  *
- * @param handle    [IN]  Pointer to the PMIC core handle structure.
- * @param crc       [OUT] The current CRC value on device.
+ * @param handle [IN]  Pointer to the PMIC core handle structure.
+ * @param value  [OUT] The current CRC value on device.
  *
  * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_configCrcGetFromDevice(const Pmic_Handle_t *handle, uint16_t *crc);
+int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
+
+/**
+ * @brief Write a 16-bit config register CRC value to the PMIC.
+ *
+ * @param handle [IN] Pointer to the PMIC core handle structure.
+ * @param value  [IN] 16-bit CRC value to write to CONFIG_CRC_REG_{1,2}.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_setConfigCrc(Pmic_Handle_t *handle, uint16_t value);
 
 #ifdef __cplusplus
 }

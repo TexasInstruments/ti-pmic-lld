@@ -39,66 +39,43 @@
 extern "C" {
 #endif
 
-/** @brief: PMIC Module Device ID Register */
-#define PMIC_DEV_ID_REG ((uint8_t)0x00U)
-
-/** @brief: PMIC Module Device Revision Infos */
-#define PMIC_DEV_REV_REG ((uint8_t)0x01U)
-
-/** @brief: PMIC NVM Code and Revision register Addresses */
-#define PMIC_NVM_CODE_REG ((uint8_t)0x02U)
-#define PMIC_NVM_REV_REG  ((uint8_t)0x0BU)
-
-/** @brief  PMIC STAT_READBACK_ERR register Addresses */
-#define PMIC_RDBK_ERR_STAT_REG ((uint8_t)0xAU)
-
-/** @brief   PMIC AMUX/DMUX Control Register Address */
+/** @brief PMIC register addresses */
+#define PMIC_DEV_ID_REG            ((uint8_t)0x00U)
+#define PMIC_DEV_REV_REG           ((uint8_t)0x01U)
+#define PMIC_NVM_CODE_REG          ((uint8_t)0x02U)
+#define CFG_REG_CRC0_REG           ((uint8_t)0x05U)
+#define CFG_REG_CRC1_REG           ((uint8_t)0x06U)
+#define SAFETY_CTRL_REG            (uint8_t)(0x08U)
+#define PMIC_NVM_REV_REG           ((uint8_t)0x0BU)
+#define PMIC_RDBK_ERR_STAT_REG     ((uint8_t)0x0AU)
 #define PMIC_DIAG_OUT_CFG_CTRL_REG ((uint8_t)0x58U)
 #define PMIC_DIAG_OUT_CFG_REG      ((uint8_t)0x59U)
-
-/** @brief: PMIC STATE_STAT and RST_MCU_TMR Registers */
-#define PMIC_STATE_CTRL_REG  ((uint8_t)0x16U)
-#define PMIC_STATE_STAT_REG  ((uint8_t)0x17U)
-#define PMIC_RST_MCU_TMR_REG ((uint8_t)0x18U)
-
-/** @brief  PMIC Dual Random Spread Spectrum register Addresses */
-#define PMIC_BUCK_BST_CFG_REG ((uint8_t)0x1BU)
-
-/** @brief  PMIC Register, Timer and Counter Lock register Addresses */
-#define CFG_REG_UNLOCK_SEQ_REG          ((uint8_t)0x03U)
-#define CNT_REG_UNLOCK_SEQ_REG          ((uint8_t)0x04U)
-#define REG_STAT_REG                    ((uint8_t)0x09U)
-
-/** @brief  PMIC Scratchpad register Addresses */
+#define PMIC_STATE_CTRL_REG        ((uint8_t)0x16U)
+#define PMIC_STATE_STAT_REG        ((uint8_t)0x17U)
+#define PMIC_RST_MCU_TMR_REG       ((uint8_t)0x18U)
+#define PMIC_BUCK_BST_CFG_REG      ((uint8_t)0x1BU)
+#define CFG_REG_UNLOCK_SEQ_REG     ((uint8_t)0x03U)
+#define CNT_REG_UNLOCK_SEQ_REG     ((uint8_t)0x04U)
+#ifndef REG_STAT_REG
+#define REG_STAT_REG               ((uint8_t)0x09U)
+#endif
 #define PMIC_CUSTOMER_SCRATCH1_REG ((uint8_t)0x68U)
 #define PMIC_CUSTOMER_SCRATCH2_REG ((uint8_t)0x69U)
-
-/** @brief  PMIC Watchdog Long Window Config register Addresses */
-#define PMIC_WD_LONGWIN_CFG_REG ((uint8_t)0x3DU)
-
-/** @brief  PMIC SAFE_TMO_CFG register Addresses */
-#define PMIC_SAFE_TMO_CFG_REG ((uint8_t)0x52U)
-
-/** @brief  PMIC SAFE_OUT register Addresses */
+#define PMIC_WD_LONGWIN_CFG_REG    ((uint8_t)0x3DU)
+#define PMIC_SAFE_TMO_CFG_REG      ((uint8_t)0x52U)
 #define PMIC_SAFE_OUT_CFG_CTRL_REG ((uint8_t)0x54U)
-
-/** @brief  PMIC SAFE_OUT2_CFG1 register Addresses */
-#define PMIC_SAFE_OUT2_CFG1_REG ((uint8_t)0x55U)
-
-/** @brief  PMIC SAFE_OUT2_CFG2 register Addresses */
-#define PMIC_SAFE_OUT2_CFG2_REG ((uint8_t)0x56U)
-
-/** @brief  PMIC SAFE_OUT2_CFG3 register Addresses */
-#define PMIC_SAFE_OUT2_CFG3_REG ((uint8_t)0x57U)
+#define PMIC_SAFE_OUT2_CFG1_REG    ((uint8_t)0x55U)
+#define PMIC_SAFE_OUT2_CFG2_REG    ((uint8_t)0x56U)
+#define PMIC_SAFE_OUT2_CFG3_REG    ((uint8_t)0x57U)
 
 #define PMIC_CUSTOMER_SCRATCH1_SHIFT (0X00U)
 #define PMIC_CUSTOMER_SCRATCH2_SHIFT (0X00U)
 
 /** @brief: PMIC STATE_STAT Register Shift Values */
-#define PMIC_STATE_SHIFT (0x00U)
-#define PMIC_PWRD_DLY_ACTV_SHIFT (0x04U)
+#define PMIC_STATE_SHIFT           (0x00U)
+#define PMIC_PWRD_DLY_ACTV_SHIFT   (0x04U)
 #define PMIC_RST_MCU_RQ_FLAG_SHIFT (0x05U)
-#define PMIC_RST_MCU_CNT_SHIFT (0x06U)
+#define PMIC_RST_MCU_CNT_SHIFT     (0x06U)
 
 /** @brief: PMIC RST_MCU_TMR Register Shift Values */
 #define PMIC_RST_MCU_TMR_SHIFT (0x00U)
@@ -298,6 +275,28 @@ extern "C" {
 
 #define CFG_REG_LOCK_MASK 	(0x01U) /* Bit mask for CFG_REG_LOCK */
 #define CNT_REG_LOCK_MASK 	(0x02U) /* Bit mask for CNT_REG_LOCK */
+
+/** @brief SAFETY_CTRL */
+#define CFG_REG_CRC_CALC_DONE_SHIFT (2U)
+#define CFG_REG_CRC_CALC_SHIFT      (1U)
+#define CFG_REG_CRC_EN_SHIFT        (0U)
+#define CFG_REG_CRC_CALC_DONE_MASK  (0x01U << CFG_REG_CRC_CALC_DONE_SHIFT)
+#define CFG_REG_CRC_CALC_MASK       (0x01U << CFG_REG_CRC_CALC_SHIFT)
+#define CFG_REG_CRC_EN_MASK         (0x01U << CFG_REG_CRC_EN_SHIFT)
+
+/** REG_STAT */
+#define TEST_MODE_STAT_SHIFT      (7U)
+#define CFG_NVM_PRG_DONE_SHIFT    (5U)
+#define CFG_NVM_VERIFY_DONE_SHIFT (4U)
+#define CFG_NVM_VERIFY_ERR_SHIFT  (3U)
+#define CFG_REG_CRC_ERR_SHIFT     (2U)
+#define CNT_REG_LOCKED_SHIFT      (1U)
+#define CFG_REG_LOCKED_SHIFT      (0U)
+#define TEST_MODE_STAT_MASK       (0x01U << TEST_MODE_STAT_SHIFT)
+#define CFG_NVM_PRG_DONE_MASK     (0x01U << CFG_NVM_PRG_DONE_SHIFT)
+#define CFG_NVM_VERIFY_DONE_MASK  (0x01U << CFG_NVM_VERIFY_DONE_SHIFT)
+#define CFG_NVM_VERIFY_ERR_MASK   (0x01U << CFG_NVM_VERIFY_ERR_SHIFT)
+#define CFG_REG_CRC_ERR_MASK      (0x01U << CFG_REG_CRC_ERR_SHIFT)
 
 #ifdef __cplusplus
 }

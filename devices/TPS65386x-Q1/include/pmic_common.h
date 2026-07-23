@@ -93,8 +93,9 @@ extern "C" {
 #define PMIC_ST_ID_NOT_SUPPORTED       (13U)
 #define PMIC_ST_ID_INV_STATUS_TYPE     (14U)
 #define PMIC_ST_ID_INV_STATUS_ID       (15U)
+#define PMIC_ST_ID_CONFIG_REG_CRC      (16U)
 #define PMIC_ST_ID_ERROR_MIN           (PMIC_ST_ID_INV_HANDLE)
-#define PMIC_ST_ID_ERROR_MAX           (PMIC_ST_ID_INV_STATUS_ID)
+#define PMIC_ST_ID_ERROR_MAX           (PMIC_ST_ID_CONFIG_REG_CRC)
 #define PMIC_ST_ID_INV_DEVICE_ID       (0U)
 #define PMIC_ST_ID_NO_IRQ_REMAINING    (1U)
 #define PMIC_ST_ID_WARNING_MIN         (PMIC_ST_ID_INV_DEVICE_ID)
@@ -188,6 +189,11 @@ extern "C" {
  * - **PMIC_ST_DEFAULT_DATA**: Indicates that default or placeholder data is
  *   being used.
  *
+ * - **PMIC_ST_ERR_CONFIG_REG_CRC**: Indicates a CRC mismatch was detected
+ *   during configuration register CRC validation. The CRC computed by the
+ *   hardware over the configuration register range did not match the value
+ *   stored in CFG_REG_CRC0/CFG_REG_CRC1.
+ *
  * **Other Status Codes**
  *
  * Other status codes are for more specific errors which may occur in one of
@@ -213,6 +219,7 @@ extern "C" {
 #define PMIC_ST_ERR_NOT_SUPPORTED       PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_NOT_SUPPORTED)
 #define PMIC_ST_ERR_INV_STATUS_TYPE     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_TYPE)
 #define PMIC_ST_ERR_INV_STATUS_ID       PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_ID)
+#define PMIC_ST_ERR_CONFIG_REG_CRC      PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_CONFIG_REG_CRC)
 #define PMIC_ST_WARN_INV_DEVICE_ID      PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_INV_DEVICE_ID)
 #define PMIC_ST_WARN_NO_IRQ_REMAINING   PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_NO_IRQ_REMAINING)
 /** @} */

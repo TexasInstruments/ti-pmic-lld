@@ -728,179 +728,6 @@ static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle)
 }
 
 /* ========================================================================== */
-/*                        CRC16 Negative Tests (6)                            */
-/* ========================================================================== */
-
-void test_neg_core_setCRC16Cfg_nullParam_handle(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status = Pmic_setCRC16Cfg(NULL, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_neg_core_setCRC16Cfg_nullParam_crc16Cfg(void)
-{
-    int32_t status = Pmic_setCRC16Cfg(&pmicHandle, NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_neg_core_setCRC16Cfg_invalidParam_validParams(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    // Set invalid validParams (bits outside the valid range)
-    crc16Cfg.validParams = 0xFFFFFFFFU;
-    int32_t status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    // API correctly masks validParams bits - invalid bits are ignored, not rejected
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
-
-void test_neg_core_getCRC16Cfg_nullParam_handle(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status = Pmic_getCRC16Cfg(NULL, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_neg_core_getCRC16Cfg_nullParam_crc16Cfg(void)
-{
-    int32_t status = Pmic_getCRC16Cfg(&pmicHandle, NULL);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
-}
-
-void test_neg_core_getCRC16Cfg_invalidParam_validParams(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    // Set invalid validParams (bits outside the valid range)
-    crc16Cfg.validParams = 0xFFFFFFFFU;
-    int32_t status = Pmic_getCRC16Cfg(&pmicHandle, &crc16Cfg);
-    // API correctly masks validParams bits - invalid bits are ignored, not rejected
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
-
-/* ========================================================================== */
-/*                        CRC16 Positive Tests (6)                            */
-/* ========================================================================== */
-
-void test_pos_core_setCRC16Cfg_enable(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    crc16Cfg.enable = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Verify with get
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
-}
-
-void test_pos_core_getCRC16Cfg_enable(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    // First set to disabled state
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    crc16Cfg.enable = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Read back enable state independently
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
-}
-
-void test_pos_core_setCRC16Cfg_activateCalc(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    crc16Cfg.validParams = PMIC_CRC16_ACTIVATE_CALC_VALID;
-    crc16Cfg.activateCalc = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Verify with get
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ACTIVATE_CALC_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.activateCalc == PMIC_ENABLE);
-}
-
-void test_pos_core_getCRC16Cfg_activateCalc(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    // First set to disabled state
-    crc16Cfg.validParams = PMIC_CRC16_ACTIVATE_CALC_VALID;
-    crc16Cfg.activateCalc = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Read back activateCalc state independently
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ACTIVATE_CALC_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.activateCalc == PMIC_DISABLE);
-}
-
-void test_pos_core_setCRC16Cfg_combinedParams(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    // Set both enable and activateCalc together
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID | PMIC_CRC16_ACTIVATE_CALC_VALID;
-    crc16Cfg.enable = PMIC_ENABLE;
-    crc16Cfg.activateCalc = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Verify with get
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID | PMIC_CRC16_ACTIVATE_CALC_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
-    PLATFORM_ASSERT(readCfg.activateCalc == PMIC_ENABLE);
-}
-
-void test_pos_core_getCRC16Cfg_combinedParams(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    int32_t status;
-
-    // First set both parameters to a known state
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID | PMIC_CRC16_ACTIVATE_CALC_VALID;
-    crc16Cfg.enable = PMIC_DISABLE;
-    crc16Cfg.activateCalc = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Read back both parameters independently
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID | PMIC_CRC16_ACTIVATE_CALC_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
-    PLATFORM_ASSERT(readCfg.activateCalc == PMIC_DISABLE);
-}
-
-/* ========================================================================== */
 /*                        LPM Get Tests (7)                                   */
 /* ========================================================================== */
 
@@ -1030,24 +857,6 @@ void test_neg_core_getLpmCfg_invalidParam_validParams(void)
     int32_t status = Pmic_getLpmCfg(&pmicHandle, &lpmCfg);
     // API correctly masks validParams bits - invalid bits are ignored, not rejected
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-}
-
-void test_neg_core_setCRC16Cfg_zeroValidParams(void)
-{
-    // Pass validParams == 0 into Pmic_setCRC16Cfg()
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    crc16Cfg.validParams = 0U;
-    int32_t status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
-}
-
-void test_neg_core_getCRC16Cfg_zeroValidParams(void)
-{
-    // Pass validParams == 0 into Pmic_getCRC16Cfg()
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    crc16Cfg.validParams = 0U;
-    int32_t status = Pmic_getCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
 void test_neg_core_setLpmCfg_zeroValidParams(void)
@@ -1365,132 +1174,6 @@ void test_pos_core_getABISTStat_active(void)
 /*                    Silicon Revision Validation Tests                       */
 /* ========================================================================== */
 
-/**
- * @brief Test CRC16 CONFIG_CRC_CONFIG register access on A0 silicon
- *
- * On A0 silicon, CONFIG_CRC_CONFIG is at address 0x61 (not 0x64).
- * This test verifies:
- * - CRC16 enable/disable works correctly on A0
- * - Register is accessible at 0x61
- * - Mock properly emulates A0 register map
- *
- * Note: This test temporarily switches to A0 silicon and back.
- * Other tests continue to run on default B0 silicon.
- */
-void test_pos_core_silicon_A0_crc16_at_0x61(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    int32_t status;
-
-    /* Test: Enable CRC16 on A0 silicon */
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    crc16Cfg.enable = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm enabled */
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
-
-    /* Test: Disable CRC16 */
-    crc16Cfg.enable = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm disabled */
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
-}
-
-/**
- * @brief Test CRC16 CONFIG_CRC_CONFIG register access on B0 silicon
- *
- * On B0 silicon, CONFIG_CRC_CONFIG is at address 0x64 (not 0x61).
- * This test verifies:
- * - CRC16 enable/disable works correctly on B0
- * - Register is accessible at 0x64
- * - Mock properly emulates B0 register map
- *
- * Note: This test runs on the default B0 silicon mock.
- */
-void test_pos_core_silicon_B0_crc16_at_0x64(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    int32_t status;
-
-    /* Test: Enable CRC16 on B0 silicon */
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    crc16Cfg.enable = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm enabled */
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
-
-    /* Test: Disable CRC16 */
-    crc16Cfg.enable = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm disabled */
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
-}
-
-/**
- * @brief Test CRC16 CONFIG_CRC_CONFIG register access on B1 silicon
- *
- * On B1 silicon, CONFIG_CRC_CONFIG is at address 0x64 (same as B0).
- * Address 0x61 is used for WD_QUESTION_ANSW_CNT (B1-only).
- * This test verifies:
- * - CRC16 enable/disable works correctly on B1
- * - Register is accessible at 0x64
- * - Mock properly emulates B1 register map
- *
- * Note: This test runs on the default B0 silicon mock.
- * B0 and B1 have identical CRC16 register behavior (both at 0x64).
- */
-void test_pos_core_silicon_B1_crc16_at_0x64(void)
-{
-    Pmic_CoreCrc16Cfg_t crc16Cfg = {0};
-    Pmic_CoreCrc16Cfg_t readCfg = {0};
-    int32_t status;
-
-    /* Test: Enable CRC16 on B1 silicon */
-    crc16Cfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    crc16Cfg.enable = PMIC_ENABLE;
-
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm enabled */
-    readCfg.validParams = PMIC_CRC16_ENABLE_VALID;
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_ENABLE);
-
-    /* Test: Disable CRC16 */
-    crc16Cfg.enable = PMIC_DISABLE;
-    status = Pmic_setCRC16Cfg(&pmicHandle, &crc16Cfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Verify: Read back and confirm disabled */
-    status = Pmic_getCRC16Cfg(&pmicHandle, &readCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(readCfg.enable == PMIC_DISABLE);
-}
-
 void test_neg_core_getLpmCfg_zeroValidParams(void)
 {
     // Test zero validParams for getLpmCfg (lines 362-363)
@@ -1664,3 +1347,162 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
 #endif
 }
 
+/* ========================================================================== */
+/*               Config CRC Tests (TC-CORE-0071 to TC-CORE-0076)             */
+/* ========================================================================== */
+
+void test_pos_core_configCrcEnable_enableOnly(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.crcEn == (bool)true);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_configCrcEnable_recalculate(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.errorDetected == (bool)false);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_neg_core_configCrcEnable_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcEnable(NULL, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_pos_core_configCrcDisable_disable(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.crcEn == (bool)false);
+}
+
+void test_neg_core_configCrcDisable_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcDisable(NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_pos_core_getConfigCrcStatus_crcEnabled(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.crcEn == (bool)true);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_getConfigCrcStatus_crcDisabled(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.crcEn == (bool)false);
+}
+
+void test_neg_core_getConfigCrcStatus_nullHandle(void)
+{
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status = Pmic_getConfigCrcStatus(NULL, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcStatus_nullStatus(void)
+{
+    int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_pos_core_configCrcCalculate_calculate(void)
+{
+    int32_t status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_configCrcCalculate_nullHandle(void)
+{
+    int32_t status = Pmic_configCrcCalculate(NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_configCrcCalculate_crcEnabled(void)
+{
+    int32_t status;
+
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    (void)Pmic_configCrcDisable(&pmicHandle);
+}
+
+void test_pos_core_getConfigCrc_readValue(void)
+{
+    uint16_t value = 0U;
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_getConfigCrc_nullHandle(void)
+{
+    uint16_t value = 0U;
+    int32_t status = Pmic_getConfigCrc(NULL, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrc_nullValue(void)
+{
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_pos_core_setConfigCrc_writeValue(void)
+{
+    int32_t status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_setConfigCrc_nullHandle(void)
+{
+    int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}

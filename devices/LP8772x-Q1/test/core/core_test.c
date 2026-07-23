@@ -200,18 +200,16 @@ void test_neg_core_configCrcCalculate_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_configCrcGetFromDevice_nullHandle(void)
+void test_neg_core_getConfigCrcVal_nullHandle(void)
 {
-    // Pass null handle into Pmic_configCrcGetFromDevice()
-    uint16_t crc = 0U;
-    int32_t status = Pmic_configCrcGetFromDevice(NULL, &crc);
+    uint16_t value = 0U;
+    int32_t status = Pmic_getConfigCrc(NULL, &value);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_configCrcGetFromDevice_nullCrc(void)
+void test_neg_core_getConfigCrcVal_nullValue(void)
 {
-    // Pass null crc into Pmic_configCrcGetFromDevice
-    int32_t status = Pmic_configCrcGetFromDevice(&pmicHandle, NULL);
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
@@ -335,18 +333,31 @@ static int32_t coreTest_getConfigCrc(uint16_t *crc)
     return status;
 }
 
-void test_pos_core_configCrcGetFromDevice_getCrc(void)
+void test_pos_core_getConfigCrcVal_readValue(void)
 {
-    uint16_t expCrc = 0U, actCrc = 0U;
+    uint16_t expValue = 0U, actValue = 0U;
 
-    // Get expected configuration CRC
-    int32_t status = Pmic_configCrcGetFromDevice(&pmicHandle, &expCrc);
+    // Get expected configuration CRC value from device
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, &expValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // Get actual configuration CRC and compare expected vs. actual values
-    status = coreTest_getConfigCrc(&actCrc);
+    // Get actual configuration CRC via raw platform read and compare
+    status = coreTest_getConfigCrc(&actValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(expCrc == actCrc);
+    PLATFORM_ASSERT(expValue == actValue);
+}
+
+void test_pos_core_setConfigCrcVal_writeValue(void)
+{
+    // Write a known 16-bit value to the config CRC registers
+    int32_t status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_setConfigCrcVal_nullHandle(void)
+{
+    int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 /* ========================================================================== */

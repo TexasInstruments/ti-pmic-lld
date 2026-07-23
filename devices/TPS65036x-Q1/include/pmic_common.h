@@ -85,8 +85,9 @@ extern "C" {
 #define PMIC_ST_ID_NOT_SUPPORTED    (8U)
 #define PMIC_ST_ID_INV_STATUS_TYPE  (9U)
 #define PMIC_ST_ID_INV_STATUS_ID    (10U)
+#define PMIC_ST_ID_CONFIG_REG_CRC   (11U)
 #define PMIC_ST_ID_ERROR_MIN        (PMIC_ST_ID_I2C_COMM_FAIL)
-#define PMIC_ST_ID_ERROR_MAX        (PMIC_ST_ID_INV_STATUS_ID)
+#define PMIC_ST_ID_ERROR_MAX        (PMIC_ST_ID_CONFIG_REG_CRC)
 #define PMIC_ST_ID_NO_IRQ_REMAINING (0U)
 #define PMIC_ST_ID_NON_MASKABLE_INT (1U)
 #define PMIC_ST_ID_WARNING_MIN      (PMIC_ST_ID_NO_IRQ_REMAINING)
@@ -163,6 +164,11 @@ extern "C" {
  *   has occurred. This interrupt cannot be disabled and requires immediate
  *   attention.
  *
+ * - **PMIC_ST_ERR_CONFIG_REG_CRC**: Indicates that the PMIC-computed configuration
+ *   register CRC does not match the expected CRC written by software. This indicates
+ *   a configuration register has been corrupted. Refer to `Pmic_configCrcCalculate()`
+ *   for more information.
+ *
  * **Other Status Codes**
  *
  * Other status codes are for more specific errors which may occur in one of
@@ -183,6 +189,7 @@ extern "C" {
 #define PMIC_ST_ERR_NOT_SUPPORTED     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_NOT_SUPPORTED)
 #define PMIC_ST_ERR_INV_STATUS_TYPE   PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_TYPE)
 #define PMIC_ST_ERR_INV_STATUS_ID     PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_INV_STATUS_ID)
+#define PMIC_ST_ERR_CONFIG_REG_CRC    PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_CONFIG_REG_CRC)
 #define PMIC_ST_WARN_NO_IRQ_REMAINING PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_NO_IRQ_REMAINING)
 #define PMIC_ST_WARN_NON_MASKABLE_INT PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_NON_MASKABLE_INT)
 /** @} */

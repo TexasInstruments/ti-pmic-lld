@@ -374,26 +374,42 @@ int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle)
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_configCrcGetFromDevice(const Pmic_Handle_t *handle, uint16_t *crc)
+int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t crcMsb = 0U;
-    uint8_t crcLsb = 0U;
+    uint8_t msb = 0U;
+    uint8_t lsb = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (crc == NULL)) {
+    if ((status == PMIC_ST_SUCCESS) && (value == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_1_REG, &crcLsb);
+        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_1_REG, &lsb);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_2_REG, &crcMsb);
+        status = Pmic_ioRxByte_CS(handle, CALCUL_CONFIG_CRC_2_REG, &msb);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);
+        *value = (uint16_t)(((uint16_t)msb << 8U) | lsb);
+    }
+
+    return Pmic_logStatus(handle, status);
+}
+
+int32_t Pmic_setConfigCrc(Pmic_Handle_t *handle, uint16_t value)
+{
+    int32_t status = Pmic_checkHandle(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioTxByte(handle, CONFIG_CRC_REG_1_REG, (uint8_t)(value & 0xFFU));
+        if (status == PMIC_ST_SUCCESS) {
+            status = Pmic_ioTxByte(handle, CONFIG_CRC_REG_2_REG, (uint8_t)((value >> 8U) & 0xFFU));
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
     return Pmic_logStatus(handle, status);

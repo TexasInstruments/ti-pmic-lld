@@ -95,6 +95,50 @@ extern "C" {
     CORE_TEST_NEG_COREGETREGLOCKSTATE()
 
 /* ======================================================================== */
+/*                      Test APIs: setRegLockState                          */
+/* ======================================================================== */
+#define CORE_TEST_POS_CORESETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_coreSetRegLockState_lock); \
+    PLATFORM_RUN_TEST(test_pos_core_coreSetRegLockState_unlock)
+
+#define CORE_TEST_NEG_CORESETREGLOCKSTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_coreSetRegLockState_nullHandle)
+
+/* Test: TC-CORE-0059 */
+#define CORE_TEST_CORESETREGLOCKSTATE() \
+    CORE_TEST_POS_CORESETREGLOCKSTATE(); \
+    CORE_TEST_NEG_CORESETREGLOCKSTATE()
+
+/* ======================================================================== */
+/*                      Test APIs: setConfigCrcVal                          */
+/* ======================================================================== */
+#define CORE_TEST_POS_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrcVal_writeAndVerify)
+
+#define CORE_TEST_NEG_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrcVal_nullHandle)
+
+/* Test: TC-CORE-0068 */
+#define CORE_TEST_SETCONFIGCRCVAL() \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL()
+
+/* ======================================================================== */
+/*                      Test APIs: getConfigCrcVal                          */
+/* ======================================================================== */
+#define CORE_TEST_POS_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcVal_readValue)
+
+#define CORE_TEST_NEG_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullValue)
+
+/* Test: TC-CORE-0069 */
+#define CORE_TEST_GETCONFIGCRCVAL() \
+    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL()
+
+/* ======================================================================== */
 /*                      Test APIs: setScratchPadValue                       */
 /* ======================================================================== */
 #define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
@@ -151,7 +195,9 @@ extern "C" {
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_VALIDATEPMICHANDLE()
+    CORE_TEST_POS_VALIDATEPMICHANDLE(); \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_POS_GETCONFIGCRCVAL()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_COREGETSILREV(); \
@@ -159,7 +205,9 @@ extern "C" {
     CORE_TEST_NEG_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_COREGETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_VALIDATEPMICHANDLE()
+    CORE_TEST_NEG_VALIDATEPMICHANDLE(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
@@ -195,6 +243,24 @@ void test_pos_core_coreSetScratchPadValue_reg3(void);
 void test_pos_core_coreGetScratchPadValue_reg4(void);
 void test_pos_core_scratchPadValue_boundary(void);
 void test_pos_core_validatePmicHandle_validCriticalSection(void);
+
+/* setRegLockState test functions */
+void test_pos_core_coreSetRegLockState_lock(void);
+void test_pos_core_coreSetRegLockState_unlock(void);
+void test_neg_core_coreSetRegLockState_nullHandle(void);
+
+/* ========================================================================== */
+/*                  setConfigCrcVal API Tests                                 */
+/* ========================================================================== */
+void test_pos_core_setConfigCrcVal_writeAndVerify(void);
+void test_neg_core_setConfigCrcVal_nullHandle(void);
+
+/* ========================================================================== */
+/*                  getConfigCrcVal API Tests                                 */
+/* ========================================================================== */
+void test_pos_core_getConfigCrcVal_readValue(void);
+void test_neg_core_getConfigCrcVal_nullHandle(void);
+void test_neg_core_getConfigCrcVal_nullValue(void);
 
 #ifdef __cplusplus
 }

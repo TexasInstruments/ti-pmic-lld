@@ -79,20 +79,15 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_CoreCrc16CfgValidParams
- * @name TPS65036x PMIC CRC16 Configuration Valid Parameters
+ * @anchor Pmic_cfgCrcCalcMode
+ * @name TPS65036x PMIC Configuration CRC Calculation Mode
  *
- * @brief Indication of which parameters are valid within the Pmic_CoreCrc16Cfg_t
- * struct.
- *
- * @details For more information on the parameters, refer to @ref Pmic_CoreCrc16Cfg.
- *
- * @note End-user could combine multiple valid parameters using the OR operator.
+ * @brief Values to be passed into the `calculate` parameter of `Pmic_configCrcEnable()`.
  *
  * @{
  */
-#define PMIC_CRC16_ENABLE_VALID             (1UL << 0U)
-#define PMIC_CRC16_ACTIVATE_CALC_VALID      (1UL << 1U)
+#define PMIC_CFG_CRC_RECALCULATE    ((bool)true)
+#define PMIC_CFG_CRC_ENABLE_ONLY    ((bool)false)
 /** @} */
 
 /**
@@ -214,29 +209,28 @@ typedef struct Pmic_CoreLpmCfg_s
 /** @} */
 
 /**
- * @anchor Pmic_CoreCrc16Cfg
- * @name TPS65036x CRC16 Configuration
+ * @anchor Pmic_ConfigCrcStat
+ * @name TPS65036x Configuration CRC Status
  *
- * @brief Struct used to set/get PMIC low CRC16 configurations.
+ * @brief Struct used to obtain PMIC configuration register CRC status.
  *
- * @param validParams Each bit in this variable represents whether a struct member
- * is valid. For valid values, refer to @ref Pmic_CoreCrc16CfgValidParams.
+ * @param crcEn Reflects the CONFIG_CRC_EN bit. True if configuration CRC is enabled.
  *
- * @param enable CRC16 enable/disable configuration. Valid values are `PMIC_ENABLE`
- * and `PMIC_DISABLE`.
+ * @param crcCalc Reflects the CONFIG_CRC_CALC bit. True if a one-shot CRC calculation
+ * has been triggered and not yet cleared.
  *
- * @param activateCalc CRC16 calculation activation/deactivation configuration.
- * Valid values are `PMIC_ENABLE` and `PMIC_DISABLE`.
+ * @param errorDetected Reflects CONFIG_CRC_STATUS (bit 2 of CONFIG_CRC_CONFIG) and
+ * CONFIG_CRC_STAT (bit 3 of STAT_MODERATE_ERR). True indicates a CRC mismatch was
+ * detected. Auto-cleared by hardware upon reading.
  *
  * @{
  */
-typedef struct Pmic_CoreCrc16Cfg_s
+typedef struct Pmic_ConfigCrcStat_s
 {
-    uint32_t validParams;
-
-    bool enable;
-    bool activateCalc;
-}Pmic_CoreCrc16Cfg_t;
+    bool crcEn;
+    bool crcCalc;
+    bool errorDetected;
+} Pmic_ConfigCrcStat_t;
 /** @} */
 
 /* ========================================================================== */
@@ -416,43 +410,93 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
 int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg);
 
 /**
- * @brief Set PMIC CRC16 configurations.
+ * @brief Enable PMIC configuration register CRC checking.
  *
- * Design: PMICDRV-766
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-544
- *
- * @details The following options are configurable via this API
- * 1. enable (validParams: PMIC_CRC16_ENABLE_VALID)
- * 2. activateCalc (validParams: PMIC_CRC16_ACTIVATE_CALC_VALID)
- * For more information on CRC configurations, refer to @ref Pmic_CoreCrc16Cfg.
+ * @details Optionally recalculates and writes the SW-computed CRC to the PMIC before
+ * enabling continuous CRC checking. Pass `PMIC_CFG_CRC_RECALCULATE` to trigger a
+ * fresh CRC computation and hardware validation before enabling. Pass
+ * `PMIC_CFG_CRC_ENABLE_ONLY` to enable CRC checking using the existing value in
+ * CONFIG_CRC_REG_1/2.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param crc16Cfg [IN] CRC16 configurations to write to PMIC.
+ * @param calculate [IN] Whether to recalculate the CRC before enabling.
+ * For valid values, refer to @ref Pmic_cfgCrcCalcMode.
  *
- * @attention CRC16 is not yet supported by PMIC LLD. It is recommended to
- * keep CRC16 disabled.
- *
- * @return Success code if CRC16 configurations have been set, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ * @return Success code if configuration CRC has been enabled, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_setCRC16Cfg(const Pmic_Handle_t *handle, const Pmic_CoreCrc16Cfg_t *crc16Cfg);
+int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate);
 
 /**
- * @brief Get PMIC CRC16 configurations. This "get" API supports obtaining the
- * same parameters that are settable through the "Set" API (`Pmic_setCRC16Cfg`).
- *
- * Design: PMICDRV-767
- * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-544
+ * @brief Disable PMIC configuration register CRC checking.
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param crc16Cfg [OUT] CRC16 configurations obtained from PMIC.
+ * @return Success code if configuration CRC has been disabled, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle);
+
+/**
+ * @brief Get PMIC configuration register CRC status.
  *
- * @return Success code if CRC16 configurations have been obtained, error code
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param configCrcStat [OUT] Configuration CRC status obtained from PMIC.
+ * For more information, refer to @ref Pmic_ConfigCrcStat.
+ *
+ * @return Success code if configuration CRC status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getCRC16Cfg(const Pmic_Handle_t *handle, Pmic_CoreCrc16Cfg_t *crc16Cfg);
+int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
+
+/**
+ * @brief Compute the SW configuration register CRC, write it to the PMIC, and
+ * trigger a hardware validation.
+ *
+ * @details Reads registers 0x14 through 0x4C, computes a CRC16 (polynomial 0x755B,
+ * init 0xFFFF), writes the result to CONFIG_CRC_REG_1/2, then triggers a one-shot
+ * hardware comparison via CONFIG_CRC_CALC. Returns `PMIC_ST_ERR_CONFIG_REG_CRC`
+ * if the hardware reports a mismatch.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return Success code if the CRC calculation and validation succeeded, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
+
+/**
+ * @brief Read the device-computed configuration CRC from the PMIC.
+ *
+ * @details Reads the CRC result stored in CALCUL_CONFIG_CRC_1/2 (0x65/0x66) by
+ * the PMIC hardware after a CONFIG_CRC_CALC trigger.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param value [OUT] Device-computed CRC value (LSB from 0x65, MSB from 0x66).
+ *
+ * @return Success code if the device CRC has been read, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
+
+/**
+ * @brief Write the SW-computed configuration CRC to the PMIC.
+ *
+ * @details Writes the expected CRC to CONFIG_CRC_REG_1 (0x4D, LSB) and
+ * CONFIG_CRC_REG_2 (0x4E, MSB). The PMIC hardware compares this value against
+ * its own computed CRC when CONFIG_CRC_CALC is asserted or CONFIG_CRC_EN is active.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param value [IN] CRC value to write.
+ *
+ * @return Success code if the CRC value has been written, error code otherwise.
+ * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value);
 
 /**
  * @brief Trigger run-time ABIST (analog built-in self test) on the PMIC.

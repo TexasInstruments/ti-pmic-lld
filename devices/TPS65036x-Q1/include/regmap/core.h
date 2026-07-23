@@ -71,6 +71,8 @@ extern "C" {
 #define PMIC_FUNC_CONF_REG              ((uint8_t)0x25U)
 #define PMIC_CONFIG_1_REG               ((uint8_t)0x3CU)
 #define PMIC_RECOV_CNT_REG_2_REG        ((uint8_t)0x3DU)
+#define PMIC_CONFIG_CRC_REG_1_REG       ((uint8_t)0x4DU)
+#define PMIC_CONFIG_CRC_REG_2_REG       ((uint8_t)0x4EU)
 #define PMIC_STAT_STARTUP_REG           ((uint8_t)0x5BU)
 #define PMIC_STAT_MISC_REG              ((uint8_t)0x5CU)
 #define PMIC_STAT_MODERATE_ERR_REG      ((uint8_t)0x5DU)

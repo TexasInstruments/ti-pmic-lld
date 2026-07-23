@@ -182,6 +182,61 @@ void test_neg_core_coreGetScratchPadValue_nullValue(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+void test_neg_core_setConfigCrcVal_nullHandle(void)
+{
+    int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test validatePmicHandle with NULL criticalSectionStart
+ *
+ * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
+ * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
+ * Test case: First condition TRUE, second condition FALSE
+ */
+void test_neg_core_validatePmicHandle_nullCritSecStart(void)
+{
+    Pmic_Handle_t testHandle = pmicHandle;
+    uint8_t siliconRev = 0U;
+    testHandle.criticalSectionStart = NULL;  // Set first condition to TRUE
+    // criticalSectionStop remains valid (second condition FALSE)
+
+    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test validatePmicHandle with NULL criticalSectionStop
+ *
+ * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
+ * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
+ * Test case: First condition FALSE, second condition TRUE
+ */
+void test_neg_core_validatePmicHandle_nullCritSecStop(void)
+{
+    Pmic_Handle_t testHandle = pmicHandle;
+    uint8_t siliconRev = 0U;
+    // criticalSectionStart remains valid (first condition FALSE)
+    testHandle.criticalSectionStop = NULL;  // Set second condition to TRUE
+
+    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_core_getConfigCrcVal_nullHandle(void)
+{
+    uint16_t value = 0U;
+    int32_t status = Pmic_getConfigCrc(NULL, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_core_getConfigCrcVal_nullValue(void)
+{
+    int32_t status = Pmic_getConfigCrc(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
 /* ========================================================================== */
 /*                         Positive Test Cases                                */
 /* ========================================================================== */
@@ -291,42 +346,6 @@ void test_pos_core_scratchPadValue_boundary(void)
 }
 
 /**
- * @brief Test validatePmicHandle with NULL criticalSectionStart
- *
- * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
- * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
- * Test case: First condition TRUE, second condition FALSE
- */
-void test_neg_core_validatePmicHandle_nullCritSecStart(void)
-{
-    Pmic_Handle_t testHandle = pmicHandle;
-    uint8_t siliconRev = 0U;
-    testHandle.criticalSectionStart = NULL;  // Set first condition to TRUE
-    // criticalSectionStop remains valid (second condition FALSE)
-
-    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
-}
-
-/**
- * @brief Test validatePmicHandle with NULL criticalSectionStop
- *
- * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
- * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
- * Test case: First condition FALSE, second condition TRUE
- */
-void test_neg_core_validatePmicHandle_nullCritSecStop(void)
-{
-    Pmic_Handle_t testHandle = pmicHandle;
-    uint8_t siliconRev = 0U;
-    // criticalSectionStart remains valid (first condition FALSE)
-    testHandle.criticalSectionStop = NULL;  // Set second condition to TRUE
-
-    int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
-}
-
-/**
  * @brief Test validatePmicHandle with valid critical section pointers
  *
  * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
@@ -340,6 +359,32 @@ void test_pos_core_validatePmicHandle_validCriticalSection(void)
     uint8_t siliconRev = 0U;
     int32_t status = Pmic_getSiliconRev(&pmicHandle, &siliconRev);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_setConfigCrcVal_writeAndVerify(void)
+{
+    int32_t status;
+    uint16_t readBack = 0U;
+
+    status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrc(&pmicHandle, &readBack);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readBack == 0xA55AU);
+}
+
+void test_pos_core_getConfigCrcVal_readValue(void)
+{
+    int32_t status;
+    uint16_t value = 0U;
+
+    status = Pmic_setConfigCrc(&pmicHandle, 0x5AA5U);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getConfigCrc(&pmicHandle, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(value == 0x5AA5U);
 }
 
 /* Note: setUp/tearDown removed - provided by test_runner.c for Unity */

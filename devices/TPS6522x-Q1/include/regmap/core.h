@@ -51,19 +51,22 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define DEV_REV_REG             ((uint16_t)0x01U)
-#define NVM_CODE_1_REG          ((uint16_t)0x02U)
-#define NVM_CODE_2_REG          ((uint16_t)0x03U)
-#define CONFIG_1_REG            ((uint16_t)0x7DU)
-#define CONFIG_2_REG            ((uint16_t)0x7EU)
-#define MISC_CTRL_REG           ((uint16_t)0x81U)
-#define REGISTER_LOCK_REG       ((uint16_t)0xA1U)
-#define MANUFACTURING_VER_REG   ((uint16_t)0xA6U)
-#define CUSTOMER_NVM_ID_REG_REG ((uint16_t)0xA7U)
-#define SCRATCH_PAD_REG_1_REG   ((uint16_t)0xC9U)
-#define SCRATCH_PAD_REG_2_REG   ((uint16_t)0xCAU)
-#define SCRATCH_PAD_REG_3_REG   ((uint16_t)0xCBU)
-#define SCRATCH_PAD_REG_4_REG   ((uint16_t)0xCCU)
+#define DEV_REV_REG              ((uint16_t)0x01U)
+#define NVM_CODE_1_REG           ((uint16_t)0x02U)
+#define NVM_CODE_2_REG           ((uint16_t)0x03U)
+#define CONFIG_1_REG             ((uint16_t)0x7DU)
+#define CONFIG_2_REG             ((uint16_t)0x7EU)
+#define MISC_CTRL_REG            ((uint16_t)0x81U)
+#define REGISTER_LOCK_REG        ((uint16_t)0xA1U)
+#define MANUFACTURING_VER_REG    ((uint16_t)0xA6U)
+#define CUSTOMER_NVM_ID_REG_REG  ((uint16_t)0xA7U)
+#define SCRATCH_PAD_REG_1_REG    ((uint16_t)0xC9U)
+#define SCRATCH_PAD_REG_2_REG    ((uint16_t)0xCAU)
+#define SCRATCH_PAD_REG_3_REG    ((uint16_t)0xCBU)
+#define SCRATCH_PAD_REG_4_REG    ((uint16_t)0xCCU)
+#define CRC_CALC_CONTROL_REG     ((uint16_t)0xEFU)
+#define REGMAP_USER_CRC_LOW_REG  ((uint16_t)0xF0U)
+#define REGMAP_USER_CRC_HIGH_REG ((uint16_t)0xF1U)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */
@@ -132,6 +135,20 @@ extern "C" {
 // SCRATCH_PAD_REG_4
 #define SCRATCH_PAD_4_SHIFT (0U)
 #define SCRATCH_PAD_4_MASK  (0xFFU << SCRATCH_PAD_4_SHIFT)
+
+/* CRC_CALC_CONTROL */
+#define RUN_CRC_UPDATE_SHIFT (1U)
+#define RUN_CRC_BIST_SHIFT   (0U)
+#define RUN_CRC_UPDATE_MASK  (1UL << RUN_CRC_UPDATE_SHIFT)
+#define RUN_CRC_BIST_MASK    (1UL << RUN_CRC_BIST_SHIFT)
+
+/* REGMAP_USER_CRC_LOW */
+#define REGMAP_USER_CRC16_LOW_SHIFT (0U)
+#define REGMAP_USER_CRC16_LOW_MASK  (0xFFUL << REGMAP_USER_CRC16_LOW_SHIFT)
+
+/* REGMAP_USER_CRC_HIGH */
+#define REGMAP_USER_CRC16_HIGH_SHIFT (0U)
+#define REGMAP_USER_CRC16_HIGH_MASK  (0xFFUL << REGMAP_USER_CRC16_HIGH_SHIFT)
 
 #ifdef __cplusplus
 }

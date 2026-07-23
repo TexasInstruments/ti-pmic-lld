@@ -307,6 +307,136 @@ extern "C" {
     CORE_TEST_POS_DIAGGETDMUXCFG(); \
     CORE_TEST_NEG_DIAGGETDMUXCFG()
 
+/* ======================================================================== */
+/*                      Test APIs: configCrcEnable                          */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly); \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
+
+#define CORE_TEST_NEG_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle)
+
+/* Test: TC-CORE-0060 */
+#define CORE_TEST_CONFIGCRCENABLE() \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE()
+
+/* ======================================================================== */
+/*                      Test APIs: configCrcDisable                         */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcDisable_disable)
+
+#define CORE_TEST_NEG_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
+
+/* Test: TC-CORE-0061 */
+#define CORE_TEST_CONFIGCRCDISABLE() \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE()
+
+/* ======================================================================== */
+/*                  Test APIs: getConfigCrcEnableState                      */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_GETCONFIGCRCENABLESTATE() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcEnableState_enabled); \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcEnableState_disabled)
+
+#define CORE_TEST_NEG_GETCONFIGCRCENABLESTATE() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcEnableState_nullIsEnabled)
+
+/* Test: TC-CORE-0062 */
+#define CORE_TEST_GETCONFIGCRCENABLESTATE() \
+    CORE_TEST_POS_GETCONFIGCRCENABLESTATE(); \
+    CORE_TEST_NEG_GETCONFIGCRCENABLESTATE()
+
+/* ======================================================================== */
+/*                    Test APIs: getConfigCrcStatus                         */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_calcDone); \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_error)
+
+#define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_zeroValidParams)
+
+/* Test: TC-CORE-0063 */
+#define CORE_TEST_GETCONFIGCRCSTATUS() \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS()
+
+/* ======================================================================== */
+/*                    Test APIs: clrConfigCrcStatus                         */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_CLRCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_core_clrConfigCrcStatus_clearCalcDone); \
+    PLATFORM_RUN_TEST(test_pos_core_clrConfigCrcStatus_clearError)
+
+#define CORE_TEST_NEG_CLRCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_core_clrConfigCrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_clrConfigCrcStatus_nullStatus); \
+    PLATFORM_RUN_TEST(test_neg_core_clrConfigCrcStatus_zeroValidParams)
+
+/* Test: TC-CORE-0064 */
+#define CORE_TEST_CLRCONFIGCRCSTATUS() \
+    CORE_TEST_POS_CLRCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_CLRCONFIGCRCSTATUS()
+
+/* ======================================================================== */
+/*                      Test APIs: setConfigCrcVal                          */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrcVal_writeAndVerify)
+
+#define CORE_TEST_NEG_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrcVal_nullHandle)
+
+/* Test: TC-CORE-0065 */
+#define CORE_TEST_SETCONFIGCRCVAL() \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL()
+
+/* ======================================================================== */
+/*                      Test APIs: getConfigCrcVal                          */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcVal_readValue)
+
+#define CORE_TEST_NEG_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullValue)
+
+/* Test: TC-CORE-0066 */
+#define CORE_TEST_GETCONFIGCRCVAL() \
+    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL()
+
+/* ======================================================================== */
+/*                    Test APIs: configCrcCalculate                         */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcCalculate_calculate)
+
+#define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle)
+
+/* Test: TC-CORE-0067 */
+#define CORE_TEST_CONFIGCRCCALCULATE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -327,7 +457,15 @@ extern "C" {
     CORE_TEST_POS_DIAGSETAMUXCFG(); \
     CORE_TEST_POS_DIAGGETAMUXCFG(); \
     CORE_TEST_POS_DIAGSETDMUXCFG(); \
-    CORE_TEST_POS_DIAGGETDMUXCFG()
+    CORE_TEST_POS_DIAGGETDMUXCFG(); \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_POS_GETCONFIGCRCENABLESTATE(); \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_POS_CLRCONFIGCRCSTATUS(); \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_POS_CONFIGCRCCALCULATE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
@@ -345,7 +483,15 @@ extern "C" {
     CORE_TEST_NEG_DIAGSETAMUXCFG(); \
     CORE_TEST_NEG_DIAGGETAMUXCFG(); \
     CORE_TEST_NEG_DIAGSETDMUXCFG(); \
-    CORE_TEST_NEG_DIAGGETDMUXCFG()
+    CORE_TEST_NEG_DIAGGETDMUXCFG(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_GETCONFIGCRCENABLESTATE(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_CLRCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
@@ -495,6 +641,64 @@ void test_pos_core_diagAMUX_setGet(void);
 /*                Positive Tests - Diagnostic DMUX                            */
 /* ========================================================================== */
 void test_pos_core_diagDMUX_setGet(void);
+
+/* ========================================================================== */
+/*                configCrcEnable API Tests                                   */
+/* ========================================================================== */
+void test_pos_core_configCrcEnable_enableOnly(void);
+void test_pos_core_configCrcEnable_recalculate(void);
+void test_neg_core_configCrcEnable_nullHandle(void);
+
+/* ========================================================================== */
+/*                configCrcDisable API Tests                                  */
+/* ========================================================================== */
+void test_pos_core_configCrcDisable_disable(void);
+void test_neg_core_configCrcDisable_nullHandle(void);
+
+/* ========================================================================== */
+/*                getConfigCrcEnableState API Tests                           */
+/* ========================================================================== */
+void test_pos_core_getConfigCrcEnableState_enabled(void);
+void test_pos_core_getConfigCrcEnableState_disabled(void);
+void test_neg_core_getConfigCrcEnableState_nullHandle(void);
+void test_neg_core_getConfigCrcEnableState_nullIsEnabled(void);
+
+/* ========================================================================== */
+/*                getConfigCrcStatus API Tests                                */
+/* ========================================================================== */
+void test_pos_core_getConfigCrcStatus_calcDone(void);
+void test_pos_core_getConfigCrcStatus_error(void);
+void test_neg_core_getConfigCrcStatus_nullHandle(void);
+void test_neg_core_getConfigCrcStatus_nullStatus(void);
+void test_neg_core_getConfigCrcStatus_zeroValidParams(void);
+
+/* ========================================================================== */
+/*                clrConfigCrcStatus API Tests                                */
+/* ========================================================================== */
+void test_pos_core_clrConfigCrcStatus_clearCalcDone(void);
+void test_pos_core_clrConfigCrcStatus_clearError(void);
+void test_neg_core_clrConfigCrcStatus_nullHandle(void);
+void test_neg_core_clrConfigCrcStatus_nullStatus(void);
+void test_neg_core_clrConfigCrcStatus_zeroValidParams(void);
+
+/* ========================================================================== */
+/*                setConfigCrcVal API Tests                                   */
+/* ========================================================================== */
+void test_pos_core_setConfigCrcVal_writeAndVerify(void);
+void test_neg_core_setConfigCrcVal_nullHandle(void);
+
+/* ========================================================================== */
+/*                getConfigCrcVal API Tests                                   */
+/* ========================================================================== */
+void test_pos_core_getConfigCrcVal_readValue(void);
+void test_neg_core_getConfigCrcVal_nullHandle(void);
+void test_neg_core_getConfigCrcVal_nullValue(void);
+
+/* ========================================================================== */
+/*                configCrcCalculate API Tests                                */
+/* ========================================================================== */
+void test_pos_core_configCrcCalculate_calculate(void);
+void test_neg_core_configCrcCalculate_nullHandle(void);
 
 #ifdef __cplusplus
 }

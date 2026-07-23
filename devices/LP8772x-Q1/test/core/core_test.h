@@ -51,7 +51,7 @@ extern "C" {
 
 /* ======================================================================== */
 /*   Test APIs: configCrcCalculate, getConfigCrcStatus, configCrcEnable,    */
-/*              configCrcDisable                                            */
+/*              configCrcDisable, getConfigCrcVal, setConfigCrcVal          */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_CONFIGCRCCALCULATE() \
@@ -101,20 +101,35 @@ extern "C" {
     CORE_TEST_NEG_CONFIGCRCENABLE()
 
 /* ======================================================================== */
-/*                    Test APIs: configCrcGetFromDevice                     */
+/*                       Test APIs: getConfigCrcVal                         */
 /* ======================================================================== */
 
-#define CORE_TEST_POS_CONFIGCRCGETFROMDEVICE() \
-    PLATFORM_RUN_TEST(test_pos_core_configCrcGetFromDevice_getCrc)
+#define CORE_TEST_POS_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcVal_readValue)
 
-#define CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE() \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcGetFromDevice_nullCrc)
+#define CORE_TEST_NEG_GETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcVal_nullValue)
 
 /* Test: TC-CORE-0026 */
-#define CORE_TEST_CONFIGCRCGETFROMDEVICE() \
-    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
-    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE()
+#define CORE_TEST_GETCONFIGCRCVAL() \
+    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL()
+
+/* ======================================================================== */
+/*                       Test APIs: setConfigCrcVal                         */
+/* ======================================================================== */
+
+#define CORE_TEST_POS_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrcVal_writeValue)
+
+#define CORE_TEST_NEG_SETCONFIGCRCVAL() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrcVal_nullHandle)
+
+/* Test: TC-CORE-0070 */
+#define CORE_TEST_SETCONFIGCRCVAL() \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL()
 
 /* ======================================================================== */
 /*                      Test APIs: getConfigCrcStatus                       */
@@ -220,7 +235,8 @@ extern "C" {
     CORE_TEST_POS_CONFIGCRCCALCULATE(); \
     CORE_TEST_POS_CONFIGCRCDISABLE(); \
     CORE_TEST_POS_CONFIGCRCENABLE(); \
-    CORE_TEST_POS_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_POS_GETCONFIGCRCVAL(); \
+    CORE_TEST_POS_SETCONFIGCRCVAL(); \
     CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
     CORE_TEST_POS_GETREGLOCKSTATE(); \
     CORE_TEST_POS_GETSCRATCHPADVALUE(); \
@@ -232,7 +248,8 @@ extern "C" {
     CORE_TEST_NEG_CONFIGCRCCALCULATE(); \
     CORE_TEST_NEG_CONFIGCRCDISABLE(); \
     CORE_TEST_NEG_CONFIGCRCENABLE(); \
-    CORE_TEST_NEG_CONFIGCRCGETFROMDEVICE(); \
+    CORE_TEST_NEG_GETCONFIGCRCVAL(); \
+    CORE_TEST_NEG_SETCONFIGCRCVAL(); \
     CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
     CORE_TEST_NEG_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
@@ -310,11 +327,17 @@ void test_neg_core_configCrcCalculate_nullHandle(void);
 void test_neg_core_configCrcCalculate_ioFailure(void);
 
 /* ========================================================================== */
-/*               configCrcGetFromDevice API Tests                             */
+/*                   getConfigCrcVal API Tests                                */
 /* ========================================================================== */
-void test_pos_core_configCrcGetFromDevice_getCrc(void);
-void test_neg_core_configCrcGetFromDevice_nullHandle(void);
-void test_neg_core_configCrcGetFromDevice_nullCrc(void);
+void test_pos_core_getConfigCrcVal_readValue(void);
+void test_neg_core_getConfigCrcVal_nullHandle(void);
+void test_neg_core_getConfigCrcVal_nullValue(void);
+
+/* ========================================================================== */
+/*                   setConfigCrcVal API Tests                                */
+/* ========================================================================== */
+void test_pos_core_setConfigCrcVal_writeValue(void);
+void test_neg_core_setConfigCrcVal_nullHandle(void);
 
 /* ========================================================================== */
 /*                  init API Tests                                            */

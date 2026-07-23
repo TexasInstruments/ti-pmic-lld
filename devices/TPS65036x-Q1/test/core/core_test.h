@@ -289,50 +289,9 @@ extern "C" {
     CORE_TEST_NEG_CHECKHANDLE()
 
 /* ======================================================================== */
-/*                          Test APIs: setCRC16Cfg                          */
-/* ======================================================================== */
-#define CORE_TEST_POS_SETCRC16CFG() \
-    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_enable); \
-    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_activateCalc); \
-    PLATFORM_RUN_TEST(test_pos_core_setCRC16Cfg_combinedParams)
-
-#define CORE_TEST_NEG_SETCRC16CFG() \
-    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_nullParam_crc16Cfg); \
-    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_invalidParam_validParams); \
-    PLATFORM_RUN_TEST(test_neg_core_setCRC16Cfg_zeroValidParams)
-
-/* Test: TC-CORE-0056 */
-#define CORE_TEST_SETCRC16CFG() \
-    CORE_TEST_POS_SETCRC16CFG(); \
-    CORE_TEST_NEG_SETCRC16CFG()
-
-/* ======================================================================== */
-/*                          Test APIs: getCRC16Cfg                          */
-/* ======================================================================== */
-#define CORE_TEST_POS_GETCRC16CFG() \
-    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_enable); \
-    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_activateCalc); \
-    PLATFORM_RUN_TEST(test_pos_core_getCRC16Cfg_combinedParams)
-
-#define CORE_TEST_NEG_GETCRC16CFG() \
-    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_nullParam_crc16Cfg); \
-    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_invalidParam_validParams); \
-    PLATFORM_RUN_TEST(test_neg_core_getCRC16Cfg_zeroValidParams)
-
-/* Test: TC-CORE-0057 */
-#define CORE_TEST_GETCRC16CFG() \
-    CORE_TEST_POS_GETCRC16CFG(); \
-    CORE_TEST_NEG_GETCRC16CFG()
-
-/* ======================================================================== */
-/*       Test APIs: setCRC16Cfg, getCRC16Cfg, init, deinit, ioRxByte        */
+/*              Test APIs: init, deinit, ioRxByte                           */
 /* ======================================================================== */
 #define CORE_TEST_POS_SILICON() \
-    PLATFORM_RUN_TEST(test_pos_core_silicon_A0_crc16_at_0x61); \
-    PLATFORM_RUN_TEST(test_pos_core_silicon_B0_crc16_at_0x64); \
-    PLATFORM_RUN_TEST(test_pos_core_silicon_B1_crc16_at_0x64); \
     PLATFORM_RUN_TEST(test_pos_core_init_A0_silicon_with_locked_registers); \
     PLATFORM_RUN_TEST(test_pos_core_init_B0_silicon_with_locked_registers); \
     PLATFORM_RUN_TEST(test_pos_core_init_B0_silicon_with_unlocked_registers)
@@ -340,6 +299,95 @@ extern "C" {
 /* Test: TC-CORE-0058 */
 #define CORE_TEST_SILICON() \
     CORE_TEST_POS_SILICON()
+
+/* ======================================================================== */
+/*                      Test APIs: configCrcEnable                          */
+/* ======================================================================== */
+#define CORE_TEST_POS_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly); \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
+
+#define CORE_TEST_NEG_CONFIGCRCENABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle)
+
+/* Test: TC-CORE-0071 */
+#define CORE_TEST_CONFIGCRCENABLE() \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCENABLE()
+
+/* ======================================================================== */
+/*                      Test APIs: configCrcDisable                         */
+/* ======================================================================== */
+#define CORE_TEST_POS_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcDisable_disable)
+
+#define CORE_TEST_NEG_CONFIGCRCDISABLE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcDisable_nullHandle)
+
+/* Test: TC-CORE-0072 */
+#define CORE_TEST_CONFIGCRCDISABLE() \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE()
+
+/* ======================================================================== */
+/*                     Test APIs: getConfigCrcStatus                        */
+/* ======================================================================== */
+#define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_crcEnabled); \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_crcDisabled)
+
+#define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus)
+
+/* Test: TC-CORE-0073 */
+#define CORE_TEST_GETCONFIGCRCSTATUS() \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS()
+
+/* ======================================================================== */
+/*                     Test APIs: configCrcCalculate                        */
+/* ======================================================================== */
+#define CORE_TEST_POS_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcCalculate_calculate)
+
+#define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_crcEnabled)
+
+/* Test: TC-CORE-0074 */
+#define CORE_TEST_CONFIGCRCCALCULATE() \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE()
+
+/* ======================================================================== */
+/*                        Test APIs: getConfigCrc                           */
+/* ======================================================================== */
+#define CORE_TEST_POS_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrc_readValue)
+
+#define CORE_TEST_NEG_GETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrc_nullValue)
+
+/* Test: TC-CORE-0075 */
+#define CORE_TEST_GETCONFIGCRC() \
+    CORE_TEST_POS_GETCONFIGCRC(); \
+    CORE_TEST_NEG_GETCONFIGCRC()
+
+/* ======================================================================== */
+/*                        Test APIs: setConfigCrc                           */
+/* ======================================================================== */
+#define CORE_TEST_POS_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_pos_core_setConfigCrc_writeValue)
+
+#define CORE_TEST_NEG_SETCONFIGCRC() \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_nullHandle)
+
+/* Test: TC-CORE-0076 */
+#define CORE_TEST_SETCONFIGCRC() \
+    CORE_TEST_POS_SETCONFIGCRC(); \
+    CORE_TEST_NEG_SETCONFIGCRC()
 
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */
@@ -357,9 +405,13 @@ extern "C" {
     CORE_TEST_POS_GETABISTSTAT(); \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_POS_CHECKHANDLE(); \
-    CORE_TEST_POS_SETCRC16CFG(); \
-    CORE_TEST_POS_GETCRC16CFG(); \
-    CORE_TEST_POS_SILICON()
+    CORE_TEST_POS_SILICON(); \
+    CORE_TEST_POS_CONFIGCRCENABLE(); \
+    CORE_TEST_POS_CONFIGCRCDISABLE(); \
+    CORE_TEST_POS_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_POS_CONFIGCRCCALCULATE(); \
+    CORE_TEST_POS_GETCONFIGCRC(); \
+    CORE_TEST_POS_SETCONFIGCRC()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_GETNVMREV(); \
@@ -377,8 +429,12 @@ extern "C" {
     CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_CHECKHANDLE(); \
-    CORE_TEST_NEG_SETCRC16CFG(); \
-    CORE_TEST_NEG_GETCRC16CFG()
+    CORE_TEST_NEG_CONFIGCRCENABLE(); \
+    CORE_TEST_NEG_CONFIGCRCDISABLE(); \
+    CORE_TEST_NEG_GETCONFIGCRCSTATUS(); \
+    CORE_TEST_NEG_CONFIGCRCCALCULATE(); \
+    CORE_TEST_NEG_GETCONFIGCRC(); \
+    CORE_TEST_NEG_SETCONFIGCRC()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \
@@ -491,31 +547,39 @@ void test_neg_core_checkHandle_nullCritSecStart(void);
 void test_neg_core_checkHandle_nullCritSecStop(void);
 void test_pos_core_checkHandle_validCriticalSection(void);
 
-/* setCRC16Cfg API tests */
-void test_neg_core_setCRC16Cfg_nullParam_handle(void);
-void test_neg_core_setCRC16Cfg_nullParam_crc16Cfg(void);
-void test_neg_core_setCRC16Cfg_invalidParam_validParams(void);
-void test_neg_core_setCRC16Cfg_zeroValidParams(void);
-void test_pos_core_setCRC16Cfg_enable(void);
-void test_pos_core_setCRC16Cfg_activateCalc(void);
-void test_pos_core_setCRC16Cfg_combinedParams(void);
-
-/* getCRC16Cfg API tests */
-void test_neg_core_getCRC16Cfg_nullParam_handle(void);
-void test_neg_core_getCRC16Cfg_nullParam_crc16Cfg(void);
-void test_neg_core_getCRC16Cfg_invalidParam_validParams(void);
-void test_neg_core_getCRC16Cfg_zeroValidParams(void);
-void test_pos_core_getCRC16Cfg_enable(void);
-void test_pos_core_getCRC16Cfg_activateCalc(void);
-void test_pos_core_getCRC16Cfg_combinedParams(void);
-
 /* Silicon revision tests */
-void test_pos_core_silicon_A0_crc16_at_0x61(void);
-void test_pos_core_silicon_B0_crc16_at_0x64(void);
-void test_pos_core_silicon_B1_crc16_at_0x64(void);
 void test_pos_core_init_A0_silicon_with_locked_registers(void);
 void test_pos_core_init_B0_silicon_with_locked_registers(void);
 void test_pos_core_init_B0_silicon_with_unlocked_registers(void);
+
+/* configCrcEnable API tests */
+void test_pos_core_configCrcEnable_enableOnly(void);
+void test_pos_core_configCrcEnable_recalculate(void);
+void test_neg_core_configCrcEnable_nullHandle(void);
+
+/* configCrcDisable API tests */
+void test_pos_core_configCrcDisable_disable(void);
+void test_neg_core_configCrcDisable_nullHandle(void);
+
+/* getConfigCrcStatus API tests */
+void test_pos_core_getConfigCrcStatus_crcEnabled(void);
+void test_pos_core_getConfigCrcStatus_crcDisabled(void);
+void test_neg_core_getConfigCrcStatus_nullHandle(void);
+void test_neg_core_getConfigCrcStatus_nullStatus(void);
+
+/* configCrcCalculate API tests */
+void test_pos_core_configCrcCalculate_calculate(void);
+void test_neg_core_configCrcCalculate_nullHandle(void);
+void test_neg_core_configCrcCalculate_crcEnabled(void);
+
+/* getConfigCrc API tests */
+void test_pos_core_getConfigCrc_readValue(void);
+void test_neg_core_getConfigCrc_nullHandle(void);
+void test_neg_core_getConfigCrc_nullValue(void);
+
+/* setConfigCrc API tests */
+void test_pos_core_setConfigCrc_writeValue(void);
+void test_neg_core_setConfigCrc_nullHandle(void);
 
 #ifdef __cplusplus
 }

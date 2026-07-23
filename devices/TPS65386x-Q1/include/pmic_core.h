@@ -184,6 +184,30 @@ extern "C" {
 #define PMIC_MUX_DMUX_GROUP_MAX    ((uint8_t)0x1FU)
 /** @} */
 
+/**
+ * @anchor Pmic_ConfigCrcStatValidParam
+ * @name PMIC Configuration Register CRC Status Valid Params
+ *
+ * @brief Valid parameters of the Pmic_ConfigCrcStat_t structure. Set the
+ * corresponding bits in the validParams field to indicate which members are
+ * valid.
+ *
+ * @{
+ */
+#define PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID (1UL << 0U)
+#define PMIC_CONFIG_CRC_STAT_ERROR_VALID     (1UL << 1U)
+/** @} */
+
+/**
+ * @anchor Pmic_ConfigCrcRecalculate
+ * @name PMIC Config CRC recalculate value
+ *
+ * @{
+ */
+#define PMIC_CFG_CRC_RECALCULATE ((bool)true)
+#define PMIC_CFG_CRC_ENABLE_ONLY ((bool)false)
+/** @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -269,6 +293,32 @@ typedef struct Pmic_MuxCfg_s {
     uint8_t amuxChannel;
     uint8_t dmuxGroup;
 } Pmic_MuxCfg_t;
+
+/**
+ * @brief PMIC configuration register CRC status structure.
+ *
+ * Used to report and clear the statuses of configuration register CRC.
+ *
+ * @note validParams is an input parameter for all Get and Clear APIs. Other
+ * struct members are output params for Get API and input params for Clear API.
+ *
+ * @param validParams Selection of structure parameters to be retrieved or cleared,
+ * from @ref Pmic_ConfigCrcStatValidParam. OR together multiple bits to get/clear
+ * multiple status flags in a single call.
+ *
+ * @param calcDone Indicates whether the PMIC has completed the CRC calculation for
+ * the configuration registers. Valid when PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID bit
+ * is set.
+ *
+ * @param error Indicates whether there is a CRC error in the configuration registers.
+ * Valid when PMIC_CONFIG_CRC_STAT_ERROR_VALID bit is set.
+ */
+typedef struct Pmic_ConfigCrcStat_s {
+    uint32_t validParams;
+
+    bool calcDone;
+    bool error;
+} Pmic_ConfigCrcStat_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -499,6 +549,122 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config);
+
+/**
+ * @brief Enable configuration register CRC checking on the PMIC, optionally
+ * recalculating the CRC before enabling.
+ *
+ * @param handle    [IN] PMIC interface handle.
+ * @param calculate [IN] If true (PMIC_CFG_CRC_RECALCULATE), calculates and
+ * stores a new CRC before enabling. If false (PMIC_CFG_CRC_ENABLE_ONLY),
+ * enables without recalculation. See @ref Pmic_ConfigCrcRecalculate.
+ *
+ * @return PMIC_ST_SUCCESS if configuration register CRC has been enabled,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate);
+
+/**
+ * @brief Disable configuration register CRC checking on the PMIC.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS if configuration register CRC has been disabled,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle);
+
+/**
+ * @brief Get the enable state of configuration register CRC checking on the PMIC.
+ *
+ * @param handle    [IN]  PMIC interface handle.
+ * @param isEnabled [OUT] True if configuration register CRC checking is enabled,
+ * false if disabled.
+ *
+ * @return PMIC_ST_SUCCESS if configuration register CRC enable state has been
+ * obtained, error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getConfigCrcEnableState(const Pmic_Handle_t *handle, bool *isEnabled);
+
+/**
+ * @brief Get configuration register CRC status from the PMIC.
+ *
+ * @details The following statuses can be obtained:
+ *
+ * 1. CFG_REG_CRC_CALC_DONE
+ * 2. CFG_REG_CRC_ERROR
+ *
+ * @param handle        [IN]  PMIC interface handle.
+ * @param configCrcStat [OUT] Configuration register CRC status.
+ *
+ * @return PMIC_ST_SUCCESS if configuration register CRC status has been obtained,
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
+
+/**
+ * @brief Clear specific configuration register CRC status flags on the PMIC.
+ * This API clears the same status flags that are reported by `Pmic_getConfigCrcStatus()`.
+ *
+ * @param handle        [IN] PMIC interface handle.
+ * @param configCrcStat [IN] Configuration register CRC status flags to clear.
+ *
+ * @return PMIC_ST_SUCCESS if the specified CRC status flags have been cleared,
+ * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_clrConfigCrcStatus(const Pmic_Handle_t *handle, const Pmic_ConfigCrcStat_t *configCrcStat);
+
+/**
+ * @brief Write a 16-bit value to the PMIC's configuration register CRC data
+ * registers (CFG_REG_CRC0_REG and CFG_REG_CRC1_REG).
+ *
+ * @param handle [IN] PMIC interface handle.
+ * @param value  [IN] 16-bit value to write to the configuration register CRC
+ * data registers.
+ *
+ * @return PMIC_ST_SUCCESS if the value has been written successfully, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value);
+
+/**
+ * @brief Read the 16-bit value from the PMIC's configuration register CRC data
+ * registers (CFG_REG_CRC0_REG and CFG_REG_CRC1_REG).
+ *
+ * @param handle [IN]  PMIC interface handle.
+ * @param value  [OUT] Value obtained from the configuration register CRC data
+ * registers.
+ *
+ * @return PMIC_ST_SUCCESS if the value has been read successfully, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
+
+/**
+ * @brief Calculate the CRC-16 over the PMIC configuration registers (0x00–0xFF),
+ * write the result to CFG_REG_CRC0/CFG_REG_CRC1, and trigger a hardware
+ * re-check to verify the stored value is correct.
+ *
+ * Polynomial : 0xBAAD (1+x^1+x^3+x^4+x^6+x^8+x^10+x^12+x^13+x^14+x^16)
+ * Init       : 0xFFFF
+ * Bit order  : big-endian (RefIn/RefOut = false)
+ *
+ * @note Configuration register CRC must be disabled (CFG_REG_CRC_EN = 0)
+ * when this function is called. Call @ref Pmic_configCrcEnable after this
+ * function to activate CRC checking.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS if the CRC was calculated, stored, and verified
+ * successfully. Returns PMIC_ST_ERR_NOT_SUPPORTED if config CRC is already
+ * enabled. Returns PMIC_ST_ERR_CONFIG_REG_CRC if the hardware reports a
+ * mismatch after the CRC is written. For all valid codes, refer to
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle);
 
 #ifdef __cplusplus
 }
