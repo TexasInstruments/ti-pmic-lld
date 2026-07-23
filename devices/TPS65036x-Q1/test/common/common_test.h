@@ -187,6 +187,73 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrRetryCntOverflow_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_pos_common_overflow_retryCnt)
 
+/* ======================================================================== */
+/*                    Test APIs: Pmic_validParamCheck                       */
+/* ======================================================================== */
+/* Test: TC-COMMON-0041 */
+#define COMMON_TEST_RUN_VALIDPARAMCHECK() \
+    PLATFORM_RUN_TEST(test_pos_common_validParamCheck_bitSet); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamCheck_bitClear); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamCheck_noParamsSet); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamCheck_allParamsSet); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamCheck_multipleParams)
+
+/* ======================================================================== */
+/*                  Test APIs: Pmic_validParamStatusCheck                   */
+/* ======================================================================== */
+/* Test: TC-COMMON-0042 */
+#define COMMON_TEST_RUN_VALIDPARAMSTATUSCHECK() \
+    PLATFORM_RUN_TEST(test_pos_common_validParamStatusCheck_successAndBitSet); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamStatusCheck_errorAndBitSet); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamStatusCheck_successAndBitClear); \
+    PLATFORM_RUN_TEST(test_pos_common_validParamStatusCheck_errorAndBitClear)
+
+/* ======================================================================== */
+/*                      Test APIs: Pmic_getBitField                         */
+/* ======================================================================== */
+/* Test: TC-COMMON-0043 */
+#define COMMON_TEST_RUN_GETBITFIELD() \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_lowNibble); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_highNibble); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_singleBitSet); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_singleBitClear); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_fullByteMask); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_twoBitField)
+
+/* ======================================================================== */
+/*                     Test APIs: Pmic_getBitField_b                        */
+/* ======================================================================== */
+/* Test: TC-COMMON-0044 */
+#define COMMON_TEST_RUN_GETBITFIELD_B() \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_b_bitSet); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_b_bitClear); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_b_lsb); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_b_msb); \
+    PLATFORM_RUN_TEST(test_pos_common_getBitField_b_alternatingPattern)
+
+/* ======================================================================== */
+/*                      Test APIs: Pmic_setBitField                         */
+/* ======================================================================== */
+/* Test: TC-COMMON-0045 */
+#define COMMON_TEST_RUN_SETBITFIELD() \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_setLowNibble); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_setHighNibble); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_clearBits); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_preservesOtherBits); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_fullByteMask)
+
+/* ======================================================================== */
+/*                     Test APIs: Pmic_setBitField_b                        */
+/* ======================================================================== */
+/* Test: TC-COMMON-0046 */
+#define COMMON_TEST_RUN_SETBITFIELD_B() \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_setTrue); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_setFalse); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_preservesOtherBitsWhenSet); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_preservesOtherBitsWhenCleared); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_lsb); \
+    PLATFORM_RUN_TEST(test_pos_common_setBitField_b_msb)
+
 /* ========================================================================== */
 /*                           Aggregate Test Runners                           */
 /* ========================================================================== */
@@ -195,7 +262,13 @@ extern "C" {
     COMMON_TEST_RUN_TIMER(); \
     COMMON_TEST_RUN_LOG_STATUS(); \
     COMMON_TEST_RUN_DIAGNOSTIC(); \
-    COMMON_TEST_RUN_RETRY_CNT()
+    COMMON_TEST_RUN_RETRY_CNT(); \
+    COMMON_TEST_RUN_VALIDPARAMCHECK(); \
+    COMMON_TEST_RUN_VALIDPARAMSTATUSCHECK(); \
+    COMMON_TEST_RUN_GETBITFIELD(); \
+    COMMON_TEST_RUN_GETBITFIELD_B(); \
+    COMMON_TEST_RUN_SETBITFIELD(); \
+    COMMON_TEST_RUN_SETBITFIELD_B()
 
 /* ========================================================================== */
 /*                       Function Declarations                                */
@@ -306,6 +379,39 @@ void test_pos_common_clrRetryCntOverflow_nullHandle(void);
 void test_pos_common_clrRetryCntOverflow_nullCritSecStart(void);
 void test_pos_common_clrRetryCntOverflow_nullCritSecStop(void);
 void test_pos_common_overflow_retryCnt(void);
+
+/* Bit Field and validParam Utility Tests */
+void test_pos_common_validParamCheck_bitSet(void);
+void test_pos_common_validParamCheck_bitClear(void);
+void test_pos_common_validParamCheck_noParamsSet(void);
+void test_pos_common_validParamCheck_allParamsSet(void);
+void test_pos_common_validParamCheck_multipleParams(void);
+void test_pos_common_validParamStatusCheck_successAndBitSet(void);
+void test_pos_common_validParamStatusCheck_errorAndBitSet(void);
+void test_pos_common_validParamStatusCheck_successAndBitClear(void);
+void test_pos_common_validParamStatusCheck_errorAndBitClear(void);
+void test_pos_common_getBitField_lowNibble(void);
+void test_pos_common_getBitField_highNibble(void);
+void test_pos_common_getBitField_singleBitSet(void);
+void test_pos_common_getBitField_singleBitClear(void);
+void test_pos_common_getBitField_fullByteMask(void);
+void test_pos_common_getBitField_twoBitField(void);
+void test_pos_common_getBitField_b_bitSet(void);
+void test_pos_common_getBitField_b_bitClear(void);
+void test_pos_common_getBitField_b_lsb(void);
+void test_pos_common_getBitField_b_msb(void);
+void test_pos_common_getBitField_b_alternatingPattern(void);
+void test_pos_common_setBitField_setLowNibble(void);
+void test_pos_common_setBitField_setHighNibble(void);
+void test_pos_common_setBitField_clearBits(void);
+void test_pos_common_setBitField_preservesOtherBits(void);
+void test_pos_common_setBitField_fullByteMask(void);
+void test_pos_common_setBitField_b_setTrue(void);
+void test_pos_common_setBitField_b_setFalse(void);
+void test_pos_common_setBitField_b_preservesOtherBitsWhenSet(void);
+void test_pos_common_setBitField_b_preservesOtherBitsWhenCleared(void);
+void test_pos_common_setBitField_b_lsb(void);
+void test_pos_common_setBitField_b_msb(void);
 
 /* Boundary Condition Tests */
 void test_pos_common_logStatus_maxErrorId(void);

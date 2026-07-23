@@ -339,14 +339,14 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_BUCK_EN_VALID        (1UL << 0U)
-#define PMIC_POWER_BUCK_PLDN_EN_VALID   (1UL << 1U)
-#define PMIC_POWER_BUCK_VMON_EN_VALID   (1UL << 2U)
-#define PMIC_POWER_BUCK_FPWM_EN_VALID   (1UL << 3U)
-#define PMIC_POWER_BUCK_VSET_VALID      (1UL << 4U)
-#define PMIC_POWER_BUCK_SLEW_RATE_VALID (1UL << 5U)
-#define PMIC_POWER_BUCK_VMON_THR_VALID  (1UL << 6U)
-#define PMIC_POWER_BUCK_GRP_SEL_VALID   (1UL << 7U)
+#define PMIC_CFG_PWR_BUCK_EN_VALID        (1UL << 0U)
+#define PMIC_CFG_PWR_BUCK_PLDN_EN_VALID   (1UL << 1U)
+#define PMIC_CFG_PWR_BUCK_VMON_EN_VALID   (1UL << 2U)
+#define PMIC_CFG_PWR_BUCK_FPWM_EN_VALID   (1UL << 3U)
+#define PMIC_CFG_PWR_BUCK_VSET_VALID      (1UL << 4U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID (1UL << 5U)
+#define PMIC_CFG_PWR_BUCK_VMON_THR_VALID  (1UL << 6U)
+#define PMIC_CFG_PWR_BUCK_GRP_SEL_VALID   (1UL << 7U)
 /** @} */
 
 /**
@@ -359,13 +359,13 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_LDO_EN_VALID           (1UL << 0U)
-#define PMIC_POWER_LDO_BYP_EN_VALID       (1UL << 1U)
-#define PMIC_POWER_LDO_VMON_EN_VALID      (1UL << 2U)
-#define PMIC_POWER_LDO_DISCHARGE_EN_VALID (1UL << 3U)
-#define PMIC_POWER_LDO_VSET_VALID         (1UL << 4U)
-#define PMIC_POWER_LDO_VMON_THR_VALID     (1UL << 5U)
-#define PMIC_POWER_LDO_GRP_SEL_VALID      (1UL << 6U)
+#define PMIC_CFG_PWR_LDO_EN_VALID           (1UL << 0U)
+#define PMIC_CFG_PWR_LDO_BYP_EN_VALID       (1UL << 1U)
+#define PMIC_CFG_PWR_LDO_VMON_EN_VALID      (1UL << 2U)
+#define PMIC_CFG_PWR_LDO_DISCHARGE_EN_VALID (1UL << 3U)
+#define PMIC_CFG_PWR_LDO_VSET_VALID         (1UL << 4U)
+#define PMIC_CFG_PWR_LDO_VMON_THR_VALID     (1UL << 5U)
+#define PMIC_CFG_PWR_LDO_GRP_SEL_VALID      (1UL << 6U)
 /** @} */
 
 /**
@@ -378,10 +378,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_VCCA_VMON_EN_VALID      (1UL << 0U)
-#define PMIC_POWER_VCCA_VMON_PG_SET_VALID  (1UL << 1U)
-#define PMIC_POWER_VCCA_VMON_THR_VALID     (1UL << 2U)
-#define PMIC_POWER_VCCA_VMON_GRP_SEL_VALID (1UL << 3U)
+#define PMIC_CFG_PWR_VCCA_VMON_EN_VALID      (1UL << 0U)
+#define PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID  (1UL << 1U)
+#define PMIC_CFG_PWR_VCCA_VMON_THR_VALID     (1UL << 2U)
+#define PMIC_CFG_PWR_VCCA_VMON_GRP_SEL_VALID (1UL << 3U)
 /** @} */
 
 /**
@@ -394,16 +394,16 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_BUCK1_UVOV_VALID     (1UL << 0U)
-#define PMIC_POWER_BUCK2_UVOV_VALID     (1UL << 1U)
-#define PMIC_POWER_BUCK3_UVOV_VALID     (1UL << 2U)
-#define PMIC_POWER_BUCK4_UVOV_VALID     (1UL << 3U)
-#define PMIC_POWER_LDO1_UVOV_VALID      (1UL << 4U)
-#define PMIC_POWER_LDO2_UVOV_VALID      (1UL << 5U)
-#define PMIC_POWER_LDO3_UVOV_VALID      (1UL << 6U)
-#define PMIC_POWER_VMON1_UVOV_VALID     (1UL << 7U)
-#define PMIC_POWER_VMON2_UVOV_VALID     (1UL << 8U)
-#define PMIC_POWER_VCCA_VMON_UVOV_VALID (1UL << 9U)
+#define PMIC_PWR_BUCK1_UVOV_VALID     (1UL << 0U)
+#define PMIC_PWR_BUCK2_UVOV_VALID     (1UL << 1U)
+#define PMIC_PWR_BUCK3_UVOV_VALID     (1UL << 2U)
+#define PMIC_PWR_BUCK4_UVOV_VALID     (1UL << 3U)
+#define PMIC_PWR_LDO1_UVOV_VALID      (1UL << 4U)
+#define PMIC_PWR_LDO2_UVOV_VALID      (1UL << 5U)
+#define PMIC_PWR_LDO3_UVOV_VALID      (1UL << 6U)
+#define PMIC_PWR_VMON1_UVOV_VALID     (1UL << 7U)
+#define PMIC_PWR_VMON2_UVOV_VALID     (1UL << 8U)
+#define PMIC_PWR_VCCA_VMON_UVOV_VALID (1UL << 9U)
 /** @} */
 
 /**
@@ -416,8 +416,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_TWARN_LEVEL_VALID   (1UL << 0U)
-#define PMIC_POWER_TSD_ORD_LEVEL_VALID (1UL << 1U)
+#define PMIC_CFG_PWR_TWARN_LEVEL_VALID   (1UL << 0U)
+#define PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID (1UL << 1U)
 /** @} */
 
 /**
@@ -430,8 +430,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_SS_EN_VALID    (1UL << 0U)
-#define PMIC_POWER_SS_DEPTH_VALID (1UL << 1U)
+#define PMIC_CFG_PWR_SS_EN_VALID    (1UL << 0U)
+#define PMIC_CFG_PWR_SS_DEPTH_VALID (1UL << 1U)
 /** @} */
 
 /* ========================================================================== */

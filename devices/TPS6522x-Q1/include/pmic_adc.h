@@ -79,9 +79,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ADC_RDIV_EN_VALID      (1UL << 0U)
-#define PMIC_ADC_CONT_CONV_EN_VALID (1UL << 1U)
-#define PMIC_ADC_SRC_SEL_VALID      (1UL << 2U)
+#define PMIC_CFG_ADC_RDIV_EN_VALID      (1UL << 0U)
+#define PMIC_CFG_ADC_CONT_CONV_EN_VALID (1UL << 1U)
+#define PMIC_CFG_ADC_SRC_SEL_VALID      (1UL << 2U)
 /** @} */
 
 /* ========================================================================== */

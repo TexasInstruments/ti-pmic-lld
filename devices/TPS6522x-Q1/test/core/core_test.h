@@ -138,7 +138,7 @@ extern "C" {
     CORE_TEST_POS_GETCONFIGCRCVAL(); \
     CORE_TEST_NEG_GETCONFIGCRCVAL()
 
-/* ======================================================================== */
+/* ========================================================================
 /*                      Test APIs: setScratchPadValue                       */
 /* ======================================================================== */
 #define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
@@ -193,6 +193,7 @@ extern "C" {
     CORE_TEST_POS_COREGETSILREV(); \
     CORE_TEST_POS_COREGETNVMREV(); \
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
+    CORE_TEST_POS_CORESETREGLOCKSTATE(); \
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
     CORE_TEST_POS_VALIDATEPMICHANDLE(); \
@@ -203,6 +204,7 @@ extern "C" {
     CORE_TEST_NEG_COREGETSILREV(); \
     CORE_TEST_NEG_COREGETNVMREV(); \
     CORE_TEST_NEG_COREGETREGLOCKSTATE(); \
+    CORE_TEST_NEG_CORESETREGLOCKSTATE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_COREGETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_VALIDATEPMICHANDLE(); \
@@ -261,6 +263,7 @@ void test_neg_core_setConfigCrcVal_nullHandle(void);
 void test_pos_core_getConfigCrcVal_readValue(void);
 void test_neg_core_getConfigCrcVal_nullHandle(void);
 void test_neg_core_getConfigCrcVal_nullValue(void);
+
 
 #ifdef __cplusplus
 }

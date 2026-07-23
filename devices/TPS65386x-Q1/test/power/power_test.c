@@ -126,12 +126,12 @@ void power_test(void *args)
     testTimer_startModule("Power");
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -327,7 +327,7 @@ void test_neg_power_pwrGetPGoodInStby_nullIsEnabled(void)
 void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_lvl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
-        .validParams = PMIC_PWR_CFG_BB_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_LVL_VALID,
         .lvl = PMIC_PWR_BB_LVL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &bbCfg);
@@ -337,7 +337,7 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_lvl(void)
 void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_stbyLvl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
-        .validParams = PMIC_PWR_CFG_BB_STBY_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_STBY_LVL_VALID,
         .stbyLvl = PMIC_PWR_BB_STBY_LVL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &bbCfg);
@@ -347,7 +347,7 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_stbyLvl(void)
 void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonThr(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID,
         .vmonThr = PMIC_PWR_BB_VMON_THR_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &bbCfg);
@@ -357,7 +357,7 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonThr(void)
 void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonDgl(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &bbCfg);
@@ -367,7 +367,7 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_vmonDgl(void)
 void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo(void)
 {
     Pmic_PwrBuckBoostCfg_t bbCfg = {
-        .validParams = PMIC_PWR_CFG_BB_BOOST_TMO_VALID,
+        .validParams = PMIC_CFG_PWR_BB_BOOST_TMO_VALID,
         .boostTmo = PMIC_PWR_BOOST_TMO_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &bbCfg);
@@ -382,7 +382,7 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo(void)
 static void helper_negative_setLdoCfg_mode(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_MODE_VALID,
         .ldo = ldo,
         .mode = PMIC_PWR_LDO_MODE_MAX + 1U
     };
@@ -393,7 +393,7 @@ static void helper_negative_setLdoCfg_mode(uint16_t ldo)
 static void helper_negative_setLdoCfg_lvl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
         .ldo = ldo,
         .lvl = PMIC_PWR_LDO_LVL_MAX + 1U
     };
@@ -404,7 +404,7 @@ static void helper_negative_setLdoCfg_lvl(uint16_t ldo)
 static void helper_negative_setLdoCfg_ilimLvl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_LVL_VALID,
         .ldo = ldo,
         .ilimLvl = PMIC_PWR_LDO_ILIM_LVL_MAX + 1U
     };
@@ -415,7 +415,7 @@ static void helper_negative_setLdoCfg_ilimLvl(uint16_t ldo)
 static void helper_negative_setLdoCfg_ilimDgl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID,
         .ldo = ldo,
         .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_MAX + 1U
     };
@@ -426,7 +426,7 @@ static void helper_negative_setLdoCfg_ilimDgl(uint16_t ldo)
 static void helper_negative_setLdoCfg_vmonThr(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID,
         .ldo = ldo,
         .vmonThr = PMIC_PWR_LDO_VMON_THR_MAX + 1U
     };
@@ -437,7 +437,7 @@ static void helper_negative_setLdoCfg_vmonThr(uint16_t ldo)
 static void helper_negative_setLdoCfg_vmonDgl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID,
         .ldo = ldo,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_MAX + 1U
     };
@@ -448,7 +448,7 @@ static void helper_negative_setLdoCfg_vmonDgl(uint16_t ldo)
 static void helper_negative_setLdoCfg_rampTime(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t ldoCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_RAMP_TIME_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_RAMP_TIME_VALID,
         .ldo = ldo,
         .rampTime = PMIC_PWR_RT_MAX + 1U
     };
@@ -495,7 +495,7 @@ void test_neg_power_pwrSetLdoCfg_outOfBounds_ldo4_rampTime(void) { helper_negati
 static void helper_negative_setPldoCfg_mode(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = pldo,
         .mode = (pldo == PMIC_PWR_PLDO1) ? (PMIC_PWR_PLDO1_MODE_MAX + 1U) : (PMIC_PWR_PLDO2_MODE_MAX + 1U)
     };
@@ -506,7 +506,7 @@ static void helper_negative_setPldoCfg_mode(uint16_t pldo)
 static void helper_negative_setPldoCfg_lvl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_LVL_VALID,
         .pldo = pldo,
         .lvl = PMIC_PWR_PLDO_LVL_MAX + 1U
     };
@@ -517,7 +517,7 @@ static void helper_negative_setPldoCfg_lvl(uint16_t pldo)
 static void helper_negative_setPldoCfg_ilimLvl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_LVL_VALID,
         .pldo = pldo,
         .ilimLvl = PMIC_PWR_PLDO_ILIM_LVL_MAX + 1U
     };
@@ -528,7 +528,7 @@ static void helper_negative_setPldoCfg_ilimLvl(uint16_t pldo)
 static void helper_negative_setPldoCfg_ilimDgl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID,
         .pldo = pldo,
         .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_MAX + 1U
     };
@@ -539,7 +539,7 @@ static void helper_negative_setPldoCfg_ilimDgl(uint16_t pldo)
 static void helper_negative_setPldoCfg_vmonThr(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID,
         .pldo = pldo,
         .vmonThr = PMIC_PWR_PLDO_VMON_THR_MAX + 1U
     };
@@ -550,7 +550,7 @@ static void helper_negative_setPldoCfg_vmonThr(uint16_t pldo)
 static void helper_negative_setPldoCfg_vmonDgl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID,
         .pldo = pldo,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_MAX + 1U
     };
@@ -561,7 +561,7 @@ static void helper_negative_setPldoCfg_vmonDgl(uint16_t pldo)
 static void helper_negative_setPldoCfg_vtrackRange(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VTRACK_RANGE_VALID,
         .pldo = pldo,
         .vtrackRange = PMIC_PWR_VTRACK_RANGE_MAX + 1U
     };
@@ -572,7 +572,7 @@ static void helper_negative_setPldoCfg_vtrackRange(uint16_t pldo)
 static void helper_negative_setPldoCfg_rampTime(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t pldoCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_RT_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_RT_VALID,
         .pldo = pldo,
         .rampTime = PMIC_PWR_RT_MAX + 1U
     };
@@ -605,7 +605,7 @@ void test_neg_power_pwrSetPldoCfg_outOfBounds_pldo2_rampTime(void) { helper_nega
 static void helper_negative_setExtVmonCfg_mode(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t vmonCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID,
         .extVmon = extVmon,
         .mode = PMIC_PWR_EXT_VMON_MODE_MAX + 1U
     };
@@ -616,7 +616,7 @@ static void helper_negative_setExtVmonCfg_mode(uint16_t extVmon)
 static void helper_negative_setExtVmonCfg_vmonThr(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t vmonCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID,
         .extVmon = extVmon,
         .vmonThr = PMIC_PWR_EXT_VMON_THR_MAX + 1U
     };
@@ -627,7 +627,7 @@ static void helper_negative_setExtVmonCfg_vmonThr(uint16_t extVmon)
 static void helper_negative_setExtVmonCfg_vmonDgl(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t vmonCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID,
         .extVmon = extVmon,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_MAX + 1U
     };
@@ -669,11 +669,11 @@ void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl(void)
 void test_pos_power_setGetBuckBoostCfg_lvl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_LVL_VALID,
         .lvl = PMIC_PWR_BB_LVL_5V
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_LVL_VALID
+        .validParams = PMIC_CFG_PWR_BB_LVL_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -687,11 +687,11 @@ void test_pos_power_setGetBuckBoostCfg_lvl(void)
 void test_pos_power_setGetBuckBoostCfg_stbyLvl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_STBY_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_STBY_LVL_VALID,
         .stbyLvl = PMIC_PWR_BB_STBY_LVL_4V
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_STBY_LVL_VALID
+        .validParams = PMIC_CFG_PWR_BB_STBY_LVL_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -705,11 +705,11 @@ void test_pos_power_setGetBuckBoostCfg_stbyLvl(void)
 void test_pos_power_setGetBuckBoostCfg_vmonThr(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID,
         .vmonThr = PMIC_PWR_BB_VMON_THR_6_PCT
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_THR_VALID
+        .validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -723,11 +723,11 @@ void test_pos_power_setGetBuckBoostCfg_vmonThr(void)
 void test_pos_power_setGetBuckBoostCfg_vmonDgl(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_16_US
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_VMON_DGL_VALID
+        .validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -741,11 +741,11 @@ void test_pos_power_setGetBuckBoostCfg_vmonDgl(void)
 void test_pos_power_setGetBuckBoostCfg_boostTmo(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_BOOST_TMO_VALID,
+        .validParams = PMIC_CFG_PWR_BB_BOOST_TMO_VALID,
         .boostTmo = PMIC_PWR_BOOST_TMO_8_SEC
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_BOOST_TMO_VALID
+        .validParams = PMIC_CFG_PWR_BB_BOOST_TMO_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -759,11 +759,11 @@ void test_pos_power_setGetBuckBoostCfg_boostTmo(void)
 void test_pos_power_setGetBuckBoostCfg_ssEn(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BB_SS_EN_VALID,
         .ssEn = true
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_SS_EN_VALID
+        .validParams = PMIC_CFG_PWR_BB_SS_EN_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -777,11 +777,11 @@ void test_pos_power_setGetBuckBoostCfg_ssEn(void)
 void test_pos_power_setGetBuckBoostCfg_includeOvUvStatInPGood(void)
 {
     Pmic_PwrBuckBoostCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .includeOvUvStatInPGood = true
     };
     Pmic_PwrBuckBoostCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID
+        .validParams = PMIC_CFG_PWR_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID
     };
     
     int32_t status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &setCfg);
@@ -829,12 +829,12 @@ void test_pos_power_setGetBuckBoostCfg_allCfg(void)
 static void helper_setGetLdoCfg_mode(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_MODE_VALID,
         .ldo = ldo,
         .mode = PMIC_PWR_LDO_EN_AS_LDO_IN_OPER
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_MODE_VALID,
         .ldo = ldo
     };
     
@@ -849,12 +849,12 @@ static void helper_setGetLdoCfg_mode(uint16_t ldo)
 static void helper_setGetLdoCfg_lvl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
         .ldo = ldo,
         .lvl = PMIC_PWR_LDO_LVL_1P8V
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_LVL_VALID,
         .ldo = ldo
     };
     
@@ -869,12 +869,12 @@ static void helper_setGetLdoCfg_lvl(uint16_t ldo)
 static void helper_setGetLdoCfg_ilimLvl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_LVL_VALID,
         .ldo = ldo,
         .ilimLvl = PMIC_PWR_LDO_ILIM_LVL_OPTION_1
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_LVL_VALID,
         .ldo = ldo
     };
     
@@ -889,12 +889,12 @@ static void helper_setGetLdoCfg_ilimLvl(uint16_t ldo)
 static void helper_setGetLdoCfg_ilimDgl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID,
         .ldo = ldo,
         .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_1_MS
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID,
         .ldo = ldo
     };
     
@@ -909,12 +909,12 @@ static void helper_setGetLdoCfg_ilimDgl(uint16_t ldo)
 static void helper_setGetLdoCfg_vmonThr(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID,
         .ldo = ldo,
         .vmonThr = PMIC_PWR_LDO_VMON_THR_5_PCT
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID,
         .ldo = ldo
     };
     
@@ -929,12 +929,12 @@ static void helper_setGetLdoCfg_vmonThr(uint16_t ldo)
 static void helper_setGetLdoCfg_vmonDgl(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID,
         .ldo = ldo,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_24_US
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID,
         .ldo = ldo
     };
     
@@ -949,12 +949,12 @@ static void helper_setGetLdoCfg_vmonDgl(uint16_t ldo)
 static void helper_setGetLdoCfg_rampTime(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_RAMP_TIME_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_RAMP_TIME_VALID,
         .ldo = ldo,
         .rampTime = PMIC_PWR_RT_LONGER
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_RAMP_TIME_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_RAMP_TIME_VALID,
         .ldo = ldo
     };
     
@@ -969,12 +969,12 @@ static void helper_setGetLdoCfg_rampTime(uint16_t ldo)
 static void helper_setGetLdoCfg_disableDischarge(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_DISABLE_DISCHARGE_VALID,
         .ldo = ldo,
         .disableDischarge = true
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_DISABLE_DISCHARGE_VALID,
         .ldo = ldo
     };
     
@@ -989,12 +989,12 @@ static void helper_setGetLdoCfg_disableDischarge(uint16_t ldo)
 static void helper_setGetLdoCfg_includeOvUvStatInPGood(uint16_t ldo)
 {
     Pmic_PwrLdoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .ldo = ldo,
         .includeOvUvStatInPGood = true
     };
     Pmic_PwrLdoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .ldo = ldo
     };
     
@@ -1058,12 +1058,12 @@ void test_pos_power_setGetLdoCfg_ldo4_includeOvUvStatInPGood(void) { helper_setG
 static void helper_setGetPldoCfg_mode(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = pldo,
         .mode = PMIC_PWR_PLDO_EN_LDO_OPER
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = pldo
     };
     
@@ -1078,12 +1078,12 @@ static void helper_setGetPldoCfg_mode(uint16_t pldo)
 static void helper_setGetPldoCfg_trackingMode(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_TRACKING_MODE_VALID,
         .pldo = pldo,
         .trackingMode = true
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_TRACKING_MODE_VALID,
         .pldo = pldo
     };
     
@@ -1098,12 +1098,12 @@ static void helper_setGetPldoCfg_trackingMode(uint16_t pldo)
 static void helper_setGetPldoCfg_lvl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_LVL_VALID,
         .pldo = pldo,
         .lvl = PMIC_PWR_LDO_LVL_3P3V
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_LVL_VALID,
         .pldo = pldo
     };
     
@@ -1118,12 +1118,12 @@ static void helper_setGetPldoCfg_lvl(uint16_t pldo)
 static void helper_setGetPldoCfg_ilimLvl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_LVL_VALID,
         .pldo = pldo,
         .ilimLvl = PMIC_PWR_PLDO_ILIM_LVL_OPTION_2
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_LVL_VALID,
         .pldo = pldo
     };
     
@@ -1138,12 +1138,12 @@ static void helper_setGetPldoCfg_ilimLvl(uint16_t pldo)
 static void helper_setGetPldoCfg_ilimDgl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID,
         .pldo = pldo,
         .ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_1_MS
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID,
         .pldo = pldo
     };
     
@@ -1158,12 +1158,12 @@ static void helper_setGetPldoCfg_ilimDgl(uint16_t pldo)
 static void helper_setGetPldoCfg_vmonThr(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID,
         .pldo = pldo,
         .vmonThr = PMIC_PWR_PLDO_VMON_THR_8_PCT
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID,
         .pldo = pldo
     };
     
@@ -1178,12 +1178,12 @@ static void helper_setGetPldoCfg_vmonThr(uint16_t pldo)
 static void helper_setGetPldoCfg_vmonDgl(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID,
         .pldo = pldo,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_32_US
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID,
         .pldo = pldo
     };
     
@@ -1198,12 +1198,12 @@ static void helper_setGetPldoCfg_vmonDgl(uint16_t pldo)
 static void helper_setGetPldoCfg_vtrackRange(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VTRACK_RANGE_VALID,
         .pldo = pldo,
         .vtrackRange = PMIC_PWR_VTRACK_GTE_2P2V
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_VTRACK_RANGE_VALID,
         .pldo = pldo
     };
     
@@ -1218,12 +1218,12 @@ static void helper_setGetPldoCfg_vtrackRange(uint16_t pldo)
 static void helper_setGetPldoCfg_rampTime(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_RT_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_RT_VALID,
         .pldo = pldo,
         .rampTime = PMIC_PWR_RT_SHORTER
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_RT_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_RT_VALID,
         .pldo = pldo
     };
     
@@ -1238,12 +1238,12 @@ static void helper_setGetPldoCfg_rampTime(uint16_t pldo)
 static void helper_setGetPldoCfg_disableDischarge(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_DISABLE_DISCHARGE_VALID,
         .pldo = pldo,
         .disableDischarge = true
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_DISABLE_DISCHARGE_VALID,
         .pldo = pldo
     };
     
@@ -1258,12 +1258,12 @@ static void helper_setGetPldoCfg_disableDischarge(uint16_t pldo)
 static void helper_setGetPldoCfg_includeOvUvStatInPGood(uint16_t pldo)
 {
     Pmic_PwrPldoCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .pldo = pldo,
         .includeOvUvStatInPGood = false
     };
     Pmic_PwrPldoCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .pldo = pldo
     };
     
@@ -1308,12 +1308,12 @@ void test_pos_power_setGetPldoCfg_pldo2_includeOvUvStatInPGood(void) { helper_se
 static void helper_setGetExtVmonCfg_mode(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID,
         .extVmon = extVmon,
         .mode = PMIC_PWR_EXT_VMON_EN_IN_OPER
     };
     Pmic_PwrExtVmonCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID,
         .extVmon = extVmon
     };
     
@@ -1328,12 +1328,12 @@ static void helper_setGetExtVmonCfg_mode(uint16_t extVmon)
 static void helper_setGetExtVmonCfg_vmonThr(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID,
         .extVmon = extVmon,
         .vmonThr = PMIC_PWR_EXT_VMON_THR_6_PCT_HYSTERESIS
     };
     Pmic_PwrExtVmonCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_THR_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID,
         .extVmon = extVmon
     };
     
@@ -1348,12 +1348,12 @@ static void helper_setGetExtVmonCfg_vmonThr(uint16_t extVmon)
 static void helper_setGetExtVmonCfg_vmonDgl(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID,
         .extVmon = extVmon,
         .vmonDgl = PMIC_PWR_RSRC_VMON_DGL_16_US
     };
     Pmic_PwrExtVmonCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_DGL_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID,
         .extVmon = extVmon
     };
     
@@ -1368,12 +1368,12 @@ static void helper_setGetExtVmonCfg_vmonDgl(uint16_t extVmon)
 static void helper_setGetExtVmonCfg_includeOvUvStatInPGood(uint16_t extVmon)
 {
     Pmic_PwrExtVmonCfg_t setCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .extVmon = extVmon,
         .includeOvUvStatInPGood = true
     };
     Pmic_PwrExtVmonCfg_t getCfg = {
-        .validParams = PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
+        .validParams = PMIC_CFG_PWR_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID,
         .extVmon = extVmon
     };
     
@@ -1657,7 +1657,7 @@ void test_neg_power_pwrSetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
         .ldo = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_LDO_MODE_VALID
+        .validParams = PMIC_CFG_PWR_LDO_MODE_VALID
     };
     int32_t status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1667,7 +1667,7 @@ void test_neg_power_pwrGetLdoCfg_invalidLdoId(void)
 {
     Pmic_PwrLdoCfg_t cfg = {
         .ldo = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_LDO_MODE_VALID
+        .validParams = PMIC_CFG_PWR_LDO_MODE_VALID
     };
     int32_t status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1677,7 +1677,7 @@ void test_neg_power_pwrSetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
         .pldo = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID
     };
     int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1687,7 +1687,7 @@ void test_neg_power_pwrGetPldoCfg_invalidPldoId(void)
 {
     Pmic_PwrPldoCfg_t cfg = {
         .pldo = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID
     };
     int32_t status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1697,7 +1697,7 @@ void test_neg_power_pwrSetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
         .extVmon = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID
+        .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID
     };
     int32_t status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1707,7 +1707,7 @@ void test_neg_power_pwrGetExtVmonCfg_invalidExtVmonId(void)
 {
     Pmic_PwrExtVmonCfg_t cfg = {
         .extVmon = TEST_INVALID_PARAM_255,
-        .validParams = PMIC_PWR_CFG_EXT_VMON_MODE_VALID
+        .validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID
     };
     int32_t status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2276,11 +2276,11 @@ void test_pos_power_pwrGetPldoCfg_redundantModeConversion(void)
 {
     /* Test that getting PLDO config twice in a row works correctly */
     Pmic_PwrPldoCfg_t cfg1 = {
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = PMIC_PWR_PLDO1
     };
     Pmic_PwrPldoCfg_t cfg2 = {
-        .validParams = PMIC_PWR_CFG_PLDO_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = PMIC_PWR_PLDO1
     };
 
@@ -2315,7 +2315,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
     status = testInject_setRegister(0x27U, 0x14U);  // PLDO2 mode=5 (invalid, > MAX=4)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    cfg.validParams = PMIC_PWR_CFG_PLDO_MODE_VALID;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_MODE_VALID;
     cfg.pldo = PMIC_PWR_PLDO2;
 
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);

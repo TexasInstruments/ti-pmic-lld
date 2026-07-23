@@ -64,14 +64,14 @@ void gpio_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -137,7 +137,7 @@ void test_neg_gpio_gpioSetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioSetCfg()
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID,
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID,
         .functionality = PMIC_GPIO_INPUT
     };
     int32_t status = Pmic_gpioSetCfg(NULL, PMIC_GPIO, &gpioCfg);
@@ -155,7 +155,7 @@ void test_neg_gpio_gpioSetCfg_invalidGpioPin(void)
 {
     // Pass invalid gpioPin into Pmic_gpioSetCfg()
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID,
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID,
         .functionality = PMIC_GPIO_INPUT
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_GPIO_PIN_MAX + 1U, &gpioCfg);
@@ -177,7 +177,7 @@ void test_neg_gpio_gpioSetCfg_gpio_invalidValidParams(void)
 {
     // Pass invalid validParams for GPIO pin (PU_PD_CFG_VALID not supported for GPIO)
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_PU_PD_CFG_VALID,
+        .validParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID,
         .puPdCfg = PMIC_PU_RESISTOR_ACTIVATED
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_GPIO, &gpioCfg);
@@ -199,7 +199,7 @@ void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality(void)
 {
     // Pass out of bounds functionality for GPIO pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID,
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID,
         .functionality = PMIC_GPIO_FUNCTIONALITY_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_GPIO, &gpioCfg);
@@ -210,7 +210,7 @@ void test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity(void)
 {
     // Pass out of bounds polarity for GPIO pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_POLARITY_VALID,
+        .validParams = PMIC_CFG_GPIO_POLARITY_VALID,
         .polarity = PMIC_POLARITY_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_GPIO, &gpioCfg);
@@ -221,7 +221,7 @@ void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality(void)
 {
     // Pass out of bounds functionality for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID,
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID,
         .functionality = PMIC_NINT_GPI_FUNCTIONALITY_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
@@ -232,7 +232,7 @@ void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity(void)
 {
     // Pass out of bounds polarity for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_POLARITY_VALID,
+        .validParams = PMIC_CFG_GPIO_POLARITY_VALID,
         .polarity = PMIC_POLARITY_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
@@ -243,7 +243,7 @@ void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg(void)
 {
     // Pass out of bounds puPdCfg for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_PU_PD_CFG_VALID,
+        .validParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID,
         .puPdCfg = PMIC_PU_PD_CFG_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
@@ -254,7 +254,7 @@ void test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg(void)
 {
     // Pass out of bounds odPpCfg for NINT_GPI pin
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_OD_PP_CFG_VALID,
+        .validParams = PMIC_CFG_GPIO_OD_PP_CFG_VALID,
         .odPpCfg = PMIC_OD_PP_CFG_MAX + 1U
     };
     int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
@@ -269,7 +269,7 @@ void test_neg_gpio_gpioGetCfg_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_gpioGetCfg()
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID
     };
     int32_t status = Pmic_gpioGetCfg(NULL, PMIC_GPIO, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -286,7 +286,7 @@ void test_neg_gpio_gpioGetCfg_invalidGpioPin(void)
 {
     // Pass invalid gpioPin into Pmic_gpioGetCfg()
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID
     };
     int32_t status = Pmic_gpioGetCfg(&pmicHandle, PMIC_GPIO_PIN_MAX + 1U, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -306,7 +306,7 @@ void test_neg_gpio_gpioGetCfg_gpio_invalidValidParams(void)
 {
     // Pass invalid validParams for GPIO pin (PU_PD_CFG_VALID not supported for GPIO)
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_PU_PD_CFG_VALID
+        .validParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID
     };
     int32_t status = Pmic_gpioGetCfg(&pmicHandle, PMIC_GPIO, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
@@ -369,8 +369,8 @@ void test_neg_gpio_gpioGetActivationState_nullActivated(void)
 void test_pos_gpio_gpioSetGetCfg_gpio_functionality(void)
 {
     /* Test all valid GPIO functionalities */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t func = PMIC_GPIO_INPUT; func <= PMIC_GPIO_FUNCTIONALITY_MAX; func++)
@@ -388,8 +388,8 @@ void test_pos_gpio_gpioSetGetCfg_gpio_functionality(void)
 void test_pos_gpio_gpioSetGetCfg_gpio_polarity(void)
 {
     /* Test all valid GPIO polarities */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_POLARITY_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_POLARITY_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_POLARITY_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_POLARITY_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t polarity = PMIC_NORMAL_POLARITY; polarity <= PMIC_POLARITY_MAX; polarity++)
@@ -408,12 +408,12 @@ void test_pos_gpio_gpioSetGetCfg_gpio_all_params(void)
 {
     /* Test GPIO with all valid parameters simultaneously */
     Pmic_GpioCfg_t expCfg = {
-        .validParams = (PMIC_FUNCTIONALITY_VALID | PMIC_POLARITY_VALID),
+        .validParams = (PMIC_CFG_GPIO_FUNCTIONALITY_VALID | PMIC_CFG_GPIO_POLARITY_VALID),
         .functionality = PMIC_GPIO_OUTPUT,
         .polarity = PMIC_INVERTED_POLARITY
     };
     Pmic_GpioCfg_t actCfg = {
-        .validParams = (PMIC_FUNCTIONALITY_VALID | PMIC_POLARITY_VALID)
+        .validParams = (PMIC_CFG_GPIO_FUNCTIONALITY_VALID | PMIC_CFG_GPIO_POLARITY_VALID)
     };
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -433,8 +433,8 @@ void test_pos_gpio_gpioSetGetCfg_gpio_all_params(void)
 void test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality(void)
 {
     /* Test all valid NINT_GPI functionalities */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_FUNCTIONALITY_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t func = PMIC_NINT_GPI_NINT; func <= PMIC_NINT_GPI_FUNCTIONALITY_MAX; func++)
@@ -452,8 +452,8 @@ void test_pos_gpio_gpioSetGetCfg_nIntGpi_functionality(void)
 void test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity(void)
 {
     /* Test all valid NINT_GPI polarities */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_POLARITY_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_POLARITY_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_POLARITY_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_POLARITY_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t polarity = PMIC_NORMAL_POLARITY; polarity <= PMIC_POLARITY_MAX; polarity++)
@@ -471,8 +471,8 @@ void test_pos_gpio_gpioSetGetCfg_nIntGpi_polarity(void)
 void test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg(void)
 {
     /* Test all valid NINT_GPI pullup/pulldown configurations */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_PU_PD_CFG_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_PU_PD_CFG_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t puPdCfg = PMIC_PU_RESISTOR_ACTIVATED; puPdCfg <= PMIC_PU_PD_CFG_MAX; puPdCfg++)
@@ -490,8 +490,8 @@ void test_pos_gpio_gpioSetGetCfg_nIntGpi_puPdCfg(void)
 void test_pos_gpio_gpioSetGetCfg_nIntGpi_odPpCfg(void)
 {
     /* Test all valid NINT_GPI open-drain/push-pull configurations */
-    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_OD_PP_CFG_VALID};
-    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_OD_PP_CFG_VALID};
+    Pmic_GpioCfg_t expCfg = {.validParams = PMIC_CFG_GPIO_OD_PP_CFG_VALID};
+    Pmic_GpioCfg_t actCfg = {.validParams = PMIC_CFG_GPIO_OD_PP_CFG_VALID};
     int32_t status = PMIC_ST_SUCCESS;
 
     for (uint8_t odPpCfg = PMIC_PUSH_PULL; odPpCfg <= PMIC_OD_PP_CFG_MAX; odPpCfg++)
@@ -510,16 +510,16 @@ void test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params(void)
 {
     /* Test NINT_GPI with all valid parameters simultaneously */
     Pmic_GpioCfg_t expCfg = {
-        .validParams = (PMIC_FUNCTIONALITY_VALID | PMIC_POLARITY_VALID |
-                        PMIC_PU_PD_CFG_VALID | PMIC_OD_PP_CFG_VALID),
+        .validParams = (PMIC_CFG_GPIO_FUNCTIONALITY_VALID | PMIC_CFG_GPIO_POLARITY_VALID |
+                        PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID),
         .functionality = PMIC_NINT_GPI_WDG_TRIG_MODE_INPUT,
         .polarity = PMIC_INVERTED_POLARITY,
         .puPdCfg = PMIC_PD_RESISTOR_ACTIVATED,
         .odPpCfg = PMIC_OPEN_DRAIN
     };
     Pmic_GpioCfg_t actCfg = {
-        .validParams = (PMIC_FUNCTIONALITY_VALID | PMIC_POLARITY_VALID |
-                        PMIC_PU_PD_CFG_VALID | PMIC_OD_PP_CFG_VALID)
+        .validParams = (PMIC_CFG_GPIO_FUNCTIONALITY_VALID | PMIC_CFG_GPIO_POLARITY_VALID |
+                        PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID)
     };
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -587,7 +587,7 @@ void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void)
     // Mock NINT_GPI_SEL register to return value 3
     int32_t status;
     Pmic_GpioCfg_t gpioCfg = {
-        .validParams = PMIC_FUNCTIONALITY_VALID
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID
     };
 
     // Inject NINT_GPI_SEL = 3 (PMIC_NINT_GPI_LPM_INPUT_REPEATED)

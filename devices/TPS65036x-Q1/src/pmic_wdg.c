@@ -1107,17 +1107,17 @@ int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntSta
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract WD_BAD_EVENT bit field
-        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_BAD_EVENT_VALID))
+        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_WDG_BAD_EVENT_VALID))
         {
             localFailCntStat.badEvent = Pmic_getBitField_b(regData, PMIC_WD_BAD_EVENT_SHIFT);
         }
         // Extract WD_FIRST_OK bit field
-        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_GOOD_EVENT_VALID))
+        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_WDG_GOOD_EVENT_VALID))
         {
             localFailCntStat.goodEvent = Pmic_getBitField_b(regData, PMIC_WD_FIRST_OK_SHIFT);
         }
         // Extract WD_FAIL_CNT bit field
-        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_FAIL_CNT_VALID))
+        if (Pmic_validParamCheck(localFailCntStat.validParams, PMIC_WDG_FAIL_CNT_VALID))
         {
             localFailCntStat.failCnt = Pmic_getBitField(regData, PMIC_WD_FAIL_CNT_SHIFT, PMIC_WD_FAIL_CNT_MASK);
         }

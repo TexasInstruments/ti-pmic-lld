@@ -269,11 +269,11 @@ int32_t Pmic_setLockCfg(const Pmic_Handle_t *handle, const Pmic_Lock_t *config) 
 
     CORE_copyLock(config, &localConfig);
 
-    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
+    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CORE_LOCK_REG_VALID, status)) {
         status = Pmic_setRegLockState(handle, localConfig.cfgLock);
     }
 
-    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
+    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CORE_LOCK_CNT_VALID, status)) {
         status = Pmic_setCntLockState(handle, (localConfig.cntLock != false) ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE);
     }
 
@@ -299,11 +299,11 @@ int32_t Pmic_getLockCfg(const Pmic_Handle_t *handle, Pmic_Lock_t *config) {
     }
 
     // Extract requested bitfields from register data
-    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
+    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CORE_LOCK_REG_VALID, status)) {
         localConfig.cfgLock = Pmic_getBitField_b(regData, CFG_REG_LOCKED_SHIFT);
     }
 
-    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
+    if (Pmic_validParamStatusCheck(localConfig.validParams, PMIC_CFG_CORE_LOCK_CNT_VALID, status)) {
         localConfig.cntLock = Pmic_getBitField_b(regData, CNT_REG_LOCKED_SHIFT);
     }
 
@@ -318,7 +318,7 @@ int32_t Pmic_getRegLockState(const Pmic_Handle_t *handle, uint8_t *lockState) {
     // Skip core handle check, this function uses other user facing APIs to do
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_REG_LOCK_VALID };
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CORE_LOCK_REG_VALID };
 
     if (lockState == NULL) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -339,7 +339,7 @@ int32_t Pmic_getCntLockState(const Pmic_Handle_t *handle, uint8_t *lockState) {
     // Skip core handle check, this function uses other user facing APIs to do
     // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CNT_LOCK_VALID };
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CORE_LOCK_CNT_VALID };
 
     if (lockState == NULL) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -439,14 +439,14 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
     }
 
     // Validate AMUX channel range
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID, status)) {
         if (config->amuxChannel > PMIC_MUX_AMUX_CHANNEL_MAX_INTERNAL) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
 
     // Validate DMUX group range
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID, status)) {
         if (config->dmuxGroup > PMIC_MUX_DMUX_GROUP_MAX_INTERNAL) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -457,14 +457,14 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
 
         // Determine which registers need to be updated
         if (Pmic_validParamCheck(config->validParams,
-                                 PMIC_CFG_MUX_MODE_VALID |
-                                 PMIC_CFG_MUX_AMUX_EN_VALID |
-                                 PMIC_CFG_MUX_DMUX_EN_VALID |
-                                 PMIC_CFG_MUX_DMUX_GROUP_VALID)) {
+                                 PMIC_CFG_CORE_MUX_MODE_VALID |
+                                 PMIC_CFG_CORE_MUX_AMUX_EN_VALID |
+                                 PMIC_CFG_CORE_MUX_DMUX_EN_VALID |
+                                 PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID)) {
             updateCtrl = true;
         }
 
-        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID)) {
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID)) {
             updateCfg = true;
         }
 
@@ -481,21 +481,21 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
         // Process mode/enable settings for control register
         if (status == PMIC_ST_SUCCESS) {
             // Handle AMUX enable
-            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_EN_VALID, status)) {
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_EN_VALID, status)) {
                 if (config->amuxEnable) {
                     ctrlValue = PMIC_DIAG_OUT_CTRL_AMUX_VALUE;
                 }
             }
 
             // Handle DMUX enable (overwrites AMUX if both set)
-            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_EN_VALID, status)) {
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_DMUX_EN_VALID, status)) {
                 if (config->dmuxEnable) {
                     ctrlValue = PMIC_DIAG_OUT_CTRL_DMUX_VALUE;
                 }
             }
 
             // Handle explicit mode value (highest priority)
-            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_MODE_VALID, status)) {
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_MODE_VALID, status)) {
                 ctrlValue = config->muxMode;
             }
 
@@ -507,13 +507,13 @@ int32_t Pmic_setMuxCfg(const Pmic_Handle_t *handle, const Pmic_MuxCfg_t *config)
         }
 
         // Update DMUX group selection in control register
-        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID, status)) {
             Pmic_setBitField(&regDataCtrl, PMIC_DIAG_GRP_SEL_SHIFT,
                             PMIC_DIAG_GRP_SEL_MASK, config->dmuxGroup);
         }
 
         // Update AMUX channel selection in config register
-        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID, status)) {
             Pmic_setBitField(&regDataCfg, PMIC_DIAG_CH_SEL_SHIFT,
                             PMIC_DIAG_CH_SEL_MASK, config->amuxChannel);
         }
@@ -548,14 +548,14 @@ int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config) {
     if (status == PMIC_ST_SUCCESS) {
         // Determine which registers need to be read
         if (Pmic_validParamCheck(config->validParams,
-                                 PMIC_CFG_MUX_MODE_VALID |
-                                 PMIC_CFG_MUX_AMUX_EN_VALID |
-                                 PMIC_CFG_MUX_DMUX_EN_VALID |
-                                 PMIC_CFG_MUX_DMUX_GROUP_VALID)) {
+                                 PMIC_CFG_CORE_MUX_MODE_VALID |
+                                 PMIC_CFG_CORE_MUX_AMUX_EN_VALID |
+                                 PMIC_CFG_CORE_MUX_DMUX_EN_VALID |
+                                 PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID)) {
             readCtrl = true;
         }
 
-        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID)) {
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID)) {
             readCfg = true;
         }
 
@@ -572,7 +572,7 @@ int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config) {
 
     if (status == PMIC_ST_SUCCESS) {
         // Extract mode value
-        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_MODE_VALID, status)) {
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_MODE_VALID, status)) {
             config->muxMode = Pmic_getBitField(regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
                                               PMIC_DIAG_OUT_CTRL_MASK);
         }
@@ -582,23 +582,23 @@ int32_t Pmic_getMuxCfg(const Pmic_Handle_t *handle, Pmic_MuxCfg_t *config) {
             uint8_t mode = Pmic_getBitField(regDataCtrl, PMIC_DIAG_OUT_CTRL_SHIFT,
                                            PMIC_DIAG_OUT_CTRL_MASK);
 
-            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_EN_VALID, status)) {
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_EN_VALID, status)) {
                 config->amuxEnable = (mode == PMIC_DIAG_OUT_CTRL_AMUX_VALUE);
             }
 
-            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_EN_VALID, status)) {
+            if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_DMUX_EN_VALID, status)) {
                 config->dmuxEnable = (mode == PMIC_DIAG_OUT_CTRL_DMUX_VALUE);
             }
         }
 
         // Extract DMUX group
-        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_DMUX_GROUP_VALID, status)) {
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID, status)) {
             config->dmuxGroup = Pmic_getBitField(regDataCtrl, PMIC_DIAG_GRP_SEL_SHIFT,
                                                 PMIC_DIAG_GRP_SEL_MASK);
         }
 
         // Extract AMUX channel
-        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_MUX_AMUX_CHANNEL_VALID, status)) {
+        if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID, status)) {
             config->amuxChannel = Pmic_getBitField(regDataCfg, PMIC_DIAG_CH_SEL_SHIFT,
                                                   PMIC_DIAG_CH_SEL_MASK);
         }

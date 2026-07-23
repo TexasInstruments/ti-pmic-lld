@@ -70,12 +70,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_LPM_PIN_DETECTION_VALID        (1UL << 0U)
-#define PMIC_LPM_DETECTION_DELAY_VALID      (1UL << 1U)
-#define PMIC_LPM_VMON_EN_VALID              (1UL << 2U)
-#define PMIC_LPM_ESM_EN_VALID               (1UL << 3U)
-#define PMIC_LPM_WDG_EN_VALID               (1UL << 4U)
-#define PMIC_LPM_ENABLE_ALL_VALID           (PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID)
+#define PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID        (1UL << 0U)
+#define PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID      (1UL << 1U)
+#define PMIC_CFG_CORE_LPM_VMON_EN_VALID              (1UL << 2U)
+#define PMIC_CFG_CORE_LPM_ESM_EN_VALID               (1UL << 3U)
+#define PMIC_CFG_CORE_LPM_WDG_EN_VALID               (1UL << 4U)
+#define PMIC_CFG_CORE_LPM_ENABLE_ALL_VALID           (PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID)
 /** @} */
 
 /**
@@ -376,12 +376,12 @@ int32_t Pmic_getPwrOn(const Pmic_Handle_t *handle, bool *pwrOnStat);
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523
  *
  * @details The following options are configurable via this API
- * 1. LPM pin detection option (validParams: PMIC_LPM_PIN_DETECTION_VALID)
+ * 1. LPM pin detection option (validParams: PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID)
  * 2. Delay time after nRSTOUT has been activated before LPM pin is recognized
- * (validParams: PMIC_LPM_DETECTION_DELAY_VALID)
- * 3. VMON activation in LPM mode (validParams: PMIC_LPM_VMON_EN_VALID)
- * 4. ESM activation in LPM mode (validParams: PMIC_LPM_ESM_EN_VALID)
- * 5. WDG activation in LPM mode (validParams: PMIC_LPM_WDG_EN_VALID)
+ * (validParams: PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID)
+ * 3. VMON activation in LPM mode (validParams: PMIC_CFG_CORE_LPM_VMON_EN_VALID)
+ * 4. ESM activation in LPM mode (validParams: PMIC_CFG_CORE_LPM_ESM_EN_VALID)
+ * 5. WDG activation in LPM mode (validParams: PMIC_CFG_CORE_LPM_WDG_EN_VALID)
  * For more information on LPM configurations, refer to @ref Pmic_CoreLpmCfg.
  *
  * @param handle [IN] PMIC interface handle.

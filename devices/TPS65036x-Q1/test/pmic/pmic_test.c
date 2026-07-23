@@ -83,14 +83,14 @@ void pmic_test(void *args)
 
 static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
 {
-    pmicCfg->validParams = PMIC_I2C_ADDR0_VALID |
-                           PMIC_COMM_HANDLE_0_VALID |
-                           PMIC_IO_READ_VALID |
-                           PMIC_IO_WRITE_VALID |
-                           PMIC_CRITICAL_SECTION_START_VALID |
-                           PMIC_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                           PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg->validParams = PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                           PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                           PMIC_CFG_INIT_IO_READ_VALID |
+                           PMIC_CFG_INIT_IO_WRITE_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                           PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg->i2cAddr0 = 0x60U;
     pmicCfg->commHandle0 = platform_getCommHandle();
     pmicCfg->ioRead = &platform_rxByte;
@@ -215,14 +215,14 @@ void test_pos_pmic_deinit(void)
 
 void test_pos_pmic_init_withRetryCnt(void)
 {
-    // Initialize with PMIC_RETRY_CNT_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_CNT_VALID set
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
     pmicTest_initPmicCfg(&pmicCfg);
 
     // Add retry count configuration
-    pmicCfg.validParams |= PMIC_RETRY_CNT_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_CNT_VALID;
     pmicCfg.retryCnt = 5U;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -238,7 +238,7 @@ void test_pos_pmic_init_withRetryCnt(void)
 
 void test_pos_pmic_init_withRetryInterval(void)
 {
-    // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID set
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
@@ -246,7 +246,7 @@ void test_pos_pmic_init_withRetryInterval(void)
 
     // Add retry interval configuration
     // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
-    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 100U;
     pmicCfg.timerWaitMs = &testUtils_timerWaitMs;
 
@@ -263,14 +263,14 @@ void test_pos_pmic_init_withRetryInterval(void)
 
 void test_pos_pmic_init_withTimerWaitMs(void)
 {
-    // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
+    // Initialize with PMIC_CFG_INIT_TIMER_WAIT_MS_VALID and valid callback
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
     pmicTest_initPmicCfg(&pmicCfg);
 
     // Add timer wait callback configuration
-    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.timerWaitMs = &testUtils_timerWaitMs;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -286,14 +286,14 @@ void test_pos_pmic_init_withTimerWaitMs(void)
 
 void test_neg_pmic_init_timerWaitNull(void)
 {
-    // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
+    // Set PMIC_CFG_INIT_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
     pmicTest_initPmicCfg(&pmicCfg);
 
     // Set valid param flag but provide NULL callback
-    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.timerWaitMs = NULL;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -302,18 +302,33 @@ void test_neg_pmic_init_timerWaitNull(void)
 
 void test_neg_pmic_init_nullIrqResponseCallback(void)
 {
-    // Test NULL IRQ response callback with PMIC_IRQ_RESPONSE_CALLBACK_VALID set (lines 173-174)
+    // Test NULL IRQ response callback with PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID set (lines 173-174)
     Pmic_HandleCfg_t pmicCfg = {0U};
     Pmic_Handle_t handle = {0U};
 
     pmicTest_initPmicCfg(&pmicCfg);
 
     // Set valid param flag but provide NULL callback
-    pmicCfg.validParams |= PMIC_IRQ_RESPONSE_CALLBACK_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
     pmicCfg.irqResponseCallback = NULL;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_pos_pmic_checkHandle_validHandle(void)
+{
+    Pmic_Handle_t handle = {0U};
+    Pmic_HandleCfg_t pmicCfg = {0U};
+
+    pmicTest_initPmicCfg(&pmicCfg);
+    int32_t status = Pmic_init(&handle, &pmicCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_checkHandle(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    (void)Pmic_deinit(&handle);
 }
 
 void test_neg_pmic_checkHandle_nullCommHandle(void)
@@ -376,7 +391,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     pmicTest_initPmicCfg(&pmicCfg);
 
     // Initialize with VALID configuration including timer
-    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 10U;  // Non-zero retry interval
     pmicCfg.timerWaitMs = &testUtils_timerWaitMs;  // Provide timer during init
 
@@ -441,12 +456,12 @@ void test_neg_pmic_init_syncMode_nullIoRead(void)
     Pmic_HandleCfg_t pmicCfg = {0U};
 
     /* Initialize with minimal valid config, but omit IO_READ_VALID */
-    pmicCfg.validParams = PMIC_I2C_ADDR0_VALID |
-                          PMIC_COMM_HANDLE_0_VALID |
-                          /* PMIC_IO_READ_VALID - intentionally omitted */
-                          PMIC_IO_WRITE_VALID |
-                          PMIC_CRITICAL_SECTION_START_VALID |
-                          PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.validParams = PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                          PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                          /* PMIC_CFG_INIT_IO_READ_VALID - intentionally omitted */
+                          PMIC_CFG_INIT_IO_WRITE_VALID |
+                          PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                          PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID;
     pmicCfg.i2cAddr0 = 0x60U;
     pmicCfg.commHandle0 = platform_getCommHandle();
     /* pmicCfg.ioRead = NULL; - left NULL (default) */
@@ -472,12 +487,12 @@ void test_neg_pmic_init_syncMode_nullIoWrite(void)
     Pmic_HandleCfg_t pmicCfg = {0U};
 
     /* Initialize with minimal valid config, but omit IO_WRITE_VALID */
-    pmicCfg.validParams = PMIC_I2C_ADDR0_VALID |
-                          PMIC_COMM_HANDLE_0_VALID |
-                          PMIC_IO_READ_VALID |
-                          /* PMIC_IO_WRITE_VALID - intentionally omitted */
-                          PMIC_CRITICAL_SECTION_START_VALID |
-                          PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.validParams = PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                          PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                          PMIC_CFG_INIT_IO_READ_VALID |
+                          /* PMIC_CFG_INIT_IO_WRITE_VALID - intentionally omitted */
+                          PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                          PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID;
     pmicCfg.i2cAddr0 = 0x60U;
     pmicCfg.commHandle0 = platform_getCommHandle();
     pmicCfg.ioRead = &platform_rxByte;
@@ -501,7 +516,7 @@ void test_neg_pmic_init_nullCriticalSectionStart(void)
     pmicTest_initPmicCfg(&pmicCfg);
 
     /* NULL critical section start hook */
-    pmicCfg.validParams |= PMIC_CRITICAL_SECTION_START_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID;
     pmicCfg.criticalSectionStart = NULL;  /* Missing required hook */
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -520,7 +535,7 @@ void test_neg_pmic_init_nullCriticalSectionStop(void)
     pmicTest_initPmicCfg(&pmicCfg);
 
     /* NULL critical section stop hook */
-    pmicCfg.validParams |= PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID;
     pmicCfg.criticalSectionStop = NULL;  /* Missing required hook */
 
     int32_t status = Pmic_init(&handle, &pmicCfg);

@@ -784,12 +784,12 @@ void esm_test(void *args)
     testTimer_startModule("ESM");
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,

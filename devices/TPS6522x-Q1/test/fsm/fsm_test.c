@@ -70,7 +70,7 @@ void test_neg_fsm_fsmSetTriggerCfg_nullCfg(void)
 void test_neg_fsm_fsmSetTriggerCfg_invalidSevereErrTrig(void)
 {
     Pmic_FsmTriggerCfg_t triggerCfg = {
-        .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID,
         .severeErrTrig = PMIC_FSM_TRIGGER_MAX + 1
     };
     int32_t status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
@@ -121,7 +121,7 @@ void test_neg_fsm_fsmSetGpioTriggerCfg_nullCfg(void)
 void test_neg_fsm_fsmSetGpioTriggerCfg_invalidPin(void)
 {
     Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
-        .validParams = PMIC_FSM_MASK_VALID,
+        .validParams = PMIC_CFG_FSM_MASK_VALID,
         .pinNum = PMIC_FSM_GPIO_PIN_MAX + 1,
         .mask = true
     };
@@ -160,7 +160,7 @@ void test_neg_fsm_fsmGetGpioTriggerCfg_invalidPin(void)
     int32_t status;
 
     memset(&cfg, 0, sizeof(cfg));
-    cfg.validParams = PMIC_FSM_MASK_VALID;  /* Must be non-zero to reach pin validation */
+    cfg.validParams = PMIC_CFG_FSM_MASK_VALID;  /* Must be non-zero to reach pin validation */
     cfg.pinNum = 0;  /* Invalid pin number (valid range is 1-6) */
 
     status = Pmic_fsmGetGpioTriggerCfg(&pmicHandle, &cfg);
@@ -289,11 +289,11 @@ void test_pos_fsm_fsmSetGetTriggerCfg_allTriggers(void)
 {
     int32_t status;
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID |
-                       PMIC_FSM_OTHER_RAIL_TRIG_VALID |
-                       PMIC_FSM_SOC_RAIL_TRIG_VALID |
-                       PMIC_FSM_MCU_RAIL_TRIG_VALID |
-                       PMIC_FSM_MODERATE_ERR_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID |
+                       PMIC_CFG_FSM_OTHER_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_SOC_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID,
         .severeErrTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR,
         .otherRailTrig = PMIC_FSM_TRIGGER_SOC_POWER_ERROR,
         .socRailTrig = PMIC_FSM_TRIGGER_ORDERLY_SHUTDOWN,
@@ -305,11 +305,11 @@ void test_pos_fsm_fsmSetGetTriggerCfg_allTriggers(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID |
-                       PMIC_FSM_OTHER_RAIL_TRIG_VALID |
-                       PMIC_FSM_SOC_RAIL_TRIG_VALID |
-                       PMIC_FSM_MCU_RAIL_TRIG_VALID |
-                       PMIC_FSM_MODERATE_ERR_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID |
+                       PMIC_CFG_FSM_OTHER_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_SOC_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID |
+                       PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -331,7 +331,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_severeErrorTrigger(void)
     for (uint8_t val = PMIC_FSM_TRIGGER_MCU_POWER_ERROR; val <= PMIC_FSM_TRIGGER_MAX; val++)
     {
         Pmic_FsmTriggerCfg_t triggerCfgSet = {
-            .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID,
+            .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID,
             .severeErrTrig = val
         };
 
@@ -339,7 +339,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_severeErrorTrigger(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
         Pmic_FsmTriggerCfg_t triggerCfgGet = {
-            .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID
+            .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID
         };
 
         status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -357,8 +357,8 @@ void test_pos_fsm_fsmSetGetGpioTriggerCfg_gpio1(void)
 
     /* Test GPIO1 trigger configuration */
     Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgSet = {
-        .validParams = PMIC_FSM_MASK_VALID |
-                       PMIC_FSM_MASK_POL_VALID,
+        .validParams = PMIC_CFG_FSM_MASK_VALID |
+                       PMIC_CFG_FSM_MASK_POL_VALID,
         .pinNum = PMIC_FSM_GPIO_PIN1,
         .mask = true,
         .maskPol = PMIC_FSM_GPIO_MASK_POL_1
@@ -368,8 +368,8 @@ void test_pos_fsm_fsmSetGetGpioTriggerCfg_gpio1(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgGet = {
-        .validParams = PMIC_FSM_MASK_VALID |
-                       PMIC_FSM_MASK_POL_VALID,
+        .validParams = PMIC_CFG_FSM_MASK_VALID |
+                       PMIC_CFG_FSM_MASK_POL_VALID,
         .pinNum = PMIC_FSM_GPIO_PIN1
     };
 
@@ -389,7 +389,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_allGpioPins(void)
     for (uint8_t pin = PMIC_FSM_GPIO_PIN_MIN; pin <= PMIC_FSM_GPIO_PIN_MAX; pin++)
     {
         Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgSet = {
-            .validParams = PMIC_FSM_MASK_VALID,
+            .validParams = PMIC_CFG_FSM_MASK_VALID,
             .pinNum = pin,
             .mask = false
         };
@@ -482,8 +482,8 @@ void test_pos_fsm_fsmSetGetTriggerCfg_combinedTriggers(void)
 
     /* Configure multiple triggers at once */
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID |
-                       PMIC_FSM_MCU_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID |
+                       PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID,
         .severeErrTrig = PMIC_FSM_TRIGGER_IMMEDIATE_SHUTDOWN,
         .mcuRailTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR
     };
@@ -493,8 +493,8 @@ void test_pos_fsm_fsmSetGetTriggerCfg_combinedTriggers(void)
 
     /* Read back and verify */
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_SEVERE_ERR_TRIG_VALID |
-                       PMIC_FSM_MCU_RAIL_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID |
+                       PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -512,7 +512,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_polarity(void)
 
     /* Test high polarity */
     Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
-        .validParams = PMIC_FSM_MASK_POL_VALID,
+        .validParams = PMIC_CFG_FSM_MASK_POL_VALID,
         .pinNum = PMIC_FSM_GPIO_PIN2,
         .maskPol = PMIC_FSM_GPIO_MASK_POL_1
     };
@@ -532,7 +532,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_polarity(void)
 void test_neg_fsm_fsmotherRailTrig_exceeds_max(void)
 {
     Pmic_FsmTriggerCfg_t triggerCfg = {
-        .validParams = PMIC_FSM_OTHER_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_OTHER_RAIL_TRIG_VALID,
         .otherRailTrig = PMIC_FSM_TRIGGER_MAX + 1
     };
     int32_t status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
@@ -545,7 +545,7 @@ void test_neg_fsm_fsmotherRailTrig_exceeds_max(void)
 void test_neg_fsm_fsmsocRailTrig_exceeds_max(void)
 {
     Pmic_FsmTriggerCfg_t triggerCfg = {
-        .validParams = PMIC_FSM_SOC_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_SOC_RAIL_TRIG_VALID,
         .socRailTrig = PMIC_FSM_TRIGGER_MAX + 1
     };
     int32_t status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
@@ -558,7 +558,7 @@ void test_neg_fsm_fsmsocRailTrig_exceeds_max(void)
 void test_neg_fsm_fsmmcuRailTrig_exceeds_max(void)
 {
     Pmic_FsmTriggerCfg_t triggerCfg = {
-        .validParams = PMIC_FSM_MCU_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID,
         .mcuRailTrig = PMIC_FSM_TRIGGER_MAX + 1
     };
     int32_t status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
@@ -571,7 +571,7 @@ void test_neg_fsm_fsmmcuRailTrig_exceeds_max(void)
 void test_neg_fsm_fsmmoderateErrTrig_exceeds_max(void)
 {
     Pmic_FsmTriggerCfg_t triggerCfg = {
-        .validParams = PMIC_FSM_MODERATE_ERR_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID,
         .moderateErrTrig = PMIC_FSM_TRIGGER_MAX + 1
     };
     int32_t status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
@@ -637,7 +637,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig(void)
 {
     int32_t status;
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_OTHER_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_OTHER_RAIL_TRIG_VALID,
         .otherRailTrig = PMIC_FSM_TRIGGER_ORDERLY_SHUTDOWN
     };
 
@@ -645,7 +645,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_OTHER_RAIL_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_OTHER_RAIL_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -660,7 +660,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void)
 {
     int32_t status;
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_SOC_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_SOC_RAIL_TRIG_VALID,
         .socRailTrig = PMIC_FSM_TRIGGER_IMMEDIATE_SHUTDOWN
     };
 
@@ -668,7 +668,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_SOC_RAIL_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_SOC_RAIL_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -683,7 +683,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void)
 {
     int32_t status;
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_MCU_RAIL_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID,
         .mcuRailTrig = PMIC_FSM_TRIGGER_SOC_POWER_ERROR
     };
 
@@ -691,7 +691,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_MCU_RAIL_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_MCU_RAIL_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -706,7 +706,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void)
 {
     int32_t status;
     Pmic_FsmTriggerCfg_t triggerCfgSet = {
-        .validParams = PMIC_FSM_MODERATE_ERR_TRIG_VALID,
+        .validParams = PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID,
         .moderateErrTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR
     };
 
@@ -714,7 +714,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_FsmTriggerCfg_t triggerCfgGet = {
-        .validParams = PMIC_FSM_MODERATE_ERR_TRIG_VALID
+        .validParams = PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID
     };
 
     status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfgGet);
@@ -780,7 +780,7 @@ void test_pos_fsm_fsmGetStartupDest_validRead(void)
 void test_neg_fsm_fsmsetGpioTrigger_invalidMaskPol(void)
 {
     Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
-        .validParams = PMIC_FSM_MASK_POL_VALID,
+        .validParams = PMIC_CFG_FSM_MASK_POL_VALID,
         .pinNum = PMIC_FSM_GPIO_PIN1,
         .maskPol = 2U  /* Invalid, max is 1 */
     };
@@ -804,13 +804,13 @@ void fsm_test(void *args)
 
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle0(),

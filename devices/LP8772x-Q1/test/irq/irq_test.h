@@ -288,6 +288,19 @@ extern "C" {
 #define IRQ_TEST_INTEGRATION() \
     IRQ_TEST_POS_INTEGRATION()
 
+/* ======================================================================== */
+/*                  Test APIs: Pmic_irqResponseCallback                     */
+/* ======================================================================== */
+
+#define IRQ_TEST_POS_IRQRESPONSECALLBACK() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_callbackInvoked); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_nullCallback); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_nullHandle)
+
+/* Test: TC-IRQ-0031 */
+#define IRQ_TEST_IRQRESPONSECALLBACK() \
+    IRQ_TEST_POS_IRQRESPONSECALLBACK()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -299,7 +312,8 @@ extern "C" {
     IRQ_TEST_POS_IRQGETNEXTFLAG(); \
     IRQ_TEST_POS_IRQGETFLAG(); \
     IRQ_TEST_POS_IRQCLRFLAG(); \
-    IRQ_TEST_POS_INTEGRATION()
+    IRQ_TEST_POS_INTEGRATION(); \
+    IRQ_TEST_POS_IRQRESPONSECALLBACK()
 
 #define IRQ_TEST_RUN_NEGATIVE() \
     IRQ_TEST_NEG_IRQSETMASK(); \
@@ -314,7 +328,8 @@ extern "C" {
 
 #define IRQ_TEST_RUN_ALL() \
     IRQ_TEST_RUN_POSITIVE(); \
-    IRQ_TEST_RUN_NEGATIVE()
+    IRQ_TEST_RUN_NEGATIVE(); \
+    IRQ_TEST_IRQRESPONSECALLBACK()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -513,6 +528,15 @@ void test_pos_irq_irqMaskedBehavior(void);
 void test_pos_irq_irqFlagPersistence(void);
 void test_pos_irq_irqStatusReadMultipleTimes(void);
 void test_pos_irq_irqIterateAndClearAll(void);
+
+/* ========================================================================== */
+/*                  irqResponseCallback API Tests                             */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqResponseCallback_callbackInvoked(void);
+void test_pos_irq_irqResponseCallback_nullCallback(void);
+void test_pos_irq_irqResponseCallback_nullHandle(void);
 
 #ifdef __cplusplus
 }

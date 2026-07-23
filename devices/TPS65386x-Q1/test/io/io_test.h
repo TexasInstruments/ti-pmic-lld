@@ -181,6 +181,52 @@ extern "C" {
     IO_TEST_POS_IOUPDATEBYTE(); \
     IO_TEST_NEG_IOUPDATEBYTE()
 
+/* ======================================================================== */
+/*                        Test APIs: ioUpdateByte_b                         */
+/* ======================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_B() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_b_setBit); \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_b_clearBit)
+
+#define IO_TEST_NEG_IOUPDATEBYTE_B() \
+    /* No negative tests for ioUpdateByte_b */
+
+/* Test: TC-IO-0035 */
+#define IO_TEST_IOUPDATEBYTE_B() \
+    IO_TEST_POS_IOUPDATEBYTE_B(); \
+    IO_TEST_NEG_IOUPDATEBYTE_B()
+
+/* ======================================================================== */
+/*                       Test APIs: ioUpdateByte_CS                         */
+/* ======================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_CS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_CS_singleBitField)
+
+#define IO_TEST_NEG_IOUPDATEBYTE_CS() \
+    /* No negative tests for ioUpdateByte_CS */
+
+/* Test: TC-IO-0036 */
+#define IO_TEST_IOUPDATEBYTE_CS() \
+    IO_TEST_POS_IOUPDATEBYTE_CS(); \
+    IO_TEST_NEG_IOUPDATEBYTE_CS()
+
+/* ======================================================================== */
+/*                       Test APIs: ioUpdateByte_bCS                        */
+/* ======================================================================== */
+
+#define IO_TEST_POS_IOUPDATEBYTE_BCS() \
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_bCS_setBit)
+
+#define IO_TEST_NEG_IOUPDATEBYTE_BCS() \
+    /* No negative tests for ioUpdateByte_bCS */
+
+/* Test: TC-IO-0037 */
+#define IO_TEST_IOUPDATEBYTE_BCS() \
+    IO_TEST_POS_IOUPDATEBYTE_BCS(); \
+    IO_TEST_NEG_IOUPDATEBYTE_BCS()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -192,7 +238,10 @@ extern "C" {
     IO_TEST_POS_IORXBYTE_CS(); \
     IO_TEST_POS_IOTXWORDSEQ(); \
     IO_TEST_POS_IORXWORDSEQ(); \
-    IO_TEST_POS_IOUPDATEBYTE()
+    IO_TEST_POS_IOUPDATEBYTE(); \
+    IO_TEST_POS_IOUPDATEBYTE_B(); \
+    IO_TEST_POS_IOUPDATEBYTE_CS(); \
+    IO_TEST_POS_IOUPDATEBYTE_BCS()
 
 #define IO_TEST_RUN_NEGATIVE() \
     IO_TEST_NEG_IOTXBYTE(); \
@@ -201,7 +250,10 @@ extern "C" {
     IO_TEST_NEG_IORXBYTE_CS(); \
     IO_TEST_NEG_IOTXWORDSEQ(); \
     IO_TEST_NEG_IORXWORDSEQ(); \
-    IO_TEST_NEG_IOUPDATEBYTE()
+    IO_TEST_NEG_IOUPDATEBYTE(); \
+    IO_TEST_NEG_IOUPDATEBYTE_B(); \
+    IO_TEST_NEG_IOUPDATEBYTE_CS(); \
+    IO_TEST_NEG_IOUPDATEBYTE_BCS()
 
 #define IO_TEST_RUN_ALL() \
     IO_TEST_RUN_POSITIVE(); \

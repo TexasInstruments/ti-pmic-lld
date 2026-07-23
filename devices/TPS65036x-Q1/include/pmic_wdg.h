@@ -147,9 +147,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BAD_EVENT_VALID                    (1UL << 0U)
-#define PMIC_GOOD_EVENT_VALID                   (1UL << 1U)
-#define PMIC_FAIL_CNT_VALID                     (1UL << 2U)
+#define PMIC_WDG_BAD_EVENT_VALID                    (1UL << 0U)
+#define PMIC_WDG_GOOD_EVENT_VALID                   (1UL << 1U)
+#define PMIC_WDG_FAIL_CNT_VALID                     (1UL << 2U)
 /** @} */
 
 /**
@@ -670,9 +670,9 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *w
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-528, PMICDRV-538
  *
  * @details The following watchdog fail counter statuses can be obtained from this API
- * 1. WD_BAD_EVENT (validParams: PMIC_BAD_EVENT_VALID)
- * 2. WD_FIRST_OK (validParams: PMIC_GOOD_EVENT_VALID)
- * 3. WD_FAIL_CNT (validParams: PMIC_FAIL_CNT_VALID)
+ * 1. WD_BAD_EVENT (validParams: PMIC_WDG_BAD_EVENT_VALID)
+ * 2. WD_FIRST_OK (validParams: PMIC_WDG_GOOD_EVENT_VALID)
+ * 3. WD_FAIL_CNT (validParams: PMIC_WDG_FAIL_CNT_VALID)
  * For more information on the watchdog fail counter statuses, refer to
  * @ref Pmic_WdgFailCntStat.
  *

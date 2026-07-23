@@ -161,9 +161,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_TWARN_STAY_IN_SAFE_STATE_VALID         (1UL << 0U)
-#define PMIC_TSD_IMM_LEVEL_VALID                    (1UL << 1U)
-#define PMIC_TWARN_LEVEL_VALID                      (1UL << 2U)
+#define PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID         (1UL << 0U)
+#define PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID                    (1UL << 1U)
+#define PMIC_CFG_PWR_TWARN_LEVEL_VALID                      (1UL << 2U)
 /** @} */
 
 /**
@@ -244,8 +244,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_SEQ_DLY_OFF_VALID                      ((uint32_t)1UL << 0U)
-#define PMIC_SEQ_DLY_ON_VALID                       ((uint32_t)1UL << 1U)
+#define PMIC_CFG_PWR_SEQ_DLY_OFF_VALID                      ((uint32_t)1UL << 0U)
+#define PMIC_CFG_PWR_SEQ_DLY_ON_VALID                       ((uint32_t)1UL << 1U)
 /** @} */
 
 /**

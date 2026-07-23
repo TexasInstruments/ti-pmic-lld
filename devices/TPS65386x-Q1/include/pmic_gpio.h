@@ -108,12 +108,12 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_GPI1_VALID (1UL << 0U)
-#define PMIC_CFG_GPI4_VALID (1UL << 1U)
-#define PMIC_CFG_GPO1_VALID (1UL << 2U)
-#define PMIC_CFG_GPO2_VALID (1UL << 3U)
-#define PMIC_CFG_GPO3_VALID (1UL << 4U)
-#define PMIC_CFG_GPO4_VALID (1UL << 5U)
+#define PMIC_CFG_GPIO_GPI1_VALID (1UL << 0U)
+#define PMIC_CFG_GPIO_GPI4_VALID (1UL << 1U)
+#define PMIC_CFG_GPIO_GPO1_VALID (1UL << 2U)
+#define PMIC_CFG_GPIO_GPO2_VALID (1UL << 3U)
+#define PMIC_CFG_GPIO_GPO3_VALID (1UL << 4U)
+#define PMIC_CFG_GPIO_GPO4_VALID (1UL << 5U)
 /** @} */
 
 /**
@@ -122,8 +122,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPIO_SAFEOUT1_EN_VALID (1UL << 0U)
-#define PMIC_GPIO_SAFEOUT2_EN_VALID (1UL << 1U)
+#define PMIC_CFG_GPIO_SAFEOUT1_EN_VALID (1UL << 0U)
+#define PMIC_CFG_GPIO_SAFEOUT2_EN_VALID (1UL << 1U)
 /** @} */
 
 /**
@@ -296,9 +296,9 @@ typedef struct Pmic_GpioCfg_s {
  * @param validParams Selection of structure parameters to be set, from
  * @ref Pmic_GpioSafeOutCfgValidParam
  * @param safeOut1En SAFEOUT1 pin enable (false=disable, true=enable).
- * Valid when PMIC_GPIO_SAFEOUT1_EN_VALID is set
+ * Valid when PMIC_CFG_GPIO_SAFEOUT1_EN_VALID is set
  * @param safeOut2En SAFEOUT2 pin enable (false=disable, true=enable).
- * Valid when PMIC_GPIO_SAFEOUT2_EN_VALID is set
+ * Valid when PMIC_CFG_GPIO_SAFEOUT2_EN_VALID is set
  */
 typedef struct Pmic_GpioSafeOutCfg_s {
     uint32_t validParams;

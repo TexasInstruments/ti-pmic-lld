@@ -289,15 +289,15 @@ Pmic_Handle_t pmicHandle;
 
 Pmic_HandleCfg_t config = {
     .validParams = (
-        PMIC_COMM_MODE_VALID              |
-        PMIC_COMM_HANDLE_0_VALID          |
-        PMIC_IO_READ_VALID                |
-        PMIC_IO_WRITE_VALID               |
-        PMIC_CRITICAL_SECTION_START_VALID |
-        PMIC_CRITICAL_SECTION_STOP_VALID  |
-        PMIC_TIMER_WAIT_MS_VALID          |
-        PMIC_RETRY_CNT_VALID              |
-        PMIC_RETRY_INTERVAL_MS_VALID
+        PMIC_CFG_INIT_COMM_MODE_VALID              |
+        PMIC_CFG_INIT_COMM_HANDLE_0_VALID          |
+        PMIC_CFG_INIT_IO_READ_VALID                |
+        PMIC_CFG_INIT_IO_WRITE_VALID               |
+        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID  |
+        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID          |
+        PMIC_CFG_INIT_RETRY_CNT_VALID              |
+        PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID
     ),
     .commMode = PMIC_INTF_SPI,
     .commHandle0 = &spiHandle,
@@ -325,17 +325,17 @@ The `validParams` field in `Pmic_HandleCfg_t` allows selective initialization of
 - Set a bit to 0 to indicate the corresponding parameter is invalid and should be ignored
 
 For TPS6522x-Q1, the following parameters are typically required:
-- `PMIC_COMM_MODE_VALID`
-- `PMIC_COMM_HANDLE_0_VALID`
-- `PMIC_IO_READ_VALID`
-- `PMIC_IO_WRITE_VALID`
-- `PMIC_CRITICAL_SECTION_START_VALID`
-- `PMIC_CRITICAL_SECTION_STOP_VALID`
-- `PMIC_TIMER_WAIT_MS_VALID`
-- `PMIC_RETRY_CNT_VALID`
-- `PMIC_RETRY_INTERVAL_MS_VALID`
+- `PMIC_CFG_INIT_COMM_MODE_VALID`
+- `PMIC_CFG_INIT_COMM_HANDLE_0_VALID`
+- `PMIC_CFG_INIT_IO_READ_VALID`
+- `PMIC_CFG_INIT_IO_WRITE_VALID`
+- `PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID`
+- `PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID`
+- `PMIC_CFG_INIT_TIMER_WAIT_MS_VALID`
+- `PMIC_CFG_INIT_RETRY_CNT_VALID`
+- `PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID`
 
-The `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
+The `PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
 
 Alternatively, use the convenience macro `PMIC_ALL_VALID` to enable all parameters.
 
@@ -418,7 +418,7 @@ Each diagnostic entry tracks:
 ```c
 // Query diagnostic info for a specific error
 Pmic_Diagnostic_t diag = {
-    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL,
     .code = PMIC_ST_ERR_I2C_COMM_FAIL
 };
 
@@ -434,9 +434,9 @@ if (status == PMIC_ST_SUCCESS) {
 
 ```c
 Pmic_Diagnostic_t diags[3] = {
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_I2C_COMM_FAIL },
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_DATA_IO_CRC },
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_INV_PARAM }
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_I2C_COMM_FAIL },
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_DATA_IO_CRC },
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_INV_PARAM }
 };
 
 status = Pmic_getDiagnostics(&pmicHandle, diags, 3U);
@@ -454,7 +454,7 @@ if (status == PMIC_ST_SUCCESS) {
 ```c
 // Clear a specific diagnostic
 Pmic_Diagnostic_t diag = {
-    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL,
     .code = PMIC_ST_ERR_I2C_COMM_FAIL
 };
 Pmic_clrDiagnostic(&pmicHandle, &diag);

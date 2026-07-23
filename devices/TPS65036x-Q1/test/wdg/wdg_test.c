@@ -117,14 +117,14 @@ void wdg_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -492,7 +492,7 @@ void test_neg_wdg_wdgGetFailCntStatus_nullHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_wdgGetFailCntStatus()
     Pmic_WdgFailCntStatus_t wdgFailCntStat = {
-        .validParams = PMIC_FAIL_CNT_VALID
+        .validParams = PMIC_WDG_FAIL_CNT_VALID
     };
     int32_t status = Pmic_wdgGetFailCntStatus(NULL, &wdgFailCntStat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1330,7 +1330,7 @@ void test_pos_wdg_wdgQaSequence_detectTimeoutErr(void)
         .qaSeed = 2U
     };
     Pmic_WdgFailCntStatus_t wdgFailCntStat = {
-        .validParams = (PMIC_BAD_EVENT_VALID | PMIC_FAIL_CNT_VALID),
+        .validParams = (PMIC_WDG_BAD_EVENT_VALID | PMIC_WDG_FAIL_CNT_VALID),
         .failCnt = 0U
     };
     Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_TIMEOUT_ERR_VALID};
@@ -1474,7 +1474,7 @@ void test_pos_wdg_wdgQaSequence_detectFailInt(void)
         .qaSeed = 2U
     };
     Pmic_WdgFailCntStatus_t wdgFailCntStat = {
-        .validParams = PMIC_FAIL_CNT_VALID,
+        .validParams = PMIC_WDG_FAIL_CNT_VALID,
         .failCnt = 0U
     };
     Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_FAIL_INT_VALID};
@@ -1570,7 +1570,7 @@ void test_pos_wdg_wdgQaSequence_detectRstInt(void)
         .qaSeed = 2U
     };
     Pmic_WdgFailCntStatus_t wdgFailCntStat = {
-        .validParams = PMIC_FAIL_CNT_VALID,
+        .validParams = PMIC_WDG_FAIL_CNT_VALID,
         .failCnt = 0U
     };
     Pmic_WdgErrStatus_t wdgErrStat = {.validParams = PMIC_WDG_RST_INT_VALID};
@@ -1912,9 +1912,9 @@ void test_pos_wdg_wdgGetFailCntStatus_copyFunction(void)
     Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Set multiple validParams to exercise the copy function
-    failCnt.validParams = PMIC_BAD_EVENT_VALID |
-                          PMIC_GOOD_EVENT_VALID |
-                          PMIC_FAIL_CNT_VALID;
+    failCnt.validParams = PMIC_WDG_BAD_EVENT_VALID |
+                          PMIC_WDG_GOOD_EVENT_VALID |
+                          PMIC_WDG_FAIL_CNT_VALID;
 
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, &failCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1984,7 +1984,7 @@ void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
     Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Get only fail count
-    failCnt.validParams = PMIC_FAIL_CNT_VALID;
+    failCnt.validParams = PMIC_WDG_FAIL_CNT_VALID;
 
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, &failCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1997,7 +1997,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
     Pmic_WdgFailCntStatus_t failCnt = {0};
 
     // Get only bad event
-    failCnt.validParams = PMIC_BAD_EVENT_VALID;
+    failCnt.validParams = PMIC_WDG_BAD_EVENT_VALID;
 
     int32_t status = Pmic_wdgGetFailCntStatus(&pmicHandle, &failCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -2090,6 +2090,9 @@ void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
     wdgCfg.qaFdbk = 0U;
     wdgCfg.qaLfsr = 0x02U;
     wdgCfg.qaSeed = 0x0CU;
+
+    // Pmic_wdgSetCfg requires WDG enabled and in ReturnToLongWindow mode
+    wdg_setupForConfig();
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

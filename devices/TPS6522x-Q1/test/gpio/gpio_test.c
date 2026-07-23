@@ -58,7 +58,7 @@ static Pmic_Handle_t pmicHandle = {0};
 void test_neg_gpio_gpioSetPinCfg_nullHandle(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .dir = PMIC_GPIO_PIN_OUTPUT
     };
@@ -90,7 +90,7 @@ void test_neg_gpio_gpioSetPinCfg_zeroValidParams(void)
 void test_neg_gpio_gpioSetPinCfg_invalidPinBelowMin(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = 0U,
         .dir = PMIC_GPIO_PIN_OUTPUT
     };
@@ -103,7 +103,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidPinBelowMin(void)
 void test_neg_gpio_gpioSetPinCfg_invalidPinAboveMax(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = 7U,
         .dir = PMIC_GPIO_PIN_OUTPUT
     };
@@ -116,7 +116,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidPinAboveMax(void)
 void test_neg_gpio_gpioSetPinCfg_invalidDirection(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .dir = 2U  // Invalid, max is 1
     };
@@ -129,7 +129,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidDirection(void)
 void test_neg_gpio_gpioSetPinCfg_invalidFunctionGpio1(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .fxnSel = 4U  // Invalid, max is 3 for GPIO1
     };
@@ -142,7 +142,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidFunctionGpio1(void)
 void test_neg_gpio_gpioSetPinCfg_invalidPullSelect(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_PU_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_PU_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .puSel = 2U  // Invalid, max is 1
     };
@@ -155,7 +155,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidPullSelect(void)
 void test_neg_gpio_gpioSetPinCfg_invalidType(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_TYPE_VALID,
+        .validParams = PMIC_CFG_GPIO_TYPE_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .type = 2U  // Invalid, max is 1
     };
@@ -168,7 +168,7 @@ void test_neg_gpio_gpioSetPinCfg_invalidType(void)
 void test_neg_gpio_gpioGetPinCfg_nullHandle(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = PMIC_GPIO_PIN1
     };
 
@@ -187,7 +187,7 @@ void test_neg_gpio_gpioGetPinCfg_nullConfig(void)
 void test_neg_gpio_gpioGetPinCfg_invalidPin(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = 10U
     };
 
@@ -199,7 +199,7 @@ void test_neg_gpio_gpioGetPinCfg_invalidPin(void)
 void test_neg_gpio_setPinCfg_invalidGpioPin(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = PMIC_GPIO_PIN_MAX + 1U,
         .dir = PMIC_GPIO_PIN_OUTPUT
     };
@@ -212,7 +212,7 @@ void test_neg_gpio_setPinCfg_invalidGpioPin(void)
 void test_neg_gpio_getPinCfg_invalidGpioPin(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
         .pinNum = PMIC_GPIO_PIN_MAX + 1U
     };
 
@@ -261,7 +261,7 @@ void test_neg_gpio_gpioGetPinVal_invalidPin(void)
 void test_neg_gpio_gpioSetNIntEnDrvCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID,
         .fxnSel = PMIC_GPIO_NINT_ENDRV_FXN_SEL_NINT
     };
 
@@ -280,7 +280,7 @@ void test_neg_gpio_gpioSetNIntEnDrvCfg_nullConfig(void)
 void test_neg_gpio_gpioSetNIntEnDrvCfg_invalidFunction(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID,
         .fxnSel = 2U  // Invalid, max is 1
     };
 
@@ -292,7 +292,7 @@ void test_neg_gpio_gpioSetNIntEnDrvCfg_invalidFunction(void)
 void test_neg_gpio_gpioGetNIntEnDrvCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID
     };
 
     int32_t status = Pmic_gpioGetNIntEnDrvCfg(NULL, &cfg);
@@ -325,7 +325,7 @@ void test_neg_gpio_gpioGetNIntEnDrvVal_nullValue(void)
 void test_neg_gpio_gpioSetEnPbVSenseCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE
     };
 
@@ -344,7 +344,7 @@ void test_neg_gpio_gpioSetEnPbVSenseCfg_nullConfig(void)
 void test_neg_gpio_gpioSetEnPbVSenseCfg_invalidFunction(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = 3U  // Invalid, max is 2
     };
 
@@ -356,7 +356,7 @@ void test_neg_gpio_gpioSetEnPbVSenseCfg_invalidFunction(void)
 void test_neg_gpio_gpioGetEnPbVSenseCfg_nullHandle(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID
     };
 
     int32_t status = Pmic_gpioGetEnPbVSenseCfg(NULL, &cfg);
@@ -407,7 +407,7 @@ void test_neg_gpio_gpioGetNRstOutVal_nullValue(void)
 void test_neg_gpio_gpiosetFunction_invalidFunctionality(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .fxnSel = TEST_MASK_FULL_BYTE  // Invalid function select value
     };
@@ -445,7 +445,7 @@ void test_pos_gpio_getNIntEnDrvCfg_enPuResistor(void)
 
     /* First, set PU resistor enable */
     Pmic_GpioNIntEnDrvCfg_t cfgSet = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID,
         .enPuResistor = true
     };
 
@@ -454,7 +454,7 @@ void test_pos_gpio_getNIntEnDrvCfg_enPuResistor(void)
 
     /* Now read it back */
     Pmic_GpioNIntEnDrvCfg_t cfgGet = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID
     };
 
     status = Pmic_gpioGetNIntEnDrvCfg(&pmicHandle, &cfgGet);
@@ -470,7 +470,7 @@ void test_pos_gpio_getNIntEnDrvCfg_enPuResistor(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio1_configOutput(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .fxnSel = PMIC_GPIO_PIN1_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_OUTPUT
@@ -484,7 +484,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio1_configOutput(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio1_getConfig(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1
     };
 
@@ -518,8 +518,8 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio1_getValue(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio3_configInputPullUp(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_PU_SEL_VALID |
-                       PMIC_GPIO_RESISTOR_EN_VALID | PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_PU_SEL_VALID |
+                       PMIC_CFG_GPIO_RESISTOR_EN_VALID | PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN3,
         .fxnSel = PMIC_GPIO_PIN3_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_INPUT,
@@ -535,8 +535,8 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio3_configInputPullUp(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio3_getConfig(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_PU_SEL_VALID |
-                       PMIC_GPIO_RESISTOR_EN_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_PU_SEL_VALID |
+                       PMIC_CFG_GPIO_RESISTOR_EN_VALID,
         .pinNum = PMIC_GPIO_PIN3
     };
 
@@ -548,8 +548,8 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio3_getConfig(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio5_configOutputOpenDrain(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_TYPE_VALID |
-                       PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_TYPE_VALID |
+                       PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN5,
         .fxnSel = PMIC_GPIO_PIN5_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_OUTPUT,
@@ -564,7 +564,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio5_configOutputOpenDrain(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio5_getConfig(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_TYPE_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_TYPE_VALID,
         .pinNum = PMIC_GPIO_PIN5
     };
 
@@ -576,8 +576,8 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio5_getConfig(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio6_configInputDeglitch(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_DEGL_EN_VALID |
-                       PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_DEGL_EN_VALID |
+                       PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN6,
         .fxnSel = PMIC_GPIO_PIN6_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_INPUT,
@@ -592,7 +592,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio6_configInputDeglitch(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio6_getConfig(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_DEGL_EN_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_DEGL_EN_VALID,
         .pinNum = PMIC_GPIO_PIN6
     };
 
@@ -627,8 +627,8 @@ void test_pos_gpio_gpioSetGetPinVal_gpio2_setGetSequence(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio4_configInputPullDown(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_PU_SEL_VALID |
-                       PMIC_GPIO_RESISTOR_EN_VALID | PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_PU_SEL_VALID |
+                       PMIC_CFG_GPIO_RESISTOR_EN_VALID | PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN4,
         .fxnSel = PMIC_GPIO_PIN4_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_INPUT,
@@ -644,7 +644,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio4_configInputPullDown(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio1_funcSdoSpi(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN1,
         .fxnSel = PMIC_GPIO_PIN1_FXN_SEL_SDO_SPI
     };
@@ -657,7 +657,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio1_funcSdoSpi(void)
 void test_pos_gpio_gpioSetGetPinVal_gpio2_funcNsleep1(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN2,
         .fxnSel = PMIC_GPIO_PIN2_FXN_SEL_NSLEEP1
     };
@@ -670,7 +670,7 @@ void test_pos_gpio_gpioSetGetPinVal_gpio2_funcNsleep1(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio3_funcPb(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN3,
         .fxnSel = PMIC_GPIO_PIN3_FXN_SEL_PB
     };
@@ -683,7 +683,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio3_funcPb(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio5_funcWkup(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN5,
         .fxnSel = PMIC_GPIO_PIN5_FXN_SEL_WKUP
     };
@@ -696,7 +696,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio5_funcWkup(void)
 void test_pos_gpio_gpioSetGetPinCfg_gpio6_funcSyncClkIn(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN6,
         .fxnSel = PMIC_GPIO_PIN6_FXN_SEL_SYNCCLKIN
     };
@@ -709,7 +709,7 @@ void test_pos_gpio_gpioSetGetPinCfg_gpio6_funcSyncClkIn(void)
 void test_pos_gpio_gpioSetGetNIntEnDrvCfg_configNInt(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID,
         .fxnSel = PMIC_GPIO_NINT_ENDRV_FXN_SEL_NINT
     };
 
@@ -721,7 +721,7 @@ void test_pos_gpio_gpioSetGetNIntEnDrvCfg_configNInt(void)
 void test_pos_gpio_gpioSetGetNIntEnDrvCfg_configEnDrv(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID,
         .fxnSel = PMIC_GPIO_NINT_ENDRV_FXN_SEL_EN_DRV
     };
 
@@ -733,7 +733,7 @@ void test_pos_gpio_gpioSetGetNIntEnDrvCfg_configEnDrv(void)
 void test_pos_gpio_gpioSetGetNIntEnDrvCfg_getConfig(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID
     };
 
     int32_t status = Pmic_gpioGetNIntEnDrvCfg(&pmicHandle, &cfg);
@@ -744,7 +744,7 @@ void test_pos_gpio_gpioSetGetNIntEnDrvCfg_getConfig(void)
 void test_pos_gpio_gpioSetGetNIntEnDrvCfg_enablePullUp(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID,
         .enPuResistor = true
     };
 
@@ -764,7 +764,7 @@ void test_pos_gpio_gpioSetGetNIntEnDrvCfg_getValue(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configEnable(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE
     };
 
@@ -776,7 +776,7 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configEnable(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_PB
     };
 
@@ -788,7 +788,7 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configVSense(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE
     };
 
@@ -800,7 +800,7 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_configVSense(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID
     };
 
     int32_t status = Pmic_gpioGetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -811,8 +811,8 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchEnable(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID |
-                       PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID |
+                       PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE,
         .enPbDegl = PMIC_GPIO_EN_DEGLITCH_50_MS
     };
@@ -825,8 +825,8 @@ void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchEnable(void)
 void test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchPb(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_FN_VALID |
-                       PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID |
+                       PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_PB,
         .enPbDegl = PMIC_GPIO_PB_DEGLITCH_600_MS
     };
@@ -860,8 +860,8 @@ void test_pos_gpio_gpioGetNRstOutVal_getValue(void)
 void test_pos_gpio_gpioSetPinCfg_pushPull(void)
 {
     Pmic_GpioPinCfg_t cfg = {
-        .validParams = PMIC_GPIO_TYPE_VALID | PMIC_GPIO_DIR_VALID |
-                       PMIC_GPIO_FXN_SEL_VALID,
+        .validParams = PMIC_CFG_GPIO_TYPE_VALID | PMIC_CFG_GPIO_DIR_VALID |
+                       PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN2,
         .fxnSel = PMIC_GPIO_PIN2_FXN_SEL_GPIO,
         .dir = PMIC_GPIO_PIN_OUTPUT,
@@ -946,9 +946,9 @@ void test_pos_gpio_property_pinConfigurations(void)
 
         // Set configuration
         Pmic_GpioPinCfg_t setCfg = {
-            .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_PU_SEL_VALID |
-                          PMIC_GPIO_TYPE_VALID | PMIC_GPIO_RESISTOR_EN_VALID |
-                          PMIC_GPIO_DEGL_EN_VALID | PMIC_GPIO_FXN_SEL_VALID,
+            .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_PU_SEL_VALID |
+                          PMIC_CFG_GPIO_TYPE_VALID | PMIC_CFG_GPIO_RESISTOR_EN_VALID |
+                          PMIC_CFG_GPIO_DEGL_EN_VALID | PMIC_CFG_GPIO_FXN_SEL_VALID,
             .pinNum = pin,
             .fxnSel = 0U,  // GPIO function
             .dir = dir,
@@ -964,9 +964,9 @@ void test_pos_gpio_property_pinConfigurations(void)
         {
             // Get configuration and verify
             Pmic_GpioPinCfg_t getCfg = {
-                .validParams = PMIC_GPIO_DIR_VALID | PMIC_GPIO_PU_SEL_VALID |
-                              PMIC_GPIO_TYPE_VALID | PMIC_GPIO_RESISTOR_EN_VALID |
-                              PMIC_GPIO_DEGL_EN_VALID,
+                .validParams = PMIC_CFG_GPIO_DIR_VALID | PMIC_CFG_GPIO_PU_SEL_VALID |
+                              PMIC_CFG_GPIO_TYPE_VALID | PMIC_CFG_GPIO_RESISTOR_EN_VALID |
+                              PMIC_CFG_GPIO_DEGL_EN_VALID,
                 .pinNum = pin
             };
 
@@ -1037,7 +1037,7 @@ void test_neg_gpio_gpiosetEnPbVSenseCfg_zeroValidParams(void)
 void test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_NINT_ENDRV_FXN_SEL_VALID | PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID | PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
         .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_ENABLE,
         .enPbDegl = PMIC_GPIO_EN_DEGL_MAX + 1  /* Invalid deglitch for EN function */
     };
@@ -1053,7 +1053,7 @@ void test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch(void)
 void test_pos_gpio_getEnPbDegl(void)
 {
     Pmic_GpioNIntEnDrvCfg_t cfg = {
-        .validParams = PMIC_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID
     };
 
     int32_t status = Pmic_gpioGetEnPbVSenseCfg(&pmicHandle, &cfg);
@@ -1084,14 +1084,14 @@ void gpio_test(void *args)
     int32_t status;
 
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle0(),

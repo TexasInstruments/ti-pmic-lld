@@ -50,12 +50,18 @@ extern "C" {
 /* ======================================================================== */
 /*                        Test APIs: fsmSetDevState                         */
 /* ======================================================================== */
+#define FSM_TEST_POS_FSMSETDEVSTATE() \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_safeRecovery); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_warmReset); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_lowPowerEntryExit)
+
 #define FSM_TEST_NEG_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_invalid_fsmCmd)
 
 /* Test: TC-FSM-0035 */
 #define FSM_TEST_FSMSETDEVSTATE() \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_NEG_FSMSETDEVSTATE()
 
 /* ======================================================================== */
@@ -165,6 +171,7 @@ extern "C" {
 /* ========================================================================== */
 
 #define FSM_TEST_RUN_POSITIVE() \
+    FSM_TEST_POS_FSMSETDEVSTATE(); \
     FSM_TEST_POS_FSMSETRECOVCNTTHR(); \
     FSM_TEST_POS_FSMGETRECOVCNT(); \
     FSM_TEST_POS_FSMSETRESETCNTTHR(); \
@@ -192,6 +199,9 @@ extern "C" {
 void fsm_test(void *args);
 
 /* fsmSetDevState API tests */
+void test_pos_fsm_fsmSetDevState_safeRecovery(void);
+void test_pos_fsm_fsmSetDevState_warmReset(void);
+void test_pos_fsm_fsmSetDevState_lowPowerEntryExit(void);
 void test_neg_fsm_fsmSetDevState_nullParam_pmicHandle(void);
 void test_neg_fsm_fsmSetDevState_invalid_fsmCmd(void);
 

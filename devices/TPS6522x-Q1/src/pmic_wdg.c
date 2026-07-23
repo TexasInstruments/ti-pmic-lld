@@ -162,7 +162,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_MODE_SEL_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_MODE_VALID))
     {
         if (wdgCfg->mode > PMIC_WDG_MODE_MAX)
         {
@@ -170,7 +170,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_WIN1_CODE_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_WIN1_CODE_VALID))
     {
         if (wdgCfg->win1Code > PMIC_WDG_WIN1_CODE_MAX)
         {
@@ -178,7 +178,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_WIN2_CODE_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_WIN2_CODE_VALID))
     {
         if (wdgCfg->win2Code > PMIC_WDG_WIN2_CODE_MAX)
         {
@@ -186,7 +186,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_FDBK_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID))
     {
         if (wdgCfg->qaFdbk > PMIC_WDG_QA_FDBK_MAX)
         {
@@ -194,7 +194,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_LFSR_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID))
     {
         if (wdgCfg->qaLfsr > PMIC_WDG_QA_LFSR_MAX)
         {
@@ -202,7 +202,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_SEED_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_SEED_VALID))
     {
         if (wdgCfg->qaSeed > PMIC_WDG_QA_SEED_MAX)
         {
@@ -210,7 +210,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_FAIL_THR_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID))
     {
         if (wdgCfg->failThr > PMIC_WDG_FAIL_THR_MAX)
         {
@@ -218,7 +218,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_THR_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_THR_VALID))
     {
         if (wdgCfg->rstThr > PMIC_WDG_RST_THR_MAX)
         {
@@ -226,7 +226,7 @@ static int32_t Pmic_wdgValidateCfg(const Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_CNT_SEL_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CNT_SEL_VALID))
     {
         if (wdgCfg->cntSel > PMIC_WDG_CNT_SEL_MAX)
         {
@@ -281,17 +281,17 @@ static int32_t Pmic_wdgSetModeReg(const Pmic_Handle_t *handle, const Pmic_WdgCfg
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_MODE_SEL_VALID))
+        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_MODE_VALID))
         {
             Pmic_setBitField_b(&regData, WD_MODE_SELECT_SHIFT, WD_MODE_SELECT_MASK, (wdgCfg->mode != 0U));
         }
 
-        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_CNT_SEL_VALID))
+        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CNT_SEL_VALID))
         {
             Pmic_setBitField_b(&regData, WD_CNT_SEL_SHIFT, WD_CNT_SEL_MASK, (wdgCfg->cntSel != 0U));
         }
 
-        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_EN_DRV_SEL_VALID))
+        if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID))
         {
             Pmic_setBitField_b(&regData, WD_ENDRV_SEL_SHIFT, WD_ENDRV_SEL_MASK, wdgCfg->clrEnDrvOnFailInt);
         }
@@ -312,25 +312,25 @@ static int32_t Pmic_wdgSetQaCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t
     uint8_t regData = 0U;
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_FDBK_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_LFSR_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_SEED_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_SEED_VALID))
     {
         status = Pmic_ioRxByte(handle, WD_QA_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_FDBK_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID))
             {
                 Pmic_setBitField(&regData, WD_QA_FDBK_SHIFT, WD_QA_FDBK_MASK, wdgCfg->qaFdbk);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_LFSR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID))
             {
                 Pmic_setBitField(&regData, WD_QA_LFSR_SHIFT, WD_QA_LFSR_MASK, wdgCfg->qaLfsr);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_SEED_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_SEED_VALID))
             {
                 Pmic_setBitField(&regData, WD_QUESTION_SEED_SHIFT, WD_QUESTION_SEED_MASK, wdgCfg->qaSeed);
             }
@@ -352,25 +352,25 @@ static int32_t Pmic_wdgSetThrCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_
     uint8_t regData = 0U;
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_EN_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_FAIL_THR_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_THR_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_EN_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_THR_VALID))
     {
         status = Pmic_ioRxByte(handle, WD_THR_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_EN_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, WD_RST_EN_SHIFT, WD_RST_EN_MASK, wdgCfg->rstEn);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_FAIL_THR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID))
             {
                 Pmic_setBitField(&regData, WD_FAIL_TH_SHIFT, WD_FAIL_TH_MASK, wdgCfg->failThr);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_THR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_THR_VALID))
             {
                 Pmic_setBitField(&regData, WD_RST_TH_SHIFT, WD_RST_TH_MASK, wdgCfg->rstThr);
             }
@@ -391,25 +391,25 @@ static int32_t Pmic_wdgGetModeReg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wd
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_MODE_SEL_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_CNT_SEL_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_EN_DRV_SEL_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_MODE_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CNT_SEL_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_MODE_REG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_MODE_SEL_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_MODE_VALID))
             {
                 wdgCfg->mode = (Pmic_getBitField_b(regData, WD_MODE_SELECT_SHIFT) != false) ? 1U : 0U;
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_CNT_SEL_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CNT_SEL_VALID))
             {
                 wdgCfg->cntSel = (Pmic_getBitField_b(regData, WD_CNT_SEL_SHIFT) != false) ? 1U : 0U;
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_EN_DRV_SEL_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID))
             {
                 wdgCfg->clrEnDrvOnFailInt = Pmic_getBitField_b(regData, WD_ENDRV_SEL_SHIFT);
             }
@@ -427,25 +427,25 @@ static int32_t Pmic_wdgGetQaCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgC
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_FDBK_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_LFSR_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_SEED_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_SEED_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_QA_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_FDBK_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID))
             {
                 wdgCfg->qaFdbk = Pmic_getBitField(regData, WD_QA_FDBK_SHIFT, WD_QA_FDBK_MASK);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_LFSR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID))
             {
                 wdgCfg->qaLfsr = Pmic_getBitField(regData, WD_QA_LFSR_SHIFT, WD_QA_LFSR_MASK);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_QA_SEED_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_SEED_VALID))
             {
                 wdgCfg->qaSeed = Pmic_getBitField(regData, WD_QUESTION_SEED_SHIFT, WD_QUESTION_SEED_MASK);
             }
@@ -463,25 +463,25 @@ static int32_t Pmic_wdgGetThrCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdg
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_EN_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_FAIL_THR_VALID) ||
-        Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_THR_VALID))
+    if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_EN_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID) ||
+        Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_THR_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_THR_CFG_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_EN_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_EN_VALID))
             {
                 wdgCfg->rstEn = Pmic_getBitField_b(regData, WD_RST_EN_SHIFT);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_FAIL_THR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID))
             {
                 wdgCfg->failThr = Pmic_getBitField(regData, WD_FAIL_TH_SHIFT, WD_FAIL_TH_MASK);
             }
 
-            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_WDG_RST_THR_VALID))
+            if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_THR_VALID))
             {
                 wdgCfg->rstThr = Pmic_getBitField(regData, WD_RST_TH_SHIFT, WD_RST_TH_MASK);
             }
@@ -556,17 +556,17 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *wdgCfg)
         status = Pmic_wdgSetModeReg(handle, &wdgCfgLocal);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_WIN1_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_WIN1_CODE_VALID))
     {
         status = Pmic_ioUpdateByte_CS(handle, WD_WIN1_CFG_REG, WD_WIN_SHIFT, WD_WIN_MASK, wdgCfgLocal.win1Code);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_WIN2_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_WIN2_CODE_VALID))
     {
         status = Pmic_ioUpdateByte_CS(handle, WD_WIN2_CFG_REG, WD_WIN_SHIFT, WD_WIN_MASK, wdgCfgLocal.win2Code);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_LONG_WIN_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_LONG_WIN_CODE_VALID))
     {
         status = Pmic_ioTxByte_CS(handle, WD_LONGWIN_CFG_REG, wdgCfgLocal.longWinCode);
     }
@@ -601,7 +601,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
         status = Pmic_wdgGetModeReg(handle, &wdgCfgLocal);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_WIN1_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_WIN1_CODE_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_WIN1_CFG_REG, &regData);
         if (status == PMIC_ST_SUCCESS)
@@ -610,7 +610,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_WIN2_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_WIN2_CODE_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_WIN2_CFG_REG, &regData);
         if (status == PMIC_ST_SUCCESS)
@@ -619,7 +619,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *wdgCfg)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_WDG_LONG_WIN_CODE_VALID))
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(wdgCfgLocal.validParams, PMIC_CFG_WDG_LONG_WIN_CODE_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, WD_LONGWIN_CFG_REG, &wdgCfgLocal.longWinCode);
     }

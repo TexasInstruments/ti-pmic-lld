@@ -177,8 +177,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_IRQ_CFG_MASK_VALID         (1UL << 0U)
-#define PMIC_IRQ_CFG_CONFIG_VALID       (1UL << 1U)
+#define PMIC_CFG_IRQ_MASK_VALID         (1UL << 0U)
+#define PMIC_CFG_IRQ_CONFIG_VALID       (1UL << 1U)
 /** @} */
 
 /**
@@ -190,8 +190,8 @@ extern "C" {
  * @{
  */
 #define PMIC_IRQ_CFG_ALL_VALID_SHIFT (\
-    PMIC_IRQ_CFG_MASK_VALID |\
-    PMIC_IRQ_CFG_CONFIG_VALID)
+    PMIC_CFG_IRQ_MASK_VALID |\
+    PMIC_CFG_IRQ_CONFIG_VALID)
 /** @} */
 
 /**

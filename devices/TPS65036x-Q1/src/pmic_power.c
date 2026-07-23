@@ -2495,8 +2495,8 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
     Pmic_PwrTsdCfg_t localTsdCfg = {0};
-    const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
-        PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
+    const uint32_t config1ValidParam = PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID |
+        PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID | PMIC_CFG_PWR_TWARN_LEVEL_VALID;
 
     if ((status == PMIC_ST_SUCCESS) && (tsdCfg == NULL))
     {
@@ -2526,13 +2526,13 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
     }
 
     // Modify TWARN_CONFIG bit field
-    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_TWARN_STAY_IN_SAFE_STATE_VALID, status))
+    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID, status))
     {
         Pmic_setBitField_b(&regData, PMIC_TWARN_CONFIG_SHIFT, PMIC_TWARN_CONFIG_MASK, localTsdCfg.twarnStayInSafeState);
     }
 
     // Modify TSD_IMM_LEVEL bit field
-    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_TSD_IMM_LEVEL_VALID, status))
+    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID, status))
     {
         if (localTsdCfg.tsdImmLevel > PMIC_TSD_IMM_LEVEL_MAX)
         {
@@ -2545,7 +2545,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
     }
 
     // Modify TWARN_LEVEL bit field
-    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_TWARN_LEVEL_VALID, status))
+    if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TWARN_LEVEL_VALID, status))
     {
         if (localTsdCfg.twarnLevel > PMIC_TWARN_LEVEL_MAX)
         {
@@ -2572,8 +2572,8 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
     Pmic_PwrTsdCfg_t localTsdCfg = {0};
-    const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
-        PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
+    const uint32_t config1ValidParam = PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID |
+        PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID | PMIC_CFG_PWR_TWARN_LEVEL_VALID;
 
     if ((status == PMIC_ST_SUCCESS) && (tsdCfg == NULL))
     {
@@ -2604,19 +2604,19 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_Handle_t *handle, Pmic_PwrTsdCfg_t *tsdCfg)
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract TWARN_CONFIG bit field
-        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_TWARN_STAY_IN_SAFE_STATE_VALID))
+        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID))
         {
             localTsdCfg.twarnStayInSafeState = Pmic_getBitField_b(regData, PMIC_TWARN_CONFIG_SHIFT);
         }
 
         // Extract TSD_IMM_LEVEL bit field
-        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_TSD_IMM_LEVEL_VALID))
+        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID))
         {
             localTsdCfg.tsdImmLevel = Pmic_getBitField(regData, PMIC_TSD_IMM_LEVEL_SHIFT, PMIC_TSD_IMM_LEVEL_MASK);
         }
 
         // Extract TWARN_LEVEL bit field
-        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_TWARN_LEVEL_VALID))
+        if (Pmic_validParamCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TWARN_LEVEL_VALID))
         {
             localTsdCfg.twarnLevel = Pmic_getBitField(regData, PMIC_TWARN_LEVEL_SHIFT, PMIC_TWARN_LEVEL_MASK);
         }
@@ -2944,14 +2944,14 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeq
                 if (status == PMIC_ST_SUCCESS)
                 {
                     // Extract SEQ_DLY_OFF bit field
-                    if (Pmic_validParamCheck(localSeqDlyCfg[i].validParams, PMIC_SEQ_DLY_OFF_VALID))
+                    if (Pmic_validParamCheck(localSeqDlyCfg[i].validParams, PMIC_CFG_PWR_SEQ_DLY_OFF_VALID))
                     {
                         localSeqDlyCfg[i].seqDlyOff = Pmic_getBitField(
                             regData, PMIC_REGULATOR_SEQ_DLY_OFF_SHIFT, PMIC_REGULATOR_SEQ_DLY_OFF_MASK);
                     }
 
                     // Extract SEQ_DLY_ON bit field
-                    if (Pmic_validParamCheck(localSeqDlyCfg[i].validParams, PMIC_SEQ_DLY_ON_VALID))
+                    if (Pmic_validParamCheck(localSeqDlyCfg[i].validParams, PMIC_CFG_PWR_SEQ_DLY_ON_VALID))
                     {
                         localSeqDlyCfg[i].seqDlyOn = Pmic_getBitField(
                             regData, PMIC_REGULATOR_SEQ_DLY_ON_SHIFT, PMIC_REGULATOR_SEQ_DLY_ON_MASK);
@@ -3024,7 +3024,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
             }
 
             // Modify SEQ_DLY_OFF bit field
-            if (Pmic_validParamStatusCheck(localSeqDlyCfg[i].validParams, PMIC_SEQ_DLY_OFF_VALID, status))
+            if (Pmic_validParamStatusCheck(localSeqDlyCfg[i].validParams, PMIC_CFG_PWR_SEQ_DLY_OFF_VALID, status))
             {
                 if (localSeqDlyCfg[i].seqDlyOff > PMIC_SEQ_DLY_MAX)
                 {
@@ -3038,7 +3038,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
             }
 
             // Modify SEQ_DLY_ON bit field
-            if (Pmic_validParamStatusCheck(localSeqDlyCfg[i].validParams, PMIC_SEQ_DLY_ON_VALID, status))
+            if (Pmic_validParamStatusCheck(localSeqDlyCfg[i].validParams, PMIC_CFG_PWR_SEQ_DLY_ON_VALID, status))
             {
                 if (localSeqDlyCfg[i].seqDlyOn > PMIC_SEQ_DLY_MAX)
                 {

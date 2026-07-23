@@ -311,11 +311,11 @@ int32_t Pmic_getDiagnostic(const Pmic_Handle_t *handle, Pmic_Diagnostic_t *diagn
             return PMIC_ST_ERR_INV_STATUS_ID;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             localDiagnostic.cnt = sysDiagnostics.errCnt[statusId];
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
             localDiagnostic.flag = sysDiagnostics.errCntOverflow[statusId];
         }
     // Get counter value and flag state for warning type
@@ -326,11 +326,11 @@ int32_t Pmic_getDiagnostic(const Pmic_Handle_t *handle, Pmic_Diagnostic_t *diagn
             return PMIC_ST_ERR_INV_STATUS_ID;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             localDiagnostic.cnt = sysDiagnostics.warnCnt[statusId];
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
             localDiagnostic.flag = sysDiagnostics.warnCntOverflow[statusId];
         }
     // This API does not support getting diagnostic information for other status types
@@ -397,11 +397,11 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
                 localDiagnostics[i].cnt = sysDiagnostics.errCnt[statusId];
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
                 localDiagnostics[i].flag = sysDiagnostics.errCntOverflow[statusId];
             }
         // Get counter value and flag state for warning type
@@ -412,11 +412,11 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
                 localDiagnostics[i].cnt = sysDiagnostics.warnCnt[statusId];
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
                 localDiagnostics[i].flag = sysDiagnostics.warnCntOverflow[statusId];
             }
         // This API does not support getting diagnostic information for other status types
@@ -476,11 +476,11 @@ int32_t Pmic_clrDiagnostic(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t 
             return PMIC_ST_ERR_INV_STATUS_ID;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             sysDiagnostics.errCnt[statusId] = 0U;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
             sysDiagnostics.errCntOverflow[statusId] = (bool)false;
         }
     // Clear counter and flag for warning type
@@ -491,11 +491,11 @@ int32_t Pmic_clrDiagnostic(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t 
             return PMIC_ST_ERR_INV_STATUS_ID;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             sysDiagnostics.warnCnt[statusId] = 0U;
         }
 
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
             sysDiagnostics.warnCntOverflow[statusId] = (bool)false;
         }
     // This API does not support clearing diagnostic information for other status types
@@ -561,11 +561,11 @@ int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
                 sysDiagnostics.errCnt[statusId] = 0U;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
                 sysDiagnostics.errCntOverflow[statusId] = (bool)false;
             }
         // Clear counter and flag for warning type
@@ -576,11 +576,11 @@ int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t
                 return PMIC_ST_ERR_INV_STATUS_ID;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_CNT_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
                 sysDiagnostics.warnCnt[statusId] = 0U;
             }
 
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_DIAGNOSTIC_FLAG_VALID)) {
+            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
                 sysDiagnostics.warnCntOverflow[statusId] = (bool)false;
             }
         // This API does not support clearing diagnostic information for other status types

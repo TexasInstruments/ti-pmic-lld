@@ -57,17 +57,20 @@ void core_test(void *args)
     (void)args;
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+
     Pmic_HandleCfg_t coreCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_CRC_ENABLE_VALID |
-                        PMIC_CONFIG_CRC_ENABLE_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .crcEnable = PMIC_DISABLE,
@@ -79,8 +82,6 @@ void core_test(void *args)
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse
     };
-
-    platform_init();
 
     testTimer_startModule("Core");
 
@@ -421,7 +422,7 @@ void test_neg_core_init_invalidDeviceType(void)
     // Test init with invalid configuration (null handle)
     // This covers error handling in Pmic_init for invalid parameters
     Pmic_HandleCfg_t invalidCfg = {
-        .validParams = PMIC_COMM_MODE_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID,
         .commMode = PMIC_INTF_MAX + 1U  // Invalid comm mode
     };
     Pmic_Handle_t tempHandle;

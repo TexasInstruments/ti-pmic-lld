@@ -244,7 +244,7 @@ void test_pos_common_logStatus_validError(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
     PLATFORM_ASSERT(g_critSecStartCallCount > 0);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -265,7 +265,7 @@ void test_pos_common_logStatus_validWarning(void)
     status = Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -326,7 +326,7 @@ void test_pos_common_logStatus_allErrorCodes(void)
         status = Pmic_logStatus(&handle, errorCodes[i]);
         PLATFORM_ASSERT(status == errorCodes[i]);
 
-        diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+        diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
         diag.code = errorCodes[i];
         status = Pmic_getDiagnostic(&handle, &diag);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -341,7 +341,7 @@ void test_pos_common_logStatus_allErrorCodes(void)
 void test_neg_common_getDiagnostic_nullHandle(void)
 {
     Pmic_Diagnostic_t diag = {0};
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostic(NULL, &diag);
@@ -381,7 +381,7 @@ void test_neg_common_getDiagnostic_invalidStatusCode(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -403,7 +403,7 @@ void test_pos_common_getDiagnostic_errorCnt(void)
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -421,7 +421,7 @@ void test_pos_common_getDiagnostic_errorFlag(void)
 
     Pmic_clrDiagnosticsAll(&handle);
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -442,7 +442,7 @@ void test_pos_common_getDiagnostic_warningCnt(void)
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -460,7 +460,7 @@ void test_pos_common_getDiagnostic_warningFlag(void)
 
     Pmic_clrDiagnosticsAll(&handle);
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -475,7 +475,7 @@ void test_neg_common_getDiagnostic_successType(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_SUCCESS;
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -490,7 +490,7 @@ void test_neg_common_getDiagnostic_nullCritSecStart(void)
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -505,7 +505,7 @@ void test_neg_common_getDiagnostic_nullCritSecStop(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -527,11 +527,11 @@ void test_pos_common_getDiagnostics_multiple(void)
     Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
-    diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[1].code = PMIC_ST_ERR_INV_PARAM;
-    diags[2].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[2].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[2].code = PMIC_ST_WARN_NO_IRQ_REMAINING;
 
     status = Pmic_getDiagnostics(&handle, diags, 3U);
@@ -573,7 +573,7 @@ void test_neg_common_getDiagnostics_nullCritSecStart(void)
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 1U);
@@ -588,7 +588,7 @@ void test_neg_common_getDiagnostics_nullCritSecStop(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 1U);
@@ -602,7 +602,7 @@ void test_neg_common_getDiagnostics_nullCritSecStop(void)
 void test_neg_common_clrDiagnostic_nullHandle(void)
 {
     Pmic_Diagnostic_t diag = {0};
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostic(NULL, &diag);
@@ -623,12 +623,12 @@ void test_pos_common_clrDiagnostic_errorCnt(void)
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -648,12 +648,12 @@ void test_pos_common_clrDiagnostic_warningCnt(void)
 
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -674,21 +674,21 @@ void test_pos_common_clrDiagnostics_multiple(void)
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     Pmic_logStatus(&handle, PMIC_ST_ERR_INV_PARAM);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
-    diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[1].code = PMIC_ST_ERR_INV_PARAM;
 
     status = Pmic_clrDiagnostics(&handle, diags, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diags[0]);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diags[0].cnt == 0U);
 
-    diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[1].code = PMIC_ST_ERR_INV_PARAM;
     status = Pmic_getDiagnostic(&handle, &diags[1]);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -711,13 +711,13 @@ void test_pos_common_clrDiagnosticsAll_clearAll(void)
     status = Pmic_clrDiagnosticsAll(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diag.cnt == 0U);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -745,7 +745,7 @@ void test_pos_common_overflow_errorCnt(void)
         Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID | PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID | PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -769,7 +769,7 @@ void test_pos_common_overflow_warningCnt(void)
         Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     }
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID | PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID | PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1075,7 +1075,7 @@ void test_pos_common_logStatus_successTypeInvalidId(void)
 void test_neg_common_getDiagnostics_nullHandle(void)
 {
     Pmic_Diagnostic_t diags[2] = {0};
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_getDiagnostics(NULL, diags, 2U);
@@ -1100,7 +1100,7 @@ void test_neg_common_getDiagnostics_zeroValidParamsInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
     diags[1].validParams = 0U;
     diags[1].code = PMIC_ST_ERR_INV_PARAM;
@@ -1117,9 +1117,9 @@ void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
-    diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[1].code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 2U);
@@ -1134,7 +1134,7 @@ void test_neg_common_getDiagnostics_successTypeInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_SUCCESS;
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 1U);
@@ -1174,7 +1174,7 @@ void test_neg_common_clrDiagnostic_invalidStatusCode(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1189,7 +1189,7 @@ void test_neg_common_clrDiagnostic_successType(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_SUCCESS;
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1212,12 +1212,12 @@ void test_pos_common_clrDiagnostic_errorFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID | PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID | PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1241,12 +1241,12 @@ void test_pos_common_clrDiagnostic_warningFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     }
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_FLAG_VALID | PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID | PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_WARN_NO_IRQ_REMAINING;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1262,7 +1262,7 @@ void test_neg_common_clrDiagnostic_nullCritSecStart(void)
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1277,7 +1277,7 @@ void test_neg_common_clrDiagnostic_nullCritSecStop(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1287,7 +1287,7 @@ void test_neg_common_clrDiagnostic_nullCritSecStop(void)
 void test_neg_common_clrDiagnostics_nullHandle(void)
 {
     Pmic_Diagnostic_t diags[1] = {0};
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostics(NULL, diags, 1U);
@@ -1336,7 +1336,7 @@ void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
     diags[1].validParams = 0U;
     diags[1].code = PMIC_ST_ERR_INV_PARAM;
@@ -1353,9 +1353,9 @@ void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
-    diags[1].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[1].code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 2U);
@@ -1370,7 +1370,7 @@ void test_neg_common_clrDiagnostics_successTypeInArray(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_SUCCESS;
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 1U);
@@ -1414,7 +1414,7 @@ void test_pos_common_getDiagnostics_errorFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     status = Pmic_getDiagnostics(&handle, diags, 1U);
@@ -1438,7 +1438,7 @@ void test_pos_common_getDiagnostics_warningFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     }
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diags[0].code = PMIC_ST_WARN_NO_IRQ_REMAINING;
 
     status = Pmic_getDiagnostics(&handle, diags, 1U);
@@ -1462,13 +1462,13 @@ void test_pos_common_clrDiagnostics_errorFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     }
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     status = Pmic_clrDiagnostics(&handle, diags, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID | PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID | PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     status = Pmic_getDiagnostic(&handle, &diags[0]);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diags[0].flag == false);
@@ -1488,13 +1488,13 @@ void test_pos_common_clrDiagnostics_warningCntOnly(void)
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_WARN_NO_IRQ_REMAINING;
 
     status = Pmic_clrDiagnostics(&handle, diags, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     status = Pmic_getDiagnostic(&handle, &diags[0]);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diags[0].cnt == 0U);
@@ -1516,13 +1516,13 @@ void test_pos_common_clrDiagnostics_warningFlagOnly(void)
         Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
     }
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID;
     diags[0].code = PMIC_ST_WARN_NO_IRQ_REMAINING;
 
     status = Pmic_clrDiagnostics(&handle, diags, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_FLAG_VALID | PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_FLAG_VALID | PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     status = Pmic_getDiagnostic(&handle, &diags[0]);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(diags[0].flag == false);
@@ -1536,7 +1536,7 @@ void test_neg_common_clrDiagnostics_nullCritSecStart(void)
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = testCritSecStop;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 1U);
@@ -1551,7 +1551,7 @@ void test_neg_common_clrDiagnostics_nullCritSecStop(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
-    diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 1U);
@@ -1636,7 +1636,7 @@ void test_pos_common_logStatus_maxErrorId(void)
     status = Pmic_logStatus(&handle, maxErrorStatus);
     PLATFORM_ASSERT(status == maxErrorStatus);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = maxErrorStatus;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1658,7 +1658,7 @@ void test_pos_common_logStatus_maxWarningId(void)
     status = Pmic_logStatus(&handle, maxWarnStatus);
     PLATFORM_ASSERT(status == maxWarnStatus);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = maxWarnStatus;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1679,7 +1679,7 @@ void test_pos_common_getDiagnostic_maxErrorId(void)
     int32_t maxErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX);
     Pmic_logStatus(&handle, maxErrorCode);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = maxErrorCode;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1700,12 +1700,12 @@ void test_pos_common_clrDiagnostic_maxErrorId(void)
     int32_t maxErrorCode = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX);
     Pmic_logStatus(&handle, maxErrorCode);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = maxErrorCode;
     status = Pmic_clrDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = maxErrorCode;
     status = Pmic_getDiagnostic(&handle, &diag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1733,7 +1733,7 @@ void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -1748,7 +1748,7 @@ void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
 
     int32_t status = Pmic_getDiagnostic(&handle, &diag);
@@ -1763,7 +1763,7 @@ void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1778,7 +1778,7 @@ void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
     handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = testCritSecStop;
 
-    diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
 
     int32_t status = Pmic_clrDiagnostic(&handle, &diag);
@@ -1795,18 +1795,18 @@ void common_test(void *args)
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_I2C_ADDR1_VALID |
-                       PMIC_I2C_ADDR2_VALID |
-                       PMIC_CRC_ENABLE_VALID |
-                       PMIC_CONFIG_CRC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR2_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                       PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .i2cAddr1 = TEST_PATTERN_AA,
@@ -1839,4 +1839,277 @@ void common_test(void *args)
 
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
+}
+
+/* ========================================================================== */
+/*                   Pmic_validParamCheck Test Functions                      */
+/* ========================================================================== */
+
+void test_pos_common_validParamCheck_bitSet(void)
+{
+    const uint32_t validParams = (1UL << 3U);
+
+    PLATFORM_ASSERT(Pmic_validParamCheck(validParams, (1UL << 3U)) == true);
+}
+
+void test_pos_common_validParamCheck_bitClear(void)
+{
+    const uint32_t validParams = (1UL << 3U);
+
+    PLATFORM_ASSERT(Pmic_validParamCheck(validParams, (1UL << 5U)) == false);
+}
+
+void test_pos_common_validParamCheck_noParamsSet(void)
+{
+    PLATFORM_ASSERT(Pmic_validParamCheck(0U, (1UL << 0U)) == false);
+}
+
+void test_pos_common_validParamCheck_allParamsSet(void)
+{
+    PLATFORM_ASSERT(Pmic_validParamCheck(0xFFFFFFFFU, (1UL << 15U)) == true);
+}
+
+void test_pos_common_validParamCheck_multipleParams(void)
+{
+    const uint32_t validParams = (1UL << 0U) | (1UL << 2U) | (1UL << 7U);
+
+    PLATFORM_ASSERT(Pmic_validParamCheck(validParams, (1UL << 2U)) == true);
+    PLATFORM_ASSERT(Pmic_validParamCheck(validParams, (1UL << 4U)) == false);
+}
+
+/* ========================================================================== */
+/*                Pmic_validParamStatusCheck Test Functions                   */
+/* ========================================================================== */
+
+void test_pos_common_validParamStatusCheck_successAndBitSet(void)
+{
+    const uint32_t validParams = (1UL << 2U);
+
+    PLATFORM_ASSERT(Pmic_validParamStatusCheck(validParams, (1UL << 2U), PMIC_ST_SUCCESS) == true);
+}
+
+void test_pos_common_validParamStatusCheck_errorAndBitSet(void)
+{
+    const uint32_t validParams = (1UL << 2U);
+
+    PLATFORM_ASSERT(Pmic_validParamStatusCheck(validParams, (1UL << 2U), PMIC_ST_ERR_NULL_PARAM) == false);
+}
+
+void test_pos_common_validParamStatusCheck_successAndBitClear(void)
+{
+    const uint32_t validParams = (1UL << 1U);
+
+    PLATFORM_ASSERT(Pmic_validParamStatusCheck(validParams, (1UL << 2U), PMIC_ST_SUCCESS) == false);
+}
+
+void test_pos_common_validParamStatusCheck_errorAndBitClear(void)
+{
+    const uint32_t validParams = (1UL << 1U);
+
+    PLATFORM_ASSERT(Pmic_validParamStatusCheck(validParams, (1UL << 2U), PMIC_ST_ERR_NULL_PARAM) == false);
+}
+
+/* ========================================================================== */
+/*                    Pmic_getBitField Test Functions                         */
+/* ========================================================================== */
+
+void test_pos_common_getBitField_lowNibble(void)
+{
+    const uint8_t regData = 0xABU;
+
+    PLATFORM_ASSERT(Pmic_getBitField(regData, 0U, 0x0FU) == 0x0BU);
+}
+
+void test_pos_common_getBitField_highNibble(void)
+{
+    const uint8_t regData = 0xABU;
+
+    PLATFORM_ASSERT(Pmic_getBitField(regData, 4U, 0xF0U) == 0x0AU);
+}
+
+void test_pos_common_getBitField_singleBitSet(void)
+{
+    const uint8_t regData = (uint8_t)(1U << 3U);
+
+    PLATFORM_ASSERT(Pmic_getBitField(regData, 3U, (uint8_t)(1U << 3U)) == 1U);
+}
+
+void test_pos_common_getBitField_singleBitClear(void)
+{
+    const uint8_t regData = (uint8_t)(~(uint8_t)(1U << 3U));
+
+    PLATFORM_ASSERT(Pmic_getBitField(regData, 3U, (uint8_t)(1U << 3U)) == 0U);
+}
+
+void test_pos_common_getBitField_fullByteMask(void)
+{
+    PLATFORM_ASSERT(Pmic_getBitField(TEST_PATTERN_A5, 0U, 0xFFU) == TEST_PATTERN_A5);
+}
+
+void test_pos_common_getBitField_twoBitField(void)
+{
+    /* 0xA5 = 1010_0101; bits[5:4] = 10b = 2 */
+    const uint8_t regData = 0xA5U;
+
+    PLATFORM_ASSERT(Pmic_getBitField(regData, 4U, 0x30U) == 0x02U);
+}
+
+/* ========================================================================== */
+/*                   Pmic_getBitField_b Test Functions                        */
+/* ========================================================================== */
+
+void test_pos_common_getBitField_b_bitSet(void)
+{
+    const uint8_t regData = (uint8_t)(1U << 5U);
+
+    PLATFORM_ASSERT(Pmic_getBitField_b(regData, 5U) == true);
+}
+
+void test_pos_common_getBitField_b_bitClear(void)
+{
+    const uint8_t regData = (uint8_t)(~(uint8_t)(1U << 5U));
+
+    PLATFORM_ASSERT(Pmic_getBitField_b(regData, 5U) == false);
+}
+
+void test_pos_common_getBitField_b_lsb(void)
+{
+    PLATFORM_ASSERT(Pmic_getBitField_b(0x01U, 0U) == true);
+    PLATFORM_ASSERT(Pmic_getBitField_b(0x00U, 0U) == false);
+}
+
+void test_pos_common_getBitField_b_msb(void)
+{
+    PLATFORM_ASSERT(Pmic_getBitField_b(0x80U, 7U) == true);
+    PLATFORM_ASSERT(Pmic_getBitField_b(0x00U, 7U) == false);
+}
+
+void test_pos_common_getBitField_b_alternatingPattern(void)
+{
+    /* 0xAA = 1010_1010: odd positions are 1, even are 0 */
+    /* 0x55 = 0101_0101: even positions are 1, odd are 0 */
+    for (uint8_t pos = 0U; pos < 8U; pos++)
+    {
+        if ((pos % 2U) == 0U)
+        {
+            PLATFORM_ASSERT(Pmic_getBitField_b(TEST_PATTERN_AA, pos) == false);
+            PLATFORM_ASSERT(Pmic_getBitField_b(TEST_PATTERN_55, pos) == true);
+        }
+        else
+        {
+            PLATFORM_ASSERT(Pmic_getBitField_b(TEST_PATTERN_AA, pos) == true);
+            PLATFORM_ASSERT(Pmic_getBitField_b(TEST_PATTERN_55, pos) == false);
+        }
+    }
+}
+
+/* ========================================================================== */
+/*                    Pmic_setBitField Test Functions                         */
+/* ========================================================================== */
+
+void test_pos_common_setBitField_setLowNibble(void)
+{
+    uint8_t regData = 0xF0U;
+
+    Pmic_setBitField(&regData, 0U, 0x0FU, 0x05U);
+    PLATFORM_ASSERT(regData == 0xF5U);
+}
+
+void test_pos_common_setBitField_setHighNibble(void)
+{
+    uint8_t regData = 0x0FU;
+
+    Pmic_setBitField(&regData, 4U, 0xF0U, 0x0AU);
+    PLATFORM_ASSERT(regData == 0xAFU);
+}
+
+void test_pos_common_setBitField_clearBits(void)
+{
+    uint8_t regData = 0xFFU;
+
+    Pmic_setBitField(&regData, 0U, 0x0FU, 0x00U);
+    PLATFORM_ASSERT(regData == 0xF0U);
+}
+
+void test_pos_common_setBitField_preservesOtherBits(void)
+{
+    /* Set bits[2:1] = 0b11 in TEST_PATTERN_AA (1010_1010).
+     * Bits outside the mask must be unchanged. */
+    uint8_t regData = TEST_PATTERN_AA;
+
+    Pmic_setBitField(&regData, 1U, 0x06U, 0x03U);
+    PLATFORM_ASSERT((regData & (uint8_t)(~0x06U)) == (TEST_PATTERN_AA & (uint8_t)(~0x06U)));
+    PLATFORM_ASSERT((regData & 0x06U) == 0x06U);
+}
+
+void test_pos_common_setBitField_fullByteMask(void)
+{
+    uint8_t regData = TEST_PATTERN_55;
+
+    Pmic_setBitField(&regData, 0U, 0xFFU, TEST_PATTERN_A5);
+    PLATFORM_ASSERT(regData == TEST_PATTERN_A5);
+}
+
+/* ========================================================================== */
+/*                   Pmic_setBitField_b Test Functions                        */
+/* ========================================================================== */
+
+void test_pos_common_setBitField_b_setTrue(void)
+{
+    uint8_t regData = 0x00U;
+
+    Pmic_setBitField_b(&regData, 3U, true);
+    PLATFORM_ASSERT(regData == (uint8_t)(1U << 3U));
+}
+
+void test_pos_common_setBitField_b_setFalse(void)
+{
+    uint8_t regData = 0xFFU;
+
+    Pmic_setBitField_b(&regData, 3U, false);
+    PLATFORM_ASSERT((regData & (uint8_t)(1U << 3U)) == 0U);
+}
+
+void test_pos_common_setBitField_b_preservesOtherBitsWhenSet(void)
+{
+    /* TEST_PATTERN_AA = 1010_1010; bit 2 is 0 — set it to 1 */
+    uint8_t regData = TEST_PATTERN_AA;
+
+    Pmic_setBitField_b(&regData, 2U, true);
+    PLATFORM_ASSERT((regData & (uint8_t)(~(uint8_t)(1U << 2U))) ==
+                    (TEST_PATTERN_AA & (uint8_t)(~(uint8_t)(1U << 2U))));
+    PLATFORM_ASSERT((regData & (uint8_t)(1U << 2U)) != 0U);
+}
+
+void test_pos_common_setBitField_b_preservesOtherBitsWhenCleared(void)
+{
+    /* TEST_PATTERN_AA = 1010_1010; bit 1 is 1 — clear it to 0 */
+    uint8_t regData = TEST_PATTERN_AA;
+
+    Pmic_setBitField_b(&regData, 1U, false);
+    PLATFORM_ASSERT((regData & (uint8_t)(~(uint8_t)(1U << 1U))) ==
+                    (TEST_PATTERN_AA & (uint8_t)(~(uint8_t)(1U << 1U))));
+    PLATFORM_ASSERT((regData & (uint8_t)(1U << 1U)) == 0U);
+}
+
+void test_pos_common_setBitField_b_lsb(void)
+{
+    uint8_t regData = 0x00U;
+
+    Pmic_setBitField_b(&regData, 0U, true);
+    PLATFORM_ASSERT(regData == 0x01U);
+
+    Pmic_setBitField_b(&regData, 0U, false);
+    PLATFORM_ASSERT(regData == 0x00U);
+}
+
+void test_pos_common_setBitField_b_msb(void)
+{
+    uint8_t regData = 0x00U;
+
+    Pmic_setBitField_b(&regData, 7U, true);
+    PLATFORM_ASSERT(regData == 0x80U);
+
+    Pmic_setBitField_b(&regData, 7U, false);
+    PLATFORM_ASSERT(regData == 0x00U);
 }

@@ -742,12 +742,12 @@ int32_t Pmic_irqSetCfg(const Pmic_Handle_t *handle, const Pmic_IrqCfg_t *irqCfg)
     }
 
     // Set IRQ mask if requested (check status first to avoid dereferencing NULL irqCfg)
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(localIrqCfg.validParams, PMIC_IRQ_CFG_MASK_VALID)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(localIrqCfg.validParams, PMIC_CFG_IRQ_MASK_VALID)) {
         status = IRQ_setMask(handle, localIrqCfg.irqNum, localIrqCfg.mask);
     }
 
     // Set IRQ config if requested (check status first to avoid dereferencing NULL irqCfg)
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(localIrqCfg.validParams, PMIC_IRQ_CFG_CONFIG_VALID)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(localIrqCfg.validParams, PMIC_CFG_IRQ_CONFIG_VALID)) {
         status = IRQ_setConfig(handle, localIrqCfg.irqNum, localIrqCfg.config);
     }
 
@@ -811,7 +811,7 @@ static int32_t IRQ_handleRecordsForRegMask(const Pmic_Handle_t *handle,
             }
 
             // If the user didn't set the mask validParam for this config, skip it
-            if (Pmic_validParamCheck(cfgs[i].validParams, PMIC_IRQ_CFG_MASK_VALID) == (bool)false) {
+            if (Pmic_validParamCheck(cfgs[i].validParams, PMIC_CFG_IRQ_MASK_VALID) == (bool)false) {
                 continue;
             }
 
@@ -870,7 +870,7 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
             }
 
             // If the user didn't set the config validParam for this config, skip it
-            if (Pmic_validParamCheck(cfgs[i].validParams, PMIC_IRQ_CFG_CONFIG_VALID) == (bool)false) {
+            if (Pmic_validParamCheck(cfgs[i].validParams, PMIC_CFG_IRQ_CONFIG_VALID) == (bool)false) {
                 continue;
             }
 
@@ -991,11 +991,11 @@ static inline int32_t IRQ_getCfg(const Pmic_Handle_t *handle, Pmic_IrqCfg_t *irq
     const bool getMask = (bool)true;
     const bool getConfig = (bool)false;
 
-    if (Pmic_validParamCheck(irqCfg->validParams, PMIC_IRQ_CFG_MASK_VALID)) {
+    if (Pmic_validParamCheck(irqCfg->validParams, PMIC_CFG_IRQ_MASK_VALID)) {
         status = IRQ_getMaskOrConfig(handle, irqCfg, getMask);
     }
 
-    if (Pmic_validParamStatusCheck(irqCfg->validParams, PMIC_IRQ_CFG_CONFIG_VALID, status)) {
+    if (Pmic_validParamStatusCheck(irqCfg->validParams, PMIC_CFG_IRQ_CONFIG_VALID, status)) {
         status = IRQ_getMaskOrConfig(handle, irqCfg, getConfig);
     }
 

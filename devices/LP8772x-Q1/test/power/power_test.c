@@ -122,17 +122,20 @@ void power_test(void *args)
     (void)args;
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+
     Pmic_HandleCfg_t coreCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_CRC_ENABLE_VALID |
-                        PMIC_CONFIG_CRC_ENABLE_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .crcEnable = PMIC_DISABLE,
@@ -144,8 +147,6 @@ void power_test(void *args)
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse
     };
-
-    platform_init();
 
     testTimer_startModule("Power");
 
@@ -210,7 +211,7 @@ void test_neg_power_pwrSetResourceCfg_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_pwrSetResourceCfg()
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1,
         .enable = PMIC_DISABLE
     };
@@ -229,7 +230,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_resource(void)
 {
     // Pass out of bounds resource into Pmic_pwrSetResourceCfg()
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .enable = PMIC_DISABLE
     };
@@ -240,7 +241,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_resource(void)
 static void powerTest_Pmic_pwrSetResourceCfg_invalidParam_buckMode(uint8_t buck)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = buck
     };
 
@@ -259,7 +260,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_invalidParam_buckMode(uint8_t buck)
 static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckIlim(uint8_t buck)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = buck,
         .ilim = PMIC_PWR_ILIM_MAX + 1U
     };
@@ -272,7 +273,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckIlim(uint8_t buck)
 static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckVoltage_mV(uint8_t buck)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = buck
     };
 
@@ -294,7 +295,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckDeglitch(uint8_t bu
 {
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = buck,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -306,7 +307,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckUvThresh(uint8_t bu
 {
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = buck,
         .uvThresh = PMIC_PWR_BUCK_UV_OV_THR_MAX + 1U
     };
@@ -318,7 +319,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckUvReaction(uint8_t 
 {
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = buck,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -330,7 +331,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckOvThresh(uint8_t bu
 {
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = buck,
         .ovThresh = PMIC_PWR_BUCK_UV_OV_THR_MAX + 1U
     };
@@ -342,7 +343,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckOvReaction(uint8_t 
 {
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = buck,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -354,7 +355,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckRvReaction(uint8_t 
 {
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = buck,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -366,7 +367,7 @@ static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_buckScReaction(uint8_t 
 {
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfg() for Buck
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = buck,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -528,7 +529,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_mode(void)
 {
     // Pass out of bounds mode into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .mode = PMIC_PWR_RSRC_MODE_MAX + 1U
     };
@@ -539,7 +540,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_mode(void)
 void test_neg_power_pwrSetResourceCfg_ldoLs1Vmon1_ilim(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -556,7 +557,7 @@ void test_neg_power_pwrSetResourceCfg_ldoLs1Vmon1_ilim(void)
 static void powerTest_Pmic_pwrSetResourceCfg_outOfBounds_ldoLsVmon_voltage_mV(uint8_t ldoLsVmon)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = ldoLsVmon
     };
 
@@ -583,7 +584,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_deglitch(void)
 {
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -595,7 +596,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_uvThresh(void)
 {
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .uvThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -607,7 +608,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_uvReaction(void)
 {
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -619,7 +620,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_ovThresh(void)
 {
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .ovThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -631,7 +632,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_ovReaction(void)
 {
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -643,7 +644,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_rvReaction(void)
 {
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -655,7 +656,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_scReaction(void)
 {
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfg() for LDO_LS1_VMON1
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -666,7 +667,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ldoLs1Vmon1_scReaction(void)
 void test_neg_power_pwrSetResourceCfg_invalidParam_ls2Vmon2_mode(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -685,7 +686,7 @@ void test_neg_power_pwrSetResourceCfg_invalidParam_ls2Vmon2_mode(void)
 void test_neg_power_pwrSetResourceCfg_ls2Vmon2_ilim(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -708,7 +709,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_deglitch(void)
 {
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -720,7 +721,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_uvThresh(void)
 {
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .uvThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -732,7 +733,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_uvReaction(void)
 {
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -744,7 +745,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_ovThresh(void)
 {
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .ovThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -756,7 +757,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_ovReaction(void)
 {
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -768,7 +769,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_rvReaction(void)
 {
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -780,7 +781,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_scReaction(void)
 {
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfg() for LS2_VMON2
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -791,7 +792,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_ls2Vmon2_scReaction(void)
 void test_neg_power_pwrSetResourceCfg_invalidParam_vccaVmon_mode(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -810,7 +811,7 @@ void test_neg_power_pwrSetResourceCfg_invalidParam_vccaVmon_mode(void)
 void test_neg_power_pwrSetResourceCfg_vccaVmon_ilim(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -833,7 +834,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_deglitch(void)
 {
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfg() for VCCA_VMON
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -845,7 +846,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_uvThresh(void)
 {
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfg() for VCCA_VMON
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .uvThresh = PMIC_PWR_VCCA_UV_OV_THR_MAX + 1U
     };
@@ -857,7 +858,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_uvReaction(void)
 {
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfg() for VCCA_VMON
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -869,7 +870,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_ovThresh(void)
 {
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfg() for VCCA_VMON
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .ovThresh = PMIC_PWR_VCCA_UV_OV_THR_MAX + 1U
     };
@@ -881,7 +882,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_ovReaction(void)
 {
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfg() for VCCA_VMON
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -892,7 +893,7 @@ void test_neg_power_pwrSetResourceCfg_outOfBounds_vccaVmon_ovReaction(void)
 void test_neg_power_pwrSetResourceCfg_vccaVmon_rvReaction(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -909,7 +910,7 @@ void test_neg_power_pwrSetResourceCfg_vccaVmon_rvReaction(void)
 void test_neg_power_pwrSetResourceCfg_vccaVmon_scReaction(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -926,7 +927,7 @@ void test_neg_power_pwrSetResourceCfg_vccaVmon_scReaction(void)
 void test_neg_power_pwrSetResourceCfg_gpo_mode(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -943,7 +944,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_mode(void)
 void test_neg_power_pwrSetResourceCfg_gpo_ilim(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -962,7 +963,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_voltage_mV(void)
     // Pass voltage_mV into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, voltage_mV is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .voltage_mV = 1000U
     };
@@ -973,7 +974,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_voltage_mV(void)
 void test_neg_power_pwrSetResourceCfg_gpo_deglitch(void)
 {
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -992,7 +993,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_uvThresh(void)
     // Pass uvThresh into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, uvThresh is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .uvThresh = 0U
     };
@@ -1005,7 +1006,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_uvReaction(void)
     // Pass uvReaction into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, uvReaction is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .uvReaction = 0U
     };
@@ -1018,7 +1019,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_ovThresh(void)
     // Pass ovThresh into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, ovThresh is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .ovThresh = 0U
     };
@@ -1031,7 +1032,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_ovReaction(void)
     // Pass ovReaction into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, ovReaction is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .ovReaction = 0U
     };
@@ -1044,7 +1045,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_rvReaction(void)
     // Pass rvReaction into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, rvReaction is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .rvReaction = 0U
     };
@@ -1057,7 +1058,7 @@ void test_neg_power_pwrSetResourceCfg_gpo_scReaction(void)
     // Pass scReaction into Pmic_pwrSetResourceCfg() for GPO.
     // NOTE: For GPO, scReaction is not a valid parameter
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .scReaction = 0U
     };
@@ -1069,7 +1070,7 @@ void test_neg_power_pwrGetResourceCfg_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_pwrGetResourceCfg()
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1,
         .enable = PMIC_DISABLE
     };
@@ -1088,7 +1089,7 @@ void test_neg_power_pwrGetResourceCfg_outOfBounds_resource(void)
 {
     // Pass out of bounds resource into Pmic_pwrGetResourceCfg()
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .enable = PMIC_DISABLE
     };
@@ -1101,7 +1102,7 @@ void test_neg_power_pwrSetResourceCfgs_nullParam_handle(void)
     // Pass NULL handle into Pmic_pwrSetResourceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1,
         .enable = PMIC_DISABLE
     };
@@ -1122,7 +1123,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_resource(void)
     // Pass out of bounds resource into Pmic_pwrSetResourceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .enable = PMIC_DISABLE
     };
@@ -1134,7 +1135,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_invalidParam_buckMode(uint8_t buck
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = buck
     };
 
@@ -1155,7 +1156,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckIlim(uint8_t buck)
     // Pass out of bounds ILIM into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = buck,
         .ilim = PMIC_PWR_ILIM_MAX + 1U
     };
@@ -1167,7 +1168,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckVoltage_mV(uint8_t
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = buck
     };
 
@@ -1190,7 +1191,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckDeglitch(uint8_t b
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = buck,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -1203,7 +1204,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckUvThresh(uint8_t b
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = buck,
         .uvThresh = PMIC_PWR_BUCK_UV_OV_THR_MAX + 1U
     };
@@ -1216,7 +1217,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckUvReaction(uint8_t
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = buck,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1229,7 +1230,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckOvThresh(uint8_t b
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = buck,
         .ovThresh = PMIC_PWR_BUCK_UV_OV_THR_MAX + 1U
     };
@@ -1242,7 +1243,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckOvReaction(uint8_t
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = buck,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1255,7 +1256,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckRvReaction(uint8_t
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = buck,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -1268,7 +1269,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_buckScReaction(uint8_t
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfgs() for buck
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = buck,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1431,7 +1432,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_mode(void)
     // Pass out of bounds mode into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .mode = PMIC_PWR_RSRC_MODE_MAX + 1U
     };
@@ -1443,7 +1444,7 @@ void test_neg_power_pwrSetResourceCfgs_ldoLs1Vmon1_ilim(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -1461,7 +1462,7 @@ static void powerTest_Pmic_pwrSetResourceCfgs_outOfBounds_ldoLsVmon_voltage_mV(u
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = ldoLsVmon
     };
 
@@ -1489,7 +1490,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_deglitch(void)
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -1502,7 +1503,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_uvThresh(void)
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .uvThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -1515,7 +1516,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_uvReaction(void)
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1528,7 +1529,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_ovThresh(void)
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .ovThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -1541,7 +1542,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_ovReaction(void)
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1554,7 +1555,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_rvReaction(void)
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -1567,7 +1568,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ldoLs1Vmon1_scReaction(void)
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfgs() for LDO_LS1_VMON1
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1579,7 +1580,7 @@ void test_neg_power_pwrSetResourceCfgs_invalidParam_ls2Vmon2_mode(void)
 {
     uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -1599,7 +1600,7 @@ void test_neg_power_pwrSetResourceCfgs_ls2Vmon2_ilim(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -1623,7 +1624,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_deglitch(void)
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -1636,7 +1637,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_uvThresh(void)
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .uvThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -1649,7 +1650,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_uvReaction(void)
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1662,7 +1663,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_ovThresh(void)
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .ovThresh = PMIC_PWR_LS_UV_OV_THR_MAX + 1U
     };
@@ -1675,7 +1676,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_ovReaction(void)
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1688,7 +1689,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_rvReaction(void)
     // Pass out of bounds rvReaction into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .rvReaction = PMIC_PWR_RV_REACT_MAX + 1U
     };
@@ -1701,7 +1702,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_ls2Vmon2_scReaction(void)
     // Pass out of bounds scReaction into Pmic_pwrSetResourceCfgs() for LS2_VMON2
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2,
         .scReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1713,7 +1714,7 @@ void test_neg_power_pwrSetResourceCfgs_invalidParam_vccaVmon_mode(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -1733,7 +1734,7 @@ void test_neg_power_pwrSetResourceCfgs_vccaVmon_ilim(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -1757,7 +1758,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_vccaVmon_deglitch(void)
     // Pass out of bounds deglitch into Pmic_pwrSetResourceCfgs() for VCCA_VMON
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .deglitch = PMIC_PWR_DEGLITCH_MAX + 1U
     };
@@ -1770,7 +1771,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_vccaVmon_uvThresh(void)
     // Pass out of bounds uvThresh into Pmic_pwrSetResourceCfgs() for VCCA_VMON
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .uvThresh = PMIC_PWR_VCCA_UV_OV_THR_MAX + 1U
     };
@@ -1783,7 +1784,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_vccaVmon_uvReaction(void)
     // Pass out of bounds uvReaction into Pmic_pwrSetResourceCfgs() for VCCA_VMON
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .uvReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1796,7 +1797,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_vccaVmon_ovThresh(void)
     // Pass out of bounds ovThresh into Pmic_pwrSetResourceCfgs() for VCCA_VMON
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .ovThresh = PMIC_PWR_VCCA_UV_OV_THR_MAX + 1U
     };
@@ -1809,7 +1810,7 @@ void test_neg_power_pwrSetResourceCfgs_outOfBounds_vccaVmon_ovReaction(void)
     // Pass out of bounds ovReaction into Pmic_pwrSetResourceCfgs() for VCCA_VMON
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .ovReaction = PMIC_PWR_FAULT_REACT_MAX + 1U
     };
@@ -1821,7 +1822,7 @@ void test_neg_power_pwrSetResourceCfgs_vccaVmon_rvReaction(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -1839,7 +1840,7 @@ void test_neg_power_pwrSetResourceCfgs_vccaVmon_scReaction(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -1857,7 +1858,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_mode(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -1875,7 +1876,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_ilim(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -1895,7 +1896,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_voltage_mV(void)
     // NOTE: For GPO, voltage_mV is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .voltage_mV = 1000U
     };
@@ -1907,7 +1908,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_deglitch(void)
 {
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
 
@@ -1927,7 +1928,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_uvThresh(void)
     // NOTE: For GPO, uvThresh is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .uvThresh = 0U
     };
@@ -1941,7 +1942,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_uvReaction(void)
     // NOTE: For GPO, uvReaction is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .uvReaction = 0U
     };
@@ -1955,7 +1956,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_ovThresh(void)
     // NOTE: For GPO, ovThresh is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .ovThresh = 0U
     };
@@ -1969,7 +1970,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_ovReaction(void)
     // NOTE: For GPO, ovReaction is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .ovReaction = 0U
     };
@@ -1983,7 +1984,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_rvReaction(void)
     // NOTE: For GPO, rvReaction is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .rvReaction = 0U
     };
@@ -1997,7 +1998,7 @@ void test_neg_power_pwrSetResourceCfgs_gpo_scReaction(void)
     // NOTE: For GPO, scReaction is not a valid parameter
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .scReaction = 0U
     };
@@ -2010,7 +2011,7 @@ void test_neg_power_pwrGetResourceCfgs_nullParam_handle(void)
     // Pass NULL handle into Pmic_pwrGetResourceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetResourceCfgs(NULL, numConfig, &resourceCfg);
@@ -2030,7 +2031,7 @@ void test_neg_power_pwrGetResourceCfgs_outOfBounds_resource(void)
     // Pass out of bounds resource into Pmic_pwrGetResourceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerResourceCfg_t resourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U
     };
     int32_t status = Pmic_pwrGetResourceCfgs(&pmicHandle, numConfig, &resourceCfg);
@@ -2041,7 +2042,7 @@ void test_neg_power_pwrSetSequenceCfg_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_pwrSetSequenceCfg()
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
@@ -2060,7 +2061,7 @@ void test_neg_power_pwrSetSequenceCfg_outOfBounds_resource(void)
 {
     // Pass out of bounds resource into Pmic_pwrSetSequenceCfg()
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
@@ -2072,7 +2073,7 @@ static void powerTest_Pmic_pwrSetSequenceCfg_outOfBounds_startupDelay(uint8_t re
 {
     // Pass out of bounds startupDelay into Pmic_pwrSetSequenceCfg()
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = resource,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX + 1U
     };
@@ -2084,7 +2085,7 @@ static void powerTest_Pmic_pwrSetSequenceCfg_outOfBounds_shutdownDelay(uint8_t r
 {
     // Pass out of bounds shutdownDelay into Pmic_pwrSetSequenceCfg()
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = resource,
         .shutdownDelay = PMIC_PWR_SEQ_DLY_MAX + 1U
     };
@@ -2157,7 +2158,7 @@ void test_neg_power_pwrSetSequenceCfg_vccaVmon_startupDelay(void)
     // Pass startupDelay into Pmic_pwrSetSequenceCfg() for VCCA_VMON.
     // NOTE: For VCCA_VMON, startupDelay is invalid
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .startupDelay = PMIC_PWR_SEQ_DLY_7P5MS
     };
@@ -2170,7 +2171,7 @@ void test_neg_power_pwrSetSequenceCfg_vccaVmon_shutdownDelay(void)
     // Pass shutdownDelay into Pmic_pwrSetSequenceCfg() for VCCA_VMON.
     // NOTE: For VCCA_VMON, shutdownDelay is invalid
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .shutdownDelay = PMIC_PWR_SEQ_DLY_7P5MS
     };
@@ -2182,7 +2183,7 @@ void test_neg_power_pwrGetSequenceCfg_nullParam_handle(void)
 {
     // Pass NULL handle into Pmic_pwrGetSequenceCfg()
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetSequenceCfg(NULL, &sequenceCfg);
@@ -2201,7 +2202,7 @@ void test_neg_power_pwrSetSequenceCfgs_nullParam_handle(void)
     // Pass NULL handle into Pmic_pwrSetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
@@ -2222,7 +2223,7 @@ void test_neg_power_pwrSetSequenceCfgs_outOfBounds_resource(void)
     // Pass out of bounds resource into Pmic_pwrSetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX
     };
@@ -2235,7 +2236,7 @@ static void powerTest_Pmic_pwrSetSequenceCfgs_outOfBounds_startupDelay(uint8_t r
     // Pass out of bounds startupDelay into Pmic_pwrSetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = resource,
         .startupDelay = PMIC_PWR_SEQ_DLY_MAX + 1U
     };
@@ -2248,7 +2249,7 @@ static void powerTest_Pmic_pwrSetSequenceCfgs_outOfBounds_shutdownDelay(uint8_t 
     // Pass out of bounds shutdownDelay into Pmic_pwrSetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = resource,
         .shutdownDelay = PMIC_PWR_SEQ_DLY_MAX + 1U
     };
@@ -2322,7 +2323,7 @@ void test_neg_power_pwrSetSequenceCfgs_vccaVmon_startupDelay(void)
     // NOTE: For VCCA_VMON, startupDelay is invalid
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .startupDelay = PMIC_PWR_SEQ_DLY_7P5MS
     };
@@ -2336,7 +2337,7 @@ void test_neg_power_pwrSetSequenceCfgs_vccaVmon_shutdownDelay(void)
     // NOTE: For VCCA_VMON, shutdownDelay is invalid
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON,
         .shutdownDelay = PMIC_PWR_SEQ_DLY_7P5MS
     };
@@ -2349,7 +2350,7 @@ void test_neg_power_pwrGetSequenceCfgs_nullParam_handle(void)
     // Pass NULL handle into Pmic_pwrGetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetSequenceCfgs(NULL, numConfig, &sequenceCfg);
@@ -2369,7 +2370,7 @@ void test_neg_power_pwrGetSequenceCfgs_outOfBounds_resource(void)
     // Pass out of bounds resource into Pmic_pwrGetSequenceCfgs()
     const uint8_t numConfig = 1U;
     Pmic_PowerSequenceCfg_t sequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U
     };
     int32_t status = Pmic_pwrGetSequenceCfgs(&pmicHandle, numConfig, &sequenceCfg);
@@ -2416,7 +2417,7 @@ void test_neg_power_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState(void)
     PmicMockDevice_t* mock = platform_getMockDevice();
     int32_t status;
     Pmic_PowerResourceCfg_t config = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -2473,11 +2474,11 @@ static void powerTest_setGetResourceCfg_enable(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_ENABLE_VALID,
         .resource = resource
     };
 
@@ -2506,11 +2507,11 @@ static void powerTest_setGetResourceCfg_buck_mode(uint8_t buck)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = buck
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = buck
     };
 
@@ -2529,11 +2530,11 @@ static void powerTest_setGetResourceCfg_buck_ilim(uint8_t buck)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = buck
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = buck
     };
 
@@ -2556,11 +2557,11 @@ static void powerTest_setGetResourceCfg_buck_voltage_mV(uint8_t buck)
     const uint16_t voltage_mV_min = 900U, voltage_mV_max = 1900U, voltage_mV_steps = 20U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = buck
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = buck
     };
 
@@ -2582,11 +2583,11 @@ static void powerTest_setGetResourceCfg_deglitch(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = resource
     };
 
@@ -2608,11 +2609,11 @@ static void powerTest_setGetResourceCfg_buck_uvThresh(uint8_t buck)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = buck
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = buck
     };
 
@@ -2634,11 +2635,11 @@ static void powerTest_setGetResourceCfg_uvReaction(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = resource
     };
 
@@ -2660,11 +2661,11 @@ static void powerTest_setGetResourceCfg_buck_ovThresh(uint8_t buck)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = buck
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = buck
     };
 
@@ -2686,11 +2687,11 @@ static void powerTest_setGetResourceCfg_ovReaction(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = resource
     };
 
@@ -2712,11 +2713,11 @@ static void powerTest_setGetResourceCfg_rvReaction(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = resource
     };
 
@@ -2738,11 +2739,11 @@ static void powerTest_setGetResourceCfg_scReaction(uint8_t resource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = resource
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = resource
     };
 
@@ -2934,11 +2935,11 @@ void test_pos_power_setGetResourceCfg_ldoLs1Vmon1_mode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -2962,11 +2963,11 @@ static void powerTest_setGetResourceCfg_ldoLsVmon_voltage_mV(uint8_t ldoLsVmon)
     const uint16_t voltage_mV_min = 600U, voltage_mV_max = 3400U, voltage_mV_steps = 25U;
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = ldoLsVmon
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = ldoLsVmon
     };
 
@@ -2999,11 +3000,11 @@ void test_pos_power_setGetResourceCfg_ldoLs1Vmon1_uvThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -3031,11 +3032,11 @@ void test_pos_power_setGetResourceCfg_ldoLs1Vmon1_ovThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -3078,11 +3079,11 @@ void test_pos_power_setGetResourceCfg_ls2Vmon2_mode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -3118,11 +3119,11 @@ void test_pos_power_setGetResourceCfg_ls2Vmon2_uvThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -3150,11 +3151,11 @@ void test_pos_power_setGetResourceCfg_ls2Vmon2_ovThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_LS2_VMON2
     };
 
@@ -3197,11 +3198,11 @@ void test_pos_power_setGetResourceCfg_vccaVmon_mode(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -3230,11 +3231,11 @@ void test_pos_power_setGetResourceCfg_vccaVmon_uvThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -3262,11 +3263,11 @@ void test_pos_power_setGetResourceCfg_vccaVmon_ovThresh(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerResourceCfg_t expResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     Pmic_PowerResourceCfg_t actResourceCfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
 
@@ -3332,16 +3333,16 @@ static inline void powerTest_initBuckCfg(Pmic_PowerResourceCfg_t *resourceCfg, u
 
 static inline void powerTest_initLdoLs1VmonCfg(Pmic_PowerResourceCfg_t *resourceCfg, uint8_t rsrc, bool isExpCfg)
 {
-    resourceCfg->validParams = PMIC_PWR_CFG_ENABLE_VALID |
-                               PMIC_PWR_CFG_MODE_VALID |
-                               PMIC_PWR_CFG_VOLTAGE_VALID |
-                               PMIC_PWR_CFG_DEGLITCH_VALID |
-                               PMIC_PWR_CFG_UV_THRESH_VALID |
-                               PMIC_PWR_CFG_UV_REACT_VALID |
-                               PMIC_PWR_CFG_OV_THRESH_VALID |
-                               PMIC_PWR_CFG_OV_REACT_VALID |
-                               PMIC_PWR_CFG_RV_REACT_VALID |
-                               PMIC_PWR_CFG_SC_REACT_VALID;
+    resourceCfg->validParams = PMIC_CFG_PWR_ENABLE_VALID |
+                               PMIC_CFG_PWR_MODE_VALID |
+                               PMIC_CFG_PWR_VOLTAGE_VALID |
+                               PMIC_CFG_PWR_DEGLITCH_VALID |
+                               PMIC_CFG_PWR_UV_THRESH_VALID |
+                               PMIC_CFG_PWR_UV_REACT_VALID |
+                               PMIC_CFG_PWR_OV_THRESH_VALID |
+                               PMIC_CFG_PWR_OV_REACT_VALID |
+                               PMIC_CFG_PWR_RV_REACT_VALID |
+                               PMIC_CFG_PWR_SC_REACT_VALID;
     resourceCfg->resource = rsrc;
 
     if (isExpCfg)
@@ -3374,16 +3375,16 @@ static inline void powerTest_initLdoLs1VmonCfg(Pmic_PowerResourceCfg_t *resource
 
 static inline void powerTest_initLs2Vmon2Cfg(Pmic_PowerResourceCfg_t *resourceCfg, uint8_t rsrc, bool isExpCfg)
 {
-    resourceCfg->validParams = PMIC_PWR_CFG_ENABLE_VALID |
-                               PMIC_PWR_CFG_MODE_VALID |
-                               PMIC_PWR_CFG_VOLTAGE_VALID |
-                               PMIC_PWR_CFG_DEGLITCH_VALID |
-                               PMIC_PWR_CFG_UV_THRESH_VALID |
-                               PMIC_PWR_CFG_UV_REACT_VALID |
-                               PMIC_PWR_CFG_OV_THRESH_VALID |
-                               PMIC_PWR_CFG_OV_REACT_VALID |
-                               PMIC_PWR_CFG_RV_REACT_VALID |
-                               PMIC_PWR_CFG_SC_REACT_VALID;
+    resourceCfg->validParams = PMIC_CFG_PWR_ENABLE_VALID |
+                               PMIC_CFG_PWR_MODE_VALID |
+                               PMIC_CFG_PWR_VOLTAGE_VALID |
+                               PMIC_CFG_PWR_DEGLITCH_VALID |
+                               PMIC_CFG_PWR_UV_THRESH_VALID |
+                               PMIC_CFG_PWR_UV_REACT_VALID |
+                               PMIC_CFG_PWR_OV_THRESH_VALID |
+                               PMIC_CFG_PWR_OV_REACT_VALID |
+                               PMIC_CFG_PWR_RV_REACT_VALID |
+                               PMIC_CFG_PWR_SC_REACT_VALID;
     resourceCfg->resource = rsrc;
 
     if (isExpCfg)
@@ -3416,14 +3417,14 @@ static inline void powerTest_initLs2Vmon2Cfg(Pmic_PowerResourceCfg_t *resourceCf
 
 static inline void powerTest_initVccaVmonCfg(Pmic_PowerResourceCfg_t *resourceCfg, uint8_t rsrc, bool isExpCfg)
 {
-    resourceCfg->validParams = PMIC_PWR_CFG_ENABLE_VALID |
-                               PMIC_PWR_CFG_MODE_VALID |
-                               PMIC_PWR_CFG_VOLTAGE_VALID |
-                               PMIC_PWR_CFG_DEGLITCH_VALID |
-                               PMIC_PWR_CFG_UV_THRESH_VALID |
-                               PMIC_PWR_CFG_UV_REACT_VALID |
-                               PMIC_PWR_CFG_OV_THRESH_VALID |
-                               PMIC_PWR_CFG_OV_REACT_VALID;
+    resourceCfg->validParams = PMIC_CFG_PWR_ENABLE_VALID |
+                               PMIC_CFG_PWR_MODE_VALID |
+                               PMIC_CFG_PWR_VOLTAGE_VALID |
+                               PMIC_CFG_PWR_DEGLITCH_VALID |
+                               PMIC_CFG_PWR_UV_THRESH_VALID |
+                               PMIC_CFG_PWR_UV_REACT_VALID |
+                               PMIC_CFG_PWR_OV_THRESH_VALID |
+                               PMIC_CFG_PWR_OV_REACT_VALID;
     resourceCfg->resource = rsrc;
 
     if (isExpCfg)
@@ -3452,7 +3453,7 @@ static inline void powerTest_initVccaVmonCfg(Pmic_PowerResourceCfg_t *resourceCf
 
 static inline void powerTest_initGpoCfg(Pmic_PowerResourceCfg_t *resourceCfg, uint8_t rsrc, bool isExpCfg)
 {
-    resourceCfg->validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    resourceCfg->validParams = PMIC_CFG_PWR_ENABLE_VALID;
     resourceCfg->resource = rsrc;
     resourceCfg->enable = isExpCfg ? PMIC_DISABLE : PMIC_ENABLE;
 }
@@ -3591,11 +3592,11 @@ static void powerTest_setGetSequenceCfg_startUpDelay(uint8_t rsrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerSequenceCfg_t expSequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = rsrc
     };
     Pmic_PowerSequenceCfg_t actSequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID,
         .resource = rsrc
     };
 
@@ -3618,11 +3619,11 @@ static void powerTest_setGetSequenceCfg_shutdownDelay(uint8_t rsrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PowerSequenceCfg_t expSequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = rsrc
     };
     Pmic_PowerSequenceCfg_t actSequenceCfg = {
-        .validParams = PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = rsrc
     };
 
@@ -3712,8 +3713,8 @@ static void powerTest_initAllSeqCfg(Pmic_PowerSequenceCfg_t *sequenceCfg, bool i
             continue;
         }
 
-        sequenceCfg[index].validParams = PMIC_PWR_SEQ_STARTUP_VALID |
-                                         PMIC_PWR_SEQ_SHUTDOWN_VALID;
+        sequenceCfg[index].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID |
+                                         PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID;
         sequenceCfg[index].resource = rsrc;
 
         if (isExpCfg)
@@ -3768,7 +3769,7 @@ void test_pos_power_setGetSequenceCfg_allRsrc_allCfg(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedIlim(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3778,7 +3779,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedIlim(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedDeglitch(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_DEGLITCH_VALID,
+        .validParams = PMIC_CFG_PWR_DEGLITCH_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3788,7 +3789,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedDeglitch(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedUvThresh(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_UV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_UV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3798,7 +3799,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedUvThresh(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedUvReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_UV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_UV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3808,7 +3809,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedUvReaction(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedOvThresh(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_OV_THRESH_VALID,
+        .validParams = PMIC_CFG_PWR_OV_THRESH_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3818,7 +3819,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedOvThresh(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedOvReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_OV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_OV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3828,7 +3829,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedOvReaction(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedRvReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3838,7 +3839,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedRvReaction(void)
 void test_neg_power_pwrGetResourceCfg_gpo_unsupportedScReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_GPO
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3853,7 +3854,7 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedScReaction(void)
 void test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedIlim(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3863,7 +3864,7 @@ void test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedIlim(void)
 void test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_RV_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_RV_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3873,7 +3874,7 @@ void test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedRvReaction(void)
 void test_neg_power_pwrGetResourceCfg_vccaVmon_unsupportedScReaction(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_SC_REACT_VALID,
+        .validParams = PMIC_CFG_PWR_SC_REACT_VALID,
         .resource = PMIC_PWR_RSRC_VCCA_VMON
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3906,7 +3907,7 @@ void test_pos_power_getNrstoutSequence(void)
 {
     // Test get sequence for NRSTOUT resource to cover NRSTOUT_SEQUENCE_REG case
     Pmic_PowerSequenceCfg_t cfg = {
-        .validParams = PMIC_PWR_SEQ_STARTUP_VALID | PMIC_PWR_SEQ_SHUTDOWN_VALID,
+        .validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID | PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID,
         .resource = PMIC_PWR_RSRC_NRSTOUT
     };
     int32_t status = Pmic_pwrGetSequenceCfg(&pmicHandle, &cfg);
@@ -3917,7 +3918,7 @@ void test_neg_power_setVoltage_invalidResource(void)
 {
     // Test invalid resource ID for voltage setting
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .voltage_mV = 1000U
     };
@@ -3929,7 +3930,7 @@ void test_neg_power_setPgLevel_invalidResource(void)
 {
     // Test invalid resource for power good level (voltage on VMON resources)
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_GPO,
         .voltage_mV = 1000U
     };
@@ -3946,7 +3947,7 @@ void test_neg_power_powerGetVoutCfg_unsupportedRegulator(void)
     // Test getting voltage configuration for unsupported regulator type
     // NRSTOUT doesn't support voltage configuration
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_NRSTOUT
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3958,7 +3959,7 @@ void test_neg_power_powerSetVoutCfg_unsupportedRegulator(void)
     // Test setting voltage configuration for unsupported regulator type
     // NRSTOUT doesn't support voltage configuration
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_NRSTOUT,
         .voltage_mV = 1000U
     };
@@ -3971,7 +3972,7 @@ void test_pos_power_powerGetPgoodLevel_validBuck(void)
     // Test reading PGOOD level configuration for BUCK regulator
     // This tests the voltage read path for BUCK resources
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK1
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -3985,7 +3986,7 @@ void test_pos_power_powerSetPgoodLevel_validBuck(void)
     // Test setting PGOOD level configuration for BUCK regulator
     // Set a valid voltage within BUCK range
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK2,
         .voltage_mV = 1200U
     };
@@ -3994,7 +3995,7 @@ void test_pos_power_powerSetPgoodLevel_validBuck(void)
 
     // Verify the voltage was set correctly
     Pmic_PowerResourceCfg_t readCfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_BUCK2
     };
     status = Pmic_pwrGetResourceCfg(&pmicHandle, &readCfg);
@@ -4031,7 +4032,7 @@ void test_neg_power_pwr_setResourceCfg_excessiveNumConfigs(void)
     for (uint8_t i = 0U; i < numConfigs; i++)
     {
         resourceCfgs[i].resource = PMIC_PWR_RSRC_BUCK1;
-        resourceCfgs[i].validParams = PMIC_PWR_CFG_VOLTAGE_VALID;
+        resourceCfgs[i].validParams = PMIC_CFG_PWR_VOLTAGE_VALID;
         resourceCfgs[i].voltage_mV = 1000U;
     }
 
@@ -4061,7 +4062,7 @@ void test_neg_power_pwr_getResourceCfgs_zeroNumConfigs(void)
 void test_neg_power_pwr_getModeCfg_unsupportedResource(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_NRSTOUT
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -4075,7 +4076,7 @@ void test_neg_power_pwr_getModeCfg_unsupportedResource(void)
 void test_neg_power_pwr_setIlimCfg_resourceOutOfBounds(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U,
         .ilim = 10U
     };
@@ -4090,7 +4091,7 @@ void test_neg_power_pwr_setIlimCfg_resourceOutOfBounds(void)
 void test_neg_power_pwr_getIlimCfg_resourceOutOfBounds(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_ILIM_VALID,
+        .validParams = PMIC_CFG_PWR_ILIM_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -4104,7 +4105,7 @@ void test_neg_power_pwr_getIlimCfg_resourceOutOfBounds(void)
 void test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds(void)
 {
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_VOLTAGE_VALID,
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
         .resource = PMIC_PWR_RSRC_MAX + 1U
     };
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
@@ -4141,7 +4142,7 @@ void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 
     // Try to get resource config - should fail with invalid combination
     Pmic_PowerResourceCfg_t cfg = {
-        .validParams = PMIC_PWR_CFG_MODE_VALID,
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
     };
 
@@ -4169,13 +4170,13 @@ void test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged(void)
     memset(configs, TEST_PATTERN_AA, sizeof(configs));
 
     configs[0].resource = PMIC_PWR_RSRC_BUCK1;
-    configs[0].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[0].validParams = PMIC_CFG_PWR_ENABLE_VALID;
 
     configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;  // Invalid - will cause error
-    configs[1].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[1].validParams = PMIC_CFG_PWR_ENABLE_VALID;
 
     configs[2].resource = PMIC_PWR_RSRC_BUCK3;
-    configs[2].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[2].validParams = PMIC_CFG_PWR_ENABLE_VALID;
 
     // Save original state
     Pmic_PowerResourceCfg_t originalConfigs[3];
@@ -4206,17 +4207,17 @@ void test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply(void)
 
     // First config - valid
     configs[0].resource = PMIC_PWR_RSRC_BUCK1;
-    configs[0].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[0].validParams = PMIC_CFG_PWR_ENABLE_VALID;
     configs[0].enable = true;
 
     // Second config - invalid resource (will cause error)
     configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;
-    configs[1].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[1].validParams = PMIC_CFG_PWR_ENABLE_VALID;
     configs[1].enable = true;
 
     // Third config - valid but should not be applied
     configs[2].resource = PMIC_PWR_RSRC_BUCK3;
-    configs[2].validParams = PMIC_PWR_CFG_ENABLE_VALID;
+    configs[2].validParams = PMIC_CFG_PWR_ENABLE_VALID;
     configs[2].enable = true;
 
     // Act
@@ -4246,13 +4247,13 @@ void test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged(void)
     memset(configs, TEST_PATTERN_AA, sizeof(configs));
 
     configs[0].resource = PMIC_PWR_RSRC_BUCK1;
-    configs[0].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[0].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
 
     configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;  // Invalid - will cause error
-    configs[1].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[1].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
 
     configs[2].resource = PMIC_PWR_RSRC_BUCK3;
-    configs[2].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[2].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
 
     // Save original state
     Pmic_PowerSequenceCfg_t originalConfigs[3];
@@ -4283,17 +4284,17 @@ void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void)
 
     // First config - valid
     configs[0].resource = PMIC_PWR_RSRC_BUCK1;
-    configs[0].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[0].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
     configs[0].startupDelay = 0U;
 
     // Second config - invalid resource (will cause error)
     configs[1].resource = PMIC_PWR_RSRC_MAX + 1U;
-    configs[1].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[1].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
     configs[1].startupDelay = 0U;
 
     // Third config - valid but should not be applied
     configs[2].resource = PMIC_PWR_RSRC_BUCK3;
-    configs[2].validParams = PMIC_PWR_SEQ_STARTUP_VALID;
+    configs[2].validParams = PMIC_CFG_PWR_SEQ_STARTUP_VALID;
     configs[2].startupDelay = 0U;
 
     // Act
@@ -4316,11 +4317,11 @@ void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void)
 void test_pos_power_thermal_twarnLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID,
         .twarnLvl = PMIC_POWER_TWARN_LEVEL_150C
     };
     Pmic_PwrThermalCfg_t thermalCfgGet = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID
     };
 
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
@@ -4337,11 +4338,11 @@ void test_pos_power_thermal_twarnLvl(void)
 void test_pos_power_thermal_tsdOrdLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
-        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID,
         .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_155C
     };
     Pmic_PwrThermalCfg_t thermalCfgGet = {
-        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID
+        .validParams = PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID
     };
 
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
@@ -4358,11 +4359,11 @@ void test_pos_power_thermal_tsdOrdLvl(void)
 void test_pos_power_thermal_twarnConfig(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
-        .validParams = PMIC_POWER_TWARN_CONFIG_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_CONFIG_VALID,
         .twarnConfig = PMIC_POWER_TWARN_CONFIG_STAY_SAFE_STATE
     };
     Pmic_PwrThermalCfg_t thermalCfgGet = {
-        .validParams = PMIC_POWER_TWARN_CONFIG_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_CONFIG_VALID
     };
 
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
@@ -4379,17 +4380,17 @@ void test_pos_power_thermal_twarnConfig(void)
 void test_pos_power_thermal_all_params(void)
 {
     Pmic_PwrThermalCfg_t thermalCfgSet = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID |
-                       PMIC_POWER_TSD_ORD_LEVEL_VALID |
-                       PMIC_POWER_TWARN_CONFIG_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID |
+                       PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID |
+                       PMIC_CFG_PWR_TWARN_CONFIG_VALID,
         .twarnLvl = PMIC_POWER_TWARN_LEVEL_140C,
         .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_150C,
         .twarnConfig = PMIC_POWER_TWARN_CONFIG_LEAVE_SAFE_STATE
     };
     Pmic_PwrThermalCfg_t thermalCfgGet = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID |
-                       PMIC_POWER_TSD_ORD_LEVEL_VALID |
-                       PMIC_POWER_TWARN_CONFIG_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID |
+                       PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID |
+                       PMIC_CFG_PWR_TWARN_CONFIG_VALID
     };
 
     int32_t status = Pmic_pwrSetThermalCfg(&pmicHandle, &thermalCfgSet);
@@ -4408,7 +4409,7 @@ void test_pos_power_thermal_all_params(void)
 void test_neg_power_thermal_null_handle(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID
     };
 
     int32_t status = Pmic_pwrSetThermalCfg(NULL, &thermalCfg);
@@ -4436,7 +4437,7 @@ void test_neg_power_thermal_null_param(void)
 void test_neg_power_thermal_invalid_twarnLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {
-        .validParams = PMIC_POWER_TWARN_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID,
         .twarnLvl = PMIC_POWER_TWARN_LEVEL_MAX + 1U
     };
 
@@ -4450,7 +4451,7 @@ void test_neg_power_thermal_invalid_twarnLvl(void)
 void test_neg_power_thermal_invalid_tsdOrdLvl(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {
-        .validParams = PMIC_POWER_TSD_ORD_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID,
         .tsdOrdLvl = PMIC_POWER_TSD_ORD_LEVEL_MAX + 1U
     };
 
@@ -4464,7 +4465,7 @@ void test_neg_power_thermal_invalid_tsdOrdLvl(void)
 void test_neg_power_thermal_invalid_twarnConfig(void)
 {
     Pmic_PwrThermalCfg_t thermalCfg = {
-        .validParams = PMIC_POWER_TWARN_CONFIG_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_CONFIG_VALID,
         .twarnConfig = PMIC_POWER_TWARN_CONFIG_MAX + 1U
     };
 
@@ -4495,7 +4496,7 @@ void test_pos_power_setGetResourceCfg_buck1_enable_mcdc(void)
     int32_t status;
     Pmic_PowerResourceCfg_t cfg = {0};
     cfg.resource = PMIC_PWR_RSRC_BUCK1;
-    cfg.validParams = PMIC_PWR_CFG_ENABLE_VALID;  /* IMON capable = FALSE path */
+    cfg.validParams = PMIC_CFG_PWR_ENABLE_VALID;  /* IMON capable = FALSE path */
     cfg.enable = true;
     status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

@@ -322,6 +322,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgWriteAnswer_nullParam); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgWriteAnswer_success)
 
+/* Test: TC-WDG-0063 */
+#define WDG_TEST_LP8772X_SPECIFIC() \
+    WDG_TEST_POS_LP8772X_SPECIFIC()
+
 /* ========================================================================== */
 /*                         Aggregate Test Runners                             */
 /* ========================================================================== */
@@ -354,7 +358,7 @@ extern "C" {
     WDG_TEST_NEG_WDGCLRERRSTATUSALL(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS(); \
     WDG_TEST_NEG_WDGQAWRITEANSWER(); \
-    WDG_TEST_POS_LP8772X_SPECIFIC()
+    WDG_TEST_LP8772X_SPECIFIC()
 
 #define WDG_TEST_RUN_ALL() \
     WDG_TEST_RUN_POSITIVE(); \

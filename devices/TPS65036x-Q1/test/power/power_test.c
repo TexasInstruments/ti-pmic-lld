@@ -78,14 +78,14 @@ void power_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -1049,7 +1049,7 @@ void test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
-        .validParams = PMIC_TSD_IMM_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID,
         .tsdImmLevel = PMIC_TSD_IMM_LEVEL_150C
     };
     int32_t status = Pmic_pwrSetTsdCfg(NULL, &tsdCfg);
@@ -1067,7 +1067,7 @@ void test_neg_power_pwrSetTsdCfg_outOfBounds_tsdImmLevel(void)
 {
     // Pass out of bounds tsdImmLevel into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
-        .validParams = PMIC_TSD_IMM_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID,
         .tsdImmLevel = PMIC_TSD_IMM_LEVEL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetTsdCfg(&pmicHandle, &tsdCfg);
@@ -1078,7 +1078,7 @@ void test_neg_power_pwrSetTsdCfg_outOfBounds_twarnLevel(void)
 {
     // Pass out of bounds twarnLevel into Pmic_pwrSetTsdCfg()
     Pmic_PwrTsdCfg_t tsdCfg = {
-        .validParams = PMIC_TWARN_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID,
         .twarnLevel = PMIC_TWARN_LEVEL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetTsdCfg(&pmicHandle, &tsdCfg);
@@ -1123,11 +1123,11 @@ void test_pos_power_tsdSetGetCfg_twarnStayInSafeState(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
-        .validParams = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID,
         .twarnStayInSafeState = true
     };
     Pmic_PwrTsdCfg_t tsdCfgGet = {
-        .validParams = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID
     };
 
     // Set TWARN stay in safe state
@@ -1154,11 +1154,11 @@ void test_pos_power_tsdSetGetCfg_tsdImmLevel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
-        .validParams = PMIC_TSD_IMM_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID,
         .tsdImmLevel = PMIC_TSD_IMM_LEVEL_150C
     };
     Pmic_PwrTsdCfg_t tsdCfgGet = {
-        .validParams = PMIC_TSD_IMM_LEVEL_VALID
+        .validParams = PMIC_CFG_PWR_TSD_IMM_LEVEL_VALID
     };
 
     // Set TSD immediate level to 150C
@@ -1185,11 +1185,11 @@ void test_pos_power_tsdSetGetCfg_twarnLevel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrTsdCfg_t tsdCfgSet = {
-        .validParams = PMIC_TWARN_LEVEL_VALID,
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID,
         .twarnLevel = PMIC_TWARN_LEVEL_130C
     };
     Pmic_PwrTsdCfg_t tsdCfgGet = {
-        .validParams = PMIC_TWARN_LEVEL_VALID
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID
     };
 
     // Set TWARN level to 130C
@@ -1363,7 +1363,7 @@ void test_neg_power_pwrSetBuckLdoSeqDly_nullParam_pmicHandle(void)
     // Pass NULL pmicHandle into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID,
             .resource = PMIC_BUCK1,
             .seqDlyOn = PMIC_SEQ_DLY_0_MS
         }
@@ -1384,7 +1384,7 @@ void test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn(void)
     // Pass out of bounds seqDlyOn into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID,
             .resource = PMIC_BUCK1,
             .seqDlyOn = PMIC_SEQ_DLY_MAX + 1U
         }
@@ -1398,7 +1398,7 @@ void test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff(void)
     // Pass out of bounds seqDlyOff into Pmic_pwrSetBuckLdoSeqDly()
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
         {
-            .validParams = PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK1,
             .seqDlyOff = PMIC_SEQ_DLY_MAX + 1U
         }
@@ -1576,7 +1576,7 @@ void test_pos_power_seqDlySetGet_buck1(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK1,
             .seqDlyOn = PMIC_SEQ_DLY_1_MS,
             .seqDlyOff = PMIC_SEQ_DLY_2_MS
@@ -1584,7 +1584,7 @@ void test_pos_power_seqDlySetGet_buck1(void)
     };
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK1
         }
     };
@@ -1605,7 +1605,7 @@ void test_pos_power_seqDlySetGet_buck2(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK2,
             .seqDlyOn = PMIC_SEQ_DLY_3_MS,
             .seqDlyOff = PMIC_SEQ_DLY_4_MS
@@ -1613,7 +1613,7 @@ void test_pos_power_seqDlySetGet_buck2(void)
     };
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK2
         }
     };
@@ -1634,7 +1634,7 @@ void test_pos_power_seqDlySetGet_buck3(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK3,
             .seqDlyOn = PMIC_SEQ_DLY_5_MS,
             .seqDlyOff = PMIC_SEQ_DLY_6_MS
@@ -1642,7 +1642,7 @@ void test_pos_power_seqDlySetGet_buck3(void)
     };
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK3
         }
     };
@@ -1663,7 +1663,7 @@ void test_pos_power_seqDlySetGet_ldo(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_LDO,
             .seqDlyOn = PMIC_SEQ_DLY_7_MS,
             .seqDlyOff = PMIC_SEQ_DLY_8_MS
@@ -1671,7 +1671,7 @@ void test_pos_power_seqDlySetGet_ldo(void)
     };
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_LDO
         }
     };
@@ -1692,25 +1692,25 @@ void test_pos_power_seqDlySetGet_allResources(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgSet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK1,
             .seqDlyOn = PMIC_SEQ_DLY_0_MS,
             .seqDlyOff = PMIC_SEQ_DLY_1_MS
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK2,
             .seqDlyOn = PMIC_SEQ_DLY_2_MS,
             .seqDlyOff = PMIC_SEQ_DLY_3_MS
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK3,
             .seqDlyOn = PMIC_SEQ_DLY_4_MS,
             .seqDlyOff = PMIC_SEQ_DLY_5_MS
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_LDO,
             .seqDlyOn = PMIC_SEQ_DLY_6_MS,
             .seqDlyOff = PMIC_SEQ_DLY_7_MS
@@ -1718,19 +1718,19 @@ void test_pos_power_seqDlySetGet_allResources(void)
     };
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfgGet[] = {
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK1
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK2
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_BUCK3
         },
         {
-            .validParams = PMIC_SEQ_DLY_ON_VALID | PMIC_SEQ_DLY_OFF_VALID,
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID | PMIC_CFG_PWR_SEQ_DLY_OFF_VALID,
             .resource = PMIC_LDO
         }
     };
@@ -5311,7 +5311,7 @@ void test_neg_power_pwr_getSeqDelay_invalidConfig(void)
     Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[] = {
         {
             .resource = PMIC_POWER_RESOURCE_MAX + 1U,  // Invalid resource
-            .validParams = PMIC_SEQ_DLY_ON_VALID
+            .validParams = PMIC_CFG_PWR_SEQ_DLY_ON_VALID
         }
     };
 

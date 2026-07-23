@@ -105,7 +105,7 @@ void test_neg_wdg_wdgSetCfg_nullWdgCfg(void)
 void test_neg_wdg_wdgSetCfg_invalidMode(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
         .mode = PMIC_WDG_MODE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -117,7 +117,7 @@ void test_neg_wdg_wdgSetCfg_invalidMode(void)
 void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_WIN1_CODE_VALID,
+        .validParams = PMIC_CFG_WDG_WIN1_CODE_VALID,
         .win1Code = PMIC_WDG_WIN1_CODE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -129,7 +129,7 @@ void test_neg_wdg_wdgSetCfg_invalidWin1Code(void)
 void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_WIN2_CODE_VALID,
+        .validParams = PMIC_CFG_WDG_WIN2_CODE_VALID,
         .win2Code = PMIC_WDG_WIN2_CODE_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -141,7 +141,7 @@ void test_neg_wdg_wdgSetCfg_invalidWin2Code(void)
 void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_QA_FDBK_VALID,
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID,
         .qaFdbk = PMIC_WDG_QA_FDBK_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -153,7 +153,7 @@ void test_neg_wdg_wdgSetCfg_invalidQaFdbk(void)
 void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_QA_LFSR_VALID,
+        .validParams = PMIC_CFG_WDG_QA_LFSR_VALID,
         .qaLfsr = PMIC_WDG_QA_LFSR_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -165,7 +165,7 @@ void test_neg_wdg_wdgSetCfg_invalidQaLfsr(void)
 void test_neg_wdg_wdgSetCfg_invalidQaSeed(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_QA_SEED_VALID,
         .qaSeed = PMIC_WDG_QA_SEED_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -177,7 +177,7 @@ void test_neg_wdg_wdgSetCfg_invalidQaSeed(void)
 void test_neg_wdg_wdgSetCfg_invalidFailThr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_FAIL_THR_VALID,
+        .validParams = PMIC_CFG_WDG_FAIL_THR_VALID,
         .failThr = PMIC_WDG_FAIL_THR_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -189,7 +189,7 @@ void test_neg_wdg_wdgSetCfg_invalidFailThr(void)
 void test_neg_wdg_wdgSetCfg_invalidRstThr(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_RST_THR_VALID,
+        .validParams = PMIC_CFG_WDG_RST_THR_VALID,
         .rstThr = PMIC_WDG_RST_THR_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -201,7 +201,7 @@ void test_neg_wdg_wdgSetCfg_invalidRstThr(void)
 void test_neg_wdg_wdgSetCfg_invalidCntSel(void)
 {
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_CNT_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_CNT_SEL_VALID,
         .cntSel = PMIC_WDG_CNT_SEL_MAX + 1U
     };
     int32_t status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
@@ -214,7 +214,7 @@ void test_neg_wdg_wdgSetCfg_whenDisabled(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
         .mode = PMIC_WDG_TRIGGER_MODE
     };
 
@@ -239,7 +239,7 @@ void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
         .mode = PMIC_WDG_TRIGGER_MODE
     };
 
@@ -469,11 +469,11 @@ void test_pos_wdg_wdgSetCfg_rstEn(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_RST_EN_VALID,
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID,
         .rstEn = true
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_RST_EN_VALID
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID
     };
     int32_t status;
     /* Set rstEn to true */
@@ -500,11 +500,11 @@ void test_pos_wdg_wdgSetCfg_mode(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID,
         .mode = PMIC_WDG_TRIGGER_MODE
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID
+        .validParams = PMIC_CFG_WDG_MODE_VALID
     };
     int32_t status;
     /* Set trigger mode */
@@ -531,10 +531,10 @@ void test_pos_wdg_wdgSetCfg_win1Code(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_WIN1_CODE_VALID
+        .validParams = PMIC_CFG_WDG_WIN1_CODE_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_WIN1_CODE_VALID
+        .validParams = PMIC_CFG_WDG_WIN1_CODE_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x20, 0x40, 0x7F};
@@ -556,10 +556,10 @@ void test_pos_wdg_wdgSetCfg_win2Code(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_WIN2_CODE_VALID
+        .validParams = PMIC_CFG_WDG_WIN2_CODE_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_WIN2_CODE_VALID
+        .validParams = PMIC_CFG_WDG_WIN2_CODE_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x20, 0x40, 0x7F};
@@ -581,10 +581,10 @@ void test_pos_wdg_wdgSetCfg_longWinCode(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_LONG_WIN_CODE_VALID
+        .validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_LONG_WIN_CODE_VALID
+        .validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x50, 0xA0, 0xFF};
@@ -606,10 +606,10 @@ void test_pos_wdg_wdgSetCfg_qaFdbk(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_QA_FDBK_VALID
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_QA_FDBK_VALID
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_QA_FDBK_MIN; val <= PMIC_WDG_QA_FDBK_MAX; val++)
@@ -630,10 +630,10 @@ void test_pos_wdg_wdgSetCfg_qaLfsr(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_QA_LFSR_VALID
+        .validParams = PMIC_CFG_WDG_QA_LFSR_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_QA_LFSR_VALID
+        .validParams = PMIC_CFG_WDG_QA_LFSR_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_QA_LFSR_MIN; val <= PMIC_WDG_QA_LFSR_MAX; val++)
@@ -654,10 +654,10 @@ void test_pos_wdg_wdgSetCfg_qaSeed(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_QA_SEED_VALID
+        .validParams = PMIC_CFG_WDG_QA_SEED_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_QA_SEED_VALID
+        .validParams = PMIC_CFG_WDG_QA_SEED_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_QA_SEED_MIN; val <= PMIC_WDG_QA_SEED_MAX; val++)
@@ -678,10 +678,10 @@ void test_pos_wdg_wdgSetCfg_failThr(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_FAIL_THR_VALID
+        .validParams = PMIC_CFG_WDG_FAIL_THR_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_FAIL_THR_VALID
+        .validParams = PMIC_CFG_WDG_FAIL_THR_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_FAIL_THR_MIN; val <= PMIC_WDG_FAIL_THR_MAX; val++)
@@ -702,10 +702,10 @@ void test_pos_wdg_wdgSetCfg_rstThr(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_RST_THR_VALID
+        .validParams = PMIC_CFG_WDG_RST_THR_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_RST_THR_VALID
+        .validParams = PMIC_CFG_WDG_RST_THR_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_RST_THR_MIN; val <= PMIC_WDG_RST_THR_MAX; val++)
@@ -726,10 +726,10 @@ void test_pos_wdg_wdgSetCfg_cntSel(void)
     wdg_setupForConfig();
 
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_CNT_SEL_VALID
+        .validParams = PMIC_CFG_WDG_CNT_SEL_VALID
     };
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_CNT_SEL_VALID
+        .validParams = PMIC_CFG_WDG_CNT_SEL_VALID
     };
     int32_t status;
     for (uint8_t val = PMIC_WDG_CNT_SEL_MIN; val <= PMIC_WDG_CNT_SEL_MAX; val++)
@@ -750,10 +750,10 @@ void test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers(void)
     int32_t status;
     /* Configure watchdog for Q&A mode with long timeouts */
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID | PMIC_WDG_WIN1_CODE_VALID |
-                       PMIC_WDG_WIN2_CODE_VALID | PMIC_WDG_LONG_WIN_CODE_VALID |
-                       PMIC_WDG_QA_FDBK_VALID | PMIC_WDG_QA_LFSR_VALID |
-                       PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID | PMIC_CFG_WDG_WIN1_CODE_VALID |
+                       PMIC_CFG_WDG_WIN2_CODE_VALID | PMIC_CFG_WDG_LONG_WIN_CODE_VALID |
+                       PMIC_CFG_WDG_QA_FDBK_VALID | PMIC_CFG_WDG_QA_LFSR_VALID |
+                       PMIC_CFG_WDG_QA_SEED_VALID,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x7F,
         .win2Code = 0x7F,
@@ -835,9 +835,9 @@ void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
     int32_t status;
     /* Set multiple configuration parameters at once */
     Pmic_WdgCfg_t wdgCfgSet = {
-        .validParams = PMIC_WDG_RST_EN_VALID | PMIC_WDG_MODE_SEL_VALID |
-                       PMIC_WDG_WIN1_CODE_VALID | PMIC_WDG_WIN2_CODE_VALID |
-                       PMIC_WDG_FAIL_THR_VALID | PMIC_WDG_RST_THR_VALID,
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID | PMIC_CFG_WDG_MODE_VALID |
+                       PMIC_CFG_WDG_WIN1_CODE_VALID | PMIC_CFG_WDG_WIN2_CODE_VALID |
+                       PMIC_CFG_WDG_FAIL_THR_VALID | PMIC_CFG_WDG_RST_THR_VALID,
         .rstEn = true,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x40,
@@ -849,9 +849,9 @@ void test_pos_wdg_wdgSetCfg_combinedConfiguration(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Read back and verify */
     Pmic_WdgCfg_t wdgCfgGet = {
-        .validParams = PMIC_WDG_RST_EN_VALID | PMIC_WDG_MODE_SEL_VALID |
-                       PMIC_WDG_WIN1_CODE_VALID | PMIC_WDG_WIN2_CODE_VALID |
-                       PMIC_WDG_FAIL_THR_VALID | PMIC_WDG_RST_THR_VALID
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID | PMIC_CFG_WDG_MODE_VALID |
+                       PMIC_CFG_WDG_WIN1_CODE_VALID | PMIC_CFG_WDG_WIN2_CODE_VALID |
+                       PMIC_CFG_WDG_FAIL_THR_VALID | PMIC_CFG_WDG_RST_THR_VALID
     };
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -872,10 +872,10 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=0 */
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID | PMIC_WDG_WIN1_CODE_VALID |
-                       PMIC_WDG_WIN2_CODE_VALID | PMIC_WDG_LONG_WIN_CODE_VALID |
-                       PMIC_WDG_QA_FDBK_VALID | PMIC_WDG_QA_LFSR_VALID |
-                       PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID | PMIC_CFG_WDG_WIN1_CODE_VALID |
+                       PMIC_CFG_WDG_WIN2_CODE_VALID | PMIC_CFG_WDG_LONG_WIN_CODE_VALID |
+                       PMIC_CFG_WDG_QA_FDBK_VALID | PMIC_CFG_WDG_QA_LFSR_VALID |
+                       PMIC_CFG_WDG_QA_SEED_VALID,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x7F,
         .win2Code = 0x7F,
@@ -900,10 +900,10 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=1 */
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID | PMIC_WDG_WIN1_CODE_VALID |
-                       PMIC_WDG_WIN2_CODE_VALID | PMIC_WDG_LONG_WIN_CODE_VALID |
-                       PMIC_WDG_QA_FDBK_VALID | PMIC_WDG_QA_LFSR_VALID |
-                       PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID | PMIC_CFG_WDG_WIN1_CODE_VALID |
+                       PMIC_CFG_WDG_WIN2_CODE_VALID | PMIC_CFG_WDG_LONG_WIN_CODE_VALID |
+                       PMIC_CFG_WDG_QA_FDBK_VALID | PMIC_CFG_WDG_QA_LFSR_VALID |
+                       PMIC_CFG_WDG_QA_SEED_VALID,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x7F,
         .win2Code = 0x7F,
@@ -928,10 +928,10 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=2 */
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID | PMIC_WDG_WIN1_CODE_VALID |
-                       PMIC_WDG_WIN2_CODE_VALID | PMIC_WDG_LONG_WIN_CODE_VALID |
-                       PMIC_WDG_QA_FDBK_VALID | PMIC_WDG_QA_LFSR_VALID |
-                       PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID | PMIC_CFG_WDG_WIN1_CODE_VALID |
+                       PMIC_CFG_WDG_WIN2_CODE_VALID | PMIC_CFG_WDG_LONG_WIN_CODE_VALID |
+                       PMIC_CFG_WDG_QA_FDBK_VALID | PMIC_CFG_WDG_QA_LFSR_VALID |
+                       PMIC_CFG_WDG_QA_SEED_VALID,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x7F,
         .win2Code = 0x7F,
@@ -956,10 +956,10 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
     int32_t status;
     /* Configure watchdog for Q&A mode with qaFdbk=3 */
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_MODE_SEL_VALID | PMIC_WDG_WIN1_CODE_VALID |
-                       PMIC_WDG_WIN2_CODE_VALID | PMIC_WDG_LONG_WIN_CODE_VALID |
-                       PMIC_WDG_QA_FDBK_VALID | PMIC_WDG_QA_LFSR_VALID |
-                       PMIC_WDG_QA_SEED_VALID,
+        .validParams = PMIC_CFG_WDG_MODE_VALID | PMIC_CFG_WDG_WIN1_CODE_VALID |
+                       PMIC_CFG_WDG_WIN2_CODE_VALID | PMIC_CFG_WDG_LONG_WIN_CODE_VALID |
+                       PMIC_CFG_WDG_QA_FDBK_VALID | PMIC_CFG_WDG_QA_LFSR_VALID |
+                       PMIC_CFG_WDG_QA_SEED_VALID,
         .mode = PMIC_WDG_QA_MODE,
         .win1Code = 0x7F,
         .win2Code = 0x7F,
@@ -1067,13 +1067,13 @@ void test_pos_wdg_wdgSetEnDrvSel_setEnDrvSel(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_EN_DRV_SEL_VALID,
+        .validParams = PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID,
         .clrEnDrvOnFailInt = true
     };
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     /* Read back and verify */
-    wdgCfg.validParams = PMIC_WDG_EN_DRV_SEL_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID;
     wdgCfg.clrEnDrvOnFailInt = false;  /* Reset to read back */
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1086,7 +1086,7 @@ void test_pos_wdg_wdgGetEnDrvSel_getEnDrvSel(void)
 {
     int32_t status;
     Pmic_WdgCfg_t wdgCfg = {
-        .validParams = PMIC_WDG_EN_DRV_SEL_VALID
+        .validParams = PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID
     };
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1178,12 +1178,12 @@ void wdg_test(void *args)
 
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID | PMIC_COMM_HANDLE_0_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_COMM_HANDLE_1_VALID |
-                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID,
+                       PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID,
         .commMode = PMIC_INTF_I2C_DUAL,
         .commHandle0 = platform_getCommHandle0(),
         .commHandle1 = platform_getCommHandle1(),

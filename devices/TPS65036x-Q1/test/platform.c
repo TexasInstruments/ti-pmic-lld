@@ -235,6 +235,12 @@ void platform_init(void)
     /* Clear both counters at startup — previous runs may have left them elevated */
     platform_writeReg(0x07U, 0x03U);
 
+    /* Flush any extra response lines the firmware may have sent for the above
+     * register writes (e.g. "WRITTEN: N bytes" trailing a "STATUS: OK").
+     * platform_txByte only consumes one line per command; leaving stale lines
+     * in the buffer would corrupt the first Pmic_init I2C read. */
+    serial_flush();
+
     PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
 #endif
 }

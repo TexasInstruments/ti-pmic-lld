@@ -69,15 +69,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_ESM_ENABLE_VALID               ((uint32_t)1UL << 0U)
-#define PMIC_ESM_MODE_VALID                 ((uint32_t)1UL << 1U)
-#define PMIC_ESM_ERR_CNT_THR_VALID          ((uint32_t)1UL << 2U)
-#define PMIC_ESM_DELAY1_VALID               ((uint32_t)1UL << 3U)
-#define PMIC_ESM_DELAY2_VALID               ((uint32_t)1UL << 4U)
-#define PMIC_ESM_HMAX_VALID                 ((uint32_t)1UL << 5U)
-#define PMIC_ESM_HMIN_VALID                 ((uint32_t)1UL << 6U)
-#define PMIC_ESM_LMAX_VALID                 ((uint32_t)1UL << 7U)
-#define PMIC_ESM_LMIN_VALID                 ((uint32_t)1UL << 8U)
+#define PMIC_CFG_ESM_ENABLE_VALID               ((uint32_t)1UL << 0U)
+#define PMIC_CFG_ESM_MODE_VALID                 ((uint32_t)1UL << 1U)
+#define PMIC_CFG_ESM_ERR_CNT_THR_VALID          ((uint32_t)1UL << 2U)
+#define PMIC_CFG_ESM_DELAY1_VALID               ((uint32_t)1UL << 3U)
+#define PMIC_CFG_ESM_DELAY2_VALID               ((uint32_t)1UL << 4U)
+#define PMIC_CFG_ESM_HMAX_VALID                 ((uint32_t)1UL << 5U)
+#define PMIC_CFG_ESM_HMIN_VALID                 ((uint32_t)1UL << 6U)
+#define PMIC_CFG_ESM_LMAX_VALID                 ((uint32_t)1UL << 7U)
+#define PMIC_CFG_ESM_LMIN_VALID                 ((uint32_t)1UL << 8U)
 /** @} */
 
 /**
@@ -224,15 +224,15 @@ typedef struct Pmic_EsmStatus_s
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-539
  *
  * @details The following options are configurable via this API
- * 1. Enable (validParams: PMIC_ESM_ENABLE_VALID)
- * 2. Mode (validParams: PMIC_ESM_MODE_VALID)
- * 3. Error count threshold (validParams: PMIC_ESM_ERR_CNT_THR_VALID)
- * 4. Delay-1 (validParams: PMIC_ESM_DELAY1_VALID)
- * 5. Delay-2 (validParams: PMIC_ESM_DELAY2_VALID)
- * 6. Maximum high-pulse time threshold (validParams: PMIC_ESM_HMAX_VALID)
- * 7. Minimum high-pulse time threshold (validParams: PMIC_ESM_HMIN_VALID)
- * 8. Maximum low-pulse time threshold (validParams: PMIC_ESM_LMAX_VALID)
- * 9. Minimum low-pulse time threshold (validParams: PMIC_ESM_LMIN_VALID)
+ * 1. Enable (validParams: PMIC_CFG_ESM_ENABLE_VALID)
+ * 2. Mode (validParams: PMIC_CFG_ESM_MODE_VALID)
+ * 3. Error count threshold (validParams: PMIC_CFG_ESM_ERR_CNT_THR_VALID)
+ * 4. Delay-1 (validParams: PMIC_CFG_ESM_DELAY1_VALID)
+ * 5. Delay-2 (validParams: PMIC_CFG_ESM_DELAY2_VALID)
+ * 6. Maximum high-pulse time threshold (validParams: PMIC_CFG_ESM_HMAX_VALID)
+ * 7. Minimum high-pulse time threshold (validParams: PMIC_CFG_ESM_HMIN_VALID)
+ * 8. Maximum low-pulse time threshold (validParams: PMIC_CFG_ESM_LMAX_VALID)
+ * 9. Minimum low-pulse time threshold (validParams: PMIC_CFG_ESM_LMIN_VALID)
  * For more information on ESM configurations, refer to @ref Pmic_EsmCfg.
  *
  * @attention Some ESM configurations can only be set when the ESM is stopped

@@ -736,17 +736,17 @@ void test_pos_io_ioTxByte_wdgWriteWithCrc(void)
     Pmic_Handle_t dualI2cHandle = {0};
 
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_CRC_ENABLE_1_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_I2C_ADDR1_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_COMM_HANDLE_1_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode    = PMIC_INTF_I2C_DUAL,
         .crcEnable0  = false,
         .crcEnable1  = false,
@@ -806,17 +806,17 @@ void test_pos_io_ioRxByte_wdgReadWithCrc(void)
     Pmic_Handle_t dualI2cHandle = {0};
 
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_CRC_ENABLE_1_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_I2C_ADDR1_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_COMM_HANDLE_1_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode    = PMIC_INTF_I2C_DUAL,
         .crcEnable0  = false,
         .crcEnable1  = false,
@@ -1149,14 +1149,14 @@ void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
 
     /* Initialize handle with I2C mode */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable0 = false,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
@@ -1213,20 +1213,20 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
 
     /* Initialize handle with SPI mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_ASYNC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_TASK_HANDLE_VALID |
                        PMIC_ASYNC_RX_START_VALID |
                        PMIC_ASYNC_TX_START_VALID |
                        PMIC_ASYNC_RX_AWAIT_VALID |
                        PMIC_ASYNC_TX_AWAIT_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID,
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
         .commMode = PMIC_INTF_SPI,
         .crcEnable0 = false,
         .asyncEnable = true,
@@ -1286,20 +1286,20 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
 
     /* Initialize handle with I2C mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_ASYNC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_TASK_HANDLE_VALID |
                        PMIC_ASYNC_RX_START_VALID |
                        PMIC_ASYNC_TX_START_VALID |
                        PMIC_ASYNC_RX_AWAIT_VALID |
                        PMIC_ASYNC_TX_AWAIT_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID,
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable0 = false,
         .asyncEnable = true,
@@ -1359,20 +1359,20 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
 
     /* Initialize handle with SPI mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_ASYNC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_TASK_HANDLE_VALID |
                        PMIC_ASYNC_RX_START_VALID |
                        PMIC_ASYNC_TX_START_VALID |
                        PMIC_ASYNC_RX_AWAIT_VALID |
                        PMIC_ASYNC_TX_AWAIT_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID,
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
         .commMode = PMIC_INTF_SPI,
         .crcEnable0 = false,
         .asyncEnable = true,
@@ -1431,20 +1431,20 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
 
     /* Initialize handle with I2C mode and async enabled */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
                        PMIC_ASYNC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_TASK_HANDLE_VALID |
                        PMIC_ASYNC_RX_START_VALID |
                        PMIC_ASYNC_TX_START_VALID |
                        PMIC_ASYNC_RX_AWAIT_VALID |
                        PMIC_ASYNC_TX_AWAIT_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID |
-                       PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID,
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable0 = false,
         .asyncEnable = true,
@@ -1834,13 +1834,13 @@ void test_neg_io_ioTxByte_nullAsyncHooks(void)
 
     /* Initialize handle with async enabled but NULL hooks */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_ASYNC_ENABLE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle0(),
@@ -2024,14 +2024,14 @@ void io_test(void *args)
 
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_I2C_ADDR0_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable0 = false,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,

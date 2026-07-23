@@ -112,19 +112,19 @@ static int32_t validateAndSetI2CCfg(Pmic_Handle_t *handle, const Pmic_HandleCfg_
     int32_t status = PMIC_ST_SUCCESS;
 
     // i2cAddr0
-    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR0_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR0_VALID))
     {
         handle->i2cAddr0 = config->i2cAddr0;
     }
 
     // i2cAddr1
-    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR1_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR1_VALID))
     {
         handle->i2cAddr1 = config->i2cAddr1;
     }
 
     // i2cAddr2
-    if (Pmic_validParamCheck(config->validParams, PMIC_I2C_ADDR2_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR2_VALID))
     {
         handle->i2cAddr2 = config->i2cAddr2;
     }
@@ -137,7 +137,7 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
     int32_t status = PMIC_ST_SUCCESS;
 
     // commHandle0
-    if (Pmic_validParamCheck(config->validParams, PMIC_COMM_HANDLE_0_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_COMM_HANDLE_0_VALID))
     {
         if (config->commHandle0 == NULL)
         {
@@ -183,7 +183,7 @@ static int32_t validateAndSetSyncHooks(Pmic_Handle_t *handle, const Pmic_HandleC
     int32_t status = PMIC_ST_SUCCESS;
 
     // ioRead
-    if (Pmic_validParamCheck(config->validParams, PMIC_IO_READ_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_IO_READ_VALID))
     {
         if (config->ioRead == NULL)
         {
@@ -196,7 +196,7 @@ static int32_t validateAndSetSyncHooks(Pmic_Handle_t *handle, const Pmic_HandleC
     }
 
     // ioWrite
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_IO_WRITE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_IO_WRITE_VALID, status))
     {
         if (config->ioWrite == NULL)
         {
@@ -275,7 +275,7 @@ static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_Handle
     int32_t status = PMIC_ST_SUCCESS;
 
     // criticalSectionStart
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID, status))
     {
         if (config->criticalSectionStart == NULL)
         {
@@ -288,7 +288,7 @@ static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // criticalSectionStop
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_STOP_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID, status))
     {
         if (config->criticalSectionStop == NULL)
         {
@@ -301,7 +301,7 @@ static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // irqResponseCallback
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_IRQ_RESPONSE_CALLBACK_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID, status))
     {
         if (config->irqResponseCallback == NULL)
         {
@@ -314,7 +314,7 @@ static int32_t validateAndSetOtherHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // timerWaitMs
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TIMER_WAIT_MS_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, status))
     {
         if (config->timerWaitMs == NULL)
         {
@@ -366,19 +366,19 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
     }
 
     // retryCnt
-    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_CNT_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID))
     {
         handle->retryCnt = config->retryCnt;
     }
 
     // retryIntervalMs
-    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID))
     {
         handle->retryIntervalMs = config->retryIntervalMs;
     }
 
     // maxLoopCnt
-    if (Pmic_validParamCheck(config->validParams, PMIC_MAX_LOOP_CNT_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_INIT_MAX_LOOP_CNT_VALID))
     {
         handle->maxLoopCnt = config->maxLoopCnt;
     }
@@ -390,7 +390,7 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
     }
 
     // commMode
-    if (Pmic_validParamCheck(config->validParams, PMIC_COMM_MODE_VALID))
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_COMM_MODE_VALID))
     {
         if (config->commMode > PMIC_INTF_MAX)
         {

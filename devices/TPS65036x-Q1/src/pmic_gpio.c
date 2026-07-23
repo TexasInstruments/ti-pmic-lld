@@ -65,7 +65,7 @@ static int32_t GPIO_setGPIOCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t
     status = Pmic_ioRxByte(handle, PMIC_INTERFACE_CONF_REG, &regData);
 
     // Set GPIO polarity
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_POLARITY_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_POLARITY_VALID, status))
     {
         if (gpioCfg->polarity > PMIC_POLARITY_MAX)
         {
@@ -78,7 +78,7 @@ static int32_t GPIO_setGPIOCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t
     }
 
     // Set GPIO functionality
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_FUNCTIONALITY_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_FUNCTIONALITY_VALID, status))
     {
         if (gpioCfg->functionality > PMIC_GPIO_FUNCTIONALITY_MAX)
         {
@@ -111,7 +111,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
     status = Pmic_ioRxByte(handle, PMIC_FUNC_CONF_REG, &regData);
 
     // Set NINT_GPI pullup/pulldown resistor configuration
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_PU_PD_CFG_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_PU_PD_CFG_VALID, status))
     {
         if (gpioCfg->puPdCfg > PMIC_PU_PD_CFG_MAX)
         {
@@ -124,7 +124,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
     }
 
     // Set NINT_GPI open-drain/push-pull output configuration
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_OD_PP_CFG_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_OD_PP_CFG_VALID, status))
     {
         if (gpioCfg->odPpCfg > PMIC_OD_PP_CFG_MAX)
         {
@@ -137,7 +137,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
     }
 
     // Set NINT_GPI polarity
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_POLARITY_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_POLARITY_VALID, status))
     {
         if (gpioCfg->polarity > PMIC_POLARITY_MAX)
         {
@@ -150,7 +150,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
     }
 
     // Set NINT_GPI functionality
-    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_FUNCTIONALITY_VALID, status))
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_FUNCTIONALITY_VALID, status))
     {
         if (gpioCfg->functionality > PMIC_NINT_GPI_FUNCTIONALITY_MAX)
         {
@@ -176,8 +176,8 @@ int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic
 {
     Pmic_GpioCfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
-    const uint32_t gpioValidParams = PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID;
-    const uint32_t nIntGpiValidParams = PMIC_PU_PD_CFG_VALID | PMIC_OD_PP_CFG_VALID | PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID;
+    const uint32_t gpioValidParams = PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
+    const uint32_t nIntGpiValidParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID | PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -229,13 +229,13 @@ static int32_t GPIO_getGPIOCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpio
     if (status == PMIC_ST_SUCCESS)
     {
         // Get GPIO polarity
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_POLARITY_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_POLARITY_VALID))
         {
             gpioCfg->polarity = Pmic_getBitField(regData, PMIC_GPIO_POL_SHIFT, PMIC_GPIO_POL_MASK);
         }
 
         // Get GPIO functionality
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_FUNCTIONALITY_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_FUNCTIONALITY_VALID))
         {
             gpioCfg->functionality = Pmic_getBitField(regData, PMIC_GPIO_SEL_SHIFT, PMIC_GPIO_SEL_MASK);
         }
@@ -255,25 +255,25 @@ static int32_t GPIO_getNINTGPICfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *g
     if (status == PMIC_ST_SUCCESS)
     {
         // Get NINT_GPI resistor configuration
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_PU_PD_CFG_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_PU_PD_CFG_VALID))
         {
             gpioCfg->puPdCfg = Pmic_getBitField(regData, PMIC_NINT_GPI_PU_PD_SEL_SHIFT, PMIC_NINT_GPI_PU_PD_SEL_MASK);
         }
 
         // Get NINT_GPI open-drain/push-pull output configuration
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_OD_PP_CFG_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_OD_PP_CFG_VALID))
         {
             gpioCfg->odPpCfg = Pmic_getBitField(regData, PMIC_NINT_PP_OD_SHIFT, PMIC_NINT_PP_OD_MASK);
         }
 
         // Get NINT_GPI polarity
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_POLARITY_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_POLARITY_VALID))
         {
             gpioCfg->polarity = Pmic_getBitField(regData, PMIC_NINT_GPI_POL_SHIFT, PMIC_NINT_GPI_POL_MASK);
         }
 
         // Get NINT_GPI functionality
-        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_FUNCTIONALITY_VALID))
+        if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_FUNCTIONALITY_VALID))
         {
             gpioCfg->functionality = Pmic_getBitField(regData, PMIC_NINT_GPI_SEL_SHIFT, PMIC_NINT_GPI_SEL_MASK);
             if (gpioCfg->functionality == PMIC_NINT_GPI_LPM_INPUT_REPEATED)
@@ -290,8 +290,8 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioC
 {
     Pmic_GpioCfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
-    const uint32_t gpioValidParams = PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID;
-    const uint32_t nIntGpiValidParams = PMIC_PU_PD_CFG_VALID | PMIC_OD_PP_CFG_VALID | PMIC_POLARITY_VALID | PMIC_FUNCTIONALITY_VALID;
+    const uint32_t gpioValidParams = PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
+    const uint32_t nIntGpiValidParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID | PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {

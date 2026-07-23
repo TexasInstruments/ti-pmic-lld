@@ -73,14 +73,14 @@ void fsm_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -125,6 +125,98 @@ void fsm_test(void *args)
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
+}
+
+/*
+ * NOTE: This test puts the PMIC in SAFE state, which affects I2C communication.
+ * As a result, ignore all I2C communication errors after sending Safe Recovery
+ * Request.
+ */
+void test_pos_fsm_fsmSetDevState_safeRecovery(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t initRecovCnt = 0U, newRecovCnt = 0U;
+
+    // Clear recovery counter
+    status = fsmTest_clrRecovCnt();
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Get initial recovery count
+    status = Pmic_fsmGetRecovCnt(&pmicHandle, &initRecovCnt);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Send FSM command to enter safe state
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_SAFE_RECOVERY_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Clear all IRQs and unlock PMIC registers
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Get new recovery count and verify it incremented
+    status = Pmic_fsmGetRecovCnt(&pmicHandle, &newRecovCnt);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+    PLATFORM_ASSERT(newRecovCnt == (initRecovCnt + 1U));
+
+    // Clear the recovery counter
+    status = fsmTest_clrRecovCnt();
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+}
+
+/*
+ * NOTE: This test makes the PMIC undergo WARM RESET, which affects I2C communication.
+ * As a result, ignore all I2C communication errors after sending Warm Reset Request.
+ */
+void test_pos_fsm_fsmSetDevState_warmReset(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t initResetCnt = 0U, newResetCnt = 0U;
+
+    // Get initial reset count
+    status = Pmic_fsmGetResetCnt(&pmicHandle, &initResetCnt);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Send FSM command to trigger warm reset
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_WARM_RESET_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Clear all IRQs and unlock PMIC registers
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Get new reset count and verify it incremented
+    status = Pmic_fsmGetResetCnt(&pmicHandle, &newResetCnt);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+    PLATFORM_ASSERT(newResetCnt == (initResetCnt + 1U));
+
+    // Clear the reset counter
+    status = fsmTest_clrResetCnt();
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+}
+
+/*
+ * NOTE: Low power entry/exit transitions affect I2C communication. As a result,
+ * ignore all I2C communication errors after sending FSM commands.
+ */
+void test_pos_fsm_fsmSetDevState_lowPowerEntryExit(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Send FSM command to enter low power mode
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_LOW_POWER_ENTRY_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Clear all IRQs and unlock PMIC registers
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Send FSM command to exit low power mode
+    status = Pmic_fsmSetDevState(&pmicHandle, PMIC_LOW_POWER_EXIT_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    // Clear all IRQs and unlock PMIC registers
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 }
 
 void test_neg_fsm_fsmSetDevState_nullParam_pmicHandle(void)

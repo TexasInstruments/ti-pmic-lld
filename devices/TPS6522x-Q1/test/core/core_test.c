@@ -57,16 +57,16 @@ void core_test(void *args)
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_I2C_ADDR1_VALID |
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR1_VALID |
                         PMIC_CRC_ENABLE_0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_I2C_ADDR_MAIN,
         .i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY,
@@ -260,6 +260,24 @@ void test_pos_core_coreGetRegLockState(void)
     bool lockState = PMIC_DISABLE;
     int32_t status = Pmic_getRegLockState(&pmicHandle, &lockState);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_coreSetRegLockState_lock(void)
+{
+    int32_t status = Pmic_setRegLockState(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_core_coreSetRegLockState_unlock(void)
+{
+    int32_t status = Pmic_setRegLockState(&pmicHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_coreSetRegLockState_nullHandle(void)
+{
+    int32_t status = Pmic_setRegLockState(NULL, true);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_pos_core_coreSetScratchPadValue_reg1(void)

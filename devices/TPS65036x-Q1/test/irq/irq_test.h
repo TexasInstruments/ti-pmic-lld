@@ -215,6 +215,19 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear); \
     PLATFORM_RUN_TEST(test_pos_irq_irqMultipleSimultaneous_allRegisters)
 
+/* ======================================================================== */
+/*                  Test APIs: Pmic_irqResponseCallback                     */
+/* ======================================================================== */
+
+#define IRQ_TEST_POS_IRQRESPONSECALLBACK() \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_callbackInvoked); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_nullCallback); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqResponseCallback_nullHandle)
+
+/* Test: TC-IRQ-0033 */
+#define IRQ_TEST_IRQRESPONSECALLBACK() \
+    IRQ_TEST_POS_IRQRESPONSECALLBACK()
+
 /* ========================================================================== */
 /*                         Aggregate Test Macros                              */
 /* ========================================================================== */
@@ -228,7 +241,8 @@ extern "C" {
     IRQ_TEST_POS_IRQGETFLAG(); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers); \
-    IRQ_TEST_IRQINTEGRATION()
+    IRQ_TEST_IRQINTEGRATION(); \
+    IRQ_TEST_POS_IRQRESPONSECALLBACK()
 
 /* Run all negative IRQ tests */
 #define IRQ_TEST_RUN_NEGATIVE() \
@@ -248,7 +262,8 @@ extern "C" {
     IRQ_TEST_NEG_IRQCLRFLAG(); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_singleFlag); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrFlag_preserveOthers); \
-    IRQ_TEST_IRQINTEGRATION()
+    IRQ_TEST_IRQINTEGRATION(); \
+    IRQ_TEST_IRQRESPONSECALLBACK()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -398,6 +413,15 @@ void test_neg_irq_irqClrAllFlags_nullParam_handle(void);
 
 void test_pos_irq_irqFullCycle_setMask_getStatus_iterate_clear(void);
 void test_pos_irq_irqMultipleSimultaneous_allRegisters(void);
+
+/* ========================================================================== */
+/*                  irqResponseCallback API Tests                             */
+/* ========================================================================== */
+
+/* Positive tests */
+void test_pos_irq_irqResponseCallback_callbackInvoked(void);
+void test_pos_irq_irqResponseCallback_nullCallback(void);
+void test_pos_irq_irqResponseCallback_nullHandle(void);
 
 #ifdef __cplusplus
 }

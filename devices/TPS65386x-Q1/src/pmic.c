@@ -68,7 +68,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm Mode */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_COMM_MODE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_COMM_MODE_VALID, status)) {
         if (config->commMode != PMIC_INTF_SPI) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -77,7 +77,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
     }
 
     /* Check and update PMIC Handle Comm Handle */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_COMM_HANDLE_0_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_COMM_HANDLE_0_VALID, status)) {
         if (config->commHandle0 == NULL) {
             status = PMIC_ST_ERR_NULL_PARAM;
         } else {
@@ -86,17 +86,17 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
     }
 
     /* Update retry count */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_CNT_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID, status)) {
         handle->retryCnt = config->retryCnt;
     }
 
     /* Update retry interval */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID, status)) {
         handle->retryIntervalMs = config->retryIntervalMs;
     }
 
     /* Update timer hook */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TIMER_WAIT_MS_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, status)) {
         if (config->timerWaitMs == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -111,7 +111,7 @@ static int32_t initCommsFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
-    if (Pmic_validParamCheck(config->validParams, PMIC_IO_READ_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_IO_READ_VALID)) {
         if (config->ioRead == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -120,7 +120,7 @@ static int32_t initCommsFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
     }
 
     /* Check and update PMIC Handle Comm IO WR Fn */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_IO_WRITE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_IO_WRITE_VALID, status)) {
         if (config->ioWrite == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -134,7 +134,7 @@ static int32_t initCommsFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
 static int32_t initCritSecFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_START_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID, status)) {
         if (config->criticalSectionStart == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -143,7 +143,7 @@ static int32_t initCritSecFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_
     }
 
     /* Check and update PMIC Handle Critical Section Stop Fn */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRITICAL_SECTION_STOP_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID, status)) {
         if (config->criticalSectionStop == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {

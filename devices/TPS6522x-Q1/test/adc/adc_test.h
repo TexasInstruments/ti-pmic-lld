@@ -150,16 +150,21 @@ extern "C" {
 /* ======================================================================== */
 /* Test APIs: adcSetCfg, adcStartSingleConversionBlocking, adcGetResultCode */
 /* ======================================================================== */
-#define ADC_TEST_POS_INTEGRATION() \
+/* Test: TC-ADC-0007 */
+#define ADC_TEST_PROPERTY() \
     PLATFORM_RUN_TEST(test_pos_adc_fullSequence_configStartPollRead); \
     PLATFORM_RUN_TEST(test_pos_adc_multipleConversions_independence)
 
-/* ========================================================================== */
-/*                        Property Tests (BUILD_MOCK)                         */
-/* ========================================================================== */
-/* Test: TC-ADC-0007 */
-#define ADC_TEST_PROPERTY() \
+/* ======================================================================== */
+/* Test APIs: adcSetCfg, adcStartSingleConversionBlocking, adcGetResultCode */
+/* ======================================================================== */
+#ifdef BUILD_MOCK
+/* Test: TC-ADC-0008 */
+#define ADC_TEST_PROPERTY_MOCK_ONLY() \
     PLATFORM_RUN_TEST(test_pos_adc_property_randomChannelConfigurations)
+#else
+#define ADC_TEST_PROPERTY_MOCK_ONLY()
+#endif
 
 /* ========================================================================= */
 /*                        Aggregate Test Macros                              */
@@ -172,8 +177,8 @@ extern "C" {
     ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING(); \
     ADC_TEST_POS_ADCGETSTATUS(); \
     ADC_TEST_POS_ADCGETRESULTCODE(); \
-    ADC_TEST_POS_INTEGRATION(); \
-    ADC_TEST_PROPERTY()
+    ADC_TEST_PROPERTY(); \
+    ADC_TEST_PROPERTY_MOCK_ONLY()
 
 #define ADC_TEST_RUN_NEGATIVE() \
     ADC_TEST_NEG_ADCSETCFG(); \

@@ -127,14 +127,14 @@ void adc_test(void *args)
     testTimer_startModule("ADC");
 
     /* Initialize PMIC handle */
-    handleCfg.validParams = PMIC_COMM_MODE_VALID |
-                            PMIC_I2C_ADDR0_VALID |
-                            PMIC_COMM_HANDLE_0_VALID |
-                            PMIC_IO_READ_VALID |
-                            PMIC_IO_WRITE_VALID |
-                            PMIC_CRITICAL_SECTION_START_VALID |
-                            PMIC_CRITICAL_SECTION_STOP_VALID |
-                            PMIC_MAX_LOOP_CNT_VALID;
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_INIT_MAX_LOOP_CNT_VALID;
     handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
     handleCfg.i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
     handleCfg.commHandle0 = platform_getCommHandle0();
@@ -172,7 +172,7 @@ void test_neg_adc_adcSetCfg_nullHandle(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_RDIV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID;
     adcCfg.rDivEn = true;
 
     status = Pmic_adcSetCfg(NULL, &adcCfg);
@@ -262,7 +262,7 @@ void test_neg_adc_adcSetCfg_invalidSrcSel(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     adcCfg.srcSel = INVALID_SRC_SEL_VALUE;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -291,7 +291,7 @@ void test_pos_adc_adcSetCfg_resistorDivider(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_RDIV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID;
     adcCfg.rDivEn = true;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -316,7 +316,7 @@ void test_pos_adc_adcSetGetCfg_resistorDividerConsistency(void)
 
     /* Set resistor divider enabled */
     memset(&setCfg, 0, sizeof(setCfg));
-    setCfg.validParams = PMIC_ADC_RDIV_EN_VALID;
+    setCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID;
     setCfg.rDivEn = true;
 
     status = Pmic_adcSetCfg(&pmicHandle, &setCfg);
@@ -324,7 +324,7 @@ void test_pos_adc_adcSetGetCfg_resistorDividerConsistency(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_RDIV_EN_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.rDivEn == true);
@@ -336,7 +336,7 @@ void test_pos_adc_adcSetGetCfg_resistorDividerConsistency(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_RDIV_EN_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.rDivEn == false);
@@ -348,7 +348,7 @@ void test_pos_adc_adcSetCfg_continuousMode(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     adcCfg.contConvEn = false;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -373,7 +373,7 @@ void test_pos_adc_adcSetGetCfg_continuousModeConsistency(void)
 
     /* Set continuous mode disabled (manual) */
     memset(&setCfg, 0, sizeof(setCfg));
-    setCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    setCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     setCfg.contConvEn = false;
 
     status = Pmic_adcSetCfg(&pmicHandle, &setCfg);
@@ -381,7 +381,7 @@ void test_pos_adc_adcSetGetCfg_continuousModeConsistency(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.contConvEn == false);
@@ -393,7 +393,7 @@ void test_pos_adc_adcSetGetCfg_continuousModeConsistency(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.contConvEn == true);
@@ -410,7 +410,7 @@ void test_pos_adc_adcSetCfg_srcSelExternal(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     adcCfg.srcSel = PMIC_ADC_SRC_SEL_INPUT;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -423,7 +423,7 @@ void test_pos_adc_adcSetCfg_srcSelThermal(void)
     Pmic_AdcCfg_t adcCfg;
 
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     adcCfg.srcSel = PMIC_ADC_SRC_SEL_THERMAL_SENSOR;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -437,7 +437,7 @@ void test_pos_adc_adcGetCfg_srcSelection(void)
 
     /* Set to external input */
     memset(&setCfg, 0, sizeof(setCfg));
-    setCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    setCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     setCfg.srcSel = PMIC_ADC_SRC_SEL_INPUT;
 
     status = Pmic_adcSetCfg(&pmicHandle, &setCfg);
@@ -445,7 +445,7 @@ void test_pos_adc_adcGetCfg_srcSelection(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.srcSel == PMIC_ADC_SRC_SEL_INPUT);
@@ -457,7 +457,7 @@ void test_pos_adc_adcGetCfg_srcSelection(void)
 
     /* Get and verify */
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_ADC_SRC_SEL_VALID;
+    getCfg.validParams = PMIC_CFG_ADC_SRC_SEL_VALID;
     status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(getCfg.srcSel == PMIC_ADC_SRC_SEL_THERMAL_SENSOR);
@@ -470,7 +470,7 @@ void test_pos_adc_adcStartSingleConversion_success(void)
 
     /* Configure for manual mode */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     adcCfg.contConvEn = false;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -488,7 +488,7 @@ void test_pos_adc_adcStartSingleConversionBlocking_success(void)
 
     /* Configure for manual mode */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     adcCfg.contConvEn = false;
 
     status = Pmic_adcSetCfg(&pmicHandle, &adcCfg);
@@ -520,7 +520,7 @@ void test_pos_adc_adcGetResultCode_success(void)
 
     /* Configure ADC */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID | PMIC_CFG_ADC_SRC_SEL_VALID;
     adcCfg.contConvEn = false;
     adcCfg.srcSel = PMIC_ADC_SRC_SEL_THERMAL_SENSOR;
 
@@ -550,7 +550,7 @@ void test_pos_adc_fullSequence_configStartPollRead(void)
 
     /* Step 1: Configure ADC */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID | PMIC_ADC_RDIV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID | PMIC_CFG_ADC_SRC_SEL_VALID | PMIC_CFG_ADC_RDIV_EN_VALID;
     adcCfg.contConvEn = false;
     adcCfg.srcSel = PMIC_ADC_SRC_SEL_THERMAL_SENSOR;
     adcCfg.rDivEn = false;
@@ -586,7 +586,7 @@ void test_pos_adc_multipleConversions_independence(void)
 
     /* Configure ADC */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID | PMIC_CFG_ADC_SRC_SEL_VALID;
     adcCfg.contConvEn = false;
     adcCfg.srcSel = PMIC_ADC_SRC_SEL_THERMAL_SENSOR;
 
@@ -632,7 +632,7 @@ void test_neg_adc_maxLoopCntFail(void)
 
     /* Configure ADC for manual mode */
     memset(&adcCfg, 0, sizeof(adcCfg));
-    adcCfg.validParams = PMIC_ADC_CONT_CONV_EN_VALID;
+    adcCfg.validParams = PMIC_CFG_ADC_CONT_CONV_EN_VALID;
     adcCfg.contConvEn = false;
 
     status = Pmic_adcSetCfg(&testHandle, &adcCfg);
@@ -679,7 +679,7 @@ void test_pos_adc_property_randomChannelConfigurations(void)
     {
         /* Generate random configuration */
         memset(&setCfg, 0, sizeof(setCfg));
-        setCfg.validParams = PMIC_ADC_RDIV_EN_VALID | PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID;
+        setCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID | PMIC_CFG_ADC_CONT_CONV_EN_VALID | PMIC_CFG_ADC_SRC_SEL_VALID;
         setCfg.rDivEn = (getRandomBool() != 0U) ? true : false;
         setCfg.contConvEn = (getRandomBool() != 0U) ? true : false;
         setCfg.srcSel = getRandomSrcSel();
@@ -690,7 +690,7 @@ void test_pos_adc_property_randomChannelConfigurations(void)
 
         /* Get configuration */
         memset(&getCfg, 0, sizeof(getCfg));
-        getCfg.validParams = PMIC_ADC_RDIV_EN_VALID | PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID;
+        getCfg.validParams = PMIC_CFG_ADC_RDIV_EN_VALID | PMIC_CFG_ADC_CONT_CONV_EN_VALID | PMIC_CFG_ADC_SRC_SEL_VALID;
         status = Pmic_adcGetCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 

@@ -204,13 +204,13 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
 
     // Read LOW_PWR_CONFIG
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID))
+    if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID))
     {
         status = Pmic_ioRxByte(handle, PMIC_LOW_PWR_CONFIG_REG, &regData);
     }
 
     // Modify LOWPWR_SEL bit field
-    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID, status))
+    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID, status))
     {
         if ((lpmCfg->pinDetection > PMIC_PIN_DETECTION_CONDITION_MAX))
         {
@@ -223,7 +223,7 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
     }
 
     // Modify LOWPWR_DELAY bit field
-    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_DETECTION_DELAY_VALID, status))
+    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID, status))
     {
         if (lpmCfg->detectionDelay > PMIC_DETECTION_DELAY_MAX)
         {
@@ -236,7 +236,7 @@ static int32_t CORE_setLpmDetectionCfg(const Pmic_Handle_t *handle, const Pmic_C
     }
 
     // Write new register value back to PMIC
-    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID, status))
+    if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID, status))
     {
         status = Pmic_ioTxByte(handle, PMIC_LOW_PWR_CONFIG_REG, regData);
     }
@@ -278,7 +278,7 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (Pmic_validParamStatusCheck(
-            localCfg.validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
+            localCfg.validParams, PMIC_CFG_CORE_LPM_ENABLE_ALL_VALID, status))
     {
         // Read LPM_CONF register
         status = Pmic_ioRxByte(handle, PMIC_LPM_CONF_REG, &regData);
@@ -287,19 +287,19 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
     if (status == PMIC_ST_SUCCESS)
     {
         // Modify LOWPWR_VMON_EN bit field
-        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_VMON_EN_VALID))
         {
             Pmic_setBitField_b(&regData, PMIC_LOWPWR_VMON_EN_SHIFT, PMIC_LOWPWR_VMON_EN_MASK, localCfg.vmonEn);
         }
 
         // Modify LOWPWR_ESM_EN bit field
-        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_ESM_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_ESM_EN_VALID))
         {
             Pmic_setBitField_b(&regData, PMIC_LOWPWR_ESM_EN_SHIFT, PMIC_LOWPWR_ESM_EN_MASK, localCfg.esmEn);
         }
 
         // Modify LOWPWR_WD_EN bit field
-        if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_WDG_EN_VALID))
+        if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_WDG_EN_VALID))
         {
             Pmic_setBitField_b(&regData, PMIC_LOWPWR_WD_EN_SHIFT, PMIC_LOWPWR_WD_EN_MASK, localCfg.wdgEn);
         }
@@ -307,7 +307,7 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
 
     // Write new register value back to PMIC
     if (Pmic_validParamStatusCheck(
-        localCfg.validParams, PMIC_LPM_ENABLE_ALL_VALID, status))
+        localCfg.validParams, PMIC_CFG_CORE_LPM_ENABLE_ALL_VALID, status))
     {
         status = Pmic_ioTxByte(handle, PMIC_LPM_CONF_REG, regData);
     }
@@ -321,19 +321,19 @@ static int32_t CORE_getLpmDetectionCfg(const Pmic_Handle_t *handle, Pmic_CoreLpm
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID))
+    if (Pmic_validParamCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID))
     {
         // Read LOW_PWR_CONFIG
         status = Pmic_ioRxByte_CS(handle, PMIC_LOW_PWR_CONFIG_REG, &regData);
 
         // Extract LOWPWR_SEL bit field
-        if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_PIN_DETECTION_VALID, status))
+        if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID, status))
         {
             lpmCfg->pinDetection = Pmic_getBitField(regData, PMIC_LOWPWR_SEL_SHIFT, PMIC_LOWPWR_SEL_MASK);
         }
 
         // Extract LOWPWR_DELAY bit field
-        if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_LPM_DETECTION_DELAY_VALID, status))
+        if (Pmic_validParamStatusCheck(lpmCfg->validParams, PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID, status))
         {
             lpmCfg->detectionDelay = Pmic_getBitField(regData, PMIC_LOWPWR_DELAY_SHIFT, PMIC_LOWPWR_DELAY_MASK);
         }
@@ -373,7 +373,7 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
         status = CORE_getLpmDetectionCfg(handle, &localCfg);
     }
 
-    if (Pmic_validParamStatusCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID, status))
     {
         // Read LPM_CONF register
         status = Pmic_ioRxByte_CS(handle, PMIC_LPM_CONF_REG, &regData);
@@ -381,19 +381,19 @@ int32_t Pmic_getLpmCfg(const Pmic_Handle_t *handle, Pmic_CoreLpmCfg_t *lpmCfg)
         if (status == PMIC_ST_SUCCESS)
         {
             // Extract LOWPWR_VMON_EN bit field
-            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_VMON_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_VMON_EN_VALID))
             {
                 localCfg.vmonEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_VMON_EN_SHIFT);
             }
 
             // Extract LOWPWR_ESM_EN bit field
-            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_ESM_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_ESM_EN_VALID))
             {
                 localCfg.esmEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_ESM_EN_SHIFT);
             }
 
             // Extract LOWPWR_WD_EN bit field
-            if (Pmic_validParamCheck(localCfg.validParams, PMIC_LPM_WDG_EN_VALID))
+            if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_WDG_EN_VALID))
             {
                 localCfg.wdgEn = Pmic_getBitField_b(regData, PMIC_LOWPWR_WD_EN_SHIFT);
             }

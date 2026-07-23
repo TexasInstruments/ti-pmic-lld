@@ -76,12 +76,12 @@ static int32_t gpioTest_initHandle(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
         .ioRead = &platform_rxByte,
@@ -116,27 +116,27 @@ static void gpioTest_setGetCfg(uint32_t validParam, uint8_t setValue,
     getCfg.validParams = validParam;
 
     /* Set the appropriate field based on validParam */
-    if (validParam == PMIC_CFG_GPI1_VALID)
+    if (validParam == PMIC_CFG_GPIO_GPI1_VALID)
     {
         setCfg.gpi1 = setValue;
     }
-    else if (validParam == PMIC_CFG_GPI4_VALID)
+    else if (validParam == PMIC_CFG_GPIO_GPI4_VALID)
     {
         setCfg.gpi4 = setValue;
     }
-    else if (validParam == PMIC_CFG_GPO1_VALID)
+    else if (validParam == PMIC_CFG_GPIO_GPO1_VALID)
     {
         setCfg.gpo1 = setValue;
     }
-    else if (validParam == PMIC_CFG_GPO2_VALID)
+    else if (validParam == PMIC_CFG_GPIO_GPO2_VALID)
     {
         setCfg.gpo2 = setValue;
     }
-    else if (validParam == PMIC_CFG_GPO3_VALID)
+    else if (validParam == PMIC_CFG_GPIO_GPO3_VALID)
     {
         setCfg.gpo3 = setValue;
     }
-    else if (validParam == PMIC_CFG_GPO4_VALID)
+    else if (validParam == PMIC_CFG_GPIO_GPO4_VALID)
     {
         setCfg.gpo4 = setValue;
     }
@@ -211,187 +211,187 @@ static void gpioTest_verifyGpo4(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 /* GPI1 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpi1_esmIn(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPI1_VALID, PMIC_GPI1_ESM_IN, gpioTest_verifyGpi1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPI1_VALID, PMIC_GPI1_ESM_IN, gpioTest_verifyGpi1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpi1_wdIn(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPI1_VALID, PMIC_GPI1_WD_IN, gpioTest_verifyGpi1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPI1_VALID, PMIC_GPI1_WD_IN, gpioTest_verifyGpi1);
 }
 
 /* GPI4 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpi4_comparator(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPI4_VALID, PMIC_GPI4_COMPARATOR, gpioTest_verifyGpi4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPI4_VALID, PMIC_GPI4_COMPARATOR, gpioTest_verifyGpi4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpi4_wdIn(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPI4_VALID, PMIC_GPI4_WD_IN, gpioTest_verifyGpi4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPI4_VALID, PMIC_GPI4_WD_IN, gpioTest_verifyGpi4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpi4_cosN(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPI4_VALID, PMIC_GPI4_COS_N, gpioTest_verifyGpi4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPI4_VALID, PMIC_GPI4_COS_N, gpioTest_verifyGpi4);
 }
 
 /* GPO1 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpo1_lowLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_LOW_LVL, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_LOW_LVL, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_highLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_HIGH_LVL, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_HIGH_LVL, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_hiz(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_HIZ, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_HIZ, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_nint(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_NINT, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_NINT, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_enOut(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_EN_OUT, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_EN_OUT, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_enOut2(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_EN_OUT2, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_EN_OUT2, gpioTest_verifyGpo1);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo1_sinNO(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO1_VALID, PMIC_GPO1_SIN_N_O, gpioTest_verifyGpo1);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO1_VALID, PMIC_GPO1_SIN_N_O, gpioTest_verifyGpo1);
 }
 
 /* GPO2 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpo2_lowLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_LOW_LVL, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_LOW_LVL, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_highLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_HIGH_LVL, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_HIGH_LVL, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_hiz(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_HIZ, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_HIZ, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_comp1Out(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_COMP1_OUT, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_COMP1_OUT, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_enOut2(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_EN_OUT2, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_EN_OUT2, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_syncClkOut(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_SYNCCLKOUT, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_SYNCCLKOUT, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_pgood(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_PGOOD, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_PGOOD, gpioTest_verifyGpo2);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo2_sinPO(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO2_VALID, PMIC_GPO2_SIN_P_O, gpioTest_verifyGpo2);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO2_VALID, PMIC_GPO2_SIN_P_O, gpioTest_verifyGpo2);
 }
 
 /* GPO3 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpo3_lowLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_LOW_LVL, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_LOW_LVL, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_highLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_HIGH_LVL, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_HIGH_LVL, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_hiz(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_HIZ, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_HIZ, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_pgood(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_PGOOD, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_PGOOD, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_comp2Out(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_COMP2_OUT, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_COMP2_OUT, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_enOut2(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_EN_OUT2, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_EN_OUT2, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_safeOut2(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_SAFE_OUT2, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_SAFE_OUT2, gpioTest_verifyGpo3);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo3_cosPO(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO3_VALID, PMIC_GPO3_COS_P_O, gpioTest_verifyGpo3);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO3_VALID, PMIC_GPO3_COS_P_O, gpioTest_verifyGpo3);
 }
 
 /* GPO4 Tests */
 void test_pos_gpio_gpioSetGetCfg_gpo4_lowLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_LOW_LVL, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_LOW_LVL, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_highLvl(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_HIGH_LVL, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_HIGH_LVL, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_hiz(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_HIZ, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_HIZ, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_safeOut2(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_SAFE_OUT2, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_SAFE_OUT2, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_enOut(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_EN_OUT, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_EN_OUT, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_nint(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_NINT, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_NINT, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_pgood(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_PGOOD, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_PGOOD, gpioTest_verifyGpo4);
 }
 
 void test_pos_gpio_gpioSetGetCfg_gpo4_cosNO(void)
 {
-    gpioTest_setGetCfg(PMIC_CFG_GPO4_VALID, PMIC_GPO4_COS_N_O, gpioTest_verifyGpo4);
+    gpioTest_setGetCfg(PMIC_CFG_GPIO_GPO4_VALID, PMIC_GPO4_COS_N_O, gpioTest_verifyGpo4);
 }
 
 /* GPO Output Value Tests */
@@ -427,7 +427,7 @@ void test_pos_gpio_gpioGpo1Hiz_duplicate(void)
     PLATFORM_ASSERT(mockDevice != NULL);
 
     memset(&getCfg, 0, sizeof(getCfg));
-    getCfg.validParams = PMIC_CFG_GPO1_VALID;
+    getCfg.validParams = PMIC_CFG_GPIO_GPO1_VALID;
 
     /* Directly set GPO_CFG1 register to have GPO1_CONF = 6 (duplicate HIZ value)
      * Register layout: GPO_CFG1_REG (0x7C)
@@ -459,7 +459,7 @@ void test_pos_gpio_gpioSafeOutSetGet(void)
     Pmic_GpioSafeOutCfg_t getCfg = {0U};
 
     /* Enable both SAFEOUT1 and SAFEOUT2 */
-    setCfg.validParams = PMIC_GPIO_SAFEOUT1_EN_VALID | PMIC_GPIO_SAFEOUT2_EN_VALID;
+    setCfg.validParams = PMIC_CFG_GPIO_SAFEOUT1_EN_VALID | PMIC_CFG_GPIO_SAFEOUT2_EN_VALID;
     setCfg.safeOut1En = true;
     setCfg.safeOut2En = true;
     status = Pmic_gpioSetSafeOutCfg(&g_pmicHandle, &setCfg);
@@ -491,7 +491,7 @@ void test_pos_gpio_gpioSafeOut_individual(void)
     Pmic_GpioSafeOutCfg_t getCfg = {0U};
 
     /* Enable only SAFEOUT1 */
-    setCfg.validParams = PMIC_GPIO_SAFEOUT1_EN_VALID;
+    setCfg.validParams = PMIC_CFG_GPIO_SAFEOUT1_EN_VALID;
     setCfg.safeOut1En = true;
     status = Pmic_gpioSetSafeOutCfg(&g_pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -502,7 +502,7 @@ void test_pos_gpio_gpioSafeOut_individual(void)
     PLATFORM_ASSERT(getCfg.safeOut1En == true);
 
     /* Enable only SAFEOUT2 */
-    setCfg.validParams = PMIC_GPIO_SAFEOUT2_EN_VALID;
+    setCfg.validParams = PMIC_CFG_GPIO_SAFEOUT2_EN_VALID;
     setCfg.safeOut1En = false;
     setCfg.safeOut2En = true;
     status = Pmic_gpioSetSafeOutCfg(&g_pmicHandle, &setCfg);
@@ -525,7 +525,7 @@ void test_neg_gpio_gpioSetCfg_nullParam_handle(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPI1_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
 
     status = Pmic_gpioSetCfg(NULL, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -557,7 +557,7 @@ void test_neg_gpio_gpioGetCfg_nullParam_handle(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPI1_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
 
     status = Pmic_gpioGetCfg(NULL, &gpioCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -621,7 +621,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpi1(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPI1_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
     gpioCfg.gpi1 = PMIC_GPI1_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -634,7 +634,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpi4(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPI4_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPI4_VALID;
     gpioCfg.gpi4 = PMIC_GPI4_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -647,7 +647,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo1(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPO1_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPO1_VALID;
     gpioCfg.gpo1 = PMIC_GPO1_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -660,7 +660,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo2(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPO2_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPO2_VALID;
     gpioCfg.gpo2 = PMIC_GPO2_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -673,7 +673,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo3(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPO3_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPO3_VALID;
     gpioCfg.gpo3 = PMIC_GPO3_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -686,7 +686,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo4(void)
     int32_t status;
 
     memset(&gpioCfg, 0, sizeof(gpioCfg));
-    gpioCfg.validParams = PMIC_CFG_GPO4_VALID;
+    gpioCfg.validParams = PMIC_CFG_GPIO_GPO4_VALID;
     gpioCfg.gpo4 = PMIC_GPO4_CFG_MAX + 1U;  /* Invalid value */
 
     status = Pmic_gpioSetCfg(&g_pmicHandle, &gpioCfg);
@@ -700,7 +700,7 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo4(void)
 void test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle(void)
 {
     Pmic_GpioSafeOutCfg_t config = {
-        .validParams = PMIC_GPIO_SAFEOUT1_EN_VALID,
+        .validParams = PMIC_CFG_GPIO_SAFEOUT1_EN_VALID,
         .safeOut1En = true
     };
     int32_t status = Pmic_gpioSetSafeOutCfg(NULL, &config);

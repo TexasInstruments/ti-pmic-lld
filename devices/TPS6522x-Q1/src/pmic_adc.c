@@ -81,19 +81,19 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
     status = Pmic_ioRxByte(handle, ADC_CTRL_REG, &regData);
 
     // Set resistor divider enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_RDIV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_RDIV_EN_VALID, status))
     {
         Pmic_setBitField_b(&regData, ADC_RDIV_EN_SHIFT, ADC_RDIV_EN_MASK, adcCfgLocal.rDivEn);
     }
 
     // Set continuous conversion enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_CONT_CONV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_CONT_CONV_EN_VALID, status))
     {
         Pmic_setBitField_b(&regData, ADC_CONT_CONV_SHIFT, ADC_CONT_CONV_MASK, adcCfgLocal.contConvEn);
     }
 
     // Set ADC source select
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_SRC_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_SRC_SEL_VALID, status))
     {
         if (adcCfgLocal.srcSel > PMIC_ADC_SRC_SEL_MAX)
         {
@@ -138,19 +138,19 @@ int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
     }
 
     // Get resistor divider enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_RDIV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_RDIV_EN_VALID, status))
     {
         adcCfgLocal.rDivEn = Pmic_getBitField_b(regData, ADC_RDIV_EN_SHIFT);
     }
 
     // Get continuous conversion enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_CONT_CONV_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_CONT_CONV_EN_VALID, status))
     {
         adcCfgLocal.contConvEn = Pmic_getBitField_b(regData, ADC_CONT_CONV_SHIFT);
     }
 
     // Get ADC source select
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_ADC_SRC_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_SRC_SEL_VALID, status))
     {
         adcCfgLocal.srcSel = Pmic_getBitField(regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK);
     }

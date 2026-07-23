@@ -232,9 +232,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_POWER_TWARN_LEVEL_VALID   (1UL << 0U)
-#define PMIC_POWER_TSD_ORD_LEVEL_VALID (1UL << 1U)
-#define PMIC_POWER_TWARN_CONFIG_VALID  (1UL << 2U)
+#define PMIC_CFG_PWR_TWARN_LEVEL_VALID   (1UL << 0U)
+#define PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID (1UL << 1U)
+#define PMIC_CFG_PWR_TWARN_CONFIG_VALID  (1UL << 2U)
 /** @} */
 
 /**
@@ -285,17 +285,17 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_CFG_ENABLE_VALID              (1UL << 0U)
-#define PMIC_PWR_CFG_MODE_VALID                (1UL << 1U)
-#define PMIC_PWR_CFG_ILIM_VALID                (1UL << 2U)
-#define PMIC_PWR_CFG_VOLTAGE_VALID             (1UL << 3U)
-#define PMIC_PWR_CFG_DEGLITCH_VALID            (1UL << 4U)
-#define PMIC_PWR_CFG_UV_THRESH_VALID           (1UL << 5U)
-#define PMIC_PWR_CFG_OV_THRESH_VALID           (1UL << 6U)
-#define PMIC_PWR_CFG_UV_REACT_VALID            (1UL << 7U)
-#define PMIC_PWR_CFG_OV_REACT_VALID            (1UL << 8U)
-#define PMIC_PWR_CFG_RV_REACT_VALID            (1UL << 9U)
-#define PMIC_PWR_CFG_SC_REACT_VALID            (1UL << 10U)
+#define PMIC_CFG_PWR_ENABLE_VALID              (1UL << 0U)
+#define PMIC_CFG_PWR_MODE_VALID                (1UL << 1U)
+#define PMIC_CFG_PWR_ILIM_VALID                (1UL << 2U)
+#define PMIC_CFG_PWR_VOLTAGE_VALID             (1UL << 3U)
+#define PMIC_CFG_PWR_DEGLITCH_VALID            (1UL << 4U)
+#define PMIC_CFG_PWR_UV_THRESH_VALID           (1UL << 5U)
+#define PMIC_CFG_PWR_OV_THRESH_VALID           (1UL << 6U)
+#define PMIC_CFG_PWR_UV_REACT_VALID            (1UL << 7U)
+#define PMIC_CFG_PWR_OV_REACT_VALID            (1UL << 8U)
+#define PMIC_CFG_PWR_RV_REACT_VALID            (1UL << 9U)
+#define PMIC_CFG_PWR_SC_REACT_VALID            (1UL << 10U)
 /** @} */
 
 /**
@@ -308,16 +308,16 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_CFG_ALL_VALID           (\
-    PMIC_PWR_CFG_ENABLE_VALID    |\
-    PMIC_PWR_CFG_ILIM_VALID      |\
-    PMIC_PWR_CFG_VOLTAGE_VALID   |\
-    PMIC_PWR_CFG_DEGLITCH_VALID  |\
-    PMIC_PWR_CFG_UV_THRESH_VALID |\
-    PMIC_PWR_CFG_OV_THRESH_VALID |\
-    PMIC_PWR_CFG_UV_REACT_VALID  |\
-    PMIC_PWR_CFG_OV_REACT_VALID  |\
-    PMIC_PWR_CFG_RV_REACT_VALID  |\
-    PMIC_PWR_CFG_SC_REACT_VALID)
+    PMIC_CFG_PWR_ENABLE_VALID    |\
+    PMIC_CFG_PWR_ILIM_VALID      |\
+    PMIC_CFG_PWR_VOLTAGE_VALID   |\
+    PMIC_CFG_PWR_DEGLITCH_VALID  |\
+    PMIC_CFG_PWR_UV_THRESH_VALID |\
+    PMIC_CFG_PWR_OV_THRESH_VALID |\
+    PMIC_CFG_PWR_UV_REACT_VALID  |\
+    PMIC_CFG_PWR_OV_REACT_VALID  |\
+    PMIC_CFG_PWR_RV_REACT_VALID  |\
+    PMIC_CFG_PWR_SC_REACT_VALID)
 /** @} */
 
 /**
@@ -326,8 +326,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_PWR_SEQ_STARTUP_VALID             (1UL << 0U)
-#define PMIC_PWR_SEQ_SHUTDOWN_VALID            (1UL << 1U)
+#define PMIC_CFG_PWR_SEQ_STARTUP_VALID             (1UL << 0U)
+#define PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID            (1UL << 1U)
 /** @} */
 
 /**
@@ -340,8 +340,8 @@ extern "C" {
  * @{
  */
 #define PMIC_PWR_SEQ_ALL_VALID            (\
-    PMIC_PWR_SEQ_STARTUP_VALID |\
-    PMIC_PWR_SEQ_SHUTDOWN_VALID)
+    PMIC_CFG_PWR_SEQ_STARTUP_VALID |\
+    PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID)
 /** @} */
 
 /* ========================================================================== */

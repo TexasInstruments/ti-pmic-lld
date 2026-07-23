@@ -751,12 +751,12 @@ void test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr(void)
 
 
     /* Test higherVbatStbyExitThr = true */
-    cfgSet.validParams = PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID;
+    cfgSet.validParams = PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID;
     cfgSet.higherVbatStbyExitThr = true;
     status = Pmic_fsmSetCfg(&pmicHandle, &cfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    cfgGet.validParams = PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID;
+    cfgGet.validParams = PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID;
     status = Pmic_fsmGetCfg(&pmicHandle, &cfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(cfgGet.higherVbatStbyExitThr == cfgSet.higherVbatStbyExitThr);
@@ -777,7 +777,7 @@ void test_neg_fsm_fsmSetCfg_invalidVbatStbyEntryThr(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID;
     fsmCfg.vbatStbyEntryThr = PMIC_VBAT_STBY_ENTRY_THR_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -790,7 +790,7 @@ void test_neg_fsm_fsmSetCfg_invalidPwdThr(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_PWD_THR_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_PWD_THR_VALID;
     fsmCfg.pwdThr = PMIC_PWD_THR_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -803,7 +803,7 @@ void test_neg_fsm_fsmSetCfg_invalidRstMcuTmo(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_RST_MCU_TMO_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_RST_MCU_TMO_VALID;
     fsmCfg.rstMcuTmo = PMIC_RST_MCU_TMO_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -816,7 +816,7 @@ void test_neg_fsm_fsmSetCfg_invalidNrstExt(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_NRST_EXT_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_NRST_EXT_VALID;
     fsmCfg.nrstExt = PMIC_NRST_EXT_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -829,7 +829,7 @@ void test_neg_fsm_fsmSetCfg_invalidSafeTmo(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_SAFE_TMO_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_SAFE_TMO_VALID;
     fsmCfg.safeTmo = PMIC_SAFE_TMO_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -842,7 +842,7 @@ void test_neg_fsm_fsmSetCfg_invalidSafeLockThr(void)
     Pmic_FsmCfg_t fsmCfg = {0};
 
 
-    fsmCfg.validParams = PMIC_CFG_SAFE_LOCK_THR_VALID;
+    fsmCfg.validParams = PMIC_CFG_FSM_SAFE_LOCK_THR_VALID;
     fsmCfg.safeLockThr = PMIC_SAFE_LOCK_THR_MAX + 1;
     status = Pmic_fsmSetCfg(&pmicHandle, &fsmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -963,7 +963,7 @@ void test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly(void)
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
 
 
-    pwrLatchCfg.validParams = PMIC_CFG_PWD_DLY_VALID;
+    pwrLatchCfg.validParams = PMIC_CFG_FSM_PWD_DLY_VALID;
     pwrLatchCfg.pwdDly = PMIC_PWD_DLY_MAX + 1;
     status = Pmic_fsmSetPowerLatchCfg(&pmicHandle, &pwrLatchCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -975,7 +975,7 @@ void test_neg_fsm_fsmGetPowerLatchCfg_nullHandle(void)
     int32_t status;
     Pmic_FsmPwrLatchCfg_t pwrLatchCfg = {0};
 
-    pwrLatchCfg.validParams = PMIC_CFG_PWD_DLY_VALID;
+    pwrLatchCfg.validParams = PMIC_CFG_FSM_PWD_DLY_VALID;
     status = Pmic_fsmGetPowerLatchCfg(NULL, &pwrLatchCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -1007,7 +1007,7 @@ void test_neg_fsm_fsmSetPowerLatch_nullHandle(void)
     int32_t status;
     Pmic_FsmPwrLatch_t pwrLatch = {0};
 
-    pwrLatch.validParams = PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID;
+    pwrLatch.validParams = PMIC_CFG_FSM_STBY_ERR_WAKE_LATCH_VALID;
     status = Pmic_fsmSetPowerLatch(NULL, &pwrLatch);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -1158,7 +1158,7 @@ void test_pos_fsm_fsmGetCfg_vbatStbyEntryThr(void)
 
 
     /* Get only vbatStbyEntryThr parameter */
-    cfgGet.validParams = PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID;
+    cfgGet.validParams = PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID;
     status = Pmic_fsmGetCfg(&pmicHandle, &cfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1193,7 +1193,7 @@ void test_pos_fsm_fsmGetPowerLatchCfg_individualParams(void)
 
 
     /* Get stbyErrWakeEventPwrlEn individually */
-    pwrLatchCfgGet.validParams = PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
+    pwrLatchCfgGet.validParams = PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
     status = Pmic_fsmGetPowerLatchCfg(&pmicHandle, &pwrLatchCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1215,7 +1215,7 @@ void test_pos_fsm_fsmGetPowerLatch_individualParams(void)
 
 
     /* Get stbyErrWakeLatch individually */
-    pwrLatchGet.validParams = PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
+    pwrLatchGet.validParams = PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
     status = Pmic_fsmGetPowerLatch(&pmicHandle, &pwrLatchGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -1355,12 +1355,12 @@ void fsm_test(void *args)
     testTimer_startModule("FSM");
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -1473,21 +1473,21 @@ void test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent(void)
 
 
     // Set power latch config with STBY_ERR_WAKE_EVENT_PWRL_EN_VALID
-    pwrLatchCfg.validParams = PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
+    pwrLatchCfg.validParams = PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID;
     pwrLatchCfg.stbyErrWakeEventPwrlEn = true;
 
     status = Pmic_fsmSetPowerLatchCfg(&pmicHandle, &pwrLatchCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Also test with WAKE1_EVENT_PWRL_EN_VALID
-    pwrLatchCfg.validParams = PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID;
+    pwrLatchCfg.validParams = PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID;
     pwrLatchCfg.wake1EventPwrlEn = true;
 
     status = Pmic_fsmSetPowerLatchCfg(&pmicHandle, &pwrLatchCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // And with WAKE2_EVENT_PWRL_EN_VALID
-    pwrLatchCfg.validParams = PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID;
+    pwrLatchCfg.validParams = PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID;
     pwrLatchCfg.wake2EventPwrlEn = true;
 
     status = Pmic_fsmSetPowerLatchCfg(&pmicHandle, &pwrLatchCfg);

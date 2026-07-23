@@ -46,12 +46,14 @@
 /*                             Global Variables                               */
 /* ========================================================================== */
 static Pmic_Handle_t pmicHandle;
+static volatile int g_irqCallbackInvoked = 0;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 static void irqTest_setGetMaskError(uint8_t irqNum);
 static int32_t irqTest_setGetMask(uint8_t irqNum, bool shouldMask);
+static void irqTest_callbackHelper(void);
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -62,17 +64,20 @@ void irq_test(void *args)
     (void)args;
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+
     Pmic_HandleCfg_t coreCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_CRC_ENABLE_VALID |
-                        PMIC_CONFIG_CRC_ENABLE_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .crcEnable = PMIC_DISABLE,
@@ -84,8 +89,6 @@ void irq_test(void *args)
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse
     };
-
-    platform_init();
 
     testTimer_startModule("IRQ");
 
@@ -2162,4 +2165,35 @@ void test_pos_irq_irqGetNextFlag_noFlagsFound(void)
     // This should return PMIC_ST_WARN_NO_IRQ_REMAINING (line 758)
     status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &nextIrqNum);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+/* ========================================================================== */
+/*           Test APIs: Pmic_irqResponseCallback (TC-IRQ-0031)               */
+/* ========================================================================== */
+
+static void irqTest_callbackHelper(void) { g_irqCallbackInvoked++; }
+
+void test_pos_irq_irqResponseCallback_callbackInvoked(void)
+{
+    Pmic_Handle_t testHandle = {0};
+    testHandle.irqResponseCallback = &irqTest_callbackHelper;
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(&testHandle);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 1);
+}
+
+void test_pos_irq_irqResponseCallback_nullCallback(void)
+{
+    Pmic_Handle_t testHandle = {0};
+    testHandle.irqResponseCallback = NULL;
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(&testHandle);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 0);
+}
+
+void test_pos_irq_irqResponseCallback_nullHandle(void)
+{
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(NULL);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 0);
 }

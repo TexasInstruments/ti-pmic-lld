@@ -146,14 +146,14 @@ void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
     Pmic_WdgCfg_t wdgCfg = {0};
 
     /* Set long window duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID;
     wdgCfg.longWinCode = TEST_INVALID_PARAM_255;  // 255 * 1100us = 280.5ms (max possible, approximates 772ms intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Get and verify long window duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID;
     wdgCfg.longWinCode = 0U;
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
@@ -173,14 +173,14 @@ void test_pos_wdg_wdgSetCfg_window1Duration(void)
     Pmic_WdgCfg_t wdgCfg = {0};
 
     /* Set window-1 duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_WIN1_CODE_VALID;
     wdgCfg.win1Code = 0x40U;  // 64 * 1100us = 70.4ms (exact match to original intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Get and verify window-1 duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_WIN1_CODE_VALID;
     wdgCfg.win1Code = 0U;
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
@@ -200,14 +200,14 @@ void test_pos_wdg_wdgSetCfg_window2Duration(void)
     Pmic_WdgCfg_t wdgCfg = {0};
 
     /* Set window-2 duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_WIN2_CODE_VALID;
     wdgCfg.win2Code = 0x40U;  // 64 * 1100us = 70.4ms (exact match to original intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Get and verify window-2 duration */
-    wdgCfg.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_WIN2_CODE_VALID;
     wdgCfg.win2Code = 0U;
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
@@ -380,21 +380,21 @@ void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
     Pmic_WdgCfg_t wdgCfg = {0};
 
     /* Configure long window and verify we can return to it */
-    wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID;
     wdgCfg.longWinCode = TEST_INVALID_PARAM_255;  // 255 * 1100us = 280.5ms (max possible, approximates 512ms intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Set a different window temporarily */
-    wdgCfg.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_WIN1_CODE_VALID;
     wdgCfg.win1Code = 0x20U;  // 32 * 1100us = 35.2ms (exact match to original intent)
 
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Return to long window and verify */
-    wdgCfg.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID;
+    wdgCfg.validParams = PMIC_CFG_WDG_LONG_WIN_CODE_VALID;
     wdgCfg.longWinCode = 0U;
 
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
@@ -1973,12 +1973,12 @@ void wdg_test(void *args)
     testTimer_startModule("WDG");
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID),
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,

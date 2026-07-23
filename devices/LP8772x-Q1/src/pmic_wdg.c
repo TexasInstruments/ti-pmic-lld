@@ -107,12 +107,12 @@ static int32_t WDG_setWindowsTimeIntervals(const Pmic_Handle_t *handle, const Pm
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Set wdg long window time interval */
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONG_WIN_CODE_VALID)) {
         status = Pmic_ioTxByte_CS(handle, PMIC_WD_LONGWIN_CFG_REG, config->longWinCode);
     }
 
     /* Set Window 1 time interval */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN1DURATION_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN1_CODE_VALID, status)) {
         if (config->win1Code > PMIC_WDG_WIN_CODE_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -121,7 +121,7 @@ static int32_t WDG_setWindowsTimeIntervals(const Pmic_Handle_t *handle, const Pm
     }
 
     /* Set Window 2 time interval */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN2DURATION_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN2_CODE_VALID, status)) {
         if (config->win2Code > PMIC_WDG_WIN_CODE_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -136,7 +136,7 @@ static int32_t WDG_getLongWindowTimeInterval(const Pmic_Handle_t *handle, Pmic_W
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONG_WIN_CODE_VALID)) {
         status = Pmic_ioRxByte_CS(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -151,7 +151,7 @@ static int32_t WDG_getWindow1TimeInterval(const Pmic_Handle_t *handle, Pmic_WdgC
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN1DURATION_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN1_CODE_VALID)) {
         status = Pmic_ioRxByte_CS(handle, PMIC_WD_WIN1_CFG_REG, &regVal);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -166,7 +166,7 @@ static int32_t WDG_getWindow2TimeInterval(const Pmic_Handle_t *handle, Pmic_WdgC
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN2DURATION_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN2_CODE_VALID)) {
         status = Pmic_ioRxByte_CS(handle, PMIC_WD_WIN2_CFG_REG, &regVal);
 
         if (PMIC_ST_SUCCESS == status) {

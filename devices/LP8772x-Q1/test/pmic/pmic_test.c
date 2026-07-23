@@ -110,18 +110,18 @@ void test_neg_pmic_init_nullCoreCfg(void)
 
 static inline void pmicInitTest_initCoreCfg(Pmic_HandleCfg_t *coreCfg)
 {
-    coreCfg->validParams = PMIC_COMM_MODE_VALID |
-                           PMIC_I2C_ADDR0_VALID |
-                           PMIC_I2C_ADDR1_VALID |
-                           PMIC_I2C_ADDR2_VALID |
-                           PMIC_CRC_ENABLE_VALID |
-                           PMIC_CONFIG_CRC_ENABLE_VALID |
-                           PMIC_COMM_HANDLE_0_VALID |
-                           PMIC_IO_READ_VALID |
-                           PMIC_IO_WRITE_VALID |
-                           PMIC_CRITICAL_SECTION_START_VALID |
-                           PMIC_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_IRQ_RESPONSE_CALLBACK_VALID;
+    coreCfg->validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                           PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                           PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                           PMIC_CFG_INIT_I2C_ADDR2_VALID |
+                           PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                           PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                           PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                           PMIC_CFG_INIT_IO_READ_VALID |
+                           PMIC_CFG_INIT_IO_WRITE_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                           PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
     coreCfg->commMode = PMIC_INTF_I2C_SINGLE;
     coreCfg->i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
     coreCfg->i2cAddr1 = PMIC_TEST_ARBITRARY_VALUE;   // Not needed to be specified for Coach
@@ -656,14 +656,14 @@ void test_pos_pmic_checkHandle_validations(void)
 
 void test_pos_pmic_init_withRetryCnt(void)
 {
-    // Initialize with PMIC_RETRY_CNT_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_CNT_VALID set
     Pmic_HandleCfg_t coreCfg = {0};
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
     // Add retry count configuration
-    coreCfg.validParams |= PMIC_RETRY_CNT_VALID;
+    coreCfg.validParams |= PMIC_CFG_INIT_RETRY_CNT_VALID;
     coreCfg.retryCnt = 5U;
 
     int32_t status = Pmic_init(&handle, &coreCfg);
@@ -679,7 +679,7 @@ void test_pos_pmic_init_withRetryCnt(void)
 
 void test_pos_pmic_init_withRetryInterval(void)
 {
-    // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID set
     Pmic_HandleCfg_t coreCfg = {0};
     Pmic_Handle_t handle = {0};
 
@@ -687,7 +687,7 @@ void test_pos_pmic_init_withRetryInterval(void)
 
     // Add retry interval configuration
     // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
-    coreCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    coreCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     coreCfg.retryIntervalMs = 100U;
     coreCfg.timerWaitMs = &testTimerWaitWrapper;
 
@@ -704,14 +704,14 @@ void test_pos_pmic_init_withRetryInterval(void)
 
 void test_pos_pmic_init_withTimerWaitMs(void)
 {
-    // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
+    // Initialize with PMIC_CFG_INIT_TIMER_WAIT_MS_VALID and valid callback
     Pmic_HandleCfg_t coreCfg = {0};
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
     // Add timer wait callback configuration
-    coreCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    coreCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     coreCfg.timerWaitMs = &testTimerWaitWrapper;
 
     int32_t status = Pmic_init(&handle, &coreCfg);
@@ -727,14 +727,14 @@ void test_pos_pmic_init_withTimerWaitMs(void)
 
 void test_neg_pmic_init_timerWaitNull(void)
 {
-    // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
+    // Set PMIC_CFG_INIT_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_HandleCfg_t coreCfg = {0};
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initCoreCfg(&coreCfg);
 
     // Set valid param flag but provide NULL callback
-    coreCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    coreCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     coreCfg.timerWaitMs = NULL;
 
     int32_t status = Pmic_init(&handle, &coreCfg);
@@ -779,7 +779,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
 
     // Initialize with valid configuration
     pmicInitTest_initCoreCfg(&coreCfg);
-    coreCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    coreCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     coreCfg.retryIntervalMs = 10U;  // Non-zero retry interval
     coreCfg.timerWaitMs = &testTimerWaitWrapper;  // Provide timer during init
 

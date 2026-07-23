@@ -55,6 +55,8 @@
 /*                             Global Variables                               */
 /* ========================================================================== */
 static Pmic_Handle_t pmicHandle = {0U};
+static volatile int g_irqCallbackInvoked = 0;
+static void irqTest_callbackHelper(void) { g_irqCallbackInvoked++; }
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -74,14 +76,14 @@ void irq_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -1629,4 +1631,33 @@ void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
 #else
     TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
 #endif
+}
+
+/* ========================================================================== */
+/*           Test APIs: Pmic_irqResponseCallback (TC-IRQ-0033)               */
+/* ========================================================================== */
+
+void test_pos_irq_irqResponseCallback_callbackInvoked(void)
+{
+    Pmic_Handle_t testHandle = {0};
+    testHandle.irqResponseCallback = &irqTest_callbackHelper;
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(&testHandle);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 1);
+}
+
+void test_pos_irq_irqResponseCallback_nullCallback(void)
+{
+    Pmic_Handle_t testHandle = {0};
+    testHandle.irqResponseCallback = NULL;
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(&testHandle);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 0);
+}
+
+void test_pos_irq_irqResponseCallback_nullHandle(void)
+{
+    g_irqCallbackInvoked = 0;
+    Pmic_irqResponseCallback(NULL);
+    PLATFORM_ASSERT(g_irqCallbackInvoked == 0);
 }

@@ -19,7 +19,7 @@ TEST_INCLUDE_DIRS = $(sort $(dir $(wildcard */*.h)))
 TEST_INCLUDE_FLAGS = $(addprefix -I,$(TEST_INCLUDE_DIRS))
 
 # Compiler flags (device-specific includes)
-CFLAGS = $(BASE_CFLAGS) -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
+CFLAGS = $(BASE_CFLAGS) -Wno-used-but-marked-unused -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
 
 # PMIC driver source files (always needed)
 PMIC_SOURCES = \

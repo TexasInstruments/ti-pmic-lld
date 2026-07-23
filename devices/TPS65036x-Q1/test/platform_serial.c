@@ -365,6 +365,15 @@ int32_t serial_init(const char *port, uint32_t baud)
         }
     }
 
+    /* Normalise port name: MSYS2 path conversion strips a backslash from
+     * \\.\COMn, so accept bare "COMn" or already-prefixed forms and always
+     * pass the required \\.\COMn prefix to CreateFileA. */
+    static char port_buf[32];
+    if (port[0] != '\\') {
+        snprintf(port_buf, sizeof(port_buf), "\\\\.\\%s", port);
+        port = port_buf;
+    }
+
     /* Open serial port */
     g_serial.hSerial = CreateFileA(port,
                                    GENERIC_READ | GENERIC_WRITE,
@@ -467,8 +476,8 @@ int32_t serial_send_command(const char *cmd)
         return -2;
     }
 
-    /* Write newline */
-    if (!WriteFile(g_serial.hSerial, "\n", 1, &bytes_written, NULL)) {
+    /* Write CR+LF — firmware triggers on '\r' (VCOMPeek/UARTPeek check for '\r') */
+    if (!WriteFile(g_serial.hSerial, "\r\n", 2, &bytes_written, NULL)) {
         snprintf(g_serial.error_msg, sizeof(g_serial.error_msg),
                  "Failed to write newline: Error %lu", GetLastError());
         return -2;

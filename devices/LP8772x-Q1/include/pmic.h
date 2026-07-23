@@ -113,21 +113,21 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_COMM_MODE_VALID              (1UL << 0U)
-#define PMIC_I2C_ADDR0_VALID              (1UL << 1U)
-#define PMIC_I2C_ADDR1_VALID              (1UL << 2U)
-#define PMIC_I2C_ADDR2_VALID              (1UL << 3U)
-#define PMIC_COMM_HANDLE_0_VALID          (1UL << 4U)
-#define PMIC_IO_READ_VALID                (1UL << 5U)
-#define PMIC_IO_WRITE_VALID               (1UL << 6U)
-#define PMIC_CRITICAL_SECTION_START_VALID (1UL << 7U)
-#define PMIC_CRITICAL_SECTION_STOP_VALID  (1UL << 8U)
-#define PMIC_CRC_ENABLE_VALID             (1UL << 9U)
-#define PMIC_CONFIG_CRC_ENABLE_VALID      (1UL << 10U)
-#define PMIC_IRQ_RESPONSE_CALLBACK_VALID  (1UL << 11U)
-#define PMIC_RETRY_CNT_VALID              (1UL << 12U)
-#define PMIC_RETRY_INTERVAL_MS_VALID      (1UL << 13U)
-#define PMIC_TIMER_WAIT_MS_VALID          (1UL << 14U)
+#define PMIC_CFG_INIT_COMM_MODE_VALID              (1UL << 0U)
+#define PMIC_CFG_INIT_I2C_ADDR0_VALID              (1UL << 1U)
+#define PMIC_CFG_INIT_I2C_ADDR1_VALID              (1UL << 2U)
+#define PMIC_CFG_INIT_I2C_ADDR2_VALID              (1UL << 3U)
+#define PMIC_CFG_INIT_COMM_HANDLE_0_VALID          (1UL << 4U)
+#define PMIC_CFG_INIT_IO_READ_VALID                (1UL << 5U)
+#define PMIC_CFG_INIT_IO_WRITE_VALID               (1UL << 6U)
+#define PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID (1UL << 7U)
+#define PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID  (1UL << 8U)
+#define PMIC_CFG_INIT_CRC_ENABLE_VALID             (1UL << 9U)
+#define PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID      (1UL << 10U)
+#define PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID  (1UL << 11U)
+#define PMIC_CFG_INIT_RETRY_CNT_VALID              (1UL << 12U)
+#define PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID      (1UL << 13U)
+#define PMIC_CFG_INIT_TIMER_WAIT_MS_VALID          (1UL << 14U)
 /** @} */
 
 /**
@@ -147,30 +147,30 @@ extern "C" {
  * ensure that it is set accordingly.
  * */
 #define PMIC_ALL_I2C_VALID        (\
-    PMIC_COMM_MODE_VALID              |\
-    PMIC_I2C_ADDR0_VALID              |\
-    PMIC_CRC_ENABLE_VALID             |\
-    PMIC_CONFIG_CRC_ENABLE_VALID      |\
-    PMIC_IO_READ_VALID                |\
-    PMIC_IO_WRITE_VALID               |\
-    PMIC_COMM_HANDLE_0_VALID          |\
-    PMIC_CRITICAL_SECTION_START_VALID |\
-    PMIC_CRITICAL_SECTION_STOP_VALID  |\
-    PMIC_RETRY_CNT_VALID              |\
-    PMIC_RETRY_INTERVAL_MS_VALID      |\
-    PMIC_TIMER_WAIT_MS_VALID)
+    PMIC_CFG_INIT_COMM_MODE_VALID              |\
+    PMIC_CFG_INIT_I2C_ADDR0_VALID              |\
+    PMIC_CFG_INIT_CRC_ENABLE_VALID             |\
+    PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID      |\
+    PMIC_CFG_INIT_IO_READ_VALID                |\
+    PMIC_CFG_INIT_IO_WRITE_VALID               |\
+    PMIC_CFG_INIT_COMM_HANDLE_0_VALID          |\
+    PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |\
+    PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID  |\
+    PMIC_CFG_INIT_RETRY_CNT_VALID              |\
+    PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID      |\
+    PMIC_CFG_INIT_TIMER_WAIT_MS_VALID)
 /** @brief Helper macro to set all `validParams` necessary for configuring SPI
  * based driver. */
 #define PMIC_ALL_SPI_VALID        (\
-    PMIC_COMM_MODE_VALID              |\
-    PMIC_IO_READ_VALID                |\
-    PMIC_IO_WRITE_VALID               |\
-    PMIC_COMM_HANDLE_0_VALID          |\
-    PMIC_CRITICAL_SECTION_START_VALID |\
-    PMIC_CRITICAL_SECTION_STOP_VALID  |\
-    PMIC_RETRY_CNT_VALID              |\
-    PMIC_RETRY_INTERVAL_MS_VALID      |\
-    PMIC_TIMER_WAIT_MS_VALID)
+    PMIC_CFG_INIT_COMM_MODE_VALID              |\
+    PMIC_CFG_INIT_IO_READ_VALID                |\
+    PMIC_CFG_INIT_IO_WRITE_VALID               |\
+    PMIC_CFG_INIT_COMM_HANDLE_0_VALID          |\
+    PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |\
+    PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID  |\
+    PMIC_CFG_INIT_RETRY_CNT_VALID              |\
+    PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID      |\
+    PMIC_CFG_INIT_TIMER_WAIT_MS_VALID)
 /** @} */
 
 /*==========================================================================*/
@@ -258,7 +258,7 @@ extern "C" {
  * can be used to support Pseudo-nINT functionality when servicing WD QA sequences.
  * While performing a WD QA sequence, the PMIC LLD will check the INT_TOP_STATUS
  * field, and if set will call this function to notify the user that an
- * interrupt is pending. Valid only when `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit of
+ * interrupt is pending. Valid only when `PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID` bit of
  * `validParams` is set.
  *
  * @param timerWaitMs Function pointer to platform-specific timer-based wait API.

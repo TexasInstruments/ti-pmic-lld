@@ -1448,22 +1448,22 @@ static int32_t PWR_setSingleResourceCfg(const Pmic_Handle_t *handle, const Pmic_
     // Define linkage between user provided valid params and the functions which
     // handle setting those configurations
     const SetResourceProcessor_t resourceProcessors[] = {
-        { (uint16_t)PMIC_PWR_CFG_MODE_VALID, PWR_setModeCfg },
-        { (uint16_t)PMIC_PWR_CFG_ILIM_VALID, PWR_setIlimCfg },
-        { (uint16_t)PMIC_PWR_CFG_VOLTAGE_VALID, PWR_setVoltageCfg },
-        { (uint16_t)PMIC_PWR_CFG_DEGLITCH_VALID, PWR_setDeglitchCfg },
-        { (uint16_t)PMIC_PWR_CFG_UV_THRESH_VALID, PWR_setUvThreshCfg },
-        { (uint16_t)PMIC_PWR_CFG_UV_REACT_VALID, PWR_setUvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_OV_THRESH_VALID, PWR_setOvThreshCfg },
-        { (uint16_t)PMIC_PWR_CFG_OV_REACT_VALID, PWR_setOvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_RV_REACT_VALID, PWR_setRvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_SC_REACT_VALID, PWR_setScReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_MODE_VALID, PWR_setModeCfg },
+        { (uint16_t)PMIC_CFG_PWR_ILIM_VALID, PWR_setIlimCfg },
+        { (uint16_t)PMIC_CFG_PWR_VOLTAGE_VALID, PWR_setVoltageCfg },
+        { (uint16_t)PMIC_CFG_PWR_DEGLITCH_VALID, PWR_setDeglitchCfg },
+        { (uint16_t)PMIC_CFG_PWR_UV_THRESH_VALID, PWR_setUvThreshCfg },
+        { (uint16_t)PMIC_CFG_PWR_UV_REACT_VALID, PWR_setUvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_OV_THRESH_VALID, PWR_setOvThreshCfg },
+        { (uint16_t)PMIC_CFG_PWR_OV_REACT_VALID, PWR_setOvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_RV_REACT_VALID, PWR_setRvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_SC_REACT_VALID, PWR_setScReactionCfg },
     };
 
     // First check for the enable bit, if this is valid and the user is
     // disabling the resource, set this first. If the user is enabling the power
     // resource, do that last.
-    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) == true) &&
+    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PWR_ENABLE_VALID, status) == true) &&
         (config->enable == PMIC_DISABLE)) {
         status = Pmic_pwrSetResourceEnable(handle, (uint8_t)config->resource, (bool)config->enable);
     }
@@ -1484,7 +1484,7 @@ static int32_t PWR_setSingleResourceCfg(const Pmic_Handle_t *handle, const Pmic_
     // Final check for the enable bit, if this is valid and the user is enabling
     // the resource, we skipped configuration at the start of this function and
     // need to enable it now.
-    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_CFG_ENABLE_VALID, status) == true) &&
+    if ((Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PWR_ENABLE_VALID, status) == true) &&
         (config->enable == PMIC_ENABLE)) {
         status = Pmic_pwrSetResourceEnable(handle, (uint8_t)config->resource, (bool)config->enable);
     }
@@ -1548,17 +1548,17 @@ static int32_t PWR_getSingleResourceCfg(const Pmic_Handle_t *handle, Pmic_PowerR
     // Define linkage between user provided valid params and the functions which
     // handle getting those configurations
     const GetResourceProcessor_t resourceProcessors[] = {
-        { (uint16_t)PMIC_PWR_CFG_ENABLE_VALID, PWR_getEnableCfg },
-        { (uint16_t)PMIC_PWR_CFG_MODE_VALID, PWR_getModeCfg },
-        { (uint16_t)PMIC_PWR_CFG_ILIM_VALID, PWR_getIlimCfg },
-        { (uint16_t)PMIC_PWR_CFG_VOLTAGE_VALID, PWR_getVoltageCfg },
-        { (uint16_t)PMIC_PWR_CFG_DEGLITCH_VALID, PWR_getDeglitchCfg },
-        { (uint16_t)PMIC_PWR_CFG_UV_THRESH_VALID, PWR_getUvThreshCfg },
-        { (uint16_t)PMIC_PWR_CFG_UV_REACT_VALID, PWR_getUvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_OV_THRESH_VALID, PWR_getOvThreshCfg },
-        { (uint16_t)PMIC_PWR_CFG_OV_REACT_VALID, PWR_getOvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_RV_REACT_VALID, PWR_getRvReactionCfg },
-        { (uint16_t)PMIC_PWR_CFG_SC_REACT_VALID, PWR_getScReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_ENABLE_VALID, PWR_getEnableCfg },
+        { (uint16_t)PMIC_CFG_PWR_MODE_VALID, PWR_getModeCfg },
+        { (uint16_t)PMIC_CFG_PWR_ILIM_VALID, PWR_getIlimCfg },
+        { (uint16_t)PMIC_CFG_PWR_VOLTAGE_VALID, PWR_getVoltageCfg },
+        { (uint16_t)PMIC_CFG_PWR_DEGLITCH_VALID, PWR_getDeglitchCfg },
+        { (uint16_t)PMIC_CFG_PWR_UV_THRESH_VALID, PWR_getUvThreshCfg },
+        { (uint16_t)PMIC_CFG_PWR_UV_REACT_VALID, PWR_getUvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_OV_THRESH_VALID, PWR_getOvThreshCfg },
+        { (uint16_t)PMIC_CFG_PWR_OV_REACT_VALID, PWR_getOvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_RV_REACT_VALID, PWR_getRvReactionCfg },
+        { (uint16_t)PMIC_CFG_PWR_SC_REACT_VALID, PWR_getScReactionCfg },
     };
 
     // Read all fields requested by the user
@@ -1670,11 +1670,11 @@ static int32_t PWR_getSingleSequence(const Pmic_Handle_t *handle, Pmic_PowerSequ
 
     // Extract the requested fields
     if (status == PMIC_ST_SUCCESS) {
-        if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID)) {
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_PWR_SEQ_STARTUP_VALID)) {
             config->startupDelay = Pmic_getBitField(regData, SEQ_STARTUP_DELAY_SHIFT, SEQ_STARTUP_DELAY_MASK);
         }
 
-        if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID)) {
+        if (Pmic_validParamCheck(config->validParams, PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID)) {
             config->shutdownDelay = Pmic_getBitField(regData, SEQ_SHUTDOWN_DELAY_SHIFT, SEQ_SHUTDOWN_DELAY_MASK);
         }
     }
@@ -1697,7 +1697,7 @@ static int32_t PWR_setSingleSequence(const Pmic_Handle_t *handle, const Pmic_Pow
     }
 
     // Modify requested fields
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PWR_SEQ_STARTUP_VALID, status)) {
         if (config->startupDelay > PMIC_PWR_SEQ_DLY_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -1705,7 +1705,7 @@ static int32_t PWR_setSingleSequence(const Pmic_Handle_t *handle, const Pmic_Pow
         }
     }
 
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PWR_SEQ_SHUTDOWN_VALID, status)) {
         if (config->shutdownDelay > PMIC_PWR_SEQ_DLY_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -1823,7 +1823,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
     status = Pmic_ioRxByte(handle, CONFIG_1_REG, &regData);
 
     // Process TWARN_LEVEL if valid
-    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_LEVEL_VALID, status))
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TWARN_LEVEL_VALID, status))
     {
         if (thermalCfgLocal.twarnLvl > PMIC_POWER_TWARN_LEVEL_MAX)
         {
@@ -1836,7 +1836,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
     }
 
     // Process TSD_ORD_LEVEL if valid
-    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TSD_ORD_LEVEL_VALID, status))
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID, status))
     {
         if (thermalCfgLocal.tsdOrdLvl > PMIC_POWER_TSD_ORD_LEVEL_MAX)
         {
@@ -1849,7 +1849,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
     }
 
     // Process TWARN_CONFIG if valid
-    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_CONFIG_VALID, status))
+    if (Pmic_validParamStatusCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TWARN_CONFIG_VALID, status))
     {
         if (thermalCfgLocal.twarnConfig > PMIC_POWER_TWARN_CONFIG_MAX)
         {
@@ -1896,17 +1896,17 @@ int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
 
     if (status == PMIC_ST_SUCCESS)
     {
-        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_LEVEL_VALID))
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TWARN_LEVEL_VALID))
         {
             thermalCfgLocal.twarnLvl = Pmic_getBitField(regData, TWARN_LEVEL_SHIFT, TWARN_LEVEL_MASK);
         }
 
-        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TSD_ORD_LEVEL_VALID))
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TSD_ORD_LEVEL_VALID))
         {
             thermalCfgLocal.tsdOrdLvl = Pmic_getBitField(regData, TSD_ORD_LEVEL_SHIFT, TSD_ORD_LEVEL_MASK);
         }
 
-        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_POWER_TWARN_CONFIG_VALID))
+        if (Pmic_validParamCheck(thermalCfgLocal.validParams, PMIC_CFG_PWR_TWARN_CONFIG_VALID))
         {
             thermalCfgLocal.twarnConfig = Pmic_getBitField(regData, TWARN_CONFIG_SHIFT, TWARN_CONFIG_MASK);
         }

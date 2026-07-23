@@ -290,18 +290,18 @@ Pmic_Handle_t pmicHandle;
 
 Pmic_HandleCfg_t config = {
     .validParams = (
-        PMIC_COMM_MODE_VALID              |
-        PMIC_CRC_ENABLE_VALID             |
-        PMIC_CONFIG_CRC_ENABLE_VALID      |
-        PMIC_I2C_ADDR0_VALID              |
-        PMIC_COMM_HANDLE_0_VALID          |
-        PMIC_IO_READ_VALID                |
-        PMIC_IO_WRITE_VALID               |
-        PMIC_CRITICAL_SECTION_START_VALID |
-        PMIC_CRITICAL_SECTION_STOP_VALID  |
-        PMIC_TIMER_WAIT_MS_VALID          |
-        PMIC_RETRY_CNT_VALID              |
-        PMIC_RETRY_INTERVAL_MS_VALID
+        PMIC_CFG_INIT_COMM_MODE_VALID              |
+        PMIC_CFG_INIT_CRC_ENABLE_VALID             |
+        PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID      |
+        PMIC_CFG_INIT_I2C_ADDR0_VALID              |
+        PMIC_CFG_INIT_COMM_HANDLE_0_VALID          |
+        PMIC_CFG_INIT_IO_READ_VALID                |
+        PMIC_CFG_INIT_IO_WRITE_VALID               |
+        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID  |
+        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID          |
+        PMIC_CFG_INIT_RETRY_CNT_VALID              |
+        PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID
     ),
     .commMode = PMIC_INTF_I2C_SINGLE,
     .crcEnable = PMIC_ENABLE,
@@ -332,22 +332,22 @@ The `validParams` field in `Pmic_HandleCfg_t` allows selective initialization of
 - Set a bit to 0 to indicate the corresponding parameter is invalid and should be ignored
 
 For LP8772x-Q1, the following parameters are typically required:
-- `PMIC_COMM_MODE_VALID`
-- `PMIC_CRC_ENABLE_VALID`
-- `PMIC_CONFIG_CRC_ENABLE_VALID`
-- `PMIC_I2C_ADDR0_VALID`
-- `PMIC_COMM_HANDLE_0_VALID`
-- `PMIC_IO_READ_VALID`
-- `PMIC_IO_WRITE_VALID`
-- `PMIC_CRITICAL_SECTION_START_VALID`
-- `PMIC_CRITICAL_SECTION_STOP_VALID`
-- `PMIC_TIMER_WAIT_MS_VALID`
-- `PMIC_RETRY_CNT_VALID`
-- `PMIC_RETRY_INTERVAL_MS_VALID`
+- `PMIC_CFG_INIT_COMM_MODE_VALID`
+- `PMIC_CFG_INIT_CRC_ENABLE_VALID`
+- `PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID`
+- `PMIC_CFG_INIT_I2C_ADDR0_VALID`
+- `PMIC_CFG_INIT_COMM_HANDLE_0_VALID`
+- `PMIC_CFG_INIT_IO_READ_VALID`
+- `PMIC_CFG_INIT_IO_WRITE_VALID`
+- `PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID`
+- `PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID`
+- `PMIC_CFG_INIT_TIMER_WAIT_MS_VALID`
+- `PMIC_CFG_INIT_RETRY_CNT_VALID`
+- `PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID`
 
 **CRC Configuration**: LP8772x-Q1 requires explicit CRC configuration via `crcEnable` and `configCrcEnable` fields. Set both to `PMIC_ENABLE` for proper operation. CRC (Cyclic Redundancy Check) ensures communication integrity between the MCU and PMIC.
 
-The `PMIC_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
+The `PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID` bit should only be set if you are implementing WDG Q&A mode functionality and have not tied a GPIO to the nINT pin of the PMIC. This callback enables IRQ detection without using the nINT signal line.
 
 Alternatively, use the convenience macro `PMIC_ALL_VALID` to enable all parameters.
 
@@ -430,8 +430,8 @@ See `include/pmic_esm.h` for complete API documentation.
 ```c
 // Configure ESM in level mode with error threshold
 Pmic_EsmCfg_t esmCfg = {
-    .validParams = (PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID |
-                    PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID),
+    .validParams = (PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                    PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID),
     .mode = PMIC_ESM_MODE_LEVEL,
     .errCntThr = 3U,    // Error threshold (0-15)
     .delay1 = 0x10U,    // Delay 1 value
@@ -447,8 +447,8 @@ For PWM mode, configure timing constraints for high/low signal periods:
 
 ```c
 Pmic_EsmCfg_t esmCfg = {
-    .validParams = (PMIC_ESM_MODE_VALID | PMIC_ESM_LMIN_VALID |
-                    PMIC_ESM_LMAX_VALID | PMIC_ESM_HMIN_VALID | PMIC_ESM_HMAX_VALID),
+    .validParams = (PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_LMIN_VALID |
+                    PMIC_CFG_ESM_LMAX_VALID | PMIC_CFG_ESM_HMIN_VALID | PMIC_CFG_ESM_HMAX_VALID),
     .mode = PMIC_ESM_MODE_PWM,
     .lmin = 0x10U,  // Minimum low time
     .lmax = 0x80U,  // Maximum low time
@@ -530,7 +530,7 @@ Each diagnostic entry tracks:
 ```c
 // Query diagnostic info for a specific error
 Pmic_Diagnostic_t diag = {
-    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL,
     .code = PMIC_ST_ERR_I2C_COMM_FAIL
 };
 
@@ -546,9 +546,9 @@ if (status == PMIC_ST_SUCCESS) {
 
 ```c
 Pmic_Diagnostic_t diags[3] = {
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_I2C_COMM_FAIL },
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_DATA_IO_CRC },
-    { .validParams = PMIC_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_INV_PARAM }
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_I2C_COMM_FAIL },
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_DATA_IO_CRC },
+    { .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL, .code = PMIC_ST_ERR_INV_PARAM }
 };
 
 status = Pmic_getDiagnostics(&pmicHandle, diags, 3U);
@@ -566,7 +566,7 @@ if (status == PMIC_ST_SUCCESS) {
 ```c
 // Clear a specific diagnostic
 Pmic_Diagnostic_t diag = {
-    .validParams = PMIC_DIAGNOSTIC_VALID_ALL,
+    .validParams = PMIC_COMMON_DIAGNOSTIC_VALID_ALL,
     .code = PMIC_ST_ERR_I2C_COMM_FAIL
 };
 Pmic_clrDiagnostic(&pmicHandle, &diag);

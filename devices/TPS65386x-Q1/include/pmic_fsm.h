@@ -68,16 +68,16 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_STBY_EN_VALID                      (1UL << 0U)
-#define PMIC_CFG_AUTO_BIST_EN_VALID                 (1UL << 1U)
-#define PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID      (1UL << 2U)
-#define PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID    (1UL << 3U)
-#define PMIC_CFG_PWD_THR_VALID                      (1UL << 4U)
-#define PMIC_CFG_NRST_EXT_VALID                     (1UL << 5U)
-#define PMIC_CFG_RST_MCU_TMO_VALID                  (1UL << 6U)
-#define PMIC_CFG_SAFE_TMO_VALID                     (1UL << 7U)
-#define PMIC_CFG_SAFE_LOCK_THR_VALID                (1UL << 8U)
-#define PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID          (1UL << 9U)
+#define PMIC_CFG_FSM_STBY_EN_VALID                      (1UL << 0U)
+#define PMIC_CFG_FSM_AUTO_BIST_EN_VALID                 (1UL << 1U)
+#define PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID      (1UL << 2U)
+#define PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID    (1UL << 3U)
+#define PMIC_CFG_FSM_PWD_THR_VALID                      (1UL << 4U)
+#define PMIC_CFG_FSM_NRST_EXT_VALID                     (1UL << 5U)
+#define PMIC_CFG_FSM_RST_MCU_TMO_VALID                  (1UL << 6U)
+#define PMIC_CFG_FSM_SAFE_TMO_VALID                     (1UL << 7U)
+#define PMIC_CFG_FSM_SAFE_LOCK_THR_VALID                (1UL << 8U)
+#define PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID          (1UL << 9U)
 /** @} */
 
 
@@ -90,10 +90,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WAKE1_EVENT_VALID  (1UL << 0U)
-#define PMIC_CFG_WAKE2_EVENT_VALID  (1UL << 1U)
-#define PMIC_CFG_WAKE1_DGL_VALID    (1UL << 2U)
-#define PMIC_CFG_WAKE2_DGL_VALID    (1UL << 3U)
+#define PMIC_CFG_FSM_WAKE1_EVENT_VALID  (1UL << 0U)
+#define PMIC_CFG_FSM_WAKE2_EVENT_VALID  (1UL << 1U)
+#define PMIC_CFG_FSM_WAKE1_DGL_VALID    (1UL << 2U)
+#define PMIC_CFG_FSM_WAKE2_DGL_VALID    (1UL << 3U)
 /** @} */
 
 
@@ -106,10 +106,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_PWD_DLY_VALID                      (1UL << 0U)
-#define PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID  (1UL << 1U)
-#define PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID          (1UL << 2U)
-#define PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID          (1UL << 3U)
+#define PMIC_CFG_FSM_PWD_DLY_VALID                      (1UL << 0U)
+#define PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID  (1UL << 1U)
+#define PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID          (1UL << 2U)
+#define PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID          (1UL << 3U)
 /** @} */
 
 
@@ -121,11 +121,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID  (1UL << 0U)
-#define PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID  (1UL << 1U)
-#define PMIC_CFG_M_PMIC_WAKE_LATCH_VALID    (1UL << 2U)
-#define PMIC_CFG_WAKE1_LATCH_VALID          (1UL << 3U)
-#define PMIC_CFG_WAKE2_LATCH_VALID          (1UL << 4U)
+#define PMIC_CFG_FSM_STBY_ERR_WAKE_LATCH_VALID  (1UL << 0U)
+#define PMIC_CFG_FSM_STBY_TMR_WAKE_LATCH_VALID  (1UL << 1U)
+#define PMIC_CFG_FSM_M_PMIC_WAKE_LATCH_VALID    (1UL << 2U)
+#define PMIC_CFG_FSM_WAKE1_LATCH_VALID          (1UL << 3U)
+#define PMIC_CFG_FSM_WAKE2_LATCH_VALID          (1UL << 4U)
 /** @} */
 
 

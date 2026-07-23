@@ -153,7 +153,7 @@ static int32_t FSM_setStbyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID, status))
     {
         if (fsmCfg->vbatStbyEntryThr > PMIC_VBAT_STBY_ENTRY_THR_MAX)
         {
@@ -170,25 +170,25 @@ static int32_t FSM_setStbyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify NRST_EN_STBY to be Pmic_FsmCfg_t.nrstActiveInStbySeq
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID))
             {
                 Pmic_setBitField_b(&regData, NRST_EN_STBY_SHIFT, fsmCfg->nrstActiveInStbySeq);
             }
 
             // Modify STBY_EN to be Pmic_FsmCfg_t.stbyEn
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_STBY_EN_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_STBY_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, STBY_EN_SHIFT, fsmCfg->stbyEn);
             }
 
             // Modify VBAT_STBY_EXIT_TH to be Pmic_FsmCfg_t.higherVbatStbyExitThr
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID))
             {
                 Pmic_setBitField_b(&regData, VBAT_STBY_EXIT_TH_SHIFT, fsmCfg->higherVbatStbyExitThr);
             }
 
             // Modify VBAT_STBY_ENTRY_TH to be Pmic_FsmCfg_t.vbatStbyEntryThr
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID))
             {
                 Pmic_setBitField(&regData, VBAT_STBY_ENTRY_TH_SHIFT, VBAT_STBY_ENTRY_TH_MASK,
                                  fsmCfg->vbatStbyEntryThr);
@@ -214,7 +214,7 @@ static int32_t FSM_setSafetyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_PWD_THR_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_PWD_THR_VALID, status))
     {
         if (fsmCfg->pwdThr > PMIC_PWD_THR_MAX)
         {
@@ -231,13 +231,13 @@ static int32_t FSM_setSafetyCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify AUTO_BIST_EN to be Pmic_FsmCfg_t.autoBistEn
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_AUTO_BIST_EN_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_AUTO_BIST_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, AUTO_BIST_EN_SHIFT, fsmCfg->autoBistEn);
             }
 
             // Modify PWD_TH to be Pmic_FsmCfg_t.pwdThr
-            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_PWD_THR_VALID))
+            if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_PWD_THR_VALID))
             {
                 Pmic_setBitField(&regData, PWD_TH_SHIFT, PWD_TH_MASK, fsmCfg->pwdThr);
             }
@@ -262,7 +262,7 @@ static int32_t FSM_setRstMcuCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_RST_MCU_TMO_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_RST_MCU_TMO_VALID, status))
     {
         if (fsmCfg->rstMcuTmo > PMIC_RST_MCU_TMO_MAX)
         {
@@ -270,7 +270,7 @@ static int32_t FSM_setRstMcuCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t
         }
     }
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_NRST_EXT_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_EXT_VALID, status))
     {
         if (fsmCfg->nrstExt > PMIC_NRST_EXT_MAX)
         {
@@ -285,13 +285,13 @@ static int32_t FSM_setRstMcuCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t
         status = Pmic_ioRxByte(handle, RST_MCU_CFG_REG, &regData);
 
         // Modify RST_MCU_TMO_CFG to be Pmic_FsmCfg_t.rstMcuTmo
-        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_RST_MCU_TMO_VALID, status))
+        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_RST_MCU_TMO_VALID, status))
         {
             Pmic_setBitField(&regData, RST_MCU_TMO_CFG_SHIFT, RST_MCU_TMO_CFG_MASK, fsmCfg->rstMcuTmo);
         }
 
         // Modify NRST_EXT to be Pmic_FsmCfg_t.nrstExt
-        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_NRST_EXT_VALID, status))
+        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_EXT_VALID, status))
         {
             Pmic_setBitField(&regData, NRST_EXT_SHIFT, NRST_EXT_MASK, fsmCfg->nrstExt);
         }
@@ -315,7 +315,7 @@ static int32_t FSM_setSafeTmoCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_SAFE_TMO_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_TMO_VALID, status))
     {
         if (fsmCfg->safeTmo > PMIC_SAFE_TMO_MAX)
         {
@@ -323,7 +323,7 @@ static int32_t FSM_setSafeTmoCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_
         }
     }
 
-    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_SAFE_LOCK_THR_VALID, status))
+    if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_LOCK_THR_VALID, status))
     {
         if (fsmCfg->safeLockThr > PMIC_SAFE_LOCK_THR_MAX)
         {
@@ -338,13 +338,13 @@ static int32_t FSM_setSafeTmoCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_
         status = Pmic_ioRxByte(handle, SAFE_TMO_CFG_REG, &regData);
 
         // Modify SAFE_TMO to be Pmic_FsmCfg_t.safeTmo
-        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_SAFE_TMO_VALID, status))
+        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_TMO_VALID, status))
         {
             Pmic_setBitField(&regData, SAFE_TMO_SHIFT, SAFE_TMO_MASK, fsmCfg->safeTmo);
         }
 
         // Modify SAFE_LOCK_TH to be Pmic_FsmCfg_t.safeLockThr
-        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_SAFE_LOCK_THR_VALID, status))
+        if (Pmic_validParamStatusCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_LOCK_THR_VALID, status))
         {
             Pmic_setBitField(&regData, SAFE_LOCK_TH_SHIFT, SAFE_LOCK_TH_MASK, fsmCfg->safeLockThr);
         }
@@ -386,10 +386,10 @@ int32_t Pmic_fsmSetCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
     // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
     // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_STBY_EN_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_STBY_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID)))
     {
         status = FSM_setStbyCfg(handle, &localFsmCfg);
     }
@@ -398,8 +398,8 @@ int32_t Pmic_fsmSetCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.autoBistEn
     // 2. Pmic_FsmCfg_t.pwdThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_PWD_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_AUTO_BIST_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_PWD_THR_VALID)))
     {
         status = FSM_setSafetyCfg(handle, &localFsmCfg);
     }
@@ -408,8 +408,8 @@ int32_t Pmic_fsmSetCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.rstMcuTmo
     // 2. Pmic_FsmCfg_t.nrstExt
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_EXT_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_NRST_EXT_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_RST_MCU_TMO_VALID)))
     {
         status = FSM_setRstMcuCfg(handle, &localFsmCfg);
     }
@@ -418,8 +418,8 @@ int32_t Pmic_fsmSetCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.safeTmo
     // 2. Pmic_FsmCfg_t.safeLockThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_TMO_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_SAFE_TMO_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_SAFE_LOCK_THR_VALID)))
     {
         status = FSM_setSafeTmoCfg(handle, &localFsmCfg);
     }
@@ -443,25 +443,25 @@ static int32_t FSM_getStbyCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg
     if (status == PMIC_ST_SUCCESS)
     {
         // Get Pmic_FsmCfg_t.nrstActiveInStbySeq
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID))
         {
             fsmCfg->nrstActiveInStbySeq = Pmic_getBitField_b(regData, NRST_EN_STBY_SHIFT);
         }
 
         // Get Pmic_FsmCfg_t.stbyEn
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_STBY_EN_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_STBY_EN_VALID))
         {
             fsmCfg->stbyEn = Pmic_getBitField_b(regData, STBY_EN_SHIFT);
         }
 
         // Get Pmic_FsmCfg_t.higherVbatStbyExitThr
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID))
         {
             fsmCfg->higherVbatStbyExitThr = Pmic_getBitField_b(regData, VBAT_STBY_EXIT_TH_SHIFT);
         }
 
         // Get Pmic_FsmCfg_t.vbatStbyEntryThr
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID))
         {
             fsmCfg->vbatStbyEntryThr = Pmic_getBitField(regData, VBAT_STBY_ENTRY_TH_SHIFT, VBAT_STBY_ENTRY_TH_MASK);
         }
@@ -484,13 +484,13 @@ static int32_t FSM_getSafetyCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmC
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract AUTO_BIST_EN
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_AUTO_BIST_EN_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_AUTO_BIST_EN_VALID))
         {
             fsmCfg->autoBistEn = Pmic_getBitField_b(regData, AUTO_BIST_EN_SHIFT);
         }
 
         // Extract PWD_TH
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_PWD_THR_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_PWD_THR_VALID))
         {
             fsmCfg->pwdThr = Pmic_getBitField(regData, PWD_TH_SHIFT, PWD_TH_MASK);
         }
@@ -513,13 +513,13 @@ static int32_t FSM_getRstMcuCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmC
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract RST_MCU_TMO_CFG
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_RST_MCU_TMO_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_RST_MCU_TMO_VALID))
         {
             fsmCfg->rstMcuTmo = Pmic_getBitField(regData, RST_MCU_TMO_CFG_SHIFT, RST_MCU_TMO_CFG_MASK);
         }
 
         // Extract NRST_EXT
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_NRST_EXT_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_EXT_VALID))
         {
             fsmCfg->nrstExt = Pmic_getBitField(regData, NRST_EXT_SHIFT, NRST_EXT_MASK);
         }
@@ -542,13 +542,13 @@ static int32_t FSM_getSafeTmoCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsm
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract SAFE_TMO
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_TMO_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_TMO_VALID))
         {
             fsmCfg->safeTmo = Pmic_getBitField(regData, SAFE_TMO_SHIFT, SAFE_TMO_MASK);
         }
 
         // Extract SAFE_LOCK_TH
-        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_SAFE_LOCK_THR_VALID))
+        if (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_SAFE_LOCK_THR_VALID))
         {
             fsmCfg->safeLockThr = Pmic_getBitField(regData, SAFE_LOCK_TH_SHIFT, SAFE_LOCK_TH_MASK);
         }
@@ -583,10 +583,10 @@ int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     // 3. Pmic_FsmCfg_t.higherVbatStbyExitThr
     // 4. Pmic_FsmCfg_t.vbatStbyEntryThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_STBY_EN_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_VBAT_STBY_ENTRY_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_STBY_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_VBAT_STBY_ENTRY_THR_VALID)))
     {
         status = FSM_getStbyCfg(handle, &localFsmCfg);
     }
@@ -595,8 +595,8 @@ int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.autoBistEn
     // 2. Pmic_FsmCfg_t.pwdThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_AUTO_BIST_EN_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_PWD_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_AUTO_BIST_EN_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_PWD_THR_VALID)))
     {
         status = FSM_getSafetyCfg(handle, &localFsmCfg);
     }
@@ -605,8 +605,8 @@ int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.rstMcuTmo
     // 2. Pmic_FsmCfg_t.nrstExt
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_NRST_EXT_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_RST_MCU_TMO_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_NRST_EXT_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_RST_MCU_TMO_VALID)))
     {
         status = FSM_getRstMcuCfg(handle, &localFsmCfg);
     }
@@ -615,8 +615,8 @@ int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
     // 1. Pmic_FsmCfg_t.safeTmo
     // 2. Pmic_FsmCfg_t.safeLockThr
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_TMO_VALID) ||
-         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_SAFE_LOCK_THR_VALID)))
+        (Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_SAFE_TMO_VALID) ||
+         Pmic_validParamCheck(localFsmCfg.validParams, PMIC_CFG_FSM_SAFE_LOCK_THR_VALID)))
     {
         status = FSM_getSafeTmoCfg(handle, &localFsmCfg);
     }
@@ -686,7 +686,7 @@ static int32_t FSM_validateWakeupCfg(const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_EVENT_VALID, status))
+    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_EVENT_VALID, status))
     {
         if (wakeupCfg->wake1Event > PMIC_WAKE_EVENT_MAX)
         {
@@ -694,7 +694,7 @@ static int32_t FSM_validateWakeupCfg(const Pmic_FsmWakeupCfg_t *wakeupCfg)
         }
     }
 
-    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_EVENT_VALID, status))
+    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_EVENT_VALID, status))
     {
         if (wakeupCfg->wake2Event > PMIC_WAKE_EVENT_MAX)
         {
@@ -702,7 +702,7 @@ static int32_t FSM_validateWakeupCfg(const Pmic_FsmWakeupCfg_t *wakeupCfg)
         }
     }
 
-    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_DGL_VALID, status))
+    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_DGL_VALID, status))
     {
         if (wakeupCfg->wake1Dgl > PMIC_WAKE_DEGLITCH_TIME_MAX)
         {
@@ -710,7 +710,7 @@ static int32_t FSM_validateWakeupCfg(const Pmic_FsmWakeupCfg_t *wakeupCfg)
         }
     }
 
-    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_DGL_VALID, status))
+    if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_DGL_VALID, status))
     {
         if (wakeupCfg->wake2Dgl > PMIC_WAKE_DEGLITCH_TIME_MAX)
         {
@@ -733,25 +733,25 @@ static int32_t FSM_setWakeupCfg(const Pmic_Handle_t *handle, const Pmic_FsmWakeu
         status = Pmic_ioRxByte(handle, WAKE_CFG_REG, &regData);
 
         // Modify WAKE1_STBY_CFG to be Pmic_FsmWakeupCfg_t.wake1Event
-        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_EVENT_VALID, status))
+        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_EVENT_VALID, status))
         {
             Pmic_setBitField(&regData, WAKE1_STBY_CFG_SHIFT, WAKE1_STBY_CFG_MASK, wakeupCfg->wake1Event);
         }
 
         // Modify WAKE2_STBY_CFG to be Pmic_FsmWakeupCfg_t.wake2Event
-        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_EVENT_VALID, status))
+        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_EVENT_VALID, status))
         {
             Pmic_setBitField(&regData, WAKE2_STBY_CFG_SHIFT, WAKE2_STBY_CFG_MASK, wakeupCfg->wake2Event);
         }
 
         // Modify WAKE1_DGL_CFG to be Pmic_FsmWakeupCfg_t.wake1Dgl
-        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_DGL_VALID, status))
+        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_DGL_VALID, status))
         {
             Pmic_setBitField(&regData, WAKE1_DGL_CFG_SHIFT, WAKE1_DGL_CFG_MASK, wakeupCfg->wake1Dgl);
         }
 
         // Modify WAKE2_DGL_CFG to be Pmic_FsmWakeupCfg_t.wake2Dgl
-        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_DGL_VALID, status))
+        if (Pmic_validParamStatusCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_DGL_VALID, status))
         {
             Pmic_setBitField(&regData, WAKE2_DGL_CFG_SHIFT, WAKE2_DGL_CFG_MASK, wakeupCfg->wake2Dgl);
         }
@@ -788,10 +788,10 @@ int32_t Pmic_fsmSetWakeupCfg(const Pmic_Handle_t *handle, const Pmic_FsmWakeupCf
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE1_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE2_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE1_DGL_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE2_DGL_VALID)))
     {
         status = FSM_setWakeupCfg(handle, &localWakeupCfg);
     }
@@ -812,25 +812,25 @@ static int32_t FSM_getWakeupCfg(const Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract WAKE1_STBY_CFG
-        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_EVENT_VALID))
+        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_EVENT_VALID))
         {
             wakeupCfg->wake1Event = Pmic_getBitField(regData, WAKE1_STBY_CFG_SHIFT, WAKE1_STBY_CFG_MASK);
         }
 
         // Extract WAKE2_STBY_CFG
-        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_EVENT_VALID))
+        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_EVENT_VALID))
         {
             wakeupCfg->wake2Event = Pmic_getBitField(regData, WAKE2_STBY_CFG_SHIFT, WAKE2_STBY_CFG_MASK);
         }
 
         // Extract WAKE1_DGL_CFG
-        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE1_DGL_VALID))
+        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE1_DGL_VALID))
         {
             wakeupCfg->wake1Dgl = Pmic_getBitField(regData, WAKE1_DGL_CFG_SHIFT, WAKE1_DGL_CFG_MASK);
         }
 
         // Extract WAKE2_DGL_CFG
-        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_WAKE2_DGL_VALID))
+        if (Pmic_validParamCheck(wakeupCfg->validParams, PMIC_CFG_FSM_WAKE2_DGL_VALID))
         {
             wakeupCfg->wake2Dgl = Pmic_getBitField(regData, WAKE2_DGL_CFG_SHIFT, WAKE2_DGL_CFG_MASK);
         }
@@ -860,10 +860,10 @@ int32_t Pmic_fsmGetWakeupCfg(const Pmic_Handle_t *handle, Pmic_FsmWakeupCfg_t *w
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_EVENT_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_EVENT_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE1_DGL_VALID) ||
-         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_WAKE2_DGL_VALID)))
+        (Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE1_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE2_EVENT_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE1_DGL_VALID) ||
+         Pmic_validParamCheck(localWakeupCfg.validParams, PMIC_CFG_FSM_WAKE2_DGL_VALID)))
     {
         status = FSM_getWakeupCfg(handle, &localWakeupCfg);
     }
@@ -917,7 +917,7 @@ static int32_t FSM_setPwrLatchCfg(const Pmic_Handle_t *handle, const Pmic_FsmPwr
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamStatusCheck(pwrLatchCfg->validParams, PMIC_CFG_PWD_DLY_VALID, status))
+    if (Pmic_validParamStatusCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_PWD_DLY_VALID, status))
     {
         if (pwrLatchCfg->pwdDly > PMIC_PWD_DLY_MAX)
         {
@@ -934,25 +934,25 @@ static int32_t FSM_setPwrLatchCfg(const Pmic_Handle_t *handle, const Pmic_FsmPwr
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify STBY_ERR_WK_PWRL_EN
-            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID))
+            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, STBY_ERR_WK_PWRL_EN_SHIFT, pwrLatchCfg->stbyErrWakeEventPwrlEn);
             }
 
             // Modify WAKE2_PWRL_EN
-            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID))
+            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, WAKE2_PWRL_EN_SHIFT, pwrLatchCfg->wake2EventPwrlEn);
             }
 
             // Modify WAKE1_PWRL_EN
-            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID))
+            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID))
             {
                 Pmic_setBitField_b(&regData, WAKE1_PWRL_EN_SHIFT, pwrLatchCfg->wake1EventPwrlEn);
             }
 
             // Modify PWRD_DLY_CFG
-            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_PWD_DLY_VALID))
+            if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_PWD_DLY_VALID))
             {
                 Pmic_setBitField(&regData, PWRD_DLY_CFG_SHIFT, PWRD_DLY_CFG_MASK, pwrLatchCfg->pwdDly);
             }
@@ -990,10 +990,10 @@ int32_t Pmic_fsmSetPowerLatchCfg(const Pmic_Handle_t *handle, const Pmic_FsmPwrL
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_PWD_DLY_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_PWD_DLY_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID)))
     {
         status = FSM_setPwrLatchCfg(handle, &localPwrLatchCfg);
     }
@@ -1014,25 +1014,25 @@ static int32_t FSM_getPwrLatchCfg(const Pmic_Handle_t *handle, Pmic_FsmPwrLatchC
     if (status == PMIC_ST_SUCCESS)
     {
         // Get STBY_ERR_WK_PWRL_EN
-        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID))
+        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID))
         {
             pwrLatchCfg->stbyErrWakeEventPwrlEn = Pmic_getBitField_b(regData, STBY_ERR_WK_PWRL_EN_SHIFT);
         }
 
         // Get WAKE2_PWRL_EN
-        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID))
+        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID))
         {
             pwrLatchCfg->wake2EventPwrlEn = Pmic_getBitField_b(regData, WAKE2_PWRL_EN_SHIFT);
         }
 
         // Get WAKE1_PWRL_EN
-        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID))
+        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID))
         {
             pwrLatchCfg->wake1EventPwrlEn = Pmic_getBitField_b(regData, WAKE1_PWRL_EN_SHIFT);
         }
 
         // Get PWRD_DLY_CFG
-        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_PWD_DLY_VALID))
+        if (Pmic_validParamCheck(pwrLatchCfg->validParams, PMIC_CFG_FSM_PWD_DLY_VALID))
         {
             pwrLatchCfg->pwdDly = Pmic_getBitField(regData, PWRD_DLY_CFG_SHIFT, PWRD_DLY_CFG_MASK);
         }
@@ -1062,10 +1062,10 @@ int32_t Pmic_fsmGetPowerLatchCfg(const Pmic_Handle_t *handle, Pmic_FsmPwrLatchCf
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_PWD_DLY_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE1_EVENT_PWRL_EN_VALID) ||
-         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_WAKE2_EVENT_PWRL_EN_VALID)))
+        (Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_PWD_DLY_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_WAKE1_EVENT_PWRL_EN_VALID) ||
+         Pmic_validParamCheck(localPwrLatchCfg.validParams, PMIC_CFG_FSM_WAKE2_EVENT_PWRL_EN_VALID)))
     {
         status = FSM_getPwrLatchCfg(handle, &localPwrLatchCfg);
     }
@@ -1108,31 +1108,31 @@ int32_t Pmic_fsmSetPowerLatch(const Pmic_Handle_t *handle, const Pmic_FsmPwrLatc
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify STBY_ERR_WK_PWRL
-            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_LATCH_VALID))
             {
                 Pmic_setBitField_b(&regData, STBY_ERR_WK_PWRL_SHIFT, localPwrLatch.stbyErrWakeLatch);
             }
 
             // Modify TMR_WK_PWRL
-            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_STBY_TMR_WAKE_LATCH_VALID))
             {
                 Pmic_setBitField_b(&regData, TMR_WK_PWRL_SHIFT, localPwrLatch.stbyTmrWakeLatch);
             }
 
             // Modify M_PMIC_WK_PWRL
-            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_M_PMIC_WAKE_LATCH_VALID))
             {
                 Pmic_setBitField_b(&regData, M_PMIC_WK_PWRL_SHIFT, localPwrLatch.mPmicWakeLatch);
             }
 
             // Modify WAKE2_PWRL
-            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE1_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_WAKE1_LATCH_VALID))
             {
                 Pmic_setBitField_b(&regData, WAKE2_PWRL_SHIFT, localPwrLatch.wake2Latch);
             }
 
             // Modify WAKE1_PWRL
-            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE2_LATCH_VALID))
+            if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_WAKE2_LATCH_VALID))
             {
                 Pmic_setBitField_b(&regData, WAKE1_PWRL_SHIFT, localPwrLatch.wake1Latch);
             }
@@ -1181,31 +1181,31 @@ int32_t Pmic_fsmGetPowerLatch(const Pmic_Handle_t *handle, Pmic_FsmPwrLatch_t *p
     if (status == PMIC_ST_SUCCESS)
     {
         // Get STBY_ERR_WK_PWRL
-        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_ERR_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_STBY_ERR_WAKE_LATCH_VALID))
         {
             localPwrLatch.stbyErrWakeLatch = Pmic_getBitField_b(regData, STBY_ERR_WK_PWRL_SHIFT);
         }
 
         // Get TMR_WK_PWRL
-        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_STBY_TMR_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_STBY_TMR_WAKE_LATCH_VALID))
         {
             localPwrLatch.stbyTmrWakeLatch = Pmic_getBitField_b(regData, TMR_WK_PWRL_SHIFT);
         }
 
         // Get M_PMIC_WK_PWRL
-        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_M_PMIC_WAKE_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_M_PMIC_WAKE_LATCH_VALID))
         {
             localPwrLatch.mPmicWakeLatch = Pmic_getBitField_b(regData, M_PMIC_WK_PWRL_SHIFT);
         }
 
         // Get WAKE2_PWRL
-        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE1_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_WAKE1_LATCH_VALID))
         {
             localPwrLatch.wake2Latch = Pmic_getBitField_b(regData, WAKE2_PWRL_SHIFT);
         }
 
         // Get WAKE1_PWRL
-        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_WAKE2_LATCH_VALID))
+        if (Pmic_validParamCheck(localPwrLatch.validParams, PMIC_CFG_FSM_WAKE2_LATCH_VALID))
         {
             localPwrLatch.wake1Latch = Pmic_getBitField_b(regData, WAKE1_PWRL_SHIFT);
         }

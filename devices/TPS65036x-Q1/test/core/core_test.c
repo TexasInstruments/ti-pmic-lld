@@ -69,14 +69,14 @@ void core_test(void *args)
     platform_init();
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
-                        PMIC_TIMER_WAIT_MS_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_CFG_INIT_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -251,7 +251,7 @@ void test_neg_core_setLpmCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_VMON_EN_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID,
         .vmonEn = PMIC_ENABLE
     };
     int32_t status = Pmic_setLpmCfg(NULL, &lpmCfg);
@@ -269,7 +269,7 @@ void test_neg_core_setLpmCfg_outOfBounds_pinDetection(void)
 {
     // Pass out of bounds pinDetection into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID,
         .pinDetection = PMIC_PIN_DETECTION_CONDITION_MAX + 1U
     };
     int32_t status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
@@ -280,7 +280,7 @@ void test_neg_core_setLpmCfg_outOfBounds_detectionDelay(void)
 {
     // Pass out of bounds detectionDelay into Pmic_setLpmCfg()
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_DETECTION_DELAY_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID,
         .detectionDelay = PMIC_DETECTION_DELAY_MAX + 1U
     };
     int32_t status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
@@ -290,7 +290,7 @@ void test_neg_core_setLpmCfg_outOfBounds_detectionDelay(void)
 void test_neg_core_getLpmCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_getLpmCfg()
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID};
     int32_t status = Pmic_getLpmCfg(NULL, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
@@ -522,8 +522,8 @@ void test_pos_core_setGetPwrOn(void)
 void test_pos_core_setGetLpmCfg_pinDetection(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
-    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
 
     // For each valid pin detection value...
     for (uint8_t pinDetectionCfg = PMIC_ALL_IRQ_CLEARED_CONDITION;
@@ -544,8 +544,8 @@ void test_pos_core_setGetLpmCfg_pinDetection(void)
 void test_pos_core_setGetLpmCfg_detectionDelay(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
-    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
 
     // For each valid detection delay value...
     for (uint8_t detectionDelayCfg = PMIC_DETECTION_DELAY_50_MS;
@@ -566,8 +566,8 @@ void test_pos_core_setGetLpmCfg_detectionDelay(void)
 void test_pos_core_setGetLpmCfg_vmonEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
-    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
+    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID};
+    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID};
 
     // Enable VMON in LPM
     expLpmCfg.vmonEn = PMIC_ENABLE;
@@ -593,8 +593,8 @@ void test_pos_core_setGetLpmCfg_vmonEn(void)
 void test_pos_core_setGetLpmCfg_esmEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID};
-    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID};
+    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID};
+    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID};
 
     // Enable ESM in LPM
     expLpmCfg.esmEn = PMIC_ENABLE;
@@ -620,8 +620,8 @@ void test_pos_core_setGetLpmCfg_esmEn(void)
 void test_pos_core_setGetLpmCfg_wdgEn(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID};
-    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID};
+    Pmic_CoreLpmCfg_t expLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID};
+    Pmic_CoreLpmCfg_t actLpmCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID};
 
     // Enable WDG in LPM
     expLpmCfg.wdgEn = PMIC_ENABLE;
@@ -737,14 +737,14 @@ void test_pos_core_getLpmCfg_pinDetection(void)
     int32_t status;
 
     // First set a known value
-    lpmCfg.validParams = PMIC_LPM_PIN_DETECTION_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID;
     lpmCfg.pinDetection = PMIC_DELAY_VALUE_MET_CONDITION;
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Now get independently
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_PIN_DETECTION_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.pinDetection == PMIC_DELAY_VALUE_MET_CONDITION);
@@ -756,14 +756,14 @@ void test_pos_core_getLpmCfg_detectionDelay(void)
     int32_t status;
 
     // First set a known value
-    lpmCfg.validParams = PMIC_LPM_DETECTION_DELAY_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID;
     lpmCfg.detectionDelay = PMIC_DETECTION_DELAY_250_MS;
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Now get independently
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_DETECTION_DELAY_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.detectionDelay == PMIC_DETECTION_DELAY_250_MS);
@@ -775,14 +775,14 @@ void test_pos_core_getLpmCfg_vmonEn(void)
     int32_t status;
 
     // First set a known value
-    lpmCfg.validParams = PMIC_LPM_VMON_EN_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID;
     lpmCfg.vmonEn = PMIC_ENABLE;
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Now get independently
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_VMON_EN_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.vmonEn == PMIC_ENABLE);
@@ -794,14 +794,14 @@ void test_pos_core_getLpmCfg_esmEn(void)
     int32_t status;
 
     // First set a known value
-    lpmCfg.validParams = PMIC_LPM_ESM_EN_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID;
     lpmCfg.esmEn = PMIC_ENABLE;
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Now get independently
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_ESM_EN_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.esmEn == PMIC_ENABLE);
@@ -813,14 +813,14 @@ void test_pos_core_getLpmCfg_wdgEn(void)
     int32_t status;
 
     // First set a known value
-    lpmCfg.validParams = PMIC_LPM_WDG_EN_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID;
     lpmCfg.wdgEn = PMIC_ENABLE;
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Now get independently
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_WDG_EN_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.wdgEn == PMIC_ENABLE);
@@ -832,7 +832,7 @@ void test_pos_core_getLpmCfg_multipleParams(void)
     int32_t status;
 
     // First set multiple known values
-    lpmCfg.validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID;
+    lpmCfg.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID;
     lpmCfg.pinDetection = PMIC_ALL_IRQ_CLEARED_CONDITION;
     lpmCfg.vmonEn = PMIC_ENABLE;
     lpmCfg.esmEn = PMIC_DISABLE;
@@ -841,7 +841,7 @@ void test_pos_core_getLpmCfg_multipleParams(void)
 
     // Now get multiple parameters at once
     Pmic_CoreLpmCfg_t readCfg = {0};
-    readCfg.validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID;
+    readCfg.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID;
     status = Pmic_getLpmCfg(&pmicHandle, &readCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readCfg.pinDetection == PMIC_ALL_IRQ_CLEARED_CONDITION);
@@ -875,8 +875,8 @@ void test_neg_core_setLpmCfg_zeroValidParams(void)
 void test_pos_core_setLpmCfg_pinDetection_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
 
     // Test each valid pin detection value
     for (uint8_t i = PMIC_ALL_IRQ_CLEARED_CONDITION; i <= PMIC_PIN_DETECTION_CONDITION_MAX; i++)
@@ -895,8 +895,8 @@ void test_pos_core_setLpmCfg_pinDetection_allValues(void)
 void test_pos_core_setLpmCfg_detectionDelay_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
 
     // Test each valid detection delay value
     for (uint8_t i = PMIC_DETECTION_DELAY_50_MS; i <= PMIC_DETECTION_DELAY_MAX; i++)
@@ -915,8 +915,8 @@ void test_pos_core_setLpmCfg_detectionDelay_allValues(void)
 void test_pos_core_setLpmCfg_vmonEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID, .vmonEn = PMIC_ENABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID, .vmonEn = PMIC_ENABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -929,8 +929,8 @@ void test_pos_core_setLpmCfg_vmonEn_enable(void)
 void test_pos_core_setLpmCfg_vmonEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_VMON_EN_VALID, .vmonEn = PMIC_DISABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_VMON_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID, .vmonEn = PMIC_DISABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -943,8 +943,8 @@ void test_pos_core_setLpmCfg_vmonEn_disable(void)
 void test_pos_core_setLpmCfg_esmEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID, .esmEn = PMIC_ENABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_ESM_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID, .esmEn = PMIC_ENABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -957,8 +957,8 @@ void test_pos_core_setLpmCfg_esmEn_enable(void)
 void test_pos_core_setLpmCfg_esmEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_ESM_EN_VALID, .esmEn = PMIC_DISABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_ESM_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID, .esmEn = PMIC_DISABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_ESM_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -971,8 +971,8 @@ void test_pos_core_setLpmCfg_esmEn_disable(void)
 void test_pos_core_setLpmCfg_wdgEn_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID, .wdgEn = PMIC_ENABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_WDG_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID, .wdgEn = PMIC_ENABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -985,8 +985,8 @@ void test_pos_core_setLpmCfg_wdgEn_enable(void)
 void test_pos_core_setLpmCfg_wdgEn_disable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_LPM_WDG_EN_VALID, .wdgEn = PMIC_DISABLE};
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_WDG_EN_VALID};
+    Pmic_CoreLpmCfg_t lpmCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID, .wdgEn = PMIC_DISABLE};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_WDG_EN_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1000,13 +1000,13 @@ void test_pos_core_setLpmCfg_multipleEnables(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID,
         .vmonEn = PMIC_ENABLE,
         .esmEn = PMIC_ENABLE,
         .wdgEn = PMIC_ENABLE
     };
     Pmic_CoreLpmCfg_t readCfg = {
-        .validParams = PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID
+        .validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID
     };
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
@@ -1023,8 +1023,8 @@ void test_pos_core_setLpmCfg_allParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID |
-                       PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID |
+                       PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID,
         .pinDetection = PMIC_DELAY_VALUE_MET_CONDITION,
         .detectionDelay = PMIC_DETECTION_DELAY_100_MS,
         .vmonEn = PMIC_ENABLE,
@@ -1032,8 +1032,8 @@ void test_pos_core_setLpmCfg_allParams(void)
         .wdgEn = PMIC_ENABLE
     };
     Pmic_CoreLpmCfg_t readCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID |
-                       PMIC_LPM_VMON_EN_VALID | PMIC_LPM_ESM_EN_VALID | PMIC_LPM_WDG_EN_VALID
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID |
+                       PMIC_CFG_CORE_LPM_VMON_EN_VALID | PMIC_CFG_CORE_LPM_ESM_EN_VALID | PMIC_CFG_CORE_LPM_WDG_EN_VALID
     };
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
@@ -1052,10 +1052,10 @@ void test_pos_core_setLpmCfg_pinDetection_boundaryMin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID,
         .pinDetection = PMIC_ALL_IRQ_CLEARED_CONDITION
     };
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1069,10 +1069,10 @@ void test_pos_core_setLpmCfg_pinDetection_boundaryMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID,
         .pinDetection = PMIC_PIN_DETECTION_CONDITION_MAX
     };
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_PIN_DETECTION_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1086,10 +1086,10 @@ void test_pos_core_setLpmCfg_detectionDelay_boundaryMin(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_DETECTION_DELAY_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID,
         .detectionDelay = PMIC_DETECTION_DELAY_50_MS
     };
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1103,10 +1103,10 @@ void test_pos_core_setLpmCfg_detectionDelay_boundaryMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_DETECTION_DELAY_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID,
         .detectionDelay = PMIC_DETECTION_DELAY_MAX
     };
-    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_LPM_DETECTION_DELAY_VALID};
+    Pmic_CoreLpmCfg_t readCfg = {.validParams = PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID};
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1120,12 +1120,12 @@ void test_pos_core_setLpmCfg_pinDetectionAndDelay(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID,
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID,
         .pinDetection = PMIC_DELAY_VALUE_MET_CONDITION,
         .detectionDelay = PMIC_DETECTION_DELAY_250_MS
     };
     Pmic_CoreLpmCfg_t readCfg = {
-        .validParams = PMIC_LPM_PIN_DETECTION_VALID | PMIC_LPM_DETECTION_DELAY_VALID
+        .validParams = PMIC_CFG_CORE_LPM_PIN_DETECTION_VALID | PMIC_CFG_CORE_LPM_DETECTION_DELAY_VALID
     };
 
     status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
@@ -1208,10 +1208,10 @@ void test_pos_core_init_A0_silicon_with_locked_registers(void)
 
     /* Step 2: Initialize PMIC - triggers A0 detection with locked registers */
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID | PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -1265,10 +1265,10 @@ void test_pos_core_init_B0_silicon_with_locked_registers(void)
 
     /* Step 2: Initialize PMIC - triggers B0 detection with locked registers */
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID | PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
@@ -1322,10 +1322,10 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
 
     /* Step 2: Initialize PMIC - triggers B0 detection */
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = (PMIC_I2C_ADDR0_VALID | PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID),
+        .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,

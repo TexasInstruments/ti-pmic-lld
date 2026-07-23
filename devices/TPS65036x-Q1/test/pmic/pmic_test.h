@@ -86,6 +86,9 @@ extern "C" {
 /*                   Test APIs: checkHandle, init, deinit                   */
 /* ======================================================================== */
 
+#define PMIC_TEST_POS_CHECKHANDLE() \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_validHandle)
+
 #define PMIC_TEST_NEG_CHECKHANDLE() \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCommHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullFptrs); \
@@ -94,6 +97,7 @@ extern "C" {
 
 /* Test: TC-PMIC-0011 */
 #define PMIC_TEST_CHECKHANDLE() \
+    PMIC_TEST_POS_CHECKHANDLE(); \
     PMIC_TEST_NEG_CHECKHANDLE()
 
 /* ========================================================================== */
@@ -101,7 +105,8 @@ extern "C" {
 /* ========================================================================== */
 
 #define PMIC_TEST_RUN_POSITIVE() \
-    PMIC_TEST_POS_INIT()
+    PMIC_TEST_POS_INIT(); \
+    PMIC_TEST_POS_CHECKHANDLE()
 
 #define PMIC_TEST_RUN_NEGATIVE() \
     PMIC_TEST_NEG_INIT(); \
@@ -147,6 +152,9 @@ void test_neg_pmic_init_nullIrqResponseCallback(void);
 /* ========================================================================== */
 /*                      checkHandle API Tests                                 */
 /* ========================================================================== */
+
+/* Positive tests */
+void test_pos_pmic_checkHandle_validHandle(void);
 
 /* Negative tests */
 void test_neg_pmic_checkHandle_nullCommHandle(void);

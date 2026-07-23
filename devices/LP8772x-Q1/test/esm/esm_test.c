@@ -144,7 +144,7 @@ void test_neg_esm_esmSetCfg_invalidValidParams(void)
 void test_neg_esm_esmSetCfg_invalidMode(void)
 {
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID,
         .mode = PMIC_ESM_MODE_MAX + 1U
     };
     int32_t status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
@@ -157,7 +157,7 @@ void test_neg_esm_esmSetCfg_invalidMode(void)
 void test_neg_esm_esmSetCfg_invalidErrCntThr(void)
 {
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_ERR_CNT_THR_VALID,
+        .validParams = PMIC_CFG_ESM_ERR_CNT_THR_VALID,
         .errCntThr = PMIC_ESM_ERR_CNT_THR_MAX + 1U
     };
     int32_t status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
@@ -285,11 +285,11 @@ void test_pos_esm_esmGetStartState_startStop(void)
 void test_pos_esm_esmSetCfg_mode(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_MODE_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID,
         .mode = PMIC_ESM_MODE_LEVEL
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_MODE_VALID
+        .validParams = PMIC_CFG_ESM_MODE_VALID
     };
     int32_t status;
 
@@ -319,10 +319,10 @@ void test_pos_esm_esmSetCfg_mode(void)
 void test_pos_esm_esmSetCfg_errCntThr(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_ERR_CNT_THR_VALID
+        .validParams = PMIC_CFG_ESM_ERR_CNT_THR_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_ERR_CNT_THR_VALID
+        .validParams = PMIC_CFG_ESM_ERR_CNT_THR_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x0, 0x5, 0xA, 0xF};
@@ -345,10 +345,10 @@ void test_pos_esm_esmSetCfg_errCntThr(void)
 void test_pos_esm_esmSetCfg_delay1(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_DELAY1_VALID
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_DELAY1_VALID
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -371,10 +371,10 @@ void test_pos_esm_esmSetCfg_delay1(void)
 void test_pos_esm_esmSetCfg_delay2(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_DELAY2_VALID
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_DELAY2_VALID
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -397,10 +397,10 @@ void test_pos_esm_esmSetCfg_delay2(void)
 void test_pos_esm_esmSetCfg_hmax(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_HMAX_VALID
+        .validParams = PMIC_CFG_ESM_HMAX_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_HMAX_VALID
+        .validParams = PMIC_CFG_ESM_HMAX_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -423,10 +423,10 @@ void test_pos_esm_esmSetCfg_hmax(void)
 void test_pos_esm_esmSetCfg_hmin(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_HMIN_VALID
+        .validParams = PMIC_CFG_ESM_HMIN_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_HMIN_VALID
+        .validParams = PMIC_CFG_ESM_HMIN_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -449,10 +449,10 @@ void test_pos_esm_esmSetCfg_hmin(void)
 void test_pos_esm_esmSetCfg_lmax(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_LMAX_VALID
+        .validParams = PMIC_CFG_ESM_LMAX_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_LMAX_VALID
+        .validParams = PMIC_CFG_ESM_LMAX_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -475,10 +475,10 @@ void test_pos_esm_esmSetCfg_lmax(void)
 void test_pos_esm_esmSetCfg_lmin(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_LMIN_VALID
+        .validParams = PMIC_CFG_ESM_LMIN_VALID
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_LMIN_VALID
+        .validParams = PMIC_CFG_ESM_LMIN_VALID
     };
     int32_t status;
     uint8_t testValues[] = {0x00, 0x40, 0x80, 0xFF};
@@ -517,8 +517,8 @@ void test_pos_esm_esmSetCfg_combinedConfiguration(void)
 
     /* Set multiple configuration parameters at once */
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID |
-                       PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID,
         .mode = PMIC_ESM_MODE_LEVEL,
         .errCntThr = 0x5,
         .delay1 = 0x80,
@@ -530,8 +530,8 @@ void test_pos_esm_esmSetCfg_combinedConfiguration(void)
 
     /* Read back and verify */
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID |
-                       PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID
     };
 
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
@@ -551,9 +551,9 @@ void test_pos_esm_esmSetCfg_pwmModeConfiguration(void)
 
     /* Configure ESM for PWM mode with all timing parameters */
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_HMIN_VALID |
-                       PMIC_ESM_HMAX_VALID | PMIC_ESM_LMIN_VALID |
-                       PMIC_ESM_LMAX_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMIN_VALID |
+                       PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_LMIN_VALID |
+                       PMIC_CFG_ESM_LMAX_VALID,
         .mode = PMIC_ESM_MODE_PWM,
         .hmin = 0x20,
         .hmax = 0x80,
@@ -566,9 +566,9 @@ void test_pos_esm_esmSetCfg_pwmModeConfiguration(void)
 
     /* Read back and verify */
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_HMIN_VALID |
-                       PMIC_ESM_HMAX_VALID | PMIC_ESM_LMIN_VALID |
-                       PMIC_ESM_LMAX_VALID
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMIN_VALID |
+                       PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_LMIN_VALID |
+                       PMIC_CFG_ESM_LMAX_VALID
     };
 
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
@@ -597,10 +597,10 @@ void test_pos_esm_integration_completeConfigurationSequence(void)
 
     /* Configure ESM with all parameters */
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID |
-                       PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID |
-                       PMIC_ESM_HMIN_VALID | PMIC_ESM_HMAX_VALID |
-                       PMIC_ESM_LMIN_VALID | PMIC_ESM_LMAX_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID |
+                       PMIC_CFG_ESM_HMIN_VALID | PMIC_CFG_ESM_HMAX_VALID |
+                       PMIC_CFG_ESM_LMIN_VALID | PMIC_CFG_ESM_LMAX_VALID,
         .mode = PMIC_ESM_MODE_PWM,
         .errCntThr = 0x3,
         .delay1 = 0x50,
@@ -651,8 +651,8 @@ void test_pos_esm_esmSetCfg_configurationReadbackVerification(void)
 
     /* Set specific configuration */
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID |
-                       PMIC_ESM_DELAY1_VALID | PMIC_ESM_DELAY2_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID,
         .mode = PMIC_ESM_MODE_LEVEL,
         .errCntThr = 0xA,
         .delay1 = TEST_PATTERN_AA,
@@ -666,25 +666,25 @@ void test_pos_esm_esmSetCfg_configurationReadbackVerification(void)
     Pmic_EsmCfg_t esmCfgGet = {0};
 
     /* Verify mode */
-    esmCfgGet.validParams = PMIC_ESM_MODE_VALID;
+    esmCfgGet.validParams = PMIC_CFG_ESM_MODE_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.mode == PMIC_ESM_MODE_LEVEL);
 
     /* Verify error count threshold */
-    esmCfgGet.validParams = PMIC_ESM_ERR_CNT_THR_VALID;
+    esmCfgGet.validParams = PMIC_CFG_ESM_ERR_CNT_THR_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.errCntThr == 0xA);
 
     /* Verify delay1 */
-    esmCfgGet.validParams = PMIC_ESM_DELAY1_VALID;
+    esmCfgGet.validParams = PMIC_CFG_ESM_DELAY1_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.delay1 == TEST_PATTERN_AA);
 
     /* Verify delay2 */
-    esmCfgGet.validParams = PMIC_ESM_DELAY2_VALID;
+    esmCfgGet.validParams = PMIC_CFG_ESM_DELAY2_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.delay2 == TEST_PATTERN_55);
@@ -715,7 +715,7 @@ void test_pos_esm_integration_enableConfigureStartSequence(void)
 
     /* Step 2: Configure ESM */
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_ERR_CNT_THR_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID,
         .mode = PMIC_ESM_MODE_LEVEL,
         .errCntThr = 0x7
     };
@@ -1093,7 +1093,7 @@ void test_neg_esm_esmSetCfg_delay1ReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_DELAY1_VALID,
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID,
         .delay1 = 0x50
     };
 
@@ -1119,7 +1119,7 @@ void test_neg_esm_esmSetCfg_hmaxReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_HMAX_VALID,
+        .validParams = PMIC_CFG_ESM_HMAX_VALID,
         .hmax = 0x80
     };
 
@@ -1145,7 +1145,7 @@ void test_neg_esm_esmSetCfg_lmaxReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_LMAX_VALID,
+        .validParams = PMIC_CFG_ESM_LMAX_VALID,
         .lmax = 0x90
     };
 
@@ -1171,7 +1171,7 @@ void test_neg_esm_esmSetCfg_modeCfgReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID,
+        .validParams = PMIC_CFG_ESM_MODE_VALID,
         .mode = PMIC_ESM_MODE_LEVEL
     };
 
@@ -1197,7 +1197,7 @@ void test_neg_esm_esmGetCfg_modeCfgReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID
+        .validParams = PMIC_CFG_ESM_MODE_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1222,7 +1222,7 @@ void test_neg_esm_esmGetCfg_delay1ReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_DELAY1_VALID
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1247,7 +1247,7 @@ void test_neg_esm_esmGetCfg_hmaxReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_HMAX_VALID
+        .validParams = PMIC_CFG_ESM_HMAX_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1272,7 +1272,7 @@ void test_neg_esm_esmGetCfg_lmaxReadFailure(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_LMAX_VALID
+        .validParams = PMIC_CFG_ESM_LMAX_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1374,7 +1374,7 @@ void test_neg_esm_esmSetCfg_cascadeFailure_delayToHmax(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_DELAY1_VALID | PMIC_ESM_HMAX_VALID,
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_HMAX_VALID,
         .delay1 = 0x50,
         .hmax = 0x80
     };
@@ -1402,7 +1402,7 @@ void test_neg_esm_esmSetCfg_cascadeFailure_hmaxToLmax(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_HMAX_VALID | PMIC_ESM_LMAX_VALID,
+        .validParams = PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_LMAX_VALID,
         .hmax = 0x80,
         .lmax = 0x90
     };
@@ -1430,7 +1430,7 @@ void test_neg_esm_esmGetCfg_cascadeFailure_modeToDelay(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_MODE_VALID | PMIC_ESM_DELAY1_VALID
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_DELAY1_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1456,7 +1456,7 @@ void test_neg_esm_esmGetCfg_cascadeFailure_delayToHmax(void)
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {
-        .validParams = PMIC_ESM_DELAY1_VALID | PMIC_ESM_HMAX_VALID
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_HMAX_VALID
     };
 
     PLATFORM_ASSERT(mockDevice != NULL);
@@ -1483,11 +1483,11 @@ void test_neg_esm_esmGetCfg_cascadeFailure_delayToHmax(void)
 void test_pos_esm_esmSetCfg_delay2Only(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_DELAY2_VALID,
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID,
         .delay2 = 0x75
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_DELAY2_VALID
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID
     };
     int32_t status;
 
@@ -1506,11 +1506,11 @@ void test_pos_esm_esmSetCfg_delay2Only(void)
 void test_pos_esm_esmSetCfg_hminOnly(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_HMIN_VALID,
+        .validParams = PMIC_CFG_ESM_HMIN_VALID,
         .hmin = 0x30
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_HMIN_VALID
+        .validParams = PMIC_CFG_ESM_HMIN_VALID
     };
     int32_t status;
 
@@ -1529,11 +1529,11 @@ void test_pos_esm_esmSetCfg_hminOnly(void)
 void test_pos_esm_esmSetCfg_lminOnly(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_LMIN_VALID,
+        .validParams = PMIC_CFG_ESM_LMIN_VALID,
         .lmin = 0x15
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_LMIN_VALID
+        .validParams = PMIC_CFG_ESM_LMIN_VALID
     };
     int32_t status;
 
@@ -1552,11 +1552,11 @@ void test_pos_esm_esmSetCfg_lminOnly(void)
 void test_pos_esm_esmGetCfg_delay2Only(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_DELAY2_VALID,
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID,
         .delay2 = 0x88
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_DELAY2_VALID
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID
     };
     int32_t status;
 
@@ -1577,11 +1577,11 @@ void test_pos_esm_esmGetCfg_delay2Only(void)
 void test_pos_esm_esmGetCfg_hminOnly(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_HMIN_VALID,
+        .validParams = PMIC_CFG_ESM_HMIN_VALID,
         .hmin = 0x22
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_HMIN_VALID
+        .validParams = PMIC_CFG_ESM_HMIN_VALID
     };
     int32_t status;
 
@@ -1602,11 +1602,11 @@ void test_pos_esm_esmGetCfg_hminOnly(void)
 void test_pos_esm_esmGetCfg_lminOnly(void)
 {
     Pmic_EsmCfg_t esmCfgSet = {
-        .validParams = PMIC_ESM_LMIN_VALID,
+        .validParams = PMIC_CFG_ESM_LMIN_VALID,
         .lmin = 0x11
     };
     Pmic_EsmCfg_t esmCfgGet = {
-        .validParams = PMIC_ESM_LMIN_VALID
+        .validParams = PMIC_CFG_ESM_LMIN_VALID
     };
     int32_t status;
 
@@ -1634,16 +1634,16 @@ void esm_test(void *args)
 
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
-        .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
-                        PMIC_COMM_HANDLE_0_VALID |
-                        PMIC_IO_READ_VALID |
-                        PMIC_IO_WRITE_VALID |
-                        PMIC_CRITICAL_SECTION_START_VALID |
-                        PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_CRC_ENABLE_VALID |
-                        PMIC_CONFIG_CRC_ENABLE_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+        .validParams = (PMIC_CFG_INIT_COMM_MODE_VALID |
+                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                        PMIC_CFG_INIT_IO_READ_VALID |
+                        PMIC_CFG_INIT_IO_WRITE_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                        PMIC_CFG_INIT_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID |
+                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID),
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .crcEnable = PMIC_DISABLE,

@@ -91,12 +91,12 @@ void pmic_test(void *args)
  */
 static void initTestHandleCfg(Pmic_HandleCfg_t *pmicCfg)
 {
-    pmicCfg->validParams = PMIC_COMM_MODE_VALID |
-                           PMIC_COMM_HANDLE_0_VALID |
-                           PMIC_IO_READ_VALID |
-                           PMIC_IO_WRITE_VALID |
-                           PMIC_CRITICAL_SECTION_START_VALID |
-                           PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg->validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                           PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                           PMIC_CFG_INIT_IO_READ_VALID |
+                           PMIC_CFG_INIT_IO_WRITE_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                           PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID;
     pmicCfg->commMode = PMIC_INTF_SPI;
     pmicCfg->commHandle0 = (void*)&dummyCommHandle;
     pmicCfg->ioRead = &platform_rxByte;
@@ -132,8 +132,8 @@ void test_neg_pmic_init_nullCommHandle(void)
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
 
-    /* Set PMIC_COMM_HANDLE_0_VALID to trigger validation */
-    pmicCfg.validParams |= PMIC_COMM_HANDLE_0_VALID;
+    /* Set PMIC_CFG_INIT_COMM_HANDLE_0_VALID to trigger validation */
+    pmicCfg.validParams |= PMIC_CFG_INIT_COMM_HANDLE_0_VALID;
     pmicCfg.commHandle0 = NULL;
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -227,7 +227,7 @@ void test_neg_pmic_init_insufficientCfg_missingIoRead(void)
 
     /* Set IO read callback to NULL with valid bit set to trigger NULL check */
     pmicCfg.ioRead = NULL;
-    /* Keep PMIC_IO_READ_VALID set so validation catches the NULL */
+    /* Keep PMIC_CFG_INIT_IO_READ_VALID set so validation catches the NULL */
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -241,7 +241,7 @@ void test_neg_pmic_init_insufficientCfg_missingIoWrite(void)
 
     /* Set IO write callback to NULL with valid bit set to trigger NULL check */
     pmicCfg.ioWrite = NULL;
-    /* Keep PMIC_IO_WRITE_VALID set so validation catches the NULL */
+    /* Keep PMIC_CFG_INIT_IO_WRITE_VALID set so validation catches the NULL */
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -255,7 +255,7 @@ void test_neg_pmic_init_insufficientCfg_missingCritSec(void)
 
     /* Set critical section start to NULL with valid bit set to trigger NULL check */
     pmicCfg.criticalSectionStart = NULL;
-    /* Keep PMIC_CRITICAL_SECTION_START_VALID set so validation catches the NULL */
+    /* Keep PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID set so validation catches the NULL */
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -651,7 +651,7 @@ void test_pos_pmic_init_minimalConfig(void)
     Pmic_HandleCfg_t pmicCfg = {0};
 
     /* Minimal valid configuration */
-    pmicCfg.validParams = PMIC_COMM_MODE_VALID | PMIC_COMM_HANDLE_0_VALID | PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID | PMIC_CRITICAL_SECTION_START_VALID | PMIC_CRITICAL_SECTION_STOP_VALID;
+    pmicCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID | PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID | PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID | PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID;
     pmicCfg.commMode = PMIC_INTF_SPI;
     pmicCfg.commHandle0 = platform_getCommHandle();
     pmicCfg.ioRead = &platform_rxByte;
@@ -1087,13 +1087,13 @@ void test_pos_pmic_checkHandle_comprehensive(void)
 
 void test_pos_pmic_init_withRetryCnt(void)
 {
-    // Initialize with PMIC_RETRY_CNT_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_CNT_VALID set
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
 
     // Add retry count configuration
-    pmicCfg.validParams |= PMIC_RETRY_CNT_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_CNT_VALID;
     pmicCfg.retryCnt = 5U;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -1109,14 +1109,14 @@ void test_pos_pmic_init_withRetryCnt(void)
 
 void test_pos_pmic_init_withRetryInterval(void)
 {
-    // Initialize with PMIC_RETRY_INTERVAL_MS_VALID set
+    // Initialize with PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID set
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
 
     // Add retry interval configuration
     // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
-    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 100U;
     pmicCfg.timerWaitMs = &mockTimerWait;
 
@@ -1133,13 +1133,13 @@ void test_pos_pmic_init_withRetryInterval(void)
 
 void test_pos_pmic_init_withTimerWaitMs(void)
 {
-    // Initialize with PMIC_TIMER_WAIT_MS_VALID and valid callback
+    // Initialize with PMIC_CFG_INIT_TIMER_WAIT_MS_VALID and valid callback
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
 
     // Add timer wait callback configuration
-    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.timerWaitMs = &mockTimerWait;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -1155,13 +1155,13 @@ void test_pos_pmic_init_withTimerWaitMs(void)
 
 void test_neg_pmic_init_timerWaitNull(void)
 {
-    // Set PMIC_TIMER_WAIT_MS_VALID but pass NULL callback
+    // Set PMIC_CFG_INIT_TIMER_WAIT_MS_VALID but pass NULL callback
     Pmic_Handle_t handle = {0};
     Pmic_HandleCfg_t pmicCfg = {0};
     initTestHandleCfg(&pmicCfg);
 
     // Set valid param flag but provide NULL callback
-    pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.timerWaitMs = NULL;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
@@ -1325,7 +1325,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     initTestHandleCfg(&pmicCfg);
 
     // Initialize handle properly with timer
-    pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID | PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 100U;
     pmicCfg.timerWaitMs = &mockTimerWait;
 

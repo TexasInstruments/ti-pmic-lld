@@ -76,12 +76,12 @@ static int32_t irqTest_initHandle(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
         .ioRead = &platform_rxByte,
@@ -111,7 +111,7 @@ static void irqTest_setGetMask(uint8_t irqNum, bool maskVal)
     memset(&getCfg, 0, sizeof(getCfg));
 
     /* Set IRQ mask configuration */
-    setCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfg.irqNum = irqNum;
     setCfg.mask = maskVal;
 
@@ -119,7 +119,7 @@ static void irqTest_setGetMask(uint8_t irqNum, bool maskVal)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Get IRQ mask configuration */
-    getCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    getCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     getCfg.irqNum = irqNum;
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &getCfg);
@@ -152,7 +152,7 @@ static void irqTest_maskTest(uint8_t irqNum)
     int32_t status;
 
     memset(&cfgSet, 0, sizeof(cfgSet));
-    cfgSet.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    cfgSet.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     cfgSet.irqNum = irqNum;
     cfgSet.config = PMIC_IRQ_CONFIG0_INT_SET;
 
@@ -374,23 +374,23 @@ void test_pos_irq_irqSetCfgs_multipleMasks(void)
     memset(getCfgs, 0, sizeof(getCfgs));
 
     /* Configure multiple IRQ masks */
-    setCfgs[0].validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     setCfgs[0].mask = true;
 
-    setCfgs[1].validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfgs[1].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[1].irqNum = PMIC_LDO1_UV_ERR_INT;
     setCfgs[1].mask = false;
 
-    setCfgs[2].validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfgs[2].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[2].irqNum = PMIC_WD_TH1_ERR_INT;
     setCfgs[2].mask = true;
 
-    setCfgs[3].validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfgs[3].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[3].irqNum = PMIC_ESM_DLY1_ERR_INT;
     setCfgs[3].mask = false;
 
-    setCfgs[4].validParams = PMIC_IRQ_CFG_MASK_VALID;
+    setCfgs[4].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[4].irqNum = PMIC_COMP1P_UV_ERR_INT;
     setCfgs[4].mask = true;
 
@@ -401,7 +401,7 @@ void test_pos_irq_irqSetCfgs_multipleMasks(void)
     /* Prepare getCfgs with same IRQ numbers */
     for (i = 0; i < 5; i++)
     {
-        getCfgs[i].validParams = PMIC_IRQ_CFG_MASK_VALID;
+        getCfgs[i].validParams = PMIC_CFG_IRQ_MASK_VALID;
         getCfgs[i].irqNum = setCfgs[i].irqNum;
     }
 
@@ -487,7 +487,7 @@ void test_neg_irq_irqSetCfg_nullParam_handle(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
     irqCfg.mask = true;
 
@@ -509,7 +509,7 @@ void test_neg_irq_irqSetCfg_invalidParam_irqNum(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  /* Invalid IRQ number */
     irqCfg.mask = true;
 
@@ -524,7 +524,7 @@ void test_neg_irq_irqSetCfgs_nullParam_handle(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     status = Pmic_irqSetCfgs(NULL, 1, &irqCfg);
@@ -545,7 +545,7 @@ void test_neg_irq_irqSetCfgs_invalidParam_numIrqs(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     /* Test with numIrqs > PMIC_IRQ_NUM */
@@ -560,7 +560,7 @@ void test_neg_irq_irqGetCfg_nullParam_handle(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     status = Pmic_irqGetCfg(NULL, &irqCfg);
@@ -581,7 +581,7 @@ void test_neg_irq_irqGetCfg_invalidParam_irqNum(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  /* Invalid IRQ number */
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &irqCfg);
@@ -595,7 +595,7 @@ void test_neg_irq_irqGetCfgs_nullParam_handle(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     status = Pmic_irqGetCfgs(NULL, 1, &irqCfg);
@@ -616,7 +616,7 @@ void test_neg_irq_irqGetCfgs_invalidParam_numIrqs(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     /* Test with numIrqs > PMIC_IRQ_NUM */
@@ -725,7 +725,7 @@ void test_neg_irq_irqSetCfg_nonMaskableIrq(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  /* Non-maskable interrupt */
     irqCfg.mask = true;
 
@@ -746,7 +746,7 @@ void test_neg_irq_irqSetCfg_nonConfigurableIrq_ABIST_ERR(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_ABIST_ERR_INT;  /* Non-configurable interrupt */
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
 
@@ -761,7 +761,7 @@ void test_neg_irq_irqGetCfg_nonConfigurableIrq(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  /* Non-configurable interrupt */
 
     /* Attempting to get config of a non-configurable IRQ should fail */
@@ -777,7 +777,7 @@ void test_neg_irq_irqSetCfg_invalidConfig_cfgRegCrcErr(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_CFG_REG_CRC_ERR_INT;  /* CONFIG1_MAX validation */
     irqCfg.config = PMIC_IRQ_CONFIG1_MAX + 1U;  /* Invalid config value */
 
@@ -792,7 +792,7 @@ void test_neg_irq_irqSetCfg_invalidConfig_comp1pUvErr(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;  /* CONFIG2_MAX validation */
     irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  /* Invalid config value */
 
@@ -807,7 +807,7 @@ void test_neg_irq_irqSetCfg_invalidConfig_comp2nOvErr(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_COMP2N_OV_ERR_INT;  /* CONFIG2_MAX validation */
     irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  /* Invalid config value */
 
@@ -822,7 +822,7 @@ void test_neg_irq_irqSetCfg_invalidConfig_otherIrq(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;  /* CONFIG0_MAX validation */
     irqCfg.config = PMIC_IRQ_CONFIG0_MAX + 1U;  /* Invalid config value */
 
@@ -841,17 +841,17 @@ void test_neg_irq_irqSetCfgs_invalidConfigInBatch(void)
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
     /* First element: valid */
-    irqCfgs[0].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
 
     /* Second element: invalid config value (triggers error) */
-    irqCfgs[1].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[1].irqNum = PMIC_LDO1_UV_ERR_INT;
     irqCfgs[1].config = PMIC_IRQ_CONFIG0_MAX + 1U;  /* Invalid */
 
     /* Third element: valid (should not be processed) */
-    irqCfgs[2].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO2_UV_ERR_INT;
     irqCfgs[2].config = PMIC_IRQ_CONFIG0_INT_SET;
 
@@ -868,15 +868,15 @@ void test_neg_irq_irqGetCfgs_nonConfigurableInBatch(void)
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
     /* First element: configurable IRQ */
-    irqCfgs[0].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
 
     /* Second element: non-configurable IRQ (triggers error) */
-    irqCfgs[1].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[1].irqNum = PMIC_ABIST_ERR_INT;  /* Non-configurable */
 
     /* Third element: configurable IRQ (should not be processed) */
-    irqCfgs[2].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO1_UV_ERR_INT;
 
     /* Batch operation should fail on second element */
@@ -962,7 +962,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_OFF_INT_EVT_ERR_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_OFF_INT_EVT_ERR_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -976,7 +976,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_OFF_PROT_EVT_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_OFF_PROT_EVT_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -990,7 +990,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_FIRST_PWR_ON_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_FIRST_PWR_ON_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1004,7 +1004,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_CLK_ERR_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_CLK_ERR_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1018,7 +1018,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_INTERNAL_OV_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_INTERNAL_OV_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1032,7 +1032,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_INIT_AN_TMO_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_INIT_AN_TMO_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1046,7 +1046,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_WD_TMO_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_WD_TMO_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1060,7 +1060,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_WD_TRIG_EARLY_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_WD_TRIG_EARLY_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1074,7 +1074,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_ESM_ERR_INT;  /* Non-maskable */
     irqCfg.mask = true;
 
@@ -1150,7 +1150,7 @@ void test_pos_irq_irqSetCfg_configValue(void)
     memset(&irqCfg, 0, sizeof(irqCfg));
 
     /* Set config value for a configurable IRQ */
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
 
@@ -1159,7 +1159,7 @@ void test_pos_irq_irqSetCfg_configValue(void)
 
     /* Read back the config */
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &irqCfg);
@@ -1180,17 +1180,17 @@ void test_pos_irq_irqSetCfgs_batchConfigValues(void)
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
     /* First IRQ: BB_UV_ERR_INT with config */
-    irqCfgs[0].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
 
     /* Second IRQ: BB_OV_ERR_INT with config (same register as BB_UV) */
-    irqCfgs[1].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[1].irqNum = PMIC_BB_OV_ERR_INT;
     irqCfgs[1].config = PMIC_IRQ_CONFIG0_SET_GOTO_SAFE;
 
     /* Third IRQ: LDO1_UV_ERR_INT with config (different register) */
-    irqCfgs[2].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO1_UV_ERR_INT;
     irqCfgs[2].config = PMIC_IRQ_CONFIG1_INT_SET_GOTO_SAFE;
 
@@ -1200,7 +1200,7 @@ void test_pos_irq_irqSetCfgs_batchConfigValues(void)
 
     /* Verify first config */
     memset(irqCfgs, 0, sizeof(irqCfgs));
-    irqCfgs[0].validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &irqCfgs[0]);
@@ -1219,7 +1219,7 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_mask(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
     irqCfg.mask = true;
 
@@ -1240,7 +1240,7 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_viaMask(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     // Set both CONFIG and MASK valid params to trigger both paths
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID | PMIC_IRQ_CFG_MASK_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID | PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
     irqCfg.mask = true;
@@ -1262,7 +1262,7 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_config(void)
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
-    irqCfg.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
 

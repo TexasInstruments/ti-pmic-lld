@@ -84,8 +84,8 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_REG_LOCK_VALID (1UL << 0U)
-#define PMIC_CFG_CNT_LOCK_VALID (1UL << 1U)
+#define PMIC_CFG_CORE_LOCK_REG_VALID (1UL << 0U)
+#define PMIC_CFG_CORE_LOCK_CNT_VALID (1UL << 1U)
 /** @} */
 
 /**
@@ -95,8 +95,8 @@ extern "C" {
  * @{
  */
 #define PMIC_CFG_LOCK_ALL_VALID_SHIFT (\
-    PMIC_CFG_REG_LOCK_VALID |\
-    PMIC_CFG_CNT_LOCK_VALID)
+    PMIC_CFG_CORE_LOCK_REG_VALID |\
+    PMIC_CFG_CORE_LOCK_CNT_VALID)
 /** @} */
 
 /**
@@ -133,11 +133,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_MUX_MODE_VALID          (1UL << 0U)
-#define PMIC_CFG_MUX_AMUX_EN_VALID       (1UL << 1U)
-#define PMIC_CFG_MUX_DMUX_EN_VALID       (1UL << 2U)
-#define PMIC_CFG_MUX_AMUX_CHANNEL_VALID  (1UL << 3U)
-#define PMIC_CFG_MUX_DMUX_GROUP_VALID    (1UL << 4U)
+#define PMIC_CFG_CORE_MUX_MODE_VALID          (1UL << 0U)
+#define PMIC_CFG_CORE_MUX_AMUX_EN_VALID       (1UL << 1U)
+#define PMIC_CFG_CORE_MUX_DMUX_EN_VALID       (1UL << 2U)
+#define PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID  (1UL << 3U)
+#define PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID    (1UL << 4U)
 /** @} */
 
 /**
@@ -148,15 +148,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_MUX_AMUX_ALL_VALID (PMIC_CFG_MUX_AMUX_EN_VALID | \
-                                     PMIC_CFG_MUX_AMUX_CHANNEL_VALID)
-#define PMIC_CFG_MUX_DMUX_ALL_VALID (PMIC_CFG_MUX_DMUX_EN_VALID | \
-                                     PMIC_CFG_MUX_DMUX_GROUP_VALID)
-#define PMIC_CFG_MUX_ALL_VALID      (PMIC_CFG_MUX_MODE_VALID | \
-                                     PMIC_CFG_MUX_AMUX_EN_VALID | \
-                                     PMIC_CFG_MUX_DMUX_EN_VALID | \
-                                     PMIC_CFG_MUX_AMUX_CHANNEL_VALID | \
-                                     PMIC_CFG_MUX_DMUX_GROUP_VALID)
+#define PMIC_CFG_MUX_AMUX_ALL_VALID (PMIC_CFG_CORE_MUX_AMUX_EN_VALID | \
+                                     PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID)
+#define PMIC_CFG_MUX_DMUX_ALL_VALID (PMIC_CFG_CORE_MUX_DMUX_EN_VALID | \
+                                     PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID)
+#define PMIC_CFG_MUX_ALL_VALID      (PMIC_CFG_CORE_MUX_MODE_VALID | \
+                                     PMIC_CFG_CORE_MUX_AMUX_EN_VALID | \
+                                     PMIC_CFG_CORE_MUX_DMUX_EN_VALID | \
+                                     PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID | \
+                                     PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID)
 /** @} */
 
 /**
@@ -242,10 +242,10 @@ typedef struct Pmic_DeviceInfo_s {
  * combination of @ref Pmic_CoreLockCfgValidParamShift and the corresponding
  * member value will be updated.
  *
- * @param cfgLock Configuration Register Lock. Valid only when PMIC_CFG_REG_LOCK_VALID bit is set
+ * @param cfgLock Configuration Register Lock. Valid only when PMIC_CFG_CORE_LOCK_REG_VALID bit is set
  *
  * @param cntLock Timer/Rotation Counter Register Lock configuration. Valid
- * only when PMIC_CFG_CNT_LOCK_VALID bit is set
+ * only when PMIC_CFG_CORE_LOCK_CNT_VALID bit is set
  */
 typedef struct Pmic_Lock_s {
     uint16_t validParams;
@@ -267,21 +267,21 @@ typedef struct Pmic_Lock_s {
  * @ref Pmic_MuxCfgValidParam. OR together multiple bits to set/get
  * multiple parameters in a single call.
  *
- * @param muxMode Multiplexer mode selection. Valid when PMIC_CFG_MUX_MODE_VALID
+ * @param muxMode Multiplexer mode selection. Valid when PMIC_CFG_CORE_MUX_MODE_VALID
  * is set. For valid values, see @ref Pmic_MuxMode.
  *
  * @param amuxEnable AMUX (Analog Multiplexer) enable. Valid when
- * PMIC_CFG_MUX_AMUX_EN_VALID is set. Set to true to enable, false to disable.
+ * PMIC_CFG_CORE_MUX_AMUX_EN_VALID is set. Set to true to enable, false to disable.
  *
  * @param dmuxEnable DMUX (Digital Multiplexer) enable. Valid when
- * PMIC_CFG_MUX_DMUX_EN_VALID is set. Set to true to enable, false to disable.
+ * PMIC_CFG_CORE_MUX_DMUX_EN_VALID is set. Set to true to enable, false to disable.
  *
  * @param amuxChannel AMUX channel selection (0-31). Valid when
- * PMIC_CFG_MUX_AMUX_CHANNEL_VALID is set. Selects which analog signal
+ * PMIC_CFG_CORE_MUX_AMUX_CHANNEL_VALID is set. Selects which analog signal
  * is routed to the AMUX output pin.
  *
  * @param dmuxGroup DMUX group selection (0-31). Valid when
- * PMIC_CFG_MUX_DMUX_GROUP_VALID is set. Selects which digital signal
+ * PMIC_CFG_CORE_MUX_DMUX_GROUP_VALID is set. Selects which digital signal
  * group is routed to the DMUX output pins.
  */
 typedef struct Pmic_MuxCfg_s {

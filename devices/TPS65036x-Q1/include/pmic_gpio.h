@@ -69,10 +69,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_FUNCTIONALITY_VALID    ((uint32_t)(1UL << 0U))
-#define PMIC_POLARITY_VALID         ((uint32_t)(1UL << 1U))
-#define PMIC_PU_PD_CFG_VALID        ((uint32_t)(1UL << 2U))
-#define PMIC_OD_PP_CFG_VALID        ((uint32_t)(1UL << 3U))
+#define PMIC_CFG_GPIO_FUNCTIONALITY_VALID    ((uint32_t)(1UL << 0U))
+#define PMIC_CFG_GPIO_POLARITY_VALID         ((uint32_t)(1UL << 1U))
+#define PMIC_CFG_GPIO_PU_PD_CFG_VALID        ((uint32_t)(1UL << 2U))
+#define PMIC_CFG_GPIO_OD_PP_CFG_VALID        ((uint32_t)(1UL << 3U))
 /** @} */
 
 /**
@@ -197,10 +197,10 @@ typedef struct Pmic_GpioCfg_s {
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-541
  *
  * @details The options that are configurable using this API are listed below.
- * 1. Functionality (validParams: PMIC_FUNCTIONALITY_VALID)
- * 2. Polarity (validParams: PMIC_POLARITY_VALID)
- * 3. Pulldown resistor (validParams: PMIC_PU_PD_CFG_VALID)
- * 4. Open-drain/push-pull operation (validParams: PMIC_OD_PP_CFG_VALID)
+ * 1. Functionality (validParams: PMIC_CFG_GPIO_FUNCTIONALITY_VALID)
+ * 2. Polarity (validParams: PMIC_CFG_GPIO_POLARITY_VALID)
+ * 3. Pulldown resistor (validParams: PMIC_CFG_GPIO_PU_PD_CFG_VALID)
+ * 4. Open-drain/push-pull operation (validParams: PMIC_CFG_GPIO_OD_PP_CFG_VALID)
  *
  * @note NINT_GPI has two configurations that GPIO does not: pullup/pulldown
  * resistor configuration and push-pull/open-drain configuration.

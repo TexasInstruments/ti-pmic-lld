@@ -158,9 +158,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WDG_LONGWINDURATION_VALID          (1UL << 0U)
-#define PMIC_CFG_WDG_WIN1DURATION_VALID             (1UL << 1U)
-#define PMIC_CFG_WDG_WIN2DURATION_VALID             (1UL << 2U)
+#define PMIC_CFG_WDG_LONG_WIN_CODE_VALID          (1UL << 0U)
+#define PMIC_CFG_WDG_WIN1_CODE_VALID             (1UL << 1U)
+#define PMIC_CFG_WDG_WIN2_CODE_VALID             (1UL << 2U)
 #define PMIC_CFG_WDG_THRESHOLD_RESET_VALID          (1UL << 3U)
 #define PMIC_CFG_WDG_THRESHOLD_FAIL_VALID           (1UL << 4U)
 #define PMIC_CFG_WDG_MODE_VALID                     (1UL << 5U)
@@ -181,9 +181,9 @@ extern "C" {
  * @{
  */
 #define PMIC_CFG_WDG_CFG_ALL_VALID            (\
-    PMIC_CFG_WDG_LONGWINDURATION_VALID |\
-    PMIC_CFG_WDG_WIN1DURATION_VALID    |\
-    PMIC_CFG_WDG_WIN2DURATION_VALID    |\
+    PMIC_CFG_WDG_LONG_WIN_CODE_VALID |\
+    PMIC_CFG_WDG_WIN1_CODE_VALID    |\
+    PMIC_CFG_WDG_WIN2_CODE_VALID    |\
     PMIC_CFG_WDG_THRESHOLD_RESET_VALID |\
     PMIC_CFG_WDG_THRESHOLD_FAIL_VALID  |\
     PMIC_CFG_WDG_MODE_VALID            |\
