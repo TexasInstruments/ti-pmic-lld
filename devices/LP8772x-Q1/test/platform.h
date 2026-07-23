@@ -62,7 +62,13 @@
 /**
  * @brief Platform-specific include(s).
  */
-#ifndef BUILD_MOCK
+#if defined(BUILD_MOCK)
+#include "platform_mock.h"
+#elif defined(BUILD_HOST)
+/* Host mode: No hardware-specific includes needed */
+/* Serial communication handled by platform_serial.h */
+#else
+/* Legacy hardware mode (deprecated) */
 #include "driverlib/gpio.h"
 #include "driverlib/i2c.h"
 #include "driverlib/pin_map.h"
@@ -71,8 +77,6 @@
 #include "driverlib/uart.h"
 #include "inc/hw_memmap.h"
 #include "inc/tm4c123gh6pm.h"
-#else
-#include "platform_mock.h"
 #endif
 
 /**
@@ -81,9 +85,10 @@
 #include "unity.h"
 #include "unity_config.h"
 
-#ifndef BUILD_MOCK
-#ifdef __cplusplus
-extern "C" {
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
 #endif
 
 /* ========================================================================= */
@@ -107,8 +112,11 @@ extern "C" {
  * failures and prevent hangs on embedded hardware. When an assertion fails,
  * control returns to the test runner instead of calling abort().
  */
-#ifndef BUILD_MOCK
-    /* Hardware build: Use TEST_PROTECT to catch assertion failures */
+#if defined(BUILD_MOCK) || defined(BUILD_HOST)
+    /* Mock/Host build: Use standard RUN_TEST (abort() works fine on desktop) */
+    #define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
+#else
+    /* Legacy hardware build: Use TEST_PROTECT to catch assertion failures */
     #define PLATFORM_RUN_TEST(test) \
         do { \
             Unity.CurrentTestName = #test; \
@@ -124,9 +132,6 @@ extern "C" {
                 Unity.TestFailures++; \
             } \
         } while(0)
-#else
-    /* Mock build: Use standard RUN_TEST (abort() works fine on desktop) */
-    #define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
 #endif
 
 #define PLATFORM_ASSERT(condition)  TEST_ASSERT(condition)
@@ -134,6 +139,10 @@ extern "C" {
 /* ========================================================================= */
 /*                           Function Declarations                           */
 /* ========================================================================= */
+
+#if !defined(BUILD_MOCK)
+/* Function declarations (for BUILD_HOST and legacy hardware builds) */
+/* BUILD_MOCK provides these as macros in platform_mock.h */
 
 /**
  * @brief Initialize platform and its peripherals for testing LLD.
@@ -267,13 +276,17 @@ void platform_unlockRegisters(void);
  *
  * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
  *          Mock: Single execution, no waits
+ *          Host: Single execution, no waits
  *
  * @param testCallback Function that executes all test suites
  */
 void platform_runTestLoop(void (*testCallback)(void));
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-#endif /* BUILD_MOCK */
+#endif /* !BUILD_MOCK - End of function declarations */
+
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  }
+  #endif /* __cplusplus */
+#endif /* !BUILD_MOCK && !BUILD_HOST */
 #endif /* PMIC_TEST_PLATFORM_H */

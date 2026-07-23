@@ -35,6 +35,7 @@
 #include "unity.h"
 #include "unity_config.h"
 #include "platform.h"
+#include "debug.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
 #include "pmic_mock_core.h"
@@ -49,6 +50,8 @@
  */
 void setUp(void)
 {
+    TEST_DEBUG(DEBUG_LEVEL_TRACE, "setUp: entry");
+
     /* Unlock registers to ensure clean state */
     extern void platform_unlockRegisters(void);
     platform_unlockRegisters();
@@ -62,6 +65,8 @@ void setUp(void)
         PmicMock_ClearErrors(mock);
     }
     #endif
+
+    TEST_DEBUG(DEBUG_LEVEL_TRACE, "setUp: completed");
 }
 
 /**
@@ -69,6 +74,8 @@ void setUp(void)
  */
 void tearDown(void)
 {
+    TEST_DEBUG(DEBUG_LEVEL_TRACE, "tearDown: entry");
+
     /* Unlock registers (in case test locked them) */
     extern void platform_unlockRegisters(void);
     platform_unlockRegisters();
@@ -82,6 +89,8 @@ void tearDown(void)
         PmicMock_ClearErrors(mock);
     }
     #endif
+
+    TEST_DEBUG(DEBUG_LEVEL_TRACE, "tearDown: completed");
 }
 
 /* Declare test entry functions */
@@ -126,6 +135,14 @@ static void runAllTests(void)
     printf("\n=== Running ESM Tests ===\n");
     esm_test(NULL);
 
+#ifdef BUILD_MOCK
+    printf("\n=== Running IRQ Tests ===\n");
+    irq_test(NULL);
+
+    printf("\n=== Running POWER Tests ===\n");
+    power_test(NULL);
+#endif
+
     printf("All tests completed\n");
 }
 
@@ -134,6 +151,9 @@ static void runAllTests(void)
  */
 int main(void)
 {
+    /* Initialize debug system (reads PMIC_DEBUG_LEVEL and PMIC_DEBUG_MODULES env vars) */
+    debug_init();
+
     // Initialize platform (works for both mock and hardware)
     platform_init();
 

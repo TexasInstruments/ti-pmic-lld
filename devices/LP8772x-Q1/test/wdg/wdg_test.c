@@ -154,15 +154,11 @@ void wdg_test(void *args)
     platform_printString("WDG_TEST\r\n");
     platform_printString("-------\r\n\r\n");
 
-    platform_printString("DEBUG: About to call Pmic_init()...\r\n");
     status = Pmic_init(&pmicHandle, &coreCfg);
-    platform_printString("DEBUG: Pmic_init() returned\r\n");
 
     if (status == PMIC_ST_SUCCESS)
     {
-        platform_printString("DEBUG: About to call wdgTest_clrAllPmicIrq()...\r\n");
         status = wdgTest_clrAllPmicIrq();
-        platform_printString("DEBUG: wdgTest_clrAllPmicIrq() returned\r\n");
 
         if (status == PMIC_ST_SUCCESS)
         {

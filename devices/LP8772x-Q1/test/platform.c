@@ -31,104 +31,53 @@
  *
  *****************************************************************************/
 
+/**
+ * @file platform.c
+ * @brief Host-controlled platform layer for PMIC testing
+ *
+ * This implementation runs tests on the host PC while communicating with
+ * pmic-tiva-host firmware on TM4C123 via serial commands. The firmware acts
+ * as an I2C/GPIO translation layer, providing unlimited memory and easy
+ * debugging while still accessing real PMIC hardware.
+ */
 
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 #include "platform.h"
+#include "debug.h"
+#include <stdbool.h> /* For bool type */
+
+#ifdef BUILD_HOST
+#include "platform_serial.h"
+#include <unistd.h>  /* For usleep */
+#include <stdlib.h>  /* For strtoul, getenv, exit */
+#endif
 
 /* ========================================================================== */
 /*                           Structures and Enums                             */
 /* ========================================================================== */
 
 /**
- * @brief Platform I2C information structure definition.
+ * @brief Pseudo I2C handle for host mode (just stores slave address)
  */
-typedef struct I2cHandle_s
-{
-    uint32_t sysPeriphI2C;
-    uint32_t sysPeriphGPIO;
-    uint32_t gpioPortBase;
-    uint32_t i2cBase;
-    uint8_t sdaPin;
-    uint8_t sclPin;
-    uint32_t gpioToSDA;
-    uint32_t gpioToSCL;
+typedef struct {
     uint8_t slaveAddr;
-    bool bFast;
 } I2cHandle_t;
-
-/**
- * @brief Platform UART information structure definition.
- */
-typedef struct uartHandle_s
-{
-    uint32_t sysctlPeriphUART;
-    uint32_t sysctlPeriphGPIO;
-    uint32_t gpioPortBase;
-    uint32_t uartBase;
-    uint8_t gpioTxPin;
-    uint8_t gpioRxPin;
-    uint32_t TxPinToUART;
-    uint32_t RxPinToUART;
-    uint32_t clkSrc;
-    uint32_t clkSrcFreq;
-    uint32_t baudRate;
-} uartHandle_t;
-
-/**
- * @brief Platform Timer information structure definition.
- */
-typedef struct timerHandle_s
-{
-    uint32_t sysctlPeriphTimer;
-    uint32_t timerBase;
-} timerHandle_t;
-
-/* ========================================================================== */
-/*                           Function Declarations                            */
-/* ========================================================================== */
-
-static void vcpInitModule(const uartHandle_t *vcpHandle);
-static void vcpDeinitModule(const uartHandle_t *vcpHandle);
-static void vcpInitHandle(uartHandle_t *vcpHandle);
-static void vcpDeinitHandle(uartHandle_t *vcpHandle);
-static void timerInitModule(const timerHandle_t *timerHandle);
-static void timerDeinitModule(const timerHandle_t *timerHandle);
-static void timerInitHandle(timerHandle_t *timerHandle);
-static void timerDeinitHandle(timerHandle_t *timerHandle);
-static void I2CInitModule(const I2cHandle_t *i2cHandle);
-static void I2CDeinitModule(const I2cHandle_t *i2cHandle);
-static void I2CInitHandle(I2cHandle_t *i2cHandle);
-static void I2CDeinitHandle(I2cHandle_t *i2cHandle);
-static inline void waitForUserResponse(bool wait);
-static void UARTStrPut(const uartHandle_t *UARTHandle, const char *str);
-static void vcpClearConsole(const uartHandle_t *uartHandle);
-static int32_t I2CStartWrite(const I2cHandle_t *i2cHandle, uint8_t regAddr);
-static int32_t I2CSingleWrite(const I2cHandle_t *i2cHandle, const uint8_t *pTxBuf);
-static int32_t I2CBurstWrite(const I2cHandle_t *i2cHandle, uint8_t bufLen, const uint8_t *pTxBuf);
-static int32_t I2CStartRead(const I2cHandle_t *i2cHandle, uint8_t regAddr);
-static int32_t I2CBurstRead(const I2cHandle_t *i2cHandle, uint8_t bufLen, uint8_t *pRxBuf);
-static int32_t I2CSingleRead(const I2cHandle_t *i2cHandle, uint8_t *pRxBuf);
 
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
 /**
- * @brief I2C handle used to communicate to PMIC.
+ * @brief I2C handle used to communicate to PMIC (stores slave address)
  */
 static I2cHandle_t commHandle = {0U};
 
 /**
- * @brief UART handle used to transmit and receive console data.
+ * @brief Platform initialization state
  */
-static uartHandle_t consoleHandle = {0U};
-
-/**
- * @brief Timer handle used to facilitate activities involving time.
- */
-static timerHandle_t tHandle = {0U};
+static bool g_platform_initialized = false;
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -136,154 +85,175 @@ static timerHandle_t tHandle = {0U};
 
 void platform_init(void)
 {
-#ifndef BUILD_MOCK
-    // Configure system clock to 50 MHz using PLL with 16 MHz crystal
-    SysCtlClockSet(SYSCTL_SYSDIV_4 |      // Divide by 4 for 50 MHz
-                   SYSCTL_USE_PLL |        // Enable PLL (200 MHz)
-                   SYSCTL_OSC_MAIN |       // Use main oscillator
-                   SYSCTL_XTAL_16MHZ);     // 16 MHz external crystal
+#ifdef BUILD_HOST
+    const char *port;
+    char response[256];
+    int32_t status;
 
-    // Allow PLL to stabilize before peripheral initialization
-    // Delay ~100ms (conservative for 50 MHz operation)
-    SysCtlDelay(50000000 / 3 / 10);
+    /* If already initialized, just return success */
+    if (g_platform_initialized) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Already initialized, skipping");
+        return;
+    }
 
-    // Initialize console/terminal communication
-    vcpInitHandle(&consoleHandle);
-    vcpInitModule(&consoleHandle);
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Host-controlled platform initialization");
 
-    // Clear the console/terminal of any prior data
-    vcpClearConsole(&consoleHandle);
+    /* Reset initialization state */
+    g_platform_initialized = false;
+    commHandle.slaveAddr = 0x00;
+
+    /* Get serial port from environment or use default */
+    port = getenv("PMIC_SERIAL_PORT");
+    if (port == NULL) {
+        port = SERIAL_DEFAULT_PORT;
+    }
+
+    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Serial port: %s", port);
+
+    printf("Initializing host-controlled PMIC testing...\n");
+    printf("Serial port: %s\n", port);
+    fflush(stdout);
+
+    /* Initialize serial communication */
+    status = serial_init(port, SERIAL_DEFAULT_BAUD);
+    if (status != 0) {
+        fprintf(stderr, "ERROR: Failed to open serial port %s\n", port);
+        fprintf(stderr, "       %s\n", serial_get_last_error());
+        fprintf(stderr, "\nTroubleshooting:\n");
+        fprintf(stderr, "  1. Check that pmic-tiva-host firmware is flashed to TM4C123\n");
+        fprintf(stderr, "  2. Verify USB cable is connected\n");
+        fprintf(stderr, "  3. Check port name (set PMIC_SERIAL_PORT environment variable)\n");
+        fprintf(stderr, "  4. On Linux: Add user to dialout group (sudo usermod -a -G dialout $USER)\n");
+        exit(1);
+    }
+
+    /* Verify firmware connection - send 'id' command */
+    printf("Verifying firmware connection...\n");
+
+    /* Wait for startup banner to complete */
+    usleep(500000);  /* 500ms */
+
+    /* Flush any stale data (startup banner) */
+    serial_flush();
+
+    status = serial_send_command("id");
+    if (status != 0) {
+        fprintf(stderr, "ERROR: Failed to send command to firmware\n");
+        fprintf(stderr, "       %s\n", serial_get_last_error());
+        serial_close();
+        exit(1);
+    }
+
+    /* Read response (should be "STATUS: OK" followed by "ID: PPC Host...") */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+    if (status < 0) {
+        fprintf(stderr, "ERROR: No response from firmware\n");
+        fprintf(stderr, "       %s\n", serial_get_last_error());
+        fprintf(stderr, "\nFirmware is not responding. Check that:\n");
+        fprintf(stderr, "  1. pmic-tiva-host firmware is flashed and running\n");
+        fprintf(stderr, "  2. Board is powered on\n");
+        fprintf(stderr, "  3. UART0 is functioning (TX=PA1, RX=PA0)\n");
+        serial_close();
+        exit(1);
+    }
+
+    /* Check for "STATUS: OK" in first line */
+    if (strstr(response, "STATUS: OK") == NULL) {
+        fprintf(stderr, "ERROR: Firmware returned error: %s\n", response);
+        serial_close();
+        exit(1);
+    }
+
+    /* Read ID line */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+    if (status < 0) {
+        fprintf(stderr, "ERROR: Firmware ID read failed\n");
+        fprintf(stderr, "       %s\n", serial_get_last_error());
+        serial_close();
+        exit(1);
+    }
+
+    /* Validate firmware ID contains "PPC Host" */
+    if (strstr(response, "PPC Host") == NULL) {
+        fprintf(stderr, "ERROR: Invalid firmware ID: %s\n", response);
+        fprintf(stderr, "       Expected 'PPC Host' in firmware identification\n");
+        serial_close();
+        exit(1);
+    }
+
+    printf("Firmware connected: %s\n", response);
+    printf("Host-controlled platform initialized successfully\n\n");
+
+    /* Only set address and state after all validation passes */
+    commHandle.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
+    g_platform_initialized = true;
+
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
 #endif
-
-    // Initialize PMIC I2C communication
-    I2CInitHandle(&commHandle);
-    I2CInitModule(&commHandle);
-
-    // Initialize timer
-    timerInitHandle(&tHandle);
-    timerInitModule(&tHandle);
 }
 
 void platform_deinit(void)
 {
-#ifndef BUILD_MOCK
-    // Wait for UART TX to complete before disabling
-    while (UARTBusy(consoleHandle.uartBase)) {
-        // Busy-wait for UART transmission to complete
+#ifdef BUILD_HOST
+    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "platform_deinit called (initialized=%d)", g_platform_initialized);
+
+    /* Skip deinit when running test suites - keep port open for next suite */
+    /* Only truly deinit when explicitly needed (not during normal test runs) */
+    if (g_platform_initialized) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Keeping port open for test suites");
+        /* Keep the port open - just return without deinitialization */
+        return;
     }
 
-    // Small delay to ensure final character is fully transmitted
-    SysCtlDelay(SysCtlClockGet() / 1000); // 1ms delay
-
-    // De-initialize console/terminal communication
-    vcpDeinitModule(&consoleHandle);
-    vcpDeinitHandle(&consoleHandle);
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Performing actual deinitialization");
 #endif
-
-    // De-initialize PMIC I2C communication
-    I2CDeinitModule(&commHandle);
-    I2CDeinitHandle(&commHandle);
-
-    // De-initialize timer
-    timerDeinitModule(&tHandle);
-    timerDeinitHandle(&tHandle);
+    /* This code only runs if already deinitialized */
+    g_platform_initialized = false;
+    commHandle.slaveAddr = 0x00;
 }
 
 void platform_setupTests(void)
 {
-#ifndef BUILD_MOCK
-    // Default to auto-run (no wait) for automated testing
-    // Set PLATFORM_WAIT_FOR_USER compile flag for interactive debugging
-#ifdef PLATFORM_WAIT_FOR_USER
-    bool waitForUser = true;
-#else
-    bool waitForUser = false;  // Default: don't wait
-#endif
-    waitForUserResponse(waitForUser);
-#endif  // BUILD_MOCK
+    /* No setup needed for host mode */
 }
 
 void platform_tearDownTests(void)
 {
+    /* No teardown needed for host mode */
 }
 
 void platform_printChar(char c)
 {
-    UARTCharPut(consoleHandle.uartBase, c);
-
-    if (c == '\n')
-    {
-        UARTCharPut(consoleHandle.uartBase, '\r');
+    if (c == '\n') {
+        putchar('\r');  /* CR first */
+        putchar('\n');  /* LF second = proper CRLF */
+        fflush(stdout);
+    } else if (c == '\r') {
+        /* Skip standalone CR - we handle line endings with LF */
+        return;
+    } else {
+        putchar(c);
     }
 }
 
 void platform_printString(const char *str)
 {
-    UARTStrPut(&consoleHandle, str);
+    if (str != NULL) {
+        while (*str != '\0') {
+            platform_printChar(*str);
+            str++;
+        }
+    }
 }
 
 void platform_timerWaitMs(uint16_t ms)
 {
-    uint32_t cycles = 0U;
-
-    /*** Delay for specified number of seconds ***/
-
-    // Disable timer before configuration
-    TimerDisable(tHandle.timerBase, TIMER_BOTH);
-
-    // Configure timer to be in full-width Periodic mode counting down
-    TimerConfigure(tHandle.timerBase, 0x0U);
-    TimerConfigure(tHandle.timerBase, TIMER_CFG_PERIODIC);
-
-    // Configure timer to generate a 1 second period
-    TimerLoadSet(tHandle.timerBase, TIMER_A, SysCtlClockGet());
-
-    // Clear any pending timer interrupt
-    TimerIntClear(tHandle.timerBase, TIMER_TIMA_TIMEOUT);
-
-    // Enable timer and start counting
-    TimerEnable(tHandle.timerBase, TIMER_A);
-
-    while (ms >= 1000U)
-    {
-        // Wait for 1 second
-        while (TimerIntStatus(tHandle.timerBase, false) != TIMER_TIMA_TIMEOUT)
-        {
-        }
-
-        // Clear timeout IRQ and decrement milliseconds
-        TimerIntClear(tHandle.timerBase, TIMER_TIMA_TIMEOUT);
-        ms -= 1000U;
-    }
-
-    // Disable timer after target duration has been met
-    TimerDisable(tHandle.timerBase, TIMER_BOTH);
-
-    /*** Delay for specified fraction of a second ***/
-
-    // Configure timer to be in full-width One-Shot mode counting down
-    TimerConfigure(tHandle.timerBase, 0x0U);
-    TimerConfigure(tHandle.timerBase, TIMER_CFG_ONE_SHOT);
-
-    cycles = (uint32_t)((SysCtlClockGet() / 1000U) * ms);
-    TimerLoadSet(tHandle.timerBase, TIMER_A, cycles);
-
-    // Clear any pending timer interrupt
-    TimerIntClear(tHandle.timerBase, TIMER_TIMA_TIMEOUT);
-
-    // Enable timer and start counting
-    TimerEnable(tHandle.timerBase, TIMER_A);
-
-    // Wait the fraction of a second
-    while (TimerIntStatus(tHandle.timerBase, false) != TIMER_TIMA_TIMEOUT)
-    {
-    }
-
-    // Clear flag
-    TimerIntClear(tHandle.timerBase, TIMER_TIMA_TIMEOUT);
-
-    // Disable timer after target duration has been met
-    TimerDisable(tHandle.timerBase, TIMER_BOTH);
+#ifdef BUILD_HOST
+    /* Simple host-side delay (firmware doesn't need to wait) */
+    usleep(ms * 1000);
+#endif
 }
 
 void platform_critSecStart(uint8_t resource)
@@ -311,649 +281,262 @@ void *platform_getCommHandle(void)
 int32_t platform_txByte(
     const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    (void)page;  // LP8772x-Q1: Page mapping MAIN=0, QA=1, NVM=2 (currently only uses page 0)
+#ifdef BUILD_HOST
+    char cmd[SERIAL_MAX_CMD_LEN];
+    char response[SERIAL_MAX_RESPONSE_LEN];
+    int32_t status;
+    int n;
+    uint8_t i;
 
-    // Parameter validation
-    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
+    (void)page;  /* LP8772x-Q1: Page mapping not used in current implementation */
+
+    /* Validate platform is initialized */
+    if (!g_platform_initialized) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (bufLen == 0U))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
+    /* Parameter validation */
+    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Execute I2C transaction - Address phase
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = I2CStartWrite((I2cHandle_t*)(handle->commHandle0), regAddr);
+    if (bufLen == 0U) {
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Execute I2C transaction - Data phase
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = (bufLen == 1U) ? I2CSingleWrite((I2cHandle_t*)(handle->commHandle0), buffer) :
-                                  I2CBurstWrite((I2cHandle_t*)(handle->commHandle0), bufLen, buffer);
+    /* Get slave address from handle */
+    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+
+    /* Build i2ce command: write only (read_len=0)
+     * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
+     * Example: i2ce 0 400000 0x60 0 2 0x10 0xAA
+     */
+    n = snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 %d 0x%02X",
+                 i2cHandle->slaveAddr, bufLen + 1, regAddr);
+
+    if (n < 0 || n >= (int)sizeof(cmd)) {
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
-    // The return code of the API I2CMasterErr() is positive when there is an I2C-related error
-    if (status > 0)
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
+    /* Append data bytes */
+    for (i = 0; i < bufLen; i++) {
+        n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " 0x%02X", buffer[i]);
+        if (n >= (int)sizeof(cmd)) {
+            return PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
-    return status;
+    /* Send command to firmware */
+    status = serial_send_command(cmd);
+    if (status != 0) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
+    }
+
+    /* Read response: "STATUS: OK\n" or "STATUS: ERROR_CMD - ...\n" */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+    if (status < 0) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
+    }
+
+    /* Parse response */
+    if (strstr(response, "STATUS: OK") != NULL) {
+        return PMIC_ST_SUCCESS;
+    } else if (strstr(response, "I2C") != NULL || strstr(response, "NACK") != NULL) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
+    } else {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+#else
+    /* Should not reach here - BUILD_HOST should be defined */
+    (void)handle;
+    (void)page;
+    (void)regAddr;
+    (void)buffer;
+    (void)bufLen;
+    return PMIC_ST_ERR_INV_PARAM;
+#endif
 }
 
 int32_t platform_rxByte(
     const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen)
 {
-    // Variable declaration/initialization
-    int32_t status = PMIC_ST_SUCCESS;
-    (void)page;  // LP8772x-Q1: Page mapping MAIN=0, QA=1, NVM=2 (currently only uses page 0)
+#ifdef BUILD_HOST
+    char cmd[SERIAL_MAX_CMD_LEN];
+    char response[SERIAL_MAX_RESPONSE_LEN];
+    int32_t status;
+    char *results;
+    char *token;
+    uint8_t idx;
 
-    // Parameter validation
-    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
+    (void)page;  /* LP8772x-Q1: Page mapping not used in current implementation */
+
+    /* Validate platform is initialized */
+    if (!g_platform_initialized) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (bufLen == 0U))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
+    /* Parameter validation */
+    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Execute I2C transaction - Address phase
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = I2CStartRead((I2cHandle_t*)(handle->commHandle0), regAddr);
+    if (bufLen == 0U) {
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Execute I2C transaction - Data phase
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Always use I2CBurstRead - it now properly handles single-byte reads with repeated start
-        status = I2CBurstRead((I2cHandle_t*)(handle->commHandle0), bufLen, buffer);
+    /* Get slave address from handle */
+    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+
+    /* Build i2ce command: write reg address, then read
+     * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
+     * Example: i2ce 0 400000 0x60 2 1 0x10
+     *   This writes 0x10 (register address), then reads 2 bytes
+     */
+    snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X %d 1 0x%02X",
+             i2cHandle->slaveAddr, bufLen, regAddr);
+
+    /* Send command to firmware */
+    status = serial_send_command(cmd);
+    if (status != 0) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    // The return code of the API I2CMasterErr() is positive when there is an I2C-related error
-    if (status > 0)
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
+    /* Read first line: "STATUS: OK\n" or "STATUS: ERROR_CMD - ...\n" */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+    if (status < 0) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    return status;
-}
-
-void vcpInitModule(const uartHandle_t *vcpHandle)
-{
-    // Enable the UART module for PC <--> MCU communication
-    SysCtlPeripheralEnable(vcpHandle->sysctlPeriphUART);
-
-    // Enable UART TX and RX pins' GPIO port
-    SysCtlPeripheralEnable(vcpHandle->sysctlPeriphGPIO);
-
-    // Ensure VCP GPIO port is ready to be configured
-    while (!SysCtlPeripheralReady(vcpHandle->sysctlPeriphGPIO))
-    {
+    /* Check for errors */
+    if (strstr(response, "STATUS: OK") == NULL) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    // Configure VCP GPIO TX and RX pins for UART operation (both together)
-    GPIOPinTypeUART(vcpHandle->gpioPortBase,
-                    vcpHandle->gpioTxPin | vcpHandle->gpioRxPin);
-
-    // Configure VCP GPIO TX and RX pins to UART functionality
-    GPIOPinConfigure(vcpHandle->TxPinToUART);
-    GPIOPinConfigure(vcpHandle->RxPinToUART);
-
-    // Ensure VCP UART is ready to be configured
-    while (!SysCtlPeripheralReady(vcpHandle->sysctlPeriphUART))
-    {
+    /* Read second line: "RESULTS: 0xAA 0xBB 0xCC\n" */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+    if (status < 0) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    // If UART is already enabled, properly shut it down first
-    // Wait for any pending transmission to complete
-    while (UARTBusy(vcpHandle->uartBase)) {
-        // Busy-wait for transmission completion
+    /* Find "RESULTS:" prefix */
+    results = strstr(response, "RESULTS:");
+    if (results == NULL) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    // Disable the UART before configuration
-    UARTDisable(vcpHandle->uartBase);
+    /* Parse hex data: "RESULTS: 0xAA 0xBB 0xCC" */
+    results += 9;  /* Skip "RESULTS: " */
 
-    // Small delay to ensure UART hardware has fully stopped
-    SysCtlDelay(SysCtlClockGet() / 100); // 10ms delay
+    /* Use strtok to split by spaces */
+    token = strtok(results, " \n\r");
+    idx = 0;
 
-    // Configure the UART to the popular configuration:
-    // 9600 baud, 8 bit data, one stop bit, no parity
-    // w/ input clock PIOSC (16,000,000 Hz)
-    UARTConfigSetExpClk(vcpHandle->uartBase,
-                        vcpHandle->clkSrcFreq,
-                        vcpHandle->baudRate,
-                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
-    UARTClockSourceSet(vcpHandle->uartBase, vcpHandle->clkSrc);
-
-    // Enable the UART after configuration
-    UARTEnable(vcpHandle->uartBase);
-
-    // Clear any RX error flags that might block reception
-    UARTRxErrorClear(vcpHandle->uartBase);
-
-    // // Defensive: Explicitly ensure FIFO is enabled
-    // // (UARTEnable should do this, but make sure)
-    // volatile uint32_t *lcrh = (volatile uint32_t *)(vcpHandle->uartBase + 0x02C);
-    // *lcrh |= 0x0010;  // Set FEN bit
-
-    // // Defensive: Explicitly ensure RX is enabled
-    // // (UARTEnable should do this, but make sure)
-    // volatile uint32_t *ctl = (volatile uint32_t *)(vcpHandle->uartBase + 0x030);
-    // *ctl |= 0x0200;  // Set RXE bit
-}
-
-static void vcpDeinitModule(const uartHandle_t *vcpHandle) __attribute__((unused));
-static void vcpDeinitModule(const uartHandle_t *vcpHandle)
-{
-    UARTDisable(vcpHandle->uartBase);
-    SysCtlPeripheralDisable(vcpHandle->sysctlPeriphUART);
-}
-
-static void vcpInitHandle(uartHandle_t *vcpHandle)
-{
-    vcpHandle->sysctlPeriphUART = SYSCTL_PERIPH_UART0;
-    vcpHandle->sysctlPeriphGPIO = SYSCTL_PERIPH_GPIOA;
-    vcpHandle->gpioPortBase = GPIO_PORTA_BASE;
-    vcpHandle->uartBase = UART0_BASE;
-    vcpHandle->gpioTxPin = GPIO_PIN_1;
-    vcpHandle->gpioRxPin = GPIO_PIN_0;
-    vcpHandle->TxPinToUART = GPIO_PA1_U0TX;
-    vcpHandle->RxPinToUART = GPIO_PA0_U0RX;
-    vcpHandle->clkSrc = UART_CLOCK_PIOSC;
-    vcpHandle->clkSrcFreq = 16000000U;
-    vcpHandle->baudRate = 115200U;
-}
-
-static void vcpDeinitHandle(uartHandle_t *vcpHandle) __attribute__((unused));
-static void vcpDeinitHandle(uartHandle_t *vcpHandle)
-{
-    vcpHandle->sysctlPeriphUART = 0U;
-    vcpHandle->sysctlPeriphGPIO = 0U;
-    vcpHandle->gpioPortBase = 0U;
-    vcpHandle->uartBase = 0U;
-    vcpHandle->gpioTxPin = 0U;
-    vcpHandle->gpioRxPin = 0U;
-    vcpHandle->TxPinToUART = 0U;
-    vcpHandle->RxPinToUART = 0U;
-    vcpHandle->clkSrc = 0U;
-    vcpHandle->clkSrcFreq = 0U;
-    vcpHandle->baudRate = 0U;
-}
-
-static void timerInitHandle(timerHandle_t *timerHandle)
-{
-    timerHandle->sysctlPeriphTimer = SYSCTL_PERIPH_TIMER0;
-    timerHandle->timerBase = TIMER0_BASE;
-}
-
-static void timerDeinitHandle(timerHandle_t *timerHandle) __attribute__((unused));
-static void timerDeinitHandle(timerHandle_t *timerHandle)
-{
-    timerHandle->sysctlPeriphTimer = 0U;
-    timerHandle->timerBase = 0U;
-}
-
-static void timerInitModule(const timerHandle_t *timerHandle)
-{
-    // Enable the target timer peripheral
-    SysCtlPeripheralEnable(timerHandle->sysctlPeriphTimer);
-
-    // Ensure timer is ready to be configured
-    while (!SysCtlPeripheralReady(timerHandle->sysctlPeriphTimer))
-    {
+    while (token != NULL && idx < bufLen) {
+        /* Convert hex string to byte */
+        unsigned long val = strtoul(token, NULL, 16);
+        buffer[idx] = (uint8_t)val;
+        idx++;
+        token = strtok(NULL, " \n\r");
     }
 
-    // Ensure timer is disabled so that other Timer APIs could safely configure the timer module
-    TimerDisable(timerHandle->timerBase, TIMER_BOTH);
-}
-
-static void timerDeinitModule(const timerHandle_t *timerHandle) __attribute__((unused));
-static void timerDeinitModule(const timerHandle_t *timerHandle)
-{
-    TimerDisable(timerHandle->timerBase, TIMER_BOTH);
-    SysCtlPeripheralDisable(timerHandle->sysctlPeriphTimer);
-}
-
-static void I2CInitModule(const I2cHandle_t *i2cHandle)
-{
-    // Enable the I2C module
-    SysCtlPeripheralEnable(i2cHandle->sysPeriphI2C);
-
-    // Enable the I2C SDL and SDA pins' GPIO port
-    SysCtlPeripheralEnable(i2cHandle->sysPeriphGPIO);
-
-    // Ensure I2C GPIO port is ready to be configured
-    while (!SysCtlPeripheralReady(i2cHandle->sysPeriphGPIO))
-    {
+    /* Verify we got the expected number of bytes */
+    if (idx != bufLen) {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    // Configure I2C GPIO pins for I2C operation
-    GPIOPinTypeI2C(i2cHandle->gpioPortBase, i2cHandle->sdaPin); // Configure SDA pin
-    GPIOPinTypeI2CSCL(i2cHandle->gpioPortBase, i2cHandle->sclPin);
-
-    // Configure the I2C GPIO pins to I2C functionality
-    GPIOPinConfigure(i2cHandle->gpioToSDA);
-    GPIOPinConfigure(i2cHandle->gpioToSCL);
-
-    // Initialize the I2C module for use as a master
-    // running at a clock rate of 100 KHz or 400 KHz
-    I2CMasterInitExpClk(i2cHandle->i2cBase, SysCtlClockGet(), i2cHandle->bFast);
-}
-
-static void I2CDeinitModule(const I2cHandle_t *i2cHandle) __attribute__((unused));
-static void I2CDeinitModule(const I2cHandle_t *i2cHandle)
-{
-    SysCtlPeripheralDisable(i2cHandle->sysPeriphI2C);
-}
-
-static void I2CInitHandle(I2cHandle_t *i2cHandle)
-{
-    i2cHandle->sysPeriphI2C = SYSCTL_PERIPH_I2C0;
-    i2cHandle->sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
-    i2cHandle->gpioPortBase = GPIO_PORTB_BASE;
-    i2cHandle->i2cBase = I2C0_BASE;
-    i2cHandle->sdaPin = GPIO_PIN_3;
-    i2cHandle->sclPin = GPIO_PIN_2;
-    i2cHandle->gpioToSDA = GPIO_PB3_I2C0SDA;
-    i2cHandle->gpioToSCL = GPIO_PB2_I2C0SCL;
-    i2cHandle->slaveAddr = PLATFORM_TARGET_I2C_ADDR;
-    i2cHandle->bFast = (bool)false;
-}
-
-static void I2CDeinitHandle(I2cHandle_t *i2cHandle) __attribute__((unused));
-static void I2CDeinitHandle(I2cHandle_t *i2cHandle)
-{
-    i2cHandle->sysPeriphI2C = 0U;
-    i2cHandle->sysPeriphGPIO = 0U;
-    i2cHandle->gpioPortBase = 0U;
-    i2cHandle->i2cBase = 0U;
-    i2cHandle->sdaPin = 0U;
-    i2cHandle->sclPin = 0U;
-    i2cHandle->gpioToSDA = 0U;
-    i2cHandle->gpioToSCL = 0U;
-    i2cHandle->slaveAddr = 0U;
-    i2cHandle->bFast = (bool)false;
-}
-
-static inline void waitForUserResponse(bool wait)
-{
-    // Block CPU until user transmits a character to the MCU
-    if (wait)
-    {
-        printf("Waiting for keypress (press Enter to start)...\n");
-
-        // Wait for Enter key specifically (ignore other characters)
-        uint32_t heartbeat = 0;
-        bool enterPressed = false;
-
-        while (!enterPressed)
-        {
-            // Check if character is available
-            if (UARTCharsAvail(consoleHandle.uartBase))
-            {
-                // Read the character
-                int32_t ch = UARTCharGetNonBlocking(consoleHandle.uartBase);
-
-                // Check if it's Enter key (CR or LF)
-                if ((ch == '\r') || (ch == '\n'))
-                {
-                    enterPressed = true;
-                }
-                // Ignore other characters (allows terminal scrolling)
-            }
-            else
-            {
-                // Heartbeat while waiting
-                heartbeat++;
-                if (heartbeat >= 10000000)
-                {
-                    printf(".");
-                    heartbeat = 0;
-                }
-            }
-        }
-
-        printf("\nKey detected!\n");
-
-        // Flush any remaining characters in UART RX FIFO
-        while (UARTCharsAvail(consoleHandle.uartBase))
-        {
-            (void)UARTCharGetNonBlocking(consoleHandle.uartBase);
-        }
-    }
-}
-
-static void UARTStrPut(const uartHandle_t *UARTHandle, const char *str)
-{
-    if ((str != NULL) && (UARTHandle != NULL))
-    {
-        while (*str != '\0')
-        {
-            UARTCharPut(UARTHandle->uartBase, *str);
-            str++;
-        }
-    }
-}
-
-static void vcpClearConsole(const uartHandle_t *uartHandle)
-{
-    if (uartHandle != NULL)
-    {
-        UARTStrPut(uartHandle, "\033[2J");
-        UARTStrPut(uartHandle, "\033[1;1H");
-    }
-}
-
-static inline int32_t I2CStartWrite(const I2cHandle_t *i2cHandle, uint8_t regAddr)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Set target device I2C address and indicate that we want to write
-    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, (bool)false);
-
-    /*****************************************************************************/
-    /**************** Transmitting internal register address frame ***************/
-    /*****************************************************************************/
-
-    // Put the target internal register address into the data register
-    I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-    // Send the start condition, I2C address, write bit, and internal register addr
-    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
-
-    // Wait while the master is busy sending data to target I2C device
-    while (I2CMasterBusy(i2cHandle->i2cBase))
-    {
-    }
-
-    // Check to see if there is an error
-    status = I2CMasterErr(i2cHandle->i2cBase);
-
-    return status;
-}
-
-static inline int32_t I2CSingleWrite(const I2cHandle_t *i2cHandle, const uint8_t *pTxBuf)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Put data into the data register
-    I2CMasterDataPut(i2cHandle->i2cBase, *pTxBuf);
-
-    // Send the start bit, I2C address, write bit, and data across the bus
-    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
-
-    // Wait while the master is busy writing data to I2C device
-    while (I2CMasterBusy(i2cHandle->i2cBase))
-    {
-    }
-
-    // Check to see if there is an error
-    status = I2CMasterErr(i2cHandle->i2cBase);
-
-    return status;
-}
-
-static inline int32_t I2CBurstWrite(const I2cHandle_t *i2cHandle, uint8_t bufLen, const uint8_t *pTxBuf)
-{
-    uint8_t i = 0;
-    int32_t status = PMIC_ST_SUCCESS;
-
-    for (i = 0; i < bufLen; i++)
-    {
-        // Put data into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, pTxBuf[i]);
-
-        // If on last iteration, Generate stop condition at end of transmission
-        if ((bufLen - i) == 1U)
-        {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
-        }
-        // Else continue sending data
-        else
-        {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_CONT);
-        }
-
-        // Wait while the master is busy writing data to I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
-
-        // If error, send stop bit
-        if (status != PMIC_ST_SUCCESS)
-        {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_STOP);
-            break;
-        }
-    }
-
-    return status;
-}
-
-static inline int32_t I2CStartRead(const I2cHandle_t *i2cHandle, uint8_t regAddr)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Set target device I2C address and indicate that we want to write
-    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, (bool)false);
-
-    /*****************************************************************************/
-    /**************** Transmitting internal register address frame ***************/
-    /*****************************************************************************/
-
-    // Put the target internal register address into the data register
-    I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-    // Send the start condition, I2C address, write bit, and internal register addr
-    // Use BURST_SEND_START to enable repeated START (no STOP before read phase)
-    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
-
-    // Wait while the master is busy sending data to target I2C device
-    while (I2CMasterBusy(i2cHandle->i2cBase))
-    {
-    }
-
-    // Check to see if there is an error
-    status = I2CMasterErr(i2cHandle->i2cBase);
-
-    return status;
-}
-
-static inline int32_t I2CBurstRead(const I2cHandle_t *i2cHandle, uint8_t bufLen, uint8_t *pRxBuf)
-{
-    uint8_t i = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Set slave address for READ operation ONCE before any receive commands
-    // This transitions from write mode (set by I2CStartRead) to read mode
-    // Subsequent receive commands will automatically generate repeated START
-    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, (bool)true);
-
-    for (i = 0U; i < bufLen; i++)
-    {
-        // Select appropriate I2C command based on number of bytes and position
-
-        if (bufLen == 1U)
-        {
-            // Single byte read: SINGLE_RECEIVE generates repeated START when bus is active
-            // Sequence: RepeatedSTART + Addr(R) + Data + NACK + STOP
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_RECEIVE);
-        }
-        else if (i == 0U)
-        {
-            // First byte of multi-byte read
-            // Sequence: RepeatedSTART + Addr(R) + Data + ACK
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_START);
-        }
-        else if ((bufLen - i) == 1U)
-        {
-            // Last byte: Data + NACK + STOP
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
-        }
-        else
-        {
-            // Middle bytes: Data + ACK
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
-        }
-
-        // Wait for operation to complete
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check for errors
-        status = I2CMasterErr(i2cHandle->i2cBase);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            pRxBuf[i] = I2CMasterDataGet(i2cHandle->i2cBase);
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    return status;
-}
-
-static inline int32_t I2CSingleRead(const I2cHandle_t *i2cHandle, uint8_t *pRxBuf)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // Set target device I2C address and indicate that we want to read
-    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, (bool)true);
-
-    // Send the start condition, I2C address, and read bit across the bus
-    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_RECEIVE);
-
-    // Wait while the master is busy reading data from target I2C device
-    while (I2CMasterBusy(i2cHandle->i2cBase))
-    {
-    }
-
-    // Check if there is an error
-    status = I2CMasterErr(i2cHandle->i2cBase);
-
-    // If there is no error, read from data register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        *pRxBuf = I2CMasterDataGet(i2cHandle->i2cBase);
-    }
-
-    return status;
+    return PMIC_ST_SUCCESS;
+#else
+    /* Should not reach here - BUILD_HOST should be defined */
+    (void)handle;
+    (void)page;
+    (void)regAddr;
+    (void)buffer;
+    (void)bufLen;
+    return PMIC_ST_ERR_INV_PARAM;
+#endif
 }
 
 void platform_unlockRegisters(void)
 {
-    #ifndef BUILD_MOCK
-    // Hardware: Unlock LP8772x-Q1 configuration registers
-    // Write 0x9B to register 0x09 (REGISTER_LOCK)
+#ifdef BUILD_HOST
+    /* Hardware: Unlock LP8772x-Q1 configuration registers
+     * Write 0x9B to register 0x09 (REGISTER_LOCK)
+     */
     const uint8_t REGISTER_LOCK_REG = 0x09U;
     const uint8_t UNLOCK_KEY = 0x9BU;
-    const uint32_t I2C_TIMEOUT_CYCLES = 10000U;
-    volatile uint32_t timeout;  // VOLATILE prevents compiler optimization
-    uint32_t err;
-    char buf[80];
+    char cmd[SERIAL_MAX_CMD_LEN];
+    char response[SERIAL_MAX_RESPONSE_LEN];
+    int32_t status;
 
-    // Clear any stale I2C errors before starting
-    err = I2CMasterErr(commHandle.i2cBase);
+    PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, ">>> platform_unlockRegisters");
 
-    // Use low-level I2C write (bypass PMIC driver to avoid recursion)
-    I2CMasterSlaveAddrSet(commHandle.i2cBase, commHandle.slaveAddr, false);  // Write mode
-
-    // Send register address
-    I2CMasterDataPut(commHandle.i2cBase, REGISTER_LOCK_REG);
-    I2CMasterControl(commHandle.i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
-
-    // Wait for completion with timeout
-    timeout = I2C_TIMEOUT_CYCLES;
-    while (I2CMasterBusy(commHandle.i2cBase) && timeout > 0U) {
-        timeout--;
-    }
-
-    // Check and clear errors BEFORE checking timeout
-    // TivaWare I2C may stay busy if error isn't cleared
-    err = I2CMasterErr(commHandle.i2cBase);
-    if (err != 0U) {
-        platform_printString("ERROR: I2C error during register unlock (addr phase)\r\n");
+    /* Validate platform is initialized */
+    if (!g_platform_initialized) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "Platform not initialized");
+        fprintf(stderr, "ERROR: Platform not initialized\n");
         return;
     }
 
-    if (timeout == 0U) {
-        platform_printString("ERROR: I2C timeout on register unlock (addr phase)\r\n");
+    /* Validate I2C address is correct */
+    if (commHandle.slaveAddr != PLATFORM_TARGET_I2C_ADDR) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "Invalid I2C address: 0x%02X (expected 0x%02X)",
+                       commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
+        fprintf(stderr, "ERROR: Invalid I2C address 0x%02X (expected 0x%02X)\n",
+                commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
         return;
     }
 
-    // Send unlock key
-    I2CMasterDataPut(commHandle.i2cBase, UNLOCK_KEY);
-    I2CMasterControl(commHandle.i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    /* Build i2ce command to write unlock key to register lock
+     * Format: i2ce 0 400000 0x60 0 2 0x09 0x9B
+     *   Write 0x9B to register 0x09, no read
+     */
+    snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 2 0x%02X 0x%02X",
+             commHandle.slaveAddr, REGISTER_LOCK_REG, UNLOCK_KEY);
 
-    // Wait for completion with timeout
-    timeout = I2C_TIMEOUT_CYCLES;
-    while (I2CMasterBusy(commHandle.i2cBase) && timeout > 0U) {
-        timeout--;
-    }
+    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Sending unlock command: %s", cmd);
 
-    // Check and clear errors BEFORE checking timeout
-    err = I2CMasterErr(commHandle.i2cBase);
-    if (err != 0U) {
-        platform_printString("ERROR: I2C error during register unlock (data phase)\r\n");
+    /* Send command to firmware */
+    status = serial_send_command(cmd);
+    if (status != 0) {
+        platform_printString("ERROR: Failed to send unlock command\r\n");
         return;
     }
 
-    if (timeout == 0U) {
-        platform_printString("ERROR: I2C timeout on register unlock (data phase)\r\n");
+    /* Read response */
+    memset(response, 0, sizeof(response));
+    status = serial_read_response(response, sizeof(response));
+
+    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Got response (status=%d): %s", status,
+                   status >= 0 ? response : "(no response)");
+
+    if (status < 0) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "No response from firmware");
+        platform_printString("ERROR: No response from firmware during unlock\r\n");
         return;
     }
 
-    // Success - but still check for any latent errors
-    err = I2CMasterErr(commHandle.i2cBase);
-    if (err != 0U) {
-        platform_printString("WARNING: I2C error after successful transaction\r\n");
+    /* Check response */
+    if (strstr(response, "STATUS: OK") == NULL) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_WARNING, "Unlock failed: %s", response);
+        fprintf(stderr, "ERROR: Failed to unlock PMIC registers: %s\n", response);
+    } else {
+        PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, "<<< platform_unlockRegisters (success)");
     }
-    #endif
-    // Mock: No-op (mock doesn't enforce register locking)
+#endif
+    /* Mock: No-op (mock doesn't enforce register locking) */
 }
 
 void platform_runTestLoop(void (*testCallback)(void))
 {
-#ifdef BUILD_MOCK
-    // Mock build: Just run tests once, no interaction
+#ifdef BUILD_HOST
+    /* Host build: Just run tests once, no interaction */
     testCallback();
 #else
-    // Hardware build: Infinite loop - waits for keypress each time
-    // User presses RESET button to exit
-    while (1)  // Loop forever - use RESET button to exit
-    {
-        #ifndef PLATFORM_NO_WAIT
-        printf("\nPress any key to start tests...\n");
-        waitForUserResponse(true);
-        #endif
-
-        // Execute all tests
-        testCallback();
-
-        // Display completion message
-        printf("\n======================================\n");
-        printf("Tests complete!\n");
-        printf("======================================\n");
-        printf("Press RESET to exit, or\n");
-
-        // Loop back to "Press any key to start tests..."
-    }
+    /* Should not reach here for host build */
+    testCallback();
 #endif
 }
 

@@ -4,7 +4,7 @@
 # Usage:
 #   make test               # Build and run with mock backend (default)
 #   make test BUILD=mock    # Build and run with mock backend
-#   make test BUILD=hardware # Build and run with hardware (requires TI drivers)
+#   make test BUILD=host # Build and run with hardware (requires TI drivers)
 #   make clean              # Clean build artifacts
 
 # Build type (mock or hardware)
@@ -191,65 +191,29 @@ ifeq ($(BUILD), mock)
 	TARGET = test_runner
 
 	PLATFORM_NAME = Mock Backend
+
+else ifeq ($(BUILD), host)
+	# Host-controlled build - tests run on PC, communicate with pmic-tiva-host firmware
+	CFLAGS += -I$(UNITY_DIR)/src
+	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE
+
+	# Platform sources - serial-based implementation
+	PLATFORM_SOURCES = platform.c platform_serial.c
+
+	# No special linking required for host build
+	LDFLAGS =
+
+	TARGET = test_runner
+
+	PLATFORM_NAME = Host-Controlled (via pmic-tiva-host firmware)
+
+else ifeq ($(BUILD), hardware)
+	# DEPRECATED: BUILD=hardware is no longer supported
+	# Use BUILD=host instead (tests run on PC, communicate with firmware via serial)
+	$(error BUILD=hardware is deprecated. Use BUILD=host instead. See README_HOST_MODE.md for details)
+
 else
-	# Hardware build configuration - Cross-compile for ARM Cortex-M4F
-	# Set TIVAWARE_DIR environment variable or update the path below
-	TIVAWARE_DIR ?= $(HOME)/TivaWare
-
-	# Use ARM GCC toolchain for cross-compilation
-	CC = arm-none-eabi-gcc
-	OBJCOPY = arm-none-eabi-objcopy
-
-	# ARM Cortex-M4F compiler flags
-	ARM_FLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
-	ARM_FLAGS += -ffunction-sections -fdata-sections
-
-	# Override warning flags for embedded build (simpler set)
-	WARN_FLAGS = -Wall -Wextra -Wshadow
-
-	# Hardware-specific defines and includes
-	CFLAGS = $(ARM_FLAGS) $(WARN_FLAGS) \
-	         -std=c99 -O2 -g \
-	         -I$(TIVAWARE_DIR) \
-	         -I$(INC_DIR) -I. $(TEST_INCLUDE_FLAGS) \
-	         -I$(UNITY_DIR)/src \
-	         -DPART_TM4C123GH6PM \
-	         -DTARGET_IS_TM4C123_RB1 \
-	         -DUNITY_INCLUDE_DOUBLE \
-	         -DPMIC_ERR_CNT_OVERFLOW_THR=100U \
-	         -DPMIC_WARN_CNT_OVERFLOW_THR=100U \
-	         -DPMIC_RETRY_CNT_OVERFLOW_THR=100U
-
-	# Optional: Enable wait for user input (for debugging)
-	# Default: auto-run for automated testing
-	ifdef WAIT_FOR_USER
-	    CFLAGS += -DPLATFORM_WAIT_FOR_USER
-	else
-	    CFLAGS += -DPLATFORM_NO_WAIT
-	endif
-
-	# Platform source (hardware abstraction layer) and syscall stubs
-	PLATFORM_SOURCES = platform.c syscalls.c
-
-	# Startup code from TivaWare (assuming GCC toolchain)
-	STARTUP_SOURCE = $(TIVAWARE_DIR)/examples/boards/ek-tm4c123gxl/project0/startup_gcc.c
-
-	# Linker script (using our custom one for proper heap/stack setup)
-	LINKER_SCRIPT = tm4c123gh6pm.ld
-
-	# Linker flags
-	LDFLAGS = -T$(LINKER_SCRIPT) \
-	          $(ARM_FLAGS) \
-	          -Wl,--gc-sections \
-	          -Wl,--entry=ResetISR \
-	          -L$(TIVAWARE_DIR)/driverlib/gcc \
-	          -ldriver -lm -lc -lgcc
-
-	# Output files
-	TARGET = test_hardware.elf
-	TARGET_BIN = test_hardware.bin
-
-	PLATFORM_NAME = Hardware (TI TivaWare ARM Cortex-M4F)
+	$(error Invalid BUILD type. Use: BUILD=mock or BUILD=host)
 endif
 
 # clock_gettime is in winpthread on MinGW; harmless on Linux
@@ -290,24 +254,20 @@ $(TARGET): check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Compiling test and PMIC sources..."
 	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
 	@echo "Build complete: $@"
-else
-$(TARGET): $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) $(STARTUP_SOURCE)
+else ifeq ($(BUILD), host)
+$(TARGET): $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Building $(TARGET) for $(PLATFORM_NAME)..."
-	@echo "Checking TivaWare installation..."
-	@test -d "$(TIVAWARE_DIR)" || (echo "ERROR: TivaWare not found at $(TIVAWARE_DIR). Set TIVAWARE_DIR or install TivaWare." && exit 1)
-	@test -f "$(TIVAWARE_DIR)/driverlib/gcc/libdriver.a" || (echo "ERROR: TivaWare driverlib not built. Run: cd $(TIVAWARE_DIR)/driverlib && make" && exit 1)
-	@test -f "$(STARTUP_SOURCE)" || (echo "ERROR: Startup file not found at $(STARTUP_SOURCE)" && exit 1)
-	@test -f "$(LINKER_SCRIPT)" || (echo "ERROR: Linker script not found at $(LINKER_SCRIPT)" && exit 1)
-	@echo "Compiling Unity framework..."
-	@$(CC) $(ARM_FLAGS) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
-	@echo "Compiling startup code..."
-	@$(CC) $(ARM_FLAGS) -I$(TIVAWARE_DIR) -c $(STARTUP_SOURCE) -o startup.o
+	@echo "Compiling Unity framework (relaxed warnings)..."
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources..."
-	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o startup.o -o $@ $(LDFLAGS)
-	@echo "Creating binary file for flashing..."
-	@$(OBJCOPY) -O binary $(TARGET) $(TARGET_BIN)
-	@echo "Build complete: $(TARGET) and $(TARGET_BIN)"
-	@echo "Flash with: lm4flash $(TARGET_BIN)"
+	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
+	@echo "Build complete: $@"
+	@echo ""
+	@echo "IMPORTANT: Before running tests, ensure pmic-tiva-host firmware is flashed:"
+	@echo "  cd /path/to/pmic-tiva-host && make && lm4flash ppc_host.bin"
+	@echo ""
+	@echo "Set serial port (optional):"
+	@echo "  export PMIC_SERIAL_PORT=/dev/ttyUSB0  # or COM3 on Windows"
 endif
 
 # Run tests (always rebuild to catch compilation issues)
@@ -323,14 +283,55 @@ test: check-mock-lib
 	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests..."
 	./$(TARGET)
-else
-test: all
+else ifeq ($(BUILD), host)
+test:
 	@echo "========================================"
-	@echo "Hardware build complete"
+	@echo "Building and running tests on $(PLATFORM_NAME)"
 	@echo "========================================"
-	@echo "Binary ready: $(TARGET_BIN)"
-	@echo "To flash to TIVA: lm4flash $(TARGET_BIN)"
-	@echo "Note: Hardware tests run on the device, not on host"
+	@echo "Compiling Unity framework (relaxed warnings)..."
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@echo "Compiling test and PMIC sources..."
+	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
+	@echo "Running tests (requires pmic-tiva-host firmware on TM4C123)..."
+	./$(TARGET)
+endif
+
+# Run tests with debug logging enabled
+# Usage:
+#   export PMIC_DEBUG_LEVEL=5 && export PMIC_DEBUG_MODULES=ALL && make test-debug BUILD=host
+#   export PMIC_DEBUG_LEVEL=3 && export PMIC_DEBUG_MODULES=PLATFORM && make test-debug BUILD=mock
+#
+# Debug levels: 0=NONE, 1=ERROR, 2=WARNING, 3=INFO, 4=DEBUG, 5=TRACE
+# Debug modules: ALL, PLATFORM, TEST, LLD, SERIAL (comma-separated)
+#
+# Adds ~2KB to binary size, minimal runtime overhead when disabled
+.PHONY: test-debug
+ifeq ($(BUILD), mock)
+test-debug: check-mock-lib
+	@echo "========================================"
+	@echo "Building and running tests with DEBUG on $(PLATFORM_NAME)"
+	@echo "========================================"
+	@echo "Debug level: $${PMIC_DEBUG_LEVEL:-not set (no output)}"
+	@echo "Debug modules: $${PMIC_DEBUG_MODULES:-not set (no output)}"
+	@echo "Compiling Unity framework (relaxed warnings)..."
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@echo "Compiling test and PMIC sources with debug support..."
+	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
+	@echo "Running tests with debug logging..."
+	./$(TARGET)
+else ifeq ($(BUILD), host)
+test-debug:
+	@echo "========================================"
+	@echo "Building and running tests with DEBUG on $(PLATFORM_NAME)"
+	@echo "========================================"
+	@echo "Debug level: $${PMIC_DEBUG_LEVEL:-not set (no output)}"
+	@echo "Debug modules: $${PMIC_DEBUG_MODULES:-not set (no output)}"
+	@echo "Compiling Unity framework (relaxed warnings)..."
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@echo "Compiling test and PMIC sources with debug support..."
+	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
+	@echo "Running tests with debug logging (requires pmic-tiva-host firmware on TM4C123)..."
+	./$(TARGET)
 endif
 
 # Run tests with coverage (generates both text and JSON reports)
@@ -363,7 +364,7 @@ help:
 	@echo "LP8772x-Q1 PMIC Test Makefile"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make [TARGET] [BUILD=mock|hardware]"
+	@echo "  make [TARGET] [BUILD=mock|host]"
 	@echo ""
 	@echo "Targets:"
 	@echo "  all              - Build test executable (default)"
@@ -374,12 +375,18 @@ help:
 	@echo ""
 	@echo "Build Options:"
 	@echo "  BUILD=mock       - Use mock backend (no hardware required) [default]"
-	@echo "  BUILD=hardware   - Use TI drivers (requires hardware)"
+	@echo "  BUILD=host       - Host-controlled (requires pmic-tiva-host firmware on TM4C123)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make test                    # Run tests with mock"
 	@echo "  make test BUILD=mock         # Run tests with mock"
-	@echo "  make test BUILD=hardware     # Run tests with hardware"
+	@echo "  make test BUILD=host         # Run tests with host-controlled mode"
 	@echo "  make clean                   # Clean build"
+	@echo ""
+	@echo "Host-Controlled Mode Setup:"
+	@echo "  1. Flash pmic-tiva-host firmware to TM4C123"
+	@echo "  2. Connect USB cable"
+	@echo "  3. Set PMIC_SERIAL_PORT (optional, defaults to /dev/ttyUSB0)"
+	@echo "  4. Run: make test BUILD=host"
 
 .PHONY: all test clean help coverage

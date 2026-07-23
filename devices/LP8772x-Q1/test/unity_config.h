@@ -20,16 +20,16 @@
 #define UNITY_CONFIG_H
 
 /**
- * @brief Configure Unity to use platform UART for output (hardware builds only)
+ * @brief Configure Unity to use platform UART for output (legacy hardware builds only)
  *
- * On hardware builds, UNITY_OUTPUT_CHAR wraps a real function (unity_output_char_impl)
+ * On legacy hardware builds, UNITY_OUTPUT_CHAR wraps a real function (unity_output_char_impl)
  * instead of directly macro-expanding to platform_printChar.
  * This ensures proper calling convention and eliminates macro expansion
  * issues with string constant access.
  *
- * On mock builds, Unity uses its default putchar() implementation.
+ * On mock/host builds, Unity uses its default putchar() implementation.
  */
-#ifndef BUILD_MOCK
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
 extern void unity_output_char_impl(int c);
 extern void platform_printChar(char c);
 #define UNITY_OUTPUT_CHAR(c) unity_output_char_impl(c)
