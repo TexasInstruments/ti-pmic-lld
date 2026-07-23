@@ -300,9 +300,8 @@ void platform_softReboot(void)
 {
 #ifdef BUILD_HOST
     Pmic_Handle_t h = {0};
-    h.commHandle0 = platform_getCommHandle0();
-    h.commHandle1 = platform_getCommHandle1();
-    h.commMode    = PMIC_INTF_I2C_DUAL;
+    h.i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
+    h.i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY;
     uint8_t val = (uint8_t)SOFT_REBOOT_MASK;
     int32_t status = platform_txByte(&h, PMIC_PAGE_MAIN, (uint8_t)SOFT_REBOOT_REG_REG, &val, 1U);
     if (status != PMIC_ST_SUCCESS)
@@ -400,10 +399,7 @@ int32_t platform_txByte(
     }
 
     /* Parameter validation */
-    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
-        return PMIC_ST_ERR_NULL_PARAM;
-    }
-    if ((handle->commMode == PMIC_INTF_I2C_DUAL) && (handle->commHandle1 == NULL)) {
+    if ((handle == NULL) || (buffer == NULL)) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
@@ -411,16 +407,10 @@ int32_t platform_txByte(
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Select handle and Tiva I2C port based on page */
-    I2cHandle_t *i2cHandle;
-    uint8_t tivaPort;
-    if ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL)) {
-        i2cHandle = (I2cHandle_t*)(handle->commHandle1);
-        tivaPort  = PLATFORM_I2C_PORT_SECONDARY;
-    } else {
-        i2cHandle = (I2cHandle_t*)(handle->commHandle0);
-        tivaPort  = PLATFORM_I2C_PORT_MAIN;
-    }
+    /* Select I2C address and Tiva port based on page and mode */
+    uint8_t slaveAddr = (page == PMIC_PAGE_WDG) ? handle->i2cAddr1 : handle->i2cAddr0;
+    uint8_t tivaPort  = ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL))
+                        ? PLATFORM_I2C_PORT_SECONDARY : PLATFORM_I2C_PORT_MAIN;
 
     /* Build i2ce command: write only (read_len=0)
      * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
@@ -428,7 +418,7 @@ int32_t platform_txByte(
      *       The data bytes start with register address, then buffer contents
      */
     n = snprintf(cmd, sizeof(cmd), "i2ce %u 400000 0x%02X 0 %d 0x%02X",
-                 tivaPort, i2cHandle->slaveAddr, bufLen + 1, regAddr);
+                 tivaPort, slaveAddr, bufLen + 1, regAddr);
 
     if (n < 0 || n >= (int)sizeof(cmd)) {
         return PMIC_ST_ERR_INV_PARAM;
@@ -492,10 +482,7 @@ int32_t platform_rxByte(
     }
 
     /* Parameter validation */
-    if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
-        return PMIC_ST_ERR_NULL_PARAM;
-    }
-    if ((handle->commMode == PMIC_INTF_I2C_DUAL) && (handle->commHandle1 == NULL)) {
+    if ((handle == NULL) || (buffer == NULL)) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
@@ -503,23 +490,17 @@ int32_t platform_rxByte(
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Select handle and Tiva I2C port based on page */
-    I2cHandle_t *i2cHandle;
-    uint8_t tivaPort;
-    if ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL)) {
-        i2cHandle = (I2cHandle_t*)(handle->commHandle1);
-        tivaPort  = PLATFORM_I2C_PORT_SECONDARY;
-    } else {
-        i2cHandle = (I2cHandle_t*)(handle->commHandle0);
-        tivaPort  = PLATFORM_I2C_PORT_MAIN;
-    }
+    /* Select I2C address and Tiva port based on page and mode */
+    uint8_t slaveAddr = (page == PMIC_PAGE_WDG) ? handle->i2cAddr1 : handle->i2cAddr0;
+    uint8_t tivaPort  = ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL))
+                        ? PLATFORM_I2C_PORT_SECONDARY : PLATFORM_I2C_PORT_MAIN;
 
     /* Build i2ce command: write reg address, then read
      * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
      *   This writes the register address, then reads bufLen bytes
      */
     snprintf(cmd, sizeof(cmd), "i2ce %u 400000 0x%02X %d 1 0x%02X",
-             tivaPort, i2cHandle->slaveAddr, bufLen, regAddr);
+             tivaPort, slaveAddr, bufLen, regAddr);
 
     /* Send command to firmware */
     if (getenv("PMIC_TRACE")) { printf("[RX] %s\n", cmd); fflush(stdout); }

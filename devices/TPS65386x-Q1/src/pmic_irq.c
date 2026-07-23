@@ -891,17 +891,17 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
 }
 
 static int32_t IRQ_validateCfgsIrqNum(uint8_t numCfgs, const Pmic_IrqCfg_t *cfgs) {
-	int32_t status = PMIC_ST_SUCCESS;
-	
-	for (uint8_t i = 0U; (i < numCfgs); i++) {
-		const uint8_t irqNum = cfgs[i].irqNum;
-		if (irqNum > PMIC_IRQ_MAX) {
-			status = PMIC_ST_ERR_INV_PARAM;
-			break;
-		}
-	}
-	
-	return status;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    for (uint8_t i = 0U; (i < numCfgs); i++) {
+        const uint8_t irqNum = cfgs[i].irqNum;
+        if (irqNum > PMIC_IRQ_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+            break;
+        }
+    }
+
+    return status;
 }
 
 int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {

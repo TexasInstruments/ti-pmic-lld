@@ -251,8 +251,12 @@ void test_pos_fsm_fsmSetDevState_coldBootRequest(void)
  */
 void test_pos_fsm_fsmSetDevState_offRequest(void)
 {
+#ifdef BUILD_MOCK
     int32_t status = Pmic_fsmSetDevState(&pmicHandle, PMIC_OFF_REQUEST);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK: OFF request leaves PMIC unable to soft reboot");
+#endif
 }
 
 void test_neg_fsm_fsmSetRecovCntThr_nullParam_pmicHandle(void)

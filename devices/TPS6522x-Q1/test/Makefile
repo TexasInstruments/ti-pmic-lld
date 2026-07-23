@@ -99,7 +99,7 @@ else ifeq ($(BUILD), host)
 	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE -D_DEFAULT_SOURCE
 
 	# Platform sources - serial-based implementation
-	PLATFORM_SOURCES = platform.c platform_serial.c
+	PLATFORM_SOURCES = platform.c platform_serial.c async_stubs.c
 
 	# No special linking required for host build
 	LDFLAGS +=

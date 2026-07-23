@@ -1979,6 +1979,7 @@ void test_neg_io_ioTxByte_dualI2cNullCommHandle1(void)
  */
 void test_neg_io_ioTxByte_nullAsyncRxStartAlone(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_Handle_t testHandle;
 
@@ -1991,6 +1992,10 @@ void test_neg_io_ioTxByte_nullAsyncRxStartAlone(void)
 
     status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -1998,6 +2003,7 @@ void test_neg_io_ioTxByte_nullAsyncRxStartAlone(void)
  */
 void test_neg_io_ioTxByte_nullAsyncTxStartAlone(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_Handle_t testHandle;
 
@@ -2010,6 +2016,10 @@ void test_neg_io_ioTxByte_nullAsyncTxStartAlone(void)
 
     status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -2017,6 +2027,7 @@ void test_neg_io_ioTxByte_nullAsyncTxStartAlone(void)
  */
 void test_neg_io_ioTxByte_nullAsyncTxAwaitAlone(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_Handle_t testHandle;
 
@@ -2029,6 +2040,10 @@ void test_neg_io_ioTxByte_nullAsyncTxAwaitAlone(void)
 
     status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -2036,6 +2051,7 @@ void test_neg_io_ioTxByte_nullAsyncTxAwaitAlone(void)
  */
 void test_neg_io_ioTxByte_nullAsyncRxAwaitAlone(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_Handle_t testHandle;
 
@@ -2048,6 +2064,10 @@ void test_neg_io_ioTxByte_nullAsyncRxAwaitAlone(void)
 
     status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -2197,6 +2217,7 @@ void test_pos_io_ioRxByte_i2cRxRetry(void)
  */
 void test_pos_io_ioRxByte_retrySucceeds(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint8_t regData = 0U;
     Pmic_Handle_t testHandle;
@@ -2216,6 +2237,10 @@ void test_pos_io_ioRxByte_retrySucceeds(void)
     status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(g_mockIoReadCallCount == 2U);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -2276,6 +2301,7 @@ void test_pos_io_ioRxByte_asyncSpi(void)
  */
 void test_pos_io_ioTxByte_retrySucceeds(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint8_t writeVal = TEST_PATTERN_AA;
     Pmic_Handle_t testHandle;
@@ -2295,6 +2321,10 @@ void test_pos_io_ioTxByte_retrySucceeds(void)
     status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_2_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**
@@ -2737,15 +2767,19 @@ void io_test(void *args)
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
-        .commMode = PMIC_INTF_I2C_SINGLE,
+        .commMode = PMIC_INTF_I2C_DUAL,
         .crcEnable0 = false,
-        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .i2cAddr0 = PLATFORM_I2C_ADDR_MAIN,
+        .i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY,
         .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

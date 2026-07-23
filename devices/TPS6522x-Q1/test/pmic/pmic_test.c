@@ -854,6 +854,7 @@ void test_pos_pmic_pmicInit_async_mode(void)
 
 void test_pos_pmic_pmicInit_with_i2c_addresses(void)
 {
+#ifdef BUILD_MOCK
     // Test initialization with all three I2C addresses configured (mock mode - no timer/retry needed)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
@@ -889,10 +890,14 @@ void test_pos_pmic_pmicInit_with_i2c_addresses(void)
 
     // Clean up
     Pmic_deinit(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK - uses non-hardware I2C addresses");
+#endif
 }
 
 void test_pos_pmic_pmicInit_with_task_handle(void)
 {
+#ifdef BUILD_MOCK
     // Test initialization with task handle configured (for RTOS environments)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
@@ -922,6 +927,9 @@ void test_pos_pmic_pmicInit_with_task_handle(void)
 
     // Clean up
     Pmic_deinit(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK - uses SPI/task handle not available on hardware");
+#endif
 }
 
 void test_pos_pmic_pmicInit_withRetryCnt(void)
@@ -1313,7 +1321,6 @@ void test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle1(void)
 #ifdef BUILD_MOCK
     PmicMockDevice_t *mockDev = platform_getMockDevice();
     PLATFORM_ASSERT(mockDev != NULL);
-#endif
 
     // Build a handle that passes the drvInitStat and commHandle0 checks but has
     // commHandle1 == NULL while commMode is PMIC_INTF_I2C_DUAL.
@@ -1329,6 +1336,10 @@ void test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle1(void)
 
     int32_t status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /**

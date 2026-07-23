@@ -252,6 +252,42 @@ static int32_t PWR_getBuckVout(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     return status;
 }
 
+static void PWR_extractBuck1CtrlFields(uint8_t regData, Pmic_PwrBuckCfg_t *buckCfg)
+{
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+    {
+        buckCfg->highSideSlewRate = Pmic_getBitField(
+            regData, PMIC_BUCK1_EN_HS_ON_SR_SHIFT, PMIC_BUCK1_EN_HS_ON_SR_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
+    {
+        buckCfg->dischargeSel = Pmic_getBitField(
+            regData, PMIC_BUCK1_DISCHARGE_SEL_SHIFT, PMIC_BUCK1_DISCHARGE_SEL_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
+    {
+        buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK1_PLDN_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
+    {
+        buckCfg->slewRate = Pmic_getBitField(
+            regData, PMIC_BUCK1_SLEW_RATE_SHIFT, PMIC_BUCK1_SLEW_RATE_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
+    {
+        buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK1_FPWM_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
+    {
+        buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK1_EN_SHIFT);
+    }
+}
+
 static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     uint8_t regData = 0U;
@@ -266,46 +302,45 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract BUCK1_EN_HS_ON_SR bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
-        {
-            buckCfg->highSideSlewRate = Pmic_getBitField(
-                regData, PMIC_BUCK1_EN_HS_ON_SR_SHIFT, PMIC_BUCK1_EN_HS_ON_SR_MASK);
-        }
-
-        // Extract BUCK1_DISCHARGE_SEL bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
-        {
-            buckCfg->dischargeSel = Pmic_getBitField(
-                regData, PMIC_BUCK1_DISCHARGE_SEL_SHIFT, PMIC_BUCK1_DISCHARGE_SEL_MASK);
-        }
-
-        // Extract BUCK1_PLDN bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
-        {
-            buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK1_PLDN_SHIFT);
-        }
-
-        // Extract BUCK1_SLEW_RATE bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
-        {
-            buckCfg->slewRate = Pmic_getBitField(regData, PMIC_BUCK1_SLEW_RATE_SHIFT, PMIC_BUCK1_SLEW_RATE_MASK);
-        }
-
-        // Extract BUCK1_FPWM bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
-        {
-            buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK1_FPWM_SHIFT);
-        }
-
-        // Extract BUCK1_EN bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
-        {
-            buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK1_EN_SHIFT);
-        }
+        PWR_extractBuck1CtrlFields(regData, buckCfg);
     }
 
     return status;
+}
+
+static void PWR_extractBuck2_3CtrlFields(uint8_t regData, Pmic_PwrBuckCfg_t *buckCfg)
+{
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
+    {
+        buckCfg->vmonOnly = Pmic_getBitField_b(regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
+    {
+        buckCfg->dischargeSel = Pmic_getBitField(
+            regData, PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT, PMIC_BUCK2_3_DISCHARGE_SEL_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
+    {
+        buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_PLDN_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
+    {
+        buckCfg->slewRate = Pmic_getBitField(
+            regData, PMIC_BUCK2_3_SLEW_RATE_SHIFT, PMIC_BUCK2_3_SLEW_RATE_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
+    {
+        buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_FPWM_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
+    {
+        buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK2_3_EN_SHIFT);
+    }
 }
 
 static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
@@ -325,41 +360,7 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract BUCKx_VMON_ONLY (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
-        {
-            buckCfg->vmonOnly = Pmic_getBitField_b(regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT);
-        }
-
-        // Extract BUCKx_DISCHARGE_SEL (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
-        {
-            buckCfg->dischargeSel = Pmic_getBitField(regData, PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT, PMIC_BUCK2_3_DISCHARGE_SEL_MASK);
-        }
-
-        // Extract BUCKx_PLDN (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
-        {
-            buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_PLDN_SHIFT);
-        }
-
-        // Extract BUCKx_SLEW_RATE (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
-        {
-            buckCfg->slewRate = Pmic_getBitField(regData, PMIC_BUCK2_3_SLEW_RATE_SHIFT, PMIC_BUCK2_3_SLEW_RATE_MASK);
-        }
-
-        // Extract BUCKx_FPWM (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
-        {
-            buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_FPWM_SHIFT);
-        }
-
-        // Extract BUCKx_EN (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
-        {
-            buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK2_3_EN_SHIFT);
-        }
+        PWR_extractBuck2_3CtrlFields(regData, buckCfg);
     }
 
     return status;
@@ -402,6 +403,35 @@ static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     return status;
 }
 
+static void PWR_extractBuckMonConfFields(uint8_t regData, Pmic_PwrBuckCfg_t *buckCfg)
+{
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_THR_VALID))
+    {
+        buckCfg->uvThr = Pmic_getBitField(regData, PMIC_BUCK_UV_THR_SHIFT, PMIC_BUCK_UV_THR_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_THR_VALID))
+    {
+        buckCfg->ovThr = Pmic_getBitField(regData, PMIC_BUCK_OV_THR_SHIFT, PMIC_BUCK_OV_THR_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_RV_CONF_VALID))
+    {
+        buckCfg->rvConf = Pmic_getBitField(regData, PMIC_BUCK_RV_CONF_SHIFT, PMIC_BUCK_RV_CONF_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID))
+    {
+        buckCfg->ilimSel = Pmic_getBitField(regData, PMIC_BUCK_ILIM_SEL_SHIFT, PMIC_BUCK_ILIM_SEL_MASK);
+    }
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID))
+    {
+        buckCfg->deglitchSel = Pmic_getBitField(
+            regData, PMIC_BUCK_DEGLITCH_SEL_SHIFT, PMIC_BUCK_DEGLITCH_SEL_MASK);
+    }
+}
+
 static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -432,35 +462,7 @@ static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract BUCKx_UV_THR bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_THR_VALID))
-        {
-            buckCfg->uvThr = Pmic_getBitField(regData, PMIC_BUCK_UV_THR_SHIFT, PMIC_BUCK_UV_THR_MASK);
-        }
-
-        // Extract BUCKx_OV_THR bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_THR_VALID))
-        {
-            buckCfg->ovThr = Pmic_getBitField(regData, PMIC_BUCK_OV_THR_SHIFT, PMIC_BUCK_OV_THR_MASK);
-        }
-
-        // Extract BUCKx_RV_CONF bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_RV_CONF_VALID))
-        {
-            buckCfg->rvConf = Pmic_getBitField(regData, PMIC_BUCK_RV_CONF_SHIFT, PMIC_BUCK_RV_CONF_MASK);
-        }
-
-        // Extract BUCKx_ILIM_SEL bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID))
-        {
-            buckCfg->ilimSel = Pmic_getBitField(regData, PMIC_BUCK_ILIM_SEL_SHIFT, PMIC_BUCK_ILIM_SEL_MASK);
-        }
-
-        // Extract BUCKx_DEGLITCH_SEL bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID))
-        {
-            buckCfg->deglitchSel = Pmic_getBitField(regData, PMIC_BUCK_DEGLITCH_SEL_SHIFT, PMIC_BUCK_DEGLITCH_SEL_MASK);
-        }
+        PWR_extractBuckMonConfFields(regData, buckCfg);
     }
 
     return status;
@@ -992,6 +994,38 @@ static int32_t PWR_validateBuckCfg(const Pmic_PwrBuckCfg_t *buckCfg)
     return PMIC_ST_SUCCESS;
 }
 
+static int32_t PWR_setBuckCfgFields(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
+{
+    int32_t status = PWR_setSpreadSpectrumCfg(handle, buckCfg);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckVout(handle, buckCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckMonConf(handle, buckCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckFaultResponses(handle, buckCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuck1Uvlo(handle, buckCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckCtrl(handle, buckCfg);
+    }
+
+    return status;
+}
+
 int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -1014,40 +1048,9 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
         PWR_copyBuckCfg(buckCfg, &localBuckCfg);
     }
 
-    // Set spread spectrum configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setSpreadSpectrumCfg(handle, &localBuckCfg);
-    }
-
-    // Set buck VOUT register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckVout(handle, &localBuckCfg);
-    }
-
-    // Set BUCKx_MON_CONF register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckMonConf(handle, &localBuckCfg);
-    }
-
-    // Set buck fault responses
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckFaultResponses(handle, &localBuckCfg);
-    }
-
-    // Set BUCK1_UVLO
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuck1Uvlo(handle, &localBuckCfg);
-    }
-
-    // Set BUCKx_CTRL register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setBuckCtrl(handle, &localBuckCfg);
+        status = PWR_setBuckCfgFields(handle, &localBuckCfg);
     }
 
     return Pmic_logStatus(handle, status);
@@ -1813,6 +1816,28 @@ static int32_t PWR_getLdoFaultResponses(const Pmic_Handle_t *handle, Pmic_PwrLdo
     return status;
 }
 
+static int32_t PWR_getLdoCfgFields(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+{
+    int32_t status = PWR_getLdoConf(handle, ldoCfg);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoCtrl(handle, ldoCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoMonConf(handle, ldoCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoFaultResponses(handle, ldoCfg);
+    }
+
+    return status;
+}
+
 int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -1838,28 +1863,9 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
         PWR_copyLdoCfg(ldoCfg, &localLdoCfg);
     }
 
-    // Read LDO_CONF register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getLdoConf(handle, &localLdoCfg);
-    }
-
-    // read LDO_CTRL register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_getLdoCtrl(handle, &localLdoCfg);
-    }
-
-    // Read LDO_MON_CONF register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_getLdoMonConf(handle, &localLdoCfg);
-    }
-
-    // Get LDO fault responses
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_getLdoFaultResponses(handle, &localLdoCfg);
+        status = PWR_getLdoCfgFields(handle, &localLdoCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -1919,6 +1925,41 @@ static int32_t PWR_setLdoConf(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_
     return status;
 }
 
+static int32_t PWR_applyLdoCtrlFields(uint8_t *regData, const Pmic_PwrLdoCfg_t *ldoCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_VMON_ONLY_VALID, status))
+    {
+        Pmic_setBitField_b(regData, PMIC_LDO_VMON_ONLY_SHIFT, ldoCfg->vmonOnly);
+    }
+
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_DISCHARGE_SEL_VALID, status))
+    {
+        if (ldoCfg->dischargeSel > PMIC_LDO_DISCHARGE_SEL_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            Pmic_setBitField(regData, PMIC_LDO_DISCHARGE_SEL_SHIFT,
+                             PMIC_LDO_DISCHARGE_SEL_MASK, ldoCfg->dischargeSel);
+        }
+    }
+
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_DISCHARGE_EN_VALID, status))
+    {
+        Pmic_setBitField_b(regData, PMIC_LDO_DISCHARGE_EN_SHIFT, ldoCfg->dischargeEn);
+    }
+
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_ENABLE_VALID, status))
+    {
+        Pmic_setBitField_b(regData, PMIC_LDO_EN_SHIFT, ldoCfg->enable);
+    }
+
+    return status;
+}
+
 static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     uint8_t regData = 0U;
@@ -1932,35 +1973,9 @@ static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_
         status = Pmic_ioRxByte(handle, PMIC_LDO_CTRL_REG, &regData);
     }
 
-    // Modify LDO_VMON_ONLY bit field
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_VMON_ONLY_VALID, status))
+    if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_LDO_VMON_ONLY_SHIFT, ldoCfg->vmonOnly);
-    }
-
-    // Modify LDO_DISCHARGE_SEL bit field
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_DISCHARGE_SEL_VALID, status))
-    {
-        if (ldoCfg->dischargeSel > PMIC_LDO_DISCHARGE_SEL_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, PMIC_LDO_DISCHARGE_SEL_SHIFT, PMIC_LDO_DISCHARGE_SEL_MASK, ldoCfg->dischargeSel);
-        }
-    }
-
-    // Modify LDO_DISCHARGE_EN bit field
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_DISCHARGE_EN_VALID, status))
-    {
-        Pmic_setBitField_b(&regData, PMIC_LDO_DISCHARGE_EN_SHIFT, ldoCfg->dischargeEn);
-    }
-
-    // Modify LDO_EN bit field
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_ENABLE_VALID, status))
-    {
-        Pmic_setBitField_b(&regData, PMIC_LDO_EN_SHIFT, ldoCfg->enable);
+        status = PWR_applyLdoCtrlFields(&regData, ldoCfg);
     }
 
     // Write new register value back to PMIC
@@ -2213,6 +2228,28 @@ static int32_t PWR_setLdoFaultResponses(const Pmic_Handle_t *handle, const Pmic_
     return status;
 }
 
+static int32_t PWR_setLdoCfgFields(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+{
+    int32_t status = PWR_setLdoConf(handle, ldoCfg);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoMonConf(handle, ldoCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoFaultResponses(handle, ldoCfg);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoCtrl(handle, ldoCfg);
+    }
+
+    return status;
+}
+
 int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -2238,28 +2275,9 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
         PWR_copyLdoCfg(ldoCfg, &localLdoCfg);
     }
 
-    // Set LDO_CONF register configurations
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_setLdoConf(handle, &localLdoCfg);
-    }
-
-    // Set LDO_MON_CONF register configurations
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setLdoMonConf(handle, &localLdoCfg);
-    }
-
-    // Set LDO fault responses
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setLdoFaultResponses(handle, &localLdoCfg);
-    }
-
-    // Set LDO_CTRL register configurations
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = PWR_setLdoCtrl(handle, &localLdoCfg);
+        status = PWR_setLdoCfgFields(handle, &localLdoCfg);
     }
 
     return Pmic_logStatus(handle, status);
@@ -2373,6 +2391,25 @@ static int32_t PWR_getStatBuck3Ldo(const Pmic_Handle_t *handle, Pmic_PwrRsrcStat
     return status;
 }
 
+static int32_t PWR_getRsrcStatusFields(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
+{
+    int32_t status = PWR_getStatStartup(handle, pwrRsrcStat);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        if ((pwrRsrcStat->resource == PMIC_BUCK1) || (pwrRsrcStat->resource == PMIC_BUCK2))
+        {
+            status = PWR_getStatBuck1_2(handle, pwrRsrcStat);
+        }
+        else
+        {
+            status = PWR_getStatBuck3Ldo(handle, pwrRsrcStat);
+        }
+    }
+
+    return status;
+}
+
 int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *pwrRsrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
@@ -2393,24 +2430,9 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
         PWR_copyRsrcStat(pwrRsrcStat, &localPwrRsrcStat);
     }
 
-    // Get resource active status bit from STAT_STARTUP register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = PWR_getStatStartup(handle, &localPwrRsrcStat);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // If power resource is BUCK1 or BUCK2, get status bits from STAT_BUCK1_2 register
-        if ((localPwrRsrcStat.resource == PMIC_BUCK1) || (localPwrRsrcStat.resource == PMIC_BUCK2))
-        {
-            status = PWR_getStatBuck1_2(handle, &localPwrRsrcStat);
-        }
-        // If power resource is BUCK3 or LDO, get status bits from STAT_BUCK3_LDO register
-        else
-        {
-            status = PWR_getStatBuck3Ldo(handle, &localPwrRsrcStat);
-        }
+        status = PWR_getRsrcStatusFields(handle, &localPwrRsrcStat);
     }
 
     if (status == PMIC_ST_SUCCESS)

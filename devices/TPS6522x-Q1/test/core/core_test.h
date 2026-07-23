@@ -51,11 +51,14 @@ extern "C" {
 /*                         Test APIs: getSiliconRev                         */
 /* ======================================================================== */
 #define CORE_TEST_POS_COREGETSILREV() \
-    PLATFORM_RUN_TEST(test_pos_core_coreGetSilRev)
+    PLATFORM_RUN_TEST(test_pos_core_coreGetSilRev); \
+    PLATFORM_RUN_TEST(test_pos_core_validatePmicHandle_validCriticalSection)
 
 #define CORE_TEST_NEG_COREGETSILREV() \
     PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_handle); \
-    PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_siliconRev)
+    PLATFORM_RUN_TEST(test_neg_core_coreGetSilRev_nullParam_siliconRev); \
+    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStop)
 
 /* Test: TC-CORE-0018 */
 #define CORE_TEST_COREGETSILREV() \
@@ -129,7 +132,8 @@ extern "C" {
 /* ======================================================================== */
 #define CORE_TEST_POS_COREGETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg2); \
-    PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg4)
+    PLATFORM_RUN_TEST(test_pos_core_coreGetScratchPadValue_reg4); \
+    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_validReg)
 
 #define CORE_TEST_NEG_COREGETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_neg_core_coreGetScratchPadValue_outOfBounds_scratchPadRegNum); \
@@ -141,26 +145,6 @@ extern "C" {
     CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
 
-/* ======================================================================== */
-/*              Test APIs: getScratchPadValue (additional positive)         */
-/* ======================================================================== */
-#define CORE_TEST_POS_GETSCRATCHPADVALUE() \
-    PLATFORM_RUN_TEST(test_pos_core_getScratchPadValue_validReg)
-
-/* ========================================================================== */
-/*          API-Specific Test Macros - validatePmicHandle                     */
-/* ========================================================================== */
-#define CORE_TEST_POS_VALIDATEPMICHANDLE() \
-    PLATFORM_RUN_TEST(test_pos_core_validatePmicHandle_validCriticalSection)
-
-#define CORE_TEST_NEG_VALIDATEPMICHANDLE() \
-    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_neg_core_validatePmicHandle_nullCritSecStop)
-
-#define CORE_TEST_VALIDATEPMICHANDLE() \
-    CORE_TEST_POS_VALIDATEPMICHANDLE(); \
-    CORE_TEST_NEG_VALIDATEPMICHANDLE()
-
 /* ========================================================================== */
 /*                        Aggregate Test Macros                               */
 /* ========================================================================== */
@@ -171,9 +155,7 @@ extern "C" {
     CORE_TEST_POS_COREGETREGLOCKSTATE(); \
     CORE_TEST_POS_CORESETREGLOCKSTATE(); \
     CORE_TEST_POS_CORESETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_COREGETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_GETSCRATCHPADVALUE(); \
-    CORE_TEST_POS_VALIDATEPMICHANDLE()
+    CORE_TEST_POS_COREGETSCRATCHPADVALUE()
 
 #define CORE_TEST_RUN_NEGATIVE() \
     CORE_TEST_NEG_COREGETSILREV(); \
@@ -181,8 +163,7 @@ extern "C" {
     CORE_TEST_NEG_COREGETREGLOCKSTATE(); \
     CORE_TEST_NEG_CORESETREGLOCKSTATE(); \
     CORE_TEST_NEG_CORESETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_COREGETSCRATCHPADVALUE(); \
-    CORE_TEST_NEG_VALIDATEPMICHANDLE()
+    CORE_TEST_NEG_COREGETSCRATCHPADVALUE()
 
 #define CORE_TEST_RUN_ALL() \
     CORE_TEST_RUN_POSITIVE(); \

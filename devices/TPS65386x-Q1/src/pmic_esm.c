@@ -499,7 +499,7 @@ static int32_t ESM_getCtrlConfig(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esm
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
-		(Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID) ||
+        (Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID) ||
         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_MODE_VALID) ||
         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_ERR_THR_VALID)))
     {
@@ -507,7 +507,7 @@ static int32_t ESM_getCtrlConfig(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esm
     }
 
     if ((status == PMIC_ST_SUCCESS) &&
-		(Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID) ||
+        (Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID) ||
         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_DEGLITCH_VALID) ||
         Pmic_validParamCheck(esmCfg->validParams, PMIC_CFG_ESM_TIME_BASE_VALID)))
     {

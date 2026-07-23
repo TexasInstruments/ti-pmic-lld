@@ -935,7 +935,7 @@ void test_neg_power_pwrSetPldoCfg_modeIoRxByteFail(void);
 void test_neg_power_pwrSetPldoCfg_dischargeIoRxByteFail(void);
 void test_neg_power_pwrSetPldoCfg_vmonDglIoRxByteFail(void);
 void test_neg_power_pwrSetPldoCfg_ilimDglIoRxByteFail(void);
-	void test_neg_power_pwrSetPldoCfg_vmonThrIoRxByteFail(void);
+void test_neg_power_pwrSetPldoCfg_vmonThrIoRxByteFail(void);
 void test_neg_power_pwrSetExtVmonCfg_modeIoRxByteFail(void);
 void test_neg_power_pwrSetExtVmonCfg_vmonThrIoRxByteFail(void);
 void test_neg_power_pwrSetExtVmonCfg_vmonDglIoRxByteFail(void);

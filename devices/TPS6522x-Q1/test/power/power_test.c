@@ -2759,13 +2759,19 @@ void power_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
-        .commMode = PMIC_INTF_I2C_SINGLE,
+        .commMode = PMIC_INTF_I2C_DUAL,
+        .i2cAddr0 = PLATFORM_I2C_ADDR_MAIN,
+        .i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY,
         .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

@@ -407,10 +407,11 @@ static int32_t PWR_setBuckGrpSel(const Pmic_Handle_t *handle, const Pmic_PwrBuck
 // Set buck configuration
 static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
+    int32_t status;
     uint8_t buckId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)buckCfg->resource), &buckId);
 
-    int32_t status = PWR_setBuckCtrlReg(handle, buckCfg, buckId);
+    status = PWR_setBuckCtrlReg(handle, buckCfg, buckId);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -560,10 +561,11 @@ static int32_t PWR_getBuckGrpSel(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t 
 // Get buck configuration
 static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
+    int32_t status;
     uint8_t buckId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)buckCfg->resource), &buckId);
 
-    int32_t status = PWR_getBuckCtrlReg(handle, buckCfg, buckId);
+    status = PWR_getBuckCtrlReg(handle, buckCfg, buckId);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -744,10 +746,11 @@ static int32_t PWR_setLdoGrpSel(const Pmic_Handle_t *handle, const Pmic_PwrLdoCf
 // Set LDO configuration
 static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
+    int32_t status;
     uint8_t ldoId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)ldoCfg->resource), &ldoId);
 
-    int32_t status = PWR_setLdoCtrlReg(handle, ldoCfg, ldoId);
+    status = PWR_setLdoCtrlReg(handle, ldoCfg, ldoId);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -875,10 +878,11 @@ static int32_t PWR_getLdoGrpSel(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *l
 // Get LDO configuration
 static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
+    int32_t status;
     uint8_t ldoId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)ldoCfg->resource), &ldoId);
 
-    int32_t status = PWR_getLdoCtrlReg(handle, ldoCfg, ldoId);
+    status = PWR_getLdoCtrlReg(handle, ldoCfg, ldoId);
 
     if (status == PMIC_ST_SUCCESS)
     {

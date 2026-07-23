@@ -132,25 +132,26 @@ static int32_t CORE_calculateCrc(const Pmic_Handle_t *handle, uint16_t *crc)
 static int32_t CORE_performCrcSequence(const Pmic_Handle_t *handle, uint8_t regData)
 {
     int32_t status = PMIC_ST_SUCCESS;
+    uint8_t localRegData = regData;
 
     // Ensure CFG_REG_CRC_CALC is low first to produce a clean rising edge
-    if (Pmic_getBitField_b(regData, CFG_REG_CRC_CALC_SHIFT)) {
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_SHIFT, (bool)false);
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)false);
-        status = Pmic_ioTxByte(handle, SAFETY_CTRL_REG, regData);
+    if (Pmic_getBitField_b(localRegData, CFG_REG_CRC_CALC_SHIFT)) {
+        Pmic_setBitField_b(&localRegData, CFG_REG_CRC_CALC_SHIFT, (bool)false);
+        Pmic_setBitField_b(&localRegData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)false);
+        status = Pmic_ioTxByte(handle, SAFETY_CTRL_REG, localRegData);
     }
 
     // Assert CFG_REG_CRC_CALC - rising edge triggers hardware calculation
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_SHIFT, (bool)true);
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)false);
-        status = Pmic_ioTxByte(handle, SAFETY_CTRL_REG, regData);
+        Pmic_setBitField_b(&localRegData, CFG_REG_CRC_CALC_SHIFT, (bool)true);
+        Pmic_setBitField_b(&localRegData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)false);
+        status = Pmic_ioTxByte(handle, SAFETY_CTRL_REG, localRegData);
     }
 
     // SPI transaction time is sufficient for hardware to complete the
     // calculation; read back to capture the updated CALC_DONE status
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte(handle, SAFETY_CTRL_REG, &regData);
+        status = Pmic_ioRxByte(handle, SAFETY_CTRL_REG, &localRegData);
     }
 
     // De-assert CFG_REG_CRC_CALC; writing 0x00 is safe since CRC_EN is
@@ -161,10 +162,10 @@ static int32_t CORE_performCrcSequence(const Pmic_Handle_t *handle, uint8_t regD
 
     // Check REG_STAT for a CRC mismatch error
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte(handle, REG_STAT_REG, &regData);
+        status = Pmic_ioRxByte(handle, REG_STAT_REG, &localRegData);
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, CFG_REG_CRC_ERR_SHIFT)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(localRegData, CFG_REG_CRC_ERR_SHIFT)) {
         status = PMIC_ST_ERR_CONFIG_REG_CRC;
     }
 

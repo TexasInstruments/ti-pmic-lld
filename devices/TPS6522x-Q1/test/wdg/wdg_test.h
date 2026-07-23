@@ -127,7 +127,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullWdgCfg); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_modeRegReadFail); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_qaCfgReadFail); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrCfgReadFail)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrCfgReadFail); \
     WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY()
 
 /* Test: TC-WDG-0017 */
@@ -345,6 +345,10 @@ extern "C" {
     WDG_TEST_NEG_WDGCLRERRSTATUSALL(); \
     WDG_TEST_NEG_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
+
+#define WDG_TEST_RUN_ALL() \
+    WDG_TEST_RUN_POSITIVE(); \
+    WDG_TEST_RUN_NEGATIVE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

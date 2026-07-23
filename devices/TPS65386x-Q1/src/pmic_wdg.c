@@ -760,6 +760,28 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
     return Pmic_logStatus(handle, status);
 }
 
+static int32_t WDG_getAllCfgFields(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
+    int32_t status = WDG_getWindowsTimeIntervals(handle, config);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_getThresholds(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_getModeAndTimeBaseCfg(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_getQAConfigurations(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_getThrIntBehavior(handle, config);
+    }
+
+    return status;
+}
+
 int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     Pmic_WdgCfg_t localConfig = (Pmic_WdgCfg_t){0};
@@ -773,23 +795,7 @@ int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getWindowsTimeIntervals(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getThresholds(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getModeAndTimeBaseCfg(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getQAConfigurations(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_getThrIntBehavior(handle, &localConfig);
+        status = WDG_getAllCfgFields(handle, &localConfig);
     }
 
     if (status == PMIC_ST_SUCCESS) {

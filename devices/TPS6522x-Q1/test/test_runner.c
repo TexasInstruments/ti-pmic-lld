@@ -75,6 +75,8 @@ void setUp(void)
     h.commHandle0 = platform_getCommHandle0();
     h.commHandle1 = platform_getCommHandle1();
     h.commMode    = PMIC_INTF_I2C_DUAL;
+    h.i2cAddr0    = PLATFORM_I2C_ADDR_MAIN;
+    h.i2cAddr1    = PLATFORM_I2C_ADDR_SECONDARY;
 
 #ifndef BUILD_MOCK
     platform_softReboot();
@@ -247,6 +249,8 @@ int main(void)
         h.commHandle0 = platform_getCommHandle0();
         h.commHandle1 = platform_getCommHandle1();
         h.commMode    = PMIC_INTF_I2C_DUAL;
+        h.i2cAddr0    = PLATFORM_I2C_ADDR_MAIN;
+        h.i2cAddr1    = PLATFORM_I2C_ADDR_SECONDARY;
         uint8_t regVal = 0U;
         int32_t status;
         for (uint8_t i = 0U; i < (uint8_t)(sizeof(infoRegs) / sizeof(infoRegs[0])); i++) {
