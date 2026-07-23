@@ -30,44 +30,68 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
+#ifndef TEST_TIMER_H
+#define TEST_TIMER_H
 
+#include <stdint.h>
+#include <stdbool.h>
 
-/* ========================================================================== */
-/*                              Include Files                                 */
-/* ========================================================================== */
+/**
+ * @brief Initialize the test timing system
+ *
+ * Must be called before any timing operations.
+ * Resets all timing state.
+ */
+void testTimer_init(void);
 
-#include "test_utils.h"
+/**
+ * @brief Start timing a test
+ * @param testName Name of the test being timed
+ */
+void testTimer_startTest(const char* testName);
 
-/* ========================================================================= */
-/*                             Macros & Typedefs                             */
-/* ========================================================================= */
+/**
+ * @brief End timing a test and record elapsed time
+ *
+ * Prints: " (XX.XX ms)" after test result
+ */
+void testTimer_endTest(void);
 
-#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
-#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
-#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
-#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
-#define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
+/**
+ * @brief Start timing a module
+ * @param moduleName Name of the module being timed
+ */
+void testTimer_startModule(const char* moduleName);
 
-// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
-#define DEVICE_PG_IDENTIFIER_MASK (1UL << 3U)
+/**
+ * @brief End timing a module and print summary
+ *
+ * Prints: "[MODULE] Module total: XX.XX ms (N tests)"
+ */
+void testTimer_endModule(void);
 
-/* ========================================================================== */
-/*                           Function Definitions                             */
-/* ========================================================================== */
+/**
+ * @brief Start timing the entire test suite
+ */
+void testTimer_startSuite(void);
 
-void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
-{
-    char msg[50U] = {0};
+/**
+ * @brief End timing the test suite and print summary
+ *
+ * Prints: "=== TOTAL TEST SUITE: XXXX.XX ms ==="
+ */
+void testTimer_endSuite(void);
 
-    // LP8772x doesn't have isA0 field, use devSiRev only
-    if ((pmicHandle->devSiRev & DEVICE_PG_IDENTIFIER_MASK) != 0U)
-    {
-        (void)sprintf(msg, "PMIC device is PG2 (B1)\r\n\r\n");
-        platform_printString(msg);
-    }
-    else
-    {
-        (void)sprintf(msg, "PMIC device is PG1 (A0 or B0)\r\n\r\n");
-        platform_printString(msg);
-    }
-}
+/**
+ * @brief Get elapsed time for current test in milliseconds
+ * @return Elapsed time in ms, or 0.0 if no test is active
+ */
+double testTimer_getTestElapsed(void);
+
+/**
+ * @brief Get elapsed time for current module in milliseconds
+ * @return Elapsed time in ms, or 0.0 if no module is active
+ */
+double testTimer_getModuleElapsed(void);
+
+#endif /* TEST_TIMER_H */

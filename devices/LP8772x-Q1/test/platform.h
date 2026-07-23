@@ -67,23 +67,14 @@
 #elif defined(BUILD_HOST)
 /* Host mode: No hardware-specific includes needed */
 /* Serial communication handled by platform_serial.h */
-#else
-/* Legacy hardware mode (deprecated) */
-#include "driverlib/gpio.h"
-#include "driverlib/i2c.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/timer.h"
-#include "driverlib/uart.h"
-#include "inc/hw_memmap.h"
-#include "inc/tm4c123gh6pm.h"
 #endif
 
 /**
  * @brief Testing framework include(s).
  */
 #include "unity.h"
-#include "unity_config.h"
+#include "test_filter.h"
+#include "test_timer.h"
 
 #if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
   #ifdef __cplusplus
@@ -105,31 +96,52 @@
  */
 #define PLATFORM_INVALID_VALUE      (0x00U)
 
+/* ========================================================================= */
+/*                        Module Name Tracking                               */
+/* ========================================================================= */
+
+/**
+ * @brief Current module name for test result prefixes
+ */
+extern const char* g_currentModuleName;
+
+/**
+ * @brief Set the current module name for test result prefixes
+ * @param moduleName The module name to use as a prefix (e.g., "ESM", "WDG")
+ *
+ * @note Internal use only - called automatically by testTimer_startModule().
+ *       Test code should use testTimer_startModule() instead of calling this directly.
+ */
+void platform_setModuleName(const char* moduleName);
+
 /**
  * @brief Macros/defines relating to testing framework.
  *
- * PLATFORM_RUN_TEST wraps Unity's RUN_TEST with TEST_PROTECT to catch assertion
- * failures and prevent hangs on embedded hardware. When an assertion fails,
- * control returns to the test runner instead of calling abort().
+ * PLATFORM_RUN_TEST wraps Unity's RUN_TEST with test filtering and (on hardware)
+ * TEST_PROTECT to catch assertion failures. Test filtering allows selective
+ * test execution via environment variables without recompilation.
+ *
+ * Filtering is controlled by:
+ * - PMIC_TEST_MODULES: Comma-separated module list (e.g., "irq,power")
+ * - PMIC_TEST_FILTER: Wildcard pattern (e.g., "*mask*", "test_pos_*")
+ * - PMIC_TEST_GROUPS: "positive", "negative", or "all"
+ *
+ * Note: platform_mock.h may have already defined PLATFORM_RUN_TEST, so we
+ * undefine it first to ensure our filtered version is used.
  */
+#ifdef PLATFORM_RUN_TEST
+#undef PLATFORM_RUN_TEST
+#endif
+
 #if defined(BUILD_MOCK) || defined(BUILD_HOST)
-    /* Mock/Host build: Use standard RUN_TEST (abort() works fine on desktop) */
-    #define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
-#else
-    /* Legacy hardware build: Use TEST_PROTECT to catch assertion failures */
+    /* Mock/Host build: Use standard RUN_TEST with filtering */
     #define PLATFORM_RUN_TEST(test) \
         do { \
-            Unity.CurrentTestName = #test; \
-            Unity.CurrentTestLineNumber = __LINE__; \
-            Unity.NumberOfTests++; \
-            if (TEST_PROTECT()) { \
-                setUp(); \
-                test(); \
-            } \
-            TEST_UNPROTECT(); \
-            tearDown(); \
-            if (Unity.CurrentTestFailed) { \
-                Unity.TestFailures++; \
+            if (testFilter_shouldRunTestWithGroup(#test)) { \
+                testTimer_startTest(#test); \
+                if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
+                RUN_TEST(test); \
+                testTimer_endTest(); \
             } \
         } while(0)
 #endif

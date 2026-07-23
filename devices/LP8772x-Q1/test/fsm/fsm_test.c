@@ -108,9 +108,7 @@ void fsm_test(void *args)
 
     platform_init();
 
-    platform_printString("\r\n");
-    platform_printString("FSM_TEST\r\n");
-    platform_printString("--------\r\n\r\n");
+    testTimer_startModule("FSM");
 
     status = Pmic_init(&pmicHandle, &coreCfg);
 
@@ -125,6 +123,8 @@ void fsm_test(void *args)
         (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
@@ -328,6 +328,9 @@ static inline void fsmTest_assertPmicRegsLocked(bool lock)
 
 void test_pos_fsm_fsmSetDevState_coldBootReq(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Hardware in STANDBY state - COLD_BOOT requires ACTIVE state (GPIO-driven transition)");
+#else
     // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);
 
@@ -340,10 +343,14 @@ void test_pos_fsm_fsmSetDevState_coldBootReq(void)
 
     // After Cold Boot, registers are automatically locked; assert PMIC registers are locked
     fsmTest_assertPmicRegsLocked((bool)true);
+#endif
 }
 
 void test_pos_fsm_fsmSetDevState_warmResetReq(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Hardware in STANDBY state - WARM_RESET requires ACTIVE state (GPIO-driven transition)");
+#else
     uint8_t initResetCnt = 0U, actResetCnt = 0U;
 
     // Get initial PMIC RESET_CNT value
@@ -362,10 +369,14 @@ void test_pos_fsm_fsmSetDevState_warmResetReq(void)
     status = Pmic_fsmGetResetCnt(&pmicHandle, &actResetCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((initResetCnt + 1U) == actResetCnt);
+#endif
 }
 
 void test_pos_fsm_fsmSetDevState_safeRecovReq(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Hardware in STANDBY state - SAFE_RECOV requires ACTIVE state (GPIO-driven transition)");
+#else
     uint8_t initRecovCnt = 0U, actRecovCnt = 0U;
 
     // Get initial PMIC RECOV_CNT
@@ -384,10 +395,14 @@ void test_pos_fsm_fsmSetDevState_safeRecovReq(void)
     status = Pmic_fsmGetRecovCnt(&pmicHandle, &actRecovCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((initRecovCnt + 1U) == actRecovCnt);
+#endif
 }
 
 void test_pos_fsm_fsmSetDevState_offReq(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Hardware in STANDBY state - OFF_REQ requires ACTIVE state (GPIO-driven transition)");
+#else
     // Assert PMIC registers are unlocked (registers are unlocked in platform_setupMock)
     fsmTest_assertPmicRegsLocked((bool)false);
 
@@ -400,5 +415,6 @@ void test_pos_fsm_fsmSetDevState_offReq(void)
 
     // After the PMIC enters STANDBY state, registers are automatically locked; assert PMIC registers are locked
     fsmTest_assertPmicRegsLocked((bool)true);
+#endif
 }
 

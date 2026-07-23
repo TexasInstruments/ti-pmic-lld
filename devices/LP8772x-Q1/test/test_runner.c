@@ -33,9 +33,9 @@
 
 
 #include "unity.h"
-#include "unity_config.h"
 #include "platform.h"
 #include "debug.h"
+#include "test_filter.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
 #include "pmic_mock_core.h"
@@ -99,49 +99,73 @@ extern void core_test(void *args);
 extern void esm_test(void *args);
 extern void fsm_test(void *args);
 extern void io_test(void *args);
-#ifdef BUILD_MOCK
 extern void irq_test(void *args);
 extern void power_test(void *args);
-#endif
 extern void pmic_test(void *args);
 extern void wdg_test(void *args);
 
+/* ========================================================================= */
+/*                         Test Module Registry                              */
+/* ========================================================================= */
+
 /**
- * @brief Execute all test suites once
+ * @brief Test module function pointer type
+ */
+typedef void (*TestModuleFunc_t)(void *args);
+
+/**
+ * @brief Test module registry entry
+ *
+ * Defines a test module with its internal name (for filtering),
+ * display name (for output), and entry function.
+ */
+typedef struct {
+    const char *name;           /**< Module name for filtering (lowercase) */
+    const char *displayName;    /**< Display name for output */
+    TestModuleFunc_t func;      /**< Module entry function */
+} TestModuleEntry_t;
+
+/**
+ * @brief Test module registry - all modules in execution order
+ *
+ * This table-driven approach makes it easy to add/remove test modules
+ * and enables module-level filtering via PMIC_TEST_MODULES.
+ */
+static const TestModuleEntry_t g_testModules[] = {
+    {"common", "Common",     common_test},
+    {"pmic",   "PMIC Init",  pmic_test},
+    {"core",   "Core",       core_test},
+    {"io",     "I/O",        io_test},
+    {"fsm",    "FSM",        fsm_test},
+    {"wdg",    "WDG",        wdg_test},
+    {"esm",    "ESM",        esm_test},
+    {"irq",    "IRQ",        irq_test},
+    {"power",  "POWER",      power_test},
+};
+
+/** Number of test modules */
+#define NUM_TEST_MODULES (sizeof(g_testModules) / sizeof(g_testModules[0]))
+
+/**
+ * @brief Execute all test suites once (with filtering)
  * @note Called by platform_runTestLoop() - may be called multiple times on hardware
  */
 static void runAllTests(void)
 {
     printf("Starting tests\n");
 
-    printf("\n=== Running Common Tests ===\n");
-    common_test(NULL);
+    /* Print active filter configuration */
+    testFilter_printConfig();
 
-    printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_test(NULL);
+    /* Iterate through all registered test modules */
+    for (uint32_t i = 0; i < NUM_TEST_MODULES; i++) {
+        const TestModuleEntry_t *module = &g_testModules[i];
 
-    printf("\n=== Running Core Tests ===\n");
-    core_test(NULL);
-
-    printf("\n=== Running I/O Tests ===\n");
-    io_test(NULL);
-
-    printf("\n=== Running FSM Tests ===\n");
-    fsm_test(NULL);
-
-    printf("\n=== Running WDG Tests ===\n");
-    wdg_test(NULL);
-
-    printf("\n=== Running ESM Tests ===\n");
-    esm_test(NULL);
-
-#ifdef BUILD_MOCK
-    printf("\n=== Running IRQ Tests ===\n");
-    irq_test(NULL);
-
-    printf("\n=== Running POWER Tests ===\n");
-    power_test(NULL);
-#endif
+        /* Check if this module should run based on filters */
+        if (testFilter_shouldRunModule(module->name)) {
+            module->func(NULL);
+        }
+    }
 
     printf("All tests completed\n");
 }
@@ -154,7 +178,10 @@ int main(void)
     /* Initialize debug system (reads PMIC_DEBUG_LEVEL and PMIC_DEBUG_MODULES env vars) */
     debug_init();
 
-    // Initialize platform (works for both mock and hardware)
+    /* Initialize test filter (reads PMIC_TEST_MODULES, PMIC_TEST_FILTER, PMIC_TEST_GROUPS) */
+    testFilter_init();
+
+    /* Initialize platform (works for both mock and hardware) */
     platform_init();
 
     printf("======================================\n\n");
@@ -165,6 +192,10 @@ int main(void)
 #endif
     printf("======================================\n\n");
 
+    /* Initialize timing system */
+    testTimer_init();
+    testTimer_startSuite();
+
     /* Initialize Unity test framework */
     UNITY_BEGIN();
 
@@ -173,6 +204,9 @@ int main(void)
 
     /* Finalize Unity and get results */
     int result = UNITY_END();
+
+    /* Print suite timing summary */
+    testTimer_endSuite();
 
     return result;
 }

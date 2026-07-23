@@ -167,18 +167,14 @@ void io_test(void *args)
 
     platform_init();
 
-    platform_printString("\r\n");
-    platform_printString("IO_TEST\r\n");
-    platform_printString("-------\r\n\r\n");
+    testTimer_startModule("I/O");
 
     status = Pmic_init(&pmicHandle, &coreCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        platform_printString("Starting IO tests\r\n");
         platform_setupTests();
         IO_TEST_RUN_ALL();
-        platform_printString("IO tests done\r\n");
         platform_tearDownTests();
     }
     else
@@ -186,6 +182,8 @@ void io_test(void *args)
         (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();

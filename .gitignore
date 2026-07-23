@@ -25,6 +25,13 @@ build_log.txt
 # Test artifacts
 build/
 *.gcna
+unity.o
+
+# Embedded artifacts (legacy, in case old builds exist)
+*.bin
+*.elf
+*.map
+*.lst
 
 # LDRA artifacts
 *.exh

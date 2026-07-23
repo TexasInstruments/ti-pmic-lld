@@ -30,7 +30,7 @@
  *
  * EXAMPLE OUTPUT:
  *   [DEBUG][PLATFORM][INFO] Host-controlled platform initialization
- *   [DEBUG][PLATFORM][DEBUG] Serial port: /dev/cu.usbmodem0E2393591
+ *   [DEBUG][PLATFORM][DEBUG] Serial port: /dev/cu.usbmodem1131201
  *   [DEBUG][PLATFORM][TRACE] >>> platform_unlockRegisters
  *   [DEBUG][TEST][TRACE] setUp: entry
  *

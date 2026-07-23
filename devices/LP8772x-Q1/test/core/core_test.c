@@ -82,9 +82,7 @@ void core_test(void *args)
 
     platform_init();
 
-    platform_printString("\r\n");
-    platform_printString("CORE_TEST\r\n");
-    platform_printString("-------\r\n\r\n");
+    testTimer_startModule("Core");
 
     status = Pmic_init(&pmicHandle, &coreCfg);
 
@@ -99,6 +97,8 @@ void core_test(void *args)
         (void)sprintf(msg, "Error in initializing PMIC LLD: %ld\r\n", (long)status);
         platform_printString(msg);
     }
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();

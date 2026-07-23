@@ -75,6 +75,11 @@ typedef struct {
 static I2cHandle_t commHandle = {0U};
 
 /**
+ * @brief Current module name for test result prefixes
+ */
+const char* g_currentModuleName = NULL;
+
+/**
  * @brief Platform initialization state
  */
 static bool g_platform_initialized = false;
@@ -82,6 +87,15 @@ static bool g_platform_initialized = false;
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
+
+/**
+ * @brief Set the current module name for test result prefixes
+ * @param moduleName The module name to use as a prefix (e.g., "ESM", "WDG")
+ */
+void platform_setModuleName(const char* moduleName)
+{
+    g_currentModuleName = moduleName;
+}
 
 void platform_init(void)
 {
@@ -310,6 +324,8 @@ int32_t platform_txByte(
     /* Build i2ce command: write only (read_len=0)
      * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
      * Example: i2ce 0 400000 0x60 0 2 0x10 0xAA
+     * NOTE: write_len must include the register byte, so bufLen + 1
+     *       The data bytes start with register address, then buffer contents
      */
     n = snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 %d 0x%02X",
                  i2cHandle->slaveAddr, bufLen + 1, regAddr);
@@ -427,7 +443,7 @@ int32_t platform_rxByte(
         return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
-    /* Parse hex data: "RESULTS: 0xAA 0xBB 0xCC" */
+    /* Parse data: "RESULTS: 0xAA 0xBB 0xCC" or "RESULTS: 170 187 204" */
     results += 9;  /* Skip "RESULTS: " */
 
     /* Use strtok to split by spaces */
@@ -435,8 +451,8 @@ int32_t platform_rxByte(
     idx = 0;
 
     while (token != NULL && idx < bufLen) {
-        /* Convert hex string to byte */
-        unsigned long val = strtoul(token, NULL, 16);
+        /* Convert string to byte (base 0 = auto-detect hex with 0x prefix or decimal) */
+        unsigned long val = strtoul(token, NULL, 0);
         buffer[idx] = (uint8_t)val;
         idx++;
         token = strtok(NULL, " \n\r");

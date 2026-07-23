@@ -68,7 +68,7 @@ extern "C" {
 /**
  * @brief Default serial port device path
  */
-#define SERIAL_DEFAULT_PORT         "/dev/ttyUSB0"
+#define SERIAL_DEFAULT_PORT         "/dev/cu.usbmodem1131201"
 
 /**
  * @brief Default baud rate

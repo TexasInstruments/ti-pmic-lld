@@ -78,9 +78,7 @@ void pmic_test(void *args)
 
     platform_init();
 
-    platform_printString("\r\n");
-    platform_printString("PMIC_INIT_TEST\r\n");
-    platform_printString("--------------\r\n\r\n");
+    testTimer_startModule("PMIC");
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -88,6 +86,8 @@ void pmic_test(void *args)
         PMIC_TEST_RUN_ALL();
         platform_tearDownTests();
     }
+
+    testTimer_endModule();
 
     platform_deinit();
 }

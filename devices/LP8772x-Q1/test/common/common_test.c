@@ -54,25 +54,25 @@ static uint32_t g_lastTimerWaitMs = 0;
 /*                          Mock Callback Functions                           */
 /* ========================================================================== */
 
-static void mockCritSecStart(uint8_t resource)
+static void testCritSecStart(uint8_t resource)
 {
     g_critSecStartCallCount++;
     g_lastCritSecResource = resource;
 }
 
-static void mockCritSecStop(uint8_t resource)
+static void testCritSecStop(uint8_t resource)
 {
     (void)resource;  /* Suppress unused parameter warning */
     g_critSecStopCallCount++;
 }
 
-static void mockTimerWait(uint32_t ms)
+static void testTimerWait(uint32_t ms)
 {
     g_timerWaitCallCount++;
     g_lastTimerWaitMs = ms;
 }
 
-static void resetMockCounters(void)
+static void resetTestCounters(void)
 {
     g_critSecStartCallCount = 0;
     g_critSecStopCallCount = 0;
@@ -87,7 +87,7 @@ static void resetMockCounters(void)
 
 void test_neg_common_criticalSectionStart_nullHandle(void)
 {
-    resetMockCounters();
+    resetTestCounters();
 
     Pmic_criticalSectionStart(NULL, PMIC_COMMUNICATION);
     PLATFORM_ASSERT(g_critSecStartCallCount == 0);
@@ -95,7 +95,7 @@ void test_neg_common_criticalSectionStart_nullHandle(void)
 
 void test_neg_common_criticalSectionStop_nullHandle(void)
 {
-    resetMockCounters();
+    resetTestCounters();
 
     Pmic_criticalSectionStop(NULL, PMIC_COMMUNICATION);
     PLATFORM_ASSERT(g_critSecStopCallCount == 0);
@@ -104,7 +104,7 @@ void test_neg_common_criticalSectionStop_nullHandle(void)
 void test_neg_common_criticalSectionStart_nullCallback(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = NULL;
@@ -116,7 +116,7 @@ void test_neg_common_criticalSectionStart_nullCallback(void)
 void test_neg_common_criticalSectionStop_nullCallback(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
     handle.criticalSectionStart = NULL;
     handle.criticalSectionStop = NULL;
@@ -128,10 +128,10 @@ void test_neg_common_criticalSectionStop_nullCallback(void)
 void test_pos_common_criticalSection_communication(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_criticalSectionStart(&handle, PMIC_COMMUNICATION);
     PLATFORM_ASSERT(g_critSecStartCallCount == 1);
@@ -144,10 +144,10 @@ void test_pos_common_criticalSection_communication(void)
 void test_pos_common_criticalSection_diagnostic(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_criticalSectionStart(&handle, PMIC_DIAGNOSTIC);
     PLATFORM_ASSERT(g_critSecStartCallCount == 1);
@@ -163,7 +163,7 @@ void test_pos_common_criticalSection_diagnostic(void)
 
 void test_neg_common_timerWaitMs_nullHandle(void)
 {
-    resetMockCounters();
+    resetTestCounters();
 
     Pmic_timerWaitMs(NULL, 100U);
     PLATFORM_ASSERT(g_timerWaitCallCount == 0);
@@ -172,7 +172,7 @@ void test_neg_common_timerWaitMs_nullHandle(void)
 void test_neg_common_timerWaitMs_nullCallback(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
     handle.timerWaitMs = NULL;
 
@@ -183,9 +183,9 @@ void test_neg_common_timerWaitMs_nullCallback(void)
 void test_pos_common_timerWaitMs_validCall(void)
 {
     Pmic_Handle_t handle = {0};
-    resetMockCounters();
+    resetTestCounters();
 
-    handle.timerWaitMs = mockTimerWait;
+    handle.timerWaitMs = testTimerWait;
 
     Pmic_timerWaitMs(&handle, 250U);
     PLATFORM_ASSERT(g_timerWaitCallCount == 1);
@@ -203,9 +203,9 @@ void test_pos_common_timerWaitMs_validCall(void)
 void test_pos_common_logStatus_success(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
-    resetMockCounters();
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
+    resetTestCounters();
 
     int32_t status = Pmic_logStatus(&handle, PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -234,9 +234,9 @@ void test_pos_common_logStatus_validError(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
-    resetMockCounters();
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
+    resetTestCounters();
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -257,8 +257,8 @@ void test_pos_common_logStatus_validWarning(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -275,8 +275,8 @@ void test_pos_common_logStatus_validWarning(void)
 void test_neg_common_logStatus_invalidStatusType(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -288,8 +288,8 @@ void test_neg_common_logStatus_invalidStatusType(void)
 void test_neg_common_logStatus_invalidStatusId(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -304,8 +304,8 @@ void test_pos_common_logStatus_allErrorCodes(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -340,7 +340,6 @@ void test_pos_common_logStatus_allErrorCodes(void)
 
 void test_neg_common_getDiagnostic_nullHandle(void)
 {
-
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -351,10 +350,9 @@ void test_neg_common_getDiagnostic_nullHandle(void)
 
 void test_neg_common_getDiagnostic_nullDiagnostic(void)
 {
-
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getDiagnostic(&handle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -362,12 +360,11 @@ void test_neg_common_getDiagnostic_nullDiagnostic(void)
 
 void test_neg_common_getDiagnostic_invalidValidParams(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = 0U;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -378,12 +375,11 @@ void test_neg_common_getDiagnostic_invalidValidParams(void)
 
 void test_neg_common_getDiagnostic_invalidStatusCode(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
@@ -394,13 +390,12 @@ void test_neg_common_getDiagnostic_invalidStatusCode(void)
 
 void test_pos_common_getDiagnostic_errorCnt(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -417,13 +412,12 @@ void test_pos_common_getDiagnostic_errorCnt(void)
 
 void test_pos_common_getDiagnostic_errorFlag(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -436,13 +430,12 @@ void test_pos_common_getDiagnostic_errorFlag(void)
 
 void test_pos_common_getDiagnostic_warningCnt(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -458,13 +451,12 @@ void test_pos_common_getDiagnostic_warningCnt(void)
 
 void test_pos_common_getDiagnostic_warningFlag(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -477,12 +469,11 @@ void test_pos_common_getDiagnostic_warningFlag(void)
 
 void test_neg_common_getDiagnostic_successType(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_SUCCESS;
@@ -493,12 +484,11 @@ void test_neg_common_getDiagnostic_successType(void)
 
 void test_neg_common_getDiagnostic_nullCritSecStart(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -509,11 +499,10 @@ void test_neg_common_getDiagnostic_nullCritSecStart(void)
 
 void test_neg_common_getDiagnostic_nullCritSecStop(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -525,13 +514,12 @@ void test_neg_common_getDiagnostic_nullCritSecStop(void)
 
 void test_pos_common_getDiagnostics_multiple(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[3] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -555,12 +543,11 @@ void test_pos_common_getDiagnostics_multiple(void)
 
 void test_neg_common_getDiagnostics_zeroCount(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -568,12 +555,11 @@ void test_neg_common_getDiagnostics_zeroCount(void)
 
 void test_neg_common_getDiagnostics_exceedsMax(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getDiagnostics(&handle, diags, 50U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -581,12 +567,11 @@ void test_neg_common_getDiagnostics_exceedsMax(void)
 
 void test_neg_common_getDiagnostics_nullCritSecStart(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -597,11 +582,10 @@ void test_neg_common_getDiagnostics_nullCritSecStart(void)
 
 void test_neg_common_getDiagnostics_nullCritSecStop(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -617,7 +601,6 @@ void test_neg_common_getDiagnostics_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnostic_nullHandle(void)
 {
-
     Pmic_Diagnostic_t diag = {0};
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -628,13 +611,12 @@ void test_neg_common_clrDiagnostic_nullHandle(void)
 
 void test_pos_common_clrDiagnostic_errorCnt(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -655,13 +637,12 @@ void test_pos_common_clrDiagnostic_errorCnt(void)
 
 void test_pos_common_clrDiagnostic_warningCnt(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -681,13 +662,12 @@ void test_pos_common_clrDiagnostic_warningCnt(void)
 
 void test_pos_common_clrDiagnostics_multiple(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -717,13 +697,12 @@ void test_pos_common_clrDiagnostics_multiple(void)
 
 void test_pos_common_clrDiagnosticsAll_clearAll(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_logStatus(&handle, PMIC_ST_ERR_NULL_PARAM);
     Pmic_logStatus(&handle, PMIC_ST_WARN_NO_IRQ_REMAINING);
@@ -756,8 +735,8 @@ void test_pos_common_overflow_errorCnt(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -780,8 +759,8 @@ void test_pos_common_overflow_warningCnt(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -812,8 +791,8 @@ void test_neg_common_getRetryCnt_nullHandle(void)
 void test_neg_common_getRetryCnt_nullOutput(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getRetryCnt(&handle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -825,8 +804,8 @@ void test_pos_common_getRetryCnt_initialZero(void)
     uint32_t retryCnt = TEST_INVALID_PARAM_99;
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -841,7 +820,7 @@ void test_neg_common_getRetryCnt_nullCritSecStart(void)
     uint32_t retryCnt = 0U;
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getRetryCnt(&handle, &retryCnt);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -852,7 +831,7 @@ void test_neg_common_getRetryCnt_nullCritSecStop(void)
     Pmic_Handle_t handle = {0};
     uint32_t retryCnt = 0U;
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_getRetryCnt(&handle, &retryCnt);
@@ -871,8 +850,8 @@ void test_pos_common_incrementRetryCnt_once(void)
     uint32_t retryCnt = 0;
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -890,8 +869,8 @@ void test_pos_common_incrementRetryCnt_multiple(void)
     uint32_t retryCnt = 0;
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -911,7 +890,7 @@ void test_neg_common_incrementRetryCnt_nullCritSecStart(void)
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_incrementRetryCnt(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -921,7 +900,7 @@ void test_neg_common_incrementRetryCnt_nullCritSecStop(void)
 {
     Pmic_Handle_t handle = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_incrementRetryCnt(&handle);
@@ -940,8 +919,8 @@ void test_pos_common_clrRetryCnt_afterIncrement(void)
     uint32_t retryCnt = 0;
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -961,7 +940,7 @@ void test_neg_common_clrRetryCnt_nullCritSecStart(void)
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrRetryCnt(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -971,7 +950,7 @@ void test_neg_common_clrRetryCnt_nullCritSecStop(void)
 {
     Pmic_Handle_t handle = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_clrRetryCnt(&handle);
@@ -997,7 +976,7 @@ void test_neg_common_getRetryCntOverflow_nullCritSecStart(void)
     bool overflow = false;
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getRetryCntOverflow(&handle, &overflow);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -1008,7 +987,7 @@ void test_neg_common_getRetryCntOverflow_nullCritSecStop(void)
     Pmic_Handle_t handle = {0};
     bool overflow = false;
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_getRetryCntOverflow(&handle, &overflow);
@@ -1020,7 +999,7 @@ void test_neg_common_clrRetryCntOverflow_nullCritSecStart(void)
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrRetryCntOverflow(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -1030,7 +1009,7 @@ void test_neg_common_clrRetryCntOverflow_nullCritSecStop(void)
 {
     Pmic_Handle_t handle = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_clrRetryCntOverflow(&handle);
@@ -1044,8 +1023,8 @@ void test_pos_common_overflow_retryCnt(void)
     bool reachedThreshold = false;
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1085,8 +1064,8 @@ void test_neg_common_logStatus_invalidStatusNullHandle(void)
 void test_pos_common_logStatus_successTypeInvalidId(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_SUCCESS, TEST_INVALID_PARAM_99);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
@@ -1095,7 +1074,6 @@ void test_pos_common_logStatus_successTypeInvalidId(void)
 
 void test_neg_common_getDiagnostics_nullHandle(void)
 {
-
     Pmic_Diagnostic_t diags[2] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1106,10 +1084,9 @@ void test_neg_common_getDiagnostics_nullHandle(void)
 
 void test_neg_common_getDiagnostics_nullDiagnosticArray(void)
 {
-
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getDiagnostics(&handle, NULL, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1117,12 +1094,11 @@ void test_neg_common_getDiagnostics_nullDiagnosticArray(void)
 
 void test_neg_common_getDiagnostics_zeroValidParamsInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1135,12 +1111,11 @@ void test_neg_common_getDiagnostics_zeroValidParamsInArray(void)
 
 void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1153,12 +1128,11 @@ void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void)
 
 void test_neg_common_getDiagnostics_successTypeInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_SUCCESS;
@@ -1169,10 +1143,9 @@ void test_neg_common_getDiagnostics_successTypeInArray(void)
 
 void test_neg_common_clrDiagnostic_nullDiagnostic(void)
 {
-
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrDiagnostic(&handle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1180,12 +1153,11 @@ void test_neg_common_clrDiagnostic_nullDiagnostic(void)
 
 void test_neg_common_clrDiagnostic_invalidValidParams(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = 0U;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -1196,12 +1168,11 @@ void test_neg_common_clrDiagnostic_invalidValidParams(void)
 
 void test_neg_common_clrDiagnostic_invalidStatusCode(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(TEST_INVALID_PARAM_99, 0U);
@@ -1212,12 +1183,11 @@ void test_neg_common_clrDiagnostic_invalidStatusCode(void)
 
 void test_neg_common_clrDiagnostic_successType(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_SUCCESS;
@@ -1228,13 +1198,12 @@ void test_neg_common_clrDiagnostic_successType(void)
 
 void test_pos_common_clrDiagnostic_errorFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1258,13 +1227,12 @@ void test_pos_common_clrDiagnostic_errorFlagOnly(void)
 
 void test_pos_common_clrDiagnostic_warningFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1288,12 +1256,11 @@ void test_pos_common_clrDiagnostic_warningFlagOnly(void)
 
 void test_neg_common_clrDiagnostic_nullCritSecStart(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_ST_ERR_NULL_PARAM;
@@ -1304,11 +1271,10 @@ void test_neg_common_clrDiagnostic_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnostic_nullCritSecStop(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -1320,7 +1286,6 @@ void test_neg_common_clrDiagnostic_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnostics_nullHandle(void)
 {
-
     Pmic_Diagnostic_t diags[1] = {0};
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1331,10 +1296,9 @@ void test_neg_common_clrDiagnostics_nullHandle(void)
 
 void test_neg_common_clrDiagnostics_nullDiagnosticArray(void)
 {
-
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrDiagnostics(&handle, NULL, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1342,12 +1306,11 @@ void test_neg_common_clrDiagnostics_nullDiagnosticArray(void)
 
 void test_neg_common_clrDiagnostics_zeroCount(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 0U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1355,12 +1318,11 @@ void test_neg_common_clrDiagnostics_zeroCount(void)
 
 void test_neg_common_clrDiagnostics_exceedsMax(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[50] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrDiagnostics(&handle, diags, 50U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1368,12 +1330,11 @@ void test_neg_common_clrDiagnostics_exceedsMax(void)
 
 void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1386,12 +1347,11 @@ void test_neg_common_clrDiagnostics_zeroValidParamsInArray(void)
 
 void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[2] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1404,12 +1364,11 @@ void test_neg_common_clrDiagnostics_invalidStatusCodeInArray(void)
 
 void test_neg_common_clrDiagnostics_successTypeInArray(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_SUCCESS;
@@ -1421,8 +1380,8 @@ void test_neg_common_clrDiagnostics_successTypeInArray(void)
 void test_neg_common_getRetryCntOverflow_nullOutput(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_getRetryCntOverflow(&handle, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1431,8 +1390,8 @@ void test_neg_common_getRetryCntOverflow_nullOutput(void)
 void test_neg_common_logStatus_warningTypeInvalidId(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t invalidStatus = PMIC_STATUS(PMIC_ST_TYPE_WARNING, TEST_INVALID_PARAM_99);
     int32_t status = Pmic_logStatus(&handle, invalidStatus);
@@ -1441,13 +1400,12 @@ void test_neg_common_logStatus_warningTypeInvalidId(void)
 
 void test_pos_common_getDiagnostics_errorFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1466,13 +1424,12 @@ void test_pos_common_getDiagnostics_errorFlagOnly(void)
 
 void test_pos_common_getDiagnostics_warningFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1491,13 +1448,12 @@ void test_pos_common_getDiagnostics_warningFlagOnly(void)
 
 void test_pos_common_clrDiagnostics_errorFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1520,13 +1476,12 @@ void test_pos_common_clrDiagnostics_errorFlagOnly(void)
 
 void test_pos_common_clrDiagnostics_warningCntOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1547,13 +1502,12 @@ void test_pos_common_clrDiagnostics_warningCntOnly(void)
 
 void test_pos_common_clrDiagnostics_warningFlagOnly(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1576,12 +1530,11 @@ void test_pos_common_clrDiagnostics_warningFlagOnly(void)
 
 void test_neg_common_clrDiagnostics_nullCritSecStart(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diags[0].code = PMIC_ST_ERR_NULL_PARAM;
@@ -1592,11 +1545,10 @@ void test_neg_common_clrDiagnostics_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnostics_nullCritSecStop(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diags[1] = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     diags[0].validParams = PMIC_DIAGNOSTIC_CNT_VALID;
@@ -1608,18 +1560,16 @@ void test_neg_common_clrDiagnostics_nullCritSecStop(void)
 
 void test_neg_common_clrDiagnosticsAll_nullHandle(void)
 {
-
     int32_t status = Pmic_clrDiagnosticsAll(NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 }
 
 void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void)
 {
-
     Pmic_Handle_t handle = {0};
 
     handle.criticalSectionStart = NULL;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStop = testCritSecStop;
 
     int32_t status = Pmic_clrDiagnosticsAll(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -1627,10 +1577,9 @@ void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void)
 
 void test_neg_common_clrDiagnosticsAll_nullCritSecStop(void)
 {
-
     Pmic_Handle_t handle = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStart = testCritSecStart;
     handle.criticalSectionStop = NULL;
 
     int32_t status = Pmic_clrDiagnosticsAll(&handle);
@@ -1639,7 +1588,7 @@ void test_neg_common_clrDiagnosticsAll_nullCritSecStop(void)
 
 static bool g_irqCallbackInvoked = false;
 
-static void mockIrqCallback(void)
+static void testIrqCallback(void)
 {
     g_irqCallbackInvoked = true;
 }
@@ -1649,7 +1598,7 @@ void test_pos_common_irqResponseCallback_validCall(void)
     Pmic_Handle_t handle = {0};
     g_irqCallbackInvoked = false;
 
-    handle.irqResponseCallback = mockIrqCallback;
+    handle.irqResponseCallback = testIrqCallback;
 
     Pmic_irqResponseCallback(&handle);
     PLATFORM_ASSERT(g_irqCallbackInvoked == true);
@@ -1678,8 +1627,8 @@ void test_pos_common_logStatus_maxErrorId(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1700,8 +1649,8 @@ void test_pos_common_logStatus_maxWarningId(void)
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1718,13 +1667,12 @@ void test_pos_common_logStatus_maxWarningId(void)
 
 void test_pos_common_getDiagnostic_maxErrorId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1740,13 +1688,12 @@ void test_pos_common_getDiagnostic_maxErrorId(void)
 
 void test_pos_common_clrDiagnostic_maxErrorId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
     int32_t status;
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1768,8 +1715,8 @@ void test_pos_common_clrDiagnostic_maxErrorId(void)
 void test_neg_common_logStatus_exceedsMaxErrorId(void)
 {
     Pmic_Handle_t handle = {0};
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     Pmic_clrDiagnosticsAll(&handle);
 
@@ -1780,12 +1727,11 @@ void test_neg_common_logStatus_exceedsMaxErrorId(void)
 
 void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
@@ -1796,12 +1742,11 @@ void test_neg_common_getDiagnostic_exceedsMaxErrorId(void)
 
 void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
@@ -1812,12 +1757,11 @@ void test_neg_common_getDiagnostic_exceedsMaxWarningId(void)
 
 void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
@@ -1828,12 +1772,11 @@ void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void)
 
 void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
 {
-
     Pmic_Handle_t handle = {0};
     Pmic_Diagnostic_t diag = {0};
 
-    handle.criticalSectionStart = mockCritSecStart;
-    handle.criticalSectionStop = mockCritSecStop;
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
 
     diag.validParams = PMIC_DIAGNOSTIC_CNT_VALID;
     diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
@@ -1880,10 +1823,7 @@ void common_test(void *args)
 
     platform_init();
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    LP8772x-Q1 Common Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
+    testTimer_startModule("Common");
 
     status = Pmic_init(&g_pmicHandle, &pmicCfg);
     if (status != PMIC_ST_SUCCESS)
@@ -1897,14 +1837,11 @@ void common_test(void *args)
     COMMON_TEST_POS_CRITICALSECTION();
     COMMON_TEST_POS_TIMERWAITMS();
     COMMON_TEST_POS_LOGSTATUS();
-#ifdef BUILD_MOCK
-    // Diagnostic tests disabled on hardware due to stack overflow with 272-byte arrays
     COMMON_TEST_POS_GETDIAGNOSTIC();
     COMMON_TEST_POS_GETDIAGNOSTICS();
     COMMON_TEST_POS_CLRDIAGNOSTIC();
     COMMON_TEST_POS_CLRDIAGNOSTICS();
     COMMON_TEST_POS_CLRDIAGNOSTICSALL();
-#endif
     COMMON_TEST_POS_OVERFLOW();
     COMMON_TEST_POS_GETRETRYCNT();
     COMMON_TEST_POS_INCREMENTRETRYCNT();
@@ -1915,14 +1852,11 @@ void common_test(void *args)
     COMMON_TEST_NEG_CRITICALSECTION();
     COMMON_TEST_NEG_TIMERWAITMS();
     COMMON_TEST_NEG_LOGSTATUS();
-#ifdef BUILD_MOCK
-    // Diagnostic tests disabled on hardware due to stack overflow with 272-byte arrays
     COMMON_TEST_NEG_GETDIAGNOSTIC();
     COMMON_TEST_NEG_GETDIAGNOSTICS();
     COMMON_TEST_NEG_CLRDIAGNOSTIC();
     COMMON_TEST_NEG_CLRDIAGNOSTICS();
     COMMON_TEST_NEG_CLRDIAGNOSTICSALL();
-#endif
     COMMON_TEST_NEG_GETRETRYCNT();
     COMMON_TEST_NEG_INCREMENTRETRYCNT();
     COMMON_TEST_NEG_CLRRETRYCNT();
@@ -1930,10 +1864,8 @@ void common_test(void *args)
     COMMON_TEST_NEG_CLRRETRYCNTOVERFLOW();
     COMMON_TEST_NEG_IRQRESPONSECALLBACK();
 
+    testTimer_endModule();
+
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
-
-    printf("\r\n==================================================\r\n");
-    printf("    Common Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }

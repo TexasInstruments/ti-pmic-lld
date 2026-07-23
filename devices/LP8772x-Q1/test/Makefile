@@ -73,7 +73,6 @@ ifndef UNITY_DIR
         $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity as sibling to pmic-lld repository)
     endif
 else
-    # Export UNITY_DIR to ensure it's available to child processes and LDRA tools
     export UNITY_DIR
 endif
 
@@ -89,6 +88,9 @@ endif
 # Normalize path: strip trailing slashes to avoid double-slash issues
 # Note: PMIC_MOCK_DIR is converted to absolute path by root Makefile if needed
 MOCK_DIR = $(patsubst %/,%,$(PMIC_MOCK_DIR))
+
+# Shared test infrastructure
+TEST_COMMON_DIR = ../../../common/test
 
 # Auto-discover test subdirectories (any directory with .h files)
 TEST_INCLUDE_DIRS = $(sort $(dir $(wildcard */*.h)))
@@ -117,37 +119,25 @@ CFLAGS = $(WARN_FLAGS) \
          -Wno-unsafe-buffer-usage \
 		 -Wno-extra-semi-stmt \
          -Werror \
-         -std=c99 $(TARGET_FLAG) -I$(INC_DIR) -I. $(TEST_INCLUDE_FLAGS)
-
-# LDRA instrumentation - disable optimization for accurate coverage
-ifdef LDRA_INSTRUMENT
-    CFLAGS := $(filter-out $(COV_FLAGS),$(CFLAGS))
-    CFLAGS := $(filter-out -Werror,$(CFLAGS))
-    CFLAGS += -O0 -g -Wno-unsafe-buffer-usage -Wno-missing-prototypes -Wno-implicit-int-conversion
-    CFLAGS += -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U
-endif
+         -std=c99 $(TARGET_FLAG) -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
 
 # PMIC driver source files (always needed)
-# For LDRA instrumentation: Use inszt_*.c or ipmic_*.c files if they exist (created by Phase 21q)
-# Otherwise use original *.c files
-# Note: Jenkins uses inszt_* prefix, local dev may use ipmic_* prefix
 PMIC_SOURCES = \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic.c),inszt_pmic.c,$(if $(wildcard $(SRC_DIR)/ipmic.c),ipmic.c,pmic.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_common.c),inszt_pmic_common.c,$(if $(wildcard $(SRC_DIR)/ipmic_common.c),ipmic_common.c,pmic_common.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_core.c),inszt_pmic_core.c,$(if $(wildcard $(SRC_DIR)/ipmic_core.c),ipmic_core.c,pmic_core.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_io.c),inszt_pmic_io.c,$(if $(wildcard $(SRC_DIR)/ipmic_io.c),ipmic_io.c,pmic_io.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_fsm.c),inszt_pmic_fsm.c,$(if $(wildcard $(SRC_DIR)/ipmic_fsm.c),ipmic_fsm.c,pmic_fsm.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_irq.c),inszt_pmic_irq.c,$(if $(wildcard $(SRC_DIR)/ipmic_irq.c),ipmic_irq.c,pmic_irq.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_power.c),inszt_pmic_power.c,$(if $(wildcard $(SRC_DIR)/ipmic_power.c),ipmic_power.c,pmic_power.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_wdg.c),inszt_pmic_wdg.c,$(if $(wildcard $(SRC_DIR)/ipmic_wdg.c),ipmic_wdg.c,pmic_wdg.c)) \
-	$(SRC_DIR)/$(if $(wildcard $(SRC_DIR)/inszt_pmic_esm.c),inszt_pmic_esm.c,$(if $(wildcard $(SRC_DIR)/ipmic_esm.c),ipmic_esm.c,pmic_esm.c))
+	$(SRC_DIR)/pmic.c \
+	$(SRC_DIR)/pmic_common.c \
+	$(SRC_DIR)/pmic_core.c \
+	$(SRC_DIR)/pmic_io.c \
+	$(SRC_DIR)/pmic_fsm.c \
+	$(SRC_DIR)/pmic_irq.c \
+	$(SRC_DIR)/pmic_power.c \
+	$(SRC_DIR)/pmic_wdg.c \
+	$(SRC_DIR)/pmic_esm.c
 
 # Test source files
-# For hardware builds, exclude tests that require mock-specific register injection
-ifeq ($(BUILD), mock)
 TEST_SOURCES = \
 	test_runner.c \
-	test_utils.c \
+	$(TEST_COMMON_DIR)/test_filter.c \
+	$(TEST_COMMON_DIR)/test_timer.c \
 	common/common_test.c \
 	core/core_test.c \
 	fsm/fsm_test.c \
@@ -157,20 +147,10 @@ TEST_SOURCES = \
 	power/power_test.c \
 	wdg/wdg_test.c \
 	esm/esm_test.c
-else
-# Hardware build - exclude tests that require mock-specific features:
-# - irq_test.c: Requires mock register injection (not possible on real hardware)
-# - power_test.c: Requires mock power state simulation (not possible on real hardware)
-TEST_SOURCES = \
-	test_runner.c \
-	test_utils.c \
-	common/common_test.c \
-	core/core_test.c \
-	fsm/fsm_test.c \
-	io/io_test.c \
-	pmic/pmic_test.c \
-	wdg/wdg_test.c \
-	esm/esm_test.c
+
+# Debug infrastructure (only when PMIC_DEBUG defined)
+ifdef PMIC_DEBUG
+    TEST_SOURCES += $(TEST_COMMON_DIR)/debug.c
 endif
 
 # Build-specific configuration
@@ -206,11 +186,6 @@ else ifeq ($(BUILD), host)
 	TARGET = test_runner
 
 	PLATFORM_NAME = Host-Controlled (via pmic-tiva-host firmware)
-
-else ifeq ($(BUILD), hardware)
-	# DEPRECATED: BUILD=hardware is no longer supported
-	# Use BUILD=host instead (tests run on PC, communicate with firmware via serial)
-	$(error BUILD=hardware is deprecated. Use BUILD=host instead. See README_HOST_MODE.md for details)
 
 else
 	$(error Invalid BUILD type. Use: BUILD=mock or BUILD=host)
@@ -267,7 +242,7 @@ $(TARGET): $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "  cd /path/to/pmic-tiva-host && make && lm4flash ppc_host.bin"
 	@echo ""
 	@echo "Set serial port (optional):"
-	@echo "  export PMIC_SERIAL_PORT=/dev/ttyUSB0  # or COM3 on Windows"
+	@echo "  export PMIC_SERIAL_PORT=/dev/cu.usbmodem1131201  # defaults to /dev/cu.usbmodem1131201"
 endif
 
 # Run tests (always rebuild to catch compilation issues)
@@ -334,12 +309,22 @@ test-debug:
 	./$(TARGET)
 endif
 
-# Run tests with coverage (generates both text and JSON reports)
+# Code coverage target (uses clang coverage instrumentation)
+# Usage:
+#   make coverage            # Run coverage with BUILD=mock (default)
+#   make coverage BUILD=mock # Explicit mock coverage
+#   make coverage BUILD=host # Host coverage (PC-side code only, requires hardware)
 .PHONY: coverage
+ifeq ($(BUILD), mock)
 coverage: check-mock-lib
+else
+coverage:
+endif
+	@echo "Running coverage analysis (BUILD=$(BUILD))..."
+	@$(MAKE) clean
 	@echo "Building with LLVM coverage instrumentation..."
 	@echo "Compiling Unity framework (relaxed warnings)..."
-	@$(CC) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE $(COV_FLAGS) -c $(UNITY_SRC) -o unity.o
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE $(COV_FLAGS) -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources (strict warnings)..."
 	@$(CC) $(CFLAGS) $(COV_FLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o test_runner $(LDFLAGS)
 	@echo "Removing previous coverage data..."
@@ -359,6 +344,44 @@ clean:
 	@rm -rf coverage
 	@echo "Clean complete"
 
+# Convenience targets for test filtering
+# These targets provide shortcuts for common filtering scenarios
+
+# Run tests for a specific module
+# Usage: make test-module MODULE=irq BUILD=host
+.PHONY: test-module
+test-module:
+ifndef MODULE
+	@echo "ERROR: MODULE not specified"
+	@echo "Usage: make test-module MODULE=<module> BUILD=<build>"
+	@echo "Available modules: common, pmic, core, io, fsm, wdg, esm, irq, power"
+	@exit 1
+endif
+	@export PMIC_TEST_MODULES=$(MODULE) && $(MAKE) test BUILD=$(BUILD)
+
+# Run a specific test by name pattern
+# Usage: make test-single TEST=test_pos_irq_irqSetMask_enable BUILD=host
+.PHONY: test-single
+test-single:
+ifndef TEST
+	@echo "ERROR: TEST not specified"
+	@echo "Usage: make test-single TEST=<pattern> BUILD=<build>"
+	@echo "Example: make test-single TEST='test_pos_irq_*' BUILD=host"
+	@exit 1
+endif
+	@export PMIC_TEST_FILTER=$(TEST) && $(MAKE) test BUILD=$(BUILD)
+
+# Run only positive or negative tests
+# Usage: make test-group GROUP=positive BUILD=host
+.PHONY: test-group
+test-group:
+ifndef GROUP
+	@echo "ERROR: GROUP not specified"
+	@echo "Usage: make test-group GROUP=<positive|negative> BUILD=<build>"
+	@exit 1
+endif
+	@export PMIC_TEST_GROUPS=$(GROUP) && $(MAKE) test BUILD=$(BUILD)
+
 # Help target
 help:
 	@echo "LP8772x-Q1 PMIC Test Makefile"
@@ -369,7 +392,10 @@ help:
 	@echo "Targets:"
 	@echo "  all              - Build test executable (default)"
 	@echo "  test             - Build and run tests"
-	@echo "  coverage         - Run tests with coverage analysis (generates text and JSON)"
+	@echo "  test-module      - Run tests for specific module(s)"
+	@echo "  test-single      - Run specific test by name pattern"
+	@echo "  test-group       - Run positive or negative tests only"
+	@echo "  coverage         - Run tests with coverage analysis (respects BUILD variable)"
 	@echo "  clean            - Remove build artifacts"
 	@echo "  help             - Show this help message"
 	@echo ""
@@ -377,16 +403,33 @@ help:
 	@echo "  BUILD=mock       - Use mock backend (no hardware required) [default]"
 	@echo "  BUILD=host       - Host-controlled (requires pmic-tiva-host firmware on TM4C123)"
 	@echo ""
+	@echo "Test Filtering (via environment variables):"
+	@echo "  PMIC_TEST_MODULES  - Comma-separated module list (e.g., 'irq,power')"
+	@echo "  PMIC_TEST_FILTER   - Wildcard pattern (e.g., '*mask*', 'test_pos_*')"
+	@echo "  PMIC_TEST_GROUPS   - 'positive', 'negative', or 'all' (default)"
+	@echo ""
+	@echo "Coverage Analysis:"
+	@echo "  make coverage                              # Mock coverage (default)"
+	@echo "  make coverage BUILD=mock                   # Explicit mock coverage"
+	@echo "  make coverage BUILD=host                   # Host coverage (PC-side only)"
+	@echo ""
 	@echo "Examples:"
-	@echo "  make test                    # Run tests with mock"
-	@echo "  make test BUILD=mock         # Run tests with mock"
-	@echo "  make test BUILD=host         # Run tests with host-controlled mode"
-	@echo "  make clean                   # Clean build"
+	@echo "  make test                                  # Run all tests with mock"
+	@echo "  make test BUILD=host                       # Run all tests with hardware"
+	@echo "  make test-module MODULE=irq BUILD=host     # Run only IRQ tests"
+	@echo "  make test-single TEST='*mask*' BUILD=host  # Run tests with 'mask' in name"
+	@echo "  make test-group GROUP=positive BUILD=mock  # Run only positive tests"
+	@echo ""
+	@echo "  # Advanced filtering (combine environment variables):"
+	@echo "  export PMIC_TEST_MODULES='irq,power'"
+	@echo "  export PMIC_TEST_FILTER='*mask*'"
+	@echo "  export PMIC_TEST_GROUPS='negative'"
+	@echo "  make test BUILD=host                       # Run only negative mask tests in IRQ/POWER"
 	@echo ""
 	@echo "Host-Controlled Mode Setup:"
 	@echo "  1. Flash pmic-tiva-host firmware to TM4C123"
 	@echo "  2. Connect USB cable"
-	@echo "  3. Set PMIC_SERIAL_PORT (optional, defaults to /dev/ttyUSB0)"
+	@echo "  3. Set PMIC_SERIAL_PORT (optional, defaults to /dev/cu.usbmodem1131201)"
 	@echo "  4. Run: make test BUILD=host"
 
-.PHONY: all test clean help coverage
+.PHONY: all test test-module test-single test-group clean help coverage

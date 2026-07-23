@@ -37,8 +37,10 @@
 /* ========================================================================== */
 
 #include "power_test.h"
-#include "test_inject.h"
 #include "test_constants.h"
+#ifdef BUILD_MOCK
+#include "test_inject.h"
+#endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -145,9 +147,7 @@ void power_test(void *args)
 
     platform_init();
 
-    platform_printString("\r\n");
-    platform_printString("POWER_TEST\r\n");
-    platform_printString("-------\r\n\r\n");
+    testTimer_startModule("Power");
 
     status = Pmic_init(&pmicHandle, &coreCfg);
 
@@ -162,6 +162,8 @@ void power_test(void *args)
         (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
         platform_printString(msg);
     }
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
@@ -2428,6 +2430,8 @@ void test_neg_power_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState(void)
     // Attempt to get resource config - should fail due to invalid HW state
     status = Pmic_pwrGetResourceCfg(&pmicHandle, &config);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -4121,6 +4125,7 @@ void test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds(void)
  */
 void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x1DU;
     const uint16_t FUNC_CONF_REG = 0x48U;
@@ -4142,6 +4147,9 @@ void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 
     status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**

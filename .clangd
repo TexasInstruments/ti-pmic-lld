@@ -16,6 +16,9 @@ CompileFlags:
     - "-Idevices/TPS6522x-Q1/test"
     - "-Idevices/TPS65386x-Q1/test"
 
+    # Shared test infrastructure
+    - "-Icommon/test"
+
     # ============================================================================
     # External Dependencies (configurable via environment variables)
     # ============================================================================
