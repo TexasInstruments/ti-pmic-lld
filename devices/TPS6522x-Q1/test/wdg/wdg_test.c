@@ -419,9 +419,6 @@ void test_pos_wdg_wdgSetEnableState_enableDisable(void)
  */
 void test_pos_wdg_wdgSetPowerHold_powerHold(void)
 {
-#ifndef BUILD_MOCK
-    TEST_IGNORE_MESSAGE("WD_PWRHOLD write access depends on WDG window state; not reliably testable on hardware without board-level DISABLE_WDOG control");
-#endif
     bool isEnabled = false;
     int32_t status;
 
