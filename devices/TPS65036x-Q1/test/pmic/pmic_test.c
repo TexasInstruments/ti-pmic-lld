@@ -73,6 +73,8 @@ void pmic_test(void *args)
 {
     platform_init();
 
+    testTimer_startModule("PMIC");
+
     platform_printString("\r\n");
     platform_printString("PMIC_TEST\r\n");
     platform_printString("---------\r\n\r\n");
@@ -80,6 +82,8 @@ void pmic_test(void *args)
     platform_setupTests();
     PMIC_TEST_RUN_ALL();
     platform_tearDownTests();
+
+    testTimer_endModule();
 
     platform_deinit();
 }
@@ -92,7 +96,8 @@ static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
                            PMIC_IO_WRITE_VALID |
                            PMIC_CRITICAL_SECTION_START_VALID |
                            PMIC_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_IRQ_RESPONSE_CALLBACK_VALID;
+                           PMIC_IRQ_RESPONSE_CALLBACK_VALID |
+                           PMIC_TIMER_WAIT_MS_VALID;
     pmicCfg->i2cAddr0 = 0x60U;
     pmicCfg->commHandle0 = platform_getCommHandle();
     pmicCfg->ioRead = &platform_rxByte;
@@ -100,6 +105,7 @@ static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
     pmicCfg->criticalSectionStart = &platform_critSecStart;
     pmicCfg->criticalSectionStop = &platform_critSecStop;
     pmicCfg->irqResponseCallback = &platform_irqResponse;
+    pmicCfg->timerWaitMs = &testTimerWaitWrapper;
 }
 
 void test_neg_pmic_init_nullHandle(void)

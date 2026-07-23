@@ -124,6 +124,7 @@ void adc_test(void *args)
     (void)args;
 
     platform_init();
+    testTimer_startModule("ADC");
 
     /* Initialize PMIC handle */
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
@@ -135,10 +136,10 @@ void adc_test(void *args)
                             PMIC_MAX_LOOP_CNT_VALID;
     handleCfg.commMode = PMIC_INTF_SPI;
     handleCfg.commHandle0 = platform_getCommHandle();
-    handleCfg.ioRead = platform_rxByte;
-    handleCfg.ioWrite = platform_txByte;
-    handleCfg.criticalSectionStart = platform_critSecStart;
-    handleCfg.criticalSectionStop = platform_critSecStop;
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
     handleCfg.maxLoopCnt = 1000;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
@@ -154,6 +155,7 @@ void adc_test(void *args)
 
     ADC_TEST_RUN_ALL();
 
+    testTimer_endModule();
     platform_tearDownTests();
     platform_deinit();
 }
@@ -673,8 +675,8 @@ void test_pos_adc_property_randomChannelConfigurations(void)
         /* Generate random configuration */
         memset(&setCfg, 0, sizeof(setCfg));
         setCfg.validParams = PMIC_ADC_RDIV_EN_VALID | PMIC_ADC_CONT_CONV_EN_VALID | PMIC_ADC_SRC_SEL_VALID;
-        setCfg.rDivEn = (bool)getRandomBool();
-        setCfg.contConvEn = (bool)getRandomBool();
+        setCfg.rDivEn = (getRandomBool() != 0U) ? true : false;
+        setCfg.contConvEn = (getRandomBool() != 0U) ? true : false;
         setCfg.srcSel = getRandomSrcSel();
 
         /* Set configuration */

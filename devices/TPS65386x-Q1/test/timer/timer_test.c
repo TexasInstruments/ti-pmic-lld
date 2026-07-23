@@ -1007,13 +1007,14 @@ void timer_test(void *args)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
-        .criticalSectionStart = &test_pmic_criticalSectionStartFn,
-        .criticalSectionStop = &test_pmic_criticalSectionStopFn
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     platform_init();
+    testTimer_startModule("Timer");
 
     platform_printString("\r\n");
     platform_printString("TIMER_TEST\r\n");
@@ -1035,6 +1036,7 @@ void timer_test(void *args)
         platform_printString(msg);
     }
 
+    testTimer_endModule();
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
 }

@@ -37,7 +37,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "fsm_test.h"
+#ifdef BUILD_MOCK
 #include "test_inject.h"
+#endif
 #include "test_constants.h"
 #include "regmap/fsm.h"
 
@@ -67,10 +69,10 @@ static int32_t helper_initPmic(Pmic_Handle_t *handle)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
-        .criticalSectionStart = &test_pmic_criticalSectionStartFn,
-        .criticalSectionStop = &test_pmic_criticalSectionStopFn
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
     int32_t status;
 
@@ -1568,6 +1570,7 @@ void fsm_test(void *args)
 
     /* Initialize once for all FSM tests */
     platform_init();
+    testTimer_startModule("FSM");
     status = helper_initPmic(&g_handle);
     if (status != PMIC_ST_SUCCESS)
     {
@@ -1582,6 +1585,7 @@ void fsm_test(void *args)
     platform_tearDownTests();
 
     /* Cleanup */
+    testTimer_endModule();
     helper_deinitPmic(&g_handle);
     platform_deinit();
 

@@ -799,6 +799,7 @@ void fsm_test(void *args)
     int32_t status;
 
     platform_init();
+    testTimer_startModule("FSM");
     platform_setupTests();
 
     /* Initialize PMIC handle */
@@ -811,10 +812,10 @@ void fsm_test(void *args)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     status = Pmic_init(&pmicHandle, &handleCfg);
@@ -840,6 +841,7 @@ void fsm_test(void *args)
     platform_printString("\r\n=== FSM Module Tests ===\r\n");
     FSM_TEST_RUN_ALL();
 
+    testTimer_endModule();
     Pmic_deinit(&pmicHandle);
     platform_tearDownTests();
     platform_deinit();

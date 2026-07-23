@@ -118,7 +118,7 @@ static int32_t mockIoRead(const Pmic_Handle_t *handle, uint8_t page, uint8_t reg
         return status;
     }
     /* Call the actual mock backend read function */
-    status = test_pmic_regRead(handle, page, regAddr, buffer, bufLen);
+    status = platform_rxByte(handle, page, regAddr, buffer, bufLen);
     if ((g_mockCrcCorruptionMask != 0x00U) && (bufLen == 4U) && (status == PMIC_ST_SUCCESS))
     {
         /* For SPI, CRC is at index 3 (4-byte frame) */
@@ -140,7 +140,7 @@ static int32_t mockIoWrite(const Pmic_Handle_t *handle, uint8_t page, uint8_t re
         return status;
     }
     /* Call the actual mock backend write function */
-    return test_pmic_regWrite(handle, page, regAddr, buffer, bufLen);
+    return platform_txByte(handle, page, regAddr, buffer, bufLen);
 }
 
 static void mockTimerWait(uint32_t ms)
@@ -254,13 +254,14 @@ void io_test(void *args)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
-        .criticalSectionStart = &test_pmic_criticalSectionStartFn,
-        .criticalSectionStop = &test_pmic_criticalSectionStopFn
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     platform_init();
+    testTimer_startModule("I/O");
 
     printf("\r\n");
     printf("==================================================\r\n");
@@ -280,6 +281,7 @@ void io_test(void *args)
     IO_TEST_RUN_ALL();
 
     /* Cleanup */
+    testTimer_endModule();
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 

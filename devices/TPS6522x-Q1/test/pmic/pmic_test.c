@@ -36,6 +36,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
+#include "platform.h"
 #include "pmic_test.h"
 #include "test_constants.h"
 
@@ -73,6 +74,7 @@ void pmic_test(void *args)
     int32_t status = PMIC_ST_SUCCESS;
 
     platform_init();
+    testTimer_startModule("PMIC");
 
     platform_printString("\r\n");
     platform_printString("PMIC_TEST\r\n");
@@ -85,6 +87,7 @@ void pmic_test(void *args)
         platform_tearDownTests();
     }
 
+    testTimer_endModule();
     platform_deinit();
 }
 

@@ -37,7 +37,9 @@
 /* ========================================================================== */
 
 #include "irq_test.h"
+#ifdef BUILD_MOCK
 #include "test_inject.h"
+#endif
 #include "test_constants.h"
 #include "regmap/irq.h"
 #include "regmap/fsm.h"
@@ -82,10 +84,10 @@ static int32_t irqTest_initHandle(void)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
-        .criticalSectionStart = &test_pmic_criticalSectionStartFn,
-        .criticalSectionStop = &test_pmic_criticalSectionStopFn
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
     int32_t status;
 
@@ -1340,6 +1342,7 @@ void irq_test(void *args)
 
     /* Initialize once for all IRQ tests */
     platform_init();
+    testTimer_startModule("IRQ");
     status = irqTest_initHandle();
     if (status != PMIC_ST_SUCCESS)
     {
@@ -1354,6 +1357,7 @@ void irq_test(void *args)
     platform_tearDownTests();
 
     /* Cleanup */
+    testTimer_endModule();
     Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 

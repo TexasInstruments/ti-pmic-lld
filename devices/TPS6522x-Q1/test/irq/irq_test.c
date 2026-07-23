@@ -35,7 +35,9 @@
 #include "../platform.h"
 #include "irq_test.h"
 #include "pmic.h"
+#ifdef BUILD_MOCK
 #include "test_inject.h"
+#endif
 #include "test_constants.h"
 
 /* ========================================================================== */
@@ -1024,6 +1026,7 @@ void irq_test(void *args)
     int32_t status;
 
     platform_init();
+    testTimer_startModule("IRQ");
     platform_setupTests();
 
     /* Initialize PMIC handle */
@@ -1039,10 +1042,10 @@ void irq_test(void *args)
         .commMode = PMIC_INTF_SPI,
         .crcEnable = false,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
         .maxLoopCnt = 1000
     };
 
@@ -1058,6 +1061,7 @@ void irq_test(void *args)
     platform_printString("\r\n=== IRQ Module Tests ===\r\n");
     IRQ_TEST_RUN_ALL();
 
+    testTimer_endModule();
     Pmic_deinit(&pmicHandle);
     platform_tearDownTests();
     platform_deinit();

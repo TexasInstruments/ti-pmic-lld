@@ -34,6 +34,7 @@
 
 #include "unity.h"
 #include "platform.h"
+#include "test_utils.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
 #include "pmic_mock_core.h"

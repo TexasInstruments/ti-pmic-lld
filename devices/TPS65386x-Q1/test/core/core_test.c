@@ -662,13 +662,14 @@ void core_test(void *args)
         .i2cAddr1 = 0,
         .i2cAddr2 = 0,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop
     };
 
     platform_init();
+    testTimer_startModule("Core");
 
     platform_printString("\r\n");
     platform_printString("CORE_TEST\r\n");
@@ -690,6 +691,7 @@ void core_test(void *args)
         platform_printString(msg);
     }
 
+    testTimer_endModule();
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
 }

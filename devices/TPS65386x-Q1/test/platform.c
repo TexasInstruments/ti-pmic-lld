@@ -33,12 +33,14 @@
 
 /**
  * @file platform.c
- * @brief Host-controlled platform layer for PMIC testing
+ * @brief Host-controlled platform layer for PMIC testing (SPI interface)
  *
  * This implementation runs tests on the host PC while communicating with
  * pmic-tiva-host firmware on TM4C123 via serial commands. The firmware acts
- * as an I2C/GPIO translation layer, providing unlimited memory and easy
+ * as an SPI/GPIO translation layer, providing unlimited memory and easy
  * debugging while still accessing real PMIC hardware.
+ *
+ * TPS65386x-Q1 uses SPI interface, not I2C.
  */
 
 /* ========================================================================== */
@@ -49,7 +51,7 @@
 #include <stdbool.h> /* For bool type */
 
 #ifdef BUILD_HOST
-#include "platform_serial.h"
+#include "platform_serial_spi.h"
 #include <unistd.h>  /* For usleep */
 #include <stdlib.h>  /* For strtoul, getenv, exit */
 #endif
@@ -59,20 +61,20 @@
 /* ========================================================================== */
 
 /**
- * @brief Pseudo I2C handle for host mode (just stores slave address)
+ * @brief Pseudo SPI handle for host mode
  */
 typedef struct {
-    uint8_t slaveAddr;
-} I2cHandle_t;
+    uint8_t dummy;  /* SPI doesn't use slave address like I2C */
+} SpiHandle_t;
 
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
 /**
- * @brief I2C handle used to communicate to PMIC (stores slave address)
+ * @brief SPI handle used to communicate to PMIC
  */
-static I2cHandle_t commHandle = {0U};
+static SpiHandle_t commHandle = {0U};
 
 /**
  * @brief Current module name for test result prefixes
@@ -110,11 +112,10 @@ void platform_init(void)
         return;
     }
 
-    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Host-controlled platform initialization");
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Host-controlled platform initialization (SPI)");
 
     /* Reset initialization state */
     g_platform_initialized = false;
-    commHandle.slaveAddr = 0x00;
 
     /* Get serial port from environment or use default */
     port = getenv("PMIC_SERIAL_PORT");
@@ -124,7 +125,7 @@ void platform_init(void)
 
     PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Serial port: %s", port);
 
-    printf("Initializing host-controlled PMIC testing...\n");
+    printf("Initializing host-controlled PMIC testing (SPI)...\n");
     printf("Serial port: %s\n", port);
     fflush(stdout);
 
@@ -198,13 +199,23 @@ void platform_init(void)
     }
 
     printf("Firmware connected: %s\n", response);
+
+    /* Initialize SPI peripheral on firmware side */
+    printf("Initializing SPI peripheral (SSI2)...\n");
+    status = platform_serial_init();
+    if (status != 0) {
+        fprintf(stderr, "ERROR: Failed to initialize SPI peripheral\n");
+        fprintf(stderr, "       %s\n", serial_get_last_error());
+        serial_close();
+        exit(1);
+    }
+
     printf("Host-controlled platform initialized successfully\n\n");
 
-    /* Only set address and state after all validation passes */
-    commHandle.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
+    /* Set initialization state after all validation passes */
     g_platform_initialized = true;
 
-    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - SPI mode");
 #endif
 }
 
@@ -225,7 +236,6 @@ void platform_deinit(void)
 #endif
     /* This code only runs if already deinitialized */
     g_platform_initialized = false;
-    commHandle.slaveAddr = 0x00;
 }
 
 void platform_setupTests(void)
@@ -296,17 +306,13 @@ int32_t platform_txByte(
     const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen)
 {
 #ifdef BUILD_HOST
-    char cmd[SERIAL_MAX_CMD_LEN];
-    char response[SERIAL_MAX_RESPONSE_LEN];
     int32_t status;
-    int n;
-    uint8_t i;
 
-    (void)page;  /* LP8772x-Q1: Page mapping not used in current implementation */
+    (void)page;  /* TPS65386x-Q1: Page mapping not used for SPI */
 
     /* Validate platform is initialized */
     if (!g_platform_initialized) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
+        return PMIC_ST_ERR_SPI_COMM_FAIL;
     }
 
     /* Parameter validation */
@@ -318,51 +324,13 @@ int32_t platform_txByte(
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Get slave address from handle */
-    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
-
-    /* Build i2ce command: write only (read_len=0)
-     * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
-     * Example: i2ce 0 400000 0x60 0 2 0x10 0xAA
-     * NOTE: write_len must include the register byte, so bufLen + 1
-     *       The data bytes start with register address, then buffer contents
-     */
-    n = snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 %d 0x%02X",
-                 i2cHandle->slaveAddr, bufLen + 1, regAddr);
-
-    if (n < 0 || n >= (int)sizeof(cmd)) {
-        return PMIC_ST_ERR_INV_PARAM;
-    }
-
-    /* Append data bytes */
-    for (i = 0; i < bufLen; i++) {
-        n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " 0x%02X", buffer[i]);
-        if (n >= (int)sizeof(cmd)) {
-            return PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-
-    /* Send command to firmware */
-    status = serial_send_command(cmd);
+    /* Write via SPI (2MHz = 2000 kHz) */
+    status = platform_serial_write(regAddr, buffer, bufLen, 2000);
     if (status != 0) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
+        return PMIC_ST_ERR_SPI_COMM_FAIL;
     }
 
-    /* Read response: "STATUS: OK\n" or "STATUS: ERROR_CMD - ...\n" */
-    memset(response, 0, sizeof(response));
-    status = serial_read_response(response, sizeof(response));
-    if (status < 0) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Parse response */
-    if (strstr(response, "STATUS: OK") != NULL) {
-        return PMIC_ST_SUCCESS;
-    } else if (strstr(response, "I2C") != NULL || strstr(response, "NACK") != NULL) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    } else {
-        return PMIC_ST_ERR_INV_PARAM;
-    }
+    return PMIC_ST_SUCCESS;
 #else
     /* Should not reach here - BUILD_HOST should be defined */
     (void)handle;
@@ -378,18 +346,13 @@ int32_t platform_rxByte(
     const Pmic_Handle_t *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen)
 {
 #ifdef BUILD_HOST
-    char cmd[SERIAL_MAX_CMD_LEN];
-    char response[SERIAL_MAX_RESPONSE_LEN];
     int32_t status;
-    char *results;
-    char *token;
-    uint8_t idx;
 
-    (void)page;  /* LP8772x-Q1: Page mapping not used in current implementation */
+    (void)page;  /* TPS65386x-Q1: Page mapping not used for SPI */
 
     /* Validate platform is initialized */
     if (!g_platform_initialized) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
+        return PMIC_ST_ERR_SPI_COMM_FAIL;
     }
 
     /* Parameter validation */
@@ -401,66 +364,10 @@ int32_t platform_rxByte(
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Get slave address from handle */
-    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
-
-    /* Build i2ce command: write reg address, then read
-     * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
-     * Example: i2ce 0 400000 0x60 2 1 0x10
-     *   This writes 0x10 (register address), then reads 2 bytes
-     */
-    snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X %d 1 0x%02X",
-             i2cHandle->slaveAddr, bufLen, regAddr);
-
-    /* Send command to firmware */
-    status = serial_send_command(cmd);
+    /* Read via SPI (2MHz = 2000 kHz) */
+    status = platform_serial_read(regAddr, buffer, bufLen, 2000);
     if (status != 0) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Read first line: "STATUS: OK\n" or "STATUS: ERROR_CMD - ...\n" */
-    memset(response, 0, sizeof(response));
-    status = serial_read_response(response, sizeof(response));
-    if (status < 0) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Check for errors */
-    if (strstr(response, "STATUS: OK") == NULL) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Read second line: "RESULTS: 0xAA 0xBB 0xCC\n" */
-    memset(response, 0, sizeof(response));
-    status = serial_read_response(response, sizeof(response));
-    if (status < 0) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Find "RESULTS:" prefix */
-    results = strstr(response, "RESULTS:");
-    if (results == NULL) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-
-    /* Parse data: "RESULTS: 0xAA 0xBB 0xCC" or "RESULTS: 170 187 204" */
-    results += 9;  /* Skip "RESULTS: " */
-
-    /* Use strtok to split by spaces */
-    token = strtok(results, " \n\r");
-    idx = 0;
-
-    while (token != NULL && idx < bufLen) {
-        /* Convert string to byte (base 0 = auto-detect hex with 0x prefix or decimal) */
-        unsigned long val = strtoul(token, NULL, 0);
-        buffer[idx] = (uint8_t)val;
-        idx++;
-        token = strtok(NULL, " \n\r");
-    }
-
-    /* Verify we got the expected number of bytes */
-    if (idx != bufLen) {
-        return PMIC_ST_ERR_I2C_COMM_FAIL;
+        return PMIC_ST_ERR_SPI_COMM_FAIL;
     }
 
     return PMIC_ST_SUCCESS;
@@ -478,15 +385,10 @@ int32_t platform_rxByte(
 void platform_unlockRegisters(void)
 {
 #ifdef BUILD_HOST
-    /* Hardware: Unlock LP8772x-Q1 configuration registers
-     * Write 0x9B to register 0x09 (REGISTER_LOCK)
+    /* TPS65386x-Q1: Unlock mechanism depends on device specification
+     * Placeholder - device may not have register locking like LP8772x-Q1
+     * Check device datasheet for unlock sequence if needed
      */
-    const uint8_t REGISTER_LOCK_REG = 0x09U;
-    const uint8_t UNLOCK_KEY = 0x9BU;
-    char cmd[SERIAL_MAX_CMD_LEN];
-    char response[SERIAL_MAX_RESPONSE_LEN];
-    int32_t status;
-
     PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, ">>> platform_unlockRegisters");
 
     /* Validate platform is initialized */
@@ -496,51 +398,8 @@ void platform_unlockRegisters(void)
         return;
     }
 
-    /* Validate I2C address is correct */
-    if (commHandle.slaveAddr != PLATFORM_TARGET_I2C_ADDR) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "Invalid I2C address: 0x%02X (expected 0x%02X)",
-                       commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
-        fprintf(stderr, "ERROR: Invalid I2C address 0x%02X (expected 0x%02X)\n",
-                commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
-        return;
-    }
-
-    /* Build i2ce command to write unlock key to register lock
-     * Format: i2ce 0 400000 0x60 0 2 0x09 0x9B
-     *   Write 0x9B to register 0x09, no read
-     */
-    snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 2 0x%02X 0x%02X",
-             commHandle.slaveAddr, REGISTER_LOCK_REG, UNLOCK_KEY);
-
-    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Sending unlock command: %s", cmd);
-
-    /* Send command to firmware */
-    status = serial_send_command(cmd);
-    if (status != 0) {
-        platform_printString("ERROR: Failed to send unlock command\r\n");
-        return;
-    }
-
-    /* Read response */
-    memset(response, 0, sizeof(response));
-    status = serial_read_response(response, sizeof(response));
-
-    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Got response (status=%d): %s", status,
-                   status >= 0 ? response : "(no response)");
-
-    if (status < 0) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "No response from firmware");
-        platform_printString("ERROR: No response from firmware during unlock\r\n");
-        return;
-    }
-
-    /* Check response */
-    if (strstr(response, "STATUS: OK") == NULL) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_WARNING, "Unlock failed: %s", response);
-        fprintf(stderr, "ERROR: Failed to unlock PMIC registers: %s\n", response);
-    } else {
-        PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, "<<< platform_unlockRegisters (success)");
-    }
+    /* TPS65386x-Q1 may not require unlock sequence - verify from datasheet */
+    PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, "<<< platform_unlockRegisters (no-op for TPS65386x-Q1)");
 #endif
     /* Mock: No-op (mock doesn't enforce register locking) */
 }

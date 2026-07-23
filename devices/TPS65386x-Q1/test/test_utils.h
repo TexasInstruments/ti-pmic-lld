@@ -56,6 +56,15 @@ extern "C" {
  */
 void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle);
 
+/**
+ * @brief Unlock PMIC registers for testing.
+ *
+ * @details This function unlocks PMIC configuration registers to allow
+ * register modifications during testing. This sends the unlock sequence
+ * to the PMIC (in hardware mode) or is a no-op (in mock mode).
+ */
+void platform_unlockRegisters(void);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

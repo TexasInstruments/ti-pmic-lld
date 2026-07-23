@@ -1099,6 +1099,7 @@ void gpio_test(void *args)
     };
 
     platform_init();
+    testTimer_startModule("GPIO");
     platform_printString("\r\n=== GPIO Module Tests (TPS6522x-Q1 Burton) ===\r\n");
 
     status = Pmic_init(&pmicHandle, &handleCfg);
@@ -1125,5 +1126,6 @@ void gpio_test(void *args)
         platform_printString("ERROR: Failed to initialize PMIC handle\r\n");
     }
 
+    testTimer_endModule();
     platform_deinit();
 }

@@ -853,10 +853,10 @@ void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
         .commMode = PMIC_INTF_I2C_SINGLE,
         .crcEnable = false,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     status = Pmic_init(&i2cHandle, &handleCfg);
@@ -923,15 +923,15 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle(),
         .taskHandle = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
         .asyncRxStart = test_pmic_asyncRxStart,
         .asyncTxStart = test_pmic_asyncTxStart,
         .asyncRxAwait = test_pmic_asyncRxAwait,
         .asyncTxAwait = test_pmic_asyncTxAwait,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop,
-        .irqResponseCallback = platform_irqResponse
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
     };
 
     status = Pmic_init(&asyncHandle, &handleCfg);
@@ -992,15 +992,15 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle(),
         .taskHandle = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
         .asyncRxStart = test_pmic_asyncRxStart,
         .asyncTxStart = test_pmic_asyncTxStart,
         .asyncRxAwait = test_pmic_asyncRxAwait,
         .asyncTxAwait = test_pmic_asyncTxAwait,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop,
-        .irqResponseCallback = platform_irqResponse
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
     };
 
     status = Pmic_init(&asyncHandle, &handleCfg);
@@ -1061,15 +1061,15 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle(),
         .taskHandle = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
         .asyncRxStart = test_pmic_asyncRxStart,
         .asyncTxStart = test_pmic_asyncTxStart,
         .asyncRxAwait = test_pmic_asyncRxAwait,
         .asyncTxAwait = test_pmic_asyncTxAwait,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop,
-        .irqResponseCallback = platform_irqResponse
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
     };
 
     status = Pmic_init(&asyncHandle, &handleCfg);
@@ -1129,15 +1129,15 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle(),
         .taskHandle = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
         .asyncRxStart = test_pmic_asyncRxStart,
         .asyncTxStart = test_pmic_asyncTxStart,
         .asyncRxAwait = test_pmic_asyncRxAwait,
         .asyncTxAwait = test_pmic_asyncTxAwait,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop,
-        .irqResponseCallback = platform_irqResponse
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
     };
 
     status = Pmic_init(&asyncHandle, &handleCfg);
@@ -1519,10 +1519,10 @@ void test_neg_io_ioTxByte_nullAsyncHooks(void)
         .commMode = PMIC_INTF_SPI,
         .asyncEnable = true,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
         /* Async hooks are NULL */
     };
 
@@ -1681,6 +1681,7 @@ void io_test(void *args)
     int32_t status;
 
     platform_init();
+    testTimer_startModule("I/O");
     platform_setupTests();
 
     /* Initialize PMIC handle */
@@ -1695,10 +1696,10 @@ void io_test(void *args)
         .commMode = PMIC_INTF_SPI,
         .crcEnable = false,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     status = Pmic_init(&pmicHandle, &handleCfg);
@@ -1724,6 +1725,7 @@ void io_test(void *args)
     platform_printString("\r\n=== IO Module Tests ===\r\n");
     IO_TEST_RUN_ALL();
 
+    testTimer_endModule();
     Pmic_deinit(&pmicHandle);
     platform_tearDownTests();
     platform_deinit();

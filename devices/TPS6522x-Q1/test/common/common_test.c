@@ -34,6 +34,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include "platform.h"
 #include "common_test.h"
 #include "test_constants.h"
 
@@ -1814,6 +1815,7 @@ void common_test(void *args)
     };
 
     platform_init();
+    testTimer_startModule("Common");
 
     printf("\r\n");
     printf("==================================================\r\n");
@@ -1830,6 +1832,7 @@ void common_test(void *args)
 
     COMMON_TEST_RUN_ALL();
 
+    testTimer_endModule();
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 

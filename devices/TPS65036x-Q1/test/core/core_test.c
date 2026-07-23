@@ -57,6 +57,11 @@ static Pmic_Handle_t pmicHandle = {0U};
 
 static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle);
 
+static void testTimerWaitWrapper(uint32_t ms)
+{
+    platform_timerWaitMs((uint16_t)ms);
+}
+
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
@@ -65,6 +70,9 @@ void core_test(void *args)
 {
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_I2C_ADDR0_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
@@ -72,17 +80,19 @@ void core_test(void *args)
                         PMIC_IO_WRITE_VALID |
                         PMIC_CRITICAL_SECTION_START_VALID |
                         PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop,
-        .irqResponseCallback = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse,
+        .timerWaitMs = &testTimerWaitWrapper
     };
 
-    platform_init();
+    testTimer_startModule("Core");
 
     platform_printString("\r\n");
     platform_printString("CORE_TEST\r\n");
@@ -119,6 +129,8 @@ void core_test(void *args)
         (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
         platform_printString(msg);
     }
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();

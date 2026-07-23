@@ -35,6 +35,13 @@
 
 
 
+/**
+ * @brief Platform part number.
+ */
+#ifndef PART_TM4C123GH6PM
+#define PART_TM4C123GH6PM
+#endif
+
 /* ========================================================================= */
 /*                              Include Files                                */
 /* ========================================================================= */
@@ -53,55 +60,26 @@
 #include "pmic.h"
 
 /**
+ * @brief Platform-specific include(s).
+ */
+#if defined(BUILD_MOCK)
+/* Mock mode: platform_mock.h included at end after function declarations */
+#elif defined(BUILD_HOST)
+/* Host mode: No hardware-specific includes needed */
+/* Serial communication handled by platform_serial.h */
+#endif
+
+/**
  * @brief Testing framework include(s).
  */
 #include "unity.h"
+#include "test_filter.h"
+#include "test_timer.h"
 
-/**
- * @brief Conditional platform-specific includes.
- *
- * In mock mode, we don't need hardware-specific headers.
- * In hardware mode, we need TM4C123 driver library headers.
- */
-#ifdef BUILD_MOCK
-    /* Mock mode - no hardware headers needed */
-    /* Mock-specific function prototypes */
-    extern int32_t test_pmic_regRead(const Pmic_Handle_t *handle, uint8_t page,
-                                     uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_regWrite(const Pmic_Handle_t *handle, uint8_t page,
-                                      uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_asyncRxStart(const Pmic_Handle_t *handle, uint8_t page,
-                                          uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_asyncTxStart(const Pmic_Handle_t *handle, uint8_t page,
-                                          uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_asyncRxAwait(const Pmic_Handle_t *handle);
-    extern int32_t test_pmic_asyncTxAwait(const Pmic_Handle_t *handle);
-#else
-    /* Hardware mode - TM4C123 platform part number */
-    #ifndef PART_TM4C123GH6PM
-    #define PART_TM4C123GH6PM
-    #endif
-
-    /* Platform-specific include(s) */
-    #include "driverlib/fpu.h"
-    #include "driverlib/gpio.h"
-    #include "driverlib/i2c.h"
-    #include "driverlib/ssi.h"
-    #include "driverlib/pin_map.h"
-    #include "driverlib/sysctl.h"
-    #include "driverlib/timer.h"
-    #include "driverlib/uart.h"
-    #include "driverlib/interrupt.h"
-    #include "driverlib/systick.h"
-    #include "driverlib/udma.h"
-    #include "inc/hw_memmap.h"
-    #include "inc/tm4c123gh6pm.h"
-    #include "inc/hw_ssi.h"
-    #include "utils/cpu_usage.h"
-#endif /* BUILD_MOCK */
-
-#ifdef __cplusplus
-extern "C" {
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
 #endif
 
 /* ========================================================================= */
@@ -111,12 +89,8 @@ extern "C" {
 /**
  * @brief PMIC-related information.
  */
-#if defined(USE_LEO_CUSTOMER)
-#define PLATFORM_I2C_ADDR_MAIN      (0x28U)
-#define PLATFORM_I2C_ADDR_SECONDARY (0x12U)
-#else
-#define PLATFORM_I2C_ADDR_MAIN      (0x60U)
-#define PLATFORM_I2C_ADDR_SECONDARY (0x00U)
+#ifndef PLATFORM_TARGET_I2C_ADDR
+#define PLATFORM_TARGET_I2C_ADDR    (0x60U)
 #endif
 
 /**
@@ -125,14 +99,72 @@ extern "C" {
 #define PLATFORM_INVALID_VALUE      (0x00U)
 
 /**
- * @brief Macros/defines relating to testing framework.
+ * @brief I2C address configuration for TPS6522x-Q1
+ *
+ * TPS6522x-Q1 supports dual I2C addresses (main + secondary)
  */
-#define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
+#define PLATFORM_I2C_ADDR_MAIN      (0x60U)
+#define PLATFORM_I2C_ADDR_SECONDARY (0x00U)
+
+/* ========================================================================= */
+/*                        Module Name Tracking                               */
+/* ========================================================================= */
+
+/**
+ * @brief Current module name for test result prefixes
+ */
+extern const char* g_currentModuleName;
+
+/**
+ * @brief Set the current module name for test result prefixes
+ * @param moduleName The module name to use as a prefix (e.g., "ESM", "WDG")
+ *
+ * @note Internal use only - called automatically by testTimer_startModule().
+ *       Test code should use testTimer_startModule() instead of calling this directly.
+ */
+void platform_setModuleName(const char* moduleName);
+
+/**
+ * @brief Macros/defines relating to testing framework.
+ *
+ * PLATFORM_RUN_TEST wraps Unity's RUN_TEST with test filtering and (on hardware)
+ * TEST_PROTECT to catch assertion failures. Test filtering allows selective
+ * test execution via environment variables without recompilation.
+ *
+ * Filtering is controlled by:
+ * - PMIC_TEST_MODULES: Comma-separated module list (e.g., "irq,power")
+ * - PMIC_TEST_FILTER: Wildcard pattern (e.g., "*mask*", "test_pos_*")
+ * - PMIC_TEST_GROUPS: "positive", "negative", or "all"
+ *
+ * Note: platform_mock.h may have already defined PLATFORM_RUN_TEST, so we
+ * undefine it first to ensure our filtered version is used.
+ */
+#ifdef PLATFORM_RUN_TEST
+#undef PLATFORM_RUN_TEST
+#endif
+
+#if defined(BUILD_MOCK) || defined(BUILD_HOST)
+    /* Mock/Host build: Use standard RUN_TEST with filtering */
+    #define PLATFORM_RUN_TEST(test) \
+        do { \
+            if (testFilter_shouldRunTestWithGroup(#test)) { \
+                testTimer_startTest(#test); \
+                if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
+                RUN_TEST(test); \
+                testTimer_endTest(); \
+            } \
+        } while(0)
+#endif
+
 #define PLATFORM_ASSERT(condition)  TEST_ASSERT(condition)
 
 /* ========================================================================= */
 /*                           Function Declarations                           */
 /* ========================================================================= */
+
+#if !defined(BUILD_MOCK)
+/* Function declarations (for BUILD_HOST and legacy hardware builds) */
+/* BUILD_MOCK provides these as macros in platform_mock.h */
 
 /**
  * @brief Initialize platform and its peripherals for testing LLD.
@@ -209,20 +241,19 @@ void *platform_getCommHandle(void);
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Page number for register access.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
- * @param buffer [IN] Data to write to PMIC.
+ * @param pTxBuf [IN] Data to write to PMIC.
  *
  * @param bufLen [IN] Number of bytes to transmit. That is to say, Length of
- * `txBuf`.
+ * `pTxBuf`.
  *
- * @return Success code if `bufLen` bytes have been written to PMIC, error code
+ * @return Success code if `txBuf` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t platform_txByte(const struct Pmic_Handle_s *handle,
+int32_t platform_txByte(const Pmic_Handle_t *handle,
                         uint8_t page,
                         uint8_t regAddr,
                         const uint8_t *buffer,
@@ -231,156 +262,26 @@ int32_t platform_txByte(const struct Pmic_Handle_s *handle,
 /**
  * @brief Platform-specific API to read one or multiple bytes from PMIC.
  *
- * @param handle [IN] PMIC interface handle.
+ * @param pmicCorehandle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Page number for register access.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
- * @param buffer [OUT] For I2C, data obtained from PMIC. For SPI, data to be
- * written then overwritten.
+ * @param pRxBuf [OUT] Data obtained from PMIC.
  *
  * @param bufLen [IN] Number of bytes to read from PMIC. That is to say, length
- * of `rxBuf`.
+ * of `pRxBuf`.
  *
  * @return Success code if `bufLen` bytes have been obtained from the PMIC,
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes.
  */
-int32_t platform_rxByte(const struct Pmic_Handle_s *handle,
+int32_t platform_rxByte(const Pmic_Handle_t *handle,
                         uint8_t page,
                         uint8_t regAddr,
                         uint8_t *buffer,
                         uint8_t bufLen);
-
-/**
- * @brief Start asynchronous read transfer.
- *
- * @details This API configures and triggers the DMA engine to execute a read
- * transfer. A single transfer can involve the transfer of more than one byte,
- * all handled asynchronously by the DMA while the CPU can execute other
- * instructions or routines.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Target PMIC register address.
- *
- * @param buffer [IN] For I2C, received data is stored at this location. For
- * SPI, this buffer is written first and then later overwritten via DMA.
- *
- * @param bufLen [IN] For I2C, number of bytes to be read from target address.
- * For SPI, number of bytes to transfer (write and read).
- *
- * @return PMIC_ST_SUCCESS if asynchronous transfer has been initiated, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t platform_asyncRxStart(const struct Pmic_Handle_s *handle,
-                              uint16_t regAddr,
-                              uint8_t *buffer,
-                              uint8_t bufLen);
-
-/**
- * @brief Start asynchronous write transfer.
- *
- * @details This API configures and triggers the DMA engine to execute a write
- * transfer. A single transfer can involve the transfer of more than one byte,
- * all handled asynchronously by the DMA while the CPU can execute other
- * instructions or routines.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @param regAddr [IN] Target PMIC register address.
- *
- * @param buffer [IN] Data to be written.
- *
- * @param bufLen [IN] Number of bytes to be transmitted to the target address.
- *
- * @return PMIC_ST_SUCCESS if asynchronous transfer has been initiated, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t platform_asyncTxStart(const struct Pmic_Handle_s *handle,
-                              uint16_t regAddr,
-                              const uint8_t *buffer,
-                              uint8_t bufLen);
-
-/**
- * @brief Await read transfer to be complete. An optional callback will be
- * invoked towards the end of the API routine.
- *
- * @details This API puts the CPU to sleep and waits for the transfer initiated
- * by platform_asyncRxStart() to complete. The CPU will wake once the transfer is
- * complete.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @return PMIC_ST_SUCCESS if the asynchronous transfer has been awaited, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t platform_asyncRxAwait(const struct Pmic_Handle_s *handle);
-
-/**
- * @brief Await write transfer to be complete.
- *
- * @details This API puts the CPU to sleep and waits for the transfer initiated
- * by platform_asyncTxStart() to complete. The CPU will wake once the transfer is
- * complete.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @return PMIC_ST_SUCCESS if the asynchronous transfer has been awaited, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
- */
-int32_t platform_asyncTxAwait(const struct Pmic_Handle_s *handle);
-
-/**
- * @brief Initiates platform monitoring.
- *
- * @details This API starts the system tick so that CPU usage can be monitored.
- */
-void platform_startSysMonitor(void);
-
-/**
- * @brief Stops platform monitoring.
- *
- * @details This API stops the system tick.
- */
-void platform_stopSysMonitor(void);
-
-/**
- * @brief Get the duration (in seconds) in which the system has been monitored.
- *
- * @attention The application must initialize the system tick via
- * platform_startSysMonitor() API.
- *
- * @return Number of seconds in which the system has been monitored.
- */
-uint32_t platform_getSysMonitorTime(void);
-
-/**
- * @brief Sets the system monitor time value.
- *
- * @param val [IN] Desired value to set the system monitor time to be (seconds).
- */
-void platform_setSysMonitorTime(uint32_t val);
-
-/**
- * @brief Gets the integer part of CPU usage.
- *
- * @attention The application must initialize the system tick via
- * platform_startSysMonitor() API.
- *
- * @return Integer part of CPU usage.
- */
-uint32_t platform_getCpuUsageInteger(void);
-
-/**
- * @brief Gets the CPU usage from the system monitor in raw form.
- *
- * @return Raw CPU usage, where the most significant 16 bits is the integer part
- * and least significant 16 bits is the decimal part.
- */
-uint32_t platform_getCpuUsageRaw(void);
 
 /**
  * @brief Unlock PMIC registers for testing.
@@ -392,9 +293,24 @@ uint32_t platform_getCpuUsageRaw(void);
  */
 void platform_unlockRegisters(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+/**
+ * @brief Execute test callback with platform-appropriate behavior
+ *
+ * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
+ *          Mock: Single execution, no waits
+ *          Host: Single execution, no waits
+ *
+ * @param testCallback Function that executes all test suites
+ */
+void platform_runTestLoop(void (*testCallback)(void));
+
+#endif /* !BUILD_MOCK - End of function declarations */
+
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  }
+  #endif /* __cplusplus */
+#endif /* !BUILD_MOCK && !BUILD_HOST */
 
 /**
  * @brief Include mock-specific overrides when BUILD_MOCK is defined
@@ -404,7 +320,22 @@ void platform_unlockRegisters(void);
  * issues that occur when using the mock backend.
  */
 #ifdef BUILD_MOCK
+    /* Undefine macros that platform_mock.h will redefine */
+    #ifdef PLATFORM_TARGET_I2C_ADDR
+    #undef PLATFORM_TARGET_I2C_ADDR
+    #endif
+    #ifdef PLATFORM_RUN_TEST
+    #undef PLATFORM_RUN_TEST
+    #endif
     #include "platform_mock.h"
+
+    /* Async test helper functions (TPS6522x-specific) */
+    extern int32_t test_pmic_asyncRxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                          uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_asyncTxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                          uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+    extern int32_t test_pmic_asyncRxAwait(const Pmic_Handle_t *handle);
+    extern int32_t test_pmic_asyncTxAwait(const Pmic_Handle_t *handle);
 #endif
 
 #endif /* PMIC_TEST_PLATFORM_H */

@@ -76,6 +76,7 @@ static void mockTimerWait(uint32_t ms)
 void pmic_test(void *args)
 {
     platform_init();
+    testTimer_startModule("PMIC");
 
     printf("\r\n");
     printf("==================================================\r\n");
@@ -85,6 +86,7 @@ void pmic_test(void *args)
     /* Run all PMIC tests */
     PMIC_TEST_RUN_ALL();
 
+    testTimer_endModule();
     platform_deinit();
 
     printf("\r\n==================================================\r\n");
@@ -105,10 +107,10 @@ static void initTestHandleCfg(Pmic_HandleCfg_t *pmicCfg)
                            PMIC_CRITICAL_SECTION_STOP_VALID;
     pmicCfg->commMode = PMIC_INTF_SPI;
     pmicCfg->commHandle0 = (void*)&dummyCommHandle;
-    pmicCfg->ioRead = &test_pmic_regRead;
-    pmicCfg->ioWrite = &test_pmic_regWrite;
-    pmicCfg->criticalSectionStart = &test_pmic_criticalSectionStartFn;
-    pmicCfg->criticalSectionStop = &test_pmic_criticalSectionStopFn;
+    pmicCfg->ioRead = &platform_rxByte;
+    pmicCfg->ioWrite = &platform_txByte;
+    pmicCfg->criticalSectionStart = &platform_critSecStart;
+    pmicCfg->criticalSectionStop = &platform_critSecStop;
 }
 
 /* ========================================================================== */
@@ -275,7 +277,7 @@ void test_neg_pmic_checkHandle_invalidInitStat(void)
     handle.drvInitStat = 0x00000000U;
     handle.commMode = PMIC_INTF_SPI;
     handle.commHandle0 = NULL;
-    handle.ioRead = &test_pmic_regRead;
+    handle.ioRead = &platform_rxByte;
 
     int32_t status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
@@ -371,10 +373,10 @@ void test_pos_pmic_init_withAllCallbacks(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Verify all callbacks are stored */
-    PLATFORM_ASSERT(handle.ioRead == &test_pmic_regRead);
-    PLATFORM_ASSERT(handle.ioWrite == &test_pmic_regWrite);
-    PLATFORM_ASSERT(handle.criticalSectionStart == &test_pmic_criticalSectionStartFn);
-    PLATFORM_ASSERT(handle.criticalSectionStop == &test_pmic_criticalSectionStopFn);
+    PLATFORM_ASSERT(handle.ioRead == &platform_rxByte);
+    PLATFORM_ASSERT(handle.ioWrite == &platform_txByte);
+    PLATFORM_ASSERT(handle.criticalSectionStart == &platform_critSecStart);
+    PLATFORM_ASSERT(handle.criticalSectionStop == &platform_critSecStop);
 
     (void)Pmic_deinit(&handle);
 }
@@ -552,7 +554,7 @@ void test_pos_pmic_checkHandle_detectsUninit(void)
 
     /* Uninitialized handle should fail validation */
     handle.commHandle0 = NULL;
-    handle.ioRead = &test_pmic_regRead;
+    handle.ioRead = &platform_rxByte;
     handle.drvInitStat = 0x00U;  /* Missing magic */
 
     int32_t status = Pmic_checkHandle(&handle);
@@ -581,7 +583,7 @@ void test_pos_pmic_checkHandle_detectsMissingCommHandle(void)
     handle.drvInitStat = PMIC_INIT_TEST_EXPECTED_STAT;
     handle.commMode = PMIC_INTF_SPI;
     handle.commHandle0 = NULL;  /* Missing */
-    handle.ioRead = &test_pmic_regRead;
+    handle.ioRead = &platform_rxByte;
 
     int32_t status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -660,10 +662,10 @@ void test_pos_pmic_init_minimalConfig(void)
     pmicCfg.validParams = PMIC_COMM_MODE_VALID | PMIC_COMM_HANDLE_0_VALID | PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID | PMIC_CRITICAL_SECTION_START_VALID | PMIC_CRITICAL_SECTION_STOP_VALID;
     pmicCfg.commMode = PMIC_INTF_SPI;
     pmicCfg.commHandle0 = platform_getCommHandle();
-    pmicCfg.ioRead = &test_pmic_regRead;
-    pmicCfg.ioWrite = &test_pmic_regWrite;
-    pmicCfg.criticalSectionStart = &test_pmic_criticalSectionStartFn;
-    pmicCfg.criticalSectionStop = &test_pmic_criticalSectionStopFn;
+    pmicCfg.ioRead = &platform_rxByte;
+    pmicCfg.ioWrite = &platform_txByte;
+    pmicCfg.criticalSectionStart = &platform_critSecStart;
+    pmicCfg.criticalSectionStop = &platform_critSecStop;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1061,7 +1063,7 @@ void test_pos_pmic_checkHandle_comprehensive(void)
     /* Test 2: NULL commHandle0 (line 230) */
     handle.commMode = PMIC_INTF_SPI;
     handle.commHandle0 = NULL;
-    handle.ioRead = &test_pmic_regRead;
+    handle.ioRead = &platform_rxByte;
     handle.drvInitStat = PMIC_INIT_TEST_EXPECTED_STAT;
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -1075,17 +1077,17 @@ void test_pos_pmic_checkHandle_comprehensive(void)
 
     /* Test 4: Invalid drvInitStat (line 238) */
     handle.commHandle0 = (void *)TEST_DUMMY_HANDLE;  /* Non-NULL */
-    handle.ioRead = &test_pmic_regRead;
+    handle.ioRead = &platform_rxByte;
     handle.drvInitStat = TEST_INVALID_MAGIC;  /* Invalid magic */
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
 
     /* Test 5: Valid handle passes all checks */
     handle.commHandle0 = (void *)TEST_DUMMY_HANDLE;  /* Non-NULL */
-    handle.ioRead = &test_pmic_regRead;
-    handle.ioWrite = &test_pmic_regWrite;
-    handle.criticalSectionStart = &test_pmic_criticalSectionStartFn;
-    handle.criticalSectionStop = &test_pmic_criticalSectionStopFn;
+    handle.ioRead = &platform_rxByte;
+    handle.ioWrite = &platform_txByte;
+    handle.criticalSectionStart = &platform_critSecStart;
+    handle.criticalSectionStop = &platform_critSecStop;
     handle.drvInitStat = PMIC_INIT_TEST_EXPECTED_STAT;
     status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

@@ -35,7 +35,13 @@
 /* ========================================================================== */
 
 #include "common_test.h"
+
+static void testTimerWaitWrapper(uint32_t ms)
+{
+    platform_timerWaitMs((uint16_t)ms);
+}
 #include "test_constants.h"
+
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -1758,6 +1764,8 @@ void common_test(void *args)
     (void)args;
     int32_t status = PMIC_ST_SUCCESS;
 
+    platform_init();
+
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_I2C_ADDR0_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
@@ -1765,17 +1773,19 @@ void common_test(void *args)
                         PMIC_IO_WRITE_VALID |
                         PMIC_CRITICAL_SECTION_START_VALID |
                         PMIC_CRITICAL_SECTION_STOP_VALID |
-                        PMIC_IRQ_RESPONSE_CALLBACK_VALID),
+                        PMIC_IRQ_RESPONSE_CALLBACK_VALID |
+                        PMIC_TIMER_WAIT_MS_VALID),
         .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop,
-        .irqResponseCallback = &platform_irqResponse
+        .irqResponseCallback = &platform_irqResponse,
+        .timerWaitMs = &testTimerWaitWrapper
     };
 
-    platform_init();
+    testTimer_startModule("Common");
 
     printf("\r\n");
     printf("==================================================\r\n");
@@ -1791,6 +1801,8 @@ void common_test(void *args)
     }
 
     COMMON_TEST_RUN_ALL();
+
+    testTimer_endModule();
 
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();

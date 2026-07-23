@@ -1170,6 +1170,7 @@ void wdg_test(void *args)
     int32_t status;
 
     platform_init();
+    testTimer_startModule("WDG");
     platform_setupTests();
 
     /* Initialize PMIC handle */
@@ -1195,6 +1196,7 @@ void wdg_test(void *args)
     WDG_TEST_RUN_ALL();
 
     /* Cleanup */
+    testTimer_endModule();
     (void)Pmic_deinit(&pmicHandle);
     platform_tearDownTests();
     platform_deinit();

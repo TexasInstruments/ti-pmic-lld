@@ -80,6 +80,7 @@ void core_test(void *args)
     };
 
     platform_init();
+    testTimer_startModule("Core");
 
     platform_printString("\r\n");
     platform_printString("CORE_TEST\r\n");
@@ -108,6 +109,7 @@ void core_test(void *args)
         platform_printString(msg);
     }
 
+    testTimer_endModule();
     (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
 }

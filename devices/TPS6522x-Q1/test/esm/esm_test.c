@@ -764,6 +764,7 @@ void esm_test(void *args)
     int32_t status;
 
     platform_init();
+    testTimer_startModule("ESM");
     platform_setupTests();
 
     /* Initialize PMIC handle */
@@ -776,10 +777,10 @@ void esm_test(void *args)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = platform_getCommHandle(),
-        .ioRead = platform_rxByte,
-        .ioWrite = platform_txByte,
-        .criticalSectionStart = platform_critSecStart,
-        .criticalSectionStop = platform_critSecStop
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     status = Pmic_init(&pmicHandle, &handleCfg);
@@ -794,6 +795,7 @@ void esm_test(void *args)
     platform_printString("\r\n=== ESM Module Tests ===\r\n");
     ESM_TEST_RUN_ALL();
 
+    testTimer_endModule();
     Pmic_deinit(&pmicHandle);
     platform_tearDownTests();
     platform_deinit();

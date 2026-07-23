@@ -39,6 +39,22 @@
 #include "pmic_mock_core.h"
 #endif
 
+#ifndef BUILD_MOCK
+/**
+ * @brief Current module name for test result prefixes
+ */
+const char* g_currentModuleName = NULL;
+
+/**
+ * @brief Set the current module name for test result prefixes
+ * @param moduleName The module name to use as a prefix (e.g., "ESM", "WDG")
+ */
+void platform_setModuleName(const char* moduleName)
+{
+    g_currentModuleName = moduleName;
+}
+#endif /* BUILD_MOCK */
+
 /**
  * @brief Unity setUp function - called before each test
  */

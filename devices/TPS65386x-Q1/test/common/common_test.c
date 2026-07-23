@@ -1779,13 +1779,14 @@ void common_test(void *args)
                        PMIC_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,
-        .ioRead = &test_pmic_regRead,
-        .ioWrite = &test_pmic_regWrite,
-        .criticalSectionStart = &test_pmic_criticalSectionStartFn,
-        .criticalSectionStop = &test_pmic_criticalSectionStopFn
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
     };
 
     platform_init();
+    testTimer_startModule("Common");
 
     printf("\r\n");
     printf("==================================================\r\n");
@@ -1802,6 +1803,7 @@ void common_test(void *args)
 
     COMMON_TEST_RUN_ALL();
 
+    testTimer_endModule();
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 
