@@ -25,15 +25,30 @@ MOCK_LIB_SRCS = $(wildcard $(MOCK_DIR)/mock/*.c) \
                 $(wildcard $(MOCK_DIR)/behaviors/*.c) \
                 $(wildcard $(MOCK_DIR)/devices/*/*.c)
 
-# Auto-build mock library if needed.
-# Uses make's $(wildcard) function for Windows/Unix portability;
-# avoids POSIX shell constructs ([ ], find) that fail on cmd.exe.
+# Lock directory used as a cross-process mutex for the mock library build.
+# mkdir is atomic on Windows (Git Bash) and macOS/Linux: exactly one process
+# succeeds; the rest detect the existing directory and wait. This prevents the
+# ar rename race when multiple device test builds run in parallel.
+MOCK_LOCK_DIR = $(MOCK_DIR)/.mock_build_lock
+
 .PHONY: check-mock-lib
-ifeq ($(wildcard $(MOCK_LIB)),)
 check-mock-lib:
-	@echo "Mock library not found, building it..."
-	@"$(MAKE)" -C "$(MOCK_DIR)" CC=$(CC)
-else
-check-mock-lib:
-	@echo "Mock library up to date"
-endif
+	@if [ -f "$(MOCK_LIB)" ]; then \
+		rmdir "$(MOCK_LOCK_DIR)" 2>/dev/null; \
+		echo "Mock library up to date"; \
+	elif mkdir "$(MOCK_LOCK_DIR)" 2>/dev/null; then \
+		echo "Mock library not found, building it..."; \
+		if "$(MAKE)" -C "$(MOCK_DIR)" CC=$(CC) PMIC_LLD_DIR=$(abspath $(MOCK_DIR)/../pmic-lld); then \
+			rmdir "$(MOCK_LOCK_DIR)"; \
+		else \
+			rmdir "$(MOCK_LOCK_DIR)"; \
+			exit 1; \
+		fi; \
+	else \
+		echo "Waiting for mock library build..."; \
+		while [ -d "$(MOCK_LOCK_DIR)" ]; do sleep 1; done; \
+		if [ ! -f "$(MOCK_LIB)" ]; then \
+			echo "ERROR: Mock library build failed in another process" >&2; exit 1; \
+		fi; \
+		echo "Mock library ready"; \
+	fi

@@ -420,7 +420,7 @@ int32_t Pmic_irqClrFlag(const Pmic_Handle_t *handle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // Set the bit to 1 to clear (write-1-to-clear)
-        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1UL << pmicIRQs[irqNum].bitShift), true);
+        Pmic_setBitField_b(&regData, pmicIRQs[irqNum].bitShift, true);
         status = Pmic_ioTxByte_CS(handle, pmicIRQs[irqNum].statRegAddr, regData);
     }
 

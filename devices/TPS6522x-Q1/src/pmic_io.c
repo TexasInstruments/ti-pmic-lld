@@ -188,14 +188,13 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t i2cAddr = 0U;
     bool crcEnabled = (bool)false;
+    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS)
     {
         return status;
     }
-
-    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     if (page == PMIC_PAGE_WDG)
     {
@@ -317,6 +316,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t i2cAddr = 0U;
     bool crcEnabled = (bool)false;
+    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS)
@@ -328,8 +328,6 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
     {
         return PMIC_ST_ERR_NULL_PARAM;
     }
-
-    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
 
     if (page == PMIC_PAGE_WDG)
     {
@@ -531,11 +529,11 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, const Pmic_IoCrcCfg_t *c
     {
         if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_0_VALID))
         {
-            Pmic_setBitField_b(&regData, I2C1_SPI_CRC_EN_SHIFT, I2C1_SPI_CRC_EN_MASK, cfg->crcEnable0);
+            Pmic_setBitField_b(&regData, I2C1_SPI_CRC_EN_SHIFT, cfg->crcEnable0);
         }
         if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_1_VALID))
         {
-            Pmic_setBitField_b(&regData, I2C2_CRC_EN_SHIFT, I2C2_CRC_EN_MASK, cfg->crcEnable1);
+            Pmic_setBitField_b(&regData, I2C2_CRC_EN_SHIFT, cfg->crcEnable1);
         }
 
         status = Pmic_ioTxByte(handle, CONFIG_2_REG, regData);

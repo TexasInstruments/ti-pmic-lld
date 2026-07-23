@@ -123,14 +123,14 @@ static int32_t CORE_configCrcValidate(const Pmic_Handle_t *handle)
     // Ensure clean rising edge on CONFIG_CRC_CALC
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_CALC_SHIFT))
     {
-        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, PMIC_CONFIG_CRC_CALC_MASK, (bool)false);
+        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, (bool)false);
         status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
     }
 
     // Assert CONFIG_CRC_CALC to trigger hardware CRC comparison
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, PMIC_CONFIG_CRC_CALC_MASK, (bool)true);
+        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_CALC_SHIFT, (bool)true);
         status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
     }
 
@@ -288,19 +288,19 @@ int32_t Pmic_setLpmCfg(const Pmic_Handle_t *handle, const Pmic_CoreLpmCfg_t *lpm
         // Modify LOWPWR_VMON_EN bit field
         if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_VMON_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_VMON_EN_SHIFT, PMIC_LOWPWR_VMON_EN_MASK, localCfg.vmonEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_VMON_EN_SHIFT, localCfg.vmonEn);
         }
 
         // Modify LOWPWR_ESM_EN bit field
         if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_ESM_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_ESM_EN_SHIFT, PMIC_LOWPWR_ESM_EN_MASK, localCfg.esmEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_ESM_EN_SHIFT, localCfg.esmEn);
         }
 
         // Modify LOWPWR_WD_EN bit field
         if (Pmic_validParamCheck(localCfg.validParams, PMIC_CFG_CORE_LPM_WDG_EN_VALID))
         {
-            Pmic_setBitField_b(&regData, PMIC_LOWPWR_WD_EN_SHIFT, PMIC_LOWPWR_WD_EN_MASK, localCfg.wdgEn);
+            Pmic_setBitField_b(&regData, PMIC_LOWPWR_WD_EN_SHIFT, localCfg.wdgEn);
         }
     }
 
@@ -484,7 +484,7 @@ int32_t Pmic_setPwrOn(const Pmic_Handle_t *handle, bool pwrOn)
     // Modify PWR_ON bit field and write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_PWR_ON_SHIFT, PMIC_PWR_ON_MASK, pwrOn);
+        Pmic_setBitField_b(&regData, PMIC_PWR_ON_SHIFT, pwrOn);
 
         status = Pmic_ioTxByte(handle, PMIC_FUNC_CONF_REG, regData);
     }
@@ -675,7 +675,6 @@ int32_t Pmic_configCrcCalculate(const Pmic_Handle_t *handle)
 int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (calculate == PMIC_CFG_CRC_RECALCULATE))
     {
@@ -693,7 +692,6 @@ int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate)
 int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     if (status == PMIC_ST_SUCCESS)
     {

@@ -83,7 +83,7 @@ static int32_t ESM_setModeCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *
     // Modify ESM_MCU_EN bit field
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_ESM_MCU_EN_SHIFT, PMIC_ESM_MCU_EN_MASK, esmCfg->enable);
+        Pmic_setBitField_b(&regData, PMIC_ESM_MCU_EN_SHIFT, esmCfg->enable);
     }
 
     // Modify ESM_MCU_ERR_CNT_TH bit field
@@ -479,7 +479,7 @@ int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify ESM_MCU_START bit
-            Pmic_setBitField_b(&regData, PMIC_ESM_MCU_START_SHIFT, PMIC_ESM_MCU_START_MASK, start);
+            Pmic_setBitField_b(&regData, PMIC_ESM_MCU_START_SHIFT, start);
 
             // Write new register value back to PMIC
             status = Pmic_ioTxByte(handle, PMIC_ESM_START_REG_REG, regData);

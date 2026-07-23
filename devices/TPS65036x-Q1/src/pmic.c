@@ -375,7 +375,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
     // Set the driver initialization status (only if handle is valid)
     if (handle != NULL)
     {
-        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : (uint32_t)(~PMIC_DRV_INIT_SUCCESS);
     }
 
     return status;

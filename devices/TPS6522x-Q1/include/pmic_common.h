@@ -491,7 +491,7 @@ typedef struct Pmic_Diagnostic_s {
  *
  * @return True if validParam is set, false if validParam is not set.
  */
-static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
+static inline bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
     return ((validParams & bitMask) != 0U);
 }
 
@@ -530,7 +530,7 @@ static inline bool Pmic_validParamStatusCheck(uint32_t validParams, uint32_t bit
  * @param value [IN] Desired bit field value.
  */
 static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value) {
-    *regData = (((*regData) & (~mask)) | ((value << shift) & mask));
+    *regData = ((*regData & ~mask) | ((value << shift) & mask));
 }
 
 /**
@@ -545,14 +545,11 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
  *
  * @param shift [IN] Target bit field position.
  *
- * @param mask [IN] Target bit field mask.
- *
  * @param value [IN] Desired bit field value. When parameter set to true,
  * bit field value will be set to 1. Otherwise, bit field value will be set to 0.
  */
-static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t mask, bool value) {
-    const uint8_t val = value ? 1U : 0U;
-    *regData = (((*regData) & (~mask)) | ((val << shift) & mask));
+static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value) {
+    Pmic_setBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U)), value ? 1U : 0U);
 }
 
 /**
@@ -562,7 +559,7 @@ static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t m
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-521, PMICDRV-522
  *               PMICDRV-549
  *
- * @param data [IN] Data to extract bit field from.
+ * @param regData [IN] Data to extract bit field from.
  *
  * @param shift [IN] Target bit field position.
  *
@@ -570,8 +567,8 @@ static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t m
  *
  * @return Desired bit field value.
  */
-static inline uint8_t Pmic_getBitField(uint8_t data, uint8_t shift, uint8_t mask) {
-    return ((data & mask) >> shift);
+static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask) {
+    return ((regData & mask) >> shift);
 }
 
 /**
@@ -581,15 +578,14 @@ static inline uint8_t Pmic_getBitField(uint8_t data, uint8_t shift, uint8_t mask
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-507, PMICDRV-516, PMICDRV-521, PMICDRV-522
  *               PMICDRV-549
  *
- * @param data [IN] Data to extract bit field from.
+ * @param regData [IN] Data to extract bit field from.
  *
  * @param shift [IN] Target bit field position.
  *
  * @return Desired bit field value cast as a boolean.
  */
-static inline bool Pmic_getBitField_b(uint8_t data, uint8_t shift) {
-    const uint8_t bitVal = ((data & (uint8_t)(1U << (shift & 0x07U))) >> shift);
-    return (bitVal == 1U);
+static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift) {
+    return Pmic_getBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U))) == 1U;
 }
 
 /**

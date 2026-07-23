@@ -632,7 +632,6 @@ int32_t Pmic_fsmGetCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 int32_t Pmic_fsmSetDevErrCnt(const Pmic_Handle_t *handle, uint8_t devErrCnt)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (devErrCnt > PMIC_DEV_ERR_CNT_MAX))
     {

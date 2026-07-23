@@ -426,7 +426,7 @@ typedef struct Pmic_Diagnostic_s {
  *
  * @return True if validParams is set, false if validParam is not set.
  */
-static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask)
+static inline bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask)
 {
     return ((validParams & bitMask) != 0U);
 }
@@ -551,7 +551,7 @@ static inline void Pmic_timerWaitMs(const Pmic_Handle_t *handle, uint32_t ms)
 static inline void Pmic_setBitField(
     uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
 {
-    *regData = (((*regData) & (~mask)) | ((value << shift) & mask));
+    *regData = ((*regData & ~mask) | ((value << shift) & mask));
 }
 
 /**
@@ -566,17 +566,12 @@ static inline void Pmic_setBitField(
  *
  * @param shift [IN] Target bit field position.
  *
- * @param mask [IN] Target bit field mask.
- *
  * @param value [IN] Desired bit field value. When parameter set to true,
  * bit field value will be set to 1. Otherwise, bit field value will be set to 0.
  */
-static inline void Pmic_setBitField_b(
-    uint8_t *regData, uint8_t shift, uint8_t mask, bool value)
+static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value)
 {
-    const uint8_t fieldVal = value ? 1U : 0U;
-
-    *regData = (((*regData) & (~mask)) | ((fieldVal << shift) & mask));
+    Pmic_setBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U)), value ? 1U : 0U);
 }
 
 /**
@@ -588,15 +583,15 @@ static inline void Pmic_setBitField_b(
  *
  * @param regData [IN] Register data/value.
  *
- * @param regFieldShift [IN] Target bit field position.
+ * @param shift [IN] Target bit field position.
  *
- * @param regFieldMask [IN] Target bit field mask.
+ * @param mask [IN] Target bit field mask.
  *
  * @return Desired bit field value.
  */
-static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, uint8_t regFieldMask)
+static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
 {
-    return ((regData & regFieldMask) >> regFieldShift);
+    return ((regData & mask) >> shift);
 }
 
 /**
@@ -609,15 +604,13 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, u
  *
  * @param regData [IN] Register data/value.
  *
- * @param regFieldShift [IN] Target bit field position.
+ * @param shift [IN] Target bit field position.
  *
  * @return Desired bit field value cast as a boolean.
  */
-static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
+static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {
-    const uint8_t bitVal = ((regData & (uint8_t)(1U << (regFieldShift & 0x07U))) >> regFieldShift);
-
-    return (bitVal == 1U);
+    return Pmic_getBitField(regData, shift, (uint8_t)(1U << (shift & 0x07U))) == 1U;
 }
 
 /**

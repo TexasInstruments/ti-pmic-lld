@@ -83,13 +83,13 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
     // Set resistor divider enable
     if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_RDIV_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, ADC_RDIV_EN_SHIFT, ADC_RDIV_EN_MASK, adcCfgLocal.rDivEn);
+        Pmic_setBitField_b(&regData, ADC_RDIV_EN_SHIFT, adcCfgLocal.rDivEn);
     }
 
     // Set continuous conversion enable
     if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_CONT_CONV_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, ADC_CONT_CONV_SHIFT, ADC_CONT_CONV_MASK, adcCfgLocal.contConvEn);
+        Pmic_setBitField_b(&regData, ADC_CONT_CONV_SHIFT, adcCfgLocal.contConvEn);
     }
 
     // Set ADC source select
@@ -191,7 +191,7 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
     // Set ADC_START bit to start conversion
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, ADC_START_SHIFT, ADC_START_MASK, true);
+        Pmic_setBitField_b(&regData, ADC_START_SHIFT, true);
         status = Pmic_ioTxByte(handle, ADC_CTRL_REG, regData);
     }
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
@@ -225,7 +225,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
     // Set ADC_START bit to start conversion
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, ADC_START_SHIFT, ADC_START_MASK, true);
+        Pmic_setBitField_b(&regData, ADC_START_SHIFT, true);
         status = Pmic_ioTxByte_CS(handle, ADC_CTRL_REG, regData);
     }
 

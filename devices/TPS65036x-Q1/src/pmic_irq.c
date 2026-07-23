@@ -236,7 +236,7 @@ static int32_t IRQ_setMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool sho
 
     if (status == PMIC_ST_SUCCESS) {
         // Modify IRQ mask bit field and write new register value back to PMIC
-        Pmic_setBitField_b(&regData, irqMaskBitShift, (uint8_t)(1UL << irqMaskBitShift), shouldMask);
+        Pmic_setBitField_b(&regData, irqMaskBitShift, shouldMask);
         status = Pmic_ioTxByte(handle, irqMaskRegAddr, regData);
     }
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);

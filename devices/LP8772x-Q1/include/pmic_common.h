@@ -39,6 +39,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -423,7 +424,7 @@ typedef struct Pmic_Diagnostic_s {
  *
  * @return True if validParam is set, false if validParam is not set.
  */
-static bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
+static inline bool Pmic_validParamCheck(uint32_t validParams, uint32_t bitMask) {
     return ((validParams & bitMask) != 0U);
 }
 

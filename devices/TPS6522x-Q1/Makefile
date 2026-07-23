@@ -90,6 +90,8 @@ ifeq ($(build), release)
     TARGET = $(LIB_DIR)/libpmic.$(LIB_EXT)
 endif
 
+CFLAGS += $(CFLAGS_EXTRA)
+
 SOURCES = \
 	src/pmic.c \
 	src/pmic_adc.c \

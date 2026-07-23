@@ -283,17 +283,17 @@ static int32_t Pmic_wdgSetModeReg(const Pmic_Handle_t *handle, const Pmic_WdgCfg
     {
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_MODE_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_MODE_SELECT_SHIFT, WD_MODE_SELECT_MASK, (wdgCfg->mode != 0U));
+            Pmic_setBitField_b(&regData, WD_MODE_SELECT_SHIFT, (wdgCfg->mode != 0U));
         }
 
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CNT_SEL_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_CNT_SEL_SHIFT, WD_CNT_SEL_MASK, (wdgCfg->cntSel != 0U));
+            Pmic_setBitField_b(&regData, WD_CNT_SEL_SHIFT, (wdgCfg->cntSel != 0U));
         }
 
         if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_CLR_EN_DRV_ON_FAIL_INT_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_ENDRV_SEL_SHIFT, WD_ENDRV_SEL_MASK, wdgCfg->clrEnDrvOnFailInt);
+            Pmic_setBitField_b(&regData, WD_ENDRV_SEL_SHIFT, wdgCfg->clrEnDrvOnFailInt);
         }
 
         status = Pmic_ioTxByte(handle, WD_MODE_REG_REG, regData);
@@ -362,7 +362,7 @@ static int32_t Pmic_wdgSetThrCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_
         {
             if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RST_EN_VALID))
             {
-                Pmic_setBitField_b(&regData, WD_RST_EN_SHIFT, WD_RST_EN_MASK, wdgCfg->rstEn);
+                Pmic_setBitField_b(&regData, WD_RST_EN_SHIFT, wdgCfg->rstEn);
             }
 
             if (Pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_FAIL_THR_VALID))
@@ -772,42 +772,42 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatu
         // Build the clear mask from validParams (write-1-to-clear)
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_RST_INT_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_RST_INT_SHIFT, WD_RST_INT_MASK, true);
+            Pmic_setBitField_b(&regData, WD_RST_INT_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_FAIL_INT_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_FAIL_INT_SHIFT, WD_FAIL_INT_MASK, true);
+            Pmic_setBitField_b(&regData, WD_FAIL_INT_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_ANSW_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_ANSW_ERR_SHIFT, WD_ANSW_ERR_MASK, true);
+            Pmic_setBitField_b(&regData, WD_ANSW_ERR_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_SEQ_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_SEQ_ERR_SHIFT, WD_SEQ_ERR_MASK, true);
+            Pmic_setBitField_b(&regData, WD_SEQ_ERR_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_ANSW_EARLY_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_ANSW_EARLY_SHIFT, WD_ANSW_EARLY_MASK, true);
+            Pmic_setBitField_b(&regData, WD_ANSW_EARLY_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_TRIG_EARLY_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_TRIG_EARLY_SHIFT, WD_TRIG_EARLY_MASK, true);
+            Pmic_setBitField_b(&regData, WD_TRIG_EARLY_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_TIMEOUT_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_TIMEOUT_SHIFT, WD_TIMEOUT_MASK, true);
+            Pmic_setBitField_b(&regData, WD_TIMEOUT_SHIFT, true);
         }
 
         if (Pmic_validParamCheck(wdgErrStatusLocal.validParams, PMIC_WDG_LONG_WIN_TIMEOUT_ERR_VALID))
         {
-            Pmic_setBitField_b(&regData, WD_LONGWIN_TIMEOUT_INT_SHIFT, WD_LONGWIN_TIMEOUT_INT_MASK, true);
+            Pmic_setBitField_b(&regData, WD_LONGWIN_TIMEOUT_INT_SHIFT, true);
         }
 
         status = Pmic_ioTxByte_CS(handle, WD_ERR_STATUS_REG, regData);

@@ -95,7 +95,7 @@ static int32_t ESM_setModeCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *
     // Modify ESM_MCU_ENDRV bit field
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_CLR_EN_DRV_ON_FAIL_INT_VALID, status))
     {
-        Pmic_setBitField_b(&regData, ESM_MCU_ENDRV_SHIFT, ESM_MCU_ENDRV_MASK, esmCfg->clrEnDrvOnFailInt);
+        Pmic_setBitField_b(&regData, ESM_MCU_ENDRV_SHIFT, esmCfg->clrEnDrvOnFailInt);
     }
 
     // Write new register value back to PMIC
@@ -248,7 +248,7 @@ int32_t Pmic_esmSetEnableState(const Pmic_Handle_t *handle, bool enable)
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify ESM_MCU_EN bit
-            Pmic_setBitField_b(&regData, ESM_MCU_EN_SHIFT, ESM_MCU_EN_MASK, enable);
+            Pmic_setBitField_b(&regData, ESM_MCU_EN_SHIFT, enable);
 
             // Write new register value back to PMIC
             status = Pmic_ioTxByte(handle, ESM_MCU_MODE_CFG_REG, regData);
@@ -298,7 +298,7 @@ int32_t Pmic_esmSetStartState(const Pmic_Handle_t *handle, bool start)
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify ESM_MCU_START bit
-            Pmic_setBitField_b(&regData, ESM_MCU_START_SHIFT, ESM_MCU_START_MASK, start);
+            Pmic_setBitField_b(&regData, ESM_MCU_START_SHIFT, start);
 
             // Write new register value back to PMIC
             status = Pmic_ioTxByte(handle, ESM_MCU_START_REG_REG, regData);

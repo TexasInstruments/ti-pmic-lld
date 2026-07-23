@@ -251,22 +251,22 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
 
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, BUCK_EN_SHIFT, BUCK_EN_MASK, buckCfg->buckEn);
+            Pmic_setBitField_b(&regData, BUCK_EN_SHIFT, buckCfg->buckEn);
         }
 
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, BUCK_PLDN_SHIFT, BUCK_PLDN_MASK, buckCfg->pldnEn);
+            Pmic_setBitField_b(&regData, BUCK_PLDN_SHIFT, buckCfg->pldnEn);
         }
 
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, BUCK_VMON_EN_SHIFT, BUCK_VMON_EN_MASK, buckCfg->vmonEn);
+            Pmic_setBitField_b(&regData, BUCK_VMON_EN_SHIFT, buckCfg->vmonEn);
         }
 
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, BUCK_FPWM_SHIFT, BUCK_FPWM_MASK, buckCfg->fpwmEn);
+            Pmic_setBitField_b(&regData, BUCK_FPWM_SHIFT, buckCfg->fpwmEn);
         }
 
         if (status == PMIC_ST_SUCCESS)
@@ -498,17 +498,17 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
 
         if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, LDO_EN_SHIFT, LDO_EN_MASK, ldoCfg->ldoEn);
+            Pmic_setBitField_b(&regData, LDO_EN_SHIFT, ldoCfg->ldoEn);
         }
 
         if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, LDO_VMON_EN_SHIFT, LDO_VMON_EN_MASK, ldoCfg->vmonEn);
+            Pmic_setBitField_b(&regData, LDO_VMON_EN_SHIFT, ldoCfg->vmonEn);
         }
 
         if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_DISCHARGE_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, LDO_DISCHARGE_EN_SHIFT, LDO_DISCHARGE_EN_MASK, ldoCfg->dischargeEn);
+            Pmic_setBitField_b(&regData, LDO_DISCHARGE_EN_SHIFT, ldoCfg->dischargeEn);
         }
 
         if (status == PMIC_ST_SUCCESS)
@@ -529,7 +529,7 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
 
         if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_BYP_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, LDO_BYP_CONFIG_SHIFT, LDO_BYP_CONFIG_MASK, ldoCfg->bypEn);
+            Pmic_setBitField_b(&regData, LDO_BYP_CONFIG_SHIFT, ldoCfg->bypEn);
         }
 
         if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VSET_VALID, status))
@@ -737,7 +737,7 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
 
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField_b(&regData, vmonEnShift, (uint8_t)(1UL << vmonEnShift), vccaVmonCfg->vmonEn);
+            Pmic_setBitField_b(&regData, vmonEnShift, vccaVmonCfg->vmonEn);
             status = Pmic_ioTxByte(handle, VCCA_VMON_CTRL_REG, regData);
         }
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
@@ -1322,12 +1322,12 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
     if (Pmic_validParamStatusCheck(spreadSpectrumCfgLocal.validParams, PMIC_CFG_PWR_SS_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, SS_EN_SHIFT, SS_EN_MASK, spreadSpectrumCfgLocal.ssEn);
+        Pmic_setBitField_b(&regData, SS_EN_SHIFT, spreadSpectrumCfgLocal.ssEn);
     }
 
     if (Pmic_validParamStatusCheck(spreadSpectrumCfgLocal.validParams, PMIC_CFG_PWR_SS_DEPTH_VALID, status))
     {
-        Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, SS_DEPTH_MASK, spreadSpectrumCfgLocal.ssDepth);
+        Pmic_setBitField_b(&regData, SS_DEPTH_SHIFT, spreadSpectrumCfgLocal.ssDepth);
     }
 
     if (status == PMIC_ST_SUCCESS)

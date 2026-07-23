@@ -2060,7 +2060,7 @@ void test_pos_common_setBitField_b_setTrue(void)
 {
     uint8_t regData = 0x00U;
 
-    Pmic_setBitField_b(&regData, 3U, (uint8_t)(1U << 3U), true);
+    Pmic_setBitField_b(&regData, 3U, true);
     PLATFORM_ASSERT(regData == (uint8_t)(1U << 3U));
 }
 
@@ -2068,7 +2068,7 @@ void test_pos_common_setBitField_b_setFalse(void)
 {
     uint8_t regData = 0xFFU;
 
-    Pmic_setBitField_b(&regData, 3U, (uint8_t)(1U << 3U), false);
+    Pmic_setBitField_b(&regData, 3U, false);
     PLATFORM_ASSERT((regData & (uint8_t)(1U << 3U)) == 0U);
 }
 
@@ -2077,7 +2077,7 @@ void test_pos_common_setBitField_b_preservesOtherBitsWhenSet(void)
     /* TEST_PATTERN_AA = 1010_1010; bit 2 is 0 — set it to 1 */
     uint8_t regData = TEST_PATTERN_AA;
 
-    Pmic_setBitField_b(&regData, 2U, (uint8_t)(1U << 2U), true);
+    Pmic_setBitField_b(&regData, 2U, true);
     PLATFORM_ASSERT((regData & (uint8_t)(~(uint8_t)(1U << 2U))) ==
                     (TEST_PATTERN_AA & (uint8_t)(~(uint8_t)(1U << 2U))));
     PLATFORM_ASSERT((regData & (uint8_t)(1U << 2U)) != 0U);
@@ -2088,7 +2088,7 @@ void test_pos_common_setBitField_b_preservesOtherBitsWhenCleared(void)
     /* TEST_PATTERN_AA = 1010_1010; bit 1 is 1 — clear it to 0 */
     uint8_t regData = TEST_PATTERN_AA;
 
-    Pmic_setBitField_b(&regData, 1U, (uint8_t)(1U << 1U), false);
+    Pmic_setBitField_b(&regData, 1U, false);
     PLATFORM_ASSERT((regData & (uint8_t)(~(uint8_t)(1U << 1U))) ==
                     (TEST_PATTERN_AA & (uint8_t)(~(uint8_t)(1U << 1U))));
     PLATFORM_ASSERT((regData & (uint8_t)(1U << 1U)) == 0U);
@@ -2098,10 +2098,10 @@ void test_pos_common_setBitField_b_lsb(void)
 {
     uint8_t regData = 0x00U;
 
-    Pmic_setBitField_b(&regData, 0U, (uint8_t)(1U << 0U), true);
+    Pmic_setBitField_b(&regData, 0U, true);
     PLATFORM_ASSERT(regData == 0x01U);
 
-    Pmic_setBitField_b(&regData, 0U, (uint8_t)(1U << 0U), false);
+    Pmic_setBitField_b(&regData, 0U, false);
     PLATFORM_ASSERT(regData == 0x00U);
 }
 
@@ -2109,10 +2109,10 @@ void test_pos_common_setBitField_b_msb(void)
 {
     uint8_t regData = 0x00U;
 
-    Pmic_setBitField_b(&regData, 7U, (uint8_t)(1U << 7U), true);
+    Pmic_setBitField_b(&regData, 7U, true);
     PLATFORM_ASSERT(regData == 0x80U);
 
-    Pmic_setBitField_b(&regData, 7U, (uint8_t)(1U << 7U), false);
+    Pmic_setBitField_b(&regData, 7U, false);
     PLATFORM_ASSERT(regData == 0x00U);
 }
 

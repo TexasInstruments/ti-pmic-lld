@@ -779,12 +779,12 @@ int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value)
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
 
     if (status == PMIC_ST_SUCCESS) {
-        regData = value & 0xFFU;
+        regData = (uint8_t)(value & 0xFFU);
         status = Pmic_ioTxByte(handle, CFG_REG_CRC0_REG, regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        regData = (value >> 8U) & 0xFFU;
+        regData = (uint8_t)((value >> 8U) & 0xFFU);
         status = Pmic_ioTxByte(handle, CFG_REG_CRC1_REG, regData);
     }
 

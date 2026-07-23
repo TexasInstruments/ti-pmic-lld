@@ -331,7 +331,7 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool crc8Enable)
     // Modify I2C_CRC_EN bit then write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_I2C_CRC_EN_SHIFT, PMIC_I2C_CRC_EN_MASK, crc8Enable);
+        Pmic_setBitField_b(&regData, PMIC_I2C_CRC_EN_SHIFT, crc8Enable);
 
         status = Pmic_ioTxByte(handle, PMIC_INTERFACE_CONF_REG, regData);
     }

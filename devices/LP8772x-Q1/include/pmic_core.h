@@ -289,7 +289,7 @@ int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_setConfigCrc(Pmic_Handle_t *handle, uint16_t value);
+int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value);
 
 #ifdef __cplusplus
 }

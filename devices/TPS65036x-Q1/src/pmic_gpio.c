@@ -351,7 +351,7 @@ int32_t Pmic_gpioSetActivationState(const Pmic_Handle_t *handle, bool activate)
         // Modify GPO_EN bit field; Write INTERFACE_CONF
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField_b(&regData, PMIC_GPO_EN_SHIFT, PMIC_GPO_EN_MASK, activate);
+            Pmic_setBitField_b(&regData, PMIC_GPO_EN_SHIFT, activate);
             status = Pmic_ioTxByte(handle, PMIC_INTERFACE_CONF_REG, regData);
         }
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);

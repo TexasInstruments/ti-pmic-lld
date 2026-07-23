@@ -805,7 +805,7 @@ static int32_t PWR_setLdoIlimDgl(const Pmic_Handle_t *handle, const Pmic_PwrLdoC
 int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_PwrLdoCfg_t localLdoCfg;
+    Pmic_PwrLdoCfg_t localLdoCfg = {0};
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -832,7 +832,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
     }
 
     // Set LDO mode first if disabling
-    if (Pmic_validParamStatusCheck(localLdoCfg.validParams, PMIC_CFG_PWR_LDO_MODE_VALID, status) && localLdoCfg.mode == PMIC_PWR_LDO_DISABLED)
+    if (Pmic_validParamStatusCheck(localLdoCfg.validParams, PMIC_CFG_PWR_LDO_MODE_VALID, status) && (localLdoCfg.mode == PMIC_PWR_LDO_DISABLED))
     {
         status = PWR_setLdoMode(handle, &localLdoCfg);
     }
@@ -868,7 +868,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
     }
 
     // Set LDO mode last if enabling
-    if (Pmic_validParamStatusCheck(localLdoCfg.validParams, PMIC_CFG_PWR_LDO_MODE_VALID, status) && localLdoCfg.mode != PMIC_PWR_LDO_DISABLED)
+    if (Pmic_validParamStatusCheck(localLdoCfg.validParams, PMIC_CFG_PWR_LDO_MODE_VALID, status) && (localLdoCfg.mode != PMIC_PWR_LDO_DISABLED))
     {
         status = PWR_setLdoMode(handle, &localLdoCfg);
     }

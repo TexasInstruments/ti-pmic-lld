@@ -417,7 +417,7 @@ int32_t Pmic_getConfigCrc(const Pmic_Handle_t *handle, uint16_t *value)
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_setConfigCrc(Pmic_Handle_t *handle, uint16_t value)
+int32_t Pmic_setConfigCrc(const Pmic_Handle_t *handle, uint16_t value)
 {
     int32_t status = Pmic_checkHandle(handle);
 

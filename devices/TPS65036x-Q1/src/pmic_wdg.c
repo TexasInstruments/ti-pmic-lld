@@ -280,7 +280,7 @@ static int32_t WDG_setModeAndTriggerCfg(const Pmic_Handle_t *handle, const Pmic_
         if (status == PMIC_ST_SUCCESS)
         {
             // Modify WD_RST_EN bit field
-            Pmic_setBitField_b(&regData, PMIC_WD_RST_EN_SHIFT, PMIC_WD_RST_EN_MASK, wdgCfg->rstEn);
+            Pmic_setBitField_b(&regData, PMIC_WD_RST_EN_SHIFT, wdgCfg->rstEn);
 
             // Write new WD_ENABLE_REG register value back to PMIC
             status = Pmic_ioTxByte(handle, PMIC_WD_ENABLE_REG_REG, regData);
@@ -589,7 +589,7 @@ int32_t Pmic_wdgSetEnableState(const Pmic_Handle_t *handle, bool enable)
     // Modify WD_EN bit field; write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
+        Pmic_setBitField_b(&regData, PMIC_WD_EN_SHIFT, enable);
 
         status = Pmic_ioTxByte(handle, PMIC_WD_ENABLE_REG_REG, regData);
     }
@@ -758,7 +758,7 @@ int32_t Pmic_wdgSetPowerHold(const Pmic_Handle_t *handle, bool pwrHold)
     // Modify WD_PWRHOLD bit field and write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, pwrHold);
+        Pmic_setBitField_b(&regData, PMIC_WD_PWRHOLD_SHIFT, pwrHold);
 
         status = Pmic_ioTxByte(handle, PMIC_WD_MODE_REG_REG, regData);
     }
@@ -807,7 +807,7 @@ int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_Handle_t *handle, bool retLongW
     // Modify WD_RETURN_LONGWIN bit field and write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, retLongWin);
+        Pmic_setBitField_b(&regData, PMIC_WD_RETURN_LONGWIN_SHIFT, retLongWin);
 
         status = Pmic_ioTxByte(handle, PMIC_WD_MODE_REG_REG, regData);
     }

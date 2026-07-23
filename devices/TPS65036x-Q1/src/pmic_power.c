@@ -714,7 +714,7 @@ static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_
     // Modify SS_EN bit field
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_SS_EN_SHIFT, PMIC_SS_EN_MASK, buckCfg->ssEn);
+        Pmic_setBitField_b(&regData, PMIC_SS_EN_SHIFT, buckCfg->ssEn);
     }
 
     // Write new register value back to PMIC
@@ -1307,7 +1307,7 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     // Modify BUCK1_PLDN bit field
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_BUCK1_PLDN_SHIFT, PMIC_BUCK1_PLDN_MASK, buckCfg->pldnEn);
+        Pmic_setBitField_b(&regData, PMIC_BUCK1_PLDN_SHIFT, buckCfg->pldnEn);
     }
 
     // Modify BUCK1_SLEW_RATE bit field
@@ -1327,13 +1327,13 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     // Modify BUCK1_FPWM bit field
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_BUCK1_FPWM_SHIFT, PMIC_BUCK1_FPWM_MASK, buckCfg->fpwmEn);
+        Pmic_setBitField_b(&regData, PMIC_BUCK1_FPWM_SHIFT, buckCfg->fpwmEn);
     }
 
     // Modify BUCK1_EN bit field
     if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_BUCK1_EN_SHIFT, PMIC_BUCK1_EN_MASK, buckCfg->enable);
+        Pmic_setBitField_b(&regData, PMIC_BUCK1_EN_SHIFT, buckCfg->enable);
     }
 
     // Write new register value back to PMIC
@@ -1368,8 +1368,7 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
         // Modify BUCKx_VMON_ONLY bit field (x=2 or x=3)
         if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
         {
-            Pmic_setBitField_b(
-                &regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT, PMIC_BUCK2_3_VMON_ONLY_MASK, buckCfg->vmonOnly);
+            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT, buckCfg->vmonOnly);
         }
 
         // Modify BUCKx_DISCHARGE_SEL bit field (x=2 or x=3)
@@ -1389,7 +1388,7 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
         // Modify BUCKx_PLDN bit field (x=2 or x=3)
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_PLDN_SHIFT, PMIC_BUCK2_3_PLDN_MASK, buckCfg->pldnEn);
+            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_PLDN_SHIFT, buckCfg->pldnEn);
         }
 
         // Modify BUCKx_SLEW_RATE bit field (x=2 or x=3)
@@ -1409,13 +1408,13 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
         // Modify BUCKx_FPWM bit field (x=2 or x=3)
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID, status))
         {
-            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_FPWM_SHIFT, PMIC_BUCK2_3_FPWM_MASK, buckCfg->fpwmEn);
+            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_FPWM_SHIFT, buckCfg->fpwmEn);
         }
 
         // Modify BUCKx_EN bit field (x=2 or x=3)
         if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID, status))
         {
-            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_EN_SHIFT, PMIC_BUCK2_3_EN_MASK, buckCfg->enable);
+            Pmic_setBitField_b(&regData, PMIC_BUCK2_3_EN_SHIFT, buckCfg->enable);
         }
     }
 
@@ -1989,7 +1988,7 @@ static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_
     // Modify LDO_VMON_ONLY bit field
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_VMON_ONLY_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_LDO_VMON_ONLY_SHIFT, PMIC_LDO_VMON_ONLY_MASK, ldoCfg->vmonOnly);
+        Pmic_setBitField_b(&regData, PMIC_LDO_VMON_ONLY_SHIFT, ldoCfg->vmonOnly);
     }
 
     // Modify LDO_DISCHARGE_SEL bit field
@@ -2008,13 +2007,13 @@ static int32_t PWR_setLdoCtrl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_
     // Modify LDO_DISCHARGE_EN bit field
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_DISCHARGE_EN_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_LDO_DISCHARGE_EN_SHIFT, PMIC_LDO_DISCHARGE_EN_MASK, ldoCfg->dischargeEn);
+        Pmic_setBitField_b(&regData, PMIC_LDO_DISCHARGE_EN_SHIFT, ldoCfg->dischargeEn);
     }
 
     // Modify LDO_EN bit field
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_ENABLE_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_LDO_EN_SHIFT, PMIC_LDO_EN_MASK, ldoCfg->enable);
+        Pmic_setBitField_b(&regData, PMIC_LDO_EN_SHIFT, ldoCfg->enable);
     }
 
     // Write new register value back to PMIC
@@ -2528,7 +2527,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_Handle_t *handle, const Pmic_PwrTsdCfg_t *t
     // Modify TWARN_CONFIG bit field
     if (Pmic_validParamStatusCheck(localTsdCfg.validParams, PMIC_CFG_PWR_TWARN_STAY_IN_SAFE_STATE_VALID, status))
     {
-        Pmic_setBitField_b(&regData, PMIC_TWARN_CONFIG_SHIFT, PMIC_TWARN_CONFIG_MASK, localTsdCfg.twarnStayInSafeState);
+        Pmic_setBitField_b(&regData, PMIC_TWARN_CONFIG_SHIFT, localTsdCfg.twarnStayInSafeState);
     }
 
     // Modify TSD_IMM_LEVEL bit field
@@ -2846,7 +2845,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuc
                 if (status == PMIC_ST_SUCCESS)
                 {
                     // Modify sequence trigger exclude/include bit
-                    Pmic_setBitField_b(&regData, bitPos, (uint8_t)(1UL << bitPos), localSeqTrigCfg[i].exclude);
+                    Pmic_setBitField_b(&regData, bitPos, localSeqTrigCfg[i].exclude);
 
                     // Write new register value back to PMIC
                     status = Pmic_ioTxByte(handle, regAddr, regData);

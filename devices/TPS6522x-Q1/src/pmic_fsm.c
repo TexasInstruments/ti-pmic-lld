@@ -387,7 +387,7 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
     {
         if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_CFG_FSM_MASK_VALID))
         {
-            Pmic_setBitField_b(&regData, pinMap->maskShift, (uint8_t)(1UL << pinMap->maskShift), gpioTriggerCfgLocal.mask);
+            Pmic_setBitField_b(&regData, pinMap->maskShift, gpioTriggerCfgLocal.mask);
         }
 
         if (Pmic_validParamCheck(gpioTriggerCfgLocal.validParams, PMIC_CFG_FSM_MASK_POL_VALID))
@@ -480,7 +480,6 @@ int32_t Pmic_fsmGetRecovCnt(const Pmic_Handle_t *handle, uint8_t *recovCnt)
 int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_REG_2
     if (status == PMIC_ST_SUCCESS)
