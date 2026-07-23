@@ -196,14 +196,10 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
         return status;
     }
 
-    if (page == PMIC_PAGE_WDG)
-    {
-        i2cAddr = handle->i2cAddr1;
-        crcEnabled = handle->crcEnable1;
-    }
-    else
-    {
-        i2cAddr = handle->i2cAddr0;
+    i2cAddr = (page == PMIC_PAGE_WDG) ? handle->i2cAddr1 : handle->i2cAddr0;
+    if (handle->commMode == PMIC_INTF_I2C_DUAL) {
+        crcEnabled = (page == PMIC_PAGE_WDG) ? handle->crcEnable1 : handle->crcEnable0;
+    } else {
         crcEnabled = handle->crcEnable0;
     }
 
@@ -329,14 +325,10 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if (page == PMIC_PAGE_WDG)
-    {
-        i2cAddr = handle->i2cAddr1;
-        crcEnabled = handle->crcEnable1;
-    }
-    else
-    {
-        i2cAddr = handle->i2cAddr0;
+    i2cAddr = (page == PMIC_PAGE_WDG) ? handle->i2cAddr1 : handle->i2cAddr0;
+    if (handle->commMode == PMIC_INTF_I2C_DUAL) {
+        crcEnabled = (page == PMIC_PAGE_WDG) ? handle->crcEnable1 : handle->crcEnable0;
+    } else {
         crcEnabled = handle->crcEnable0;
     }
 

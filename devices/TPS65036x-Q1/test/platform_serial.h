@@ -148,20 +148,6 @@ void serial_close(void);
 int32_t serial_set_timeout(uint32_t timeout_ms);
 
 /**
- * @brief Get current serial port timeout
- *
- * @return Timeout in milliseconds
- */
-uint32_t serial_get_timeout(void);
-
-/**
- * @brief Check if serial port is initialized and ready
- *
- * @return 1 if ready, 0 otherwise
- */
-int32_t serial_is_ready(void);
-
-/**
  * @brief Flush any pending data in serial buffers
  *
  * @return SERIAL_SUCCESS on success, error code otherwise

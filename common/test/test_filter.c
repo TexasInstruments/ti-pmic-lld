@@ -113,7 +113,9 @@ static bool matchWildcard(const char *pattern, const char *str)
         }
     }
 
-    /* Both must be exhausted for a match */
+    while (*pattern == '*') {
+        pattern++;
+    }
     return !*pattern && !*str;
 }
 

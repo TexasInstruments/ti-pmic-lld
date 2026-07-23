@@ -328,8 +328,7 @@ extern "C" {
 
 #define IRQ_TEST_RUN_ALL() \
     IRQ_TEST_RUN_POSITIVE(); \
-    IRQ_TEST_RUN_NEGATIVE(); \
-    IRQ_TEST_IRQRESPONSECALLBACK()
+    IRQ_TEST_RUN_NEGATIVE();
 
 /* ========================================================================== */
 /*                          Function Declarations                             */

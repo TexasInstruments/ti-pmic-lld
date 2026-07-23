@@ -712,7 +712,6 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
 int32_t Pmic_clrConfigCrcStatus(const Pmic_Handle_t *handle, const Pmic_ConfigCrcStat_t *configCrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
     uint32_t validParams = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL)) {
@@ -728,14 +727,11 @@ int32_t Pmic_clrConfigCrcStatus(const Pmic_Handle_t *handle, const Pmic_ConfigCr
     }
 
     if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID, status)) {
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)true);
-        status = Pmic_ioTxByte_CS(handle, SAFETY_CTRL_REG, regData);
+        status = Pmic_ioUpdateByte_bCS(handle, SAFETY_CTRL_REG, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)true);
     }
 
     if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_ERROR_VALID, status)) {
-        regData = 0U;
-        Pmic_setBitField_b(&regData, CFG_REG_CRC_ERR_SHIFT, (bool)true);
-        status = Pmic_ioTxByte_CS(handle, REG_STAT_REG, regData);
+        status = Pmic_ioTxByte_CS(handle, REG_STAT_REG, CFG_REG_CRC_ERR_MASK);
     }
 
     return Pmic_logStatus(handle, status);

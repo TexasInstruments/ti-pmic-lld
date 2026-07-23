@@ -704,7 +704,8 @@ int32_t Pmic_configCrcDisable(const Pmic_Handle_t *handle)
 int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
+    uint8_t regData0 = 0U; // To store the register value of CONFIG_CRC_CONFIG
+    uint8_t regData1 = 0U; // To store the register value of STAT_MODERATE_ERR
 
     if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL))
     {
@@ -713,14 +714,19 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
+        status = Pmic_ioRxByte_CS(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData0);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        configCrcStat->crcEn = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_EN_SHIFT);
-        configCrcStat->crcCalc = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_CALC_SHIFT);
-        configCrcStat->errorDetected = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_STATUS_SHIFT);
+        status = Pmic_ioRxByte_CS(handle, PMIC_STAT_MODERATE_ERR_REG, &regData1);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        configCrcStat->crcEn = Pmic_getBitField_b(regData0, PMIC_CONFIG_CRC_EN_SHIFT);
+        configCrcStat->crcCalc = Pmic_getBitField_b(regData0, PMIC_CONFIG_CRC_CALC_SHIFT);
+        configCrcStat->errorDetected = Pmic_getBitField_b(regData0, PMIC_CONFIG_CRC_STATUS_SHIFT) || Pmic_getBitField_b(regData1, PMIC_CONFIG_CRC_STAT_SHIFT);
     }
 
     return Pmic_logStatus(handle, status);

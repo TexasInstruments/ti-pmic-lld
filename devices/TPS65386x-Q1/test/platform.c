@@ -223,8 +223,8 @@ void platform_init(void)
      */
     printf("Asserting WAKE1 (PB5) high...\n");
     {
-        char gpio_response[256];
-        int32_t rc;
+        char gpio_response[256] = {0};
+        int32_t rc = 0;
 
         rc = serial_send_command("gpioc pb 32 o 8 1");
         if (rc != 0 ||
@@ -268,8 +268,8 @@ void platform_init(void)
      */
     printf("Configuring ESM_IN (PA2) high...\n");
     {
-        char gpio_response[256];
-        int32_t rc;
+        char gpio_response[256] = {0};
+        int32_t rc = 0;
 
         rc = serial_send_command("gpioc pa 4 o 8 1");
         if (rc != 0 ||
@@ -304,28 +304,14 @@ void platform_init(void)
 
 void platform_deinit(void)
 {
-#ifdef BUILD_HOST
-    PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "platform_deinit called (initialized=%d)", g_platform_initialized);
-
-    /* Skip deinit when running test suites - keep port open for next suite */
-    /* Only truly deinit when explicitly needed (not during normal test runs) */
-    if (g_platform_initialized) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Keeping port open for test suites");
-        /* Keep the port open - just return without deinitialization */
-        return;
-    }
-
-    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Performing actual deinitialization");
-#endif
-    /* This code only runs if already deinitialized */
-    g_platform_initialized = false;
+    /* Usually COM port would be closed here, but we keep it opened for subsequent tests. */
 }
 
 void platform_wakeFromStandby(void)
 {
 #ifdef BUILD_HOST
-    char gpio_response[256];
-    int32_t rc;
+    char gpio_response[256] = {0};
+    int32_t rc = 0;
 
     /* Rising edge on WAKE1 (PB5) wakes device from STANDBY.
      * Serial round-trip latency provides sufficient hold time between commands. */
@@ -347,8 +333,8 @@ void platform_wakeFromStandby(void)
 void platform_setEsmPin(bool high)
 {
 #ifdef BUILD_HOST
-    char gpio_response[256];
-    int32_t rc;
+    char gpio_response[256] = {0};
+    int32_t rc = 0;
     const char *cmd = high ? "gpiow pa 4 4 0" : "gpiow pa 4 0 0";
 
     rc = serial_send_command(cmd);
@@ -453,7 +439,9 @@ int32_t platform_txByte(
     /* Unlock registers before every write — EXCEPT the unlock registers
      * themselves (0x03 = CFG_REG_UNLOCK_SEQ_REG, 0x04 = CNT_REG_UNLOCK_SEQ_REG).
      * Those registers are always writable and require a precise 2-byte sequence;
-     * inserting an unlock sequence between the two bytes corrupts it. */
+     * inserting an unlock sequence between the two bytes corrupts it. This makes
+     * tests more resilient to unexpected register locks at the expense of an extra
+     * write per transaction. */
     if (regAddr != 0x03U && regAddr != 0x04U) {
         platform_unlockRegisters();
     }
@@ -613,6 +601,7 @@ void platform_irqClrAll(void)
 #endif
 }
 
+#ifdef BUILD_HOST
 static void platform_dumpAllRegisters(void)
 {
     static const uint8_t reg_addrs[] = {
@@ -643,6 +632,7 @@ static void platform_dumpAllRegisters(void)
     }
     printf("================================\n");
 }
+#endif
 
 void platform_unlockRegisters(void)
 {
