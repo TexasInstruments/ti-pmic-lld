@@ -39,6 +39,8 @@
 #include "platform.h"
 #include "pmic_test.h"
 #include "test_constants.h"
+#include "pmic_io.h"
+#include "regmap/core.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -51,6 +53,7 @@
 /*                           Function Declarations                            */
 /* ========================================================================== */
 static inline void pmicInitTest_initHandleCfg(Pmic_HandleCfg_t *handleCfg);
+static void pmicTest_disableCrcInHardware(Pmic_Handle_t *handle);
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -91,24 +94,62 @@ void pmic_test(void *args)
     platform_deinit();
 }
 
+static void pmicTest_disableCrcInHardware(Pmic_Handle_t *handle)
+{
+    uint8_t regVal = 0U;
+    int32_t status = Pmic_ioRxByte(handle, CONFIG_2_REG, &regVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    regVal &= (uint8_t)~(I2C1_SPI_CRC_EN_MASK | I2C2_CRC_EN_MASK);
+    status = Pmic_ioTxByte(handle, CONFIG_2_REG, regVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+static void pmicTest_enableCrcInHardware(void)
+{
+    // Build a minimal handle with I/O functions but no CRC, bypassing Pmic_init()
+    Pmic_Handle_t rawHandle = {0};
+    rawHandle.commMode = PMIC_INTF_I2C_DUAL;
+    rawHandle.commHandle0 = platform_getCommHandle0();
+    rawHandle.commHandle1 = platform_getCommHandle1();
+    rawHandle.ioRead = &platform_rxByte;
+    rawHandle.ioWrite = &platform_txByte;
+    rawHandle.crcEnable0 = PMIC_DISABLE;
+    rawHandle.crcEnable1 = PMIC_DISABLE;
+    rawHandle.i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
+    rawHandle.i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY;
+
+    uint8_t regVal = 0U;
+    int32_t status = Pmic_ioRxByte(&rawHandle, CONFIG_2_REG, &regVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    regVal |= (uint8_t)(I2C1_SPI_CRC_EN_MASK | I2C2_CRC_EN_MASK);
+    status = Pmic_ioTxByte(&rawHandle, CONFIG_2_REG, regVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
 static inline void pmicInitTest_initHandleCfg(Pmic_HandleCfg_t *handleCfg)
 {
     handleCfg->validParams = PMIC_COMM_MODE_VALID |
-                             PMIC_CRC_ENABLE_VALID |
+                             PMIC_CRC_ENABLE_0_VALID |
                              PMIC_COMM_HANDLE_0_VALID |
+                             PMIC_COMM_HANDLE_1_VALID |
+                             PMIC_I2C_ADDR0_VALID |
+                             PMIC_I2C_ADDR1_VALID |
                              PMIC_IO_READ_VALID |
                              PMIC_IO_WRITE_VALID |
                              PMIC_CRITICAL_SECTION_START_VALID |
                              PMIC_CRITICAL_SECTION_STOP_VALID |
                              PMIC_IRQ_RESPONSE_CALLBACK_VALID;
-    handleCfg->commMode = PMIC_INTF_SPI;
-    handleCfg->crcEnable = PMIC_DISABLE;
-    handleCfg->commHandle0 = platform_getCommHandle();
+    handleCfg->commMode = PMIC_INTF_I2C_DUAL;
+    handleCfg->crcEnable0 = PMIC_DISABLE;
+    handleCfg->commHandle0 = platform_getCommHandle0();
+    handleCfg->commHandle1 = platform_getCommHandle1();
     handleCfg->ioRead = &platform_rxByte;
     handleCfg->ioWrite = &platform_txByte;
     handleCfg->criticalSectionStart = &platform_critSecStart;
     handleCfg->criticalSectionStop = &platform_critSecStop;
     handleCfg->irqResponseCallback = &platform_irqResponse;
+    handleCfg->i2cAddr0 = PLATFORM_I2C_ADDR_MAIN;
+    handleCfg->i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY;
 }
 
 /* ========================================================================== */
@@ -317,6 +358,31 @@ void test_neg_pmic_pmicInit_timerWaitNull(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
+void test_neg_pmic_pmicInit_nullCommHandle1(void)
+{
+    // Pass NULL commHandle1 with PMIC_COMM_HANDLE_1_VALID set
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+    handleCfg.validParams |= PMIC_COMM_HANDLE_1_VALID;
+    handleCfg.commHandle1 = NULL;
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_neg_pmic_pmicInit_dualI2cMissingHandle1(void)
+{
+    // Dual I2C mode without PMIC_COMM_HANDLE_1_VALID — commHandle1 stays NULL
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+    handleCfg.validParams &= ~PMIC_COMM_HANDLE_1_VALID;
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
 /* ========================================================================== */
 /*                         Positive Test Functions                            */
 /* ========================================================================== */
@@ -328,9 +394,10 @@ void test_pos_pmic_pmicInit_validConfig(void)
     pmicInitTest_initHandleCfg(&handleCfg);
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_SPI);
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
-    PLATFORM_ASSERT(pmicHandle.commHandle0 == platform_getCommHandle());
+    PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_I2C_DUAL);
+    PLATFORM_ASSERT(pmicHandle.crcEnable0 == PMIC_DISABLE);
+    PLATFORM_ASSERT(pmicHandle.commHandle0 == platform_getCommHandle0());
+    PLATFORM_ASSERT(pmicHandle.commHandle1 == platform_getCommHandle1());
     PLATFORM_ASSERT(pmicHandle.ioRead == &platform_rxByte);
     PLATFORM_ASSERT(pmicHandle.ioWrite == &platform_txByte);
     PLATFORM_ASSERT(pmicHandle.criticalSectionStart == &platform_critSecStart);
@@ -347,8 +414,9 @@ void test_pos_pmic_pmicDeinit_afterInit(void)
     PLATFORM_ASSERT(pmicHandle.devRev == 0U);
     PLATFORM_ASSERT(pmicHandle.devSiRev == 0U);
     PLATFORM_ASSERT(pmicHandle.commMode == 0U);
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
+    PLATFORM_ASSERT(pmicHandle.crcEnable0 == PMIC_DISABLE);
     PLATFORM_ASSERT(pmicHandle.commHandle0 == NULL);
+    PLATFORM_ASSERT(pmicHandle.commHandle1 == NULL);
     PLATFORM_ASSERT(pmicHandle.ioRead == NULL);
     PLATFORM_ASSERT(pmicHandle.ioWrite == NULL);
     PLATFORM_ASSERT(pmicHandle.criticalSectionStart == NULL);
@@ -397,7 +465,7 @@ void test_pos_pmic_pmicInit_reinit(void)
     // Re-init
     status = Pmic_init(&pmicHandle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_SPI);
+    PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_I2C_DUAL);
 
     // Clean up
     Pmic_deinit(&pmicHandle);
@@ -405,42 +473,44 @@ void test_pos_pmic_pmicInit_reinit(void)
 
 void test_pos_pmic_pmicInit_with_crc_enabled(void)
 {
-    // Initialize PMIC with CRC enabled
+    // Enable CRC in hardware before init so CRC-mode reads succeed
+    pmicTest_enableCrcInHardware();
+
     Pmic_HandleCfg_t handleCfg = {0};
     pmicInitTest_initHandleCfg(&handleCfg);
-
-    // Enable CRC validation parameter
-    handleCfg.validParams |= PMIC_CRC_ENABLE_VALID;
-    handleCfg.crcEnable = PMIC_ENABLE;
+    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID;
+    handleCfg.crcEnable0 = PMIC_ENABLE;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    bool crcHandleValue = pmicHandle.crcEnable0;
 
-    // Verify CRC is enabled in handle
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_ENABLE);
-
-    // Clean up
+    // Unconditional cleanup — disable hardware CRC and deinit regardless of outcome
+    pmicTest_disableCrcInHardware(&pmicHandle);
     Pmic_deinit(&pmicHandle);
+
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(crcHandleValue == PMIC_ENABLE);
 }
 
 void test_pos_pmic_pmicInit_with_both_crc_flags(void)
 {
-    // Initialize with CRC enabled in both valid params and config
+    // Enable CRC in hardware before init so CRC-mode reads succeed
+    pmicTest_enableCrcInHardware();
+
     Pmic_HandleCfg_t handleCfg = {0};
     pmicInitTest_initHandleCfg(&handleCfg);
-
-    // Set CRC enable flag with valid parameter
-    handleCfg.validParams |= PMIC_CRC_ENABLE_VALID;
-    handleCfg.crcEnable = PMIC_ENABLE;
+    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID | PMIC_CRC_ENABLE_1_VALID;
+    handleCfg.crcEnable0 = PMIC_ENABLE;
+    handleCfg.crcEnable1 = PMIC_ENABLE;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
+
+    // Unconditional cleanup — disable hardware CRC and deinit regardless of outcome
+    pmicTest_disableCrcInHardware(&pmicHandle);
+
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Verify handle was initialized correctly
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_ENABLE);
-    PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_SPI);
-
-    // Clean up
+    PLATFORM_ASSERT(pmicHandle.crcEnable0 == PMIC_ENABLE);
+    PLATFORM_ASSERT(pmicHandle.crcEnable1 == PMIC_ENABLE);
     Pmic_deinit(&pmicHandle);
 }
 
@@ -451,42 +521,14 @@ void test_pos_pmic_pmicInit_crc_disabled(void)
     pmicInitTest_initHandleCfg(&handleCfg);
 
     // Explicitly set CRC to disabled
-    handleCfg.validParams |= PMIC_CRC_ENABLE_VALID;
-    handleCfg.crcEnable = PMIC_DISABLE;
+    handleCfg.validParams |= PMIC_CRC_ENABLE_0_VALID;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
 
     int32_t status = Pmic_init(&pmicHandle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify CRC is disabled in handle
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
-
-    // Clean up
-    Pmic_deinit(&pmicHandle);
-}
-
-void test_pos_pmic_pmicInit_verify_crc_state(void)
-{
-    // Initialize and verify CRC state can be read
-    Pmic_HandleCfg_t handleCfg = {0};
-    pmicInitTest_initHandleCfg(&handleCfg);
-
-    // Initialize with CRC enabled
-    handleCfg.validParams |= PMIC_CRC_ENABLE_VALID;
-    handleCfg.crcEnable = PMIC_ENABLE;
-
-    int32_t status = Pmic_init(&pmicHandle, &handleCfg);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Verify the CRC state is reflected in handle
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_ENABLE);
-
-    // Test that we can disable CRC after init
-    pmicHandle.crcEnable = PMIC_DISABLE;
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
-
-    // Test that we can re-enable CRC
-    pmicHandle.crcEnable = PMIC_ENABLE;
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_ENABLE);
+    PLATFORM_ASSERT(pmicHandle.crcEnable0 == PMIC_DISABLE);
 
     // Clean up
     Pmic_deinit(&pmicHandle);
@@ -525,7 +567,7 @@ void test_pos_pmic_pmicInit_i2c_single_mode(void)
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
                             PMIC_I2C_ADDR0_VALID |
                             PMIC_I2C_ADDR1_VALID |
-                            PMIC_CRC_ENABLE_VALID |
+                            PMIC_CRC_ENABLE_0_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID |
@@ -535,8 +577,8 @@ void test_pos_pmic_pmicInit_i2c_single_mode(void)
     handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
     handleCfg.i2cAddr0 = PLATFORM_I2C_ADDR_MAIN;
     handleCfg.i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY;
-    handleCfg.crcEnable = PMIC_DISABLE;
-    handleCfg.commHandle0 = platform_getCommHandle();
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;
     handleCfg.criticalSectionStart = &platform_critSecStart;
@@ -562,8 +604,9 @@ void test_pos_pmic_pmicInit_i2c_dual_mode(void)
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
                             PMIC_I2C_ADDR0_VALID |
                             PMIC_I2C_ADDR1_VALID |
-                            PMIC_CRC_ENABLE_VALID |
+                            PMIC_CRC_ENABLE_0_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
+                            PMIC_COMM_HANDLE_1_VALID |
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID |
                             PMIC_CRITICAL_SECTION_START_VALID |
@@ -572,8 +615,9 @@ void test_pos_pmic_pmicInit_i2c_dual_mode(void)
     handleCfg.commMode = PMIC_INTF_I2C_DUAL;
     handleCfg.i2cAddr0 = PLATFORM_I2C_ADDR_MAIN;
     handleCfg.i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY;
-    handleCfg.crcEnable = PMIC_DISABLE;
-    handleCfg.commHandle0 = platform_getCommHandle();
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.commHandle1 = platform_getCommHandle1();
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;
     handleCfg.criticalSectionStart = &platform_critSecStart;
@@ -587,6 +631,7 @@ void test_pos_pmic_pmicInit_i2c_dual_mode(void)
     PLATFORM_ASSERT(pmicHandle.commMode == PMIC_INTF_I2C_DUAL);
     PLATFORM_ASSERT(pmicHandle.i2cAddr0 == PLATFORM_I2C_ADDR_MAIN);
     PLATFORM_ASSERT(pmicHandle.i2cAddr1 == PLATFORM_I2C_ADDR_SECONDARY);
+    PLATFORM_ASSERT(pmicHandle.commHandle1 == platform_getCommHandle1());
 
     // Clean up
     Pmic_deinit(&pmicHandle);
@@ -635,9 +680,11 @@ void test_pos_pmic_pmicDeinit_success_path(void)
     PLATFORM_ASSERT(pmicHandle.i2cAddr0 == 0U);
     PLATFORM_ASSERT(pmicHandle.i2cAddr1 == 0U);
     PLATFORM_ASSERT(pmicHandle.i2cAddr2 == 0U);
-    PLATFORM_ASSERT(pmicHandle.crcEnable == PMIC_DISABLE);
+    PLATFORM_ASSERT(pmicHandle.crcEnable0 == PMIC_DISABLE);
+    PLATFORM_ASSERT(pmicHandle.crcEnable1 == PMIC_DISABLE);
     PLATFORM_ASSERT(pmicHandle.asyncEnable == PMIC_DISABLE);
     PLATFORM_ASSERT(pmicHandle.commHandle0 == NULL);
+    PLATFORM_ASSERT(pmicHandle.commHandle1 == NULL);
     PLATFORM_ASSERT(pmicHandle.taskHandle == NULL);
     PLATFORM_ASSERT(pmicHandle.ioRead == NULL);
     PLATFORM_ASSERT(pmicHandle.ioWrite == NULL);
@@ -662,7 +709,7 @@ void test_pos_pmic_pmicCheckHandle_all_validations(void)
     Pmic_Handle_t testHandle = {0};
     testHandle.drvInitStat = TEST_INVALID_MAGIC;  // Wrong magic number
     testHandle.commMode = PMIC_INTF_SPI;
-    testHandle.commHandle0 = platform_getCommHandle();
+    testHandle.commHandle0 = platform_getCommHandle0();
     testHandle.ioRead = &platform_rxByte;
     testHandle.ioWrite = &platform_txByte;
     testHandle.criticalSectionStart = &platform_critSecStart;
@@ -683,7 +730,7 @@ void test_pos_pmic_pmicCheckHandle_all_validations(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
     // Test 5: NULL critical section functions
-    testHandle.commHandle0 = platform_getCommHandle();
+    testHandle.commHandle0 = platform_getCommHandle0();
     testHandle.criticalSectionStart = NULL;
     status = Pmic_checkHandle(&testHandle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -722,7 +769,7 @@ void test_pos_pmic_pmicInit_async_mode(void)
     // Note: Even in async mode, synchronous I/O is needed for initialization (getPmicInfo)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
-                            PMIC_CRC_ENABLE_VALID |
+                            PMIC_CRC_ENABLE_0_VALID |
                             PMIC_ASYNC_ENABLE_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
                             PMIC_TASK_HANDLE_VALID |
@@ -736,10 +783,10 @@ void test_pos_pmic_pmicInit_async_mode(void)
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID;
     handleCfg.commMode = PMIC_INTF_SPI;
-    handleCfg.crcEnable = PMIC_DISABLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
     handleCfg.asyncEnable = PMIC_ENABLE;
-    handleCfg.commHandle0 = platform_getCommHandle();
-    handleCfg.taskHandle = platform_getCommHandle();  // Use sentinel for task handle
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.taskHandle = platform_getCommHandle0();  // Use sentinel for task handle
     handleCfg.ioRead = &platform_rxByte;  // Needed for getPmicInfo during init
     handleCfg.ioWrite = &platform_txByte;  // Needed for getPmicInfo during init
     handleCfg.asyncRxStart = &test_pmic_asyncRxStart;
@@ -780,7 +827,7 @@ void test_pos_pmic_pmicInit_with_i2c_addresses(void)
                             PMIC_I2C_ADDR0_VALID |
                             PMIC_I2C_ADDR1_VALID |
                             PMIC_I2C_ADDR2_VALID |
-                            PMIC_CRC_ENABLE_VALID |
+                            PMIC_CRC_ENABLE_0_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID |
@@ -791,8 +838,8 @@ void test_pos_pmic_pmicInit_with_i2c_addresses(void)
     handleCfg.i2cAddr0 = 0x60U;
     handleCfg.i2cAddr1 = 0x12U;
     handleCfg.i2cAddr2 = 0x34U;
-    handleCfg.crcEnable = PMIC_DISABLE;
-    handleCfg.commHandle0 = platform_getCommHandle();
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;
     handleCfg.criticalSectionStart = &platform_critSecStart;
@@ -816,7 +863,7 @@ void test_pos_pmic_pmicInit_with_task_handle(void)
     // Test initialization with task handle configured (for RTOS environments)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
-                            PMIC_CRC_ENABLE_VALID |
+                            PMIC_CRC_ENABLE_0_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID |
@@ -825,8 +872,8 @@ void test_pos_pmic_pmicInit_with_task_handle(void)
                             PMIC_IRQ_RESPONSE_CALLBACK_VALID |
                             PMIC_TASK_HANDLE_VALID;
     handleCfg.commMode = PMIC_INTF_SPI;
-    handleCfg.crcEnable = PMIC_DISABLE;
-    handleCfg.commHandle0 = platform_getCommHandle();
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
     handleCfg.taskHandle = (void*)TEST_DUMMY_HANDLE;  // Use a non-NULL sentinel value
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;

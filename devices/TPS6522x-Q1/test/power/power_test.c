@@ -1717,8 +1717,8 @@ void power_test(void *args)
                        PMIC_IO_WRITE_VALID |
                        PMIC_CRITICAL_SECTION_START_VALID |
                        PMIC_CRITICAL_SECTION_STOP_VALID,
-        .commMode = PMIC_INTF_SPI,
-        .commHandle0 = platform_getCommHandle(),
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .commHandle0 = platform_getCommHandle0(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
@@ -1729,17 +1729,6 @@ void power_test(void *args)
     if (status != PMIC_ST_SUCCESS)
     {
         platform_printString("\r\nERROR: Failed to initialize PMIC handle\r\n");
-        platform_tearDownTests();
-        platform_deinit();
-        return;
-    }
-
-    /* Unlock registers for power configuration */
-    status = Pmic_setRegLockState(&pmicHandle, false);
-    if (status != PMIC_ST_SUCCESS)
-    {
-        platform_printString("\r\nERROR: Failed to unlock registers\r\n");
-        Pmic_deinit(&pmicHandle);
         platform_tearDownTests();
         platform_deinit();
         return;

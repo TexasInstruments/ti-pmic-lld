@@ -129,7 +129,7 @@ extern "C" {
 #define PMIC_I2C_ADDR1_VALID              (1UL << 2U)
 #define PMIC_I2C_ADDR2_VALID              (1UL << 3U)
 #define PMIC_MAX_LOOP_CNT_VALID           (1UL << 4U)
-#define PMIC_CRC_ENABLE_VALID             (1UL << 5U)
+#define PMIC_CRC_ENABLE_0_VALID           (1UL << 5U)
 #define PMIC_ASYNC_ENABLE_VALID           (1UL << 6U)
 #define PMIC_COMM_HANDLE_0_VALID          (1UL << 7U)
 #define PMIC_TASK_HANDLE_VALID            (1UL << 8U)
@@ -145,11 +145,13 @@ extern "C" {
 #define PMIC_RETRY_CNT_VALID              (1UL << 18U)
 #define PMIC_RETRY_INTERVAL_MS_VALID      (1UL << 19U)
 #define PMIC_TIMER_WAIT_MS_VALID          (1UL << 20U)
+#define PMIC_COMM_HANDLE_1_VALID          (1UL << 21U)
+#define PMIC_CRC_ENABLE_1_VALID           (1UL << 22U)
 #define PMIC_SINGLE_I2C_OPERATION_VALID   (\
     PMIC_COMM_MODE_VALID |\
     PMIC_I2C_ADDR0_VALID |\
     PMIC_I2C_ADDR1_VALID |\
-    PMIC_CRC_ENABLE_VALID |\
+    PMIC_CRC_ENABLE_0_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
     PMIC_IO_READ_VALID |\
     PMIC_IO_WRITE_VALID |\
@@ -163,8 +165,10 @@ extern "C" {
     PMIC_COMM_MODE_VALID |\
     PMIC_I2C_ADDR0_VALID |\
     PMIC_I2C_ADDR1_VALID |\
-    PMIC_CRC_ENABLE_VALID |\
+    PMIC_CRC_ENABLE_0_VALID |\
+    PMIC_CRC_ENABLE_1_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
+    PMIC_COMM_HANDLE_1_VALID |\
     PMIC_IO_READ_VALID |\
     PMIC_IO_WRITE_VALID |\
     PMIC_CRITICAL_SECTION_START_VALID |\
@@ -175,7 +179,7 @@ extern "C" {
     PMIC_TIMER_WAIT_MS_VALID)
 #define PMIC_SPI_OPERATION_VALID          (\
     PMIC_COMM_MODE_VALID |\
-    PMIC_CRC_ENABLE_VALID |\
+    PMIC_CRC_ENABLE_0_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
     PMIC_IO_READ_VALID |\
     PMIC_IO_WRITE_VALID |\
@@ -187,7 +191,7 @@ extern "C" {
     PMIC_TIMER_WAIT_MS_VALID)
 #define PMIC_ASYNC_SPI_OPERATION_VALID    (\
     PMIC_COMM_MODE_VALID |\
-    PMIC_CRC_ENABLE_VALID |\
+    PMIC_CRC_ENABLE_0_VALID |\
     PMIC_ASYNC_ENABLE_VALID |\
     PMIC_COMM_HANDLE_0_VALID |\
     PMIC_TASK_HANDLE_VALID |\
@@ -245,7 +249,10 @@ extern "C" {
  *
  * @param maxLoopCnt Maximum number of iterations for loops in PMIC LLD.
  *
- * @param crcEnable Enable or disable serial communication CRC.
+ * @param crcEnable0 Enable or disable serial communication CRC on I2C1 or SPI.
+ *
+ * @param crcEnable1 Enable or disable serial communication CRC on I2C2. Unused
+ * in single I2C mode and SPI mode.
  *
  * @param asyncEnable Enable asynchronous serial communication operation. If set
  * to true, the driver shall use the asynchronous read/write hooks to transfer
@@ -317,9 +324,11 @@ typedef struct Pmic_HandleCfg_s {
     uint32_t retryCnt;
     uint32_t retryIntervalMs;
     uint32_t maxLoopCnt;
-    bool crcEnable;
+    bool crcEnable0;
+    bool crcEnable1;
     bool asyncEnable;
     void *commHandle0;
+    void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
         const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);

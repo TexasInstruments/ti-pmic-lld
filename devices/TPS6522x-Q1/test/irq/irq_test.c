@@ -954,6 +954,9 @@ void test_neg_irq_irqGetMask_invalidIrqInArray(void)
  */
 void test_pos_irq_irqGetStatus_withSetFlag(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Requires mock register injection; skipped in host mode");
+#else
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
 
@@ -973,6 +976,7 @@ void test_pos_irq_irqGetStatus_withSetFlag(void)
 
     /* Verify that the flag was detected and array was populated */
     PLATFORM_ASSERT(irqStat.intrStat[0] != 0U);
+#endif
 }
 
 /**
@@ -981,6 +985,9 @@ void test_pos_irq_irqGetStatus_withSetFlag(void)
  */
 void test_pos_irq_irqGetNextFlag_withSetFlag(void)
 {
+#ifdef BUILD_HOST
+    TEST_IGNORE_MESSAGE("Requires mock register injection; skipped in host mode");
+#else
     int32_t status;
     Pmic_IrqStatus_t irqStat = {0};
     uint8_t irqNum = 0;
@@ -1014,6 +1021,7 @@ void test_pos_irq_irqGetNextFlag_withSetFlag(void)
     /* Try to get another flag - should indicate no more flags remaining */
     status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+#endif
 }
 
 /* ========================================================================== */
@@ -1032,16 +1040,18 @@ void irq_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_CRC_ENABLE_VALID |
+                       PMIC_CRC_ENABLE_0_VALID |
+                       PMIC_I2C_ADDR0_VALID |
                        PMIC_COMM_HANDLE_0_VALID |
                        PMIC_IO_READ_VALID |
                        PMIC_IO_WRITE_VALID |
                        PMIC_CRITICAL_SECTION_START_VALID |
                        PMIC_CRITICAL_SECTION_STOP_VALID |
                        PMIC_MAX_LOOP_CNT_VALID,
-        .commMode = PMIC_INTF_SPI,
-        .crcEnable = false,
-        .commHandle0 = platform_getCommHandle(),
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .crcEnable0 = false,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle0(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

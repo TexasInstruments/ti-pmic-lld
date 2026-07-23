@@ -49,7 +49,49 @@ extern "C" {
 
 #include "pmic_common.h"
 
-/*==========================================================================  */
+/* ========================================================================== */
+/*                            Macros & Typedefs                               */
+/* ========================================================================== */
+
+/**
+ * @anchor Pmic_IoCrcCfgValidParams
+ * @name PMIC IO CRC Configuration Structure Valid Parameters
+ *
+ * @brief Definitions used to indicate valid parameters of `Pmic_IoCrcCfg_t`.
+ * Set the `validParams` member of `Pmic_IoCrcCfg_t` equal to a
+ * combination of these defines by using the `OR` operator.
+ *
+ * @{
+ */
+#define PMIC_CFG_IO_CRC_ENABLE_0_VALID (1U << 0)
+#define PMIC_CFG_IO_CRC_ENABLE_1_VALID (1U << 1)
+/** @} */
+
+/* ========================================================================== */
+/*                           Structures and Enums                             */
+/* ========================================================================== */
+
+/**
+ * @anchor Pmic_IoCrcCfg
+ * @name PMIC IO CRC Configuration Structure
+ *
+ * @brief Structure used to configure the CRC settings for PMIC IO operations.
+ *
+ * @param validParams Bitmap indicating which parameters are valid. For more
+ * information, refer to @ref Pmic_IoCrcCfgValidParams.
+ *
+ * @param crcEnable0 Enable CRC for channel 0.
+ *
+ * @param crcEnable1 Enable CRC for channel 1.
+ */
+typedef struct Pmic_IoCrcCfg_s {
+    uint32_t validParams;
+
+    bool crcEnable0;
+    bool crcEnable1;
+} Pmic_IoCrcCfg_t;
+
+/* ========================================================================== */
 /*                             Function Declarations                          */
 /* ========================================================================== */
 
@@ -247,16 +289,15 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint16_t regAddr, uin
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-526
  *               PMICDRV-544
  *
- * @param handle [IN/OUT] PMIC interface handle. The crcEnable struct member
- * will be set equal to parameter `enable` upon API call success.
+ * @param handle [IN/OUT] PMIC interface handle.
  *
- * @param enable [IN] Serial communication CRC enable/disable. When set equal to
- * `PMIC_ENABLE`, CRC will be enabled. Else, CRC will be disabled.
+ * @param cfg [IN] CRC configuration structure specifying which channel(s) to
+ * enable or disable and whether to enable or disable CRC for each channel.
  *
  * @return PMIC_ST_SUCCESS if serial communication CRC has been enabled or disabled,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable);
+int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, const Pmic_IoCrcCfg_t *cfg);
 
 /**
  * @brief Enable serial communication CRC. This API is a subset of
@@ -299,13 +340,14 @@ int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle);
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param enabled [OUT] Serial communication CRC enable status. True if serial
- * communication CRC is enabled, otherwise false.
+ * @param cfg [OUT] CRC configuration structure. Fields are populated according
+ * to validParams: set PMIC_CFG_IO_CRC_ENABLE_0_VALID to read crcEnable0
+ * (I2C1/SPI), set PMIC_CFG_IO_CRC_ENABLE_1_VALID to read crcEnable1 (I2C2).
  *
  * @return PMIC_ST_SUCCESS if CRC enable status has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *enabled);
+int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, Pmic_IoCrcCfg_t *cfg);
 
 #ifdef __cplusplus
 }

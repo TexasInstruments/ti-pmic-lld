@@ -57,6 +57,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRegisterAccess); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_writeWithCrcCalculation); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_i2cWriteWithCrc); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_wdgWriteWithCrc); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncWriteSpi); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncWriteI2c); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_withRetryOnFailure); \
@@ -97,6 +98,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_singleRegisterRead); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_registerReadVerification); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_readWithCrcValidation); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_wdgReadWithCrc); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadSpi); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadI2c); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
@@ -223,10 +225,13 @@ extern "C" {
 /*                      Test APIs: ioSetCrcEnableState                      */
 /* ======================================================================== */
 #define IO_TEST_POS_IOSETCRCENABLESTATE() \
-    PLATFORM_RUN_TEST(test_pos_io_ioSetCrcEnableState_crcSetEnableState)
+    PLATFORM_RUN_TEST(test_pos_io_ioSetCrcEnableState_crcSetEnableState); \
+    PLATFORM_RUN_TEST(test_pos_io_ioSetCrcEnableState_crcEnable1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioSetCrcEnableState_crcEnableBoth)
 
 #define IO_TEST_NEG_IOSETCRCENABLESTATE() \
-    PLATFORM_RUN_TEST(test_neg_io_ioSetCrcEnableState_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_io_ioSetCrcEnableState_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioSetCrcEnableState_nullCfg)
 
 /* Test: TC-IO-0018 */
 #define IO_TEST_IOSETCRCENABLESTATE() \
@@ -237,7 +242,9 @@ extern "C" {
 /*                      Test APIs: ioGetCrcEnableState                      */
 /* ======================================================================== */
 #define IO_TEST_POS_IOGETCRCENABLESTATE() \
-    /* Covered in other CRC tests */
+    PLATFORM_RUN_TEST(test_pos_io_ioGetCrcEnableState_crcEnable0); \
+    PLATFORM_RUN_TEST(test_pos_io_ioGetCrcEnableState_crcEnable1); \
+    PLATFORM_RUN_TEST(test_pos_io_ioGetCrcEnableState_crcEnableBoth)
 
 #define IO_TEST_NEG_IOGETCRCENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_io_ioGetCrcEnableState_nullHandle); \
@@ -306,8 +313,12 @@ void test_neg_io_ioUpdateByte_CS_nullHandle(void);
 void test_neg_io_ioUpdateByte_b_nullHandle(void);
 void test_neg_io_ioUpdateByte_bCS_nullHandle(void);
 void test_neg_io_ioSetCrcEnableState_nullHandle(void);
+void test_neg_io_ioSetCrcEnableState_nullCfg(void);
 void test_neg_io_ioCrcEnable_nullHandle(void);
 void test_neg_io_ioCrcDisable_nullHandle(void);
+void test_pos_io_ioGetCrcEnableState_crcEnable0(void);
+void test_pos_io_ioGetCrcEnableState_crcEnable1(void);
+void test_pos_io_ioGetCrcEnableState_crcEnableBoth(void);
 void test_neg_io_ioGetCrcEnableState_nullHandle(void);
 void test_neg_io_ioGetCrcEnableState_nullEnabled(void);
 void test_neg_io_ioRxByte_crcErrorExhaustsRetries(void);
@@ -328,6 +339,10 @@ void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void);
 void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void);
 void test_pos_io_ioCrcEnable_crcEnableDisable(void);
 void test_pos_io_ioSetCrcEnableState_crcSetEnableState(void);
+void test_pos_io_ioSetCrcEnableState_crcEnable1(void);
+void test_pos_io_ioSetCrcEnableState_crcEnableBoth(void);
+void test_pos_io_ioTxByte_wdgWriteWithCrc(void);
+void test_pos_io_ioRxByte_wdgReadWithCrc(void);
 void test_pos_io_ioTxByte_multipleRegisterAccess(void);
 void test_pos_io_ioRxByte_registerReadVerification(void);
 void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void);

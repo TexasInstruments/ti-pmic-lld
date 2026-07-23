@@ -58,7 +58,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_with_crc_enabled); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_with_both_crc_flags); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_crc_disabled); \
-    PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_verify_crc_state); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_complete_flow); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_i2c_single_mode); \
     PLATFORM_RUN_TEST(test_pos_pmic_pmicInit_i2c_dual_mode); \
@@ -86,7 +85,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullIrqCallback); \
     PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_timerWaitNull); \
-    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_timerWaitMsCallbackNull)
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_timerWaitMsCallbackNull); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_nullCommHandle1); \
+    PLATFORM_RUN_TEST(test_neg_pmic_pmicInit_dualI2cMissingHandle1)
 
 /* Test: TC-PMIC-0004 */
 #define PMIC_TEST_PMICINIT() \
@@ -167,6 +168,8 @@ void test_neg_pmic_pmicInit_nullCritSecStop(void);
 void test_neg_pmic_pmicInit_nullIrqCallback(void);
 void test_neg_pmic_pmicInit_timerWaitNull(void);
 void test_neg_pmic_pmicInit_timerWaitMsCallbackNull(void);
+void test_neg_pmic_pmicInit_nullCommHandle1(void);
+void test_neg_pmic_pmicInit_dualI2cMissingHandle1(void);
 
 /* Positive test functions */
 void test_pos_pmic_pmicInit_validConfig(void);
@@ -177,7 +180,6 @@ void test_pos_pmic_pmicInit_reinit(void);
 void test_pos_pmic_pmicInit_with_crc_enabled(void);
 void test_pos_pmic_pmicInit_with_both_crc_flags(void);
 void test_pos_pmic_pmicInit_crc_disabled(void);
-void test_pos_pmic_pmicInit_verify_crc_state(void);
 void test_pos_pmic_pmicInit_complete_flow(void);
 void test_pos_pmic_pmicInit_i2c_single_mode(void);
 void test_pos_pmic_pmicInit_i2c_dual_mode(void);

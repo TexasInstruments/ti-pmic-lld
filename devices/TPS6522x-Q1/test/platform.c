@@ -45,6 +45,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 #include "platform.h"
+#include "regmap/fsm.h"
 #include "debug.h"
 #include <stdbool.h>
 
@@ -69,10 +70,8 @@ typedef struct {
 /*                             Global Variables                               */
 /* ========================================================================== */
 
-/**
- * @brief I2C handle used to communicate to PMIC (stores slave address)
- */
-static I2cHandle_t commHandle = {0U};
+static I2cHandle_t commHandle0 = {0U};  /* Main I2C (port 2, addr 0x48) */
+static I2cHandle_t commHandle1 = {0U};  /* Secondary I2C (port 0, addr 0x12) */
 
 /**
  * @brief Current module name for test result prefixes
@@ -114,7 +113,8 @@ void platform_init(void)
 
     /* Reset initialization state */
     g_platform_initialized = false;
-    commHandle.slaveAddr = 0x00;
+    commHandle0.slaveAddr = 0x00;
+    commHandle1.slaveAddr  = 0x00;
 
     /* Get serial port from environment or use default */
     port = getenv("PMIC_SERIAL_PORT");
@@ -200,11 +200,23 @@ void platform_init(void)
     printf("Firmware connected: %s\n", response);
     printf("Host-controlled platform initialized successfully\n\n");
 
+    /* Configure nRSTOUT monitor pin (PB5) as input with weak pull-up.
+     * nRSTOUT is open-drain active-low; WPU is required for correct reads.
+     * gpioc uses atoi() server-side so bitmask must be decimal (32 = GPIO_PIN_5).
+     * pullupdown=10 = GPIO_PIN_TYPE_STD_WPU in TivaWare. */
+    memset(response, 0, sizeof(response));
+    status = serial_send_command("gpioc pb 32 i 10 1");
+    if (status == 0) {
+        serial_read_response(response, sizeof(response));
+    }
+
     /* Only set address and state after all validation passes */
-    commHandle.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
+    commHandle0.slaveAddr = PLATFORM_TARGET_I2C_ADDR;
+    commHandle1.slaveAddr  = PLATFORM_I2C_ADDR_SECONDARY;
     g_platform_initialized = true;
 
-    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - I2C addr: 0x%02X", PLATFORM_TARGET_I2C_ADDR);
+    PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - main: 0x%02X, sec: 0x%02X",
+                   PLATFORM_TARGET_I2C_ADDR, PLATFORM_I2C_ADDR_SECONDARY);
 #endif
 }
 
@@ -225,7 +237,67 @@ void platform_deinit(void)
 #endif
     /* This code only runs if already deinitialized */
     g_platform_initialized = false;
-    commHandle.slaveAddr = 0x00;
+    commHandle0.slaveAddr = 0x00;
+    commHandle1.slaveAddr  = 0x00;
+}
+
+#ifdef BUILD_HOST
+static void platform_waitNRSTOUT(void)
+{
+    char response[256];
+    uint32_t elapsed_ms;
+    bool ready = false;
+
+    /* Brief initial wait for the PMIC to start asserting nRSTOUT low */
+    usleep((useconds_t)PLATFORM_REBOOT_INITIAL_WAIT_MS * 1000U);
+    elapsed_ms = PLATFORM_REBOOT_INITIAL_WAIT_MS;
+
+    while (elapsed_ms < PLATFORM_REBOOT_TIMEOUT_MS) {
+        if (serial_send_command("gpior pb 32") != 0) break;
+
+        if (serial_read_response(response, sizeof(response)) < 0) break;
+        if (strstr(response, "STATUS: OK") == NULL) break;
+
+        if (serial_read_response(response, sizeof(response)) < 0) break;
+
+        /* Last "0x"-prefixed token in the RESULTS line is the pin value */
+        char *cursor = response;
+        char *last_hex = NULL;
+        while ((cursor = strstr(cursor, "0x")) != NULL) { last_hex = cursor; cursor += 2; }
+        if (last_hex != NULL) {
+            uint32_t val = (uint32_t)strtoul(last_hex, NULL, 0);
+            if ((val & 0x20U) != 0U) { ready = true; break; }
+        }
+
+        usleep(10000U);
+        elapsed_ms += 10U;
+    }
+
+    if (ready) {
+        printf("[SOFT REBOOT] nRSTOUT HIGH after %ums\n", elapsed_ms);
+    } else {
+        printf("[SOFT REBOOT] WARNING: nRSTOUT timeout after %ums, continuing\n", elapsed_ms);
+    }
+}
+#endif
+
+void platform_softReboot(void)
+{
+#ifdef BUILD_HOST
+    Pmic_Handle_t h = {0};
+    h.commHandle0 = platform_getCommHandle0();
+    h.commHandle1 = platform_getCommHandle1();
+    h.commMode    = PMIC_INTF_I2C_DUAL;
+    uint8_t val = (uint8_t)SOFT_REBOOT_MASK;
+    int32_t status = platform_txByte(&h, PMIC_PAGE_MAIN, (uint8_t)SOFT_REBOOT_REG_REG, &val, 1U);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        printf("[SOFT REBOOT] ERROR: I2C write failed (status=%d)\n", status);
+        return;
+    }
+    printf("[SOFT REBOOT] triggered\n");
+    platform_waitNRSTOUT();
+#endif
 }
 
 void platform_setupTests(void)
@@ -287,9 +359,14 @@ void platform_irqResponse(void)
     /* Empty - No response */
 }
 
-void *platform_getCommHandle(void)
+void *platform_getCommHandle0(void)
 {
-    return (void*)(&commHandle);
+    return (void*)(&commHandle0);
+}
+
+void *platform_getCommHandle1(void)
+{
+    return (void*)(&commHandle1);
 }
 
 int32_t platform_txByte(
@@ -302,8 +379,6 @@ int32_t platform_txByte(
     int n;
     uint8_t i;
 
-    (void)page;  /* TPS6522x-Q1: Page mapping not used in current implementation */
-
     /* Validate platform is initialized */
     if (!g_platform_initialized) {
         return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -313,22 +388,32 @@ int32_t platform_txByte(
     if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
+    if ((handle->commMode == PMIC_INTF_I2C_DUAL) && (handle->commHandle1 == NULL)) {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
 
     if (bufLen == 0U) {
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Get slave address from handle */
-    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+    /* Select handle and Tiva I2C port based on page */
+    I2cHandle_t *i2cHandle;
+    uint8_t tivaPort;
+    if ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL)) {
+        i2cHandle = (I2cHandle_t*)(handle->commHandle1);
+        tivaPort  = PLATFORM_I2C_PORT_SECONDARY;
+    } else {
+        i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+        tivaPort  = PLATFORM_I2C_PORT_MAIN;
+    }
 
     /* Build i2ce command: write only (read_len=0)
      * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
-     * Example: i2ce 0 400000 0x60 0 2 0x10 0xAA
      * NOTE: write_len must include the register byte, so bufLen + 1
      *       The data bytes start with register address, then buffer contents
      */
-    n = snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 %d 0x%02X",
-                 i2cHandle->slaveAddr, bufLen + 1, regAddr);
+    n = snprintf(cmd, sizeof(cmd), "i2ce %u 400000 0x%02X 0 %d 0x%02X",
+                 tivaPort, i2cHandle->slaveAddr, bufLen + 1, regAddr);
 
     if (n < 0 || n >= (int)sizeof(cmd)) {
         return PMIC_ST_ERR_INV_PARAM;
@@ -343,6 +428,7 @@ int32_t platform_txByte(
     }
 
     /* Send command to firmware */
+    if (getenv("PMIC_TRACE")) { printf("[TX] %s\n", cmd); fflush(stdout); }
     status = serial_send_command(cmd);
     if (status != 0) {
         return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -385,8 +471,6 @@ int32_t platform_rxByte(
     char *token;
     uint8_t idx;
 
-    (void)page;  /* TPS6522x-Q1: Page mapping not used in current implementation */
-
     /* Validate platform is initialized */
     if (!g_platform_initialized) {
         return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -396,23 +480,34 @@ int32_t platform_rxByte(
     if ((handle == NULL) || (handle->commHandle0 == NULL) || (buffer == NULL)) {
         return PMIC_ST_ERR_NULL_PARAM;
     }
+    if ((handle->commMode == PMIC_INTF_I2C_DUAL) && (handle->commHandle1 == NULL)) {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
 
     if (bufLen == 0U) {
         return PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Get slave address from handle */
-    I2cHandle_t *i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+    /* Select handle and Tiva I2C port based on page */
+    I2cHandle_t *i2cHandle;
+    uint8_t tivaPort;
+    if ((page == PMIC_PAGE_WDG) && (handle->commMode == PMIC_INTF_I2C_DUAL)) {
+        i2cHandle = (I2cHandle_t*)(handle->commHandle1);
+        tivaPort  = PLATFORM_I2C_PORT_SECONDARY;
+    } else {
+        i2cHandle = (I2cHandle_t*)(handle->commHandle0);
+        tivaPort  = PLATFORM_I2C_PORT_MAIN;
+    }
 
     /* Build i2ce command: write reg address, then read
      * Format: i2ce <port> <speed> <addr> <read_len> <write_len> <data>...
-     * Example: i2ce 0 400000 0x60 2 1 0x10
-     *   This writes 0x10 (register address), then reads 2 bytes
+     *   This writes the register address, then reads bufLen bytes
      */
-    snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X %d 1 0x%02X",
-             i2cHandle->slaveAddr, bufLen, regAddr);
+    snprintf(cmd, sizeof(cmd), "i2ce %u 400000 0x%02X %d 1 0x%02X",
+             tivaPort, i2cHandle->slaveAddr, bufLen, regAddr);
 
     /* Send command to firmware */
+    if (getenv("PMIC_TRACE")) { printf("[RX] %s\n", cmd); fflush(stdout); }
     status = serial_send_command(cmd);
     if (status != 0) {
         return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -479,9 +574,9 @@ void platform_unlockRegisters(void)
 {
 #ifdef BUILD_HOST
     /* Hardware: Unlock TPS6522x-Q1 configuration registers
-     * Write 0x9B to register 0x09 (REGISTER_LOCK)
+     * Write 0x9B to register 0xA1 (REGISTER_LOCK_REG, per include/regmap/core.h)
      */
-    const uint8_t REGISTER_LOCK_REG = 0x09U;
+    const uint8_t REGISTER_LOCK_REG = 0xA1U;
     const uint8_t UNLOCK_KEY = 0x9BU;
     char cmd[SERIAL_MAX_CMD_LEN];
     char response[SERIAL_MAX_RESPONSE_LEN];
@@ -497,11 +592,11 @@ void platform_unlockRegisters(void)
     }
 
     /* Validate I2C address is correct */
-    if (commHandle.slaveAddr != PLATFORM_TARGET_I2C_ADDR) {
+    if (commHandle0.slaveAddr != PLATFORM_TARGET_I2C_ADDR) {
         PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "Invalid I2C address: 0x%02X (expected 0x%02X)",
-                       commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
+                       commHandle0.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
         fprintf(stderr, "ERROR: Invalid I2C address 0x%02X (expected 0x%02X)\n",
-                commHandle.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
+                commHandle0.slaveAddr, PLATFORM_TARGET_I2C_ADDR);
         return;
     }
 
@@ -510,7 +605,7 @@ void platform_unlockRegisters(void)
      *   Write 0x9B to register 0x09, no read
      */
     snprintf(cmd, sizeof(cmd), "i2ce 2 400000 0x%02X 0 2 0x%02X 0x%02X",
-             commHandle.slaveAddr, REGISTER_LOCK_REG, UNLOCK_KEY);
+             commHandle0.slaveAddr, REGISTER_LOCK_REG, UNLOCK_KEY);
 
     PLATFORM_DEBUG(DEBUG_LEVEL_DEBUG, "Sending unlock command: %s", cmd);
 

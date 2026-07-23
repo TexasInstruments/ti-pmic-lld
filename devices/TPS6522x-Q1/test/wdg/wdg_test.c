@@ -1176,12 +1176,14 @@ void wdg_test(void *args)
     /* Initialize PMIC handle */
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID | PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_COMM_HANDLE_1_VALID |
                        PMIC_IO_READ_VALID | PMIC_IO_WRITE_VALID |
                        PMIC_CRITICAL_SECTION_START_VALID |
                        PMIC_CRITICAL_SECTION_STOP_VALID |
                        PMIC_IRQ_RESPONSE_CALLBACK_VALID,
-        .commMode = PMIC_INTF_SPI,
-        .commHandle0 = platform_getCommHandle(),
+        .commMode = PMIC_INTF_I2C_DUAL,
+        .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

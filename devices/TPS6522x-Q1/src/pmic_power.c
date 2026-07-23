@@ -214,14 +214,20 @@ static inline void PWR_getBuckGrpSelInfo(uint8_t buckId, uint16_t *regAddr, uint
 static inline void PWR_getLdoGrpSelInfo(uint8_t ldoId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_2_REG;
-    *shift = (uint8_t)((ldoId - 1U) * 2U);
+    *shift = (uint8_t)(ldoId * 2U);
 }
 
 // Get VMON group select register and shift based on VMON ID
 static inline void PWR_getVmonGrpSelInfo(uint8_t vmonId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_3_REG;
-    *shift = (uint8_t)((vmonId - 1U) * 2U);
+    switch (vmonId)
+    {
+        case PMIC_POWER_RESOURCE_ID_VMON1:     *shift = VMON1_GRP_SEL_SHIFT; break;
+        case PMIC_POWER_RESOURCE_ID_VMON2:     *shift = VMON2_GRP_SEL_SHIFT; break;
+        case PMIC_POWER_RESOURCE_ID_VCCA_VMON: *shift = VCCA_GRP_SEL_SHIFT;  break;
+        default:                               *shift = 0U;                   break;
+    }
 }
 
 // Set buck configuration
@@ -816,7 +822,9 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
             }
         }
 
-        if ((status == PMIC_ST_SUCCESS) && (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_THR_VALID)))
+        if ((status == PMIC_ST_SUCCESS) &&
+            (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_THR_VALID) ||
+             (isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_POWER_VCCA_VMON_PG_SET_VALID))))
         {
             status = Pmic_ioTxByte(handle, pgWindowRegAddr, regData);
         }

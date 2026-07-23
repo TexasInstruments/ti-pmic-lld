@@ -485,8 +485,7 @@ int32_t Pmic_fsmClrRecovCnt(const Pmic_Handle_t *handle)
     // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_REG_2
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField(&regData, RECOV_CNT_CLR_SHIFT, RECOV_CNT_CLR_MASK, 1U);
-        status = Pmic_ioTxByte_CS(handle, RECOV_CNT_REG_2_REG, regData);
+        status = Pmic_ioUpdateByte_bCS(handle, RECOV_CNT_REG_2_REG, RECOV_CNT_CLR_SHIFT, (bool)true);
     }
 
     return Pmic_logStatus(handle, status);

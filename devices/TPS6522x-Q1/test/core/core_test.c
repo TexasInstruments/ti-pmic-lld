@@ -60,7 +60,7 @@ void core_test(void *args)
         .validParams = (PMIC_COMM_MODE_VALID |
                         PMIC_I2C_ADDR0_VALID |
                         PMIC_I2C_ADDR1_VALID |
-                        PMIC_CRC_ENABLE_VALID |
+                        PMIC_CRC_ENABLE_0_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
                         PMIC_IO_READ_VALID |
                         PMIC_IO_WRITE_VALID |
@@ -70,8 +70,8 @@ void core_test(void *args)
         .commMode = PMIC_INTF_I2C_SINGLE,
         .i2cAddr0 = PLATFORM_I2C_ADDR_MAIN,
         .i2cAddr1 = PLATFORM_I2C_ADDR_SECONDARY,
-        .crcEnable = PMIC_DISABLE,
-        .commHandle0 = platform_getCommHandle(),
+        .crcEnable0 = PMIC_DISABLE,
+        .commHandle0 = platform_getCommHandle0(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

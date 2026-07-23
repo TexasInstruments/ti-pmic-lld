@@ -35,7 +35,12 @@
 
 #include "unity.h"
 #include "platform.h"
+#include "test_filter.h"
 #include <stdio.h>
+#include "regmap/core.h"
+#include "regmap/irq.h"
+#include "regmap/wdg.h"
+#include "regmap/fsm.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
 #include "pmic_mock_core.h"
@@ -48,20 +53,85 @@
  */
 void setUp(void)
 {
-    /* Unlock registers to ensure clean state */
+    static const uint8_t clrVal = 0xFFU;
+    static const struct { uint8_t page; uint16_t addr; } irqRegs[] = {
+        { PMIC_PAGE_MAIN, INT_BUCK_REG         },
+        { PMIC_PAGE_MAIN, INT_LDO_VMON_REG     },
+        { PMIC_PAGE_MAIN, INT_GPIO_REG         },
+        { PMIC_PAGE_MAIN, INT_STARTUP_REG      },
+        { PMIC_PAGE_MAIN, INT_MISC_REG         },
+        { PMIC_PAGE_MAIN, INT_MODERATE_ERR_REG },
+        { PMIC_PAGE_MAIN, INT_SEVERE_ERR_REG   },
+        { PMIC_PAGE_MAIN, INT_FSM_ERR_REG      },
+        { PMIC_PAGE_MAIN, INT_ESM_REG          },
+        { PMIC_PAGE_WDG,  WD_ERR_STATUS_REG    },
+    };
+    char msg[64] = {0};
+    uint8_t recov2 = 0U;
+
+    Pmic_Handle_t h = {0};
+    h.commHandle0 = platform_getCommHandle0();
+    h.commHandle1 = platform_getCommHandle1();
+    h.commMode    = PMIC_INTF_I2C_DUAL;
+
+#ifndef BUILD_MOCK
+    platform_softReboot();
+
+    {
+        static const struct { uint8_t page; uint16_t addr; const char *name; } statusRegs[] = {
+            { PMIC_PAGE_MAIN, INT_TOP_REG,           "INT_TOP      " },
+            { PMIC_PAGE_MAIN, STAT_SEVERE_ERR_REG,   "STAT_SEVERE  " },
+            { PMIC_PAGE_MAIN, STAT_MODERATE_ERR_REG, "STAT_MODERATE" },
+            { PMIC_PAGE_MAIN, RECOV_CNT_REG_1_REG,   "RECOV_CNT    " },
+            { PMIC_PAGE_MAIN, STARTUP_CTRL_REG,      "STARTUP_CTRL " },
+        };
+        uint8_t regVal = 0U;
+        for (uint8_t i = 0U; i < (uint8_t)(sizeof(statusRegs) / sizeof(statusRegs[0])); i++) {
+            if (platform_rxByte(&h, statusRegs[i].page, statusRegs[i].addr, &regVal, 1U) == PMIC_ST_SUCCESS) {
+                if (regVal != 0U) {
+                    printf("[PMIC STATE] %s = 0x%02X\n", statusRegs[i].name, regVal);
+                }
+            }
+        }
+    }
+#endif
+
     platform_unlockRegisters();
 
-    /* Clear mock errors if in mock mode */
-    #ifdef BUILD_MOCK
+    int32_t status = platform_rxByte(&h, PMIC_PAGE_MAIN, RECOV_CNT_REG_2_REG, &recov2, 1U);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        (void)sprintf(msg, "ERROR: Recovery counter read failed: %d\r\n", status);
+        platform_printString(msg);
+    }
+    recov2 |= (uint8_t)RECOV_CNT_CLR_MASK;
+    status = platform_txByte(&h, PMIC_PAGE_MAIN, RECOV_CNT_REG_2_REG, &recov2, 1U);
+    if (status != PMIC_ST_SUCCESS)
+    {
+        (void)sprintf(msg, "ERROR: Recovery counter clear failed: %d\r\n", status);
+        platform_printString(msg);
+    }
+
+    for (uint8_t i = 0U; i < (uint8_t)(sizeof(irqRegs) / sizeof(irqRegs[0])); i++)
+    {
+        status = platform_txByte(&h, irqRegs[i].page, irqRegs[i].addr, &clrVal, 1U);
+        if (status != PMIC_ST_SUCCESS)
+        {
+            (void)sprintf(msg, "ERROR: IRQ clear failed (reg 0x%04X): %d\r\n",
+                          irqRegs[i].addr, status);
+            platform_printString(msg);
+        }
+    }
+
+#ifdef BUILD_MOCK
     extern PmicMockDevice_t* platform_getMockDevice(void);
     PmicMockDevice_t* mock = platform_getMockDevice();
     if (mock != NULL) {
         extern void PmicMock_ClearErrors(PmicMockDevice_t *device);
         PmicMock_ClearErrors(mock);
-        /* Initialize test injection for this test */
         testInject_init(mock);
     }
-    #endif
+#endif
 }
 
 /**
@@ -69,18 +139,14 @@ void setUp(void)
  */
 void tearDown(void)
 {
-    /* Unlock registers (in case test locked them) */
-    platform_unlockRegisters();
-
-    /* Clear mock errors */
-    #ifdef BUILD_MOCK
+#ifdef BUILD_MOCK
     extern PmicMockDevice_t* platform_getMockDevice(void);
     PmicMockDevice_t* mock = platform_getMockDevice();
     if (mock != NULL) {
         extern void PmicMock_ClearErrors(PmicMockDevice_t *device);
         PmicMock_ClearErrors(mock);
     }
-    #endif
+#endif
 }
 
 /* Declare test module entry functions */
@@ -113,40 +179,102 @@ int main(void)
 #endif
     printf("========================================\n\n");
 
+#ifndef BUILD_MOCK
+    platform_init();
+    {
+        static const struct { uint8_t page; uint16_t addr; const char *name; } infoRegs[] = {
+            { PMIC_PAGE_MAIN, DEV_REV_REG,             "DEV_REV"          },
+            { PMIC_PAGE_MAIN, NVM_CODE_1_REG,          "NVM_CODE_1"       },
+            { PMIC_PAGE_MAIN, NVM_CODE_2_REG,          "NVM_CODE_2"       },
+            { PMIC_PAGE_MAIN, MANUFACTURING_VER_REG,   "MANUFACTURING_VER" },
+            { PMIC_PAGE_MAIN, CUSTOMER_NVM_ID_REG_REG, "CUSTOMER_NVM_ID_REG" },
+        };
+        Pmic_Handle_t h = {0};
+        h.commHandle0 = platform_getCommHandle0();
+        h.commHandle1 = platform_getCommHandle1();
+        h.commMode    = PMIC_INTF_I2C_DUAL;
+        uint8_t regVal = 0U;
+        int32_t status;
+        for (uint8_t i = 0U; i < (uint8_t)(sizeof(infoRegs) / sizeof(infoRegs[0])); i++) {
+            status = platform_rxByte(&h, infoRegs[i].page, infoRegs[i].addr, &regVal, 1U);
+            if (status == PMIC_ST_SUCCESS) {
+                printf("[DEVICE INFO] %-20s = 0x%02X\n", infoRegs[i].name, regVal);
+            } else {
+                printf("[DEVICE INFO] %-20s = ERROR (status=%d)\n", infoRegs[i].name, status);
+            }
+        }
+    }
+    printf("\n");
+#endif
+
+    testFilter_init();
     UNITY_BEGIN();
 
     printf("\n=== Running Common Tests ===\n");
     common_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running PMIC Init Tests ===\n");
     pmic_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running Core Tests ===\n");
     core_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running ADC Tests ===\n");
     adc_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running Power Tests ===\n");
     power_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running GPIO Tests ===\n");
     gpio_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running WDG Tests ===\n");
     wdg_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running ESM Tests ===\n");
     esm_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running I/O Tests ===\n");
     io_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running IRQ Tests ===\n");
     irq_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n=== Running FSM Tests ===\n");
     fsm_test(NULL);
+#ifndef BUILD_MOCK
+    platform_softReboot();
+#endif
 
     printf("\n========================================\n");
     return UNITY_END();

@@ -341,7 +341,10 @@ extern "C" {
  *
  * @param maxLoopCnt Maximum number of iterations for loops in PMIC LLD.
  *
- * @param crcEnable Enable or disable serial communication CRC.
+ * @param crcEnable0 Enable or disable serial communication CRC on I2C1 or SPI.
+ *
+ * @param crcEnable1 Enable or disable serial communication CRC on I2C2. Unused
+ * in single I2C mode and SPI mode.
  *
  * @param asyncEnable Enable asynchronous serial communication operation. If set
  * to true, the driver shall use the asynchronous read/write hooks to transfer
@@ -417,9 +420,11 @@ typedef struct Pmic_Handle_s {
     uint32_t retryCnt;
     uint32_t retryIntervalMs;
     uint32_t maxLoopCnt;
-    bool crcEnable;
+    bool crcEnable0;
+    bool crcEnable1;
     bool asyncEnable;
     void *commHandle0;
+    void *commHandle1;
     void *taskHandle;
     int32_t (*ioRead)(
         const struct Pmic_Handle_s *handle, uint8_t page, uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);

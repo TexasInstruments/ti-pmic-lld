@@ -21,6 +21,12 @@ TEST_INCLUDE_FLAGS = $(addprefix -I,$(TEST_INCLUDE_DIRS))
 # Compiler flags (device-specific includes)
 CFLAGS = $(BASE_CFLAGS) -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
 
+# On Windows, MSVC-targeted clang annotates CRT functions (e.g. snprintf) causing
+# spurious -Wused-but-marked-unused hits under -Weverything. Suppress only here.
+ifeq ($(OS),Windows_NT)
+    CFLAGS += -Wno-used-but-marked-unused
+endif
+
 # PMIC driver source files (always needed)
 PMIC_SOURCES = \
 	$(SRC_DIR)/pmic.c \
@@ -67,6 +73,7 @@ ifeq ($(BUILD), mock)
 	CFLAGS += -I$(MOCK_DIR)/platforms/$(DEVICE_PLATFORM)
 	CFLAGS += -I$(UNITY_DIR)/src
 	CFLAGS += -DBUILD_MOCK -DUNITY_INCLUDE_DOUBLE
+	CFLAGS += -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U
 
 	# Platform glue compiled locally (from pmic-lld-mocking/platforms/tps6522x/)
 	PLATFORM_SOURCES = $(MOCK_DIR)/platforms/$(DEVICE_PLATFORM)/platform_mock.c

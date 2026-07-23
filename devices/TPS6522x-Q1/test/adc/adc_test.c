@@ -128,14 +128,16 @@ void adc_test(void *args)
 
     /* Initialize PMIC handle */
     handleCfg.validParams = PMIC_COMM_MODE_VALID |
+                            PMIC_I2C_ADDR0_VALID |
                             PMIC_COMM_HANDLE_0_VALID |
                             PMIC_IO_READ_VALID |
                             PMIC_IO_WRITE_VALID |
                             PMIC_CRITICAL_SECTION_START_VALID |
                             PMIC_CRITICAL_SECTION_STOP_VALID |
                             PMIC_MAX_LOOP_CNT_VALID;
-    handleCfg.commMode = PMIC_INTF_SPI;
-    handleCfg.commHandle0 = platform_getCommHandle();
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.i2cAddr0 = PLATFORM_TARGET_I2C_ADDR;
+    handleCfg.commHandle0 = platform_getCommHandle0();
     handleCfg.ioRead = &platform_rxByte;
     handleCfg.ioWrite = &platform_txByte;
     handleCfg.criticalSectionStart = &platform_critSecStart;

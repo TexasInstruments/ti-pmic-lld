@@ -1801,13 +1801,15 @@ void common_test(void *args)
 
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = PMIC_COMM_MODE_VALID |
+                       PMIC_I2C_ADDR0_VALID |
                        PMIC_COMM_HANDLE_0_VALID |
                        PMIC_IO_READ_VALID |
                        PMIC_IO_WRITE_VALID |
                        PMIC_CRITICAL_SECTION_START_VALID |
                        PMIC_CRITICAL_SECTION_STOP_VALID,
-        .commMode = PMIC_INTF_SPI,
-        .commHandle0 = platform_getCommHandle(),
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle0(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,

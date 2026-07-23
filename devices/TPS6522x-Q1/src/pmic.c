@@ -149,6 +149,19 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
         }
     }
 
+    // commHandle1
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_COMM_HANDLE_1_VALID, status))
+    {
+        if (config->commHandle1 == NULL)
+        {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            handle->commHandle1 = config->commHandle1;
+        }
+    }
+
     // taskHandle
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_TASK_HANDLE_VALID, status))
     {
@@ -340,6 +353,42 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 {
     int32_t status = PMIC_ST_SUCCESS;
 
+    // crcEnable0
+    if (Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_0_VALID))
+    {
+        handle->crcEnable0 = config->crcEnable0;
+    }
+
+    // crcEnable1
+    if (Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_1_VALID))
+    {
+        handle->crcEnable1 = config->crcEnable1;
+    }
+
+    // retryCnt
+    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_CNT_VALID))
+    {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    // retryIntervalMs
+    if (Pmic_validParamCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID))
+    {
+        handle->retryIntervalMs = config->retryIntervalMs;
+    }
+
+    // maxLoopCnt
+    if (Pmic_validParamCheck(config->validParams, PMIC_MAX_LOOP_CNT_VALID))
+    {
+        handle->maxLoopCnt = config->maxLoopCnt;
+    }
+
+    // asyncEnable
+    if (Pmic_validParamCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID))
+    {
+        handle->asyncEnable = config->asyncEnable;
+    }
+
     // commMode
     if (Pmic_validParamCheck(config->validParams, PMIC_COMM_MODE_VALID))
     {
@@ -351,36 +400,6 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
         {
             handle->commMode = config->commMode;
         }
-    }
-
-    // retryCnt
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_CNT_VALID, status))
-    {
-        handle->retryCnt = config->retryCnt;
-    }
-
-    // retryIntervalMs
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_RETRY_INTERVAL_MS_VALID, status))
-    {
-        handle->retryIntervalMs = config->retryIntervalMs;
-    }
-
-    // maxLoopCnt
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_MAX_LOOP_CNT_VALID, status))
-    {
-        handle->maxLoopCnt = config->maxLoopCnt;
-    }
-
-    // crcEnable
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CRC_ENABLE_VALID, status))
-    {
-        handle->crcEnable = config->crcEnable;
-    }
-
-    // asyncEnable
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID, status))
-    {
-        handle->asyncEnable = config->asyncEnable;
     }
 
     // Validate I2C configuration
@@ -416,6 +435,15 @@ static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
     if (handle->commHandle0 == NULL)
     {
         return PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Check commHandle1 for dual I2C mode
+    if (handle->commMode == PMIC_INTF_I2C_DUAL)
+    {
+        if (handle->commHandle1 == NULL)
+        {
+            return PMIC_ST_ERR_NULL_PARAM;
+        }
     }
 
     // Check criticalSectionStart, criticalSectionStop
@@ -517,9 +545,11 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle)
         handle->i2cAddr2 = 0U;
         handle->retryCnt = 0U;
         handle->retryIntervalMs = 0U;
-        handle->crcEnable = PMIC_DISABLE;
+        handle->crcEnable0 = PMIC_DISABLE;
+        handle->crcEnable1 = PMIC_DISABLE;
         handle->asyncEnable = PMIC_DISABLE;
         handle->commHandle0 = NULL;
+        handle->commHandle1 = NULL;
         handle->taskHandle = NULL;
         handle->ioRead = NULL;
         handle->ioWrite = NULL;

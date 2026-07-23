@@ -155,6 +155,12 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle)
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Check commHandle1 in dual I2C mode
+    if ((handle->commMode == PMIC_INTF_I2C_DUAL) && (handle->commHandle1 == NULL))
+    {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
+
     // Check async hooks
     if (handle->asyncEnable)
     {
@@ -179,8 +185,9 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle)
 int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData)
 {
     uint32_t attemptNum = 0U;
-    int32_t status;
-    uint8_t page;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t i2cAddr = 0U;
+    bool crcEnabled = (bool)false;
 
     status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS)
@@ -188,7 +195,18 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
         return status;
     }
 
-    page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
+    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
+
+    if (page == PMIC_PAGE_WDG)
+    {
+        i2cAddr = handle->i2cAddr1;
+        crcEnabled = handle->crcEnable1;
+    }
+    else
+    {
+        i2cAddr = handle->i2cAddr0;
+        crcEnabled = handle->crcEnable0;
+    }
 
     // SPI MODE
     if (handle->commMode == PMIC_INTF_SPI)
@@ -201,7 +219,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
                        (SPI_WRITE_BIT << 4U);              // R/W = 0
         spiFrame[2U] = txData;                             // DATA
 
-        if (handle->crcEnable)
+        if (crcEnabled)
         {
             spiFrame[3U] = getCRC8Val(spiFrame, frameLen);
             frameLen++;
@@ -240,13 +258,13 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
         uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
 
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)(((uint8_t)(handle->i2cAddr0 & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT);
+        i2cFrame[0U] = (uint8_t)(((uint8_t)(i2cAddr & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT);
         i2cFrame[1U] = (uint8_t)regAddr;  // Only lower 8 bits on wire
         i2cFrame[2U] = txData;
         i2cFrameLen = 3U;
 
         // If PMIC CRC is enabled, calculate CRC and increment number of bytes in the I2C frame
-        if (handle->crcEnable)
+        if (crcEnabled)
         {
             i2cFrame[3U] = getCRC8Val(i2cFrame, i2cFrameLen);
             i2cFrameLen++;
@@ -296,8 +314,9 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData)
 {
     uint32_t attemptNum = 0U;
-    int32_t status;
-    uint8_t page;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t i2cAddr = 0U;
+    bool crcEnabled = (bool)false;
 
     status = IO_validatePmicHandle(handle);
     if (status != PMIC_ST_SUCCESS)
@@ -310,7 +329,18 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
         return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
+    const uint8_t page = (uint8_t)((regAddr >> SPI_ADDR_BYTE_SHIFT) & SPI_PAGE_MASK);
+
+    if (page == PMIC_PAGE_WDG)
+    {
+        i2cAddr = handle->i2cAddr1;
+        crcEnabled = handle->crcEnable1;
+    }
+    else
+    {
+        i2cAddr = handle->i2cAddr0;
+        crcEnabled = handle->crcEnable0;
+    }
 
     // SPI MODE
     if (handle->commMode == PMIC_INTF_SPI)
@@ -324,7 +354,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
                        (SPI_READ_BIT << 4U);               // R/W = 1
         spiFrame[2U] = 0x00U;                              // Dummy byte
 
-        if (handle->crcEnable)
+        if (crcEnabled)
         {
             spiFrame[3U] = getCRC8Val(spiFrame, 3U);
             frameLen++;
@@ -348,7 +378,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             }
 
             // Verify received CRC
-            if ((status == PMIC_ST_SUCCESS) && (handle->crcEnable != false))
+            if ((status == PMIC_ST_SUCCESS) && crcEnabled)
             {
                 if (spiFrame[3U] != getCRC8Val(spiFrame, 3U))
                 {
@@ -378,10 +408,10 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
         uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
 
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (uint8_t)(((uint8_t)(handle->i2cAddr0 & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT);
+        i2cFrame[0U] = (uint8_t)(((uint8_t)(i2cAddr & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT);
         i2cFrame[1U] = (uint8_t)regAddr;  // Only lower 8 bits on wire
-        i2cFrame[2U] = (uint8_t)((((uint8_t)(handle->i2cAddr0 & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
-        i2cFrameLen = (handle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
+        i2cFrame[2U] = (uint8_t)((((uint8_t)(i2cAddr & I2C_ADDR_7BIT_MASK)) << I2C_ADDR_SHIFT) | I2C_READ_BIT);
+        i2cFrameLen = (crcEnabled == PMIC_ENABLE) ? 5U : 4U;
 
         do {
             attemptNum++;
@@ -401,7 +431,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
             }
 
             // If read exchange was successful and PMIC CRC is enabled, compare actual vs. expected CRC
-            if ((status == PMIC_ST_SUCCESS) && handle->crcEnable)
+            if ((status == PMIC_ST_SUCCESS) && crcEnabled)
             {
                 if (i2cFrame[4U] != getCRC8Val(i2cFrame, i2cFrameLen - 1U))
                 {
@@ -481,31 +511,47 @@ int32_t Pmic_ioUpdateByte_bCS(const Pmic_Handle_t *handle, uint16_t regAddr, uin
     return status;
 }
 
-int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable)
+int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, const Pmic_IoCrcCfg_t *cfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
+    if ((status == PMIC_ST_SUCCESS) && (cfg == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
-        // Read CONFIG_2 register
         status = Pmic_ioRxByte(handle, CONFIG_2_REG, &regData);
     }
 
-    // Modify I2C1_SPI_CRC_EN bit then write new register value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, I2C1_SPI_CRC_EN_SHIFT, I2C1_SPI_CRC_EN_MASK, enable);
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_0_VALID))
+        {
+            Pmic_setBitField_b(&regData, I2C1_SPI_CRC_EN_SHIFT, I2C1_SPI_CRC_EN_MASK, cfg->crcEnable0);
+        }
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_1_VALID))
+        {
+            Pmic_setBitField_b(&regData, I2C2_CRC_EN_SHIFT, I2C2_CRC_EN_MASK, cfg->crcEnable1);
+        }
 
         status = Pmic_ioTxByte(handle, CONFIG_2_REG, regData);
     }
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
-    // Change crcEnable struct member of PMIC handle
     if (status == PMIC_ST_SUCCESS)
     {
-        handle->crcEnable = enable;
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_0_VALID))
+        {
+            handle->crcEnable0 = cfg->crcEnable0;
+        }
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_1_VALID))
+        {
+            handle->crcEnable1 = cfg->crcEnable1;
+        }
     }
 
     return status;
@@ -513,36 +559,47 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_Handle_t *handle, bool enable)
 
 int32_t Pmic_ioCrcEnable(Pmic_Handle_t *handle)
 {
-    return Pmic_ioSetCrcEnableState(handle, PMIC_ENABLE);
+    const Pmic_IoCrcCfg_t cfg = {
+        .validParams = PMIC_CFG_IO_CRC_ENABLE_0_VALID,
+        .crcEnable0 = PMIC_ENABLE,
+    };
+    return Pmic_ioSetCrcEnableState(handle, &cfg);
 }
 
 int32_t Pmic_ioCrcDisable(Pmic_Handle_t *handle)
 {
-    return Pmic_ioSetCrcEnableState(handle, PMIC_DISABLE);
+    const Pmic_IoCrcCfg_t cfg = {
+        .validParams = PMIC_CFG_IO_CRC_ENABLE_0_VALID,
+        .crcEnable0 = PMIC_DISABLE,
+    };
+    return Pmic_ioSetCrcEnableState(handle, &cfg);
 }
 
-int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, bool *enabled)
+int32_t Pmic_ioGetCrcEnableState(const Pmic_Handle_t *handle, Pmic_IoCrcCfg_t *cfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
-    if ((status == PMIC_ST_SUCCESS) && (enabled == NULL))
+    if ((status == PMIC_ST_SUCCESS) && (cfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Read CONFIG_2 register
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte_CS(handle, CONFIG_2_REG, &regData);
     }
 
-    // Extract the CRC enable status (cast as boolean)
-    // TPS6522x-Q1 has both I2C1_SPI_CRC_EN and I2C2_CRC_EN bits
-    // For single I2C mode, check I2C1_SPI_CRC_EN
     if (status == PMIC_ST_SUCCESS)
     {
-        *enabled = Pmic_getBitField_b(regData, I2C1_SPI_CRC_EN_SHIFT);
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_0_VALID))
+        {
+            cfg->crcEnable0 = Pmic_getBitField_b(regData, I2C1_SPI_CRC_EN_SHIFT);
+        }
+        if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_IO_CRC_ENABLE_1_VALID))
+        {
+            cfg->crcEnable1 = Pmic_getBitField_b(regData, I2C2_CRC_EN_SHIFT);
+        }
     }
 
     return status;

@@ -42,12 +42,6 @@
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define TEST_COMMON_MIN_INT_REG        ((uint8_t)0x50U)
-#define TEST_COMMON_MAX_INT_REG        ((uint8_t)0x58U)
-#define TEST_COMMON_WDG_ERR_STATUS_REG ((uint8_t)0x62U)
-#define TEST_COMMON_REGISTER_LOCK_REG  ((uint8_t)0x09U)
-#define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
-
 // BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
 #define DEVICE_PG_IDENTIFIER_MASK (1UL << 3U)
 
@@ -71,3 +65,4 @@ void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
         platform_printString(msg);
     }
 }
+

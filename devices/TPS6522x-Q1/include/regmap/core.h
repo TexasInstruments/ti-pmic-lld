@@ -51,18 +51,19 @@ extern "C" {
 /*                              Register Addresses                            */
 /* ========================================================================== */
 
-#define DEV_REV_REG           ((uint16_t)0x01U)
-#define NVM_CODE_1_REG        ((uint16_t)0x02U)
-#define NVM_CODE_2_REG        ((uint16_t)0x03U)
-#define CONFIG_1_REG          ((uint16_t)0x7DU)
-#define CONFIG_2_REG          ((uint16_t)0x7EU)
-#define MISC_CTRL_REG         ((uint16_t)0x81U)
-#define REGISTER_LOCK_REG     ((uint16_t)0xA1U)
-#define MANUFACTURING_VER_REG ((uint16_t)0xA6U)
-#define SCRATCH_PAD_REG_1_REG ((uint16_t)0xC9U)
-#define SCRATCH_PAD_REG_2_REG ((uint16_t)0xCAU)
-#define SCRATCH_PAD_REG_3_REG ((uint16_t)0xCBU)
-#define SCRATCH_PAD_REG_4_REG ((uint16_t)0xCCU)
+#define DEV_REV_REG             ((uint16_t)0x01U)
+#define NVM_CODE_1_REG          ((uint16_t)0x02U)
+#define NVM_CODE_2_REG          ((uint16_t)0x03U)
+#define CONFIG_1_REG            ((uint16_t)0x7DU)
+#define CONFIG_2_REG            ((uint16_t)0x7EU)
+#define MISC_CTRL_REG           ((uint16_t)0x81U)
+#define REGISTER_LOCK_REG       ((uint16_t)0xA1U)
+#define MANUFACTURING_VER_REG   ((uint16_t)0xA6U)
+#define CUSTOMER_NVM_ID_REG_REG ((uint16_t)0xA7U)
+#define SCRATCH_PAD_REG_1_REG   ((uint16_t)0xC9U)
+#define SCRATCH_PAD_REG_2_REG   ((uint16_t)0xCAU)
+#define SCRATCH_PAD_REG_3_REG   ((uint16_t)0xCBU)
+#define SCRATCH_PAD_REG_4_REG   ((uint16_t)0xCCU)
 
 /* ========================================================================== */
 /*                              Register Bit Fields                           */

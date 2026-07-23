@@ -90,7 +90,7 @@
  * @brief PMIC-related information.
  */
 #ifndef PLATFORM_TARGET_I2C_ADDR
-#define PLATFORM_TARGET_I2C_ADDR    (0x60U)
+#define PLATFORM_TARGET_I2C_ADDR    (0x48U)
 #endif
 
 /**
@@ -103,8 +103,11 @@
  *
  * TPS6522x-Q1 supports dual I2C addresses (main + secondary)
  */
-#define PLATFORM_I2C_ADDR_MAIN      (0x60U)
-#define PLATFORM_I2C_ADDR_SECONDARY (0x00U)
+#define PLATFORM_I2C_ADDR_MAIN      (0x48U)
+#define PLATFORM_I2C_ADDR_SECONDARY (0x12U)
+
+#define PLATFORM_I2C_PORT_MAIN      (2U)   /* Tiva I2C0: PB2(SCL)/PB3(SDA) */
+#define PLATFORM_I2C_PORT_SECONDARY (0U)   /* Tiva I2C1: PA6(SCL)/PA7(SDA) */
 
 /* ========================================================================= */
 /*                        Module Name Tracking                               */
@@ -147,7 +150,8 @@ void platform_setModuleName(const char* moduleName);
     /* Mock/Host build: Use standard RUN_TEST with filtering */
     #define PLATFORM_RUN_TEST(test) \
         do { \
-            if (testFilter_shouldRunTestWithGroup(#test)) { \
+            if (testFilter_shouldRunModule(g_currentModuleName) && \
+                testFilter_shouldRunTestWithGroup(#test)) { \
                 testTimer_startTest(#test); \
                 if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
                 RUN_TEST(test); \
@@ -162,9 +166,7 @@ void platform_setModuleName(const char* moduleName);
 /*                           Function Declarations                           */
 /* ========================================================================= */
 
-#if !defined(BUILD_MOCK)
-/* Function declarations (for BUILD_HOST and legacy hardware builds) */
-/* BUILD_MOCK provides these as macros in platform_mock.h */
+/* Function declarations available in all build modes */
 
 /**
  * @brief Initialize platform and its peripherals for testing LLD.
@@ -175,27 +177,6 @@ void platform_init(void);
  * @brief De-initialize platform and its peripherals.
  */
 void platform_deinit(void);
-
-/**
- * @brief Setup/initialize the testing framework to begin running tests.
- */
-void platform_setupTests(void);
-
-/**
- * @brief Halt/de-initialize the testing framework from running tests.
- */
-void platform_tearDownTests(void);
-
-/**
- * @brief Platform-specific API to write a character to the terminal/console.
- *
- * @details This API exists because some testing frameworks require an API to
- * write a single character. This is not used in test source code and is
- * optional.
- *
- * @param c [IN] Character to transmit to terminal/console.
- */
-void platform_printChar(char c);
 
 /**
  * @brief Platform-specific API to transmit a string to the terminal/console.
@@ -232,7 +213,8 @@ void platform_irqResponse(void);
  *
  * @return Address of communication handle casted as pointer to void.
  */
-void *platform_getCommHandle(void);
+void *platform_getCommHandle0(void);
+void *platform_getCommHandle1(void);
 
 /**
  * @brief Platform-specific API to write one or mulitple bytes to the PMIC.
@@ -293,6 +275,36 @@ int32_t platform_rxByte(const Pmic_Handle_t *handle,
  */
 void platform_unlockRegisters(void);
 
+#if !defined(BUILD_MOCK)
+/* Not provided by platform_mock.c; setupTests/tearDownTests become macros
+ * via platform_mock.h; printChar and runTestLoop have no mock implementation. */
+
+#define PLATFORM_REBOOT_INITIAL_WAIT_MS (2U)    /* time for nRSTOUT to assert after reboot trigger */
+#define PLATFORM_REBOOT_TIMEOUT_MS      (500U)   /* max poll window for nRSTOUT to deassert */
+
+void platform_softReboot(void);
+
+/**
+ * @brief Setup/initialize the testing framework to begin running tests.
+ */
+void platform_setupTests(void);
+
+/**
+ * @brief Halt/de-initialize the testing framework from running tests.
+ */
+void platform_tearDownTests(void);
+
+/**
+ * @brief Platform-specific API to write a character to the terminal/console.
+ *
+ * @details This API exists because some testing frameworks require an API to
+ * write a single character. This is not used in test source code and is
+ * optional.
+ *
+ * @param c [IN] Character to transmit to terminal/console.
+ */
+void platform_printChar(char c);
+
 /**
  * @brief Execute test callback with platform-appropriate behavior
  *
@@ -304,7 +316,7 @@ void platform_unlockRegisters(void);
  */
 void platform_runTestLoop(void (*testCallback)(void));
 
-#endif /* !BUILD_MOCK - End of function declarations */
+#endif /* !BUILD_MOCK */
 
 #if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
   #ifdef __cplusplus

@@ -42,6 +42,25 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef _WIN32
+#define str_icmp(a, b) _stricmp((a), (b))
+#else
+#include <strings.h>
+#define str_icmp(a, b) strcasecmp((a), (b))
+#endif
+
+/* Strip all non-alphanumeric characters so "I/O" matches "io", "i-o", etc. */
+static void normalizeModuleName(const char *src, char *dst, size_t dst_len)
+{
+    size_t j = 0;
+    for (size_t i = 0; src[i] && j < dst_len - 1; i++) {
+        if (isalnum((unsigned char)src[i])) {
+            dst[j++] = src[i];
+        }
+    }
+    dst[j] = '\0';
+}
+
 /* ========================================================================= */
 /*                         Global Variables                                  */
 /* ========================================================================= */
@@ -298,9 +317,14 @@ bool testFilter_shouldRunModule(const char *moduleName)
         return true;
     }
 
-    /* Check if module is in the enabled list */
+    /* Check if module is in the enabled list (normalize both sides to strip
+     * punctuation so "io" matches "I/O", "i-o", etc.) */
+    char normModule[TEST_FILTER_MAX_MODULE_NAME_LEN];
+    char normFilter[TEST_FILTER_MAX_MODULE_NAME_LEN];
+    normalizeModuleName(moduleName, normModule, sizeof(normModule));
     for (uint8_t i = 0; i < g_testFilter.moduleFilter.numModules; i++) {
-        if (strcmp(g_testFilter.moduleFilter.modules[i], moduleName) == 0) {
+        normalizeModuleName(g_testFilter.moduleFilter.modules[i], normFilter, sizeof(normFilter));
+        if (str_icmp(normFilter, normModule) == 0) {
             return true;
         }
     }
