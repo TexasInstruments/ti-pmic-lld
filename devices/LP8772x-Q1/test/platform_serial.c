@@ -365,6 +365,14 @@ int32_t serial_init(const char *port, uint32_t baud)
         }
     }
 
+    /* On Windows, COM ports above COM9 require the \\.\COMxx path format.
+     * Prepend the prefix if not already present (safe for all COM ports). */
+    char port_path[32];
+    if (strncmp(port, "\\\\.\\", 4) != 0) {
+        snprintf(port_path, sizeof(port_path), "\\\\.\\%s", port);
+        port = port_path;
+    }
+
     /* Open serial port */
     g_serial.hSerial = CreateFileA(port,
                                    GENERIC_READ | GENERIC_WRITE,
@@ -467,8 +475,8 @@ int32_t serial_send_command(const char *cmd)
         return -2;
     }
 
-    /* Write newline */
-    if (!WriteFile(g_serial.hSerial, "\n", 1, &bytes_written, NULL)) {
+    /* Write CR+LF — firmware triggers on '\r' (VCOMPeek/UARTPeek check for '\r') */
+    if (!WriteFile(g_serial.hSerial, "\r\n", 2, &bytes_written, NULL)) {
         snprintf(g_serial.error_msg, sizeof(g_serial.error_msg),
                  "Failed to write newline: Error %lu", GetLastError());
         return -2;
