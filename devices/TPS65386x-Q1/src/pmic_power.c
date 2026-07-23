@@ -509,7 +509,7 @@ static int32_t PWR_getAllBuckBoostCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckB
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_BB_SS_EN_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_BB_LVL_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_BB_STBY_LVL_VALID) ||
@@ -849,7 +849,7 @@ static int32_t PWR_applyLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_LDO_RAMP_TIME_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_LDO_LVL_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_LDO_ILIM_LVL_VALID)))
@@ -1299,22 +1299,22 @@ static int32_t PWR_validatePldoMode(const Pmic_PwrPldoCfg_t *pldoCfg)
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t modeMax = 0U;
 
-    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_CFG_PWR_PLDO_MODE_VALID, status))
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_CFG_PWR_PLDO_MODE_VALID, status)) /* DA_JUSTIFY: PMICDRV-2357 */
     {
         if (pldoCfg->pldo == PMIC_PWR_PLDO1)
         {
             modeMax = PMIC_PWR_PLDO1_MODE_MAX;
         }
-        else if (pldoCfg->pldo == PMIC_PWR_PLDO2)
+        else if (pldoCfg->pldo == PMIC_PWR_PLDO2) /* DA_JUSTIFY: PMICDRV-2357 */
         {
             modeMax = PMIC_PWR_PLDO2_MODE_MAX;
         }
         else
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
+        { /* DA_JUSTIFY: PMICDRV-2357 */
+            status = PMIC_ST_ERR_INV_PARAM; /* DA_JUSTIFY: PMICDRV-2357 */
         }
 
-        if ((status == PMIC_ST_SUCCESS) && (pldoCfg->mode > modeMax))
+        if ((status == PMIC_ST_SUCCESS) && (pldoCfg->mode > modeMax)) /* DA_JUSTIFY: PMICDRV-2357 */
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1854,7 +1854,7 @@ static int32_t PWR_getAllPldoCfg(const Pmic_Handle_t *handle, Pmic_PwrPldoCfg_t 
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_PLDO_TRACKING_MODE_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_PLDO_LVL_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_PLDO_ILIM_LVL_VALID)))
@@ -2195,7 +2195,7 @@ static int32_t PWR_getAllExtVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrExtVmon
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_EXT_VMON_MODE_VALID) ||
          Pmic_validParamCheck(cfg->validParams, PMIC_CFG_PWR_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)))
     {

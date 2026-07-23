@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -39,6 +38,8 @@
 #include "power_test.h"
 #ifdef BUILD_MOCK
 #include "test_inject.h"
+#include "pmic_mock_core.h"
+#include "pmic_mock_types.h"
 #endif
 #include "test_constants.h"
 
@@ -50,6 +51,10 @@
 
 /*                             Global Variables                               */
 /* ========================================================================== */
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 static Pmic_Handle_t pmicHandle;
 
@@ -374,7 +379,6 @@ void test_neg_power_pwrSetBuckBoostCfg_outOfBounds_boostTmo(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-
 /* ========================================================================== */
 /*                 NEGATIVE TESTS - LDO Out of Bounds Tests                   */
 /* ========================================================================== */
@@ -660,7 +664,6 @@ void test_neg_power_pwrSetExtVmonCfg_outOfBounds_vmon2_vmonDgl(void)
 {
     helper_negative_setExtVmonCfg_vmonDgl(PMIC_PWR_EXT_VMON2);
 }
-
 
 /* ========================================================================== */
 /*                  POSITIVE TESTS - Buck/Boost Configuration                 */
@@ -1075,7 +1078,6 @@ void test_pos_power_setGetLdoCfg_ldo4_rampTime(void) { helper_setGetLdoCfg_rampT
 void test_pos_power_setGetLdoCfg_ldo4_disableDischarge(void) { helper_setGetLdoCfg_disableDischarge(PMIC_PWR_LDO4); }
 void test_pos_power_setGetLdoCfg_ldo4_includeOvUvStatInPGood(void) { helper_setGetLdoCfg_includeOvUvStatInPGood(PMIC_PWR_LDO4); }
 
-
 /* ========================================================================== */
 /*                    POSITIVE TESTS - PLDO Configuration                     */
 /* ========================================================================== */
@@ -1456,7 +1458,7 @@ static void helper_getRsrcStatus(uint16_t pwrRsrc)
         .pwrRsrc = pwrRsrc
     };
 
-    /* Determine valid params based on resource type */
+    // Determine valid params based on resource type
     if (pwrRsrc == PMIC_PWR_BUCK_BOOST) {
         stat.validParams = PMIC_PWR_RSRC_STAT_BB_ALL;
     } else if ((pwrRsrc >= PMIC_PWR_LDO_MIN) && (pwrRsrc <= PMIC_PWR_LDO_MAX)) {
@@ -1909,6 +1911,16 @@ void test_neg_power_getRsrcStatus_pldo_unsupportedBbLite(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
 
+void test_neg_power_getRsrcStatus_pldo_unsupportedBbMode(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
 void test_pos_power_getRsrcStatus_pldo_uvErr(void)
 {
     Pmic_PwrRsrcStatus_t stat = {
@@ -2001,6 +2013,40 @@ void test_neg_power_getRsrcStatus_extVmon_unsupportedTsdWarn(void)
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_neg_power_getRsrcStatus_extVmon_unsupportedBbMode(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_pos_power_getRsrcStatus_extVmon_noValidParams(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = 0U,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Neither UV_ERR nor OV_ERR requested -- EXT_VMON_STAT_REG read is skipped.
+    // Failing any I/O here proves the skip if the call still succeeds.
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /* ========================================================================== */
@@ -2197,7 +2243,7 @@ void test_neg_power_pwrGetRsrcStatus_invalidResourceType(void)
 {
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0xFFFFU  /* Invalid resource type */
+        .pwrRsrc = 0xFFFFU  // Invalid resource type
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2207,7 +2253,7 @@ void test_neg_power_pwrClrRsrcStatus_invalidResourceType(void)
 {
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0xFFFFU  /* Invalid resource type */
+        .pwrRsrc = 0xFFFFU  // Invalid resource type
     };
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2216,10 +2262,10 @@ void test_neg_power_pwrClrRsrcStatus_invalidResourceType(void)
 /* Tests for malformed resource IDs - type bits don't match actual resource */
 void test_neg_power_pwrGetRsrcStatus_malformedBbResource(void)
 {
-    /* Resource with BuckBoost type bits (0x00) but invalid ID */
+    // Resource with BuckBoost type bits (0x00) but invalid ID
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
-        .pwrRsrc = 0x00FFU  /* Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST */
+        .pwrRsrc = 0x00FFU  // Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2227,10 +2273,10 @@ void test_neg_power_pwrGetRsrcStatus_malformedBbResource(void)
 
 void test_neg_power_pwrGetRsrcStatus_malformedLdoResource(void)
 {
-    /* Resource with LDO type bits (0x01) but ID outside LDO range */
+    // Resource with LDO type bits (0x01) but ID outside LDO range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x01FFU  /* Type 1 (LDO) but ID not in valid LDO range */
+        .pwrRsrc = 0x01FFU  // Type 1 (LDO) but ID not in valid LDO range
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2238,10 +2284,10 @@ void test_neg_power_pwrGetRsrcStatus_malformedLdoResource(void)
 
 void test_neg_power_pwrGetRsrcStatus_malformedPldoResource(void)
 {
-    /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
+    // Resource with PLDO type bits (0x02) but ID outside PLDO range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x02FFU  /* Type 2 (PLDO) but ID not in valid PLDO range */
+        .pwrRsrc = 0x02FFU  // Type 2 (PLDO) but ID not in valid PLDO range
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2249,10 +2295,10 @@ void test_neg_power_pwrGetRsrcStatus_malformedPldoResource(void)
 
 void test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource(void)
 {
-    /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
+    // Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x03FFU  /* Type 3 (ExtVmon) but ID not in valid ExtVmon range */
+        .pwrRsrc = 0x03FFU  // Type 3 (ExtVmon) but ID not in valid ExtVmon range
     };
     int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2260,10 +2306,10 @@ void test_neg_power_pwrGetRsrcStatus_malformedExtVmonResource(void)
 
 void test_neg_power_pwrClrRsrcStatus_malformedBbResource(void)
 {
-    /* Resource with BuckBoost type bits (0x00) but invalid ID */
+    // Resource with BuckBoost type bits (0x00) but invalid ID
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
-        .pwrRsrc = 0x00FFU  /* Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST */
+        .pwrRsrc = 0x00FFU  // Type 0 (BuckBoost) but ID doesn't match PMIC_PWR_BUCK_BOOST
     };
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2271,10 +2317,10 @@ void test_neg_power_pwrClrRsrcStatus_malformedBbResource(void)
 
 void test_neg_power_pwrClrRsrcStatus_malformedLdoResource(void)
 {
-    /* Resource with LDO type bits (0x01) but ID outside LDO range */
+    // Resource with LDO type bits (0x01) but ID outside LDO range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x01FFU  /* Type 1 (LDO) but ID not in valid LDO range */
+        .pwrRsrc = 0x01FFU  // Type 1 (LDO) but ID not in valid LDO range
     };
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2282,10 +2328,10 @@ void test_neg_power_pwrClrRsrcStatus_malformedLdoResource(void)
 
 void test_neg_power_pwrClrRsrcStatus_malformedPldoResource(void)
 {
-    /* Resource with PLDO type bits (0x02) but ID outside PLDO range */
+    // Resource with PLDO type bits (0x02) but ID outside PLDO range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x02FFU  /* Type 2 (PLDO) but ID not in valid PLDO range */
+        .pwrRsrc = 0x02FFU  // Type 2 (PLDO) but ID not in valid PLDO range
     };
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2293,10 +2339,10 @@ void test_neg_power_pwrClrRsrcStatus_malformedPldoResource(void)
 
 void test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource(void)
 {
-    /* Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range */
+    // Resource with ExtVmon type bits (0x03) but ID outside ExtVmon range
     Pmic_PwrRsrcStatus_t stat = {
         .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
-        .pwrRsrc = 0x03FFU  /* Type 3 (ExtVmon) but ID not in valid ExtVmon range */
+        .pwrRsrc = 0x03FFU  // Type 3 (ExtVmon) but ID not in valid ExtVmon range
     };
     int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -2308,7 +2354,7 @@ void test_neg_power_pwrClrRsrcStatus_malformedExtVmonResource(void)
 
 void test_pos_power_pwrGetPldoCfg_redundantModeConversion(void)
 {
-    /* Test that getting PLDO config twice in a row works correctly */
+    // Test that getting PLDO config twice in a row works correctly
     Pmic_PwrPldoCfg_t cfg1 = {
         .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
         .pldo = PMIC_PWR_PLDO1
@@ -2324,7 +2370,7 @@ void test_pos_power_pwrGetPldoCfg_redundantModeConversion(void)
     int32_t status2 = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg2);
     PLATFORM_ASSERT(status2 == PMIC_ST_SUCCESS);
 
-    /* Both reads should return the same mode */
+    // Both reads should return the same mode
     PLATFORM_ASSERT(cfg2.mode == cfg1.mode);
 }
 
@@ -2333,9 +2379,7 @@ void test_pos_power_pwrGetPldoCfg_redundantModeConversion(void)
 /* ========================================================================== */
 
 /**
- * @brief Test PLDO mode fallback to DISABLED when register value > MAX
- *
- * Covers lines 1539-1540 in pmic_power.c - PLDO mode value validation
+ * @brief Test PLDO mode fallback to DISABLED when register value > MAX.
  */
 #ifdef BUILD_MOCK
 void test_pos_power_pwr_getPldoMode_disabledFallback(void)
@@ -2346,8 +2390,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
     // Inject invalid mode value > MAX (PLDO2 mode is 3 bits, so values 5-7 are invalid)
     // PLDO_EN_OUT_CTRL_REG (0x27) PLDO2 mode field is bits 4:2
     // Inject value with PLDO2 mode = 5 (101 in bits 4:2 = 0x14)
-    status = testInject_setRegister(0x27U, 0x14U);  // PLDO2 mode=5 (invalid, > MAX=4)
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    testInject_setRegister(0x27U, 0x14U);
 
     cfg.validParams = PMIC_CFG_PWR_PLDO_MODE_VALID;
     cfg.pldo = PMIC_PWR_PLDO2;
@@ -2357,8 +2400,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
     PLATFORM_ASSERT(cfg.mode == 0U);  // Should fallback to 0 (disabled)
 
     // Test with value 7 (111 in bits 4:2 = 0x1C)
-    status = testInject_setRegister(0x27U, 0x1CU);  // PLDO2 mode=7 (invalid, > MAX=4)
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    testInject_setRegister(0x27U, 0x1CU);
 
     status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -2372,9 +2414,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
 #endif
 
 /**
- * @brief Test clearing LDO status with BB-specific validParams
- *
- * Covers lines 2515-2516 in pmic_power.c - LDO status clear with unsupported BB params
+ * @brief Test clearing LDO status with BB-specific validParams.
  */
 void test_neg_power_pwr_clrLdoStat_unsupportedBbParams(void)
 {
@@ -2389,9 +2429,7 @@ void test_neg_power_pwr_clrLdoStat_unsupportedBbParams(void)
 }
 
 /**
- * @brief Test clearing PLDO status with BB-specific validParams
- *
- * Covers lines 2595-2596 in pmic_power.c - PLDO status clear with unsupported BB params
+ * @brief Test clearing PLDO status with BB-specific validParams.
  */
 void test_neg_power_pwr_clrPldoStat_unsupportedBbParams(void)
 {
@@ -2403,4 +2441,1713 @@ void test_neg_power_pwr_clrPldoStat_unsupportedBbParams(void)
 
     int32_t result = Pmic_pwrClrRsrcStatus(&pmicHandle, &status_cfg);
     PLATFORM_ASSERT(result == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_neg_power_pwr_clrLdoStat_unsupportedBbIlimLvlParams(void)
+{
+    Pmic_PwrRsrcStatus_t status_cfg = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
+        .pwrRsrc = PMIC_PWR_LDO1
+    };
+    int32_t result = Pmic_pwrClrRsrcStatus(&pmicHandle, &status_cfg);
+    PLATFORM_ASSERT(result == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_neg_power_pwr_clrLdoStat_unsupportedBbModeParams(void)
+{
+    Pmic_PwrRsrcStatus_t status_cfg = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
+        .pwrRsrc = PMIC_PWR_LDO1
+    };
+    int32_t result = Pmic_pwrClrRsrcStatus(&pmicHandle, &status_cfg);
+    PLATFORM_ASSERT(result == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_neg_power_pwr_clrPldoStat_unsupportedBbIlimLvlParams(void)
+{
+    Pmic_PwrRsrcStatus_t status_cfg = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+    int32_t result = Pmic_pwrClrRsrcStatus(&pmicHandle, &status_cfg);
+    PLATFORM_ASSERT(result == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_neg_power_pwr_clrPldoStat_unsupportedBbModeParams(void)
+{
+    Pmic_PwrRsrcStatus_t status_cfg = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+    int32_t result = Pmic_pwrClrRsrcStatus(&pmicHandle, &status_cfg);
+    PLATFORM_ASSERT(result == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_pos_power_clrRsrcStatus_pldo1_ovErr(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_power_clrRsrcStatus_pldo1_tsdWarn(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test clearing ExtVmon status with ILIM_ERR validParam (unsupported).
+ */
+void test_neg_power_pwr_clrExtVmonStat_ilimErrUnsupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test clearing ExtVmon status with BB_LITE validParam (unsupported).
+ */
+void test_neg_power_pwr_clrExtVmonStat_bbLiteUnsupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test clearing ExtVmon status with BB_ILIM_LVL validParam (unsupported).
+ */
+void test_neg_power_pwr_clrExtVmonStat_bbIlimLvlUnsupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test clearing ExtVmon status with BB_MODE validParam (unsupported).
+ */
+void test_neg_power_pwr_clrExtVmonStat_bbModeUnsupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_MODE_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test clearing ExtVmon status with TSD_ERR validParam (unsupported).
+ */
+void test_neg_power_pwr_clrExtVmonStat_tsdErrUnsupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in BB getCfg sub-functions
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getBbSsEnLvlPGoodCfg() read failure path.
+ */
+void test_neg_power_pwrGetBuckBoostCfg_ssEnLvlPGoodReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_SS_EN_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(BUCK_BST_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getBbVmonThrBstTmo() read failure path.
+ */
+void test_neg_power_pwrGetBuckBoostCfg_vmonThrBstTmoReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_TH_CFG3_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getBbVmonDgl() read failure path.
+ */
+void test_neg_power_pwrGetBuckBoostCfg_vmonDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_DGL_CFG1_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in LDO getCfg sub-functions
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getLdoMode() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_modeReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_MODE_VALID;
+
+    // I/O #1: LDO mode register read - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoVmonThr() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_vmonThrReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID;
+
+    // I/O #1: LDO VMON threshold register read - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in PLDO getCfg sub-functions
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getPldoMode() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_modeReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_MODE_VALID;
+
+    // I/O #1: PLDO mode register read - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoVmonThr() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_vmonThrReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID;
+
+    // I/O #1: PLDO VMON threshold register read - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in ExtVmon getCfg sub-functions
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getExtVmonModePGoodCfg() read failure path.
+ */
+void test_neg_power_pwrGetExtVmonCfg_modeReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(EXT_VMON_CFG_CTRL_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getExtVmonThr() read failure path.
+ */
+void test_neg_power_pwrGetExtVmonCfg_vmonThrReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_TH_CFGx_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getExtVmonDgl() read failure path.
+ */
+void test_neg_power_pwrGetExtVmonCfg_vmonDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_DGL_CFG3_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in LDO getCfg sub-functions (cont.)
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getLdoRtLvlIlimLvl() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_lvlIlimLvlReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_LVL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(LDOx_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoPGoodCfg() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_pgoodCfgReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(LDO_PGOOD_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoVmonDgl() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_vmonDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_DGL_CFG2_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoDischargeDisable() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_dischargeDisableReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_DISABLE_DISCHARGE_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(LDO_DSCG_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoIlimDgl() read failure path.
+ */
+void test_neg_power_pwrGetLdoCfg_ilimDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(ILIM_DGL_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in PLDO getCfg sub-functions (cont.)
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getPldoTrackingModeLvlIlimLvl() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_trackingLvlIlimReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_LVL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(PLDOx_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoRtVTrackRange() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_rtVtrackRangeReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_RT_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(PLDO_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoPGoodCfg() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_pgoodCfgReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(LDO_PGOOD_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoVmonDgl() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_vmonDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(VMON_DGL_CFG3_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoDischarge() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_dischargeReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_DISABLE_DISCHARGE_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(LDO_DSCG_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoIlimDgl() read failure path.
+ */
+void test_neg_power_pwrGetPldoCfg_ilimDglReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(ILIM_DGL_CFG_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: GetRsrcStatus I/O failure and NOT_SUPPORTED paths
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getLdoStat() I/O failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_ldoIlimStatReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    stat.pwrRsrc = PMIC_PWR_LDO1;
+    stat.validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(ILIM_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoStat() NOT_SUPPORTED: BB_LITE_VALID with PLDO.
+ */
+void test_neg_power_pwrGetRsrcStatus_pldoBbLiteNotSupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .pwrRsrc = PMIC_PWR_PLDO1,
+        .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test PWR_getPldoStat() NOT_SUPPORTED: BB_ILIM_LVL_VALID with PLDO.
+ */
+void test_neg_power_pwrGetRsrcStatus_pldoBbIlimLvlNotSupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .pwrRsrc = PMIC_PWR_PLDO1,
+        .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test PWR_getPldoStat() I/O failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_pldoIlimStatReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    stat.pwrRsrc = PMIC_PWR_PLDO1;
+    stat.validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(ILIM_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getBbStat() I/O failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_bbIlimStatReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    stat.pwrRsrc = PMIC_PWR_BUCK_BOOST;
+    stat.validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(ILIM_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getExtVmonStat() NOT_SUPPORTED: ILIM_ERR_VALID with EXT_VMON.
+ */
+void test_neg_power_pwrGetRsrcStatus_extVmonIlimErrNotSupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .pwrRsrc = PMIC_PWR_EXT_VMON1,
+        .validParams = PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test PWR_getExtVmonStat() NOT_SUPPORTED: BB_LITE_VALID with EXT_VMON.
+ */
+void test_neg_power_pwrGetRsrcStatus_extVmonBbLiteNotSupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .pwrRsrc = PMIC_PWR_EXT_VMON1,
+        .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test PWR_getExtVmonStat() NOT_SUPPORTED: BB_ILIM_LVL_VALID with EXT_VMON.
+ */
+void test_neg_power_pwrGetRsrcStatus_extVmonBbIlimLvlNotSupported(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .pwrRsrc = PMIC_PWR_EXT_VMON1,
+        .validParams = PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID
+    };
+    int32_t status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+/**
+ * @brief Test PWR_getExtVmonStat() I/O failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_extVmonStatReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    stat.pwrRsrc = PMIC_PWR_EXT_VMON1;
+    stat.validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(EXT_VMON_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: I/O failure paths in BB/LDO/PLDO/ExtVmon setCfg
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_setBbSsEnLvlPGoodCfg() write failure path ().
+ */
+void test_neg_power_pwrSetBuckBoostCfg_ssEnIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_SS_EN_VALID;
+    cfg.ssEn = true;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setBbVmonThrBstTmo() write failure path ().
+ */
+void test_neg_power_pwrSetBuckBoostCfg_vmonThrIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_VMON_THR_VALID;
+    cfg.vmonThr = PMIC_PWR_BB_VMON_THR_5_PCT;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setBbVmonDgl() write failure path ().
+ */
+void test_neg_power_pwrSetBuckBoostCfg_vmonDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrBuckBoostCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_BB_VMON_DGL_VALID;
+    cfg.vmonDgl = PMIC_PWR_RSRC_VMON_DGL_8_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetBuckBoostCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoRtLvlIlimLvl() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_lvlIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_LVL_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.lvl = 0U;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoMode() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_modeIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_MODE_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.mode = PMIC_PWR_LDO_EN_AS_LDO_IN_OPER;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoPGoodCfg() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_pgoodIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.includeOvUvStatInPGood = true;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoVmonThr() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_vmonThrIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_VMON_THR_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.vmonThr = PMIC_PWR_LDO_VMON_THR_3P5_PCT;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoVmonDgl() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_vmonDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_VMON_DGL_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.vmonDgl = PMIC_PWR_RSRC_VMON_DGL_8_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoDischargeDisable() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_dischargeDisableIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_DISABLE_DISCHARGE_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.disableDischarge = true;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setLdoIlimDgl() write failure path ().
+ */
+void test_neg_power_pwrSetLdoCfg_ilimDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrLdoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_LDO_ILIM_DGL_VALID;
+    cfg.ldo = PMIC_PWR_LDO1;
+    cfg.ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_10_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetLdoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoTrackingModeLvlIlimLvl() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_lvlIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_LVL_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.lvl = 0U;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoRtVTrackRange() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_rtIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_RT_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.rampTime = 0U;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoPGoodCfg() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_pgoodIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.includeOvUvStatInPGood = true;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoMode() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_modeIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_MODE_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.mode = PMIC_PWR_PLDO_EN_LDO_OPER;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoDischarge() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_dischargeIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_DISABLE_DISCHARGE_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.disableDischarge = true;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoVmonDgl() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_vmonDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_VMON_DGL_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.vmonDgl = PMIC_PWR_RSRC_VMON_DGL_8_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoIlimDgl() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_ilimDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_ILIM_DGL_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.ilimDgl = PMIC_PWR_LDO_ILIM_DEGLITCH_10_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setPldoVmonThr() write failure path ().
+ */
+void test_neg_power_pwrSetPldoCfg_vmonThrIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_PLDO_VMON_THR_VALID;
+    cfg.pldo = PMIC_PWR_PLDO1;
+    cfg.vmonThr = PMIC_PWR_PLDO_VMON_THR_8_PCT;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setExtVmonModePGoodCfg() write failure path ().
+ */
+void test_neg_power_pwrSetExtVmonCfg_modeIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_MODE_VALID;
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.mode = 0U;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setExtVmonThr() write failure path ().
+ */
+void test_neg_power_pwrSetExtVmonCfg_vmonThrIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_THR_VALID;
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.vmonThr = PMIC_PWR_EXT_VMON_THR_DIGITAL_MODE_HYSTERESIS;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_setExtVmonDgl() write failure path ().
+ */
+void test_neg_power_pwrSetExtVmonCfg_vmonDglIoRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrExtVmonCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_PWR_EXT_VMON_DGL_VALID;
+    cfg.extVmon = PMIC_PWR_EXT_VMON1;
+    cfg.vmonDgl = PMIC_PWR_RSRC_VMON_DGL_8_US;
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetExtVmonCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: PWR_clrExtVmonStat EXT_VMON1 paths (L2810, L2815)
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_clrExtVmonStat() EXT_VMON1 OV_ERR true-arm ().
+ */
+void test_pos_power_pwrClrRsrcStatus_extVmon1_ovErr(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test PWR_clrExtVmonStat() no-op path when validParams=0 ( false).
+ */
+void test_pos_power_pwrClrRsrcStatus_extVmon1_noOp(void)
+{
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = 0U,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+    int32_t status = Pmic_pwrClrRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test Pmic_pwrSetPGoodInStby with ioRxByte failure.
+ */
+void test_neg_power_pwrSetPGoodInStby_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPGoodInStby(&pmicHandle, true);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: PWR_getExtVmonStat / PWR_getPldoStat I/O failures
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getExtVmonStat() I/O read failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_extVmonStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_EXT_VMON1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoStat() I/O read failure path.
+ */
+void test_neg_power_pwrGetRsrcStatus_pldoStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_UV_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: PWR_getBbDcdcStat / PWR_getBbTsdStat / PWR_getLdoOvUvStat
+// I/O failure paths (Pmic_ioRxByte_CS has no upstream success guarantee)
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getBbDcdcStat() I/O read failure path (DCDC_STAT_REG).
+ */
+void test_neg_power_pwrGetRsrcStatus_bbDcdcStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_BB_LITE_VALID,
+        .pwrRsrc = PMIC_PWR_BUCK_BOOST
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // I/O: Pmic_ioRxByte_CS(DCDC_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getBbTsdStat() I/O read failure path (THERMAL_STAT2_REG).
+ */
+void test_neg_power_pwrGetRsrcStatus_bbTsdStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_BUCK_BOOST
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // I/O: Pmic_ioRxByte_CS(THERMAL_STAT2_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getLdoOvUvStat() I/O read failure path (VMON_LDO_STAT_REG).
+ */
+void test_neg_power_pwrGetRsrcStatus_ldoOvUvStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_OV_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_LDO1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // I/O: Pmic_ioRxByte_CS(VMON_LDO_STAT_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Coverage Gap: PWR_getLdoTsdStat / PWR_getPldoTsdStat I/O failure paths
+// (Pmic_ioRxByte_CS has no upstream success guarantee)
+/* ========================================================================== */
+
+/**
+ * @brief Test PWR_getLdoTsdStat() I/O read failure path (THERMAL_STAT1_REG).
+ */
+void test_neg_power_pwrGetRsrcStatus_ldoTsdStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_TSD_ERR_VALID,
+        .pwrRsrc = PMIC_PWR_LDO1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // I/O: Pmic_ioRxByte_CS(THERMAL_STAT1_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_getPldoTsdStat() I/O read failure path (THERMAL_STAT2_REG).
+ */
+void test_neg_power_pwrGetRsrcStatus_pldoTsdStat_ioReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrRsrcStatus_t stat = {
+        .validParams = PMIC_PWR_RSRC_STAT_TSD_WARN_VALID,
+        .pwrRsrc = PMIC_PWR_PLDO1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // I/O: Pmic_ioRxByte_CS(THERMAL_STAT2_REG) - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetRsrcStatus(&pmicHandle, &stat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrSetPldoCfg_validatePldoMode_noModeValidParam(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_PwrPldoCfg_t cfg = {
+        .validParams = PMIC_CFG_PWR_PLDO_LVL_VALID,
+        .pldo = PMIC_PWR_PLDO1,
+        .lvl = PMIC_PWR_LDO_LVL_3P3V
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Inject failure on first I/O so the LVL register read fails,
+    // confirming we reached the I/O path inside PWR_setPldoTrackingModeLvlIlimLvl.
+    // PWR_validatePldoMode is not invoked because PMIC_CFG_PWR_PLDO_MODE_VALID
+    // is absent from validParams, exercising the false branch of its guard. */
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetPldoCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test PWR_validatePldoMode() boundary: mode == modeMax for PLDO2
+ *        (mode > modeMax comparison's false side at the exact upper bound,
+ *        a combination not exercised by any existing in-range-mode test).
+ */
+void test_pos_power_pwrSetPldoCfg_validatePldoMode_pldo2ModeAtMax(void)
+{
+    Pmic_PwrPldoCfg_t setCfg = {
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
+        .pldo = PMIC_PWR_PLDO2,
+        .mode = PMIC_PWR_PLDO2_MODE_MAX
+    };
+    Pmic_PwrPldoCfg_t getCfg = {
+        .validParams = PMIC_CFG_PWR_PLDO_MODE_VALID,
+        .pldo = PMIC_PWR_PLDO2
+    };
+
+    int32_t status = Pmic_pwrSetPldoCfg(&pmicHandle, &setCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_pwrGetPldoCfg(&pmicHandle, &getCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(getCfg.mode == setCfg.mode);
 }

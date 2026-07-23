@@ -57,7 +57,9 @@
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetTriggerCfg_trigSel1IoFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetTriggerCfg_trigSel2IoFail)
 
 /* Test: TC-FSM-0015 */
 #define FSM_TEST_FSMSETTRIGGERCFG() \
@@ -72,8 +74,13 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_nullCfg); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmgetTriggerCfg_zero_valid_params)
 
+#define FSM_TEST_POS_FSMGETTRIGGERCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_trigSel1IoFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetTriggerCfg_trigSel2IoFail)
+
 /* Test: TC-FSM-0016 */
 #define FSM_TEST_FSMGETTRIGGERCFG() \
+    FSM_TEST_POS_FSMGETTRIGGERCFG(); \
     FSM_TEST_NEG_FSMGETTRIGGERCFG()
 
 /* ======================================================================== */
@@ -89,7 +96,8 @@
 #define FSM_TEST_POS_FSMSETGETGPIOTRIGGERCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGetGpioTriggerCfg_gpio1); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGpioTriggerCfg_allGpioPins); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGpioTriggerCfg_polarity)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetGpioTriggerCfg_polarity); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetGpioTriggerCfg_ioRxByteFail)
 
 /* Test: TC-FSM-0017 */
 #define FSM_TEST_FSMSETGPIOTRIGGERCFG() \
@@ -105,8 +113,14 @@
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetGpioTriggerCfg_invalidPin); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmgetGpioTriggerCfg_zero_valid_params)
 
+#define FSM_TEST_POS_FSMGETGPIOTRIGGERCFG() \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetGpioTriggerCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetGpioTriggerCfg_noMaskValid); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetGpioTriggerCfg_noMaskPolValid)
+
 /* Test: TC-FSM-0018 */
 #define FSM_TEST_FSMGETGPIOTRIGGERCFG() \
+    FSM_TEST_POS_FSMGETGPIOTRIGGERCFG(); \
     FSM_TEST_NEG_FSMGETGPIOTRIGGERCFG()
 
 /* ======================================================================== */
@@ -207,7 +221,9 @@
 /* ========================================================================== */
 #define FSM_TEST_RUN_POSITIVE() \
     FSM_TEST_POS_FSMSETGETTRIGGERCFG(); \
+    FSM_TEST_POS_FSMGETTRIGGERCFG(); \
     FSM_TEST_POS_FSMSETGETGPIOTRIGGERCFG(); \
+    FSM_TEST_POS_FSMGETGPIOTRIGGERCFG(); \
     FSM_TEST_POS_FSMGETRECOVCNT(); \
     FSM_TEST_POS_FSMSETGETRECOVCNTTHR(); \
     FSM_TEST_POS_FSMSENDSOFTREBOOTREQ(); \
@@ -301,5 +317,13 @@ void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void);
 void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void);
 void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void);
 void test_pos_fsm_fsmGetStartupDest_validRead(void);
+void test_neg_fsm_fsmGetGpioTriggerCfg_ioRxByteCSFail(void);
+void test_pos_fsm_fsmGetGpioTriggerCfg_noMaskValid(void);
+void test_pos_fsm_fsmGetGpioTriggerCfg_noMaskPolValid(void);
+void test_neg_fsm_fsmGetTriggerCfg_trigSel1IoFail(void);
+void test_neg_fsm_fsmGetTriggerCfg_trigSel2IoFail(void);
+void test_neg_fsm_fsmSetGpioTriggerCfg_ioRxByteFail(void);
+void test_neg_fsm_fsmSetTriggerCfg_trigSel1IoFail(void);
+void test_neg_fsm_fsmSetTriggerCfg_trigSel2IoFail(void);
 
 #endif /* FSM_TEST_H */

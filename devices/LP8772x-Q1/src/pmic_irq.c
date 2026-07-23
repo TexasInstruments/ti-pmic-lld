@@ -151,7 +151,7 @@ static inline void IRQ_copyIrqStat(const Pmic_IrqStatus_t *src, Pmic_IrqStatus_t
 
 static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
 {
-    if (irqNum <= PMIC_IRQ_MAX)
+    if (irqNum <= PMIC_IRQ_MAX) /* DA_JUSTIFY: PMICDRV-2357 */
     {
         // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
         // At an index, the IRQ is stored at its corresponding bit
@@ -270,7 +270,7 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
     }
 
     if ((status == PMIC_ST_SUCCESS) && anyMasks) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             const uint8_t irqNum = masks[i].irqNum;
             const Pmic_IrqInfo_t *pIrq = &pmicIRQs[irqNum];
             const uint8_t userMask = (uint8_t)(1UL << pIrq->shift);
@@ -287,7 +287,7 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
                 regData &= ~userMask;
             }
 
-            if (*processedMasks < (uint8_t)UINT8_MAX) {
+            if (*processedMasks < (uint8_t)UINT8_MAX) { /* DA_JUSTIFY: PMICDRV-2356 */
                 *processedMasks += 1U;
             }
         }
@@ -340,7 +340,7 @@ int32_t Pmic_irqSetMasks(const Pmic_Handle_t *handle, uint8_t numMasks, const Pm
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numMasks); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             IRQ_copyIrqMask(&masks[i], &localMasks[i]);
         }
     }
@@ -416,17 +416,17 @@ int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_I
     int32_t status = IRQ_validateGetMaskArgs(handle, irqMasks, numIrqMasks);
 
     if (status == PMIC_ST_SUCCESS) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             IRQ_copyIrqMask(&irqMasks[i], &localIrqMasks[i]);
         }
 
-        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             status = IRQ_readOneMask(handle, &localIrqMasks[i]);
             if (status != PMIC_ST_SUCCESS) { break; }
         }
 
         if (status == PMIC_ST_SUCCESS) {
-            for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
+            for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
                 IRQ_copyIrqMask(&localIrqMasks[i], &irqMasks[i]);
             }
         }
@@ -436,7 +436,7 @@ int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_I
 }
 
 static inline void IRQ_extractBits(Pmic_IrqStatus_t *irqStat, uint8_t regData, const uint8_t irqs[], uint8_t numIrqs) {
-    for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqs); i++) {
+    for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqs); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
         const uint8_t irqNum = irqs[i];
         if (Pmic_getBitField_b(regData, pmicIRQs[irqNum].shift)) {
             IRQ_setIntrStat(irqStat, irqNum);
@@ -757,14 +757,14 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
     bool foundFlag = (bool)false;
 
     // For each element in struct member intrStat of irqStat...
-    for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) {
+    for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) { /* DA_JUSTIFY: PMICDRV-2357 */
         // If current element has no IRQ statuses set, move onto next element
         if (irqStat->intrStat[statIndex] == 0U) {
             continue;
         }
 
         // For each bit in the element...
-        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT; bitPos++) {
+        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT; bitPos++) { /* DA_JUSTIFY: PMICDRV-2357 */
             // If the bit is set...
             const uint32_t mask = ((uint32_t)1UL << bitPos);
             if ((irqStat->intrStat[statIndex] & mask) != 0U) {
@@ -776,10 +776,10 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
             }
         }
 
-        if (foundFlag) {
+        if (foundFlag) { /* DA_JUSTIFY: PMICDRV-2357 */
             break;
         }
-    } /* LCOV_EXCL_LINE */
+    }
 
     // Return the corresponding IRQ number
     return (bitPos + (PMIC_NUM_BITS_IN_INTR_STAT * statIndex));

@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -39,6 +38,11 @@
 #include "pmic_test.h"
 #include "regmap/core.h"
 #include "test_constants.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
+#endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -58,6 +62,10 @@ static inline void pmicInitTest_initCoreCfg(Pmic_HandleCfg_t *coreCfg);
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 static Pmic_Handle_t pmicHandle = {0};
 
 /* Wrapper for platform timer wait to match PMIC API signature */
@@ -741,7 +749,6 @@ void test_neg_pmic_init_timerWaitNull(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
-
 /* ========================================================================== */
 /*           LP8772x-Q1 Tests for Uncovered Lines in pmic.c                  */
 /* ========================================================================== */
@@ -797,4 +804,217 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     // Restore for cleanup
     handle.timerWaitMs = &testTimerWaitWrapper;
     (void)Pmic_deinit(&handle);
+}
+
+/* ========================================================================== */
+// LP8772x-Q1 Tests for validParams false-branch coverage
+/* ========================================================================== */
+
+void test_pos_pmic_init_noCommModeValidBit(void)
+{
+    // Omit COMM_MODE_VALID from validParams to exercise the commMode-skip path
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    coreCfg.validParams &= ~PMIC_CFG_INIT_COMM_MODE_VALID;
+
+    int32_t status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    (void)Pmic_deinit(&handle);
+}
+
+void test_neg_pmic_init_noIoReadValidBit(void)
+{
+    // Omit PMIC_CFG_INIT_IO_READ_VALID so ioRead is never assigned; validatePmicHandle returns null-fptr
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Remove IO_READ_VALID bit — ioRead is never assigned to the handle
+    coreCfg.validParams &= ~PMIC_CFG_INIT_IO_READ_VALID;
+
+    // validatePmicHandle checks (ioRead == NULL) -> PMIC_ST_ERR_NULL_FPTR
+    int32_t status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_pmic_init_noCritSecStartValidBit(void)
+{
+    // Omit CRITICAL_SECTION_START_VALID so criticalSectionStart is never assigned; null-fptr expected
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Remove CRITICAL_SECTION_START_VALID bit
+    coreCfg.validParams &= ~PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID;
+
+    int32_t status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_pmic_init_getPmicInfo_secondReadFail(void)
+{
+    // Inject failure on op 2 (MANUFACTURING_VER_REG read) to exercise the error path in getPmicInfo
+#ifdef BUILD_MOCK
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+    // Op 1 = read DEV_REV_REG (success)
+    // Op 2 = read MANUFACTURING_VER_REG (fail) -> getPmicInfo second read fails
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_pmic_init_configureDeviceCrc_ioFail(void)
+{
+    // Inject failure on op 4 (INTERFACE_CONF read) to exercise the error path in configureDeviceCrc
+#ifdef BUILD_MOCK
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Skip ops 1-3 (getPmicInfo x2 + validateComms), fail op4 (INTERFACE_CONF read)
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 3U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_pmic_init_validateComms_readFail(void)
+{
+    // Inject failure on op 3 (validateComms DEV_REV_REG read) to exercise the error exit path
+#ifdef BUILD_MOCK
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Skip ops 1-2 (getPmicInfo reads), fail op3 (validateComms DEV_REV_REG read)
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_pmic_init_configureDeviceCrc_lockDisableFail(void)
+{
+    // Inject failure on op 5 (setRegLockState DISABLE) to exercise the error path in configureDeviceCrc
+#ifdef BUILD_MOCK
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Skip ops 1-4 (getPmicInfo x2 + validateComms + ioGetCrcEnableState), fail op5
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 4U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_pmic_init_configureDeviceCrc_lockEnableFail(void)
+{
+    // Inject failure on op 7 (setRegLockState ENABLE) to exercise the final error path in configureDeviceCrc
+#ifdef BUILD_MOCK
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_HandleCfg_t coreCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initCoreCfg(&coreCfg);
+
+    // Skip ops 1-6 (getPmicInfo x2 + validateComms + crcGetState + lockDisable + crcDisable)
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 6U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &coreCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_pmic_checkHandle_nullIoWrite(void)
+{
+    // Set ioWrite=NULL while ioRead is valid to exercise the second operand of the null-fptr check
+    Pmic_Handle_t handle = {
+        .drvInitStat = (uint32_t)(PMIC_TEST_DRV_INIT_STATUS | (uint8_t)0U),
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .crcEnable = PMIC_DISABLE,
+        .configCrcEnable = PMIC_DISABLE,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = NULL,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    int32_t status = Pmic_checkHandle(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_pmic_checkHandle_nullCriticalSectionStop(void)
+{
+    // Set criticalSectionStop=NULL while criticalSectionStart is valid to exercise the second operand check
+    Pmic_Handle_t handle = {
+        .drvInitStat = (uint32_t)(PMIC_TEST_DRV_INIT_STATUS | (uint8_t)0U),
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .crcEnable = PMIC_DISABLE,
+        .configCrcEnable = PMIC_DISABLE,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = NULL,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    int32_t status = Pmic_checkHandle(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }

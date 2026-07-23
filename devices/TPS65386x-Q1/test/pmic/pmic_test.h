@@ -33,8 +33,6 @@
 #ifndef PMIC_TEST_H
 #define PMIC_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -82,9 +80,19 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_init_spi_comprehensive); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_noCommModeValid); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTaskHandle); \
+    PLATFORM_RUN_TEST(test_neg_pmic_getPmicInfo_firstReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_getPmicInfo_secondReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_getPmicInfo_thirdReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_getPmicInfo_fourthReadFail)
 
 #define PMIC_TEST_NEG_INIT() \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noIoReadValid); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noIoWriteValid); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noCritSecStartValid); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noCritSecStopValid); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCoreCfg); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCommHandle); \
@@ -132,14 +140,17 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsUninit); \
     PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsMissingIoRead); \
     PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_detectsMissingCommHandle); \
-    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_comprehensive)
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_comprehensive); \
+    PLATFORM_RUN_TEST(test_pos_pmic_checkHandle_retryWithValidTimer)
 
 #define PMIC_TEST_NEG_CHECKHANDLE() \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidInitStat); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidCommMode); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCritSec); \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry)
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_retryIntervalWithNoTimer)
 
 /* Test: TC-PMIC-0003 */
 #define PMIC_TEST_CHECKHANDLE() \
@@ -259,6 +270,8 @@ void test_neg_pmic_checkHandle_invalidInitStat(void);
 void test_neg_pmic_checkHandle_invalidCommMode(void);
 void test_neg_pmic_checkHandle_nullCritSec(void);
 void test_neg_pmic_checkHandle_nullTimerWithRetry(void);
+void test_neg_pmic_checkHandle_nullIoWrite(void);
+void test_neg_pmic_checkHandle_retryIntervalWithNoTimer(void);
 
 /* Positive Tests */
 void test_pos_pmic_checkHandle_validHandle(void);
@@ -267,10 +280,25 @@ void test_pos_pmic_checkHandle_detectsUninit(void);
 void test_pos_pmic_checkHandle_detectsMissingIoRead(void);
 void test_pos_pmic_checkHandle_detectsMissingCommHandle(void);
 void test_pos_pmic_checkHandle_comprehensive(void);
+void test_pos_pmic_checkHandle_retryWithValidTimer(void);
 void test_neg_pmic_pmicInit_nullAsyncRxStart(void);
 void test_neg_pmic_pmicInit_nullAsyncTxStart(void);
 void test_neg_pmic_pmicInit_nullAsyncRxAwait(void);
 void test_neg_pmic_pmicInit_nullAsyncTxAwait(void);
+
+/* ========================================================================== */
+/*            Coverage-gap Tests - pmic.c static function branches            */
+/* ========================================================================== */
+void test_pos_pmic_init_noCommModeValid(void);
+void test_neg_pmic_init_noIoReadValid(void);
+void test_neg_pmic_init_noIoWriteValid(void);
+void test_neg_pmic_init_noCritSecStartValid(void);
+void test_neg_pmic_init_noCritSecStopValid(void);
+void test_pos_pmic_init_withTaskHandle(void);
+void test_neg_pmic_getPmicInfo_firstReadFail(void);
+void test_neg_pmic_getPmicInfo_secondReadFail(void);
+void test_neg_pmic_getPmicInfo_thirdReadFail(void);
+void test_neg_pmic_getPmicInfo_fourthReadFail(void);
 
 #ifdef __cplusplus
 }

@@ -30,7 +30,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef CORE_TEST_H
 #define CORE_TEST_H
 
@@ -153,11 +152,14 @@ extern "C" {
 /* ======================================================================== */
 
 #define CORE_TEST_POS_SETLOCKCFG() \
-    PLATFORM_RUN_TEST(test_pos_core_lockCfg_setGet)
+    PLATFORM_RUN_TEST(test_pos_core_lockCfg_setGet); \
+    PLATFORM_RUN_TEST(test_pos_core_setLockCfg_lockCntValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_core_setLockCfg_lockRegValidOnly)
 
 #define CORE_TEST_NEG_SETLOCKCFG() \
     PLATFORM_RUN_TEST(test_neg_core_setLockCfg_nullConfig); \
-    PLATFORM_RUN_TEST(test_neg_core_setLockCfg_invalidValidParams)
+    PLATFORM_RUN_TEST(test_neg_core_setLockCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_core_setLockCfg_invalidBitsInValidParams)
 
 /* Test: TC-CORE-0007 */
 #define CORE_TEST_SETLOCKCFG() \
@@ -217,10 +219,18 @@ extern "C" {
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETOUTCTRLCFG() \
-    PLATFORM_RUN_TEST(test_pos_core_diagOutCtrl_setGet)
+    PLATFORM_RUN_TEST(test_pos_core_diagOutCtrl_setGet); \
+    PLATFORM_RUN_TEST(test_pos_core_setMuxCfg_amuxEnableDisabled); \
+    PLATFORM_RUN_TEST(test_pos_core_setMuxCfg_dmuxEnableDisabled); \
+    PLATFORM_RUN_TEST(test_pos_core_setMuxCfg_amuxChannelOnly); \
+    PLATFORM_RUN_TEST(test_pos_core_setMuxCfg_updateCtrlSuccess)
 
 #define CORE_TEST_NEG_DIAGSETOUTCTRLCFG() \
-    PLATFORM_RUN_TEST(test_neg_core_diagSetOutCtrlCfg_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_core_diagSetOutCtrlCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setMuxCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_core_setMuxCfg_readFail); \
+    PLATFORM_RUN_TEST(test_neg_core_setMuxCfg_cfgRegReadFail); \
+    PLATFORM_RUN_TEST(test_neg_core_setMuxCfg_writeCtrlTxFail)
 
 /* Test: TC-CORE-0012 */
 #define CORE_TEST_DIAGSETOUTCTRLCFG() \
@@ -232,11 +242,14 @@ extern "C" {
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETOUTCTRLCFG() \
-    /* Positive tests for diagGetOutCtrlCfg are combined with diagSetOutCtrlCfg tests */
+    /* Positive tests for diagGetOutCtrlCfg are combined with diagSetOutCtrlCfg tests */ \
+    PLATFORM_RUN_TEST(test_pos_core_getMuxCfg_amuxChannelValid)
 
 #define CORE_TEST_NEG_DIAGGETOUTCTRLCFG() \
     PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullConfig)
+    PLATFORM_RUN_TEST(test_neg_core_diagGetOutCtrlCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_core_getMuxCfg_readFail); \
+    PLATFORM_RUN_TEST(test_neg_core_getMuxCfg_cfgRegReadFail)
 
 /* Test: TC-CORE-0013 */
 #define CORE_TEST_DIAGGETOUTCTRLCFG() \
@@ -366,7 +379,9 @@ extern "C" {
 #define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullStatus); \
-    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_firstReadFail); \
+    PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_secondReadFail)
 
 /* Test: TC-CORE-0135 */
 #define CORE_TEST_GETCONFIGCRCSTATUS() \
@@ -430,7 +445,14 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_configCrcCalculate_calculate)
 
 #define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_calculateCrc_midLoopReadFail); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_safetyCtrlReadFail); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_crcAlreadyEnabled); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_calcBitAlreadySet); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_crcErrorDetected); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_calcAssertWriteFail); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_calcAssertGateSkippedOnCleanEdgeFail)
 
 /* Test: TC-CORE-0067 */
 #define CORE_TEST_CONFIGCRCCALCULATE() \
@@ -548,6 +570,7 @@ void test_neg_core_getCntLockState_nullLockState(void);
 /* ========================================================================== */
 void test_neg_core_setLockCfg_nullConfig(void);
 void test_neg_core_setLockCfg_invalidValidParams(void);
+void test_neg_core_setLockCfg_invalidBitsInValidParams(void);
 
 /* ========================================================================== */
 /*                Negative Tests - getLockCfg                                 */
@@ -577,6 +600,7 @@ void test_neg_core_diagSetOutCtrlCfg_nullHandle(void);
 /* ========================================================================== */
 void test_neg_core_diagGetOutCtrlCfg_nullHandle(void);
 void test_neg_core_diagGetOutCtrlCfg_nullConfig(void);
+void test_neg_core_setMuxCfg_nullConfig(void);
 
 /* ========================================================================== */
 /*                Negative Tests - diagSetAmuxCfg                             */
@@ -621,6 +645,8 @@ void test_pos_core_cntLock_setGet(void);
 /*                Positive Tests - Lock Configuration                         */
 /* ========================================================================== */
 void test_pos_core_lockCfg_setGet(void);
+void test_pos_core_setLockCfg_lockCntValidOnly(void);
+void test_pos_core_setLockCfg_lockRegValidOnly(void);
 
 /* ========================================================================== */
 /*                Positive Tests - Device ID & Revision                       */
@@ -631,6 +657,20 @@ void test_pos_core_deviceId_revision(void);
 /*                Positive Tests - Diagnostic Output Control                  */
 /* ========================================================================== */
 void test_pos_core_diagOutCtrl_setGet(void);
+void test_pos_core_getMuxCfg_amuxChannelValid(void);
+void test_pos_core_setMuxCfg_amuxEnableDisabled(void);
+void test_pos_core_setMuxCfg_dmuxEnableDisabled(void);
+void test_pos_core_setMuxCfg_amuxChannelOnly(void);
+void test_pos_core_setMuxCfg_updateCtrlSuccess(void);
+
+/* ========================================================================== */
+/*                   Negative Tests - getMuxCfg / setMuxCfg                   */
+/* ========================================================================== */
+void test_neg_core_getMuxCfg_readFail(void);
+void test_neg_core_getMuxCfg_cfgRegReadFail(void);
+void test_neg_core_setMuxCfg_readFail(void);
+void test_neg_core_setMuxCfg_cfgRegReadFail(void);
+void test_neg_core_setMuxCfg_writeCtrlTxFail(void);
 
 /* ========================================================================== */
 /*                Positive Tests - Diagnostic AMUX                            */
@@ -671,6 +711,8 @@ void test_pos_core_getConfigCrcStatus_error(void);
 void test_neg_core_getConfigCrcStatus_nullHandle(void);
 void test_neg_core_getConfigCrcStatus_nullStatus(void);
 void test_neg_core_getConfigCrcStatus_zeroValidParams(void);
+void test_neg_core_getConfigCrcStatus_firstReadFail(void);
+void test_neg_core_getConfigCrcStatus_secondReadFail(void);
 
 /* ========================================================================== */
 /*                clrConfigCrcStatus API Tests                                */
@@ -699,6 +741,13 @@ void test_neg_core_getConfigCrc_nullValue(void);
 /* ========================================================================== */
 void test_pos_core_configCrcCalculate_calculate(void);
 void test_neg_core_configCrcCalculate_nullHandle(void);
+void test_neg_core_calculateCrc_midLoopReadFail(void);
+void test_neg_core_configCrcValidate_safetyCtrlReadFail(void);
+void test_neg_core_configCrcValidate_crcAlreadyEnabled(void);
+void test_neg_core_configCrcValidate_calcBitAlreadySet(void);
+void test_neg_core_configCrcValidate_crcErrorDetected(void);
+void test_neg_core_configCrcValidate_calcAssertWriteFail(void);
+void test_neg_core_configCrcValidate_calcAssertGateSkippedOnCleanEdgeFail(void);
 
 #ifdef __cplusplus
 }

@@ -33,13 +33,12 @@
 #ifndef PMIC_TEST_WDG_H
 #define PMIC_TEST_WDG_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
 #include "test_utils.h"
+// Test comment to verify editing works
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,7 +83,7 @@ extern "C" {
 
 /* Test: TC-WDG-0047 */
 #define WDG_TEST_WDGDISABLE() \
-    WDG_TEST_NEG_WDGDISABLE()
+    WDG_TEST_NEG_WDGGDISABLE()
 
 /* ======================================================================== */
 /*                       Test APIs: wdgGetEnableState                       */
@@ -116,7 +115,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_qaSeed); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_qaFdbk1); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_qaFdbk2); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_qaFdbk3)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_qaFdbk3); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetCfg_checkCfgState_inLongWindow); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgState_notInLongWindow)
 
 #define WDG_TEST_NEG_WDGSETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_nullHandle); \
@@ -132,7 +133,13 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaLfsr); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidQaSeed); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_setModeAndTrigger_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_setWinIntervals_win1_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_setWinIntervals_win2_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnFirstOp); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnSecondOp); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_setQaCfg_ioRxByteFail)
 
 /* Test: TC-WDG-0049 */
 #define WDG_TEST_WDGSETCFG() \
@@ -146,7 +153,16 @@ extern "C" {
 #define WDG_TEST_NEG_WDGGETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_invalidParam)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_invalidParam); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getModeAndTrigger_mode_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getModeAndTrigger_trigSel_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getQaCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getThresholds_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getWinIntervals_win1_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getWinIntervals_win2_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getWinIntervals_longWin_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_wdEnableRegFail)
 
 /* Test: TC-WDG-0050 */
 #define WDG_TEST_WDGGETCFG() \
@@ -234,7 +250,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_fullSequence)
 
 #define WDG_TEST_NEG_WDGQAWRITEANSWER() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_firstReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_secondReadFail)
 
 /* Test: TC-WDG-0056 */
 #define WDG_TEST_WDGQAWRITEANSWER() \
@@ -479,6 +497,8 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void);
 void test_pos_wdg_wdgSetCfg_qaFdbk1(void);
 void test_pos_wdg_wdgSetCfg_qaFdbk2(void);
 void test_pos_wdg_wdgSetCfg_qaFdbk3(void);
+void test_pos_wdg_wdgSetCfg_checkCfgState_inLongWindow(void);
+void test_neg_wdg_wdgSetCfg_checkCfgState_notInLongWindow(void);
 void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void);
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void);
 void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void);
@@ -487,6 +507,23 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void);
 void test_pos_wdg_wdgGetErrStatus_allFields(void);
 void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void);
 void test_pos_wdg_wdgGetErrStatus_answerError(void);
+void test_neg_wdg_wdgQaWriteAnswer_firstReadFail(void);
+void test_neg_wdg_wdgQaWriteAnswer_secondReadFail(void);
+void test_neg_wdg_wdgSetCfg_setModeAndTrigger_ioRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_setWinIntervals_win1_ioRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_setWinIntervals_win2_ioRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_mode_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_trigSel_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getQaCfg_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getThresholds_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getWinIntervals_win1_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getWinIntervals_win2_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_getWinIntervals_longWin_ioRxByteCSFail(void);
+void test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnFirstOp(void);
+void test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnSecondOp(void);
+void test_neg_wdg_wdgSetCfg_setQaCfg_ioRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_wdEnableRegFail(void);
 
 #ifdef __cplusplus
 }

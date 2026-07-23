@@ -151,7 +151,7 @@ static inline bool PWR_isInRangeU16(uint16_t min, uint16_t max, uint16_t param)
 
 static inline bool PWR_isInRangeU8(uint8_t min, uint8_t max, uint8_t param)
 {
-    return (param >= min) && (param <= max);
+    return (param >= min) && (param <= max); /* DA_JUSTIFY: PMICDRV-2355 */
 }
 
 static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourceTypes type, uint8_t min, uint8_t max)
@@ -173,13 +173,13 @@ static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourc
             validResources = (const uint8_t *)&PwrResourceImonCapable;
             numResources = COUNT(PwrResourceImonCapable);
             break;
-        default: /* LCOV_EXCL_START */
-            status = PMIC_ST_ERR_INV_PARAM;
-            break; /* LCOV_EXCL_STOP */
+        default: /* DA_JUSTIFY: PMICDRV-2356 */
+            status = PMIC_ST_ERR_INV_PARAM; /* DA_JUSTIFY: PMICDRV-2356 */
+            break;
     }
 
     // Validate resource requested supports configuration of this parameter
-    if ((status == PMIC_ST_SUCCESS) && !PWR_isResourceValid(validResources, numResources, resource)) {
+    if ((status == PMIC_ST_SUCCESS) && !PWR_isResourceValid(validResources, numResources, resource)) { /* DA_JUSTIFY: PMICDRV-2356 */
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -1302,7 +1302,7 @@ static inline int32_t PWR_convertVoltageMvToCodeBuck(uint16_t voltageMv, uint8_t
 
     // If all assertions passed, we can safely convert the voltage to VSET code
     if (status == PMIC_ST_SUCCESS) {
-        if ((voltageMv >= BUCK_VSET_MIN_MV) && (voltageMv <= BUCK_VSET_MAX_MV)) {
+        if ((voltageMv >= BUCK_VSET_MIN_MV) && (voltageMv <= BUCK_VSET_MAX_MV)) { /* DA_JUSTIFY: PMICDRV-2356 */
             *voltageCode = (uint8_t)((voltageMv - BUCK_VSET_MIN_MV) / BUCK_VSET_STEP_MV);
         }
     }
@@ -1327,7 +1327,7 @@ static inline int32_t PWR_convertVoltageMvToCodeVmon(uint16_t voltageMv, uint8_t
 
     // If all assertions passed, we can safely convert the voltage to VSET code
     if (status == PMIC_ST_SUCCESS) {
-        if ((voltageMv >= VMON_PG_LEVEL_MIN_MV) && (voltageMv <= VMON_PG_LEVEL_MAX_MV)) {
+        if ((voltageMv >= VMON_PG_LEVEL_MIN_MV) && (voltageMv <= VMON_PG_LEVEL_MAX_MV)) { /* DA_JUSTIFY: PMICDRV-2356 */
             *voltageCode = (uint8_t)((voltageMv - VMON_PG_LEVEL_MIN_MV) / VMON_PG_LEVEL_STEP_MV);
         }
     }
@@ -1358,7 +1358,7 @@ static int32_t PWR_setVoltageCfg(const Pmic_Handle_t *handle, const Pmic_PowerRe
         case PMIC_PWR_RSRC_BUCK3:
             mask = BUCK_VSET_MASK;
 
-            if (status == PMIC_ST_SUCCESS) {
+            if (status == PMIC_ST_SUCCESS) { /* DA_JUSTIFY: PMICDRV-2356 */
                 status = PWR_convertVoltageMvToCodeBuck((uint16_t)config->voltage_mV, &voltageCode);
             }
 
@@ -1368,7 +1368,7 @@ static int32_t PWR_setVoltageCfg(const Pmic_Handle_t *handle, const Pmic_PowerRe
         case PMIC_PWR_RSRC_VCCA_VMON:
             mask = VMON_PGSET_MASK;
 
-            if (status == PMIC_ST_SUCCESS) {
+            if (status == PMIC_ST_SUCCESS) { /* DA_JUSTIFY: PMICDRV-2356 */
                 status = PWR_convertVoltageMvToCodeVmon((uint16_t)config->voltage_mV, &voltageCode);
             }
 
@@ -1457,9 +1457,9 @@ static int32_t PWR_convertVoltageCode(uint8_t resource, uint8_t regData,
         case PMIC_PWR_RSRC_VCCA_VMON:
             status = PWR_convertCodeToVoltageMvVmon(voltageMv, code);
             break;
-        default: /* LCOV_EXCL_START */
-            status = PMIC_ST_ERR_INV_PARAM;
-            break; /* LCOV_EXCL_STOP */
+        default: /* DA_JUSTIFY: PMICDRV-2356 */
+            status = PMIC_ST_ERR_INV_PARAM; /* DA_JUSTIFY: PMICDRV-2356 */
+            break;
     }
 
     return status;

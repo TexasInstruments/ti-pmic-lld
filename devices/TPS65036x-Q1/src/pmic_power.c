@@ -2699,7 +2699,7 @@ static int32_t PWR_validateAndCopySeqTrigInput(const Pmic_PwrBuckLdoSeqTrig_t *s
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             PWR_copyBuckLdoSeqTrig(&src[i], &dst[i]);
         }
@@ -2727,7 +2727,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSe
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             status = PWR_getOneSeqTrig(handle, &localSeqTrigCfg[i]);
             if (status != PMIC_ST_SUCCESS)
@@ -2739,7 +2739,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSe
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             PWR_copyBuckLdoSeqTrig(&localSeqTrigCfg[i], &seqTrigCfg[i]);
         }
@@ -2778,7 +2778,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_Handle_t *handle, const Pmic_PwrBuc
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_TRIG_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             status = PWR_setOneSeqTrig(handle, &localSeqTrigCfg[i]);
             if (status != PMIC_ST_SUCCESS)
@@ -2922,7 +2922,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeq
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             status = PWR_getOneSeqDly(handle, &localSeqDlyCfg[i]);
             if (status != PMIC_ST_SUCCESS)
@@ -2934,7 +2934,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_Handle_t *handle, Pmic_PwrBuckLdoSeq
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             PWR_copyBuckLdoSeqDly(&localSeqDlyCfg[i], &seqDlyCfg[i]);
         }
@@ -2965,7 +2965,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             PWR_copyBuckLdoSeqDly(&seqDlyCfg[i], &localSeqDlyCfg[i]);
         }
@@ -2973,7 +2973,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_Handle_t *handle, const Pmic_PwrBuck
 
     if (status == PMIC_ST_SUCCESS)
     {
-        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++)
+        for (uint8_t i = 0U; (i < PMIC_PWR_SEQ_DLY_LEN_MAX) && (i < len); i++) /* DA_JUSTIFY: PMICDRV-2356 */
         {
             status = PWR_setOneSeqDly(handle, &localSeqDlyCfg[i]);
             if (status != PMIC_ST_SUCCESS)

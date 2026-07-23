@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -985,7 +984,7 @@ void test_neg_io_crcErrorExhaustsRetries(void)
 }
 
 /**
- * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
+ * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt.
  */
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
@@ -1022,7 +1021,7 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 }
 
 /**
- * @brief Test ioRxByte with zero retry count (no retries allowed)
+ * @brief Test ioRxByte with zero retry count (no retries allowed).
  */
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
@@ -1053,7 +1052,7 @@ void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 }
 
 /**
- * @brief Test ioTxByte with multiple retry attempts before success
+ * @brief Test ioTxByte with multiple retry attempts before success.
  */
 void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
@@ -1082,7 +1081,6 @@ void test_pos_io_ioTxByte_multipleRetryAttempts(void)
     /* Should have 2 attempts (1 failure + 1 success) */
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
 }
-
 
 /* ========================================================================== */
 /*           LP8772x-Q1 Tests for Uncovered Lines in pmic_io.c               */
@@ -1122,4 +1120,36 @@ void test_neg_io_ioTxByte_nullIoWrite(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
     // No need to deinit corrupted handle
+}
+
+void test_neg_io_ioRxByte_nullIoReadFptr(void)
+{
+    // Copy global handle and corrupt ioRead to NULL; Pmic_ioRxByte should return non-SUCCESS
+    uint8_t regData = 0U;
+    Pmic_Handle_t testHandle;
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead = NULL;
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+}
+
+void test_neg_io_ioRxByte_nullCommHandle0(void)
+{
+    // Copy global handle and set commHandle0 to NULL; Pmic_ioRxByte should return non-SUCCESS
+    uint8_t regData = 0U;
+    Pmic_Handle_t testHandle;
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.commHandle0 = NULL;
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, &regData);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+}
+
+void test_neg_io_ioTxByte_nullCommHandle0(void)
+{
+    // Copy global handle and set commHandle0 to NULL; Pmic_ioTxByte should return non-SUCCESS
+    Pmic_Handle_t testHandle;
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.commHandle0 = NULL;
+    int32_t status = Pmic_ioTxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
 }

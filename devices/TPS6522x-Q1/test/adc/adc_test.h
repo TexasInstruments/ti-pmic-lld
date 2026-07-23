@@ -33,8 +33,6 @@
 #ifndef ADC_TEST_H
 #define ADC_TEST_H
 
-
-
 /* ========================================================================= */
 /*                              Include Files                                */
 /* ========================================================================= */
@@ -105,8 +103,16 @@ extern "C" {
 /* ======================================================================== */
 /*               Test APIs: adcStartSingleConversionBlocking                */
 /* ======================================================================== */
+#ifdef BUILD_MOCK
+#define ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING_MOCK_ONLY() \
+    PLATFORM_RUN_TEST(test_neg_adc_adcStartSingleConversionBlocking_ioRxByteCSFail)
+#else
+#define ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING_MOCK_ONLY()
+#endif
+
 #define ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING() \
-    PLATFORM_RUN_TEST(test_pos_adc_adcStartSingleConversionBlocking_success)
+    PLATFORM_RUN_TEST(test_pos_adc_adcStartSingleConversionBlocking_success); \
+    ADC_TEST_POS_ADCSTARTSINGLECONVERSIONBLOCKING_MOCK_ONLY()
 
 #define ADC_TEST_NEG_ADCSTARTSINGLECONVERSIONBLOCKING() \
     PLATFORM_RUN_TEST(test_neg_adc_adcStartSingleConversionBlocking_nullHandle); \
@@ -229,6 +235,7 @@ void test_pos_adc_adcSetCfg_srcSelThermal(void);
 void test_pos_adc_adcGetCfg_srcSelection(void);
 void test_pos_adc_adcStartSingleConversion_success(void);
 void test_pos_adc_adcStartSingleConversionBlocking_success(void);
+void test_neg_adc_adcStartSingleConversionBlocking_ioRxByteCSFail(void);
 void test_pos_adc_adcGetStatus_idle(void);
 void test_pos_adc_adcGetResultCode_success(void);
 void test_pos_adc_fullSequence_configStartPollRead(void);

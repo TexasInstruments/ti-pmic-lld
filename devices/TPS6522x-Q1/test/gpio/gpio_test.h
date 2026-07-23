@@ -33,8 +33,6 @@
 #ifndef GPIO_TEST_H
 #define GPIO_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -62,7 +60,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio5_funcWkup); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio6_configInputDeglitch); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio6_funcSyncClkIn); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetPinCfg_pushPull)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetPinCfg_pushPull); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetPinCfg_ioRxByteFail)
 
 #define GPIO_TEST_NEG_SETPINCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetPinCfg_nullHandle); \
@@ -89,7 +88,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio1_getConfig); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio3_getConfig); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio5_getConfig); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio6_getConfig)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetPinCfg_gpio6_getConfig); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetPinCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGetPinCfg_noDirValid)
 
 #define GPIO_TEST_NEG_GETPINCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetPinCfg_nullHandle); \
@@ -145,7 +146,8 @@ extern "C" {
 #define GPIO_TEST_POS_SETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_configNInt); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_configEnDrv); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_enablePullUp)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_enablePullUp); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetNIntEnDrvCfg_enPuResistorFalse)
 
 #define GPIO_TEST_NEG_SETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetNIntEnDrvCfg_nullHandle); \
@@ -163,7 +165,8 @@ extern "C" {
 /* ======================================================================== */
 #define GPIO_TEST_POS_GETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetNIntEnDrvCfg_getConfig); \
-    PLATFORM_RUN_TEST(test_pos_gpio_getNIntEnDrvCfg_enPuResistor)
+    PLATFORM_RUN_TEST(test_pos_gpio_getNIntEnDrvCfg_enPuResistor); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNIntEnDrvCfg_ioRxByteCSFail)
 
 #define GPIO_TEST_NEG_GETNINTENDDRVCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetNIntEnDrvCfg_nullHandle); \
@@ -198,7 +201,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_configPb); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_configVSense); \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchEnable); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchPb)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_deglitchPb); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetEnPbVSenseCfg_noFnValid); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetEnPbVSenseCfg_pbFnDeglitch); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetEnPbVSenseCfg_vsenseFn); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetEnPbVSenseCfg_deglitchOnlyNoFnSel)
 
 #define GPIO_TEST_NEG_SETENPBVSENSECFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetEnPbVSenseCfg_nullHandle); \
@@ -217,7 +224,8 @@ extern "C" {
 /* ======================================================================== */
 #define GPIO_TEST_POS_GETENPBVSENSECFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_getConfig); \
-    PLATFORM_RUN_TEST(test_pos_gpio_getEnPbDegl)
+    PLATFORM_RUN_TEST(test_pos_gpio_getEnPbDegl); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseCfg_ioRxByteCSFail)
 
 #define GPIO_TEST_NEG_GETENPBVSENSECFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseCfg_nullHandle); \
@@ -233,7 +241,11 @@ extern "C" {
 /*                    Test APIs: gpioGetEnPbVSenseStatus                    */
 /* ======================================================================== */
 #define GPIO_TEST_POS_GETENPBVSENSESTATUS() \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_getStatus)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetGetEnPbVSenseCfg_getStatus); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseStatus_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGetEnPbVSenseStatus_noPbLvlValid); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGetEnPbVSenseStatus_noEnLvlValid); \
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioGetEnPbVSenseStatus_noVsenseLvlValid)
 
 #define GPIO_TEST_NEG_GETENPBVSENSESTATUS() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetEnPbVSenseStatus_nullHandle); \
@@ -401,6 +413,20 @@ void test_pos_gpio_gpioGetValue_validPin(void);
 void test_pos_gpio_gpioSetValue_validPin(void);
 void test_pos_gpio_property_pinConfigurations(void);
 void test_pos_gpio_getEnPbDegl(void);
+void test_neg_gpio_gpioGetEnPbVSenseCfg_ioRxByteCSFail(void);
+void test_neg_gpio_gpioGetEnPbVSenseStatus_ioRxByteCSFail(void);
+void test_neg_gpio_gpioGetNIntEnDrvCfg_ioRxByteCSFail(void);
+void test_neg_gpio_gpioGetPinCfg_ioRxByteCSFail(void);
+void test_pos_gpio_gpioSetNIntEnDrvCfg_enPuResistorFalse(void);
+void test_neg_gpio_gpioSetPinCfg_ioRxByteFail(void);
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noPbLvlValid(void);
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noEnLvlValid(void);
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noVsenseLvlValid(void);
+void test_pos_gpio_gpioSetEnPbVSenseCfg_noFnValid(void);
+void test_pos_gpio_gpioSetEnPbVSenseCfg_pbFnDeglitch(void);
+void test_pos_gpio_gpioSetEnPbVSenseCfg_vsenseFn(void);
+void test_pos_gpio_gpioSetEnPbVSenseCfg_deglitchOnlyNoFnSel(void);
+void test_pos_gpio_gpioGetPinCfg_noDirValid(void);
 
 #ifdef __cplusplus
 }

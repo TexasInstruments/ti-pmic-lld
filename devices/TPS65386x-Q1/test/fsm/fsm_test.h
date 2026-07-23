@@ -33,8 +33,6 @@
 #ifndef FSM_TEST_H
 #define FSM_TEST_H
 
-
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -80,7 +78,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETDEVSTATE() \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_validStates)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_validStates); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_ioRxByteFail)
 
 #define FSM_TEST_NEG_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullHandle); \
@@ -128,7 +127,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_safeLockThr); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_vbatStbyEntryThr); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_multiple); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_higherVbatStbyExitThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_pwdThrOnlyFlag); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_noStbyFields); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_vbatStbyEntryThrOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetCfg_stbyEnOnly)
 
 #define FSM_TEST_NEG_FSMSETCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_nullHandle); \
@@ -139,7 +142,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidRstMcuTmo); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidNrstExt); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeTmo); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeLockThr)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_invalidSafeLockThr); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_stbyCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_safetyCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_rstMcuCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetCfg_safeTmoCfgIoRxByteFail)
 
 /* Test: TC-FSM-0003 */
 #define FSM_TEST_FSMSETCFG() \
@@ -152,12 +159,23 @@ extern "C" {
 
 #define FSM_TEST_POS_FSMGETCFG() \
     /* Positive tests for fsmGetCfg are combined with fsmSetCfg tests */ \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_vbatStbyEntryThr)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_vbatStbyEntryThr); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_stbyEnOnlyFlag); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_pwdThrValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_rstMcuTmoValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_safeLockThrValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_nrstExtOnlyValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_safeTmoValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetCfg_autoBistEnValidOnly)
 
 #define FSM_TEST_NEG_FSMGETCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_invalidParams)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_invalidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_stbyCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_safetyCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_rstMcuCfgIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetCfg_safeTmoCfgIoRxByteFail)
 
 /* Test: TC-FSM-0004 */
 #define FSM_TEST_FSMGETCFG() \
@@ -185,7 +203,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define FSM_TEST_POS_FSMGETDEVERRCNT() \
-    /* Positive tests for fsmGetDevErrCnt are combined with fsmSetDevErrCnt tests */
+    /* Positive tests for fsmGetDevErrCnt are combined with fsmSetDevErrCnt tests */ \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_ioRxByteCSFail)
 
 #define FSM_TEST_NEG_FSMGETDEVERRCNT() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetDevErrCnt_nullHandle); \
@@ -202,7 +221,9 @@ extern "C" {
 
 #define FSM_TEST_POS_FSMSETWAKEUPCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_basic); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_withAllValidParams)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_withAllValidParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_wake2DglValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetWakeupCfg_noWakeFields)
 
 #define FSM_TEST_NEG_FSMSETWAKEUPCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_nullHandle); \
@@ -211,7 +232,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Event); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Event); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake1Dgl); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_invalidWake2Dgl); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetWakeupCfg_ioRxByteFail)
 
 /* Test: TC-FSM-0007 */
 #define FSM_TEST_FSMSETWAKEUPCFG() \
@@ -224,12 +246,15 @@ extern "C" {
 
 #define FSM_TEST_POS_FSMGETWAKEUPCFG() \
     /* Positive tests for fsmGetWakeupCfg are combined with fsmSetWakeupCfg tests */ \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_individualParams)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_individualParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_wake2DglValidOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetWakeupCfg_noWakeFields)
 
 #define FSM_TEST_NEG_FSMGETWAKEUPCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetWakeupCfg_ioRxByteFail)
 
 /* Test: TC-FSM-0008 */
 #define FSM_TEST_FSMGETWAKEUPCFG() \
@@ -258,13 +283,16 @@ extern "C" {
 
 #define FSM_TEST_POS_FSMSETPOWERLATCHCFG() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_basic); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_wake2EventOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatchCfg_noPwrlFields)
 
 #define FSM_TEST_NEG_FSMSETPOWERLATCHCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_nullPointer); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_zeroValidParams); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_invalidPwdDly); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatchCfg_ioRxByteFail)
 
 /* Test: TC-FSM-0010 */
 #define FSM_TEST_FSMSETPOWERLATCHCFG() \
@@ -277,12 +305,15 @@ extern "C" {
 
 #define FSM_TEST_POS_FSMGETPOWERLATCHCFG() \
     /* Positive tests for fsmGetPowerLatchCfg are combined with fsmSetPowerLatchCfg tests */ \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_individualParams)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_individualParams); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_wake2EventOnly); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmGetPowerLatchCfg_noPwrlFields)
 
 #define FSM_TEST_NEG_FSMGETPOWERLATCHCFG() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_nullPointer); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmGetPowerLatchCfg_ioRxByteFail)
 
 /* Test: TC-FSM-0011 */
 #define FSM_TEST_FSMGETPOWERLATCHCFG() \
@@ -294,12 +325,19 @@ extern "C" {
 /* ======================================================================== */
 
 #define FSM_TEST_POS_FSMSETPOWERLATCH() \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_basic)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_basic); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_stbyErrWakeLatchValid); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_stbyTmrWakeLatchValid); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_mPmicWakeLatchValid); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_wake1LatchValid); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetPowerLatch_wake2LatchValid)
 
 #define FSM_TEST_NEG_FSMSETPOWERLATCH() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_nullPointer); \
-    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_readFail); \
+    PLATFORM_RUN_TEST(test_neg_fsm_fsmSetPowerLatch_writeFail)
 
 /* Test: TC-FSM-0012 */
 #define FSM_TEST_FSMSETPOWERLATCH() \
@@ -411,6 +449,11 @@ void test_pos_fsm_fsmGetDevState_validRange(void);
  * @brief Test: Set and get FSM standby enable configuration.
  */
 void test_pos_fsm_fsmSetCfg_stbyEn(void);
+
+/**
+ * @brief Test: Set and get FSM standby enable configuration with ONLY STBY_EN_VALID set.
+ */
+void test_pos_fsm_fsmSetCfg_stbyEnOnly(void);
 
 /**
  * @brief Test: Set and get FSM auto BIST enable configuration.
@@ -536,6 +579,71 @@ void test_pos_fsm_fsmGetDevState_validRead(void);
 void test_pos_fsm_fsmGetDevState_validRange_initStateMapping(void);
 void test_pos_fsm_fsmGetDevState_validRange_offStateRepeated(void);
 void test_pos_fsm_fsmSetPowerLatchCfg_stbyErrWakeEvent(void);
+
+/* Dynamic-analysis coverage: I/O failure tests (BUILD_MOCK-gated) */
+void test_neg_fsm_fsmGetDevErrCnt_ioRxByteCSFail(void);
+void test_neg_fsm_fsmSetDevState_ioRxByteFail(void);
+
+/* Dynamic-analysis coverage: OR short-circuit tests — fsmGetCfg */
+void test_pos_fsm_fsmGetCfg_stbyEnOnlyFlag(void);
+void test_pos_fsm_fsmGetCfg_pwdThrValidOnly(void);
+void test_pos_fsm_fsmGetCfg_rstMcuTmoValidOnly(void);
+void test_pos_fsm_fsmGetCfg_safeLockThrValidOnly(void);
+
+/* Dynamic-analysis coverage: false-branch of inner validParam checks — fsmGetCfg */
+void test_pos_fsm_fsmGetCfg_nrstExtOnlyValidOnly(void);
+void test_pos_fsm_fsmGetCfg_safeTmoValidOnly(void);
+void test_pos_fsm_fsmGetCfg_autoBistEnValidOnly(void);
+
+/* Dynamic-analysis coverage: OR short-circuit tests — fsmSetCfg */
+void test_pos_fsm_fsmSetCfg_pwdThrOnlyFlag(void);
+
+/* Dynamic-analysis coverage: OR short-circuit tests — fsmGetWakeupCfg / fsmSetWakeupCfg */
+void test_pos_fsm_fsmGetWakeupCfg_wake2DglValidOnly(void);
+void test_pos_fsm_fsmSetWakeupCfg_wake2DglValidOnly(void);
+
+/* Coverage-gap: false-branch of compound OR guard — no WAKE/PWRL fields */
+void test_pos_fsm_fsmGetPowerLatchCfg_noPwrlFields(void);
+void test_pos_fsm_fsmGetWakeupCfg_noWakeFields(void);
+void test_pos_fsm_fsmSetCfg_noStbyFields(void);
+void test_pos_fsm_fsmSetCfg_vbatStbyEntryThrOnly(void);
+void test_neg_fsm_fsmSetPowerLatch_readFail(void);
+void test_neg_fsm_fsmSetPowerLatch_writeFail(void);
+void test_pos_fsm_fsmSetPowerLatchCfg_noPwrlFields(void);
+void test_pos_fsm_fsmSetWakeupCfg_noWakeFields(void);
+
+/* Coverage-gap: I/O failure in FSM_setStbyCfg / FSM_setSafetyCfg /
+ * FSM_setRstMcuCfg / FSM_setSafeTmoCfg (false-branch after ioRxByte) */
+void test_neg_fsm_fsmSetCfg_stbyCfgIoRxByteFail(void);
+void test_neg_fsm_fsmSetCfg_safetyCfgIoRxByteFail(void);
+void test_neg_fsm_fsmSetCfg_rstMcuCfgIoRxByteFail(void);
+void test_neg_fsm_fsmSetCfg_safeTmoCfgIoRxByteFail(void);
+
+/* Coverage-gap: I/O failure in FSM_getStbyCfg / FSM_getSafetyCfg /
+ * FSM_getRstMcuCfg / FSM_getSafeTmoCfg (false-branch after ioRxByte_CS) */
+void test_neg_fsm_fsmGetCfg_stbyCfgIoRxByteFail(void);
+void test_neg_fsm_fsmGetCfg_safetyCfgIoRxByteFail(void);
+void test_neg_fsm_fsmGetCfg_rstMcuCfgIoRxByteFail(void);
+void test_neg_fsm_fsmGetCfg_safeTmoCfgIoRxByteFail(void);
+
+/* Coverage-gap: I/O failure in FSM_setWakeupCfg / FSM_getWakeupCfg */
+void test_neg_fsm_fsmSetWakeupCfg_ioRxByteFail(void);
+void test_neg_fsm_fsmGetWakeupCfg_ioRxByteFail(void);
+
+/* Coverage-gap: I/O failure in FSM_setPwrLatchCfg / FSM_getPwrLatchCfg */
+void test_neg_fsm_fsmSetPowerLatchCfg_ioRxByteFail(void);
+void test_neg_fsm_fsmGetPowerLatchCfg_ioRxByteFail(void);
+
+/* Dynamic-analysis coverage: OR short-circuit tests — fsmGetPowerLatchCfg / fsmSetPowerLatchCfg */
+void test_pos_fsm_fsmGetPowerLatchCfg_wake2EventOnly(void);
+void test_pos_fsm_fsmSetPowerLatchCfg_wake2EventOnly(void);
+
+/* Dynamic-analysis coverage: individual latch-flag tests — fsmSetPowerLatch */
+void test_pos_fsm_fsmSetPowerLatch_stbyErrWakeLatchValid(void);
+void test_pos_fsm_fsmSetPowerLatch_stbyTmrWakeLatchValid(void);
+void test_pos_fsm_fsmSetPowerLatch_mPmicWakeLatchValid(void);
+void test_pos_fsm_fsmSetPowerLatch_wake1LatchValid(void);
+void test_pos_fsm_fsmSetPowerLatch_wake2LatchValid(void);
 
 /* ========================================================================== */
 /*                       Negative Test Declarations                           */

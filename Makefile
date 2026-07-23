@@ -37,7 +37,7 @@ endif
 # Coverage tools from pmic-lld-utils
 # Auto-detect utils directory (sibling directory)
 ifndef PMIC_UTILS_DIR
-    PMIC_UTILS_DIR := $(shell test -d ../pmic-lld-utils && echo ../pmic-lld-utils)
+	PMIC_UTILS_DIR := $(shell test -d ../pmic-lld-utils && cd ../pmic-lld-utils && pwd)
 endif
 
 # Check if pmic-coverage is globally installed, otherwise use uv run
@@ -46,6 +46,8 @@ ifndef PMIC_COVERAGE
     PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
 endif
 export PMIC_COVERAGE
+
+PMIC_COVERAGE_TEMPLATE := $(PMIC_UTILS_DIR)/coverage/DynamicAnalysisReport_Template.xlsx
 
 # List of all PMIC device variants
 DEVICES := LP8772x-Q1 TPS65036x-Q1 TPS6522x-Q1 TPS65386x-Q1
@@ -198,9 +200,13 @@ ifndef DEVICE
 		echo "==================== Coverage for $$device ===================="; \
 		if [ -d "$(DEVICE_DIR)/$$device/test" ]; then \
 			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test coverage BUILD=mock || exit 1; \
-			latest_json=$$(ls -t $(DEVICE_DIR)/$$device/test/coverage/*.json 2>/dev/null | head -1); \
+			latest_json=$$(ls -t $(DEVICE_DIR)/$$device/test/coverage/*_coverage.json 2>/dev/null | head -1); \
 			if [ -n "$$latest_json" ]; then \
 				json_reports="$$json_reports $$latest_json"; \
+				if [ -f "$(PMIC_COVERAGE_TEMPLATE)" ]; then \
+					$(PMIC_COVERAGE) report "$$latest_json" \
+						--template "$(PMIC_COVERAGE_TEMPLATE)" || true; \
+				fi; \
 			fi; \
 		else \
 			echo "No tests found for $$device"; \
@@ -210,14 +216,19 @@ ifndef DEVICE
 	echo "==================== Generating Aggregate Report ===================="; \
 	if [ -n "$$json_reports" ]; then \
 		$(PMIC_COVERAGE) aggregate $$json_reports; \
+		if [ -f "$(PMIC_COVERAGE_TEMPLATE)" ]; then \
+			$(PMIC_COVERAGE) combined-report $$json_reports \
+				--template "$(PMIC_COVERAGE_TEMPLATE)" || true; \
+		fi; \
 	else \
 		echo "ERROR: No coverage reports generated!"; \
 		exit 1; \
 	fi
 	@echo ""
 	@echo "Coverage analysis completed!"
-	@echo "Individual reports: devices/*/test/coverage/"
-	@echo "Aggregate report:   coverage/"
+	@echo "Individual JSON reports: devices/*/test/coverage/"
+	@echo "Aggregate report:        coverage/"
+	@echo "Combined XLSX:           coverage/*_Combined_Dynamic_Analysis_Report.xlsx"
 else
 	@echo "Generating coverage report for device: $(DEVICE)"
 	@if [ ! -d "$(DEVICE_DIR)/$(DEVICE)/test" ]; then \
@@ -225,6 +236,13 @@ else
 		exit 1; \
 	fi
 	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test coverage BUILD=mock
+	@if [ -f "$(PMIC_COVERAGE_TEMPLATE)" ]; then \
+		latest_json=$$(ls -t $(DEVICE_DIR)/$(DEVICE)/test/coverage/*_coverage.json 2>/dev/null | head -1); \
+		if [ -n "$$latest_json" ]; then \
+			$(PMIC_COVERAGE) report "$$latest_json" \
+				--template "$(PMIC_COVERAGE_TEMPLATE)" || true; \
+		fi; \
+	fi
 	@echo ""
 	@echo "Coverage reports generated:"
 	@echo "  $(DEVICE_DIR)/$(DEVICE)/test/coverage/"

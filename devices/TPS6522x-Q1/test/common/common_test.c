@@ -1791,6 +1791,122 @@ void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
 }
 
 /* ========================================================================== */
+// Out-of-range status ID boundary test functions
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_getDiagnostic with out-of-range ERROR status ID.
+ *
+ * Passes PMIC_ST_TYPE_ERROR with statusId == PMIC_ST_ID_ERROR_MAX + 1.
+ * statusCodeCheck() catches this before the inner isValidErrorId check,
+ * so the inner branch may be unreachable from external callers.
+ * Note: may be unreachable — verify during coverage run
+ */
+void test_neg_common_getDiagnostic_outOfRangeErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/**
+ * @brief Test Pmic_getDiagnostic with out-of-range WARNING status ID.
+ *
+ * Passes PMIC_ST_TYPE_WARNING with statusId == PMIC_ST_ID_WARNING_MAX + 1.
+ * statusCodeCheck() catches this before the inner isValidWarningId check.
+ * Note: may be unreachable — verify during coverage run
+ */
+void test_neg_common_getDiagnostic_outOfRangeWarningId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/**
+ * @brief Test Pmic_getDiagnostics with an array element having out-of-range ERROR ID.
+ *
+ * Places a valid first element and a second element with an out-of-range error ID.
+ * Note: may be unreachable — verify during coverage run
+ */
+void test_neg_common_getDiagnostics_outOfRangeErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[2] = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_NULL_PARAM;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[1].code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+
+    int32_t status = Pmic_getDiagnostics(&handle, diags, 2U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/**
+ * @brief Test Pmic_clrDiagnostics with an array element having out-of-range ERROR ID.
+ *
+ * Note: may be unreachable — verify during coverage run
+ */
+void test_neg_common_clrDiagnostics_outOfRangeErrorId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[2] = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_NULL_PARAM;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[1].code = PMIC_STATUS(PMIC_ST_TYPE_ERROR, PMIC_ST_ID_ERROR_MAX + 1U);
+
+    int32_t status = Pmic_clrDiagnostics(&handle, diags, 2U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/**
+ * @brief Test Pmic_clrDiagnostics with an array element having out-of-range WARNING ID.
+ *
+ * Note: may be unreachable — verify during coverage run
+ */
+void test_neg_common_clrDiagnostics_outOfRangeWarningId(void)
+{
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diags[2] = {0};
+
+    handle.criticalSectionStart = mockCritSecStart;
+    handle.criticalSectionStop = mockCritSecStop;
+
+    diags[0].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[0].code = PMIC_ST_ERR_NULL_PARAM;
+    diags[1].validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diags[1].code = PMIC_STATUS(PMIC_ST_TYPE_WARNING, PMIC_ST_ID_WARNING_MAX + 1U);
+
+    int32_t status = Pmic_clrDiagnostics(&handle, diags, 2U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/* ========================================================================== */
 /*                        Test Suite Entry Point                              */
 /* ========================================================================== */
 

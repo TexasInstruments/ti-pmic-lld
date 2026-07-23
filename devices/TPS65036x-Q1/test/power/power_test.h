@@ -55,6 +55,19 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
+/* Mirrors the internal bounds defined in pmic_power.c; kept out of the public
+ * pmic_power.h since they are implementation details, not part of the API. */
+/** @brief Maximum sequence trigger bit position per power resource (bits 0-5) */
+#define PMIC_PWR_SEQ_TRIG_BIT_POS_MAX       5U
+
+/** @brief Maximum number of sequence trigger configurations that can be processed
+ *  Derived: PMIC_POWER_RESOURCE_MAX (4) × 6 bits = 24 */
+#define PMIC_PWR_SEQ_TRIG_LEN_MAX           (24U)
+
+/** @brief Maximum number of sequence delay configurations that can be processed
+ *  Same as trigger max: PMIC_POWER_RESOURCE_MAX (4) × 6 bits = 24 */
+#define PMIC_PWR_SEQ_DLY_LEN_MAX            (24U)
+
 /* ======================================================================== */
 /*                         Test APIs: pwrSetLdoCfg                          */
 /* ======================================================================== */
@@ -90,7 +103,13 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_uvSel); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_scSel); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_outOfBounds_rvConf); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setLdoCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setLdoCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ldoConf_vsetOutOfBounds_ioPath); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ldoOvpResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ldoOvResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ldoUvResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ldoScResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_setLdoConf_vsetBelowMin)
 
 /* Test: TC-POWER-0032 */
 #define POWER_TEST_PWRSETLDOCFG() \
@@ -106,7 +125,14 @@ extern "C" {
 #define POWER_TEST_NEG_PWRGETLDOCFG() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_nullParam_ldoCfg); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getLdoCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getLdoCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoConf_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoCtrl_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoMonConf_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoOvpResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoOvResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoUvResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ldoScResponse_ioRxByteCSFail)
 
 /* Test: TC-POWER-0033 */
 #define POWER_TEST_PWRGETLDOCFG() \
@@ -181,7 +207,16 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidDischargeSel); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidSlewRate); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setUvlo_invalidBuck)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setUvlo_invalidBuck); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckActiveVSET_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckLPwrVSET_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckOvpResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckOvResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckUvResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buckScResponse_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_buck2_3Ctrl_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_setBuckActiveVSET_belowMin); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_setBuckLPwrVSET_belowMin)
 
 #define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED() \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues); \
@@ -328,7 +363,19 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getUvlo_invalidBuck)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getUvlo_invalidBuck); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_spreadSpectrum_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckVSET_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckVsetActive_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckVsetLPwr_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck1Ctrl_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_3Ctrl_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckMonConf_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckOvpResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckOvResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckUvResponse_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buckScResponse_ioRxByteCSFail)
 
 /* Test: TC-POWER-0035 */
 #define POWER_TEST_PWRGETBUCKCFG() \
@@ -385,7 +432,10 @@ extern "C" {
 #define POWER_TEST_NEG_PWRGETRSRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_nullParam_pwrRsrcStat); \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_outOfBounds_resource)
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_outOfBounds_resource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_statStartup_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_statBuck1_2_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_statBuck3Ldo_ioRxByteCSFail)
 
 /* Test: TC-POWER-0038 */
 #define POWER_TEST_PWRGETRSRCSTATUS() \
@@ -406,8 +456,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_lenExceedsMax); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidPwrRsrc); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidBitPos)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqTrig_invalidBitPos); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_ioFailure); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqTrig_lenMax_ioFailure)
 
 /* Test: TC-POWER-0039 */
 #define POWER_TEST_PWRSETBUCKLDOSEQTRIG() \
@@ -424,8 +477,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_nullParam_seqTrigCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_zeroLen); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_lenExceedsMax); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidResource); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidBitPos)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqTrig_invalidBitPos); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqTrig_ioFailure)
 
 /* Test: TC-POWER-0040 */
 #define POWER_TEST_PWRGETBUCKLDOSEQTRIG() \
@@ -448,7 +503,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOn); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_outOfBounds_seqDlyOff); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_zeroLen); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_invalidConfig)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_lenExceedsMax); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_setSeqDelay_invalidConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckLdoSeqDly_invalidResource)
 
 /* Test: TC-POWER-0041 */
 #define POWER_TEST_PWRSETBUCKLDOSEQDLY() \
@@ -459,13 +517,19 @@ extern "C" {
 /*                      Test APIs: pwrGetBuckLdoSeqDly                      */
 /* ======================================================================== */
 
-#define POWER_TEST_POS_PWRGETBUCKLDOSEQDLY()  /* All positive tests covered by SET */
+#define POWER_TEST_POS_PWRGETBUCKLDOSEQDLY() \
+    PLATFORM_RUN_TEST(test_pos_power_pwrGetBuckLdoSeqDly_onlyOffDelay); \
+    PLATFORM_RUN_TEST(test_pos_power_pwrGetBuckLdoSeqDly_onlyOnDelay)
 
 #define POWER_TEST_NEG_PWRGETBUCKLDOSEQDLY() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_nullParam_seqDlyCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_zeroLen); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_invalidConfig)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_lenExceedsMax); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_getSeqDelay_invalidConfig); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_ioFailure); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckLdoSeqDly_lenMax_ioFailure)
 
 /* Test: TC-POWER-0042 */
 #define POWER_TEST_PWRGETBUCKLDOSEQDLY() \
@@ -547,7 +611,6 @@ void test_pos_power_ldoSetGetCfg_uvSel(void);
 void test_pos_power_ldoSetGetCfg_scSel(void);
 void test_pos_power_ldoSetGetCfg_rvConf(void);
 
-
 /* TSD Configuration Tests - Negative */
 void test_neg_power_pwrSetTsdCfg_nullParam_pmicHandle(void);
 void test_neg_power_pwrSetTsdCfg_nullParam_tsdCfg(void);
@@ -598,7 +661,6 @@ void test_pos_power_seqDlySetGet_buck2(void);
 void test_pos_power_seqDlySetGet_buck3(void);
 void test_pos_power_seqDlySetGet_ldo(void);
 void test_pos_power_seqDlySetGet_allResources(void);
-
 
 /* Buck Configuration Tests - Positive */
 void test_pos_power_buckSetGetCfg_enable_buck1(void);
@@ -808,7 +870,6 @@ void test_pos_power_buckSetCfg_buck3ScSel(void);
 void test_pos_power_buckSetCfg_buck1RvConf(void);
 void test_pos_power_buckSetCfg_buck1IlimSel(void);
 
-/* BUCK2/BUCK3 Coverage Gap Tests */
 void test_pos_power_powerGetCfg_buck2Enable(void);
 void test_pos_power_powerSetCfg_buck2Enable(void);
 void test_pos_power_powerGetVoutCfg_buck2Voltage(void);
@@ -831,15 +892,80 @@ void test_neg_power_pwr_getLdoCfg_zeroValidParams(void);
 void test_neg_power_pwr_setTsdCfg_zeroValidParams(void);
 void test_neg_power_pwr_getTsdCfg_zeroValidParams(void);
 void test_neg_power_pwr_setSeqTrig_zeroLen(void);
+void test_neg_power_pwr_setSeqTrig_lenExceedsMax(void);
 void test_neg_power_pwr_setSeqTrig_invalidPwrRsrc(void);
 void test_neg_power_pwr_setSeqTrig_invalidBitPos(void);
 void test_neg_power_pwr_getSeqTrig_zeroLen(void);
+void test_neg_power_pwr_getSeqTrig_lenExceedsMax(void);
 void test_neg_power_pwr_getSeqTrig_invalidResource(void);
 void test_neg_power_pwr_getSeqTrig_invalidBitPos(void);
+void test_neg_power_pwrGetBuckLdoSeqTrig_ioFailure(void);
 void test_neg_power_pwr_setSeqDelay_zeroLen(void);
+void test_neg_power_pwr_setSeqDelay_lenExceedsMax(void);
 void test_neg_power_pwr_setSeqDelay_invalidConfig(void);
 void test_neg_power_pwr_getSeqDelay_zeroLen(void);
+void test_neg_power_pwr_getSeqDelay_lenExceedsMax(void);
 void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
+
+/* Buck/LDO Sequencing Tests */
+void test_neg_power_pwrGetBuckCfg_nullHandle(void);
+void test_neg_power_pwrGetBuckLdoSeqDly_zeroValidParams(void);
+void test_neg_power_pwrGetBuckLdoSeqDly_ioFailure(void);
+void test_pos_power_pwrGetBuckLdoSeqDly_onlyOffDelay(void);
+void test_pos_power_pwrGetBuckLdoSeqDly_onlyOnDelay(void);
+void test_neg_power_pwrSetBuckLdoSeqDly_zeroValidParams(void);
+void test_neg_power_pwrSetBuckLdoSeqDly_invalidResource(void);
+void test_neg_power_pwrSetBuckLdoSeqTrig_ioFailure(void);
+
+/* Power static function I/O failure tests - Pmic_pwrGetBuckCfg */
+void test_neg_power_pwrGetBuckCfg_spreadSpectrum_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckVSET_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckVsetActive_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckVsetLPwr_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buck1Ctrl_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buck2_3Ctrl_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckMonConf_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckOvpResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckOvResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckUvResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetBuckCfg_buckScResponse_ioRxByteCSFail(void);
+
+/* Power static function I/O failure tests - Pmic_pwrSetBuckCfg */
+void test_neg_power_pwrSetBuckCfg_buckActiveVSET_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buckLPwrVSET_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buckOvpResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buckOvResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buckUvResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buckScResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetBuckCfg_buck2_3Ctrl_ioRxByteFail(void);
+
+/* Power static function I/O failure tests - Pmic_pwrGetLdoCfg */
+void test_neg_power_pwrGetLdoCfg_ldoConf_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoCtrl_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoMonConf_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoOvpResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoOvResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoUvResponse_ioRxByteCSFail(void);
+void test_neg_power_pwrGetLdoCfg_ldoScResponse_ioRxByteCSFail(void);
+
+/* Power static function I/O failure tests - Pmic_pwrSetLdoCfg */
+void test_neg_power_pwrSetLdoCfg_ldoConf_vsetOutOfBounds_ioPath(void);
+void test_neg_power_pwrSetLdoCfg_ldoOvpResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetLdoCfg_ldoOvResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetLdoCfg_ldoUvResponse_ioRxByteFail(void);
+void test_neg_power_pwrSetLdoCfg_ldoScResponse_ioRxByteFail(void);
+
+/* Power static function I/O failure tests - Pmic_pwrGetRsrcStatus */
+void test_neg_power_pwrGetRsrcStatus_statStartup_ioRxByteCSFail(void);
+void test_neg_power_pwrGetRsrcStatus_statBuck1_2_ioRxByteCSFail(void);
+void test_neg_power_pwrGetRsrcStatus_statBuck3Ldo_ioRxByteCSFail(void);
+
+void test_neg_power_pwrSetBuckCfg_setBuckActiveVSET_belowMin(void);
+void test_neg_power_pwrSetBuckCfg_setBuckLPwrVSET_belowMin(void);
+void test_neg_power_pwrSetLdoCfg_setLdoConf_vsetBelowMin(void);
+
+void test_neg_power_pwrGetBuckLdoSeqDly_lenMax_ioFailure(void);
+void test_neg_power_pwrSetBuckLdoSeqTrig_lenMax_ioFailure(void);
 
 #ifdef __cplusplus
 }

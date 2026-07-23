@@ -31,9 +31,14 @@
  *
  *****************************************************************************/
 
-
 #include "platform.h"
 #include "fsm_test.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_core.h"
+#include "pmic_mock_types.h"
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -46,7 +51,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /* ========================================================================== */
 
 /**
- * @brief Test Pmic_fsmSetTriggerCfg with NULL handle
+ * @brief Test Pmic_fsmSetTriggerCfg with NULL handle.
  */
 void test_neg_fsm_fsmSetTriggerCfg_nullHandle(void)
 {
@@ -56,7 +61,7 @@ void test_neg_fsm_fsmSetTriggerCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetTriggerCfg with NULL triggerCfg pointer
+ * @brief Test Pmic_fsmSetTriggerCfg with NULL triggerCfg pointer.
  */
 void test_neg_fsm_fsmSetTriggerCfg_nullCfg(void)
 {
@@ -65,7 +70,7 @@ void test_neg_fsm_fsmSetTriggerCfg_nullCfg(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetTriggerCfg with invalid severe error trigger
+ * @brief Test Pmic_fsmSetTriggerCfg with invalid severe error trigger.
  */
 void test_neg_fsm_fsmSetTriggerCfg_invalidSevereErrTrig(void)
 {
@@ -78,7 +83,7 @@ void test_neg_fsm_fsmSetTriggerCfg_invalidSevereErrTrig(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetTriggerCfg with NULL handle
+ * @brief Test Pmic_fsmGetTriggerCfg with NULL handle.
  */
 void test_neg_fsm_fsmGetTriggerCfg_nullHandle(void)
 {
@@ -88,7 +93,7 @@ void test_neg_fsm_fsmGetTriggerCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetTriggerCfg with NULL triggerCfg pointer
+ * @brief Test Pmic_fsmGetTriggerCfg with NULL triggerCfg pointer.
  */
 void test_neg_fsm_fsmGetTriggerCfg_nullCfg(void)
 {
@@ -97,7 +102,7 @@ void test_neg_fsm_fsmGetTriggerCfg_nullCfg(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetGpioTriggerCfg with NULL handle
+ * @brief Test Pmic_fsmSetGpioTriggerCfg with NULL handle.
  */
 void test_neg_fsm_fsmSetGpioTriggerCfg_nullHandle(void)
 {
@@ -107,7 +112,7 @@ void test_neg_fsm_fsmSetGpioTriggerCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetGpioTriggerCfg with NULL gpioTriggerCfg pointer
+ * @brief Test Pmic_fsmSetGpioTriggerCfg with NULL gpioTriggerCfg pointer.
  */
 void test_neg_fsm_fsmSetGpioTriggerCfg_nullCfg(void)
 {
@@ -116,7 +121,7 @@ void test_neg_fsm_fsmSetGpioTriggerCfg_nullCfg(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetGpioTriggerCfg with invalid pin number
+ * @brief Test Pmic_fsmSetGpioTriggerCfg with invalid pin number.
  */
 void test_neg_fsm_fsmSetGpioTriggerCfg_invalidPin(void)
 {
@@ -130,7 +135,7 @@ void test_neg_fsm_fsmSetGpioTriggerCfg_invalidPin(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetGpioTriggerCfg with NULL handle
+ * @brief Test Pmic_fsmGetGpioTriggerCfg with NULL handle.
  */
 void test_neg_fsm_fsmGetGpioTriggerCfg_nullHandle(void)
 {
@@ -140,7 +145,7 @@ void test_neg_fsm_fsmGetGpioTriggerCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetGpioTriggerCfg with NULL gpioTriggerCfg pointer
+ * @brief Test Pmic_fsmGetGpioTriggerCfg with NULL gpioTriggerCfg pointer.
  */
 void test_neg_fsm_fsmGetGpioTriggerCfg_nullCfg(void)
 {
@@ -149,10 +154,7 @@ void test_neg_fsm_fsmGetGpioTriggerCfg_nullCfg(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetGpioTriggerCfg with invalid pin number
- *
- * Covers pmic_fsm.c:436 - error path when Pmic_fsmGetGpioPinMapping fails
- * due to invalid pinNum in the trigger config structure.
+ * @brief Test Pmic_fsmGetGpioTriggerCfg with invalid pin number.
  */
 void test_neg_fsm_fsmGetGpioTriggerCfg_invalidPin(void)
 {
@@ -168,7 +170,7 @@ void test_neg_fsm_fsmGetGpioTriggerCfg_invalidPin(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetRecovCnt with NULL handle
+ * @brief Test Pmic_fsmGetRecovCnt with NULL handle.
  */
 void test_neg_fsm_fsmGetRecovCnt_nullHandle(void)
 {
@@ -178,7 +180,7 @@ void test_neg_fsm_fsmGetRecovCnt_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetRecovCnt with NULL recovCnt pointer
+ * @brief Test Pmic_fsmGetRecovCnt with NULL recovCnt pointer.
  */
 void test_neg_fsm_fsmGetRecovCnt_nullRecovCnt(void)
 {
@@ -187,7 +189,7 @@ void test_neg_fsm_fsmGetRecovCnt_nullRecovCnt(void)
 }
 
 /**
- * @brief Test Pmic_fsmClrRecovCnt with NULL handle
+ * @brief Test Pmic_fsmClrRecovCnt with NULL handle.
  */
 void test_neg_fsm_fsmClrRecovCnt_nullHandle(void)
 {
@@ -196,7 +198,7 @@ void test_neg_fsm_fsmClrRecovCnt_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetRecovCntThr with NULL handle
+ * @brief Test Pmic_fsmSetRecovCntThr with NULL handle.
  */
 void test_neg_fsm_fsmSetRecovCntThr_nullHandle(void)
 {
@@ -205,7 +207,7 @@ void test_neg_fsm_fsmSetRecovCntThr_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetRecovCntThr with invalid threshold value
+ * @brief Test Pmic_fsmSetRecovCntThr with invalid threshold value.
  */
 void test_neg_fsm_fsmSetRecovCntThr_invalidValue(void)
 {
@@ -214,7 +216,7 @@ void test_neg_fsm_fsmSetRecovCntThr_invalidValue(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetRecovCntThr with NULL handle
+ * @brief Test Pmic_fsmGetRecovCntThr with NULL handle.
  */
 void test_neg_fsm_fsmGetRecovCntThr_nullHandle(void)
 {
@@ -224,7 +226,7 @@ void test_neg_fsm_fsmGetRecovCntThr_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetRecovCntThr with NULL recovCntThr pointer
+ * @brief Test Pmic_fsmGetRecovCntThr with NULL recovCntThr pointer.
  */
 void test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr(void)
 {
@@ -233,7 +235,7 @@ void test_neg_fsm_fsmGetRecovCntThr_nullRecovCntThr(void)
 }
 
 /**
- * @brief Test Pmic_fsmSendSoftRebootReq with NULL handle
+ * @brief Test Pmic_fsmSendSoftRebootReq with NULL handle.
  */
 void test_neg_fsm_fsmSendSoftRebootReq_nullHandle(void)
 {
@@ -242,7 +244,7 @@ void test_neg_fsm_fsmSendSoftRebootReq_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetStartupDest with NULL handle
+ * @brief Test Pmic_fsmSetStartupDest with NULL handle.
  */
 void test_neg_fsm_fsmSetStartupDest_nullHandle(void)
 {
@@ -251,7 +253,7 @@ void test_neg_fsm_fsmSetStartupDest_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetStartupDest with invalid destination
+ * @brief Test Pmic_fsmSetStartupDest with invalid destination.
  */
 void test_neg_fsm_fsmSetStartupDest_invalidDest(void)
 {
@@ -260,7 +262,7 @@ void test_neg_fsm_fsmSetStartupDest_invalidDest(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetStartupDest with NULL handle
+ * @brief Test Pmic_fsmGetStartupDest with NULL handle.
  */
 void test_neg_fsm_fsmGetStartupDest_nullHandle(void)
 {
@@ -270,7 +272,7 @@ void test_neg_fsm_fsmGetStartupDest_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_fsmGetStartupDest with NULL destination pointer
+ * @brief Test Pmic_fsmGetStartupDest with NULL destination pointer.
  */
 void test_neg_fsm_fsmGetStartupDest_nullDestination(void)
 {
@@ -283,7 +285,7 @@ void test_neg_fsm_fsmGetStartupDest_nullDestination(void)
 /* ========================================================================== */
 
 /**
- * @brief Test FSM trigger configuration set and get
+ * @brief Test FSM trigger configuration set and get.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_allTriggers(void)
 {
@@ -322,7 +324,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_allTriggers(void)
 }
 
 /**
- * @brief Test severe error trigger configuration
+ * @brief Test severe error trigger configuration.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_severeErrorTrigger(void)
 {
@@ -349,7 +351,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_severeErrorTrigger(void)
 }
 
 /**
- * @brief Test GPIO trigger configuration
+ * @brief Test GPIO trigger configuration.
  */
 void test_pos_fsm_fsmSetGetGpioTriggerCfg_gpio1(void)
 {
@@ -380,7 +382,7 @@ void test_pos_fsm_fsmSetGetGpioTriggerCfg_gpio1(void)
 }
 
 /**
- * @brief Test all GPIO pins trigger configuration
+ * @brief Test all GPIO pins trigger configuration.
  */
 void test_pos_fsm_fsmSetGpioTriggerCfg_allGpioPins(void)
 {
@@ -400,7 +402,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_allGpioPins(void)
 }
 
 /**
- * @brief Test recovery counter threshold set and get
+ * @brief Test recovery counter threshold set and get.
  */
 void test_pos_fsm_fsmSetGetRecovCntThr_allValues(void)
 {
@@ -420,7 +422,7 @@ void test_pos_fsm_fsmSetGetRecovCntThr_allValues(void)
 }
 
 /**
- * @brief Test recovery counter get and clear
+ * @brief Test recovery counter get and clear.
  */
 void test_pos_fsm_fsmGetClrRecovCnt_readAndClear(void)
 {
@@ -442,7 +444,7 @@ void test_pos_fsm_fsmGetClrRecovCnt_readAndClear(void)
 }
 
 /**
- * @brief Test startup destination set and get
+ * @brief Test startup destination set and get.
  */
 void test_pos_fsm_fsmSetGetStartupDest_allDestinations(void)
 {
@@ -462,7 +464,7 @@ void test_pos_fsm_fsmSetGetStartupDest_allDestinations(void)
 }
 
 /**
- * @brief Test soft reboot request
+ * @brief Test soft reboot request.
  */
 void test_pos_fsm_fsmSendSoftRebootReq_validRequest(void)
 {
@@ -477,7 +479,7 @@ void test_pos_fsm_fsmSendSoftRebootReq_validRequest(void)
 }
 
 /**
- * @brief Test combined trigger configuration
+ * @brief Test combined trigger configuration.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_combinedTriggers(void)
 {
@@ -507,7 +509,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_combinedTriggers(void)
 }
 
 /**
- * @brief Test GPIO trigger polarity
+ * @brief Test GPIO trigger polarity.
  */
 void test_pos_fsm_fsmSetGpioTriggerCfg_polarity(void)
 {
@@ -530,7 +532,7 @@ void test_pos_fsm_fsmSetGpioTriggerCfg_polarity(void)
 }
 
 /**
- * @brief Test negative case: otherRailTrig exceeds max value
+ * @brief Test negative case: otherRailTrig exceeds max value.
  */
 void test_neg_fsm_fsmotherRailTrig_exceeds_max(void)
 {
@@ -543,7 +545,7 @@ void test_neg_fsm_fsmotherRailTrig_exceeds_max(void)
 }
 
 /**
- * @brief Test negative case: socRailTrig exceeds max value
+ * @brief Test negative case: socRailTrig exceeds max value.
  */
 void test_neg_fsm_fsmsocRailTrig_exceeds_max(void)
 {
@@ -556,7 +558,7 @@ void test_neg_fsm_fsmsocRailTrig_exceeds_max(void)
 }
 
 /**
- * @brief Test negative case: mcuRailTrig exceeds max value
+ * @brief Test negative case: mcuRailTrig exceeds max value.
  */
 void test_neg_fsm_fsmmcuRailTrig_exceeds_max(void)
 {
@@ -569,7 +571,7 @@ void test_neg_fsm_fsmmcuRailTrig_exceeds_max(void)
 }
 
 /**
- * @brief Test negative case: moderateErrTrig exceeds max value
+ * @brief Test negative case: moderateErrTrig exceeds max value.
  */
 void test_neg_fsm_fsmmoderateErrTrig_exceeds_max(void)
 {
@@ -582,7 +584,7 @@ void test_neg_fsm_fsmmoderateErrTrig_exceeds_max(void)
 }
 
 /**
- * @brief Test negative case: setTriggerCfg with zero validParams
+ * @brief Test negative case: setTriggerCfg with zero validParams.
  */
 void test_neg_fsm_fsmsetTriggerCfg_zero_valid_params(void)
 {
@@ -595,7 +597,7 @@ void test_neg_fsm_fsmsetTriggerCfg_zero_valid_params(void)
 }
 
 /**
- * @brief Test negative case: getTriggerCfg with zero validParams
+ * @brief Test negative case: getTriggerCfg with zero validParams.
  */
 void test_neg_fsm_fsmgetTriggerCfg_zero_valid_params(void)
 {
@@ -607,7 +609,7 @@ void test_neg_fsm_fsmgetTriggerCfg_zero_valid_params(void)
 }
 
 /**
- * @brief Test negative case: setGpioTriggerCfg with zero validParams
+ * @brief Test negative case: setGpioTriggerCfg with zero validParams.
  */
 void test_neg_fsm_fsmsetGpioTriggerCfg_zero_valid_params(void)
 {
@@ -621,7 +623,7 @@ void test_neg_fsm_fsmsetGpioTriggerCfg_zero_valid_params(void)
 }
 
 /**
- * @brief Test negative case: getGpioTriggerCfg with zero validParams
+ * @brief Test negative case: getGpioTriggerCfg with zero validParams.
  */
 void test_neg_fsm_fsmgetGpioTriggerCfg_zero_valid_params(void)
 {
@@ -634,7 +636,7 @@ void test_neg_fsm_fsmgetGpioTriggerCfg_zero_valid_params(void)
 }
 
 /**
- * @brief Test positive case: setTriggerCfg with OTHER_RAIL_TRIG_VALID
+ * @brief Test positive case: setTriggerCfg with OTHER_RAIL_TRIG_VALID.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig(void)
 {
@@ -657,7 +659,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_otherRailTrig(void)
 }
 
 /**
- * @brief Test positive case: setTriggerCfg with SOC_RAIL_TRIG_VALID
+ * @brief Test positive case: setTriggerCfg with SOC_RAIL_TRIG_VALID.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void)
 {
@@ -680,7 +682,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_socRailTrig(void)
 }
 
 /**
- * @brief Test positive case: setTriggerCfg with MCU_RAIL_TRIG_VALID
+ * @brief Test positive case: setTriggerCfg with MCU_RAIL_TRIG_VALID.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void)
 {
@@ -703,7 +705,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_mcuRailTrig(void)
 }
 
 /**
- * @brief Test positive case: setTriggerCfg with MODERATE_ERR_TRIG_VALID only
+ * @brief Test positive case: setTriggerCfg with MODERATE_ERR_TRIG_VALID only.
  */
 void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void)
 {
@@ -726,7 +728,7 @@ void test_pos_fsm_fsmSetGetTriggerCfg_moderateErrTrig(void)
 }
 
 /**
- * @brief Test negative case: setStartupDest with invalid startup destination
+ * @brief Test negative case: setStartupDest with invalid startup destination.
  */
 void test_neg_fsm_fsmSetStartupDest_invalidState(void)
 {
@@ -741,7 +743,7 @@ void test_neg_fsm_fsmSetStartupDest_invalidState(void)
 }
 
 /**
- * @brief Test positive case: getStartupDest reads current destination correctly
+ * @brief Test positive case: getStartupDest reads current destination correctly.
  */
 void test_pos_fsm_fsmGetStartupDest_validRead(void)
 {
@@ -777,8 +779,7 @@ void test_pos_fsm_fsmGetStartupDest_validRead(void)
 }
 
 /**
- * @brief Test Pmic_fsmSetGpioTriggerCfg with invalid maskPol value
- * Covers line 373 in pmic_fsm.c
+ * @brief Test Pmic_fsmSetGpioTriggerCfg with invalid maskPol value.
  */
 void test_neg_fsm_fsmsetGpioTrigger_invalidMaskPol(void)
 {
@@ -790,6 +791,188 @@ void test_neg_fsm_fsmsetGpioTrigger_invalidMaskPol(void)
 
     int32_t status = Pmic_fsmSetGpioTriggerCfg(&pmicHandle, &gpioTriggerCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+/**
+ * @brief Test Pmic_fsmGetGpioTriggerCfg ioRxByte_CS I/O failure.
+ */
+void test_neg_fsm_fsmGetGpioTriggerCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
+        .validParams = PMIC_CFG_FSM_MASK_VALID,
+        .pinNum = PMIC_FSM_GPIO_PIN1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmGetGpioTriggerCfg(&pmicHandle, &gpioTriggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_fsmGetGpioTriggerCfg with validParams MASK_VALID cleared.
+ */
+void test_pos_fsm_fsmGetGpioTriggerCfg_noMaskValid(void)
+{
+    int32_t status;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
+        .validParams = PMIC_CFG_FSM_MASK_POL_VALID,
+        .pinNum = PMIC_FSM_GPIO_PIN1
+    };
+
+    status = Pmic_fsmGetGpioTriggerCfg(&pmicHandle, &gpioTriggerCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test Pmic_fsmGetGpioTriggerCfg with validParams MASK_POL_VALID cleared.
+ */
+void test_pos_fsm_fsmGetGpioTriggerCfg_noMaskPolValid(void)
+{
+    int32_t status;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
+        .validParams = PMIC_CFG_FSM_MASK_VALID,
+        .pinNum = PMIC_FSM_GPIO_PIN1
+    };
+
+    status = Pmic_fsmGetGpioTriggerCfg(&pmicHandle, &gpioTriggerCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/**
+ * @brief Test Pmic_fsmGetTriggerCfg I/O failure inside GetTrigSel1.
+ */
+void test_neg_fsm_fsmGetTriggerCfg_trigSel1IoFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmTriggerCfg_t triggerCfg = {
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_fsmGetTriggerCfg I/O failure inside GetTrigSel2.
+ */
+void test_neg_fsm_fsmGetTriggerCfg_trigSel2IoFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmTriggerCfg_t triggerCfg = {
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID |
+                       PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip the 1 ioRxByte consumed by GetTrigSel1, fail the 1 ioRxByte in GetTrigSel2
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmGetTriggerCfg(&pmicHandle, &triggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_fsmSetGpioTriggerCfg ioRxByte I/O failure.
+ */
+void test_neg_fsm_fsmSetGpioTriggerCfg_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfg = {
+        .validParams = PMIC_CFG_FSM_MASK_VALID,
+        .pinNum = PMIC_FSM_GPIO_PIN1,
+        .mask = true
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmSetGpioTriggerCfg(&pmicHandle, &gpioTriggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_fsmSetTriggerCfg I/O failure inside SetTrigSel1.
+ */
+void test_neg_fsm_fsmSetTriggerCfg_trigSel1IoFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmTriggerCfg_t triggerCfg = {
+        .validParams = PMIC_CFG_FSM_SEVERE_ERR_TRIG_VALID,
+        .severeErrTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_fsmSetTriggerCfg I/O failure inside Pmic_fsmSetTrigSel2.
+ */
+void test_neg_fsm_fsmSetTriggerCfg_trigSel2IoFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_FsmTriggerCfg_t triggerCfg = {
+        .validParams = PMIC_CFG_FSM_MODERATE_ERR_TRIG_VALID,
+        .moderateErrTrig = PMIC_FSM_TRIGGER_MCU_POWER_ERROR
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // First (and only) I/O is ioRxByte(FSM_TRIG_SEL_2_REG) — fail it immediately
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_fsmSetTriggerCfg(&pmicHandle, &triggerCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /* ========================================================================== */

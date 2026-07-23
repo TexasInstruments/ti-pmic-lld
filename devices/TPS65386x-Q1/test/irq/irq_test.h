@@ -30,8 +30,6 @@
  *
  *****************************************************************************/
 
-
-
 #ifndef IRQ_TEST_H
 #define IRQ_TEST_H
 
@@ -92,7 +90,13 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2pOvErr_mask); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2nUvErr_mask); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_comp2nOvErr_mask); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_configValue)
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfg_configValue); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_setMask_ioRxFail); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_setMask_ioTxFail); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_setConfig_ioTxFail); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqCheckConfigParam_crcErrValidConfig); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqCheckConfigParam_compIrqValidConfig); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqCheckConfigParam_compIrqConfig0FalseBranch)
 
 #define IRQ_TEST_NEG_IRQSETCFG() \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_nullParam_handle); \
@@ -115,7 +119,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_mask); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_viaMask); \
-    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_config)
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_invalidIrqNum_config); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqCheckConfigParam_comp1pUvErr_configAboveMax); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfg_setConfig_ioRxFail)
 
 /* Test: TC-IRQ-0001 */
 #define IRQ_TEST_IRQSETCFG() \
@@ -146,12 +152,20 @@ extern "C" {
 
 #define IRQ_TEST_POS_IRQSETCFGS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_multipleMasks); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_batchConfigValues)
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_batchConfigValues); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_handleRecordsMask_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_noMasksProcessed); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_noConfigsProcessed); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoConfigs); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoMasks); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyMasksFalse); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyConfigsFalse)
 
 #define IRQ_TEST_NEG_IRQSETCFGS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_nullParam_irqCfg); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_invalidParam_numIrqs); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_invalidParam_irqNumInBatch); \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetCfgs_invalidConfigInBatch)
 
 /* Test: TC-IRQ-0003 */
@@ -182,7 +196,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define IRQ_TEST_POS_IRQGETSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_allIrqs)
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_allIrqs); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_ioRxFail)
 
 #define IRQ_TEST_NEG_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullParam_handle); \
@@ -199,7 +214,11 @@ extern "C" {
 
 #define IRQ_TEST_POS_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_singleFlag); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlagsSet)
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_multipleFlagsSet); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_intrStat0NonZero); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_intrStat2NonZero); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_intrStat3NonZero); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetNextFlag_allIntrStatZero)
 
 #define IRQ_TEST_NEG_IRQGETNEXTFLAG() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetNextFlag_nullParam_irqStat); \
@@ -251,7 +270,8 @@ extern "C" {
 #define IRQ_TEST_POS_IRQCLRALLFLAGS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_basic); \
     PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_devErrStatPreservation); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqClrAllFlags_ioFailureMidLoop)
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_ioFailureMidLoop); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_devErrStatIoFail)
 
 #define IRQ_TEST_NEG_IRQCLRALLFLAGS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullParam_handle)
@@ -344,6 +364,12 @@ void test_pos_irq_irqSetCfg_comp2pOvErr_mask(void);
 void test_pos_irq_irqSetCfg_comp2nUvErr_mask(void);
 void test_pos_irq_irqSetCfg_comp2nOvErr_mask(void);
 void test_pos_irq_irqSetCfg_configValue(void);
+void test_neg_irq_irqSetCfg_setMask_ioRxFail(void);
+void test_neg_irq_irqSetCfg_setMask_ioTxFail(void);
+void test_neg_irq_irqSetCfg_setConfig_ioTxFail(void);
+void test_neg_irq_irqCheckConfigParam_crcErrValidConfig(void);
+void test_pos_irq_irqCheckConfigParam_compIrqValidConfig(void);
+void test_pos_irq_irqCheckConfigParam_compIrqConfig0FalseBranch(void);
 
 /* Negative tests */
 void test_neg_irq_irqSetCfg_nullParam_handle(void);
@@ -367,6 +393,8 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT(void);
 void test_neg_irq_irqSetCfg_invalidIrqNum_mask(void);
 void test_neg_irq_irqSetCfg_invalidIrqNum_viaMask(void);
 void test_neg_irq_irqSetCfg_invalidIrqNum_config(void);
+void test_neg_irq_irqCheckConfigParam_comp1pUvErr_configAboveMax(void);
+void test_neg_irq_irqSetCfg_setConfig_ioRxFail(void);
 
 /* ========================================================================== */
 /*                       irqGetCfg API Tests                                  */
@@ -385,11 +413,19 @@ void test_neg_irq_irqGetCfg_nonConfigurableIrq(void);
 /* Positive tests */
 void test_pos_irq_irqSetCfgs_multipleMasks(void);
 void test_pos_irq_irqSetCfgs_batchConfigValues(void);
+void test_neg_irq_irqSetCfgs_handleRecordsMask_ioRxFail(void);
+void test_pos_irq_irqSetCfgs_noMasksProcessed(void);
+void test_pos_irq_irqSetCfgs_noConfigsProcessed(void);
+void test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoConfigs(void);
+void test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoMasks(void);
+void test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyMasksFalse(void);
+void test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyConfigsFalse(void);
 
 /* Negative tests */
 void test_neg_irq_irqSetCfgs_nullParam_handle(void);
 void test_neg_irq_irqSetCfgs_nullParam_irqCfg(void);
 void test_neg_irq_irqSetCfgs_invalidParam_numIrqs(void);
+void test_neg_irq_irqSetCfgs_invalidParam_irqNumInBatch(void);
 void test_neg_irq_irqSetCfgs_invalidConfigInBatch(void);
 
 /* ========================================================================== */
@@ -408,6 +444,7 @@ void test_neg_irq_irqGetCfgs_nonConfigurableInBatch(void);
 
 /* Positive tests */
 void test_pos_irq_irqGetStatus_allIrqs(void);
+void test_neg_irq_irqGetStatus_ioRxFail(void);
 
 /* Negative tests */
 void test_neg_irq_irqGetStatus_nullParam_handle(void);
@@ -420,6 +457,10 @@ void test_neg_irq_irqGetStatus_nullParam_irqStat(void);
 /* Positive tests */
 void test_pos_irq_irqGetNextFlag_singleFlag(void);
 void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void);
+void test_pos_irq_irqGetNextFlag_intrStat0NonZero(void);
+void test_pos_irq_irqGetNextFlag_intrStat2NonZero(void);
+void test_pos_irq_irqGetNextFlag_intrStat3NonZero(void);
+void test_pos_irq_irqGetNextFlag_allIntrStatZero(void);
 
 /* Negative tests */
 void test_neg_irq_irqGetNextFlag_nullParam_irqStat(void);
@@ -456,7 +497,8 @@ void test_neg_irq_irqClrFlag_invalidParam_irqNum(void);
 /* Positive tests */
 void test_pos_irq_irqClrAllFlags_basic(void);
 void test_pos_irq_irqClrAllFlags_devErrStatPreservation(void);
-void test_pos_irq_irqClrAllFlags_ioFailureMidLoop(void);
+void test_neg_irq_irqClrAllFlags_ioFailureMidLoop(void);
+void test_neg_irq_irqClrAllFlags_devErrStatIoFail(void);
 
 /* Negative tests */
 void test_neg_irq_irqClrAllFlags_nullParam_handle(void);

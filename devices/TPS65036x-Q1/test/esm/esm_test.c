@@ -41,11 +41,20 @@
 
 #include "esm_test.h"
 
+#ifdef BUILD_MOCK
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
+#endif
+
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
 static Pmic_Handle_t pmicHandle = {0U};
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -747,5 +756,367 @@ void test_pos_esm_esmGetErrCnt(void)
     // Get ESM error count
     status = Pmic_esmGetErrCnt(&pmicHandle, &errCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+// Mock-gated I/O Failure Tests (BUILD_MOCK only)
+/* ========================================================================== */
+
+void test_neg_esm_esmGetErrCnt_ioRxByteCSFail(void)
+{
+    // after Pmic_ioRxByte_CS in Pmic_esmGetErrCnt
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    uint8_t errCnt = 0U;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetErrCnt(&pmicHandle, &errCnt);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetStartState_ioRxByteCSFail(void)
+{
+    // after Pmic_ioRxByte_CS in Pmic_esmGetStartState
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    bool startState = (bool)false;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetStartState(&pmicHandle, &startState);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetStartState_ioRxByteFail(void)
+{
+    // after Pmic_ioRxByte (non-CS) in Pmic_esmSetStartState
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetStartState(&pmicHandle, (bool)true);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Static-Function I/O Failure Tests (ESM set path)
+/* ========================================================================== */
+
+void test_neg_esm_esmSetCfg_delay1_ioRxByteFail(void)
+{
+    // after Pmic_ioRxByte for DELAY1 register fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID,
+        .delay1 = 10U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetCfg_delay2_ioRxByteFail(void)
+{
+    // DELAY2 register fails (DELAY1 param not requested, DELAY2 is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID,
+        .delay2 = 5U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetCfg_hmax_ioRxByteFail(void)
+{
+    // HMAX register fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_HMAX_VALID,
+        .hmax = 10U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetCfg_hmin_ioRxByteFail(void)
+{
+    // HMIN register fails (HMAX not requested, HMIN is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_HMIN_VALID,
+        .hmin = 5U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetCfg_lmax_ioRxByteFail(void)
+{
+    // LMAX register fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_LMAX_VALID,
+        .lmax = 10U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmSetCfg_lmin_ioRxByteFail(void)
+{
+    // LMIN register fails (LMAX not requested, LMIN is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_LMIN_VALID,
+        .lmin = 5U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Static-Function I/O Failure Tests (ESM get path)
+/* ========================================================================== */
+
+void test_neg_esm_esmGetCfg_modeCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_delay1_ioRxByteCSFail(void)
+{
+    // DELAY1 fails. Mode/enable params not requested so this is first I/O.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_delay2_ioRxByteCSFail(void)
+{
+    // DELAY2 fails (DELAY1 not requested, DELAY2 is the only I/O here).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_DELAY2_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_hmax_ioRxByteCSFail(void)
+{
+    // HMAX fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_HMAX_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_hmin_ioRxByteCSFail(void)
+{
+    // HMIN fails (HMAX not requested).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_HMIN_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_lmax_ioRxByteCSFail(void)
+{
+    // LMAX fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_LMAX_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_esm_esmGetCfg_lmin_ioRxByteCSFail(void)
+{
+    // LMIN fails (LMAX not requested).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_EsmCfg_t esmCfg = {
+        .validParams = PMIC_CFG_ESM_LMIN_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 

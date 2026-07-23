@@ -147,7 +147,8 @@ extern "C" {
 #define IO_TEST_NEG_RETRY() \
     PLATFORM_RUN_TEST(test_neg_io_crcErrorExhaustsRetries); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
-    PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry)
+    PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_retryExhausted)
 
 /* Test: TC-IO-0033 */
 #define IO_TEST_RETRY() \
@@ -259,7 +260,7 @@ void test_neg_io_nullIoRead(void);
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void);
 void test_pos_io_ioTxByte_multipleRetryAttempts(void);
-
+void test_neg_io_ioTxByte_retryExhausted(void);
 
 #ifdef __cplusplus
 }

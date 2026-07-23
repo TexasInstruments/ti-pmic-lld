@@ -367,7 +367,7 @@ static int32_t GPIO_getAllCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioC
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         ((Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI1_VALID)) ||
          (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI4_VALID))))
     {

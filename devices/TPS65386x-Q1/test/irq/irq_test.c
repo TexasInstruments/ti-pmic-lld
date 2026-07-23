@@ -30,8 +30,6 @@
  *
  *****************************************************************************/
 
-
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -68,11 +66,11 @@ static Pmic_Handle_t g_pmicHandle;
 /* ========================================================================== */
 
 /**
- * @brief Initialize PMIC handle for IRQ tests
+ * @brief Initialize PMIC handle for IRQ tests.
  */
 static int32_t irqTest_initHandle(void)
 {
-    /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
+    // Dummy handle for mock - driver validates non-NULL but doesn't dereference
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
@@ -83,7 +81,7 @@ static int32_t irqTest_initHandle(void)
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
-        .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
+        .commHandle0 = (void*)&dummyCommHandle,  // Driver requires non-NULL, even for mock
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
@@ -97,7 +95,7 @@ static int32_t irqTest_initHandle(void)
 }
 
 /**
- * @brief Helper function to test IRQ mask set/get
+ * @brief Helper function to test IRQ mask set/get.
  *
  * @param irqNum   IRQ number to test
  * @param maskVal  Mask value to set (true = masked, false = unmasked)
@@ -110,7 +108,7 @@ static void irqTest_setGetMask(uint8_t irqNum, bool maskVal)
     memset(&setCfg, 0, sizeof(setCfg));
     memset(&getCfg, 0, sizeof(getCfg));
 
-    /* Set IRQ mask configuration */
+    // Set IRQ mask configuration
     setCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfg.irqNum = irqNum;
     setCfg.mask = maskVal;
@@ -118,14 +116,14 @@ static void irqTest_setGetMask(uint8_t irqNum, bool maskVal)
     status = Pmic_irqSetCfg(&g_pmicHandle, &setCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get IRQ mask configuration */
+    // Get IRQ mask configuration
     getCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     getCfg.irqNum = irqNum;
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify mask value */
+    // Verify mask value
     PLATFORM_ASSERT(getCfg.mask == maskVal);
 }
 
@@ -373,7 +371,7 @@ void test_pos_irq_irqSetCfgs_multipleMasks(void)
     memset(setCfgs, 0, sizeof(setCfgs));
     memset(getCfgs, 0, sizeof(getCfgs));
 
-    /* Configure multiple IRQ masks */
+    // Configure multiple IRQ masks
     setCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
     setCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     setCfgs[0].mask = true;
@@ -394,22 +392,22 @@ void test_pos_irq_irqSetCfgs_multipleMasks(void)
     setCfgs[4].irqNum = PMIC_COMP1P_UV_ERR_INT;
     setCfgs[4].mask = true;
 
-    /* Set multiple IRQ configurations */
+    // Set multiple IRQ configurations
     status = Pmic_irqSetCfgs(&g_pmicHandle, 5, setCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Prepare getCfgs with same IRQ numbers */
+    // Prepare getCfgs with same IRQ numbers
     for (i = 0; i < 5; i++)
     {
         getCfgs[i].validParams = PMIC_CFG_IRQ_MASK_VALID;
         getCfgs[i].irqNum = setCfgs[i].irqNum;
     }
 
-    /* Get multiple IRQ configurations */
+    // Get multiple IRQ configurations
     status = Pmic_irqGetCfgs(&g_pmicHandle, 5, getCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify all mask values */
+    // Verify all mask values
     for (i = 0; i < 5; i++)
     {
         PLATFORM_ASSERT(getCfgs[i].mask == setCfgs[i].mask);
@@ -424,7 +422,7 @@ void test_pos_irq_irqGetStatus_allIrqs(void)
 
     memset(&irqStat, 0, sizeof(irqStat));
 
-    /* Get status of all IRQs */
+    // Get status of all IRQs
     status = Pmic_irqGetStatus(&g_pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -437,11 +435,11 @@ void test_pos_irq_irqGetNextFlag_singleFlag(void)
 
     memset(&irqStat, 0, sizeof(irqStat));
 
-    /* Get all IRQ statuses first */
+    // Get all IRQ statuses first
     status = Pmic_irqGetStatus(&g_pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get next flag (may return PMIC_ST_WARN_NO_IRQ_REMAINING if no flags set) */
+    // Get next flag (may return PMIC_ST_WARN_NO_IRQ_REMAINING if no flags set)
     status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) ||
                     (status == PMIC_ST_WARN_NO_IRQ_REMAINING));
@@ -453,15 +451,15 @@ void test_pos_irq_irqGetFlag_andClrFlag(void)
     int32_t status;
     uint8_t testIrq = PMIC_BB_UV_ERR_INT;
 
-    /* Get flag status */
+    // Get flag status
     status = Pmic_irqGetFlag(&g_pmicHandle, testIrq, &flag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Clear the flag */
+    // Clear the flag
     status = Pmic_irqClrFlag(&g_pmicHandle, testIrq);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify flag is cleared */
+    // Verify flag is cleared
     status = Pmic_irqGetFlag(&g_pmicHandle, testIrq, &flag);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(flag == false);
@@ -471,7 +469,7 @@ void test_pos_irq_irqClrAllFlags_basic(void)
 {
     int32_t status;
 
-    /* Clear all IRQ flags */
+    // Clear all IRQ flags
     status = Pmic_irqClrAllFlags(&g_pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -510,7 +508,7 @@ void test_neg_irq_irqSetCfg_invalidParam_irqNum(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  /* Invalid IRQ number */
+    irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  // Invalid IRQ number
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -548,8 +546,30 @@ void test_neg_irq_irqSetCfgs_invalidParam_numIrqs(void)
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
-    /* Test with numIrqs > PMIC_IRQ_NUM */
+    // Test with numIrqs > PMIC_IRQ_NUM
     status = Pmic_irqSetCfgs(&g_pmicHandle, PMIC_IRQ_NUM + 1U, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_irq_irqSetCfgs_invalidParam_irqNumInBatch(void)
+{
+    Pmic_IrqCfg_t irqCfgs[2];
+    int32_t status;
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+
+    // First element: valid
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfgs[0].mask = true;
+
+    // Second element: irqNum out of range (array count is within PMIC_IRQ_NUM,
+    // but this individual entry's irqNum exceeds PMIC_IRQ_MAX)
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[1].irqNum = (uint8_t)(PMIC_IRQ_MAX + 1U);
+    irqCfgs[1].mask = true;
+
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 2, irqCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -582,7 +602,7 @@ void test_neg_irq_irqGetCfg_invalidParam_irqNum(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  /* Invalid IRQ number */
+    irqCfg.irqNum = PMIC_IRQ_MAX + 1U;  // Invalid IRQ number
 
     status = Pmic_irqGetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -619,7 +639,7 @@ void test_neg_irq_irqGetCfgs_invalidParam_numIrqs(void)
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
 
-    /* Test with numIrqs > PMIC_IRQ_NUM */
+    // Test with numIrqs > PMIC_IRQ_NUM
     status = Pmic_irqGetCfgs(&g_pmicHandle, PMIC_IRQ_NUM + 1U, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -726,10 +746,10 @@ void test_neg_irq_irqSetCfg_nonMaskableIrq(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  /* Non-maskable interrupt */
+    irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  // Non-maskable interrupt
     irqCfg.mask = true;
 
-    /* Attempting to mask a non-maskable IRQ should fail */
+    // Attempting to mask a non-maskable IRQ should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
@@ -747,10 +767,10 @@ void test_neg_irq_irqSetCfg_nonConfigurableIrq_ABIST_ERR(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_ABIST_ERR_INT;  /* Non-configurable interrupt */
+    irqCfg.irqNum = PMIC_ABIST_ERR_INT;  // Non-configurable interrupt
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
 
-    /* Attempting to configure a non-configurable IRQ should fail */
+    // Attempting to configure a non-configurable IRQ should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
@@ -762,9 +782,9 @@ void test_neg_irq_irqGetCfg_nonConfigurableIrq(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  /* Non-configurable interrupt */
+    irqCfg.irqNum = PMIC_NORMAL_OFF_INT;  // Non-configurable interrupt
 
-    /* Attempting to get config of a non-configurable IRQ should fail */
+    // Attempting to get config of a non-configurable IRQ should fail
     status = Pmic_irqGetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
@@ -778,10 +798,10 @@ void test_neg_irq_irqSetCfg_invalidConfig_cfgRegCrcErr(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_CFG_REG_CRC_ERR_INT;  /* CONFIG1_MAX validation */
-    irqCfg.config = PMIC_IRQ_CONFIG1_MAX + 1U;  /* Invalid config value */
+    irqCfg.irqNum = PMIC_CFG_REG_CRC_ERR_INT;  // CONFIG1_MAX validation
+    irqCfg.config = PMIC_IRQ_CONFIG1_MAX + 1U;  // Invalid config value
 
-    /* Config value exceeds CONFIG1_MAX should fail */
+    // Config value exceeds CONFIG1_MAX should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -793,10 +813,10 @@ void test_neg_irq_irqSetCfg_invalidConfig_comp1pUvErr(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;  /* CONFIG2_MAX validation */
-    irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  /* Invalid config value */
+    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;  // CONFIG2_MAX validation
+    irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  // Invalid config value
 
-    /* Config value exceeds CONFIG2_MAX should fail */
+    // Config value exceeds CONFIG2_MAX should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -808,10 +828,10 @@ void test_neg_irq_irqSetCfg_invalidConfig_comp2nOvErr(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_COMP2N_OV_ERR_INT;  /* CONFIG2_MAX validation */
-    irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  /* Invalid config value */
+    irqCfg.irqNum = PMIC_COMP2N_OV_ERR_INT;  // CONFIG2_MAX validation
+    irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  // Invalid config value
 
-    /* Config value exceeds CONFIG2_MAX should fail */
+    // Config value exceeds CONFIG2_MAX should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -823,10 +843,10 @@ void test_neg_irq_irqSetCfg_invalidConfig_otherIrq(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;  /* CONFIG0_MAX validation */
-    irqCfg.config = PMIC_IRQ_CONFIG0_MAX + 1U;  /* Invalid config value */
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;  // CONFIG0_MAX validation
+    irqCfg.config = PMIC_IRQ_CONFIG0_MAX + 1U;  // Invalid config value
 
-    /* Config value exceeds CONFIG0_MAX should fail */
+    // Config value exceeds CONFIG0_MAX should fail
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -840,22 +860,22 @@ void test_neg_irq_irqSetCfgs_invalidConfigInBatch(void)
 
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
-    /* First element: valid */
+    // First element: valid
     irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
 
-    /* Second element: invalid config value (triggers error) */
+    // Second element: invalid config value (triggers error)
     irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[1].irqNum = PMIC_LDO1_UV_ERR_INT;
-    irqCfgs[1].config = PMIC_IRQ_CONFIG0_MAX + 1U;  /* Invalid */
+    irqCfgs[1].config = PMIC_IRQ_CONFIG0_MAX + 1U;  // Invalid
 
-    /* Third element: valid (should not be processed) */
+    // Third element: valid (should not be processed)
     irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO2_UV_ERR_INT;
     irqCfgs[2].config = PMIC_IRQ_CONFIG0_INT_SET;
 
-    /* Batch operation should fail on second element */
+    // Batch operation should fail on second element
     status = Pmic_irqSetCfgs(&g_pmicHandle, 3, irqCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -867,19 +887,19 @@ void test_neg_irq_irqGetCfgs_nonConfigurableInBatch(void)
 
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
-    /* First element: configurable IRQ */
+    // First element: configurable IRQ
     irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
 
-    /* Second element: non-configurable IRQ (triggers error) */
+    // Second element: non-configurable IRQ (triggers error)
     irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfgs[1].irqNum = PMIC_ABIST_ERR_INT;  /* Non-configurable */
+    irqCfgs[1].irqNum = PMIC_ABIST_ERR_INT;  // Non-configurable
 
-    /* Third element: configurable IRQ (should not be processed) */
+    // Third element: configurable IRQ (should not be processed)
     irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO1_UV_ERR_INT;
 
-    /* Batch operation should fail on second element */
+    // Batch operation should fail on second element
     status = Pmic_irqGetCfgs(&g_pmicHandle, 3, irqCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
@@ -891,17 +911,15 @@ void test_pos_irq_irqClrFlag_offStateStat1Register(void)
 #ifdef BUILD_MOCK
     int32_t status;
 
-    /* Set a flag in OFF_STATE_STAT1 register using test injection */
-    status = testInject_setBits(OFF_STATE_STAT1_REG, 0x01U);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Clear the flag - this exercises the special OFF_STATE_CLR path */
-    /* The driver should write to OFF_STATE_CLR_REG, not directly to OFF_STATE_STAT1 */
+    // Set a flag in OFF_STATE_STAT1 register using test injection
+    testInject_setBits(OFF_STATE_STAT1_REG, 0x01U);
+    // Clear the flag - this exercises the special OFF_STATE_CLR path
+    // The driver should write to OFF_STATE_CLR_REG, not directly to OFF_STATE_STAT1
     status = Pmic_irqClrFlag(&g_pmicHandle, PMIC_NORMAL_OFF_INT);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    // Test requires mock support for register injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
@@ -910,17 +928,15 @@ void test_pos_irq_irqClrFlag_offStateStat2Register(void)
 #ifdef BUILD_MOCK
     int32_t status;
 
-    /* Set a flag in OFF_STATE_STAT2 register using test injection */
-    status = testInject_setBits(OFF_STATE_STAT2_REG, 0x01U);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Clear the flag - this exercises the special OFF_STATE_CLR path */
-    /* The driver should write to OFF_STATE_CLR_REG, not directly to OFF_STATE_STAT2 */
+    // Set a flag in OFF_STATE_STAT2 register using test injection
+    testInject_setBits(OFF_STATE_STAT2_REG, 0x01U);
+    // Clear the flag - this exercises the special OFF_STATE_CLR path
+    // The driver should write to OFF_STATE_CLR_REG, not directly to OFF_STATE_STAT2
     status = Pmic_irqClrFlag(&g_pmicHandle, PMIC_CRC_ERR_INT);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    // Test requires mock support for register injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
@@ -930,27 +946,25 @@ void test_pos_irq_irqClrAllFlags_devErrStatPreservation(void)
     int32_t status;
     uint8_t regValue = 0U;
 
-    /* Set DEV_ERR_CNT to a non-zero value and SAFE_ST_TMO_RST_ERR flag */
-    /* First, set the entire register value */
-    /* DEV_ERR_CNT=0x17 (bits 4:0), SAFE_ST_TMO_RST_ERR=1 (bit 6) */
-    /* 0x57 = 0b01010111 */
-    status = testInject_setBits(DEV_ERR_STAT_REG, 0x57U);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Clear all flags */
+    // Set DEV_ERR_CNT to a non-zero value and SAFE_ST_TMO_RST_ERR flag
+    // First, set the entire register value
+    // DEV_ERR_CNT=0x17 (bits 4:0), SAFE_ST_TMO_RST_ERR=1 (bit 6)
+    // 0x57 = 0b01010111
+    testInject_setBits(DEV_ERR_STAT_REG, 0x57U);
+    // Clear all flags
     status = Pmic_irqClrAllFlags(&g_pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back DEV_ERR_STAT register to verify DEV_ERR_CNT is preserved */
+    // Read back DEV_ERR_STAT register to verify DEV_ERR_CNT is preserved
     status = Pmic_ioRxByte(&g_pmicHandle, DEV_ERR_STAT_REG, &regValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify DEV_ERR_CNT field (bits 4:0 with mask 0x1F) is preserved */
-    /* After clear, the SAFE_ST_TMO_RST_ERR bit should be cleared, but DEV_ERR_CNT preserved */
+    // Verify DEV_ERR_CNT field (bits 4:0 with mask 0x1F) is preserved
+    // After clear, the SAFE_ST_TMO_RST_ERR bit should be cleared, but DEV_ERR_CNT preserved
     PLATFORM_ASSERT((regValue & DEV_ERR_CNT_MASK) == 0x17U);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    // Test requires mock support for register injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
@@ -963,7 +977,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_OFF_INT_EVT_ERR_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_OFF_INT_EVT_ERR_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_OFF_INT_EVT_ERR_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -977,7 +991,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_OFF_PROT_EVT_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_OFF_PROT_EVT_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_OFF_PROT_EVT_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -991,7 +1005,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_FIRST_PWR_ON_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_FIRST_PWR_ON_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_FIRST_PWR_ON_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1005,7 +1019,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_CLK_ERR_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_CLK_ERR_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_CLK_ERR_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1019,7 +1033,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_INTERNAL_OV_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_INTERNAL_OV_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_INTERNAL_OV_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1033,7 +1047,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_INIT_AN_TMO_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_INIT_AN_TMO_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_INIT_AN_TMO_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1047,7 +1061,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_WD_TMO_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_WD_TMO_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_WD_TMO_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1061,7 +1075,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_WD_TRIG_EARLY_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_WD_TRIG_EARLY_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_WD_TRIG_EARLY_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1075,7 +1089,7 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_ESM_ERR_INT;  /* Non-maskable */
+    irqCfg.irqNum = PMIC_ESM_ERR_INT;  // Non-maskable
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
@@ -1086,14 +1100,9 @@ void test_neg_irq_irqSetCfg_maskNonMaskable_ESM_ERR_INT(void)
 /*                    Additional Coverage Tests                               */
 /* ========================================================================== */
 
-/**
- * @brief Test IRQ_getNextFlag with multiple interrupt flags set
- *
- * Covers IRQ_getNextFlag() internal helper (lines 590-624 in pmic_irq.c)
- * and IRQ_setIntrStat() (lines 567-578 in pmic_irq.c)
- */
 void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void)
 {
+    // Test irqGetNextFlag with multiple interrupt flags set.
 #ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat;
     uint8_t irqNum;
@@ -1102,21 +1111,17 @@ void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void)
 
     memset(&irqStat, 0, sizeof(irqStat));
 
-    /* Inject multiple interrupt flags across different registers */
-    /* BB_UV_ERR_INT is in DCDC_STAT_REG */
-    status = testInject_setBits(DCDC_STAT_REG, TEST_MASK_LOW_NIBBLE);  /* Set multiple buck flags */
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* LDO1_UV_ERR_INT is in VMON_LDO_STAT_REG */
-    status = testInject_setBits(VMON_LDO_STAT_REG, 0x03U);  /* Set multiple LDO flags */
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    /* Get all IRQ statuses - this will call IRQ_setIntrStat() for each set bit */
+    // Inject multiple interrupt flags across different registers
+    // BB_UV_ERR_INT is in DCDC_STAT_REG
+    testInject_setBits(DCDC_STAT_REG, TEST_MASK_LOW_NIBBLE);
+    // LDO1_UV_ERR_INT is in VMON_LDO_STAT_REG
+    testInject_setBits(VMON_LDO_STAT_REG, 0x03U);
+    // Get all IRQ statuses - this will call IRQ_setIntrStat() for each set bit
     status = Pmic_irqGetStatus(&g_pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Now call Pmic_irqGetNextFlag multiple times to iterate through flags */
-    /* This will exercise IRQ_getNextFlag() internal helper */
+    // Now call Pmic_irqGetNextFlag multiple times to iterate through flags
+    // This will exercise IRQ_getNextFlag() internal helper
     do {
         status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
         if (status == PMIC_ST_SUCCESS) {
@@ -1125,31 +1130,27 @@ void test_pos_irq_irqGetNextFlag_multipleFlagsSet(void)
         }
     } while (status == PMIC_ST_SUCCESS && flagCount < 10);
 
-    /* Verify we found some flags */
+    // Verify we found some flags
     PLATFORM_ASSERT(flagCount > 0);
 
-    /* Final call should return NO_IRQ_REMAINING */
+    // Final call should return NO_IRQ_REMAINING
     status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    // Test requires mock support for register injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
-/**
- * @brief Test IRQ configuration with config values (not just mask)
- *
- * Covers IRQ_anyConfsForReg() path (lines 867-879 in pmic_irq.c)
- */
 void test_pos_irq_irqSetCfg_configValue(void)
 {
+    // Test IRQ configuration with config values (not just mask).
     Pmic_IrqCfg_t irqCfg;
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
 
-    /* Set config value for a configurable IRQ */
+    // Set config value for a configurable IRQ
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
@@ -1157,7 +1158,7 @@ void test_pos_irq_irqSetCfg_configValue(void)
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back the config */
+    // Read back the config
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
@@ -1167,38 +1168,34 @@ void test_pos_irq_irqSetCfg_configValue(void)
     PLATFORM_ASSERT(irqCfg.config == PMIC_IRQ_CONFIG0_INT_SET);
 }
 
-/**
- * @brief Test batch IRQ configuration with multiple config values
- *
- * Covers IRQ_anyConfsForReg() batch processing path (lines 867-879 in pmic_irq.c)
- */
 void test_pos_irq_irqSetCfgs_batchConfigValues(void)
 {
+    // Test batch IRQ configuration with multiple config values.
     Pmic_IrqCfg_t irqCfgs[3];
     int32_t status;
 
     memset(irqCfgs, 0, sizeof(irqCfgs));
 
-    /* First IRQ: BB_UV_ERR_INT with config */
+    // First IRQ: BB_UV_ERR_INT with config
     irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
     irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
 
-    /* Second IRQ: BB_OV_ERR_INT with config (same register as BB_UV) */
+    // Second IRQ: BB_OV_ERR_INT with config (same register as BB_UV)
     irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[1].irqNum = PMIC_BB_OV_ERR_INT;
     irqCfgs[1].config = PMIC_IRQ_CONFIG0_SET_GOTO_SAFE;
 
-    /* Third IRQ: LDO1_UV_ERR_INT with config (different register) */
+    // Third IRQ: LDO1_UV_ERR_INT with config (different register)
     irqCfgs[2].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[2].irqNum = PMIC_LDO1_UV_ERR_INT;
     irqCfgs[2].config = PMIC_IRQ_CONFIG1_INT_SET_GOTO_SAFE;
 
-    /* Set all configs in batch - this exercises IRQ_anyConfsForReg */
+    // Set all configs in batch - this exercises IRQ_anyConfsForReg
     status = Pmic_irqSetCfgs(&g_pmicHandle, 3, irqCfgs);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify first config */
+    // Verify first config
     memset(irqCfgs, 0, sizeof(irqCfgs));
     irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
     irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
@@ -1208,11 +1205,6 @@ void test_pos_irq_irqSetCfgs_batchConfigValues(void)
     PLATFORM_ASSERT(irqCfgs[0].config == PMIC_IRQ_CONFIG0_INT_SET);
 }
 
-/**
- * @brief Test invalid IRQ number in IRQ_setMask
- *
- * Covers lines 628-630 in pmic_irq.c
- */
 void test_neg_irq_irqSetCfg_invalidIrqNum_mask(void)
 {
     Pmic_IrqCfg_t irqCfg;
@@ -1220,28 +1212,23 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_mask(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
+    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  // Invalid IRQ number
     irqCfg.mask = true;
 
     status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-/**
- * @brief Test invalid IRQ number via CONFIG validParam (calls setMask)
- *
- * Covers lines 629-630 in pmic_irq.c - IRQ_setMask path via setConfig
- * When CONFIG validParam is set along with MASK, setConfig calls setMask
- */
 void test_neg_irq_irqSetCfg_invalidIrqNum_viaMask(void)
 {
+    // Test invalid IRQ number via CONFIG validParam (triggers IRQ_setConfig first).
     Pmic_IrqCfg_t irqCfg;
     int32_t status;
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     // Set both CONFIG and MASK valid params to trigger both paths
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID | PMIC_CFG_IRQ_MASK_VALID;
-    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
+    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  // Invalid IRQ number
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
     irqCfg.mask = true;
 
@@ -1251,11 +1238,6 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_viaMask(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-/**
- * @brief Test invalid IRQ number in IRQ_setConfig
- *
- * Covers lines 665-666 in pmic_irq.c - IRQ_setConfig validation
- */
 void test_neg_irq_irqSetCfg_invalidIrqNum_config(void)
 {
     Pmic_IrqCfg_t irqCfg;
@@ -1263,7 +1245,7 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_config(void)
 
     memset(&irqCfg, 0, sizeof(irqCfg));
     irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
-    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  /* Invalid IRQ number */
+    irqCfg.irqNum = PMIC_IRQ_MAX + 1;  // Invalid IRQ number
     irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
 
     // This will directly call IRQ_setConfig which checks irqNum at line 664-666
@@ -1271,36 +1253,463 @@ void test_neg_irq_irqSetCfg_invalidIrqNum_config(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
-/**
- * @brief Test Pmic_irqClrAllFlags with I/O failure mid-loop
- *
- * Covers line 1196 in pmic_irq.c - error handling break in register clear loop.
- * This test injects an I/O error that occurs during the loop iteration, causing
- * the break statement to execute.
- */
-void test_pos_irq_irqClrAllFlags_ioFailureMidLoop(void)
+void test_neg_irq_irqClrAllFlags_ioFailureMidLoop(void)
 {
 #ifdef BUILD_MOCK
-    PmicMockDevice_t* mockDevice = platform_getMockDevice();
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
     int32_t status;
 
     PLATFORM_ASSERT(mockDevice != NULL);
 
-    /* Inject 1 I/O error - will fail on the 2nd register write in the loop */
+    // Inject 1 I/O error - will fail on the 2nd register write in the loop
     status = PmicMock_InjectError(mockDevice,
                                    PMIC_MOCK_ERROR_COMM_FAILURE,
                                    1);
     PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
 
-    /* Call Pmic_irqClrAllFlags - will start loop, succeed once, then fail */
-    /* This will hit the break at line 1196 when the second write fails */
+    // Call Pmic_irqClrAllFlags - will start loop, succeed once, then fail
+    // This will hit the break at line 1196 when the second write fails
     status = Pmic_irqClrAllFlags(&g_pmicHandle);
 
-    /* Verify that operation failed due to injected error */
+    // Verify that operation failed due to injected error
     PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
 #else
-    /* Test requires mock support for error injection */
-    PLATFORM_ASSERT(true);
+    // Test requires mock support for error injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_IrqClrAllFlags / Pmic_IrqGetNextFlag
+/* ========================================================================== */
+
+void test_neg_irq_irqClrAllFlags_devErrStatIoFail(void)
+{
+    // Test Pmic_irqClrAllFlags with I/O failure on DEV_ERR_STAT ioRxByte.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip the 10 preceding ioTxByte calls, then fail on the ioRxByte
+    // that reads DEV_ERR_STAT_REG before the read-modify-write.
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 10U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqClrAllFlags(&g_pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_pos_irq_irqGetNextFlag_intrStat0NonZero(void)
+{
+    // IRQ 0 (PMIC_CFG_REG_CRC_ERR_INT) maps to intrStat[0] bit 0; must return IRQ 0 with PMIC_ST_SUCCESS.
+    Pmic_IrqStatus_t irqStat;
+    uint8_t irqNum;
+    int32_t status;
+
+    memset(&irqStat, 0, sizeof(irqStat));
+
+    // Set bit 0 of intrStat[0] — corresponds to IRQ number 0
+    irqStat.intrStat[0U] = 1U;
+
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == 0U);
+
+    // Verify the bit was consumed — next call should report no IRQ remaining
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_pos_irq_irqGetNextFlag_intrStat2NonZero(void)
+{
+    // IRQ 64 maps to intrStat[2] bit 0 (64/32==2, 64%32==0); must return IRQ 64 with PMIC_ST_SUCCESS.
+    Pmic_IrqStatus_t irqStat;
+    uint8_t irqNum;
+    int32_t status;
+
+    memset(&irqStat, 0, sizeof(irqStat));
+
+    // Set bit 0 of intrStat[2] — corresponds to IRQ number 64
+    irqStat.intrStat[2U] = 1U;
+
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == 64U);
+
+    // Verify the bit was consumed — next call should report no IRQ remaining
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_pos_irq_irqGetNextFlag_allIntrStatZero(void)
+{
+    Pmic_IrqStatus_t irqStat;
+    uint8_t irqNum = 0U;
+    int32_t status;
+
+    memset(&irqStat, 0, sizeof(irqStat));
+
+    // All words zero — intrStat[3] must be evaluated to reach the irqStatEmpty=true branch
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_pos_irq_irqGetNextFlag_intrStat3NonZero(void)
+{
+    Pmic_IrqStatus_t irqStat;
+    uint8_t irqNum;
+    int32_t status;
+
+    memset(&irqStat, 0, sizeof(irqStat));
+    irqStat.intrStat[3U] = 0x01U;
+
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == 96U);  // 3*32 + 0
+
+    // Verify bit was consumed — second call should report no IRQ remaining
+    status = Pmic_irqGetNextFlag(&g_pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqSetCfg / Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_neg_irq_irqSetCfg_setMask_ioRxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfg.mask = true;
+
+    // Fail on the ioRxByte (mask register read) itself
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqSetCfg_setMask_ioTxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfg.mask = true;
+
+    // Skip the ioRxByte (1 read), then fail on the ioTxByte (1 write)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqSetCfg_setConfig_ioTxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    // Skip the ioRxByte (1 read), then fail on the ioTxByte (1 write)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqCheckConfigParam_crcErrValidConfig(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    // Use MASK_VALID so IRQ_checkConfigParam runs but IRQ_setConfig is skipped
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfg.irqNum = PMIC_CFG_REG_CRC_ERR_INT;
+    irqCfg.mask = true;
+    irqCfg.config = 0U;  // Valid value (0 <= CONFIG1_MAX=1) — covers line 707 false
+
+    // CRC_ERR_INT is NON_MASKABLE so the mask operation returns NOT_SUPPORTED
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+}
+
+void test_pos_irq_irqCheckConfigParam_compIrqValidConfig(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;
+    irqCfg.config = PMIC_IRQ_CONFIG2_INT_SET;  // Valid config (0 <= CONFIG2_MAX=2)
+
+    // IRQ_checkConfigParam evaluates line 711 — third sub-condition false
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_irq_irqGetStatus_ioRxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_IrqStatus_t irqStat;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    memset(&irqStat, 0, sizeof(irqStat));
+
+    // First register read succeeds; second fails
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqGetStatus(&g_pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqSetCfgs_handleRecordsMask_ioRxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_IrqCfg_t irqCfgs[1];
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfgs[0].mask = true;
+
+    // Fail on the first I/O call (ioRxByte inside IRQ_handleRecordsForRegMask)
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 1U, irqCfgs);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_pos_irq_irqSetCfgs_noMasksProcessed(void)
+{
+    Pmic_IrqCfg_t irqCfgs[2];
+    int32_t status;
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+
+    // Record 0: only CONFIG_VALID set — MASK_VALID is NOT set
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    // Record 1: only CONFIG_VALID set — MASK_VALID is NOT set
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfgs[1].irqNum = PMIC_BB_OV_ERR_INT;
+    irqCfgs[1].config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    // IRQ_handleRecordsForRegMask will find masks for these regs but
+    // processedCfgs stays 0 because MASK_VALID is absent — skips ioTxByte
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 2U, irqCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetCfgs_noConfigsProcessed(void)
+{
+    Pmic_IrqCfg_t irqCfgs[2];
+    int32_t status;
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+
+    // Record 0: only MASK_VALID set — CONFIG_VALID is NOT set
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[0].irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfgs[0].mask = false;
+
+    // Record 1: only MASK_VALID set — CONFIG_VALID is NOT set
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[1].irqNum = PMIC_BB_OV_ERR_INT;
+    irqCfgs[1].mask = false;
+
+    // IRQ_handleRecordsForRegConfig: processedCfgs stays 0, ioTxByte skipped
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 2U, irqCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_pos_irq_irqCheckConfigParam_compIrqConfig0FalseBranch(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;
+    irqCfg.config = 0U;  // valid config, below CONFIG2_MAX
+
+    // Config is valid — IRQ_setConfig runs successfully
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoConfigs(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfg.config = PMIC_IRQ_CONFIG0_INT_SET;  // valid config for BB_UV
+
+    // Single entry targets UV_DCDC_CFG_REG; all other config registers have anyConfigs=false
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 1U, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetCfgs_singleEntryOtherRegsNoMasks(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfg.irqNum = PMIC_BB_UV_ERR_INT;
+    irqCfg.mask = true;
+
+    // Single entry targets UV_DCDC_CFG_REG; all other mask registers have anyMasks=false
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 1U, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyMasksFalse(void)
+{
+    Pmic_IrqCfg_t irqCfgs[2];
+    int32_t status;
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+
+    // Both entries share UV_INT_MASK_REG (index 3 of IrqMaskRegisters) —
+    // registers at indices 0-2 are visited first with anyMasks=false before
+    // totalProcessed reaches numIrqs, exercising the loop's early-break path
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[0].irqNum = PMIC_LDO1_UV_ERR_INT;
+    irqCfgs[0].mask = true;
+
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_MASK_VALID;
+    irqCfgs[1].irqNum = PMIC_LDO2_UV_ERR_INT;
+    irqCfgs[1].mask = false;
+
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 2U, irqCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetCfgs_multiEntry_otherRegAnyConfigsFalse(void)
+{
+    Pmic_IrqCfg_t irqCfgs[2];
+    int32_t status;
+
+    memset(irqCfgs, 0, sizeof(irqCfgs));
+
+    // Both entries share UV_INT_CFG1_REG (index 7 of IrqConfRegisters) —
+    // registers at indices 0-6 are visited first with anyConfigs=false before
+    // totalProcessed reaches numIrqs, exercising the loop's early-break path
+    irqCfgs[0].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfgs[0].irqNum = PMIC_LDO1_UV_ERR_INT;
+    irqCfgs[0].config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    irqCfgs[1].validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfgs[1].irqNum = PMIC_LDO2_UV_ERR_INT;
+    irqCfgs[1].config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    status = Pmic_irqSetCfgs(&g_pmicHandle, 2U, irqCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_irq_irqCheckConfigParam_comp1pUvErr_configAboveMax(void)
+{
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;
+    irqCfg.config = PMIC_IRQ_CONFIG2_MAX + 1U;  // Exceeds CONFIG2_MAX
+
+    // config exceeds CONFIG2_MAX — IRQ_checkConfigParam rejects it
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_irq_irqSetCfg_setConfig_ioRxFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    Pmic_IrqCfg_t irqCfg;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    memset(&irqCfg, 0, sizeof(irqCfg));
+    irqCfg.validParams = PMIC_CFG_IRQ_CONFIG_VALID;
+    irqCfg.irqNum = PMIC_COMP1P_UV_ERR_INT;
+    irqCfg.config = PMIC_IRQ_CONFIG2_INT_SET;  // Valid config value
+
+    // Fail on the very first I/O call (ioRxByte inside IRQ_setConfig, line 688)
+    status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetCfg(&g_pmicHandle, &irqCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
@@ -1309,7 +1718,7 @@ void test_pos_irq_irqClrAllFlags_ioFailureMidLoop(void)
 /* ========================================================================== */
 
 /**
- * @brief IRQ test suite entry point (wrapper for test runner)
+ * @brief IRQ test suite entry point (wrapper for test runner).
  * @param args Test arguments (unused)
  *
  * Note: This module doesn't define setUp/tearDown at global scope to avoid
@@ -1318,9 +1727,9 @@ void test_pos_irq_irqClrAllFlags_ioFailureMidLoop(void)
 void irq_test(void *args)
 {
     int32_t status;
-    (void)args;  /* Unused parameter */
+    (void)args;  // Unused parameter
 
-    /* Initialize once for all IRQ tests */
+    // Initialize once for all IRQ tests
     platform_init();
     testTimer_startModule("IRQ");
     status = irqTest_initHandle();
@@ -1330,13 +1739,13 @@ void irq_test(void *args)
         platform_deinit();
         return;
     }
-    /* Run all IRQ tests */
+    // Run all IRQ tests
     platform_unlockRegisters();
     platform_setupTests();
     IRQ_TEST_RUN_ALL();
     platform_tearDownTests();
 
-    /* Cleanup */
+    // Cleanup
     testTimer_endModule();
     Pmic_deinit(&g_pmicHandle);
     platform_deinit();

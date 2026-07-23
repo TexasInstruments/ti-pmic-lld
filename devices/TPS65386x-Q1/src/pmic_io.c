@@ -122,7 +122,7 @@ static const uint8_t CRC8_TABLE[] = {
 static uint8_t getCRC8Val(const uint8_t data[PMIC_IO_FRAME_LEN_MAX], uint8_t len) {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 
-    for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < len); i++) {
+    for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < len); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
         crc = CRC8_TABLE[data[i] ^ crc];
     }
 
@@ -215,7 +215,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxB
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     // Save RDATA[7:0]
     if (status == PMIC_ST_SUCCESS) {
@@ -294,7 +294,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     return status;
 }

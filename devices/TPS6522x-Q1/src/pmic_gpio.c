@@ -104,9 +104,9 @@ static int32_t GPIO_validatePinNum(uint8_t pinNum)
 /* Get GPIO configuration register address for a given pin (1-6). */
 static void GPIO_getConfRegAddr(uint8_t pinNum, uint8_t *regAddr)
 {
-    const uint8_t offset = ((pinNum >= PMIC_GPIO_PIN1) && (pinNum <= PMIC_GPIO_PIN_MAX))
+    const uint8_t offset = ((pinNum >= PMIC_GPIO_PIN1) && (pinNum <= PMIC_GPIO_PIN_MAX)) /* DA_JUSTIFY: PMICDRV-2357 */
                            ? (uint8_t)(pinNum - PMIC_GPIO_PIN1)
-                           : 0U;
+                           : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = (uint8_t)(GPIO1_CONF_REG + offset);
 }
 
@@ -154,9 +154,9 @@ static bool GPIO_isFxnSelValid(uint8_t pinNum, uint8_t fxnSel)
         case PMIC_GPIO_PIN6:
             validFxn = (fxnSel <= PMIC_GPIO_PIN6_FXN_SEL_MAX);
             break;
-        default: /* LCOV_EXCL_LINE */
-            validFxn = (bool)false; /* LCOV_EXCL_LINE */
-            break; /* LCOV_EXCL_LINE */
+        default: /* DA_JUSTIFY: PMICDRV-2356 */
+            validFxn = (bool)false; /* DA_JUSTIFY: PMICDRV-2356 */
+            break;
     }
 
     return validFxn;

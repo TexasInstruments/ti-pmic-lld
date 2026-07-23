@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -39,17 +38,27 @@
 #include "wdg_test.h"
 #ifdef BUILD_MOCK
 #include "test_inject.h"
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
 #endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
+// Register addresses differ between A0 and B0 silicon revisions
+#define WDG_TEST_ERR_STATUS_REG_A0 (0x5FU)
+#define WDG_TEST_ERR_STATUS_REG    (0x62U)
+
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
 static Pmic_Handle_t pmicHandle = {0U};
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -59,7 +68,7 @@ static void wdgTest_checkForWdgErrors(void);
 static void wdg_enableAndConfigure(const Pmic_WdgCfg_t *cfg);
 
 /**
- * @brief Setup helper: Initialize WDG to valid configuration state
+ * @brief Setup helper: Initialize WDG to valid configuration state.
  *
  * Ensures WDG is enabled and in Long Window mode, which are
  * prerequisites for calling Pmic_wdgSetCfg().
@@ -68,19 +77,19 @@ static void wdg_setupForConfig(void)
 {
     int32_t status;
 
-    /* Disable first to ensure clean state regardless of what the previous test left behind */
+    // Disable first to ensure clean state regardless of what the previous test left behind
     status = Pmic_wdgDisable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Enable watchdog */
+    // Enable watchdog
     status = Pmic_wdgSetEnableState(&pmicHandle, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Enable return to long window */
+    // Enable return to long window
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Hold in Long Window so that subsequent SetCfg writes are accepted */
+    // Hold in Long Window so that subsequent SetCfg writes are accepted
     status = Pmic_wdgSetPowerHold(&pmicHandle, PMIC_ENABLE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     platform_timerWaitMs(25U);
@@ -336,15 +345,15 @@ void test_neg_wdg_wdgSetCfg_whenDisabled(void)
         .mode = PMIC_TRIGGER_MODE
     };
 
-    /* Disable watchdog */
+    // Disable watchdog
     status = Pmic_wdgSetEnableState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Attempt to configure - should fail */
+    // Attempt to configure - should fail
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 
-    /* Re-enable watchdog for subsequent tests */
+    // Re-enable watchdog for subsequent tests
     status = Pmic_wdgSetEnableState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
@@ -359,17 +368,17 @@ void test_neg_wdg_wdgSetCfg_whenNotInLongWindow(void)
         .mode = PMIC_TRIGGER_MODE
     };
 
-    /* Enable watchdog but disable return to long window */
+    // Enable watchdog but disable return to long window
     status = Pmic_wdgSetEnableState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Attempt to configure - should fail */
+    // Attempt to configure - should fail
     status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 
-    /* Re-enable return to long window for subsequent tests */
+    // Re-enable return to long window for subsequent tests
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -580,7 +589,7 @@ void test_neg_wdg_wdgGetFailCntStatus_invalidParam(void)
 
 void test_pos_wdg_wdgEnable_enableDisable(void)
 {
-    /* Test WDG enable/disable */
+    // Test WDG enable/disable
     bool isEnabled = PMIC_DISABLE;
 
     int32_t status = Pmic_wdgDisable(&pmicHandle);
@@ -600,7 +609,7 @@ void test_pos_wdg_wdgEnable_enableDisable(void)
 
 void test_pos_wdg_wdgSetPowerHold_enableDisable(void)
 {
-    /* Test WDG power hold enable/disable */
+    // Test WDG power hold enable/disable
     bool isEnabled = PMIC_DISABLE;
 
     int32_t status = Pmic_wdgSetPowerHold(&pmicHandle, PMIC_DISABLE);
@@ -620,7 +629,7 @@ void test_pos_wdg_wdgSetPowerHold_enableDisable(void)
 
 void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void)
 {
-    /* Test WDG return to long window enable/disable */
+    // Test WDG return to long window enable/disable
     bool isEnabled = PMIC_DISABLE;
 
     int32_t status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, PMIC_DISABLE);
@@ -641,7 +650,7 @@ void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void)
 void test_pos_wdg_wdgSetCfg_rstEn(void)
 {
     wdg_setupForConfig();
-    /* Test WDG reset enable enable/disable */
+    // Test WDG reset enable enable/disable
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_EN_VALID};
 
@@ -665,7 +674,7 @@ void test_pos_wdg_wdgSetCfg_rstEn(void)
 void test_pos_wdg_wdgSetCfg_mode(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG modes */
+    // Test all valid WDG modes
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_MODE_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_MODE_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -685,7 +694,7 @@ void test_pos_wdg_wdgSetCfg_mode(void)
 void test_pos_wdg_wdgSetCfg_trigSel(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG trigger selections */
+    // Test all valid WDG trigger selections
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_TRIG_SEL_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_TRIG_SEL_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -705,7 +714,7 @@ void test_pos_wdg_wdgSetCfg_trigSel(void)
 void test_pos_wdg_wdgSetCfg_failThr(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG failure thresholds */
+    // Test all valid WDG failure thresholds
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_FAIL_THR_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_FAIL_THR_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -725,7 +734,7 @@ void test_pos_wdg_wdgSetCfg_failThr(void)
 void test_pos_wdg_wdgSetCfg_rstThr(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG reset thresholds */
+    // Test all valid WDG reset thresholds
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_RST_THR_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_RST_THR_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -745,7 +754,7 @@ void test_pos_wdg_wdgSetCfg_rstThr(void)
 void test_pos_wdg_wdgSetCfg_longWinDuration(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG long window durations */
+    // Test all valid WDG long window durations
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_LONG_WIN_DURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_LONG_WIN_DURATION_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -765,7 +774,7 @@ void test_pos_wdg_wdgSetCfg_longWinDuration(void)
 void test_pos_wdg_wdgSetCfg_win1Duration(void)
 {
     wdg_setupForConfig();
-    /* Test all valid window-1 durations */
+    // Test all valid window-1 durations
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1_DURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN1_DURATION_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -785,7 +794,7 @@ void test_pos_wdg_wdgSetCfg_win1Duration(void)
 void test_pos_wdg_wdgSetCfg_win2Duration(void)
 {
     wdg_setupForConfig();
-    /* Test all valid window-2 durations */
+    // Test all valid window-2 durations
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2_DURATION_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_WIN2_DURATION_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -805,7 +814,7 @@ void test_pos_wdg_wdgSetCfg_win2Duration(void)
 void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG Q&A feedback values */
+    // Test all valid WDG Q&A feedback values
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_FDBK_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -828,7 +837,7 @@ void test_pos_wdg_wdgSetCfg_qaFdbk(void)
 void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG Q&A LFSR values */
+    // Test all valid WDG Q&A LFSR values
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_LFSR_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -851,7 +860,7 @@ void test_pos_wdg_wdgSetCfg_qaLfsr(void)
 void test_pos_wdg_wdgSetCfg_qaSeed(void)
 {
     wdg_setupForConfig();
-    /* Test all valid WDG Q&A seeds */
+    // Test all valid WDG Q&A seeds
     Pmic_WdgCfg_t expWdgCfg = {.validParams = PMIC_CFG_WDG_QA_SEED_VALID};
     Pmic_WdgCfg_t actWdgCfg = {.validParams = PMIC_CFG_WDG_QA_SEED_VALID};
     int32_t status = PMIC_ST_SUCCESS;
@@ -876,7 +885,7 @@ static void wdgTest_checkForWdgErrors(void)
     uint8_t regData = 0U;
     const uint8_t bufLen = 1U;
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t wdErrStatusRegAddr = (pmicHandle.isA0) ? 0x5FU : 0x62U;
+    uint8_t wdErrStatusRegAddr = (pmicHandle.isA0) ? WDG_TEST_ERR_STATUS_REG_A0 : WDG_TEST_ERR_STATUS_REG;
 
     status = platform_rxByte(&pmicHandle, 0x00U, wdErrStatusRegAddr, &regData, bufLen);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -2101,9 +2110,6 @@ void test_pos_wdg_wdgQaSequence_qaWithIrqCallback(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    // Clear the injected bit
-    testInject_clearBits(0x61U, (1UL << 7U));
-
     status = Pmic_wdgDisable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
@@ -2134,4 +2140,503 @@ void test_pos_wdg_wdgGetErrStatus_allFields(void)
 
     // The actual values don't matter for coverage - we're testing that all
     // extraction code paths execute without error
+}
+
+void test_neg_wdg_wdgQaWriteAnswer_firstReadFail(void)
+{
+    // fails, causing Pmic_wdgQaWriteAnswer to return non-SUCCESS.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgQaWriteAnswer(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgQaWriteAnswer_secondReadFail(void)
+{
+    // Inject failure on second read (PMIC_WD_QUESTION_ANSW_CNT_REG) to exercise the error path
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgQaWriteAnswer(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Static-Function I/O Failure Tests (WDG set path)
+/* ========================================================================== */
+
+void test_neg_wdg_wdgSetCfg_setModeAndTrigger_ioRxByteFail(void)
+{
+    // if (status == PMIC_ST_SUCCESS) after Pmic_ioRxByte for WD_ENABLE_REG fails.
+    // Request PMIC_CFG_WDG_RST_EN_VALID so WDG_setModeAndTriggerCfg reads
+    // WD_ENABLE_REG; inject failure on that read.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID,
+        .rstEn = (bool)true
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    wdg_setupForConfig();
+
+    // WDG_checkCfgState reads WD_ENABLE_REG (I/O #1) and RETURN_LONGWIN (I/O #2).
+    // PMIC_CFG_WDG_QA_CFG_ALL_VALID's bitmask includes bit 0 (RST_EN_VALID), so
+    // WDG_setQaCfg's Pmic_validParamCheck() spuriously matches and performs a
+    // read-modify-writeback of WD_QA_CFG_REG even though no QA fields were
+    // requested (I/O #3 read, I/O #4 write).
+    // WDG_setModeAndTriggerCfg with only RST_EN reads WD_ENABLE_REG (I/O #5).
+    // Skip ops 1-4 so checkCfgState and the spurious QA writeback pass, then
+    // fail op 5 to exercise the intended error path.
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 4U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    (void)Pmic_wdgDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgSetCfg_setWinIntervals_win1_ioRxByteFail(void)
+{
+    // for WD_WIN1_CFG fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_WIN1_DURATION_VALID,
+        .win1Duration = 0x10U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    wdg_setupForConfig();
+
+    // WDG_checkCfgState reads ENABLE_REG (I/O #1) and RETURN_LONGWIN (I/O #2).
+    // WDG_setWindowTimeIntervals with WIN1_DURATION reads WD_WIN1_CFG (I/O #3).
+    // Skip ops 1-2 so checkCfgState passes, then fail op 3 to exercise the error path.
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    (void)Pmic_wdgDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgSetCfg_setWinIntervals_win2_ioRxByteFail(void)
+{
+    // for WD_WIN2_CFG fails (WIN1 not requested, WIN2 is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_WIN2_DURATION_VALID,
+        .win2Duration = 0x10U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    wdg_setupForConfig();
+
+    // WDG_checkCfgState reads ENABLE_REG (I/O #1) and RETURN_LONGWIN (I/O #2).
+    // WDG_setWindowTimeIntervals with WIN2_DURATION (no WIN1) reads WD_WIN2_CFG (I/O #3).
+    // Skip ops 1-2 so checkCfgState passes, then fail op 3 to exercise the error path.
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    (void)Pmic_wdgDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Static-Function I/O Failure Tests (WDG get path)
+/* ========================================================================== */
+
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_ioRxByteCSFail(void)
+{
+    // for WD_ENABLE_REG fails (only RST_EN requested so this is first I/O).
+    // PMIC_CFG_WDG_QA_CFG_ALL_VALID's bitmask includes bit 0 (RST_EN_VALID), so
+    // WDG_getQaCfg's Pmic_validParamCheck() spuriously matches and reads
+    // WD_QA_CFG_REG (I/O #1) before WDG_getModeAndTriggerCfg's intended
+    // WD_ENABLE_REG read (I/O #2). Skip the spurious read, then fail I/O #2.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_mode_ioRxByteCSFail(void)
+{
+    // for WD_CONFIG fails (RST_EN not requested, MODE is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_MODE_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_trigSel_ioRxByteCSFail(void)
+{
+    // for WD_CONFIG fails (RST_EN not requested, TRIG_SEL is first I/O).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_TRIG_SEL_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getQaCfg_ioRxByteCSFail(void)
+{
+    // WD_QA_CFG fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getThresholds_ioRxByteCSFail(void)
+{
+    // WD_THR_CFG fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_FAIL_THR_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getWinIntervals_win1_ioRxByteCSFail(void)
+{
+    // for WD_WIN1_CFG fails.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_WIN1_DURATION_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getWinIntervals_win2_ioRxByteCSFail(void)
+{
+    // for WD_WIN2_CFG fails (WIN1 not requested).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_WIN2_DURATION_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getWinIntervals_longWin_ioRxByteCSFail(void)
+{
+    // for WD_LONGWIN_CFG fails (WIN1 and WIN2 not requested).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_LONG_WIN_DURATION_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_wdgSetCfg
+/* ========================================================================== */
+
+void test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnFirstOp(void)
+{
+    // Pmic_wdgSetCfg is Pmic_wdgGetEnableState -> Pmic_ioRxByte_CS on
+    // WD_ENABLE_REG.  Injecting failure on I/O #1 (skipCount=0) causes
+    // WDG_checkCfgState to propagate a comm-failure error before any
+    // state check can succeed.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID,
+        .rstEn = (bool)true
+    };
+
+    // (the first call made by WDG_checkCfgState).
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgSetCfg_checkCfgState_ioFailOnSecondOp(void)
+{
+    // WDG_checkCfgState reads WD_ENABLE_REG (I/O #1) then WD_MODE_REG for
+    // ReturnToLongWindow (I/O #2). WD_EN must be set first so the line-228
+    // isEnabled check passes and execution actually reaches line 236. Skip
+    // I/O #1 so the first read succeeds, then fail I/O #2 so
+    // Pmic_wdgGetReturnToLongWindow itself returns an error - this exercises
+    // line 236's `status == PMIC_ST_SUCCESS` operand evaluating false, which
+    // no other test reaches (every other test either fails I/O #1 directly
+    // or lets both checkCfgState reads succeed).
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID,
+        .rstEn = (bool)true
+    };
+
+    // Set WD_EN (bit 0) in WD_ENABLE_REG (0x0F) so the first isEnabled check passes
+    testInject_setBits(0x0FU, (1UL << 0U));
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Clean up so WD_EN doesn't leak into subsequent tests
+    testInject_clearBits(0x0FU, (1UL << 0U));
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgSetCfg_setQaCfg_ioRxByteFail(void)
+{
+    // WDG_setControlCfg calls WDG_setQaCfg first; if that call fails,
+    // `if (status == PMIC_ST_SUCCESS)` after it (pmic_wdg.c line 660) must
+    // evaluate false and skip WDG_setModeAndTriggerCfg. WDG_setQaCfg performs
+    // real I/O (read WD_QA_CFG_REG, then write it back) that can fail
+    // independent of caller validation, so target that call directly.
+    // Request only QA_FDBK (validParams bit 8) so PMIC_CFG_WDG_QA_CFG_ALL_VALID's
+    // Pmic_validParamCheck() matches inside WDG_setQaCfg but none of
+    // WDG_setTimingCfg / WDG_setModeAndTriggerCfg's guards match, keeping the
+    // I/O sequence isolated to: checkCfgState's two reads (I/O #1, #2) then
+    // WDG_setQaCfg's WD_QA_CFG_REG read (I/O #3). Skip ops 1-2 so
+    // checkCfgState passes, then fail op 3 to exercise line 660's false branch.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_QA_FDBK_VALID,
+        .qaFdbk = 0U
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    wdg_setupForConfig();
+
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    (void)Pmic_wdgDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgGetCfg_getModeAndTrigger_rstEn_wdEnableRegFail(void)
+{
+    // PMIC_CFG_WDG_MODE_VALID are set, the first I/O is Pmic_ioRxByte_CS on
+    // WD_ENABLE_REG.  Injecting failure on that call (I/O #1 of Pmic_wdgGetCfg,
+    // WDG_getModeAndTriggerCfg when both RST_EN and MODE params are requested.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    // Request both RST_EN and MODE so that WDG_getModeAndTriggerCfg attempts
+    // to read WD_ENABLE_REG first, then WD_CONFIG.
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID | PMIC_CFG_WDG_MODE_VALID
+    };
+
+    // With only RST_EN and MODE requested, Pmic_wdgGetCfg calls:
+    //   WDG_getWindowTimeIntervals  -> 0 I/O ops (none of WIN1/WIN2/LONGWIN set)
+    //   WDG_getThresholds           -> 0 I/O ops (FAIL_THR/RST_THR not set)
+    //   WDG_getQaCfg                -> 0 I/O ops (QA flags not set)
+    //   WDG_getModeAndTriggerCfg    -> I/O #1: reads WD_ENABLE_REG (RST_EN_VALID set)
+    // Fail I/O #1 (skipCount=0) to cover the WD_ENABLE_REG failure path.
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_wdg_wdgSetCfg_checkCfgState_notInLongWindow(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_THR_VALID,
+        .rstThr = 1U
+    };
+
+    // Set WD_EN so WDG_checkCfgState sees the watchdog as enabled
+    testInject_setBits(0x0FU, (1UL << 0U));
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+void test_pos_wdg_wdgSetCfg_checkCfgState_inLongWindow(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    Pmic_WdgCfg_t wdgCfg = {
+        .validParams = PMIC_CFG_WDG_RST_EN_VALID,
+        .rstEn = (bool)false
+    };
+
+    // Directly set WD_EN (bit 0) in WD_ENABLE_REG (0x0F)
+    testInject_setBits(0x0FU, (1UL << 0U));
+    // Directly set WD_RETURN_LONGWIN (bit 0) in WD_MODE_REG (0x10)
+    testInject_setBits(0x10U, (1UL << 0U));
+    // WDG_checkCfgState will read 0x0F (call 1, WD_EN=1) then 0x10 (call 2,
+    // WD_RETURN_LONGWIN=1).  Both isEnabled checks pass -> line 236 false
+    // branch taken.  The subsequent WDG_setModeAndTriggerCfg reads 0x0F
+    // (call 3) and succeeds normally.
+    status = Pmic_wdgSetCfg(&pmicHandle, &wdgCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Clear WD_RETURN_LONGWIN so it doesn't leak into subsequent tests
+    testInject_clearBits(0x10U, (1UL << 0U));
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
 }

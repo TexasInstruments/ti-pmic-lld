@@ -31,8 +31,6 @@
  *
  *****************************************************************************/
 
-
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -54,12 +52,6 @@ static Pmic_Handle_t g_pmicHandle;
 /* ========================================================================== */
 
 /* ========================================================================== */
-/*                            Global Variables                                */
-/* ========================================================================== */
-
-static Pmic_Handle_t g_pmicHandle;
-
-/* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
@@ -68,7 +60,7 @@ static Pmic_Handle_t g_pmicHandle;
 /* ========================================================================== */
 
 /**
- * @brief Initialize PMIC handle for GPIO tests
+ * @brief Initialize PMIC handle for GPIO tests.
  */
 static int32_t gpioTest_initHandle(void)
 {
@@ -97,7 +89,7 @@ static int32_t gpioTest_initHandle(void)
 }
 
 /**
- * @brief Helper function to test GPIO set/get configuration
+ * @brief Helper function to test GPIO set/get configuration.
  *
  * @param validParam  Valid param bit for the GPIO to test
  * @param setValue    Value to set
@@ -157,7 +149,7 @@ static void gpioTest_setGetCfg(uint32_t validParam, uint8_t setValue,
 }
 
 /**
- * @brief Verify GPI1 configuration
+ * @brief Verify GPI1 configuration.
  */
 static void gpioTest_verifyGpi1(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -165,7 +157,7 @@ static void gpioTest_verifyGpi1(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 }
 
 /**
- * @brief Verify GPI4 configuration
+ * @brief Verify GPI4 configuration.
  */
 static void gpioTest_verifyGpi4(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -173,7 +165,7 @@ static void gpioTest_verifyGpi4(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 }
 
 /**
- * @brief Verify GPO1 configuration
+ * @brief Verify GPO1 configuration.
  */
 static void gpioTest_verifyGpo1(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -181,7 +173,7 @@ static void gpioTest_verifyGpo1(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 }
 
 /**
- * @brief Verify GPO2 configuration
+ * @brief Verify GPO2 configuration.
  */
 static void gpioTest_verifyGpo2(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -189,7 +181,7 @@ static void gpioTest_verifyGpo2(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 }
 
 /**
- * @brief Verify GPO3 configuration
+ * @brief Verify GPO3 configuration.
  */
 static void gpioTest_verifyGpo3(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -197,7 +189,7 @@ static void gpioTest_verifyGpo3(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 }
 
 /**
- * @brief Verify GPO4 configuration
+ * @brief Verify GPO4 configuration.
  */
 static void gpioTest_verifyGpo4(const Pmic_GpioCfg_t *cfg, uint8_t expected)
 {
@@ -410,19 +402,14 @@ void test_pos_gpio_gpioGetOutputValue_allGpos(void)
 }
 
 /**
- * @brief Test GPO1_HIZ_DUPLICATE handling
- *
- * This test verifies that when GPO1_CONF register returns value 6 (duplicate HIZ),
- * the driver correctly converts it to PMIC_GPO1_HIZ (value 2).
- *
- * Coverage target: pmic_gpio.c lines 281-284
+ * @brief Test GPO1_HIZ_DUPLICATE handling.
  */
 void test_pos_gpio_gpioGpo1Hiz_duplicate(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
     Pmic_GpioCfg_t getCfg;
-    PmicMockDevice_t* mockDevice = platform_getMockDevice();
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
 
     PLATFORM_ASSERT(mockDevice != NULL);
 
@@ -694,6 +681,32 @@ void test_neg_gpio_gpioSetCfg_invalidValue_gpo4(void)
 }
 
 /* ========================================================================== */
+// POSITIVE TESTS - SAFEOUT I/O FAILURE
+/* ========================================================================== */
+
+void test_neg_gpio_gpioSetSafeOutCfg_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioSafeOutCfg_t config = {
+        .validParams = PMIC_CFG_GPIO_SAFEOUT1_EN_VALID,
+        .safeOut1En = true
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetSafeOutCfg(&g_pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
 /*                       NEGATIVE TESTS - SAFEOUT                             */
 /* ========================================================================== */
 
@@ -731,11 +744,168 @@ void test_neg_gpio_gpioSetSafeOutCfg_invalidParam_validParams(void)
 }
 
 /* ========================================================================== */
+// Coverage Gap: I/O failure tests for getCfg/setCfg sub-functions
+/* ========================================================================== */
+
+/**
+ * @brief Test GPIO_getCfgGpi1_4() IO read failure path.
+ */
+void test_neg_gpio_gpioGetCfg_gpi1_4_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(GPI_CFG_REG) inside GPIO_getCfgGpi1_4 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test GPIO_getCfgGpo1_2() IO read failure path.
+ */
+void test_neg_gpio_gpioGetCfg_gpo1_2_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPO1_VALID;
+
+    // I/O #1: Pmic_ioRxByte_CS(GPO_CFG1_REG) inside GPIO_getCfgGpo1_2 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test GPIO_getCfgGpo3_4() IO read failure path.
+ */
+void test_neg_gpio_gpioGetCfg_gpo3_4_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPO3_VALID;
+
+    // I/O #1: Pmic_ioRxByte(GPO_CFG2_REG) inside GPIO_getCfgGpo3_4 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test GPIO_setCfgGpi1_4() IO read failure path.
+ */
+void test_neg_gpio_gpioSetCfg_gpi1_4_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPI1_VALID;
+    cfg.gpi1 = 0U;  // Valid value
+
+    // I/O #1: Pmic_ioRxByte(GPI_CFG_REG) inside GPIO_setCfgGpi1_4 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test GPIO_setCfgGpo1_2() IO read failure path.
+ */
+void test_neg_gpio_gpioSetCfg_gpo1_2_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPO1_VALID;
+    cfg.gpo1 = 0U;  // Valid value
+
+    // I/O #1: Pmic_ioRxByte(GPO_CFG1_REG) inside GPIO_setCfgGpo1_2 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test GPIO_setCfgGpo3_4() IO read failure path.
+ */
+void test_neg_gpio_gpioSetCfg_gpo3_4_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_GPIO_GPO3_VALID;
+    cfg.gpo3 = 0U;  // Valid value
+
+    // I/O #1: Pmic_ioRxByte(GPO_CFG2_REG) inside GPIO_setCfgGpo3_4 - FAIL
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetCfg(&g_pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
 /*                            Test Setup/Teardown                             */
 /* ========================================================================== */
 
 /**
- * @brief GPIO test suite entry point (wrapper for test runner)
+ * @brief GPIO test suite entry point (wrapper for test runner).
  * @param args Test arguments (unused)
  *
  * Note: This module doesn't define setUp/tearDown at global scope to avoid

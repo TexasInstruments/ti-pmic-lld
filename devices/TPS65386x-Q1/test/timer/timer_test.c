@@ -31,13 +31,16 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
 #include "timer_test.h"
 #include "test_constants.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_core.h"
+#endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -931,7 +934,7 @@ void test_neg_timer_timerSetCfg_validParamsZero(void)
 }
 
 /**
- * @brief Test Pmic_timerSetCfg prescale configuration while timer is running
+ * @brief Test Pmic_timerSetCfg prescale configuration while timer is running.
  */
 void test_neg_timer_timerSetCfg_prescaleWhileRunning(void)
 {
@@ -988,11 +991,131 @@ void test_neg_timer_timerClr_nullHandle(void)
 }
 
 /* ========================================================================== */
+// DYNAMIC ANALYSIS TEST CASES
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_timerClr returns error when ioRxByte fails.
+ */
+void test_neg_timer_timerClr_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    /* Unlock CNT registers before timer operations */
+    unlockCntRegisters();
+
+    // Inject 1 comm failure - will hit Pmic_ioRxByte(handle, TMR_CFG_REG) in Pmic_timerClr
+    status = PmicMock_InjectError(mockDevice,
+                                   PMIC_MOCK_ERROR_COMM_FAILURE,
+                                   1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    // Call Pmic_timerClr - ioRxByte will fail, skipping the if-success branch
+    status = Pmic_timerClr(&pmicHandle);
+
+    // Verify that operation failed due to injected error
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    // Test requires mock support for error injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_timerStop returns error when ioRxByte fails.
+ */
+void test_neg_timer_timerStop_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Inject 1 comm failure - will hit Pmic_ioRxByte(handle, TMR_CFG_REG) in Pmic_timerStop
+    status = PmicMock_InjectError(mockDevice,
+                                   PMIC_MOCK_ERROR_COMM_FAILURE,
+                                   1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    // Call Pmic_timerStop - ioRxByte will fail, skipping the if-success branch
+    status = Pmic_timerStop(&pmicHandle);
+
+    // Verify that operation failed due to injected error
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    // Test requires mock support for error injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_timerSetCfg returns error when ioRxByte fails inside critical section.
+ */
+void test_neg_timer_timerSetCfg_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_TimerCfg_t cfg;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Inject 1 comm failure to exercise the I/O read failure path in the critical section
+    status = PmicMock_InjectError(mockDevice,
+                                   PMIC_MOCK_ERROR_COMM_FAILURE,
+                                   1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    // Call Pmic_timerSetCfg with valid params - ioRxByte inside critical section will fail
+    cfg.validParams = PMIC_CFG_TMR_MODE_VALID;
+    cfg.mode = PMIC_TMR_MODE_STOPPED;
+    status = Pmic_timerSetCfg(&pmicHandle, &cfg);
+
+    // Verify that operation failed due to injected error
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    // Test requires mock support for error injection
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_timer_timerSetCfg_prescaleCfgStateIoFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_TimerCfg_t cfg = {0};
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    cfg.validParams = PMIC_CFG_TMR_PRESCALE_VALID;
+    cfg.prescale = PMIC_TMR_PRESCALE_64P64_US;
+
+    /* Fail the 1st I/O: Pmic_ioRxByte_CS(TMR_CFG_REG) inside Pmic_timerGetCfg,
+     * called from TIMER_checkPrescaleCfgState.  Makes status != PMIC_ST_SUCCESS
+     * so the `timerCfg.mode != PMIC_TMR_MODE_STOPPED` sub-condition is never
+     * evaluated, giving independent FALSE coverage for the first MC/DC operand. */
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_timerSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
 /*                          Test Entry Point                                  */
 /* ========================================================================== */
 
 /**
- * @brief Timer test suite entry point
+ * @brief Timer test suite entry point.
  * @param args Test arguments (unused)
  */
 void timer_test(void *args)

@@ -33,14 +33,16 @@
 #ifndef PMIC_TEST_H
 #define PMIC_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
 
 #include "platform.h"
 #include "test_utils.h"
+
+#ifdef BUILD_MOCK
+#include "test_inject.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,7 +61,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_deinit); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_b1Silicon)
 
 #define PMIC_TEST_NEG_INIT() \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
@@ -75,7 +78,16 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_syncMode_nullIoRead); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_syncMode_nullIoWrite); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCriticalSectionStart); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCriticalSectionStop)
+    PLATFORM_RUN_TEST(test_neg_pmic_init_nullCriticalSectionStop); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noI2cAddrValid); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noCommHandleValid); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_validateHandle_nullCritSecStart); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_validateHandle_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_getPmicInfo_ioFailOn2ndRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_getPmicInfo_ioFailOn3rdRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_getPmicInfo_ioFailOn4thRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_getPmicInfo_ioFailOn5thRead); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_decipherA0_ioFailOnLockRead)
 
 /* Test: TC-PMIC-0010 */
 #define PMIC_TEST_INIT() \
@@ -93,7 +105,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCommHandle); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullFptrs); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
-    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidDrvInitStat)
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidDrvInitStat); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullIoWrite)
 
 /* Test: TC-PMIC-0011 */
 #define PMIC_TEST_CHECKHANDLE() \
@@ -136,6 +149,7 @@ void test_pos_pmic_deinit(void);
 void test_pos_pmic_init_withRetryCnt(void);
 void test_pos_pmic_init_withRetryInterval(void);
 void test_pos_pmic_init_withTimerWaitMs(void);
+void test_pos_pmic_init_b1Silicon(void);
 
 /* Negative tests */
 void test_neg_pmic_init_nullHandle(void);
@@ -161,12 +175,24 @@ void test_neg_pmic_checkHandle_nullCommHandle(void);
 void test_neg_pmic_checkHandle_nullFptrs(void);
 void test_neg_pmic_checkHandle_nullTimerWithRetry(void);
 void test_neg_pmic_checkHandle_invalidDrvInitStat(void);
+void test_neg_pmic_checkHandle_nullIoWrite(void);
 
 /* Coverage Tests */
 void test_neg_pmic_init_syncMode_nullIoRead(void);
 void test_neg_pmic_init_syncMode_nullIoWrite(void);
 void test_neg_pmic_init_nullCriticalSectionStart(void);
 void test_neg_pmic_init_nullCriticalSectionStop(void);
+
+/* Static branch coverage tests */
+void test_neg_pmic_init_noI2cAddrValid(void);
+void test_neg_pmic_init_noCommHandleValid(void);
+void test_neg_pmic_init_validateHandle_nullCritSecStart(void);
+void test_neg_pmic_init_validateHandle_nullCritSecStop(void);
+void test_neg_pmic_init_getPmicInfo_ioFailOn2ndRead(void);
+void test_neg_pmic_init_getPmicInfo_ioFailOn3rdRead(void);
+void test_neg_pmic_init_getPmicInfo_ioFailOn4thRead(void);
+void test_neg_pmic_init_getPmicInfo_ioFailOn5thRead(void);
+void test_neg_pmic_init_decipherA0_ioFailOnLockRead(void);
 
 #ifdef __cplusplus
 }

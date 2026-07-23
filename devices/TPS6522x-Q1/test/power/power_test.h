@@ -33,8 +33,6 @@
 #ifndef POWER_TEST_H
 #define POWER_TEST_H
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -59,7 +57,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_nullBuckCfg); \
     PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidResource)
+    PLATFORM_RUN_TEST(test_neg_power_getBuckCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_isBuckBelowMin); \
+    PLATFORM_RUN_TEST(test_neg_power_setBuckCfg_vsetAboveMaxBuck1)
 
 #define POWER_TEST_POS_SETGETBUCKCFG() \
     PLATFORM_RUN_TEST(test_pos_power_buck1_enableDisable); \
@@ -92,7 +92,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_nullLdoCfg); \
     PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidResource)
+    PLATFORM_RUN_TEST(test_neg_power_getLdoCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_invalidVsetLdo2)
 
 #define POWER_TEST_POS_SETGETLDOCFG() \
     PLATFORM_RUN_TEST(test_pos_power_ldo1_enableDisable); \
@@ -102,7 +103,11 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_ldo2_grpSel); \
     PLATFORM_RUN_TEST(test_pos_power_ldo_combinedConfig); \
     PLATFORM_RUN_TEST(test_pos_power_ldoValidParams_twoCondition_TT); \
-    PLATFORM_RUN_TEST(test_pos_power_ldoValidParams_twoCondition_FF)
+    PLATFORM_RUN_TEST(test_pos_power_ldoValidParams_twoCondition_FF); \
+    PLATFORM_RUN_TEST(test_pos_power_getLdoCfg_vmonEnOnlyValid); \
+    PLATFORM_RUN_TEST(test_pos_power_getLdoCfg_dischargeEnOnlyValid); \
+    PLATFORM_RUN_TEST(test_pos_power_setLdoCfg_vmonEnOnly); \
+    PLATFORM_RUN_TEST(test_pos_power_setLdoCfg_dischargeEnOnly)
 
 /* Test: TC-POWER-0015 */
 #define POWER_TEST_SETGETLDOCFG() \
@@ -125,7 +130,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_nullVccaVmonCfg); \
     PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidValidParams); \
-    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidResource)
+    PLATFORM_RUN_TEST(test_neg_power_getVccaVmonCfg_invalidResource); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetVccaVmonCfg_isVmonAboveMax); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_pgSetAboveMaxVmon2)
 
 #define POWER_TEST_POS_SETGETVCCAVMONCFG() \
     PLATFORM_RUN_TEST(test_pos_power_vcca_enableDisable); \
@@ -136,7 +143,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_vmon1_pgSet); \
     PLATFORM_RUN_TEST(test_pos_power_vmon2_pgSet); \
     PLATFORM_RUN_TEST(test_pos_power_vmon2_enableDisable); \
-    PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig)
+    PLATFORM_RUN_TEST(test_pos_power_vmon2_grpSel); \
+    PLATFORM_RUN_TEST(test_pos_power_vmon_combinedConfig); \
+    PLATFORM_RUN_TEST(test_pos_power_setVccaVmonCfg_vccaPgSetOnly)
 
 /* Test: TC-POWER-0016 */
 #define POWER_TEST_SETGETVCCAVMONCFG() \
@@ -251,6 +260,59 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
+
+/* ========================================================================== */
+
+#ifdef BUILD_MOCK
+#define POWER_TEST_DYNAMIC_ANALYSIS() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetThermalCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetSpreadSpectrumCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetVccaVmonCfg_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetGlobalVmonDegl_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetSpreadSpectrumCfg_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetRsrcStatus_ldoVmonReadFail)
+#else
+#define POWER_TEST_DYNAMIC_ANALYSIS()
+#endif
+
+/* ========================================================================== */
+/*       Static Helper Coverage Tests (BUILD_MOCK) — internal I/O failures    */
+/* ========================================================================== */
+
+#ifdef BUILD_MOCK
+#define POWER_TEST_STATIC_HELPER_COVERAGE() \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_ctrlReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_slewRateReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_vmonThrReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_slewRateReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_vsetReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_vmonThrReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_ctrlReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_voutReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_vmonThrReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetLdoCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_voutReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_vmonThrReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetLdoCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetVccaVmonCfg_pgWindowReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetVccaVmonCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetVccaVmonCfg_pgWindowReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetVccaVmonCfg_grpSelReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetVccaVmonCfg_vmonEnReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetVccaVmonCfg_pgLevelReadFailVmon1); \
+    PLATFORM_RUN_TEST(test_neg_power_setLdoCfg_vsetAboveMaxLdo2); \
+    PLATFORM_RUN_TEST(test_neg_power_setVccaVmonCfg_thrValidNoPgSet); \
+    PLATFORM_RUN_TEST(test_pos_power_setLdoCfg_vsetInRangeLdo1); \
+    PLATFORM_RUN_TEST(test_pos_power_setVccaVmonCfg_vmon1_thrAndPgSet)
+#else
+#define POWER_TEST_STATIC_HELPER_COVERAGE()
+#endif
+
+/* ========================================================================== */
 /*                          Aggregate Test Macros                             */
 /* ========================================================================== */
 
@@ -262,7 +324,9 @@ extern "C" {
     POWER_TEST_POS_SETGETTHERMALCFG(); \
     POWER_TEST_POS_SETGETSPREADSPECTRUMCFG(); \
     POWER_TEST_POS_GETRSRCSTATUS(); \
-    POWER_TEST_POS_PROPERTY()
+    POWER_TEST_POS_PROPERTY(); \
+    POWER_TEST_DYNAMIC_ANALYSIS(); \
+    POWER_TEST_STATIC_HELPER_COVERAGE()
 
 #define POWER_TEST_RUN_NEGATIVE() \
     POWER_TEST_NEG_SETGETBUCKCFG(); \
@@ -288,7 +352,9 @@ extern "C" {
     POWER_TEST_POS_SETGETSPREADSPECTRUMCFG(); \
     POWER_TEST_NEG_GETRSRCSTATUS(); \
     POWER_TEST_POS_GETRSRCSTATUS(); \
-    POWER_TEST_POS_PROPERTY()
+    POWER_TEST_POS_PROPERTY(); \
+    POWER_TEST_DYNAMIC_ANALYSIS(); \
+    POWER_TEST_STATIC_HELPER_COVERAGE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -380,6 +446,7 @@ void test_pos_power_vmon1_enableDisable(void);
 void test_pos_power_vmon2_pgSet(void);
 void test_pos_power_vmon1_pgSet(void);
 void test_pos_power_vmon2_enableDisable(void);
+void test_pos_power_vmon2_grpSel(void);
 void test_pos_power_globalVmonDegl_allValues(void);
 void test_pos_power_thermal_twarnLvl(void);
 void test_pos_power_thermal_tsdOrdLvl(void);
@@ -399,6 +466,54 @@ void test_pos_power_property_vmonThresholdEnumeration(void);
 /* MC/DC coverage test functions */
 void test_pos_power_ldoValidParams_twoCondition_TT(void);
 void test_pos_power_ldoValidParams_twoCondition_FF(void);
+
+/* Dynamic analysis / error injection test functions (BUILD_MOCK) */
+void test_neg_power_pwrGetBuckCfg_ioRxByteFail(void);
+void test_neg_power_pwrGetLdoCfg_ioRxByteFail(void);
+void test_neg_power_pwrGetThermalCfg_ioRxByteCSFail(void);
+void test_neg_power_pwrGetSpreadSpectrumCfg_ioRxByteCSFail(void);
+void test_neg_power_pwrGetVccaVmonCfg_ioRxByteFail(void);
+void test_neg_power_pwrSetGlobalVmonDegl_ioRxByteFail(void);
+void test_neg_power_pwrSetSpreadSpectrumCfg_ioRxByteFail(void);
+void test_neg_power_pwrGetRsrcStatus_ldoVmonReadFail(void);
+
+void test_neg_power_pwrSetBuckCfg_isBuckBelowMin(void);
+void test_neg_power_pwrSetVccaVmonCfg_isVmonAboveMax(void);
+void test_pos_power_getLdoCfg_vmonEnOnlyValid(void);
+void test_pos_power_getLdoCfg_dischargeEnOnlyValid(void);
+void test_neg_power_setBuckCfg_vsetAboveMaxBuck1(void);
+void test_pos_power_setLdoCfg_vmonEnOnly(void);
+void test_pos_power_setLdoCfg_dischargeEnOnly(void);
+void test_neg_power_setLdoCfg_invalidVsetLdo2(void);
+void test_neg_power_setVccaVmonCfg_pgSetAboveMaxVmon2(void);
+void test_pos_power_setVccaVmonCfg_vccaPgSetOnly(void);
+void test_neg_power_pwrSetVccaVmonCfg_vmonEnReadFail(void);
+void test_neg_power_pwrGetVccaVmonCfg_pgLevelReadFailVmon1(void);
+void test_neg_power_setLdoCfg_vsetAboveMaxLdo2(void);
+void test_neg_power_setVccaVmonCfg_thrValidNoPgSet(void);
+void test_pos_power_setLdoCfg_vsetInRangeLdo1(void);
+void test_pos_power_setVccaVmonCfg_vmon1_thrAndPgSet(void);
+
+/* Static helper coverage test functions (BUILD_MOCK) — internal I/O failures */
+void test_neg_power_pwrSetBuckCfg_ctrlReadFail(void);
+void test_neg_power_pwrSetBuckCfg_slewRateReadFail(void);
+void test_neg_power_pwrSetBuckCfg_vmonThrReadFail(void);
+void test_neg_power_pwrSetBuckCfg_grpSelReadFail(void);
+void test_neg_power_pwrGetBuckCfg_slewRateReadFail(void);
+void test_neg_power_pwrGetBuckCfg_vsetReadFail(void);
+void test_neg_power_pwrGetBuckCfg_vmonThrReadFail(void);
+void test_neg_power_pwrGetBuckCfg_grpSelReadFail(void);
+void test_neg_power_pwrSetLdoCfg_ctrlReadFail(void);
+void test_neg_power_pwrSetLdoCfg_voutReadFail(void);
+void test_neg_power_pwrSetLdoCfg_vmonThrReadFail(void);
+void test_neg_power_pwrSetLdoCfg_grpSelReadFail(void);
+void test_neg_power_pwrGetLdoCfg_voutReadFail(void);
+void test_neg_power_pwrGetLdoCfg_vmonThrReadFail(void);
+void test_neg_power_pwrGetLdoCfg_grpSelReadFail(void);
+void test_neg_power_pwrSetVccaVmonCfg_pgWindowReadFail(void);
+void test_neg_power_pwrSetVccaVmonCfg_grpSelReadFail(void);
+void test_neg_power_pwrGetVccaVmonCfg_pgWindowReadFail(void);
+void test_neg_power_pwrGetVccaVmonCfg_grpSelReadFail(void);
 void test_pos_power_getRsrcStatus_buck1Only(void);
 void test_pos_power_getRsrcStatus_buck2Only(void);
 void test_pos_power_getRsrcStatus_buck3Only(void);

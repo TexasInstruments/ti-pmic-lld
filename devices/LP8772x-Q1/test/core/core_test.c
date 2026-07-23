@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -46,6 +45,10 @@
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
@@ -357,6 +360,25 @@ void test_neg_core_setConfigCrc_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+void test_neg_core_setConfigCrc_ioTxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject I/O failure on first write to exercise the early-exit error path
+    int32_t status;
+    PmicMockDevice_t *mockDevice;
+
+    mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
 /* ========================================================================== */
 /*              LP8772x-Q1 Specific CRC Configuration Tests                   */
 /* ========================================================================== */
@@ -383,7 +405,6 @@ void test_pos_core_configCrcDisable_disable(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.crcEn == PMIC_DISABLE);
 }
-
 
 /* ========================================================================== */
 /*              LP8772x-Q1 Additional Error Handling Coverage Tests          */
@@ -553,6 +574,123 @@ void test_neg_core_configCrcCalculate_ioFailure(void)
     // Inject error on 3rd I/O operation (3rd iteration of CRC loop)
     // This covers pmic_core.c:337-338 (break on I/O failure)
     status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 3);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_core_configCrcValidate_pollExhaustion(void)
+{
+#ifdef BUILD_MOCK
+    // Exercise the poll-count exhaustion path in CORE_configCrcValidate
+    int32_t status;
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Call configCrcCalculate; poll loop exhausts without STATUS bit set, returns success
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+void test_neg_core_configCrcValidate_pollLoopback(void)
+{
+#ifdef BUILD_MOCK
+    // Inject I/O failure on the second poll iteration to exercise the loop-back path
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    // Ensure config CRC is disabled (required by CORE_configCrcValidate)
+    int32_t status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Skip 53 I/Os, fail the 54th to hit the second poll iteration
+    status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 53U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_core_CORE_performCrcSequence_clearCalcIoFailure(void)
+{
+#ifdef BUILD_MOCK
+    // Test coverage for pmic_core.c:294 (Branch gap)
+    // CORE_performCrcSequence(): when CONFIG_CRC_CALC is already high, the
+    // function first writes it low (line 291) before the "if (status ==
+    // PMIC_ST_SUCCESS)" gate at line 294. No existing test isolates a
+    // failure of that specific write. Force CONFIG_CRC_CALC high so line
+    // 291's Pmic_ioTxByte executes, then inject a mock failure on exactly
+    // that I/O call (the 52nd I/O op: 48 CRC-range reads + 2 CRC writes +
+    // 1 CORE_configCrcValidate read + this write) so status != SUCCESS
+    // going into the line 294 check, driving it to skip the re-enable
+    // write at line 295-296 and return the error untested until now.
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    const uint16_t CONFIG_CRC_CONFIG_REG = 0x60U; // CONFIG_CRC_CONFIG register address
+    const uint8_t CONFIG_CRC_CALC_SHIFT = 1U;     // CONFIG_CRC_CALC bit position
+
+    // Ensure config CRC is disabled (required by CORE_configCrcValidate)
+    int32_t status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Force CONFIG_CRC_CALC bit high so CORE_performCrcSequence takes the
+    // line 289-292 branch and issues the "clear CALC" write at line 291
+    testInject_setBits(CONFIG_CRC_CONFIG_REG, (1UL << CONFIG_CRC_CALC_SHIFT));
+
+    // Skip the first 51 I/Os (calculateCrc reads + CRC writes + validate
+    // read), then fail exactly the 52nd: the line 291 "clear CALC" write
+    status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 51U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Clean up injected bit
+    testInject_clearBits(CONFIG_CRC_CONFIG_REG, (1UL << CONFIG_CRC_CALC_SHIFT));
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_core_CORE_performCrcSequence_setCalcIoFailure(void)
+{
+#ifdef BUILD_MOCK
+    // Test coverage for pmic_core.c:299 (Branch gap)
+    // CORE_performCrcSequence(): the "if (status == PMIC_ST_SUCCESS)" gate
+    // at line 299 guards entry to the CONFIG_CRC_STATUS poll loop, and is
+    // reached right after the "set CALC high" write at line 296. No
+    // existing test isolates a failure of that specific write. With
+    // CONFIG_CRC_CALC left low (default, after disabling config CRC), the
+    // line 289 branch is skipped, so the write at line 296 becomes the
+    // 52nd I/O op (48 CRC-range reads + 2 CRC writes + 1
+    // CORE_configCrcValidate read). Failing exactly that call drives
+    // status != PMIC_ST_SUCCESS into the line 299 check, so the poll loop
+    // is skipped entirely and the function returns the error - the
+    // previously-untested false branch of line 299.
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    // Ensure config CRC is disabled (required by CORE_configCrcValidate),
+    // which also leaves CONFIG_CRC_CALC low so line 289 is false and the
+    // write at line 296 lands on I/O op #52
+    int32_t status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Skip the first 51 I/Os, then fail exactly the 52nd: the line 296
+    // "set CALC high" write that gates the line 299 poll-loop entry
+    status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 51U, 1U);
     PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
 
     status = Pmic_configCrcCalculate(&pmicHandle);

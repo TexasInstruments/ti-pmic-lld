@@ -33,8 +33,6 @@
 #ifndef IO_TEST_H
 #define IO_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -108,6 +106,8 @@ extern "C" {
 #define IO_TEST_NEG_IORXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_crcErrorExhaustsRetries); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullIoReadFptr); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullCommHandle0); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullRxBuffer); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_zeroRetryCntImmediateFail); \
     PLATFORM_RUN_TEST(test_neg_io_readWithCrcError)
@@ -164,7 +164,8 @@ extern "C" {
 
 #define IO_TEST_NEG_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullIoWrite)
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullCommHandle0)
 
 /* Test: TC-IO-0026 */
 #define IO_TEST_IOTXBYTE() \
@@ -256,6 +257,9 @@ void test_neg_io_ioGetCrcEnableState_nullIsEnabled(void);
 void test_neg_io_ioRxByte_CS_nullHandle(void);
 void test_neg_io_ioRxByte_CS_nullRxBuffer(void);
 void test_neg_io_ioRxByte_nullHandle(void);
+void test_neg_io_ioRxByte_nullIoReadFptr(void);
+void test_neg_io_ioRxByte_nullCommHandle0(void);
+void test_neg_io_ioTxByte_nullCommHandle0(void);
 void test_neg_io_ioRxByte_nullRxBuffer(void);
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void);
 void test_neg_io_ioSetCrcEnableState_nullHandle(void);

@@ -383,12 +383,12 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
         handle->crcEnable = PMIC_DISABLE;
         handle->configCrcEnable = PMIC_DISABLE;
         handle->commHandle0 = NULL;
-        handle->ioRead = (void *)0U;
-        handle->ioWrite = (void *)0U;
-        handle->criticalSectionStart = (void *)0U;
-        handle->criticalSectionStop = (void *)0U;
-        handle->irqResponseCallback = (void *)0U;
-        handle->timerWaitMs = (void *)0U;
+        handle->ioRead = NULL;
+        handle->ioWrite = NULL;
+        handle->criticalSectionStart = NULL;
+        handle->criticalSectionStop = NULL;
+        handle->irqResponseCallback = NULL;
+        handle->timerWaitMs = NULL;
     }
 
     return status;

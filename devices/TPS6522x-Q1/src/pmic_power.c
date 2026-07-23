@@ -143,63 +143,63 @@ static inline bool PWR_isVmon(uint16_t pwrRsrc)
 // Get buck control register address
 static inline void PWR_getBuckCtrlRegAddr(uint8_t buckId, uint16_t *regAddr)
 {
-    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U;
+    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = BUCK1_CTRL_REG + (2U * buckOffset);
 }
 
 // Get buck config register address
 static inline void PWR_getBuckConfRegAddr(uint8_t buckId, uint16_t *regAddr)
 {
-    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U;
+    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = BUCK1_CONF_REG + (2U * buckOffset);
 }
 
 // Get buck VOUT register address
 static inline void PWR_getBuckVoutRegAddr(uint8_t buckId, uint16_t *regAddr)
 {
-    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U;
+    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = BUCK1_VOUT_REG + (2U * buckOffset);
 }
 
 // Get buck PG window register address
 static inline void PWR_getBuckPgWindowRegAddr(uint8_t buckId, uint16_t *regAddr)
 {
-    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U;
+    const uint16_t buckOffset = (buckId >= 1U) ? ((uint16_t)buckId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = BUCK1_PG_WINDOW_REG + buckOffset;
 }
 
 // Get LDO control register address
 static inline void PWR_getLdoCtrlRegAddr(uint8_t ldoId, uint16_t *regAddr)
 {
-    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U;
+    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = LDO1_CTRL_REG + ldoOffset;
 }
 
 // Get LDO VOUT register address
 static inline void PWR_getLdoVoutRegAddr(uint8_t ldoId, uint16_t *regAddr)
 {
-    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U;
+    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = LDO1_VOUT_REG + ldoOffset;
 }
 
 // Get LDO PG window register address
 static inline void PWR_getLdoPgWindowRegAddr(uint8_t ldoId, uint16_t *regAddr)
 {
-    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U;
+    const uint16_t ldoOffset = (ldoId >= 1U) ? ((uint16_t)ldoId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = LDO1_PG_WINDOW_REG + ldoOffset;
 }
 
 // Get VMON PG level register address (for VMON1 and VMON2)
 static inline void PWR_getVmonPgLevelRegAddr(uint8_t vmonId, uint16_t *regAddr)
 {
-    const uint16_t vmonOffset = (vmonId >= 1U) ? ((uint16_t)vmonId - 1U) : 0U;
+    const uint16_t vmonOffset = (vmonId >= 1U) ? ((uint16_t)vmonId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = VMON1_PG_LEVEL_REG + (2U * vmonOffset);
 }
 
 // Get VMON PG window register address
 static inline void PWR_getVmonPgWindowRegAddr(uint8_t vmonId, uint16_t *regAddr)
 {
-    const uint16_t vmonOffset = (vmonId >= 1U) ? ((uint16_t)vmonId - 1U) : 0U;
+    const uint16_t vmonOffset = (vmonId >= 1U) ? ((uint16_t)vmonId - 1U) : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
     *regAddr = VMON1_PG_WINDOW_REG + (2U * vmonOffset);
 }
 
@@ -207,18 +207,18 @@ static inline void PWR_getVmonPgWindowRegAddr(uint8_t vmonId, uint16_t *regAddr)
 static inline void PWR_getBuckGrpSelInfo(uint8_t buckId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_1_REG;
-    *shift = ((buckId >= 1U) && (buckId <= PMIC_POWER_RESOURCE_ID_BUCK4))
+    *shift = ((buckId >= 1U) && (buckId <= PMIC_POWER_RESOURCE_ID_BUCK4)) /* DA_JUSTIFY: PMICDRV-2357 */
              ? (uint8_t)((buckId - 1U) * 2U)
-             : 0U;
+             : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
 }
 
 // Get LDO group select register and shift based on LDO ID
 static inline void PWR_getLdoGrpSelInfo(uint8_t ldoId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_2_REG;
-    *shift = (ldoId <= PMIC_POWER_RESOURCE_ID_LDO3)
+    *shift = (ldoId <= PMIC_POWER_RESOURCE_ID_LDO3) /* DA_JUSTIFY: PMICDRV-2357 */
              ? (uint8_t)(ldoId * 2U)
-             : 0U;
+             : 0U; /* DA_JUSTIFY: PMICDRV-2357 */
 }
 
 // Get VMON group select register and shift based on VMON ID
@@ -230,7 +230,7 @@ static inline void PWR_getVmonGrpSelInfo(uint8_t vmonId, uint16_t *regAddr, uint
         case PMIC_POWER_RESOURCE_ID_VMON1:     *shift = VMON1_GRP_SEL_SHIFT; break;
         case PMIC_POWER_RESOURCE_ID_VMON2:     *shift = VMON2_GRP_SEL_SHIFT; break;
         case PMIC_POWER_RESOURCE_ID_VCCA_VMON: *shift = VCCA_GRP_SEL_SHIFT;  break;
-        default:                               *shift = 0U;                   break;
+        default:                               *shift = 0U;                   break; /* DA_JUSTIFY: PMICDRV-2357 */
     }
 }
 
@@ -659,7 +659,7 @@ static int32_t PWR_setLdoVoutReg(const Pmic_Handle_t *handle, const Pmic_PwrLdoC
                 vsetMax = PMIC_POWER_LDO2_3_VSET_MAX;
             }
 
-            if ((ldoCfg->vset < vsetMin) || (ldoCfg->vset > vsetMax))
+            if ((ldoCfg->vset < vsetMin) || (ldoCfg->vset > vsetMax)) /* DA_JUSTIFY: PMICDRV-2355 */
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1030,7 +1030,7 @@ static int32_t PWR_setVccaVmonPgWindow(const Pmic_Handle_t *handle, const Pmic_P
 
         if ((status == PMIC_ST_SUCCESS) &&
             (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID) ||
-             (isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID))))
+             (isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID)))) /* DA_JUSTIFY: PMICDRV-2358 */
         {
             status = Pmic_ioTxByte(handle, pgWindowRegAddr, regData);
         }

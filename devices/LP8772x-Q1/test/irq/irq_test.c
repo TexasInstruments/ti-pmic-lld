@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -819,7 +818,6 @@ static bool irqTest_isNMI(uint8_t irqNum)
             return (bool)false;
     }
 }
-
 
 static int32_t irqTest_setGetMaskAll(bool shouldMask)
 {
@@ -2140,15 +2138,13 @@ void test_pos_irq_irqGetStatus_multiple_L2_same_category(void)
 #endif
 }
 
-
 /* ========================================================================== */
 /*           LP8772x-Q1 Tests for Uncovered Lines in pmic_irq.c              */
 /* ========================================================================== */
 
 void test_pos_irq_irqGetNextFlag_noFlagsFound(void)
 {
-    // Test coverage for line 737: Call Pmic_irqGetNextFlag with empty status
-    // When no flags are set, it should return PMIC_ST_ERR_INV_IRQ_NUM
+    // Call Pmic_irqGetNextFlag with empty status to verify PMIC_ST_WARN_NO_IRQ_REMAINING is returned
 
     Pmic_IrqStatus_t irqStat = {0U};
     uint8_t nextIrqNum = 0U;
@@ -2165,6 +2161,160 @@ void test_pos_irq_irqGetNextFlag_noFlagsFound(void)
     // This should return PMIC_ST_WARN_NO_IRQ_REMAINING (line 758)
     status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &nextIrqNum);
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+}
+
+void test_pos_irq_IRQ_getNextFlag_outerLoop_skipsEmptyElemZero(void)
+{
+#ifdef BUILD_MOCK
+    // Dynamic-analysis gap: pmic_irq.c line 760 (outer for-loop over intrStat[]).
+    // The untested branch side is intrStat[0]==0 && intrStat[1]!=0, which forces
+    // the outer loop to execute the "continue" at statIndex==0 (line 762/763) and
+    // then proceed to statIndex==1 where the flag actually lives.
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t irqNum = 0U;
+    uint32_t expectedBit = 0U;
+
+    // Clear all PMIC IRQ flags so intrStat starts fully zeroed
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject SEVERE_ERR_INT in INT_TOP (bit 6) -- this only sets bits that map
+    // into intrStat[1]; intrStat[0] remains 0 for this scenario.
+    regData = (1UL << 6U);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
+
+    // Inject TSD_IMM_NMI in INT_SEVERE_ERR (bit 0)
+    regData = (1UL << 0U);
+    testInject_setBits(0x4FU, regData);
+
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Confirm intrStat[0]==0 and intrStat[1]!=0 -- the exact precondition needed
+    // to exercise the untested side of the outer loop's bounds-check branch.
+    PLATFORM_ASSERT(irqStat.intrStat[0] == 0U);
+    PLATFORM_ASSERT(irqStat.intrStat[1] != 0U);
+
+    // IRQ_getNextFlag() must skip statIndex==0 via "continue" and find the flag
+    // at statIndex==1 on its next outer-loop iteration.
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    expectedBit = (uint32_t)(1UL << (PMIC_SE_TSD_IMM_NMI - 32U));
+    PLATFORM_ASSERT(irqNum == PMIC_SE_TSD_IMM_NMI);
+    (void)expectedBit;
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_pos_irq_IRQ_getNextFlag_innerLoop_scansElemOneBits(void)
+{
+#ifdef BUILD_MOCK
+    // Dynamic-analysis gap: pmic_irq.c line 767 (inner for-loop over bit positions).
+    // Same root cause as the L760 gap: with intrStat[0]==0 and intrStat[1]!=0, the
+    // inner bit-scanning loop is untested at statIndex==1 because prior tests only
+    // ever populated intrStat[0]. This drives the inner loop's bounds-check branch
+    // (bitPos < PMIC_NUM_BITS_IN_INTR_STAT) through several non-matching iterations
+    // on element 1 before it finds the set bit and clears/breaks.
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t irqNum = 0U;
+
+    // Clear all PMIC IRQ flags so intrStat starts fully zeroed
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject FSM_ERR_INT in INT_TOP (bit 7) -- maps only into intrStat[1]
+    regData = (1UL << 7U);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
+
+    // Inject FSM_IMM_SHUTDOWN_NMI in INT_FSM_ERR (bit 0). IRQ 56 -> bit 24 of
+    // intrStat[1], so the inner loop must iterate past bit positions 0..23
+    // (all non-matching) before it finds the set bit at position 24.
+    regData = (1UL << 0U);
+    testInject_setBits(TEST_REG_INT_FSM_ERR, regData);
+
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Confirm intrStat[0]==0 and intrStat[1]!=0
+    PLATFORM_ASSERT(irqStat.intrStat[0] == 0U);
+    PLATFORM_ASSERT(irqStat.intrStat[1] != 0U);
+
+    // IRQ_getNextFlag() must run the inner loop against intrStat[1] and locate
+    // the set bit, exercising the previously-untested side of the inner loop's
+    // bounds-check branch on a non-zero, non-index-0 element.
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == PMIC_FSM_IMM_SHUTDOWN_NMI);
+
+    // The bit should now be cleared out of intrStat[1]
+    uint32_t clearedBit = (uint32_t)(1UL << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
+    PLATFORM_ASSERT((irqStat.intrStat[1] & clearedBit) == 0U);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_pos_irq_IRQ_getNextFlag_foundFlagFalse_whenElemZeroSkipped(void)
+{
+#ifdef BUILD_MOCK
+    // Dynamic-analysis gap: pmic_irq.c line 779 ("if (foundFlag)").
+    // The untested (false) side of this branch was previously unreachable
+    // because all prior tests only ever populated intrStat[0], so element 0
+    // always contained the matching bit and foundFlag was true on the very
+    // first outer-loop iteration. By forcing intrStat[0]==0 and intrStat[1]!=0
+    // (via MODERATE_ERR/CONFIG_CRC_INT, a dispatch path distinct from the L760
+    // and L767 gap tests), statIndex==0 takes the "continue" at line 762/763
+    // and never reaches line 779 on that iteration; foundFlag is still false
+    // going into the statIndex==1 iteration, where the inner loop finds the
+    // bit and sets foundFlag true, hitting the true side. Combined with the
+    // L760/L767 tests (which cover the false-side "continue" itself), this
+    // confirms line 779 is reachable with foundFlag having remained false
+    // across a skipped element -- the previously-unjustified scenario.
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t irqNum = 0U;
+
+    // Clear all PMIC IRQ flags so intrStat starts fully zeroed
+    status = Pmic_irqClrAllFlags(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Inject MODERATE_ERR_INT in INT_TOP (bit 5) -- maps only into intrStat[1]
+    regData = (1UL << 5U);
+    testInject_setBits(TEST_REG_INT_TOP, regData);
+
+    // Inject CONFIG_CRC_INT in INT_MODERATE_ERR (bit 3)
+    regData = (1UL << 3U);
+    testInject_setBits(0x4EU, regData);
+
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Confirm intrStat[0]==0 and intrStat[1]!=0: element 0 is skipped entirely
+    // (continue fires before line 779 is reached for statIndex==0), and only
+    // element 1 carries a set bit.
+    PLATFORM_ASSERT(irqStat.intrStat[0] == 0U);
+    PLATFORM_ASSERT(irqStat.intrStat[1] != 0U);
+
+    // IRQ_getNextFlag() must skip statIndex==0 and resolve foundFlag==true only
+    // once it reaches statIndex==1, exercising the false-then-true evaluation
+    // path of "if (foundFlag)" across outer-loop iterations.
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(irqNum == PMIC_ME_CONFIG_CRC_INT);
+
+    // No flags should remain after retrieving the single set bit
+    status = Pmic_irqGetNextFlag(&pmicHandle, &irqStat, &irqNum);
+    PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 /* ========================================================================== */
@@ -2196,4 +2346,630 @@ void test_pos_irq_irqResponseCallback_nullHandle(void)
     g_irqCallbackInvoked = 0;
     Pmic_irqResponseCallback(NULL);
     PLATFORM_ASSERT(g_irqCallbackInvoked == 0);
+}
+
+/* ========================================================================== */
+// Positive Tests - Pmic_irqGetMask / Pmic_irqSetMasks
+/* ========================================================================== */
+
+void test_pos_irq_irqGetMask_zeroCount(void)
+{
+    Pmic_IrqMask_t arr[1U];
+    arr[0U].irqNum = PMIC_BUCK1_OV_INT;
+    arr[0U].mask = PMIC_IRQ_UNMASK;
+    int32_t status = Pmic_irqGetMask(&pmicHandle, 0U, arr);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetMasks_zeroCount(void)
+{
+    // Call irqSetMasks with numMasks=0 to exercise the zero-iteration path
+    Pmic_IrqMask_t dummy[1U];
+    dummy[0U].irqNum = PMIC_BUCK1_OV_INT;
+    dummy[0U].mask = PMIC_IRQ_UNMASK;
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, 0U, dummy);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetMasks_smallNumMasks(void)
+{
+    // Call irqSetMasks with numMasks=2 to exercise the early-break on totalProcessed == numMasks
+    Pmic_IrqMask_t masks[2U];
+    masks[0U].irqNum = PMIC_BUCK1_OV_INT;
+    masks[0U].mask = PMIC_IRQ_MASK;
+    masks[1U].irqNum = PMIC_BUCK1_UV_INT;
+    masks[1U].mask = PMIC_IRQ_MASK;
+
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, 2U, masks);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Restore masks to unmasked state
+    masks[0U].mask = PMIC_IRQ_UNMASK;
+    masks[1U].mask = PMIC_IRQ_UNMASK;
+    status = Pmic_irqSetMasks(&pmicHandle, 2U, masks);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_neg_irq_irqGetStatus_severe_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set ONLY SEVERE_ERR_INT_SHIFT (bit 6) in INT_TOP; overwrite (not OR) to avoid
+    // residual bits from earlier tests routing the injected failure elsewhere
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 6U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_moderate_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set MODERATE_ERR_INT_SHIFT (bit 5) in INT_TOP so IRQ_getStatModerate is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 5U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_misc_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set MISC_INT_SHIFT (bit 4) in INT_TOP so IRQ_getStatMisc is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 4U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_vccaVmon1_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set VCCA_INT_SHIFT (bit 2) in INT_TOP so IRQ_getStatVccaVmon1 is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 2U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_ls2Vmon2_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set LS2_VMON2_INT_SHIFT (bit 1) in INT_TOP so IRQ_getStatLs2Vmon2 is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 1U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set BUCK_LDO_LS1_VMON1_INT_SHIFT (bit 0) in INT_TOP so IRQ_getStatBucks is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set FSM_ERR_INT_SHIFT (bit 7) in INT_TOP so IRQ_getStatFSM is called
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_neg_irq_irqGetStatus_fsm_esmMcuIntFalse(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject only IMM_SHUTDOWN_NMI (bit 0) in INT_FSM_ERR — ESM_MCU_INT (bit 5) clear
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 0U));
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // FSM_IMM_SHUTDOWN_NMI (IRQ 56) should be set; ESM IRQs must NOT be set
+    uint32_t fsmBit = (1UL << (PMIC_FSM_IMM_SHUTDOWN_NMI - 32U));
+    PLATFORM_ASSERT((irqStat.intrStat[1] & fsmBit) != 0U);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_esmReadFail(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject ESM_MCU_INT (bit 5) in INT_FSM_ERR to trigger INT_ESM_REG read
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 5U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_commErrIntFalse(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject only WD_INT (bit 7) in INT_FSM_ERR — COMM_ERR_INT (bit 6) clear
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 7U));
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_commErrReadFail(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject COMM_ERR_INT (bit 6) in INT_FSM_ERR to trigger INT_COMM_ERR_REG read
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 6U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_wdIntFalse(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject only ESM_MCU_INT (bit 5) in INT_FSM_ERR — WD_INT (bit 7) clear
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 5U));
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_wdReadFail(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+
+    // Inject WD_INT (bit 7) in INT_FSM_ERR to trigger WD_ERR_STAT_REG read
+    testInject_setRegister(TEST_REG_INT_FSM_ERR, (1U << 7U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_neg_irq_irqGetStatus_bucks_buck12False(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+
+    // Inject only BUCK3_INT (bit 2) in INT_BUCK_LDO_LS1_VMON1 — BUCK1/BUCK2 bits clear
+    testInject_setRegister(0x47U, (1U << 2U));
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_buck12ReadFail(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+
+    testInject_setRegister(0x47U, (1U << 0U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_buck3LdoFalse(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+
+    // Inject only BUCK1_INT (bit 0) in INT_BUCK_LDO_LS1_VMON1 — BUCK3/LDO bits clear
+    testInject_setRegister(0x47U, (1U << 0U));
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    int32_t status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_buck3LdoReadFail(void)
+{
+#ifdef BUILD_MOCK
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+
+    // BUCK1/BUCK2 bits clear so buck12=false — INT_BUCK_12 is NOT read (op3 is INT_BUCK3_LDO)
+    testInject_setRegister(0x47U, (1U << 2U));
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Positive Tests - Pmic_irqSetMasks
+/* ========================================================================== */
+
+void test_pos_irq_irqSetMasks_anyMasksForReg_earlyExit(void)
+{
+    // Provide one mask so the first register iteration sets anyMasks=true and triggers early exit
+    Pmic_IrqMask_t mask;
+    mask.irqNum = PMIC_BUCK1_OV_INT;
+    mask.mask = PMIC_IRQ_MASK;
+
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, 1U, &mask);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Restore unmasked state
+    mask.mask = PMIC_IRQ_UNMASK;
+    status = Pmic_irqSetMasks(&pmicHandle, 1U, &mask);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_pos_irq_irqSetMasks_handleRecordsForReg_noMatch(void)
+{
+    // Mask targeting the last register entry, forcing iteration through all prior registers without a match
+    Pmic_IrqMask_t mask;
+    mask.irqNum = PMIC_ESM_MCU_PIN_INT;
+    mask.mask = PMIC_IRQ_MASK;
+
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, 1U, &mask);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Restore unmasked state
+    mask.mask = PMIC_IRQ_UNMASK;
+    status = Pmic_irqSetMasks(&pmicHandle, 1U, &mask);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_irqGetStatus
+/* ========================================================================== */
+
+void test_neg_irq_irqGetStatus_intTop_ioFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject I/O failure on INT_TOP read to exercise the early-return error path
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_intBuckLdoFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set BUCK_LDO_LS1_VMON1_INT bit and inject failure on L1 register read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_intBuck12Fail(void)
+{
+#ifdef BUILD_MOCK
+    // Set BUCK1_INT to enable buck12 path, inject failure on INT_BUCK_12 read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+    testInject_setRegister(0x47U, (1U << 0U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_bucks_intBuck3LdoFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set BUCK3_INT only (no BUCK1/2) to route into buck3Ldo path, inject failure on that read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 0U));
+    testInject_setRegister(0x47U, (1U << 2U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_fsm_commErrRegFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set COMM_ERR_INT in INT_FSM_ERR and inject failure on INT_COMM_ERR read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 7U));
+    testInject_setBits(TEST_REG_INT_FSM_ERR, (1U << 6U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_ls2Vmon2_regFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set LS2_VMON2_INT bit and inject failure on INT_LS2_VMON2 read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 1U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_misc_regFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set MISC_INT bit and inject failure on INT_MISC read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 4U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_moderate_regFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set MODERATE_ERR_INT bit and inject failure on INT_MODERATE_ERR read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 5U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_severe_regFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set SEVERE_ERR_INT bit and inject failure on INT_SEVERE_ERR read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 6U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqGetStatus_vccaVmon1_regFail(void)
+{
+#ifdef BUILD_MOCK
+    // Set VCCA_INT bit and inject failure on INT_VCCA read
+    testInject_setRegister(TEST_REG_INT_TOP, (1U << 2U));
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    Pmic_IrqStatus_t irqStat = {0U};
+    status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqSetMasks_handleRecordsForReg_ioFail(void)
+{
+    // Inject I/O failure on mask register read so status != SUCCESS on first register iteration
+#ifdef BUILD_MOCK
+    Pmic_IrqMask_t mask;
+    mask.irqNum = PMIC_BUCK1_OV_INT;
+    mask.mask = PMIC_IRQ_MASK;
+
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+
+    // Fail the first I/O call
+    int32_t status = PmicMock_InjectErrorAfterN(mockDev, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_irqSetMasks(&pmicHandle, 1U, &mask);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_irq_irqSetMasks_zeroMasks_noLoop(void)
+{
+    // Call irqSetMasks with numMasks=0 and a valid non-NULL mask pointer
+    Pmic_IrqMask_t dummy;
+    dummy.irqNum = PMIC_BUCK1_OV_INT;
+    dummy.mask = PMIC_IRQ_UNMASK;
+
+    int32_t status = Pmic_irqSetMasks(&pmicHandle, 0U, &dummy);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }

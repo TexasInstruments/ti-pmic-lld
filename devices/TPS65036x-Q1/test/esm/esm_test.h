@@ -76,7 +76,20 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_outOfBounds_errCntThr); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullEsmCfg); \
-    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams)
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay1_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay2_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmax_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmin_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmax_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmin_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_modeCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay1_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay2_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmax_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmin_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmax_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmin_ioRxByteCSFail)
 
 /* Test: TC-ESM-0026 */
 #define ESM_TEST_ESMSETGETCFG() \
@@ -90,7 +103,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_esm_esmStartStop); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStart); \
     PLATFORM_RUN_TEST(test_pos_esm_esmStop); \
-    PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState)
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetStartState); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_ioRxByteFail)
 
 #define ESM_TEST_NEG_ESMSTARTSTOP() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle); \
@@ -130,7 +145,8 @@ extern "C" {
 /*                         Test APIs: esmGetErrCnt                          */
 /* ======================================================================== */
 #define ESM_TEST_POS_ESMGETERRCNT() \
-    PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt)
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetErrCnt); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_ioRxByteCSFail)
 
 #define ESM_TEST_NEG_ESMGETERRCNT() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_nullHandle); \
@@ -184,6 +200,21 @@ void test_neg_esm_esmGetCfg_nullHandle(void);
 void test_neg_esm_esmGetCfg_nullEsmCfg(void);
 void test_neg_esm_esmGetCfg_invalidValidParams(void);
 
+/* Negative Tests - static ESM set/get I/O failures */
+void test_neg_esm_esmSetCfg_delay1_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_delay2_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_hmax_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_hmin_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_lmax_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_lmin_ioRxByteFail(void);
+void test_neg_esm_esmGetCfg_modeCfg_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_delay1_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_delay2_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_hmax_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_hmin_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_lmax_ioRxByteCSFail(void);
+void test_neg_esm_esmGetCfg_lmin_ioRxByteCSFail(void);
+
 /* Negative Tests - Pmic_esmSetStartState */
 void test_neg_esm_esmSetStartState_nullHandle(void);
 
@@ -230,6 +261,8 @@ void test_pos_esm_esmStartStop(void);
 void test_pos_esm_esmStart(void);
 void test_pos_esm_esmStop(void);
 void test_pos_esm_esmGetStartState(void);
+void test_neg_esm_esmGetStartState_ioRxByteCSFail(void);
+void test_neg_esm_esmSetStartState_ioRxByteFail(void);
 
 /* Positive Tests - ESM Status */
 void test_pos_esm_esmGetStatus(void);
@@ -237,6 +270,7 @@ void test_pos_esm_esmClrStatus(void);
 
 /* Positive Tests - ESM Error Count */
 void test_pos_esm_esmGetErrCnt(void);
+void test_neg_esm_esmGetErrCnt_ioRxByteCSFail(void);
 
 #ifdef __cplusplus
 }

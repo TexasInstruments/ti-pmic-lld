@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -41,6 +40,12 @@
 #include "test_constants.h"
 #include "pmic_io.h"
 #include "regmap/core.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_core.h"
+#include "pmic_mock_types.h"
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -345,7 +350,6 @@ void test_neg_pmic_pmicInit_nullIrqCallback(void)
 void test_neg_pmic_pmicInit_timerWaitNull(void)
 {
     // Pass NULL timerWaitMs with non-zero retryIntervalMs
-    // Covers line 449 in pmic.c
     Pmic_HandleCfg_t handleCfg = {0};
     Pmic_Handle_t handle = {0};
 
@@ -750,7 +754,36 @@ void test_pos_pmic_pmicCheckHandle_all_validations(void)
     status = Pmic_checkHandle(&testHandle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
-    // Test 8: Valid handle should pass all checks
+    // Test 9: NULL ioWrite in synchronous mode (isolated from ioRead)
+    testHandle.asyncEnable = PMIC_DISABLE;
+    testHandle.ioRead = &platform_rxByte;
+    testHandle.ioWrite = NULL;
+    status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Test 10: NULL asyncTxStart in async mode (isolated from asyncRxStart)
+    testHandle.ioWrite = &platform_txByte;
+    testHandle.asyncEnable = PMIC_ENABLE;
+    testHandle.asyncRxStart = &test_pmic_asyncRxStart;
+    testHandle.asyncTxStart = NULL;
+    testHandle.asyncRxAwait = &test_pmic_asyncRxAwait;
+    testHandle.asyncTxAwait = &test_pmic_asyncTxAwait;
+    status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Test 11: NULL asyncRxAwait in async mode (isolated from asyncRxStart/asyncTxStart)
+    testHandle.asyncTxStart = &test_pmic_asyncTxStart;
+    testHandle.asyncRxAwait = NULL;
+    status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Test 12: NULL asyncTxAwait in async mode (isolated from asyncRxStart/asyncTxStart/asyncRxAwait)
+    testHandle.asyncRxAwait = &test_pmic_asyncRxAwait;
+    testHandle.asyncTxAwait = NULL;
+    status = Pmic_checkHandle(&testHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+
+    // Test 13: Valid handle should pass all checks
     Pmic_HandleCfg_t handleCfg = {0};
     pmicInitTest_initHandleCfg(&handleCfg);
     status = Pmic_init(&pmicHandle, &handleCfg);
@@ -975,5 +1008,358 @@ void test_neg_pmic_pmicInit_timerWaitMsCallbackNull(void)
     handleCfg.timerWaitMs = NULL;
 
     int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/* ========================================================================== */
+// getPmicInfo / syncCrcEnableFromHw I/O failure tests (BUILD_MOCK)
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_init when getPmicInfo's 2nd ioRxByte_CS (NVM_CODE_1_REG) fails.
+ */
+void test_neg_pmic_pmicInit_getPmicInfo_secondReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Use I2C single (only commHandle0 needed)
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
+    handleCfg.irqResponseCallback = &platform_irqResponse;
+
+    // Skip read #0, fail read #1 (NVM_CODE_1_REG)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_init when getPmicInfo's 3rd ioRxByte_CS (NVM_CODE_2_REG) fails.
+ */
+void test_neg_pmic_pmicInit_getPmicInfo_thirdReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
+    handleCfg.irqResponseCallback = &platform_irqResponse;
+
+    // Skip reads #0 and #1, fail read #2 (NVM_CODE_2_REG)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_init when getPmicInfo's 4th ioRxByte_CS (MANUFACTURING_VER_REG) fails.
+ */
+void test_neg_pmic_pmicInit_getPmicInfo_fourthReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
+    handleCfg.irqResponseCallback = &platform_irqResponse;
+
+    // Skip reads #0, #1, #2; fail read #3 (MANUFACTURING_VER_REG)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 3U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_init when getPmicInfo's very first ioRxByte_CS (DEV_REV_REG) fails.
+ */
+void test_neg_pmic_pmicInit_getPmicInfo_firstReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Use I2C single (only commHandle0 needed)
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
+    handleCfg.irqResponseCallback = &platform_irqResponse;
+
+    // Fail read #0 (DEV_REV_REG) — the very first I/O op in getPmicInfo
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_init when syncCrcEnableFromHw's ioRxByte_CS (CONFIG_2_REG) fails.
+ */
+void test_neg_pmic_pmicInit_syncCrcEnableFromHw_fail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                            PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                            PMIC_CFG_INIT_IO_READ_VALID |
+                            PMIC_CFG_INIT_IO_WRITE_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                            PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID;
+    handleCfg.commMode = PMIC_INTF_I2C_SINGLE;
+    handleCfg.crcEnable0 = PMIC_DISABLE;
+    handleCfg.commHandle0 = platform_getCommHandle0();
+    handleCfg.ioRead = &platform_rxByte;
+    handleCfg.ioWrite = &platform_txByte;
+    handleCfg.criticalSectionStart = &platform_critSecStart;
+    handleCfg.criticalSectionStop = &platform_critSecStop;
+    handleCfg.irqResponseCallback = &platform_irqResponse;
+
+    // Skip all 4 getPmicInfo reads (#0-#3), fail CONFIG_2_REG read (#4)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 4U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// TPS6522x-Q1 Tests for validParams false-branch coverage
+/* ========================================================================== */
+
+void test_pos_pmic_pmicInit_noCommModeValidBit(void)
+{
+    // Omit COMM_MODE_VALID so commMode stays 0 (PMIC_INTF_I2C_SINGLE); init should succeed
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+
+    // Remove COMM_MODE_VALID bit — validateAndSetHandleCfg commMode block is skipped
+    handleCfg.validParams &= ~PMIC_CFG_INIT_COMM_MODE_VALID;
+
+    // handle->commMode stays 0 (PMIC_INTF_I2C_SINGLE); init should succeed
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    (void)Pmic_deinit(&handle);
+}
+
+void test_neg_pmic_pmicInit_noIoReadValidBit(void)
+{
+    // Omit PMIC_CFG_INIT_IO_READ_VALID so ioRead is never assigned; validatePmicHandle returns null-fptr
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+
+    // Remove IO_READ_VALID bit — ioRead is never assigned to the handle
+    handleCfg.validParams &= ~PMIC_CFG_INIT_IO_READ_VALID;
+
+    // validatePmicHandle checks (ioRead == NULL) -> PMIC_ST_ERR_NULL_FPTR
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_pmic_pmicInit_noCritSecStartValidBit(void)
+{
+    // Omit CRITICAL_SECTION_START_VALID so criticalSectionStart is never assigned; null-fptr expected
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+
+    // Remove CRITICAL_SECTION_START_VALID bit — criticalSectionStart block skipped
+    handleCfg.validParams &= ~PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID;
+
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+void test_neg_pmic_pmicInit_noCommHandle0ValidBit(void)
+{
+    // Omit COMM_HANDLE_0_VALID so commHandle0 is never assigned; validatePmicHandle returns null-param
+    Pmic_HandleCfg_t handleCfg = {0};
+    Pmic_Handle_t handle = {0};
+
+    pmicInitTest_initHandleCfg(&handleCfg);
+
+    // Remove COMM_HANDLE_0_VALID bit — commHandle0 is never assigned to the handle
+    handleCfg.validParams &= ~PMIC_CFG_INIT_COMM_HANDLE_0_VALID;
+
+    // validatePmicHandle checks (commHandle0 == NULL) -> PMIC_ST_ERR_NULL_PARAM
+    int32_t status = Pmic_init(&handle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Negative test for validatePmicHandle: dual I2C mode with commHandle1 NULL.
+ *
+ * Constructs a Pmic_Handle_t directly (bypassing Pmic_init) with:
+ *   - drvInitStat set to the magic value so Pmic_checkHandle passes the init-stat check
+ *   - commMode = PMIC_INTF_I2C_DUAL (triggers the commHandle1 NULL check)
+ *   - commHandle1 = NULL (the branch under test)
+ *
+ * This exercises the branch in validatePmicHandle (pmic.c lines 443-449):
+ *   if (handle->commMode == PMIC_INTF_I2C_DUAL)
+ *   {
+ *       if (handle->commHandle1 == NULL)
+ *           return PMIC_ST_ERR_NULL_PARAM;
+ *   }
+ *
+ * No I/O is performed — no mock injection needed.
+ */
+void test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle1(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDev = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDev != NULL);
+#endif
+
+    // Build a handle that passes the drvInitStat and commHandle0 checks but has
+    // commHandle1 == NULL while commMode is PMIC_INTF_I2C_DUAL.
+    Pmic_Handle_t handle = {0};
+    handle.drvInitStat      = TEST_PMIC_INIT_MAGIC;
+    handle.commMode         = PMIC_INTF_I2C_DUAL;
+    handle.commHandle0      = platform_getCommHandle0();
+    handle.commHandle1      = NULL;  // triggers the NULL check for dual-I2C
+    handle.criticalSectionStart = &platform_critSecStart;
+    handle.criticalSectionStop  = &platform_critSecStop;
+    handle.ioRead           = &platform_rxByte;
+    handle.ioWrite          = &platform_txByte;
+
+    int32_t status = Pmic_checkHandle(&handle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Negative test for validatePmicHandle: dual I2C mode with commHandle2 NULL.
+ *        used as a second sentinel to confirm commHandle1 NULL is the failing field.
+ *
+ * Constructs a Pmic_Handle_t directly with commMode = PMIC_INTF_I2C_DUAL,
+ * commHandle1 non-NULL but passes a different NULL handle field to confirm the
+ * check ordering in validatePmicHandle.  Specifically exercises the path where
+ * commHandle1 is valid but criticalSectionStart is NULL, reaching that branch
+ * after the dual-I2C commHandle1 check passes.
+ *
+ * This is a companion test to ensure full branch coverage of the dual-I2C
+ * commHandle1 == NULL branch: we need one test that reaches it (commHandle1 = NULL)
+ * and one that bypasses it (commHandle1 != NULL, later check fails).
+ */
+void test_neg_pmic_validatePmicHandle_dualI2cNullCommHandle2(void)
+{
+    // Construct a handle in dual I2C mode where commHandle1 is valid but
+    // criticalSectionStop is NULL — exercises the path PAST the commHandle1
+    // check, confirming the check is conditional on PMIC_INTF_I2C_DUAL only.
+    Pmic_Handle_t handle = {0};
+    handle.drvInitStat          = TEST_PMIC_INIT_MAGIC;
+    handle.commMode             = PMIC_INTF_I2C_DUAL;
+    handle.commHandle0          = platform_getCommHandle0();
+    handle.commHandle1          = platform_getCommHandle1();  // valid — not NULL
+    handle.criticalSectionStart = &platform_critSecStart;
+    handle.criticalSectionStop  = NULL;  // triggers NULL fptr check after commHandle1 passes
+    handle.ioRead               = &platform_rxByte;
+    handle.ioWrite              = &platform_txByte;
+
+    int32_t status = Pmic_checkHandle(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }

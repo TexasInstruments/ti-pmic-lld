@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -39,17 +38,31 @@
 #include "core_test.h"
 #include "test_constants.h"
 
+#ifdef BUILD_MOCK
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
+#include "test_inject.h"
+#endif
+
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
 /* Test organization macros are defined in core_test.h */
 
+// Register addresses differ between A0 and B0 silicon revisions
+#define CORE_TEST_INT_MISC_REG_A0 (0x50U)
+#define CORE_TEST_INT_MISC_REG    (0x53U)
+
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
 
 static Pmic_Handle_t pmicHandle = {0U};
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -99,7 +112,7 @@ void core_test(void *args)
     {
         testUtils_printSiRev(&pmicHandle);
 
-        /* Unlock PMIC registers for testing (except lock-specific tests) */
+        // Unlock PMIC registers for testing (except lock-specific tests)
         status = coreTest_unlockPmicRegs(&pmicHandle);
         if (status != PMIC_ST_SUCCESS)
         {
@@ -648,7 +661,7 @@ void test_pos_core_runABIST(void)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t intMiscRegAddr = (pmicHandle.isA0) ? 0x50U : 0x53U;
+    uint8_t intMiscRegAddr = (pmicHandle.isA0) ? CORE_TEST_INT_MISC_REG_A0 : CORE_TEST_INT_MISC_REG;
     const uint8_t maskMiscRegAddr = 0x38U, bufLen = 1U, abistDoneShift = 0U;
 
     // Clear all PMIC IRQs
@@ -866,6 +879,34 @@ void test_neg_core_setLpmCfg_zeroValidParams(void)
     lpmCfg.validParams = 0U;
     int32_t status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_core_setLpmEnableReg_ioRxByteFail(void)
+{
+    // Fail the Pmic_ioRxByte(handle, PMIC_LPM_CONF_REG, &regData) read inside
+    // CORE_setLpmEnableReg (static helper of Pmic_setLpmCfg). Using only
+    // PMIC_CFG_CORE_LPM_VMON_EN_VALID means CORE_setLpmDetectionCfg performs no
+    // I/O of its own, so this read is the very first I/O op in the call chain.
+    // When it fails, status != PMIC_ST_SUCCESS at line 276, so
+    // CORE_setLpmEnableBits() must be skipped and the failure propagated.
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_CoreLpmCfg_t lpmCfg = {
+        .validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID,
+        .vmonEn = PMIC_ENABLE
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_setLpmCfg(&pmicHandle, &lpmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 /* ========================================================================== */
@@ -1187,14 +1228,7 @@ void test_neg_core_getLpmCfg_zeroValidParams(void)
 }
 
 /**
- * @brief Test A0 silicon detection when registers are initially locked
- *
- * Covers pmic.c:288-289 (unlock), 310-311 (A0 detection), 317-318 (re-lock)
- *
- * The mock library supports A0 silicon emulation:
- * - A0: MASK_MODERATE_ERR (0x39) bit 5 (NRSTOUT_READBACK_MASK) is writable
- * - B0/B1: MASK_MODERATE_ERR (0x39) bit 5 is read-only
- * - platform_reinitWithSiliconLocked() keeps registers locked
+ * @brief Test A0 silicon detection when registers are initially locked.
  */
 void test_pos_core_init_A0_silicon_with_locked_registers(void)
 {
@@ -1202,11 +1236,11 @@ void test_pos_core_init_A0_silicon_with_locked_registers(void)
     Pmic_Handle_t testHandle = {0};
     int32_t status;
 
-    /* Step 1: Reinitialize mock as A0 silicon with registers LOCKED */
+    // Step 1: Reinitialize mock as A0 silicon with registers LOCKED
     status = platform_reinitWithSiliconLocked(PMIC_SILICON_REV_A0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 2: Initialize PMIC - triggers A0 detection with locked registers */
+    // Step 2: Initialize PMIC - triggers A0 detection with locked registers
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
@@ -1223,35 +1257,28 @@ void test_pos_core_init_A0_silicon_with_locked_registers(void)
     status = Pmic_init(&testHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 3: Verify A0 was detected (line 310-311) */
+    // Step 3: Verify A0 was detected (line 310-311)
     PLATFORM_ASSERT(testHandle.isA0 == (bool)true);
 
-    /* Step 4: Verify registers were re-locked (line 317-318) */
+    // Step 4: Verify registers were re-locked (line 317-318)
     uint8_t lockStatus = 0U;
     status = Pmic_ioRxByte(&testHandle, PMIC_REGISTER_LOCK_REG, &lockStatus);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((lockStatus & 0x01U) != 0U);  /* Bit 0 = locked */
+    PLATFORM_ASSERT((lockStatus & 0x01U) != 0U);  // Bit 0 = locked
 
-    /* Cleanup */
+    // Cleanup
     (void)Pmic_deinit(&testHandle);
 
-    /* Restore mock to default B0 silicon (unlocked) for other tests */
+    // Restore mock to default B0 silicon (unlocked) for other tests
     status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
 #endif
 }
 
 /**
- * @brief Test B0 silicon detection with locked registers
- *
- * Covers pmic.c:294 FALSE path: NRSTOUT_READBACK_MASK bit returns 0
- *
- * The mock library supports B0 silicon emulation:
- * - B0: MASK_MODERATE_ERR (0x39) bit 5 (NRSTOUT_READBACK_MASK) is read-only
- * - Write attempt returns 0 on read, indicating B0 silicon
- * - platform_reinitWithSiliconLocked() keeps registers locked
+ * @brief Test B0 silicon detection with locked registers.
  */
 void test_pos_core_init_B0_silicon_with_locked_registers(void)
 {
@@ -1259,11 +1286,11 @@ void test_pos_core_init_B0_silicon_with_locked_registers(void)
     Pmic_Handle_t testHandle = {0};
     int32_t status;
 
-    /* Step 1: Reinitialize mock as B0 silicon with registers LOCKED */
+    // Step 1: Reinitialize mock as B0 silicon with registers LOCKED
     status = platform_reinitWithSiliconLocked(PMIC_SILICON_REV_B0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 2: Initialize PMIC - triggers B0 detection with locked registers */
+    // Step 2: Initialize PMIC - triggers B0 detection with locked registers
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
@@ -1280,35 +1307,28 @@ void test_pos_core_init_B0_silicon_with_locked_registers(void)
     status = Pmic_init(&testHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 3: Verify B0 was detected (line 294 condition = FALSE) */
+    // Step 3: Verify B0 was detected (line 294 condition = FALSE)
     PLATFORM_ASSERT(testHandle.isA0 == (bool)false);
 
-    /* Step 4: Verify registers were re-locked */
+    // Step 4: Verify registers were re-locked
     uint8_t lockStatus = 0U;
     status = Pmic_ioRxByte(&testHandle, PMIC_REGISTER_LOCK_REG, &lockStatus);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT((lockStatus & 0x01U) != 0U);  /* Bit 0 = locked */
+    PLATFORM_ASSERT((lockStatus & 0x01U) != 0U);  // Bit 0 = locked
 
-    /* Cleanup */
+    // Cleanup
     (void)Pmic_deinit(&testHandle);
 
-    /* Restore mock to default B0 silicon (unlocked) for other tests */
+    // Restore mock to default B0 silicon (unlocked) for other tests
     status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
 #endif
 }
 
 /**
- * @brief Test B0 silicon detection with unlocked registers
- *
- * Covers pmic.c:294 FALSE path without lock/unlock operations
- *
- * The mock library supports B0 silicon emulation:
- * - B0: MASK_MODERATE_ERR (0x39) bit 5 (NRSTOUT_READBACK_MASK) is read-only
- * - Write attempt returns 0 on read, indicating B0 silicon
- * - platform_reinitWithSilicon() leaves registers unlocked
+ * @brief Test B0 silicon detection with unlocked registers.
  */
 void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
 {
@@ -1316,11 +1336,11 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
     Pmic_Handle_t testHandle = {0};
     int32_t status;
 
-    /* Step 1: Reinitialize mock as B0 silicon (registers unlocked) */
+    // Step 1: Reinitialize mock as B0 silicon (registers unlocked)
     status = platform_reinitWithSilicon(PMIC_SILICON_REV_B0);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 2: Initialize PMIC - triggers B0 detection */
+    // Step 2: Initialize PMIC - triggers B0 detection
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_CFG_INIT_I2C_ADDR0_VALID | PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID | PMIC_CFG_INIT_IO_WRITE_VALID |
@@ -1337,13 +1357,13 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
     status = Pmic_init(&testHandle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Step 3: Verify B0 was detected (line 294 condition = FALSE) */
+    // Step 3: Verify B0 was detected (line 294 condition = FALSE)
     PLATFORM_ASSERT(testHandle.isA0 == (bool)false);
 
-    /* Cleanup */
+    // Cleanup
     (void)Pmic_deinit(&testHandle);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1437,6 +1457,48 @@ void test_neg_core_getConfigCrcStatus_nullStatus(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+/**
+ * @brief Test Pmic_getConfigCrcStatus() detects error via CONFIG_CRC_CONFIG's CRC_STATUS bit.
+ */
+void test_pos_core_getConfigCrcStatus_configCrcStatusBitSet(void)
+{
+#ifdef BUILD_MOCK
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    testInject_setBits(PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_STATUS_MASK);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.errorDetected == (bool)true);
+
+    testInject_clearBits(PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_STATUS_MASK);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_getConfigCrcStatus() detects error via STAT_MODERATE_ERR's CRC_STAT bit.
+ */
+void test_pos_core_getConfigCrcStatus_statModErrCrcStatBitSet(void)
+{
+#ifdef BUILD_MOCK
+    Pmic_ConfigCrcStat_t configCrcStat = {0U};
+    int32_t status;
+
+    testInject_setBits(PMIC_STAT_MODERATE_ERR_REG, PMIC_CONFIG_CRC_STAT_MASK);
+
+    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(configCrcStat.errorDetected == (bool)true);
+
+    testInject_clearBits(PMIC_STAT_MODERATE_ERR_REG, PMIC_CONFIG_CRC_STAT_MASK);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
 void test_pos_core_configCrcCalculate_calculate(void)
 {
     int32_t status = Pmic_configCrcCalculate(&pmicHandle);
@@ -1476,24 +1538,24 @@ void test_pos_core_setConfigCrc_writeValue(void)
     uint16_t testValue = 0xA55AU;
     int32_t status;
 
-    /* Save original stored CRC from CONFIG_CRC_REG_1/2 (0x4D/0x4E) */
+    // Save original stored CRC from CONFIG_CRC_REG_1/2 (0x4D/0x4E)
     status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_1_REG, &origLsb);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_2_REG, &origMsb);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Write test value */
+    // Write test value
     status = Pmic_setConfigCrc(&pmicHandle, testValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back directly from CONFIG_CRC_REG_1/2 and verify */
+    // Read back directly from CONFIG_CRC_REG_1/2 and verify
     status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_1_REG, &readLsb);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_2_REG, &readMsb);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((uint16_t)((uint16_t)((uint16_t)readMsb << 8U) | readLsb) == testValue);
 
-    /* Restore original stored CRC */
+    // Restore original stored CRC
     status = Pmic_setConfigCrc(&pmicHandle, (uint16_t)((uint16_t)((uint16_t)origMsb << 8U) | origLsb));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
@@ -1502,4 +1564,205 @@ void test_neg_core_setConfigCrc_nullHandle(void)
 {
     int32_t status = Pmic_setConfigCrc(NULL, 0xA55AU);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+void test_pos_core_configCrcEnable_enableOnly(void)
+{
+    // Call Pmic_configCrcEnable() with PMIC_CFG_CRC_ENABLE_ONLY (non-recalculate path)
+    int32_t status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+void test_neg_core_getABISTStat_ioRxByteCSFail(void)
+{
+    // after Pmic_ioRxByte_CS(handle, PMIC_STAT_MISC_REG, &regData) in Pmic_getABISTStat
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    bool abistStat = (bool)false;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_getABISTStat(&pmicHandle, &abistStat);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_core_getLpmCfg_ioRxByteCSFail(void)
+{
+    // after Pmic_ioRxByte_CS(handle, PMIC_LPM_CONF_REG, &regData) in Pmic_getLpmCfg
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_CoreLpmCfg_t lpmCfg = {
+        .validParams = PMIC_CFG_CORE_LPM_VMON_EN_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_getLpmCfg(&pmicHandle, &lpmCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_calculateCrc() IO failure mid-loop.
+ */
+void test_neg_core_configCrcCalculate_ioFailInLoop(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Fail the very first I/O op (first register read in CORE_calculateCrc loop)
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() IO failure on initial CONFIG_CRC_CONFIG read.
+ */
+void test_neg_core_configCrcValidate_ioFailOnConfigRead(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip 59 I/O ops (57 CORE_calculateCrc reads + 2 CRC writes), fail #60
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 59U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() returns NOT_SUPPORTED when CRC is already enabled.
+ */
+void test_neg_core_configCrcValidate_crcAlreadyEnabled(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+
+    // Pre-set CRC_EN bit (bit 0) in CONFIG_CRC_CONFIG_REG (0x64)
+    testInject_setBits(PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_EN_MASK);
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
+
+    // Clear CRC_EN so it doesn't leak into subsequent tests
+    testInject_clearBits(PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_EN_MASK);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() IO failure on CRC_CALC assert write.
+ */
+void test_neg_core_configCrcValidate_ioFailOnCalcAssert(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip 60 I/O ops (57 reads + 2 writes + 1 read), fail on #61 (assert CRC_CALC write)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 60U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() IO failure on read-back after CRC_CALC assert.
+ */
+void test_neg_core_configCrcValidate_ioFailOnReadback(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip 61 ops (57r+2w+1r+1w), fail on #62 (read-back after CRC_CALC assert)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 61U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() IO failure on CRC_CALC clear write.
+ */
+void test_neg_core_configCrcValidate_ioFailOnCalcClear(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip 62 ops (57r+2w+1r+1w+1r), fail on #63 (clear CRC_CALC write)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 62U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test CORE_configCrcValidate() returns CRC error when STATUS bit set in read-back.
+ */
+void test_neg_core_configCrcValidate_crcStatusError(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+
+    // Pre-set CRC_STATUS bit (bit 2) in CONFIG_CRC_CONFIG_REG (0x64).
+    // The assert-CRC_CALC write at I/O #61 will set bit 1 but not clear bit 2,
+    // so the read-back returns CRC_STATUS=1, triggering the error branch.
+    testInject_setBits(PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_STATUS_MASK);
+    status = Pmic_configCrcCalculate(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_CONFIG_REG_CRC);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
 }

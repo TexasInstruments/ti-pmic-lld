@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef ESM_TEST_H
 #define ESM_TEST_H
 
@@ -43,7 +42,9 @@
 /*             Test APIs: esmSetEnableState, esmGetEnableState              */
 /* ======================================================================== */
 #define ESM_TEST_POS_SETENABLESTATE() \
-    PLATFORM_RUN_TEST(test_pos_esm_setGetEnableState)
+    PLATFORM_RUN_TEST(test_pos_esm_setGetEnableState); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetEnableState_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetEnableState_ioRxByteFail)
 
 #define ESM_TEST_NEG_SETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_esm_setEnableState_nullHandle); \
@@ -59,7 +60,9 @@
 /*              Test APIs: esmSetStartState, esmGetStartState               */
 /* ======================================================================== */
 #define ESM_TEST_POS_SETSTARTSTATE() \
-    PLATFORM_RUN_TEST(test_pos_esm_setGetStartState)
+    PLATFORM_RUN_TEST(test_pos_esm_setGetStartState); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetStartState_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_ioRxByteFail)
 
 #define ESM_TEST_NEG_SETSTARTSTATE() \
     PLATFORM_RUN_TEST(test_neg_esm_setStartState_nullHandle); \
@@ -86,7 +89,9 @@
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_clrEnDrvOnFailInt); \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_combined); \
     PLATFORM_RUN_TEST(test_pos_esm_setCfg_pwmMode); \
-    PLATFORM_RUN_TEST(test_pos_esm_getCfg_readback)
+    PLATFORM_RUN_TEST(test_pos_esm_getCfg_readback); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_ioTxByteFail)
 
 #define ESM_TEST_NEG_SETCFG() \
     PLATFORM_RUN_TEST(test_neg_esm_setCfg_nullHandle); \
@@ -104,10 +109,38 @@
     ESM_TEST_NEG_SETCFG()
 
 /* ======================================================================== */
+/*                    Negative Test APIs: esmGetCfg (read failures)         */
+/* ======================================================================== */
+#define ESM_TEST_NEG_ESMGETCFG() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_modeCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_secondReadFail)
+
+/* ========================================================================== */
+/*   Static Helper Coverage Tests (BUILD_MOCK) — internal I/O failures        */
+/* ========================================================================== */
+
+#ifdef BUILD_MOCK
+#define ESM_TEST_STATIC_HELPER_COVERAGE() \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay2ReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmaxReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hminReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmaxReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lminReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay2ReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmaxReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hminReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmaxReadFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lminReadFail)
+#else
+#define ESM_TEST_STATIC_HELPER_COVERAGE()
+#endif
+
+/* ======================================================================== */
 /*                         Test APIs: esmGetErrCnt                          */
 /* ======================================================================== */
 #define ESM_TEST_POS_GETERRCNT() \
-    PLATFORM_RUN_TEST(test_pos_esm_getErrCnt)
+    PLATFORM_RUN_TEST(test_pos_esm_getErrCnt); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetErrCnt_ioRxByteCSFail)
 
 #define ESM_TEST_NEG_GETERRCNT() \
     PLATFORM_RUN_TEST(test_neg_esm_getErrCnt_nullHandle); \
@@ -132,20 +165,24 @@
     ESM_TEST_POS_SETSTARTSTATE(); \
     ESM_TEST_POS_SETCFG(); \
     ESM_TEST_POS_GETERRCNT(); \
-    ESM_TEST_INTEGRATION()
+    ESM_TEST_INTEGRATION(); \
+    ESM_TEST_STATIC_HELPER_COVERAGE()
 
 #define ESM_TEST_RUN_NEGATIVE() \
     ESM_TEST_NEG_SETENABLESTATE(); \
     ESM_TEST_NEG_SETSTARTSTATE(); \
     ESM_TEST_NEG_SETCFG(); \
+    ESM_TEST_NEG_ESMGETCFG(); \
     ESM_TEST_NEG_GETERRCNT()
 
 #define ESM_TEST_RUN_ALL() \
     ESM_TEST_SETENABLESTATE(); \
     ESM_TEST_SETSTARTSTATE(); \
     ESM_TEST_SETCFG(); \
+    ESM_TEST_NEG_ESMGETCFG(); \
     ESM_TEST_GETERRCNT(); \
-    ESM_TEST_INTEGRATION()
+    ESM_TEST_INTEGRATION(); \
+    ESM_TEST_STATIC_HELPER_COVERAGE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -193,5 +230,30 @@ void test_pos_esm_setCfg_combined(void);
 void test_pos_esm_setCfg_pwmMode(void);
 void test_pos_esm_completeSequence(void);
 void test_pos_esm_getCfg_readback(void);
+
+/* Negative test functions (read fail variants) */
+void test_neg_esm_esmGetCfg_modeCfgReadFail(void);
+void test_neg_esm_esmGetCfg_secondReadFail(void);
+
+/* Dynamic analysis / error injection test functions */
+void test_neg_esm_esmGetEnableState_ioRxByteCSFail(void);
+void test_neg_esm_esmGetErrCnt_ioRxByteCSFail(void);
+void test_neg_esm_esmGetStartState_ioRxByteCSFail(void);
+void test_neg_esm_esmSetEnableState_ioRxByteFail(void);
+void test_neg_esm_esmSetStartState_ioRxByteFail(void);
+void test_neg_esm_esmGetCfg_ioRxByteFail(void);
+void test_neg_esm_esmSetCfg_ioTxByteFail(void);
+
+/* Static helper coverage test functions (BUILD_MOCK) — internal I/O failures */
+void test_neg_esm_esmSetCfg_delay2ReadFail(void);
+void test_neg_esm_esmSetCfg_hmaxReadFail(void);
+void test_neg_esm_esmSetCfg_hminReadFail(void);
+void test_neg_esm_esmSetCfg_lmaxReadFail(void);
+void test_neg_esm_esmSetCfg_lminReadFail(void);
+void test_neg_esm_esmGetCfg_delay2ReadFail(void);
+void test_neg_esm_esmGetCfg_hmaxReadFail(void);
+void test_neg_esm_esmGetCfg_hminReadFail(void);
+void test_neg_esm_esmGetCfg_lmaxReadFail(void);
+void test_neg_esm_esmGetCfg_lminReadFail(void);
 
 #endif /* ESM_TEST_H */

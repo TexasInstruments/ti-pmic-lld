@@ -1786,6 +1786,26 @@ void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void)
 }
 
 /* ========================================================================== */
+// statusCodeCheck Coverage Tests
+/* ========================================================================== */
+
+void test_neg_common_statusCodeCheck_successTypeNonZeroId(void)
+{
+    // Pass a SUCCESS-type status code with non-zero ID to trigger the invalid ID error path
+    Pmic_Handle_t handle = {0};
+    Pmic_Diagnostic_t diag = {0};
+
+    handle.criticalSectionStart = testCritSecStart;
+    handle.criticalSectionStop = testCritSecStop;
+
+    diag.validParams = PMIC_COMMON_DIAGNOSTIC_CNT_VALID;
+    diag.code = PMIC_STATUS(PMIC_ST_TYPE_SUCCESS, 1U);
+
+    int32_t status = Pmic_getDiagnostic(&handle, &diag);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_STATUS_ID);
+}
+
+/* ========================================================================== */
 /*                        Test Suite Entry Point                              */
 /* ========================================================================== */
 

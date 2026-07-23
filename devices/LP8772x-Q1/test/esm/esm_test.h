@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef ESM_TEST_H
 #define ESM_TEST_H
 
@@ -82,9 +81,15 @@
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cascadeFailure_delayToHmax); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cascadeFailure_modeToDelay); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay1ReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay2OnlyReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay2ReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hminOnlyReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hminReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lminOnlyReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lminReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_modeCfgReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullEsmCfg); \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullHandle)
@@ -191,11 +196,17 @@
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cascadeFailure_delayToHmax); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cascadeFailure_hmaxToLmax); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay1ReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay1WriteFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_delay2ReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hmaxWriteFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_hminReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidErrCntThr); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidMode); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmaxReadFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lmaxWriteFailure); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_lminReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_modeCfgReadFailure); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullEsmCfg); \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle)
@@ -366,8 +377,11 @@ void test_neg_esm_esmGetCfg_nullHandle(void);
 void test_neg_esm_esmGetCfg_cascadeFailure_delayToHmax(void);
 void test_neg_esm_esmGetCfg_cascadeFailure_modeToDelay(void);
 void test_neg_esm_esmGetCfg_delay1ReadFailure(void);
+void test_neg_esm_esmGetCfg_delay2OnlyReadFailure(void);
 void test_neg_esm_esmGetCfg_hmaxReadFailure(void);
+void test_neg_esm_esmGetCfg_hminOnlyReadFailure(void);
 void test_neg_esm_esmGetCfg_lmaxReadFailure(void);
+void test_neg_esm_esmGetCfg_lminOnlyReadFailure(void);
 void test_neg_esm_esmGetCfg_modeCfgReadFailure(void);
 
 /* ========================================================================== */
@@ -432,8 +446,14 @@ void test_neg_esm_esmSetCfg_nullHandle(void);
 void test_neg_esm_esmSetCfg_cascadeFailure_delayToHmax(void);
 void test_neg_esm_esmSetCfg_cascadeFailure_hmaxToLmax(void);
 void test_neg_esm_esmSetCfg_delay1ReadFailure(void);
+void test_neg_esm_esmSetCfg_delay1WriteFailure(void);
+void test_neg_esm_esmSetCfg_delay2ReadFailure(void);
 void test_neg_esm_esmSetCfg_hmaxReadFailure(void);
+void test_neg_esm_esmSetCfg_hmaxWriteFailure(void);
+void test_neg_esm_esmSetCfg_hminReadFailure(void);
 void test_neg_esm_esmSetCfg_lmaxReadFailure(void);
+void test_neg_esm_esmSetCfg_lmaxWriteFailure(void);
+void test_neg_esm_esmSetCfg_lminReadFailure(void);
 void test_neg_esm_esmSetCfg_modeCfgReadFailure(void);
 
 /* ========================================================================== */
@@ -465,6 +485,5 @@ void test_neg_esm_esmStop_nullHandle(void);
 /* ========================================================================== */
 void test_pos_esm_integration_completeConfigurationSequence(void);
 void test_pos_esm_integration_enableConfigureStartSequence(void);
-
 
 #endif /* ESM_TEST_H */

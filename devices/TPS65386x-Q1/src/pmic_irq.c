@@ -571,7 +571,7 @@ static inline void IRQ_setIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
 {
     const uint32_t mask = ((uint32_t)1UL << (irqNum % PMIC_NUM_BITS_IN_INTR_ELEM));
 
-    if (irqNum < (uint32_t)PMIC_IRQ_NUM)
+    if (irqNum < (uint32_t)PMIC_IRQ_NUM) /* DA_JUSTIFY: PMICDRV-2357 */
     {
         // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
         // At an index, the IRQ is stored at its corresponding bit
@@ -584,7 +584,7 @@ static inline void IRQ_clrIntrStat(Pmic_IrqStatus_t *irqStat, uint32_t irqNum)
 {
     const uint32_t mask = ((uint32_t)1UL << (irqNum % PMIC_NUM_BITS_IN_INTR_ELEM));
 
-    if (irqNum < (uint32_t)PMIC_IRQ_NUM)
+    if (irqNum < (uint32_t)PMIC_IRQ_NUM) /* DA_JUSTIFY: PMICDRV-2357 */
     {
         irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_ELEM] &= ~mask;
     }
@@ -595,14 +595,14 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
     bool foundFlag = (bool)false;
 
     // For each element in struct member intrStat of irqStat...
-    for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) {
+    for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) { /* DA_JUSTIFY: PMICDRV-2357 */
         // If current element has no IRQ statuses set, move onto next element
         if (irqStat->intrStat[statIndex] == 0U) {
             continue;
         }
 
         // For each bit in the element...
-        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_ELEM; bitPos++) {
+        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_ELEM; bitPos++) { /* DA_JUSTIFY: PMICDRV-2357 */
             // If the bit is set...
             const uint32_t mask = (uint32_t)(1UL << bitPos);
             if ((irqStat->intrStat[statIndex] & mask) != 0U) {
@@ -613,10 +613,10 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
             }
         }
 
-        if (foundFlag) {
+        if (foundFlag) { /* DA_JUSTIFY: PMICDRV-2357 */
             break;
         }
-    } /* LCOV_EXCL_LINE */
+    }
 
     // Return the corresponding IRQ number
     return (bitPos + (PMIC_NUM_BITS_IN_INTR_ELEM * statIndex));
@@ -629,17 +629,15 @@ static int32_t IRQ_setMask(const Pmic_Handle_t *handle, uint8_t irqNum, bool sho
     uint8_t maskShift = 0U;
 
     // Check for invalid IRQ number
-    // LCOV_EXCL_START - public API validates first
-    if (irqNum > PMIC_IRQ_MAX) {
-        status = PMIC_ST_ERR_INV_PARAM;
+    if (irqNum > PMIC_IRQ_MAX) { /* DA_JUSTIFY: PMICDRV-2357 */
+        status = PMIC_ST_ERR_INV_PARAM; /* DA_JUSTIFY: PMICDRV-2357 */
     } else {
         maskReg = pmicIRQs[irqNum].maskReg;
         maskShift = pmicIRQs[irqNum].maskShift;
     }
-    // LCOV_EXCL_STOP
 
     // Check whether IRQ is maskable
-    if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
+    if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) { /* DA_JUSTIFY: PMICDRV-2357 */
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -667,18 +665,16 @@ static int32_t IRQ_setConfig(const Pmic_Handle_t *handle, uint8_t irqNum, uint8_
     uint8_t configMask = 0U;
 
     // Check for invalid IRQ number
-    // LCOV_EXCL_START - public API validates first
-    if (irqNum > PMIC_IRQ_MAX) {
-        status = PMIC_ST_ERR_INV_PARAM;
+    if (irqNum > PMIC_IRQ_MAX) { /* DA_JUSTIFY: PMICDRV-2357 */
+        status = PMIC_ST_ERR_INV_PARAM; /* DA_JUSTIFY: PMICDRV-2357 */
     } else {
         configReg = pmicIRQs[irqNum].confReg;
         configShift = pmicIRQs[irqNum].confShift;
         configMask = pmicIRQs[irqNum].confMask;
     }
-    // LCOV_EXCL_STOP
 
     // Check whether IRQ is configurable
-    if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].isConfigurable == PMIC_IRQ_NON_CONFIGURABLE)) {
+    if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].isConfigurable == PMIC_IRQ_NON_CONFIGURABLE)) { /* DA_JUSTIFY: PMICDRV-2357 */
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
@@ -708,7 +704,7 @@ static inline int32_t IRQ_checkConfigParam(const Pmic_IrqCfg_t *irqCfg)
         status = PMIC_ST_ERR_INV_PARAM;
     }
     // Check whether irqCfg->config is valid for irqNum>=PMIC_COMP1P_UV_ERR_INT && irqNum<=PMIC_COMP2N_OV_ERR_INT
-    else if ((irqCfg->irqNum >= PMIC_COMP1P_UV_ERR_INT) && (irqCfg->irqNum <= PMIC_COMP2N_OV_ERR_INT) &&
+    else if ((irqCfg->irqNum >= PMIC_COMP1P_UV_ERR_INT) && (irqCfg->irqNum <= PMIC_COMP2N_OV_ERR_INT) && /* DA_JUSTIFY: PMICDRV-2357 */
             (irqCfg->config > PMIC_IRQ_CONFIG2_MAX)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -799,11 +795,10 @@ static int32_t IRQ_handleRecordsForRegMask(const Pmic_Handle_t *handle,
     }
 
     if ((status == PMIC_ST_SUCCESS) && anyMasks) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_NUM) && (i < numCfgs); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_NUM) && (i < numCfgs); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             const uint8_t irqNum = cfgs[i].irqNum;
             const Pmic_IrqInfo_t *pIrq = &pmicIRQs[irqNum];
             const uint8_t userMask = (uint8_t)(1UL << pIrq->maskShift);
-
             // If the current mask setting isn't targeted at the register we are
             // currently building, skip it
             if (regAddr != pIrq->maskReg) {
@@ -822,7 +817,7 @@ static int32_t IRQ_handleRecordsForRegMask(const Pmic_Handle_t *handle,
             }
 
             // Increment the counter indicating we processed this record
-            if (*processedCfgs < numCfgs) {
+            if (*processedCfgs < numCfgs) { /* DA_JUSTIFY: PMICDRV-2356 */
                 *processedCfgs += 1U;
             }
         }
@@ -860,11 +855,10 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
     }
 
     if ((status == PMIC_ST_SUCCESS) && anyConfigs) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_NUM) && (i < numCfgs); i++) {
+        for (uint8_t i = 0U; (i < PMIC_IRQ_NUM) && (i < numCfgs); i++) { /* DA_JUSTIFY: PMICDRV-2356 */
             const uint8_t irqNum = cfgs[i].irqNum;
             const Pmic_IrqInfo_t *pIrq = &pmicIRQs[irqNum];
             const uint8_t userMask = (uint8_t)((cfgs[i].config << pIrq->confShift) & pIrq->confMask);
-
             // If the current mask setting isn't targeted at the register we are
             // currently building, skip it
             if (regAddr != pIrq->confReg) {
@@ -880,7 +874,7 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
             regData |= userMask;
 
             // Increment the counter indicating we processed this record
-            if (*processedCfgs < numCfgs) {
+            if (*processedCfgs < numCfgs) { /* DA_JUSTIFY: PMICDRV-2356 */
                 *processedCfgs += 1U;
             }
         }
@@ -896,6 +890,20 @@ static int32_t IRQ_handleRecordsForRegConfig(const Pmic_Handle_t *handle,
     return status;
 }
 
+static int32_t IRQ_validateCfgsIrqNum(uint8_t numCfgs, const Pmic_IrqCfg_t *cfgs) {
+	int32_t status = PMIC_ST_SUCCESS;
+	
+	for (uint8_t i = 0U; (i < numCfgs); i++) {
+		const uint8_t irqNum = cfgs[i].irqNum;
+		if (irqNum > PMIC_IRQ_MAX) {
+			status = PMIC_ST_ERR_INV_PARAM;
+			break;
+		}
+	}
+	
+	return status;
+}
+
 int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t lastProcessed = 0U;
@@ -908,6 +916,10 @@ int32_t Pmic_irqSetCfgs(const Pmic_Handle_t *handle, uint8_t numIrqs, const Pmic
 
     if ((status == PMIC_ST_SUCCESS) && (numIrqs > PMIC_IRQ_NUM)) {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = IRQ_validateCfgsIrqNum(numIrqs, irqCfgs);
     }
 
     // Handle mask controls

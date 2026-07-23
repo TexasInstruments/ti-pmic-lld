@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -47,16 +46,21 @@
 /* ========================================================================== */
 
 /**
- * @brief Resource count and configuration flags
+ * @brief Resource count and configuration flags.
  */
-#define POWER_TEST_NUM_RESOURCES           (7U)   /* BUCK1-3, LDO_LS1_VMON1, LS2_VMON2, VCCA_VMON, GPO */
-#define POWER_TEST_NUM_RESOURCES_NO_VCCA   (6U)   /* All resources except VCCA_VMON */
+#define POWER_TEST_NUM_RESOURCES           (7U)  // BUCK1-3, LDO_LS1_VMON1, LS2_VMON2, VCCA_VMON, GPO
+#define POWER_TEST_NUM_RESOURCES_NO_VCCA   (6U)  // All resources except VCCA_VMON
 #define POWER_TEST_IS_EXPECTED_CFG         (true)
 #define POWER_TEST_IS_ACTUAL_CFG           (false)
 
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+extern int32_t PmicMock_WriteRegister(PmicMockDevice_t *mock, uint16_t addr, uint8_t value);
+#endif
 static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
@@ -2402,19 +2406,13 @@ static void powerTest_enableDisableResource(uint8_t rsrc)
 }
 
 /**
- * @brief Test Pmic_pwrGetResourceCfg for LDO_LS1_VMON1 with invalid hardware state
- *
- * This test injects an invalid bit combination into FUNC_CONF_REG that doesn't
- * match any valid mode (lines 461-464 in pmic_power.c). The function should
- * return PMIC_ST_ERR_FAIL when the hardware state is invalid.
+ * @brief Test Pmic_pwrGetResourceCfg for LDO_LS1_VMON1 with invalid hardware state.
  */
 void test_neg_power_pwrGetResourceCfg_ldoLs1Vmon1_invalidHwState(void)
 {
 #ifdef BUILD_MOCK
-    extern PmicMockDevice_t* platform_getMockDevice(void);
-    extern int32_t PmicMock_WriteRegister(PmicMockDevice_t* mock, uint16_t addr, uint8_t value);
 
-    PmicMockDevice_t* mock = platform_getMockDevice();
+    PmicMockDevice_t *mock = platform_getMockDevice();
     int32_t status;
     Pmic_PowerResourceCfg_t config = {
         .validParams = PMIC_CFG_PWR_MODE_VALID,
@@ -3761,7 +3759,6 @@ void test_pos_power_setGetSequenceCfg_allRsrc_allCfg(void)
     powerTest_compareExpActSeqCfgs(expSequenceCfgs, actSequenceCfgs);
 }
 
-
 /* ========================================================================== */
 /*              GPO Resource GET Unsupported Tests                            */
 /* ========================================================================== */
@@ -3845,7 +3842,6 @@ void test_neg_power_pwrGetResourceCfg_gpo_unsupportedScReaction(void)
     int32_t status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 }
-
 
 /* ========================================================================== */
 /*              VCCA_VMON Resource GET Unsupported Tests                      */
@@ -4009,8 +4005,7 @@ void test_pos_power_powerSetPgoodLevel_validBuck(void)
 
 void test_neg_power_pwr_setResourceCfg_zeroNumConfigs(void)
 {
-    // Test coverage for lines 1526-1527: numConfigs == 0
-    // Pmic_pwrSetResourceCfgs() should return error when numConfigs is 0
+    // Verify Pmic_pwrSetResourceCfgs() rejects numConfigs == 0
 
     Pmic_PowerResourceCfg_t resourceCfgs[1] = {{0}};
     uint8_t numConfigs = 0U;
@@ -4022,8 +4017,7 @@ void test_neg_power_pwr_setResourceCfg_zeroNumConfigs(void)
 
 void test_neg_power_pwr_setResourceCfg_excessiveNumConfigs(void)
 {
-    // Test coverage for lines 1526-1527: numConfigs > PMIC_PWR_RSRC_MAX
-    // Pmic_pwrSetResourceCfgs() should return error when numConfigs exceeds maximum
+    // Verify Pmic_pwrSetResourceCfgs() rejects numConfigs exceeding the maximum
 
     Pmic_PowerResourceCfg_t resourceCfgs[PMIC_PWR_RSRC_MAX + 1U];
     uint8_t numConfigs = PMIC_PWR_RSRC_MAX + 1U;
@@ -4043,8 +4037,7 @@ void test_neg_power_pwr_setResourceCfg_excessiveNumConfigs(void)
 
 void test_neg_power_pwr_getResourceCfgs_zeroNumConfigs(void)
 {
-    // Test coverage for lines 1608-1609: numConfigs == 0
-    // Pmic_pwrGetResourceCfgs() should return error when numConfigs is 0
+    // Verify Pmic_pwrGetResourceCfgs() rejects numConfigs == 0
 
     Pmic_PowerResourceCfg_t resourceCfgs[1] = {{0}};
     uint8_t numConfigs = 0U;
@@ -4055,9 +4048,7 @@ void test_neg_power_pwr_getResourceCfgs_zeroNumConfigs(void)
 }
 
 /**
- * @brief Test Pmic_pwrGetResourceCfg() with MODE valid for unsupported resource
- * Covers PWR_getModeCfg() default case (pmic_power.c:522-523)
- * NRSTOUT resource doesn't support mode configuration
+ * @brief Test Pmic_pwrGetResourceCfg() with MODE valid for unsupported resource.
  */
 void test_neg_power_pwr_getModeCfg_unsupportedResource(void)
 {
@@ -4070,8 +4061,7 @@ void test_neg_power_pwr_getModeCfg_unsupportedResource(void)
 }
 
 /**
- * @brief Test Pmic_pwrSetResourceCfg() with ILIM valid and resource > MAX
- * Covers PWR_setIlimCfg() resource bounds check (pmic_power.c:537-539)
+ * @brief Test Pmic_pwrSetResourceCfg() with ILIM valid and resource > MAX.
  */
 void test_neg_power_pwr_setIlimCfg_resourceOutOfBounds(void)
 {
@@ -4085,8 +4075,7 @@ void test_neg_power_pwr_setIlimCfg_resourceOutOfBounds(void)
 }
 
 /**
- * @brief Test Pmic_pwrGetResourceCfg() with ILIM valid and resource > MAX
- * Covers PWR_getIlimCfg() resource bounds check (pmic_power.c:567-569)
+ * @brief Test Pmic_pwrGetResourceCfg() with ILIM valid and resource > MAX.
  */
 void test_neg_power_pwr_getIlimCfg_resourceOutOfBounds(void)
 {
@@ -4099,8 +4088,7 @@ void test_neg_power_pwr_getIlimCfg_resourceOutOfBounds(void)
 }
 
 /**
- * @brief Test Pmic_pwrGetResourceCfg() with VOLTAGE valid and resource > MAX
- * Covers PWR_getVoltageCfg() resource bounds check (pmic_power.c:1402-1403)
+ * @brief Test Pmic_pwrGetResourceCfg() with VOLTAGE valid and resource > MAX.
  */
 void test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds(void)
 {
@@ -4113,34 +4101,20 @@ void test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds(void)
 }
 
 /**
- * @brief Test PWR_getModeCfgLdoLs1Vmon1() with invalid mode bit combination
- * Covers lines 461-463 in pmic_power.c (invalid hardware state detection)
- *
- * The LDO_LS1_VMON1 resource has 4 valid mode combinations:
- * - (bypConfig=0, vmon1Sel=0, lswConfig=0) -> REG mode
- * - (bypConfig=1, vmon1Sel=0, lswConfig=0) -> BYP mode
- * - (bypConfig=1, vmon1Sel=0, lswConfig=1) -> LSW mode
- * - (bypConfig=1, vmon1Sel=1, lswConfig=1) -> VMON mode
- *
- * Any other combination is invalid. This test injects an invalid combination.
+ * @brief Test PWR_getModeCfgLdoLs1Vmon1() with invalid mode bit combination.
  */
 void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 {
 #ifdef BUILD_MOCK
     int32_t status;
-    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x1DU;
-    const uint16_t FUNC_CONF_REG = 0x48U;
+    // LDO_LS1_VMON1_PG_LEVEL_REG=0x14 (BYP_CONFIG bit7), FUNC_CONF_REG=0x1E (VMON1_SEL bit0, LSW_CONFIG bit1)
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x14U;
+    const uint16_t FUNC_CONF_REG = 0x1EU;
 
-    // Inject invalid combination: bypConfig=0, vmon1Sel=1, lswConfig=0
-    // LDO_LS1_BYP_CONFIG is bit 0 of LDO_LS1_VMON1_PG_LEVEL_REG
-    status = testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, 0x00U);  /* bypConfig=0 */
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    // Invalid combination: bypConfig=0, vmon1Sel=1, lswConfig=0
+    testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, 0x00U);
+    testInject_setRegister(FUNC_CONF_REG, (1U << 0U));  // vmon1Sel=1 (bit 0)
 
-    // LDO_LS1_VMON1_SEL is bit 3, LDO_LS1_LSW_CONFIG is bit 2 of FUNC_CONF_REG
-    status = testInject_setRegister(FUNC_CONF_REG, (1UL << 3U));  /* vmon1Sel=1, lswConfig=0 */
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    // Try to get resource config - should fail with invalid combination
     Pmic_PowerResourceCfg_t cfg = {
         .validParams = PMIC_CFG_PWR_MODE_VALID,
         .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
@@ -4153,8 +4127,102 @@ void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void)
 #endif
 }
 
+void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_lswOnly(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x14U;
+    const uint16_t FUNC_CONF_REG = 0x1EU;
+
+    // Invalid combination: bypConfig=0, vmon1Sel=0, lswConfig=1
+    testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, 0x00U);
+    testInject_setRegister(FUNC_CONF_REG, (1U << 1U));  // lswConfig=1 (bit 1)
+
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_bypVmonOnly(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x14U;
+    const uint16_t FUNC_CONF_REG = 0x1EU;
+
+    // Invalid combination: bypConfig=1, vmon1Sel=1, lswConfig=0
+    testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, (1U << 7U));  // bypConfig=1 (bit 7)
+    testInject_setRegister(FUNC_CONF_REG, (1U << 0U));  // vmon1Sel=1 (bit 0), lswConfig=0
+
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+void test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_lswMode(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    // bypConfig=1 (bit7 of 0x14), vmon1Sel=0, lswConfig=1 (bit1 of 0x1E) → LSW mode
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x14U;
+    const uint16_t FUNC_CONF_REG = 0x1EU;
+
+    testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, (1U << 7U));
+    testInject_setRegister(FUNC_CONF_REG, (1U << 1U));
+
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfg.mode == PMIC_PWR_RSRC_MODE_LSW);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
+void test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_vmonMode(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    // bypConfig=1 (bit7 of 0x14), vmon1Sel=1 (bit0 of 0x1E), lswConfig=1 (bit1 of 0x1E) → VMON mode
+    const uint16_t LDO_LS1_VMON1_PG_LEVEL_REG = 0x14U;
+    const uint16_t FUNC_CONF_REG = 0x1EU;
+
+    testInject_setRegister(LDO_LS1_VMON1_PG_LEVEL_REG, (1U << 7U));
+    testInject_setRegister(FUNC_CONF_REG, (1U << 0U) | (1U << 1U));  // vmon1Sel=1, lswConfig=1
+
+    Pmic_PowerResourceCfg_t cfg = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfg.mode == PMIC_PWR_RSRC_MODE_VMON);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
+#endif
+}
+
 /**
- * @brief Test Pmic_pwrGetResourceCfgs() with error mid-batch
+ * @brief Test Pmic_pwrGetResourceCfgs() with error mid-batch.
  * Verifies that when an error occurs during batch Get operation, the output array
  * remains unchanged (atomic behavior - all or nothing).
  *
@@ -4193,7 +4261,7 @@ void test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged(void)
 }
 
 /**
- * @brief Test Pmic_pwrSetResourceCfgs() with error mid-batch
+ * @brief Test Pmic_pwrSetResourceCfgs() with error mid-batch.
  * Verifies behavior when an error occurs during batch Set operation.
  *
  * This test creates a batch of 3 configs where the second has an invalid resource.
@@ -4231,7 +4299,7 @@ void test_neg_power_pwrSetResourceCfgs_errorMidBatch_partialApply(void)
 }
 
 /**
- * @brief Test Pmic_pwrGetSequenceCfgs() with error mid-batch
+ * @brief Test Pmic_pwrGetSequenceCfgs() with error mid-batch.
  * Verifies that when an error occurs during batch Get operation, the output array
  * remains unchanged (atomic behavior - all or nothing).
  *
@@ -4270,7 +4338,7 @@ void test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged(void)
 }
 
 /**
- * @brief Test Pmic_pwrSetSequenceCfgs() with error mid-batch
+ * @brief Test Pmic_pwrSetSequenceCfgs() with error mid-batch.
  * Verifies behavior when an error occurs during batch Set operation.
  *
  * This test creates a batch of 3 configs where the second has an invalid resource.
@@ -4312,7 +4380,7 @@ void test_neg_power_pwrSetSequenceCfgs_errorMidBatch_partialApply(void)
 /* ========================================================================== */
 
 /**
- * @brief Test setting and getting TWARN_LEVEL thermal configuration
+ * @brief Test setting and getting TWARN_LEVEL thermal configuration.
  */
 void test_pos_power_thermal_twarnLvl(void)
 {
@@ -4333,7 +4401,7 @@ void test_pos_power_thermal_twarnLvl(void)
 }
 
 /**
- * @brief Test setting and getting TSD_ORD_LEVEL thermal configuration
+ * @brief Test setting and getting TSD_ORD_LEVEL thermal configuration.
  */
 void test_pos_power_thermal_tsdOrdLvl(void)
 {
@@ -4354,7 +4422,7 @@ void test_pos_power_thermal_tsdOrdLvl(void)
 }
 
 /**
- * @brief Test setting and getting TWARN_CONFIG thermal configuration
+ * @brief Test setting and getting TWARN_CONFIG thermal configuration.
  */
 void test_pos_power_thermal_twarnConfig(void)
 {
@@ -4375,7 +4443,7 @@ void test_pos_power_thermal_twarnConfig(void)
 }
 
 /**
- * @brief Test setting and getting all thermal configuration parameters
+ * @brief Test setting and getting all thermal configuration parameters.
  */
 void test_pos_power_thermal_all_params(void)
 {
@@ -4404,7 +4472,7 @@ void test_pos_power_thermal_all_params(void)
 }
 
 /**
- * @brief Test thermal configuration with NULL handle
+ * @brief Test thermal configuration with NULL handle.
  */
 void test_neg_power_thermal_null_handle(void)
 {
@@ -4420,7 +4488,7 @@ void test_neg_power_thermal_null_handle(void)
 }
 
 /**
- * @brief Test thermal configuration with NULL parameter
+ * @brief Test thermal configuration with NULL parameter.
  */
 void test_neg_power_thermal_null_param(void)
 {
@@ -4432,7 +4500,7 @@ void test_neg_power_thermal_null_param(void)
 }
 
 /**
- * @brief Test thermal configuration with invalid TWARN_LEVEL
+ * @brief Test thermal configuration with invalid TWARN_LEVEL.
  */
 void test_neg_power_thermal_invalid_twarnLvl(void)
 {
@@ -4446,7 +4514,7 @@ void test_neg_power_thermal_invalid_twarnLvl(void)
 }
 
 /**
- * @brief Test thermal configuration with invalid TSD_ORD_LEVEL
+ * @brief Test thermal configuration with invalid TSD_ORD_LEVEL.
  */
 void test_neg_power_thermal_invalid_tsdOrdLvl(void)
 {
@@ -4460,7 +4528,7 @@ void test_neg_power_thermal_invalid_tsdOrdLvl(void)
 }
 
 /**
- * @brief Test thermal configuration with invalid TWARN_CONFIG
+ * @brief Test thermal configuration with invalid TWARN_CONFIG.
  */
 void test_neg_power_thermal_invalid_twarnConfig(void)
 {
@@ -4474,7 +4542,7 @@ void test_neg_power_thermal_invalid_twarnConfig(void)
 }
 
 /**
- * @brief Test thermal configuration with no valid parameters
+ * @brief Test thermal configuration with no valid parameters.
  */
 void test_neg_power_thermal_no_valid_params(void)
 {
@@ -4496,8 +4564,207 @@ void test_pos_power_setGetResourceCfg_buck1_enable_mcdc(void)
     int32_t status;
     Pmic_PowerResourceCfg_t cfg = {0};
     cfg.resource = PMIC_PWR_RSRC_BUCK1;
-    cfg.validParams = PMIC_CFG_PWR_ENABLE_VALID;  /* IMON capable = FALSE path */
-    cfg.enable = true;
+    cfg.validParams = PMIC_CFG_PWR_ENABLE_VALID;  // IMON capable = FALSE path    cfg.enable = true;
     status = Pmic_pwrSetResourceCfg(&pmicHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_PwrGetResourceCfgs / Pmic_PwrGetSequenceCfgs
+/* ========================================================================== */
+
+void test_neg_power_pwrGetResourceCfgs_numConfigsExceedsMax(void)
+{
+    // Verify Pmic_pwrGetResourceCfgs() rejects numConfigs exceeding the maximum
+    Pmic_PowerResourceCfg_t resourceCfgs[PMIC_PWR_RSRC_MAX + 1U];
+
+    for (uint8_t i = 0U; i < (PMIC_PWR_RSRC_MAX + 1U); i++)
+    {
+        resourceCfgs[i].resource = PMIC_PWR_RSRC_BUCK1;
+        resourceCfgs[i].validParams = PMIC_CFG_PWR_VOLTAGE_VALID;
+    }
+
+    int32_t status = Pmic_pwrGetResourceCfgs(&pmicHandle, PMIC_PWR_RSRC_MAX + 1U, resourceCfgs);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_power_pwrGetSequenceCfgs_numConfigsExceedsMax(void)
+{
+    // Verify Pmic_pwrGetSequenceCfgs() rejects numConfigs exceeding the maximum
+    Pmic_PowerSequenceCfg_t cfg[9] = {{0}};
+
+    int32_t status = Pmic_pwrGetSequenceCfgs(&pmicHandle, 9U, cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_power_pwrSetSequenceCfgs_numConfigsExceedsMax(void)
+{
+    // Verify Pmic_pwrSetSequenceCfgs() rejects numConfigs exceeding the maximum
+    Pmic_PowerSequenceCfg_t cfg[9] = {{0}};
+
+    int32_t status = Pmic_pwrSetSequenceCfgs(&pmicHandle, 9U, cfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
+}
+
+void test_neg_power_pwrGetThermalCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject comm failure to exercise the error path in Pmic_pwrGetThermalCfg()
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PwrThermalCfg_t thermalCfg = {
+        .validParams = PMIC_CFG_PWR_TWARN_LEVEL_VALID
+    };
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetThermalCfg(&pmicHandle, &thermalCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - Pmic_pwrSetBuckCfg / Pmic_pwrSetLdoCfg
+/* ========================================================================== */
+
+void test_neg_power_pwrSetResourceCfg_readModifyWrite_writeFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject write failure (op 2) to exercise the error path in PWR_readModifyWrite
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_VOLTAGE_VALID,
+        .resource    = PMIC_PWR_RSRC_BUCK1,
+        .voltage_mV  = 1000U
+    };
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrSetResourceCfg_setModeCfgLdoLs1_writeFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject write failure to exercise the error path in PWR_setModeCfgLdoLs1Vmon1
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource    = PMIC_PWR_RSRC_LDO_LS1_VMON1,
+        .mode        = PMIC_PWR_RSRC_MODE_REG
+    };
+
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrSetResourceCfg_setModeCfgLs2Vmon2_writeFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject write failure to exercise the error path in PWR_setModeCfgLs2Vmon2
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource    = PMIC_PWR_RSRC_LS2_VMON2,
+        .mode        = PMIC_PWR_RSRC_MODE_LSW
+    };
+
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrSetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_firstReadFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject failure on first read to exercise the error path in PWR_getModeCfgLdoLs1Vmon1
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource    = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    // Fail op1 (LDO_LS1_VMON1_PG_LEVEL_REG read) directly
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_secondReadFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject failure on second read to exercise the error path in PWR_getModeCfgLdoLs1Vmon1
+
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource    = PMIC_PWR_RSRC_LDO_LS1_VMON1
+    };
+
+    // Skip op1 (LDO_LS1_VMON1_PG_LEVEL_REG read), fail op2 (FUNC_CONF_REG read)
+    int32_t status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_power_pwrGetResourceCfg_getModeCfgLs2Vmon2_readFail(void)
+{
+#ifdef BUILD_MOCK
+    // Inject failure on FUNC_CONF_REG read to exercise the error path in PWR_getModeCfgLs2Vmon2
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    Pmic_PowerResourceCfg_t config = {
+        .validParams = PMIC_CFG_PWR_MODE_VALID,
+        .resource    = PMIC_PWR_RSRC_LS2_VMON2
+    };
+
+    int32_t status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_pwrGetResourceCfg(&pmicHandle, &config);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }

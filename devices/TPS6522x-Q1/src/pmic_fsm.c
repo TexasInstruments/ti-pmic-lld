@@ -375,10 +375,10 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
         return Pmic_logStatus(handle, status);
     }
 
-    if (pinMap == NULL) /* LCOV_EXCL_LINE */
-    { /* LCOV_EXCL_LINE */
-        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* LCOV_EXCL_LINE */
-    } /* LCOV_EXCL_LINE */
+    if (pinMap == NULL) /* DA_JUSTIFY: PMICDRV-2356 */
+    { /* DA_JUSTIFY: PMICDRV-2356 */
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* DA_JUSTIFY: PMICDRV-2356 */
+    }
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, pinMap->regAddr, &regData);
@@ -432,10 +432,10 @@ int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTrigg
         return Pmic_logStatus(handle, status);
     }
 
-    if (pinMap == NULL) /* LCOV_EXCL_LINE */
-    { /* LCOV_EXCL_LINE */
-        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* LCOV_EXCL_LINE */
-    } /* LCOV_EXCL_LINE */
+    if (pinMap == NULL) /* DA_JUSTIFY: PMICDRV-2356 */
+    { /* DA_JUSTIFY: PMICDRV-2356 */
+        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM); /* DA_JUSTIFY: PMICDRV-2356 */
+    }
 
     status = Pmic_ioRxByte_CS(handle, pinMap->regAddr, &regData);
 

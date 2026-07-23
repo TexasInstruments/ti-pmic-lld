@@ -586,7 +586,7 @@ static inline uint8_t mux(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_
         y = x2;
         break;
     case 3U:
-    default:
+    default: /* DA_JUSTIFY: PMICDRV-2356 */
         y = x3;
         break;
     }

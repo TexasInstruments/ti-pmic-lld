@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef WDG_TEST_H
 #define WDG_TEST_H
 
@@ -112,12 +111,28 @@ extern "C" {
 /*                           Test APIs: wdgGetCfg                           */
 /* ======================================================================== */
 
+#ifdef BUILD_MOCK
+#define WDG_TEST_POS_WDGGETCFG_MOCK_ONLY() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_ioRxByteCSFail)
+#else
+#define WDG_TEST_POS_WDGGETCFG_MOCK_ONLY()
+#endif
+
+#ifdef BUILD_MOCK
+#define WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_secondReadFail)
+#else
+#define WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY()
+#endif
+
 #define WDG_TEST_NEG_WDGGETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullWdgCfg)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullWdgCfg); \
+    WDG_TEST_NEG_WDGGETCFG_MOCK_ONLY()
 
 /* Test: TC-WDG-0017 */
 #define WDG_TEST_WDGGETCFG() \
+    WDG_TEST_POS_WDGGETCFG_MOCK_ONLY(); \
     WDG_TEST_NEG_WDGGETCFG()
 
 /* ======================================================================== */
@@ -178,15 +193,31 @@ extern "C" {
 /*                       Test APIs: wdgQaWriteAnswer                        */
 /* ======================================================================== */
 
+#ifdef BUILD_MOCK
+#define WDG_TEST_POS_WDGQAWRITEANSWER_MOCK_ONLY() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_ioRxByteCSFail)
+#else
+#define WDG_TEST_POS_WDGQAWRITEANSWER_MOCK_ONLY()
+#endif
+
 #define WDG_TEST_POS_WDGQAWRITEANSWER() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaSequenceCorrectAnswers); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk0); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk1); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk2); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk3)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_qaFdbk3); \
+    WDG_TEST_POS_WDGQAWRITEANSWER_MOCK_ONLY()
+
+#ifdef BUILD_MOCK
+#define WDG_TEST_NEG_WDGQAWRITEANSWER_MOCK_ONLY() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_secondReadFail)
+#else
+#define WDG_TEST_NEG_WDGQAWRITEANSWER_MOCK_ONLY()
+#endif
 
 #define WDG_TEST_NEG_WDGQAWRITEANSWER() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle); \
+    WDG_TEST_NEG_WDGQAWRITEANSWER_MOCK_ONLY()
 
 /* Test: TC-WDG-0022 */
 #define WDG_TEST_WDGQAWRITEANSWER() \
@@ -290,6 +321,7 @@ extern "C" {
 #define WDG_TEST_RUN_POSITIVE() \
     WDG_TEST_POS_WDGSETENABLESTATE(); \
     WDG_TEST_POS_WDGSETCFG(); \
+    WDG_TEST_POS_WDGGETCFG_MOCK_ONLY(); \
     WDG_TEST_POS_WDGSETPOWERHOLD(); \
     WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW(); \
     WDG_TEST_POS_WDGQAWRITEANSWER(); \
@@ -314,9 +346,28 @@ extern "C" {
     WDG_TEST_NEG_WDGGETERRSTATUS(); \
     WDG_TEST_NEG_WDGGETFAILCNTSTATUS()
 
+/* ========================================================================== */
+/*              Static Helper Coverage Tests (BUILD_MOCK only)                */
+/* ========================================================================== */
+
+#ifdef BUILD_MOCK
+#define WDG_TEST_STATIC_HELPER_COVERAGE() \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_modeRegReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thrCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_modeRegReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_qaCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrCfgReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getEnableStateReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_getReturnToLongWindowReadFail)
+#else
+#define WDG_TEST_STATIC_HELPER_COVERAGE()
+#endif
+
 #define WDG_TEST_RUN_ALL() \
     WDG_TEST_RUN_POSITIVE(); \
-    WDG_TEST_RUN_NEGATIVE()
+    WDG_TEST_RUN_NEGATIVE(); \
+    WDG_TEST_STATIC_HELPER_COVERAGE()
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -398,6 +449,23 @@ void test_pos_wdg_wdgClrErrStatus_clrAnswEarlyErr(void);
 void test_pos_wdg_wdgClrErrStatus_clrTrigEarlyErr(void);
 void test_pos_wdg_wdgClrErrStatus_clrTimeoutErr(void);
 void test_pos_wdg_wdgClrErrStatus_clrLongWinTimeoutErr(void);
+void test_neg_wdg_wdgGetCfg_ioRxByteCSFail(void);
+void test_neg_wdg_wdgQaWriteAnswer_ioRxByteCSFail(void);
+void test_neg_wdg_wdgGetCfg_secondReadFail(void);
+void test_neg_wdg_wdgQaWriteAnswer_secondReadFail(void);
+
+/* Static helper coverage test functions (BUILD_MOCK only) */
+#ifdef BUILD_MOCK
+void test_neg_wdg_wdgSetCfg_modeRegReadFail(void);
+void test_neg_wdg_wdgSetCfg_qaCfgReadFail(void);
+void test_neg_wdg_wdgSetCfg_thrCfgReadFail(void);
+void test_neg_wdg_wdgGetCfg_modeRegReadFail(void);
+void test_neg_wdg_wdgGetCfg_qaCfgReadFail(void);
+void test_neg_wdg_wdgGetCfg_thrCfgReadFail(void);
+
+void test_neg_wdg_wdgSetCfg_getEnableStateReadFail(void);
+void test_neg_wdg_wdgSetCfg_getReturnToLongWindowReadFail(void);
+#endif
 
 #ifdef __cplusplus
 }

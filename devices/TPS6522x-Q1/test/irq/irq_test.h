@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef IRQ_TEST_H
 #define IRQ_TEST_H
 
@@ -56,7 +55,12 @@
     PLATFORM_RUN_TEST(test_pos_irq_irqSetGetMask_pushButton); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetMask_nonMaskable); \
     PLATFORM_RUN_TEST(test_pos_irq_irqSetMask_specific); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqSetMask_unmaskSpecific)
+    PLATFORM_RUN_TEST(test_pos_irq_irqSetMask_unmaskSpecific); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_primaryRegIoFail); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_ioUpdateByteCSFail); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetMask_dualRegisterIrq); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetMask_mask1FalseMask2True); \
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetMask_mask1TrueMask2False)
 
 #define IRQ_TEST_NEG_IRQSETGETMASK() \
     PLATFORM_RUN_TEST(test_neg_irq_irqSetMask_nullHandle); \
@@ -69,7 +73,8 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_nullIrqMasks); \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_zeroCount); \
-    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_invalidIrqInArray)
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_invalidIrqInArray); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetMask_secondReadFail)
 
 /* Test: TC-IRQ-0010 */
 #define IRQ_TEST_IRQSETGETMASK() \
@@ -82,7 +87,8 @@
 #define IRQ_TEST_POS_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_read); \
     PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_withActiveFlags); \
-    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_withSetFlag)
+    PLATFORM_RUN_TEST(test_pos_irq_irqGetStatus_withSetFlag); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_ioRxByteCSFail)
 
 #define IRQ_TEST_NEG_IRQGETSTATUS() \
     PLATFORM_RUN_TEST(test_neg_irq_irqGetStatus_nullHandle); \
@@ -138,7 +144,8 @@
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_invalidIrqNum); \
     PLATFORM_RUN_TEST(test_neg_irq_irqClrFlag_invalidIrqNumBeyondMax); \
-    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_irq_irqClrAllFlags_loopEarlyExitOnIoFail)
 
 /* Test: TC-IRQ-0014 */
 #define IRQ_TEST_IRQCLRFLAG() \
@@ -214,6 +221,8 @@ void test_neg_irq_irqSetMask_invalidIrqNumBeyondMax(void);
 void test_neg_irq_irqGetFlag_invalidIrqNumBeyondMax(void);
 void test_neg_irq_irqClrFlag_invalidIrqNumBeyondMax(void);
 void test_neg_irq_irqGetMask_invalidIrqInArray(void);
+void test_neg_irq_irqGetMask_secondReadFail(void);
+void test_neg_irq_irqClrAllFlags_loopEarlyExitOnIoFail(void);
 
 /* Positive test functions */
 void test_pos_irq_irqSetGetMask_single(void);
@@ -239,6 +248,12 @@ void test_pos_irq_irqSetMask_specific(void);
 void test_pos_irq_irqSetMask_unmaskSpecific(void);
 void test_pos_irq_irqGetStatus_withSetFlag(void);
 void test_pos_irq_irqGetNextFlag_withSetFlag(void);
+void test_neg_irq_irqGetMask_primaryRegIoFail(void);
+void test_neg_irq_irqGetStatus_ioRxByteCSFail(void);
+void test_neg_irq_irqSetMask_ioUpdateByteCSFail(void);
+void test_pos_irq_irqGetMask_dualRegisterIrq(void);
+void test_pos_irq_irqGetMask_mask1FalseMask2True(void);
+void test_pos_irq_irqGetMask_mask1TrueMask2False(void);
 
 /* ========================================================================== */
 /*                  irqResponseCallback API Tests                             */

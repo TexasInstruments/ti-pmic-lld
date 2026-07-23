@@ -53,7 +53,9 @@ extern "C" {
 #define FSM_TEST_POS_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_safeRecovery); \
     PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_warmReset); \
-    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_lowPowerEntryExit)
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_lowPowerEntryExit); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_coldBootRequest); \
+    PLATFORM_RUN_TEST(test_pos_fsm_fsmSetDevState_offRequest)
 
 #define FSM_TEST_NEG_FSMSETDEVSTATE() \
     PLATFORM_RUN_TEST(test_neg_fsm_fsmSetDevState_nullParam_pmicHandle); \
@@ -202,6 +204,8 @@ void fsm_test(void *args);
 void test_pos_fsm_fsmSetDevState_safeRecovery(void);
 void test_pos_fsm_fsmSetDevState_warmReset(void);
 void test_pos_fsm_fsmSetDevState_lowPowerEntryExit(void);
+void test_pos_fsm_fsmSetDevState_coldBootRequest(void);
+void test_pos_fsm_fsmSetDevState_offRequest(void);
 void test_neg_fsm_fsmSetDevState_nullParam_pmicHandle(void);
 void test_neg_fsm_fsmSetDevState_invalid_fsmCmd(void);
 

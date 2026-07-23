@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -39,7 +38,6 @@
 #include "fsm_test.h"
 #include "test_constants.h"
 #include "regmap/core.h"
-
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -233,6 +231,30 @@ void test_neg_fsm_fsmSetDevState_invalid_fsmCmd(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
 
+/*
+ * Covers FSM_checkFsmCmd() pmic_fsm.c line 13 false-branch:
+ * (fsmCmd != PMIC_COLD_BOOT_REQUEST) evaluates to false, so the
+ * compound condition short-circuits and returns PMIC_ST_SUCCESS.
+ * NOTE: Cold-boot triggers a power cycle; ignore I2C failures afterward.
+ */
+void test_pos_fsm_fsmSetDevState_coldBootRequest(void)
+{
+    int32_t status = Pmic_fsmSetDevState(&pmicHandle, PMIC_COLD_BOOT_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+}
+
+/*
+ * Covers FSM_checkFsmCmd() pmic_fsm.c line 15 false-branch:
+ * (fsmCmd != PMIC_OFF_REQUEST) evaluates to false, so the compound
+ * condition short-circuits and returns PMIC_ST_SUCCESS.
+ * NOTE: OFF request may disrupt I2C; ignore I2C failures afterward.
+ */
+void test_pos_fsm_fsmSetDevState_offRequest(void)
+{
+    int32_t status = Pmic_fsmSetDevState(&pmicHandle, PMIC_OFF_REQUEST);
+    PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+}
+
 void test_neg_fsm_fsmSetRecovCntThr_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_fsmSetRecovCntThr()
@@ -340,6 +362,10 @@ void test_pos_fsm_setGetRecovCntThr(void)
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t actThreshold = 0U;
 
+    // Preceding COLD_BOOT/OFF FSM commands re-lock registers; unlock before writing
+    status = fsmTest_unlockPmicRegs(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
     // clear recovery counter
     status = fsmTest_clrRecovCnt();
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -390,6 +416,10 @@ void test_pos_fsm_getClrRecovCnt(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t initRecovCnt = 0U, newRecovCnt = 0U;
+
+    // Preceding COLD_BOOT/OFF FSM commands re-lock registers; unlock before writing
+    status = fsmTest_unlockPmicRegs(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Get initial recovery count
     status = Pmic_fsmGetRecovCnt(&pmicHandle, &initRecovCnt);

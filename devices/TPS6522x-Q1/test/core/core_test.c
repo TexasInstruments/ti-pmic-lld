@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -91,13 +90,13 @@ void core_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        /* Unlock registers for scratchpad configuration */
+        // Unlock registers for scratchpad configuration
         int32_t unlockStatus = Pmic_setRegLockState(&pmicHandle, false);
         if (unlockStatus != PMIC_ST_SUCCESS)
         {
             (void)sprintf(msg, "WARNING: Failed to unlock registers: %d\r\n", unlockStatus);
             platform_printString(msg);
-            /* Continue with tests anyway - some may still pass */
+            // Continue with tests anyway - some may still pass
         }
 
         platform_setupTests();
@@ -183,13 +182,23 @@ void test_neg_core_coreGetScratchPadValue_nullValue(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+/**
+ * @brief Test Pmic_getScratchPadValue with an invalid handle (NULL ioRead) and.
+ */
+void test_neg_core_getScratchPadValue_invalidHandle(void)
+{
+    Pmic_Handle_t localHandle = pmicHandle;
+    uint8_t value = 0U;
+    int32_t status;
+
+    localHandle.ioRead = NULL;  // Causes Pmic_checkHandle to fail (A=false)
+
+    status = Pmic_getScratchPadValue(&localHandle, PMIC_SCRATCH_PAD_REG_MAX + 1U, &value);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
 
 /**
- * @brief Test validatePmicHandle with NULL criticalSectionStart
- *
- * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
- * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
- * Test case: First condition TRUE, second condition FALSE
+ * @brief Test validatePmicHandle with NULL criticalSectionStart.
  */
 void test_neg_core_validatePmicHandle_nullCritSecStart(void)
 {
@@ -203,11 +212,7 @@ void test_neg_core_validatePmicHandle_nullCritSecStart(void)
 }
 
 /**
- * @brief Test validatePmicHandle with NULL criticalSectionStop
- *
- * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
- * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
- * Test case: First condition FALSE, second condition TRUE
+ * @brief Test validatePmicHandle with NULL criticalSectionStop.
  */
 void test_neg_core_validatePmicHandle_nullCritSecStop(void)
 {
@@ -219,7 +224,6 @@ void test_neg_core_validatePmicHandle_nullCritSecStop(void)
     int32_t status = Pmic_getSiliconRev(&testHandle, &siliconRev);  // Will call validatePmicHandle internally
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
-
 
 /* ========================================================================== */
 /*                         Positive Test Cases                                */
@@ -348,11 +352,27 @@ void test_pos_core_scratchPadValue_boundary(void)
 }
 
 /**
- * @brief Test validatePmicHandle with valid critical section pointers
+ * @brief Test Pmic_getScratchPadValue with a valid register number.
  *
- * This test validates MCDC coverage for line 422 in pmic.c::validatePmicHandle()
- * Condition: (criticalSectionStart == NULL) || (criticalSectionStop == NULL)
- * Test case: Both conditions FALSE (positive case)
+ * Writes a known value to PMIC_SCRATCH_PAD_REG_1 then reads it back,
+ * exercising the simple positive path through getScratchPadValue.
+ */
+void test_pos_core_getScratchPadValue_validReg(void)
+{
+    uint8_t writeVal = TEST_PATTERN_5A;
+    uint8_t readVal = 0U;
+    int32_t status;
+
+    status = Pmic_setScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, writeVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_getScratchPadValue(&pmicHandle, PMIC_SCRATCH_PAD_REG_1, &readVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(readVal == writeVal);
+}
+
+/**
+ * @brief Test validatePmicHandle with valid critical section pointers.
  */
 void test_pos_core_validatePmicHandle_validCriticalSection(void)
 {
@@ -362,6 +382,5 @@ void test_pos_core_validatePmicHandle_validCriticalSection(void)
     int32_t status = Pmic_getSiliconRev(&pmicHandle, &siliconRev);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
-
 
 /* Note: setUp/tearDown removed - provided by test_runner.c for Unity */

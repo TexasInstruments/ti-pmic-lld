@@ -189,7 +189,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_nullParam_lpmCfg); \
     PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_outOfBounds_pinDetection); \
     PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_outOfBounds_detectionDelay); \
-    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_zeroValidParams)
+    PLATFORM_RUN_TEST(test_neg_core_setLpmCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_core_setLpmEnableReg_ioRxByteFail)
 
 /* Test: TC-CORE-0042 */
 #define CORE_TEST_SETLPMCFG() \
@@ -205,7 +206,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_vmonEn); \
     PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_esmEn); \
     PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_wdgEn); \
-    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_multipleParams)
+    PLATFORM_RUN_TEST(test_pos_core_getLpmCfg_multipleParams); \
+    PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_ioRxByteCSFail)
 
 #define CORE_TEST_NEG_GETLPMCFG() \
     PLATFORM_RUN_TEST(test_neg_core_getLpmCfg_nullParam_pmicHandle); \
@@ -236,7 +238,8 @@ extern "C" {
 /*                         Test APIs: getABISTStat                          */
 /* ======================================================================== */
 #define CORE_TEST_POS_GETABISTSTAT() \
-    PLATFORM_RUN_TEST(test_pos_core_getABISTStat_active)
+    PLATFORM_RUN_TEST(test_pos_core_getABISTStat_active); \
+    PLATFORM_RUN_TEST(test_neg_core_getABISTStat_ioRxByteCSFail)
 
 #define CORE_TEST_NEG_GETABISTSTAT() \
     PLATFORM_RUN_TEST(test_neg_core_getABISTStat_nullParam_pmicHandle); \
@@ -304,7 +307,8 @@ extern "C" {
 /*                      Test APIs: configCrcEnable                          */
 /* ======================================================================== */
 #define CORE_TEST_POS_CONFIGCRCENABLE() \
-    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate); \
+    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly)
 
 #define CORE_TEST_NEG_CONFIGCRCENABLE() \
     PLATFORM_RUN_TEST(test_neg_core_configCrcEnable_nullHandle)
@@ -333,7 +337,9 @@ extern "C" {
 /* ======================================================================== */
 #define CORE_TEST_POS_GETCONFIGCRCSTATUS() \
     PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_crcEnabled); \
-    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_crcDisabled)
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_crcDisabled); \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_configCrcStatusBitSet); \
+    PLATFORM_RUN_TEST(test_pos_core_getConfigCrcStatus_statModErrCrcStatBitSet)
 
 #define CORE_TEST_NEG_GETCONFIGCRCSTATUS() \
     PLATFORM_RUN_TEST(test_neg_core_getConfigCrcStatus_nullHandle); \
@@ -351,7 +357,14 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_configCrcCalculate_calculate)
 
 #define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailInLoop); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_ioFailOnConfigRead); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_crcAlreadyEnabled); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_ioFailOnCalcAssert); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_ioFailOnReadback); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_ioFailOnCalcClear); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_crcStatusError)
 
 /* Test: TC-CORE-0074 */
 #define CORE_TEST_CONFIGCRCCALCULATE() \
@@ -488,6 +501,7 @@ void test_neg_core_setLpmCfg_nullParam_lpmCfg(void);
 void test_neg_core_setLpmCfg_outOfBounds_pinDetection(void);
 void test_neg_core_setLpmCfg_outOfBounds_detectionDelay(void);
 void test_neg_core_setLpmCfg_zeroValidParams(void);
+void test_neg_core_setLpmEnableReg_ioRxByteFail(void);
 void test_pos_core_setGetLpmCfg_pinDetection(void);
 void test_pos_core_setGetLpmCfg_detectionDelay(void);
 void test_pos_core_setGetLpmCfg_vmonEn(void);
@@ -520,6 +534,7 @@ void test_pos_core_getLpmCfg_vmonEn(void);
 void test_pos_core_getLpmCfg_esmEn(void);
 void test_pos_core_getLpmCfg_wdgEn(void);
 void test_pos_core_getLpmCfg_multipleParams(void);
+void test_neg_core_getLpmCfg_ioRxByteCSFail(void);
 
 /* runABIST API tests */
 void test_neg_core_runABIST_nullParam_pmicHandle(void);
@@ -529,6 +544,7 @@ void test_pos_core_runABIST(void);
 void test_neg_core_getABISTStat_nullParam_pmicHandle(void);
 void test_neg_core_getABISTStat_nullParam_isActive(void);
 void test_pos_core_getABISTStat_active(void);
+void test_neg_core_getABISTStat_ioRxByteCSFail(void);
 
 /* setScratchPadValue API tests */
 void test_neg_core_setScratchPadValue_nullParam_pmicHandle(void);
@@ -552,6 +568,7 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void);
 
 /* configCrcEnable API tests */
 void test_pos_core_configCrcEnable_recalculate(void);
+void test_pos_core_configCrcEnable_enableOnly(void);
 void test_neg_core_configCrcEnable_nullHandle(void);
 
 /* configCrcDisable API tests */
@@ -561,12 +578,21 @@ void test_neg_core_configCrcDisable_nullHandle(void);
 /* getConfigCrcStatus API tests */
 void test_pos_core_getConfigCrcStatus_crcEnabled(void);
 void test_pos_core_getConfigCrcStatus_crcDisabled(void);
+void test_pos_core_getConfigCrcStatus_configCrcStatusBitSet(void);
+void test_pos_core_getConfigCrcStatus_statModErrCrcStatBitSet(void);
 void test_neg_core_getConfigCrcStatus_nullHandle(void);
 void test_neg_core_getConfigCrcStatus_nullStatus(void);
 
 /* configCrcCalculate API tests */
 void test_pos_core_configCrcCalculate_calculate(void);
 void test_neg_core_configCrcCalculate_nullHandle(void);
+void test_neg_core_configCrcCalculate_ioFailInLoop(void);
+void test_neg_core_configCrcValidate_ioFailOnConfigRead(void);
+void test_neg_core_configCrcValidate_crcAlreadyEnabled(void);
+void test_neg_core_configCrcValidate_ioFailOnCalcAssert(void);
+void test_neg_core_configCrcValidate_ioFailOnReadback(void);
+void test_neg_core_configCrcValidate_ioFailOnCalcClear(void);
+void test_neg_core_configCrcValidate_crcStatusError(void);
 
 /* getConfigCrc API tests */
 void test_pos_core_getConfigCrc_readValue(void);

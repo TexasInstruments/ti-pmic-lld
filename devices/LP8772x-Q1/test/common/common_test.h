@@ -133,7 +133,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullCritSecStop)
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_common_statusCodeCheck_successTypeNonZeroId)
 
 /* Test: TC-COMMON-0024 */
 #define COMMON_TEST_GETDIAGNOSTIC() \
@@ -639,6 +640,9 @@ void test_neg_common_getDiagnostic_exceedsMaxErrorId(void);
 void test_neg_common_getDiagnostic_exceedsMaxWarningId(void);
 void test_neg_common_clrDiagnostic_exceedsMaxErrorId(void);
 void test_neg_common_clrDiagnostic_exceedsMaxWarningId(void);
+
+/* statusCodeCheck Coverage Tests */
+void test_neg_common_statusCodeCheck_successTypeNonZeroId(void);
 
 #ifdef __cplusplus
 }

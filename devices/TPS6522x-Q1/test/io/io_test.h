@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef IO_TEST_H
 #define IO_TEST_H
 
@@ -63,14 +62,25 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_withRetryOnFailure); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts); \
-    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_i2cTxRetry)
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_i2cTxRetry); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceeds); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncSpi); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncSpiTxStartFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncI2cTxStartFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncSpiRetryExhausted)
 
 #define IO_TEST_NEG_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullIoWrite); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullCommHandle); \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullTimerWithRetry); \
-    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncHooks)
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncHooks); \
+    PLATFORM_RUN_TEST(test_neg_io_validatePmicHandle_asyncEnabledNullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_dualI2cNullCommHandle1); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncRxStartAlone); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncTxStartAlone); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncTxAwaitAlone); \
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullAsyncRxAwaitAlone)
 
 /* Test: TC-IO-0008 */
 #define IO_TEST_IOTXBYTE() \
@@ -102,7 +112,12 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadSpi); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadI2c); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
-    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_i2cRxRetry)
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_i2cRxRetry); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_retrySucceeds); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncSpi); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncSpiRxStartFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncI2cRxStartFail); \
+    PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncSpiRetryExhausted)
 
 #define IO_TEST_NEG_IORXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
@@ -327,6 +342,12 @@ void test_neg_io_ioTxByte_nullTimerWithRetry(void);
 void test_neg_io_ioTxByte_nullAsyncHooks(void);
 void test_neg_io_ioRxByte_spiRxCrcMismatch(void);
 void test_neg_io_ioRxByte_i2cRxCrcMismatch(void);
+void test_neg_io_validatePmicHandle_asyncEnabledNullCommHandle(void);
+void test_neg_io_ioTxByte_dualI2cNullCommHandle1(void);
+void test_neg_io_ioTxByte_nullAsyncRxStartAlone(void);
+void test_neg_io_ioTxByte_nullAsyncTxStartAlone(void);
+void test_neg_io_ioTxByte_nullAsyncTxAwaitAlone(void);
+void test_neg_io_ioTxByte_nullAsyncRxAwaitAlone(void);
 
 /* Positive test functions */
 void test_pos_io_ioRxByte_singleRegisterRead(void);
@@ -361,6 +382,16 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
 void test_pos_io_ioTxByte_multipleRetryAttempts(void);
 void test_pos_io_ioTxByte_i2cTxRetry(void);
 void test_pos_io_ioRxByte_i2cRxRetry(void);
+void test_pos_io_ioRxByte_retrySucceeds(void);
+void test_pos_io_ioRxByte_asyncSpi(void);
+void test_pos_io_ioTxByte_retrySucceeds(void);
+void test_pos_io_ioTxByte_asyncSpi(void);
+void test_neg_io_ioRxByte_asyncSpiRxStartFail(void);
+void test_neg_io_ioRxByte_asyncI2cRxStartFail(void);
+void test_neg_io_ioTxByte_asyncSpiTxStartFail(void);
+void test_neg_io_ioTxByte_asyncI2cTxStartFail(void);
+void test_neg_io_ioTxByte_asyncSpiRetryExhausted(void);
+void test_neg_io_ioRxByte_asyncSpiRetryExhausted(void);
 
 #ifdef __cplusplus
 }

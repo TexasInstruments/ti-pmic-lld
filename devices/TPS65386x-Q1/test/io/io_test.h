@@ -33,8 +33,6 @@
 #ifndef IO_TEST_H
 #define IO_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -59,7 +57,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceedsOnLastAttempt); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_multipleRetryAttempts); \
     PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncWriteSpi); \
-    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncRetryOnStartFailure)
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_asyncRetryOnStartFailure); \
+    PLATFORM_RUN_TEST(test_pos_io_ioTxByte_retrySucceeds)
 
 #define IO_TEST_NEG_IOTXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioTxByte_nullHandle); \
@@ -81,7 +80,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_scratchpad2); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_withRetryOnCrcError); \
     PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncReadSpi); \
-    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncRetryOnAwaitFailure)
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_asyncRetryOnAwaitFailure); \
+    PLATFORM_RUN_TEST(test_pos_io_ioRxByte_retrySucceeds)
 
 #define IO_TEST_NEG_IORXBYTE() \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_nullHandle); \
@@ -90,7 +90,14 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_crcError); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncStartFails); \
     PLATFORM_RUN_TEST(test_neg_io_ioRxByte_asyncAwaitFails); \
-    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncExhaustRetries)
+    PLATFORM_RUN_TEST(test_neg_io_ioTxByte_asyncExhaustRetries); \
+    PLATFORM_RUN_TEST(test_neg_io_nullCommHandle); \
+    PLATFORM_RUN_TEST(test_neg_io_nullIoFptrs); \
+    PLATFORM_RUN_TEST(test_neg_io_nullTimerWithRetry); \
+    PLATFORM_RUN_TEST(test_neg_io_asyncHandleNullHook); \
+    PLATFORM_RUN_TEST(test_neg_io_asyncHandleNullAsyncTxStart); \
+    PLATFORM_RUN_TEST(test_neg_io_asyncHandleNullAsyncRxAwait); \
+    PLATFORM_RUN_TEST(test_neg_io_asyncHandleNullAsyncTxAwait)
 
 /* Test: TC-IO-0002 */
 #define IO_TEST_IORXBYTE() \
@@ -171,7 +178,8 @@ extern "C" {
 #define IO_TEST_POS_IOUPDATEBYTE() \
     PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_singleBitField); \
     PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_multiBitField); \
-    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_asyncReadModifyWrite)
+    PLATFORM_RUN_TEST(test_pos_io_ioUpdateByte_asyncReadModifyWrite); \
+    PLATFORM_RUN_TEST(test_neg_io_ioUpdateByte_ioRxByteFail)
 
 #define IO_TEST_NEG_IOUPDATEBYTE() \
     /* No negative tests for ioUpdateByte */
@@ -298,17 +306,23 @@ void test_neg_io_crcErrorExhaustsRetries(void);
 void test_neg_io_nullCommHandle(void);
 void test_neg_io_nullIoFptrs(void);
 void test_neg_io_nullTimerWithRetry(void);
+void test_neg_io_asyncHandleNullHook(void);
+void test_neg_io_asyncHandleNullAsyncTxStart(void);
+void test_neg_io_asyncHandleNullAsyncRxAwait(void);
+void test_neg_io_asyncHandleNullAsyncTxAwait(void);
 
 /* Positive Tests - ioTxByte */
 void test_pos_io_ioTxByte_scratchpad1(void);
 void test_pos_io_ioTxByte_scratchpad2(void);
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void);
 void test_pos_io_ioTxByte_multipleRetryAttempts(void);
+void test_pos_io_ioTxByte_retrySucceeds(void);
 
 /* Positive Tests - ioRxByte */
 void test_pos_io_ioRxByte_scratchpad1(void);
 void test_pos_io_ioRxByte_scratchpad2(void);
 void test_pos_io_ioRxByte_withRetryOnCrcError(void);
+void test_pos_io_ioRxByte_retrySucceeds(void);
 
 /* Positive Tests - ioTxByte_CS */
 void test_pos_io_ioTxByte_CS_scratchpad1(void);
@@ -325,6 +339,7 @@ void test_pos_io_ioTxRxWordSeq_2bytes(void);
 /* Positive Tests - ioUpdateByte */
 void test_pos_io_ioUpdateByte_singleBitField(void);
 void test_pos_io_ioUpdateByte_multiBitField(void);
+void test_neg_io_ioUpdateByte_ioRxByteFail(void);
 
 /* Positive Tests - ioUpdateByte_b */
 void test_pos_io_ioUpdateByte_b_setBit(void);

@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================= */
 /*                              Include Files                                */
 /* ========================================================================= */
@@ -41,6 +40,12 @@
 #include "pmic_adc.h"
 #include "test_constants.h"
 #include "adc_test.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_core.h"
+#include "pmic_mock_types.h"
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -111,6 +116,8 @@ void test_pos_adc_multipleConversions_independence(void);
 void test_pos_adc_property_randomChannelConfigurations(void);
 static uint8_t getRandomBool(void);
 static uint8_t getRandomSrcSel(void);
+// I/O error injection tests
+void test_neg_adc_adcStartSingleConversionBlocking_ioRxByteCSFail(void);
 #endif
 
 /* ========================================================================= */
@@ -617,8 +624,7 @@ void test_pos_adc_multipleConversions_independence(void)
 }
 
 /**
- * @brief Test ADC max loop count timeout
- * Covers lines 221-222 in pmic_adc.c
+ * @brief Test ADC max loop count timeout.
  */
 void test_neg_adc_maxLoopCntFail(void)
 {
@@ -663,6 +669,29 @@ static uint8_t getRandomSrcSel(void)
 }
 
 #endif /* BUILD_MOCK */
+
+/**
+ * @brief Test Pmic_adcStartSingleConversionBlocking when the ioRxByte_CS call.
+ */
+void test_neg_adc_adcStartSingleConversionBlocking_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    /* skipCount=0: the very first I/O op in the function is the ioRxByte_CS
+     * inside the while loop.  Fail that one call. */
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_adcStartSingleConversionBlocking(&pmicHandle);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
 
 void test_pos_adc_property_randomChannelConfigurations(void)
 {

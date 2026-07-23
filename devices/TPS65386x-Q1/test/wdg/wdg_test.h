@@ -30,7 +30,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef WDG_TEST_H
 #define WDG_TEST_H
 
@@ -57,7 +56,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define WDG_TEST_POS_WDGSETENABLESTATE() \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgEnable_enableDisable)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgEnable_enableDisable); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetEnableState_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgEnable_nullHandle); \
@@ -74,7 +74,7 @@ extern "C" {
 /* ======================================================================== */
 
 #define WDG_TEST_POS_WDGGETENABLESTATE() \
-    /* Positive tests combined with wdgSetEnableState */
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGGETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetEnableState_nullHandle); \
@@ -117,8 +117,20 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold1IntBehavior); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidThreshold2IntBehavior); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_zeroValidParams); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_invalidBitsInValidParams); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenDisabled); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_whenNotInLongWindow); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgStateIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgStateIoRxByteFailOp1); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgStateDisabledBranch); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetAllCfgFields_windowsTimeIntervalsIoTxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thresholdsIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_modeAndTimeBaseIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_modeAndTimeBaseIoRxByteFailOp4); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaConfigurationsIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaConfigurationsIoRxByteFailOp4); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thrIntBehaviorIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thrIntBehaviorIoRxByteFailOp4)
 
 /* Test: TC-WDG-0003 */
 #define WDG_TEST_WDGSETCFG() \
@@ -134,7 +146,14 @@ extern "C" {
 
 #define WDG_TEST_NEG_WDGGETCFG() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_nullConfig); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_longWinIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_win1IoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_win2IoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thrIntBehaviorIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_thresholdsIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_modeAndTimeBaseIoRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_qaConfigurationsIoRxByteFail)
 
 /* Test: TC-WDG-0004 */
 #define WDG_TEST_WDGGETCFG() \
@@ -156,7 +175,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_wdg_wdgQaWriteAnswer_differentLfsr)
 
 #define WDG_TEST_NEG_WDGSETANSWERCNT() \
-    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_getQandAIoRxByteFail)
 
 /* Test: TC-WDG-0005 */
 #define WDG_TEST_WDGSETANSWERCNT() \
@@ -190,7 +210,8 @@ extern "C" {
 
 #define WDG_TEST_POS_WDGTRIGGER() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetMode_triggerMode); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetMode_qAndAMode)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetMode_qAndAMode); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGTRIGGER() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetMode_nullHandle); \
@@ -225,7 +246,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_th1ErrorOnly); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_th2ErrorOnly); \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_seqErrorOnly); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatusAll_whenNoErrors)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatusAll_whenNoErrors); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgClrErrStatus_noBitsSet)
 
 #define WDG_TEST_NEG_WDGGETSTATUS() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetErrStatus_nullHandle); \
@@ -245,7 +267,8 @@ extern "C" {
 
 #define WDG_TEST_POS_WDGSETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_enable); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_disable)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetPowerHold_disable); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGSETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetPowerHold_nullHandle)
@@ -260,7 +283,7 @@ extern "C" {
 /* ======================================================================== */
 
 #define WDG_TEST_POS_WDGGETPOWERHOLD() \
-    /* Positive tests combined with wdgSetPowerHold */
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGGETPOWERHOLD() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetPowerHold_nullHandle); \
@@ -277,7 +300,8 @@ extern "C" {
 
 #define WDG_TEST_POS_WDGSETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_enable); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_disable)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgSetReturnToLongWindow_disable); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_ioRxByteFail)
 
 #define WDG_TEST_NEG_WDGSETRETURNTOLONGWINDOW() \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgSetReturnToLongWindow_nullHandle)
@@ -381,17 +405,20 @@ void test_neg_wdg_wdgDisable_nullHandle(void);
 /*                       wdgSetEnableState API Tests                          */
 /* ========================================================================== */
 void test_neg_wdg_wdgSetEnableState_nullHandle(void);
+void test_neg_wdg_wdgSetEnableState_ioRxByteFail(void);
 
 /* ========================================================================== */
 /*                       wdgGetEnableState API Tests                          */
 /* ========================================================================== */
 void test_neg_wdg_wdgGetEnableState_nullHandle(void);
 void test_neg_wdg_wdgGetEnableState_nullParam(void);
+void test_neg_wdg_wdgGetEnableState_ioRxByteFail(void);
 
 /* ========================================================================== */
 /*                         wdgSetCfg API Tests                                */
 /* ========================================================================== */
 void test_pos_wdg_wdgSetCfg_longWindowDuration(void);
+void test_neg_wdg_wdgSetCfg_invalidBitsInValidParams(void);
 void test_pos_wdg_wdgSetCfg_window1Duration(void);
 void test_pos_wdg_wdgSetCfg_window2Duration(void);
 void test_pos_wdg_wdgSetCfg_failThreshold(void);
@@ -430,6 +457,7 @@ void test_neg_wdg_wdgGetCfg_nullConfig(void);
 /* ========================================================================== */
 void test_pos_wdg_wdgSetMode_triggerMode(void);
 void test_pos_wdg_wdgSetMode_qAndAMode(void);
+void test_neg_wdg_wdgSetMode_ioRxByteFail(void);
 void test_neg_wdg_wdgSetMode_nullHandle(void);
 void test_neg_wdg_wdgSetMode_invalidMode(void);
 
@@ -444,11 +472,13 @@ void test_neg_wdg_wdgGetMode_nullParam(void);
 /* ========================================================================== */
 void test_pos_wdg_wdgSetPowerHold_enable(void);
 void test_pos_wdg_wdgSetPowerHold_disable(void);
+void test_neg_wdg_wdgSetPowerHold_ioRxByteFail(void);
 void test_neg_wdg_wdgSetPowerHold_nullHandle(void);
 
 /* ========================================================================== */
 /*                       wdgGetPowerHold API Tests                            */
 /* ========================================================================== */
+void test_neg_wdg_wdgGetPowerHold_ioRxByteFail(void);
 void test_neg_wdg_wdgGetPowerHold_nullHandle(void);
 void test_neg_wdg_wdgGetPowerHold_nullParam(void);
 
@@ -457,6 +487,7 @@ void test_neg_wdg_wdgGetPowerHold_nullParam(void);
 /* ========================================================================== */
 void test_pos_wdg_wdgSetReturnToLongWindow_enable(void);
 void test_pos_wdg_wdgSetReturnToLongWindow_disable(void);
+void test_neg_wdg_wdgSetReturnToLongWindow_ioRxByteFail(void);
 void test_neg_wdg_wdgSetReturnToLongWindow_nullHandle(void);
 
 /* ========================================================================== */
@@ -484,6 +515,7 @@ void test_neg_wdg_wdgGetErrStatus_nullParam(void);
 /* ========================================================================== */
 /*                      wdgClrErrStatus API Tests                             */
 /* ========================================================================== */
+void test_pos_wdg_wdgClrErrStatus_noBitsSet(void);
 void test_pos_wdg_wdgClrErrStatus_timeout(void);
 void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void);
 void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void);
@@ -525,6 +557,33 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void);
 void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void);
 void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void);
 void test_neg_wdg_wdgQaWriteAnswer_nullHandle(void);
+void test_neg_wdg_wdgQaWriteAnswer_getQandAIoRxByteFail(void);
+
+/* ========================================================================== */
+/*          Coverage Gap: I/O failure tests for wdgSetCfg sub-functions       */
+/* ========================================================================== */
+void test_neg_wdg_wdgSetCfg_checkCfgStateIoRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_checkCfgStateIoRxByteFailOp1(void);
+void test_neg_wdg_wdgSetCfg_checkCfgStateDisabledBranch(void);
+void test_neg_wdg_wdgSetAllCfgFields_windowsTimeIntervalsIoTxByteFail(void);
+void test_neg_wdg_wdgSetCfg_thresholdsIoRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_modeAndTimeBaseIoRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_modeAndTimeBaseIoRxByteFailOp4(void);
+void test_neg_wdg_wdgSetCfg_qaConfigurationsIoRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_qaConfigurationsIoRxByteFailOp4(void);
+void test_neg_wdg_wdgSetCfg_thrIntBehaviorIoRxByteFail(void);
+void test_neg_wdg_wdgSetCfg_thrIntBehaviorIoRxByteFailOp4(void);
+
+/* ========================================================================== */
+/*          Coverage Gap: I/O failure tests for wdgGetCfg sub-functions       */
+/* ========================================================================== */
+void test_neg_wdg_wdgGetCfg_longWinIoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_win1IoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_win2IoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_thrIntBehaviorIoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_thresholdsIoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_modeAndTimeBaseIoRxByteFail(void);
+void test_neg_wdg_wdgGetCfg_qaConfigurationsIoRxByteFail(void);
 
 #ifdef __cplusplus
 }

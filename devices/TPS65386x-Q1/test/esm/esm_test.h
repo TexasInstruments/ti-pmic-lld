@@ -33,8 +33,6 @@
 #ifndef ESM_TEST_H
 #define ESM_TEST_H
 
-
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -91,7 +89,15 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_hmin); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_lmax); \
     PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_lmin); \
-    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_multiple)
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_multiple); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_modeOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_errThrOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_deglitchOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_timeBaseOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_cfg1_enableAndErrThrSkipped); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cfg1_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetCfg_cfg2_polarityAndDeglitchSkipped); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_cfg2_ioRxFail)
 
 #define ESM_TEST_NEG_ESMSETCFG() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetCfg_nullHandle); \
@@ -113,7 +119,23 @@ extern "C" {
 /* ======================================================================== */
 
 #define ESM_TEST_POS_ESMGETCFG() \
-    /* Positive tests for esmGetCfg are combined with esmSetCfg tests */
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delays_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_delay1Only); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmax_ioRxFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_delay2_ioRxFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_hmin_ioRxFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmax_ioRxFail); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_lmin_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_hmaxOnly); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cfg1_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_enableOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_modeOnly); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_cfg2_ioRxFail); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_polarityOnly); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_ctrlCfg_modeOnlyTriggersCfg1); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_ctrlCfg_errThrOnlyTriggersCfg1); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_ctrlCfg_deglitchOnlyTriggersCfg2); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmGetCfg_ctrlCfg_timeBaseOnlyTriggersCfg2)
 
 #define ESM_TEST_NEG_ESMGETCFG() \
     PLATFORM_RUN_TEST(test_neg_esm_esmGetCfg_nullHandle); \
@@ -130,7 +152,8 @@ extern "C" {
 /* ======================================================================== */
 
 #define ESM_TEST_POS_ESMSETENABLESTATE() \
-    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetStartState)
+    PLATFORM_RUN_TEST(test_pos_esm_esmSetGetStartState); \
+    PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_ioRxByteFail)
 
 #define ESM_TEST_NEG_ESMSETENABLESTATE() \
     PLATFORM_RUN_TEST(test_neg_esm_esmSetStartState_nullHandle)
@@ -186,7 +209,6 @@ extern "C" {
     ESM_TEST_POS_ESMSTOP(); \
     ESM_TEST_NEG_ESMSTOP()
 
-
 /* ======================================================================== */
 /*                         Test APIs: esmGetStatus                          */
 /* ======================================================================== */
@@ -212,7 +234,10 @@ extern "C" {
 /* ======================================================================== */
 
 #define ESM_TEST_POS_ESMCLRSTATUS() \
-    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus)
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_omitDelay2Flag); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_omitDelay1Flag); \
+    PLATFORM_RUN_TEST(test_pos_esm_esmClrStatus_omitEsmErrFlag)
 
 #define ESM_TEST_NEG_ESMCLRSTATUS() \
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_nullHandle); \
@@ -268,6 +293,12 @@ void esm_test(void *args);
  * @brief Test: Set and get ESM start state.
  */
 void test_pos_esm_esmSetGetStartState(void);
+
+/**
+ * @brief Test: Pmic_esmSetStartState() returns error when the first I/O call fails.
+ * BUILD_MOCK only — uses PmicMock_InjectError to fail the ioRxByte call.
+ */
+void test_neg_esm_esmSetStartState_ioRxByteFail(void);
 
 /* esmStart Tests */
 /**
@@ -347,6 +378,33 @@ void test_pos_esm_esmSetCfg_lmin(void);
  */
 void test_pos_esm_esmSetCfg_multiple(void);
 
+/* ESM MC/DC and I/O failure coverage tests (static function gap coverage) */
+void test_pos_esm_esmSetCfg_modeOnly(void);
+void test_pos_esm_esmSetCfg_errThrOnly(void);
+void test_pos_esm_esmSetCfg_deglitchOnly(void);
+void test_pos_esm_esmSetCfg_timeBaseOnly(void);
+void test_pos_esm_esmSetCfg_cfg1_enableAndErrThrSkipped(void);
+void test_neg_esm_esmSetCfg_cfg1_ioRxFail(void);
+void test_pos_esm_esmSetCfg_cfg2_polarityAndDeglitchSkipped(void);
+void test_neg_esm_esmSetCfg_cfg2_ioRxFail(void);
+void test_neg_esm_esmGetCfg_delays_ioRxFail(void);
+void test_pos_esm_esmGetCfg_delay1Only(void);
+void test_neg_esm_esmGetCfg_hmax_ioRxFail(void);
+void test_neg_esm_esmGetCfg_delay2_ioRxFail(void);
+void test_neg_esm_esmGetCfg_hmin_ioRxFail(void);
+void test_neg_esm_esmGetCfg_lmax_ioRxFail(void);
+void test_neg_esm_esmGetCfg_lmin_ioRxFail(void);
+void test_pos_esm_esmGetCfg_hmaxOnly(void);
+void test_neg_esm_esmGetCfg_cfg1_ioRxFail(void);
+void test_pos_esm_esmGetCfg_enableOnly(void);
+void test_pos_esm_esmGetCfg_modeOnly(void);
+void test_neg_esm_esmGetCfg_cfg2_ioRxFail(void);
+void test_pos_esm_esmGetCfg_polarityOnly(void);
+void test_pos_esm_esmGetCfg_ctrlCfg_modeOnlyTriggersCfg1(void);
+void test_pos_esm_esmGetCfg_ctrlCfg_errThrOnlyTriggersCfg1(void);
+void test_pos_esm_esmGetCfg_ctrlCfg_deglitchOnlyTriggersCfg2(void);
+void test_pos_esm_esmGetCfg_ctrlCfg_timeBaseOnlyTriggersCfg2(void);
+
 /* esmGetStatus Tests */
 /**
  * @brief Test: Get ESM error status.
@@ -373,6 +431,24 @@ void test_pos_esm_esmGetStatus_errCnt(void);
  * @brief Test: Clear ESM status flags.
  */
 void test_pos_esm_esmClrStatus(void);
+
+/**
+ * @brief Test: Pmic_esmClrStatus() succeeds when DELAY2_ERR_VALID flag is absent.
+ * Covers the false branch of the PMIC_ESM_DELAY2_ERR_VALID condition.
+ */
+void test_pos_esm_esmClrStatus_omitDelay2Flag(void);
+
+/**
+ * @brief Test: Pmic_esmClrStatus() succeeds when DELAY1_ERR_VALID flag is absent.
+ * Covers the false branch of the PMIC_ESM_DELAY1_ERR_VALID condition.
+ */
+void test_pos_esm_esmClrStatus_omitDelay1Flag(void);
+
+/**
+ * @brief Test: Pmic_esmClrStatus() succeeds when ESM_ERR_VALID flag is absent.
+ * Covers the false branch of the PMIC_ESM_ERR_VALID condition.
+ */
+void test_pos_esm_esmClrStatus_omitEsmErrFlag(void);
 
 /* ========================================================================== */
 /*                       Negative Test Declarations                           */

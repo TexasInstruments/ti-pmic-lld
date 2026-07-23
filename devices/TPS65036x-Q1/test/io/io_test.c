@@ -45,7 +45,6 @@
 #include "test_constants.h"
 #include "regmap/core.h"
 
-
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
@@ -73,7 +72,6 @@ static uint32_t g_mockIoWriteCallCount = 0U;
 static int32_t g_mockIoReadReturnStatus = PMIC_ST_SUCCESS;
 static int32_t g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
 static uint8_t g_mockCrcCorruptionMask = 0x00U;  /* XOR mask to corrupt CRC byte */
-
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -745,7 +743,6 @@ void test_pos_io_ioTxRxByte_B0_revisionMapping(void)
 /*                        Property Test Definitions                           */
 /* ========================================================================== */
 
-
 void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -799,7 +796,7 @@ void test_pos_io_ioTxByte_withRetryOnFailure(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
@@ -871,7 +868,7 @@ void test_neg_io_crcErrorExhaustsRetries(void)
 }
 
 /**
- * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
+ * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt.
  */
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
@@ -894,12 +891,12 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 
 /**
- * @brief Test ioRxByte with zero retry count (no retries allowed)
+ * @brief Test ioRxByte with zero retry count (no retries allowed).
  */
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
@@ -930,7 +927,7 @@ void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 }
 
 /**
- * @brief Test ioTxByte with multiple retry attempts before success
+ * @brief Test ioTxByte with multiple retry attempts before success.
  */
 void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
@@ -961,7 +958,7 @@ void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 }
 
 /**
- * @brief Test NULL timer with retry - exercises line 147 in pmic_io.c
+ * @brief Test NULL timer with retry.c.
  */
 void test_neg_io_nullTimerWithRetry(void)
 {
@@ -983,7 +980,7 @@ void test_neg_io_nullTimerWithRetry(void)
 }
 
 /**
- * @brief Test A0 revision register mapping - exercises lines 153-154, 221-222 in pmic_io.c
+ * @brief Test A0 revision register mapping.c.
  */
 void test_pos_io_a0RevisionMapping(void)
 {
@@ -1017,13 +1014,12 @@ void test_pos_io_a0RevisionMapping(void)
     // Verify data integrity (mock should handle address mapping transparently)
     PLATFORM_ASSERT(readData == testData);
 #else
-    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK");
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for register injection");
 #endif
 }
 
 /**
- * @brief Test Pmic_ioTxByte() with NULL ioWrite function pointer
- * Covers NULL ioWrite check in Pmic_ioTxByte()
+ * @brief Test Pmic_ioTxByte() with NULL ioWrite function pointer.
  */
 void test_neg_io_nullIoWriteFunc(void)
 {
@@ -1041,7 +1037,7 @@ void test_neg_io_nullIoWriteFunc(void)
 }
 
 /**
- * @brief Test NULL ioRead pointer - exercises line 214 in pmic_io.c
+ * @brief Test NULL ioRead pointer.c.
  */
 void test_neg_io_nullIoRead(void)
 {
@@ -1065,8 +1061,7 @@ void test_neg_io_nullIoRead(void)
 /* ========================================================================== */
 
 /**
- * @brief Test Pmic_ioTxByte with NULL commHandle0
- * Tests line 141 branch: handle!=NULL but commHandle0==NULL
+ * @brief Test Pmic_ioTxByte with NULL commHandle0.
  */
 void test_neg_io_ioTxByte_nullCommHandle(void)
 {
@@ -1082,8 +1077,7 @@ void test_neg_io_ioTxByte_nullCommHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte with NULL commHandle0
- * Tests line 220 branch: handle!=NULL && commHandle0==NULL && rxData!=NULL
+ * @brief Test Pmic_ioRxByte with NULL commHandle0.
  */
 void test_neg_io_ioRxByte_nullCommHandle(void)
 {
@@ -1097,5 +1091,36 @@ void test_neg_io_ioRxByte_nullCommHandle(void)
     /* Should fail with NULL_PARAM error */
     int32_t status = Pmic_ioRxByte(&handle, 0x10, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test Pmic_ioTxByte() retry exhaustion.
+ * With retryCnt == 0U the do-while breaks after the first failed write,
+ * so g_mockIoWriteCallCount should be exactly 1.
+ */
+void test_neg_io_ioTxByte_retryExhausted(void)
+{
+    int32_t status;
+    uint8_t writeVal = TEST_PATTERN_AA;
+    Pmic_Handle_t testHandle;
+
+    // Build a test handle that routes I/O through the mock functions
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead = &mockIoRead;
+    testHandle.ioWrite = &mockIoWrite;
+    testHandle.timerWaitMs = &mockTimerWait;
+    testHandle.retryCnt = 0U;  // No retries allowed
+    testHandle.retryIntervalMs = 0U;
+
+    // Reset mock state and configure write to fail
+    resetMockIoState();
+    g_mockIoWriteReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
+
+    // Attempt write — should fail immediately without any retry
+    status = Pmic_ioTxByte(&testHandle, IO_TEST_SCRATCH_PAD_REG_1_REG, writeVal);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    // Verify exactly one write attempt was made (no retries)
+    PLATFORM_ASSERT(g_mockIoWriteCallCount == 1U);
 }
 

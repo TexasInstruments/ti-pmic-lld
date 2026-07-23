@@ -47,7 +47,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define PMIC_MAX_DIAGNOSTIC_ID ((PMIC_ST_ID_ERROR_MAX > PMIC_ST_ID_WARNING_MAX) ? PMIC_ST_ID_ERROR_MAX : PMIC_ST_ID_WARNING_MAX)
+#define PMIC_MAX_DIAGNOSTIC_ID ((PMIC_ST_ID_ERROR_MAX > PMIC_ST_ID_WARNING_MAX) ? PMIC_ST_ID_ERROR_MAX : PMIC_ST_ID_WARNING_MAX) /* DA_JUSTIFY: PMICDRV-2355 */
 
 /* ========================================================================== */
 /*                          Structures and Enums                              */
@@ -146,8 +146,8 @@ static inline void copyDiagnostic(const Pmic_Diagnostic_t *src, Pmic_Diagnostic_
 static inline int32_t incrementErrCnt(int32_t status) {
     const uint16_t statusId = getStatusCodeId(status);
 
-    if (!isValidErrorId(statusId)) {
-        return PMIC_ST_ERR_INV_STATUS_ID;
+    if (!isValidErrorId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+        return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
     }
 
     if (sysDiagnostics.errCnt[statusId] >= PMIC_ERR_CNT_OVERFLOW_THR) {
@@ -171,8 +171,8 @@ static inline int32_t incrementErrCnt(int32_t status) {
 static inline int32_t incrementWarnCnt(int32_t status) {
     const uint16_t statusId = getStatusCodeId(status);
 
-    if (!isValidWarningId(statusId)) {
-        return PMIC_ST_ERR_INV_STATUS_ID;
+    if (!isValidWarningId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+        return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
     }
 
     if (sysDiagnostics.warnCnt[statusId] >= PMIC_WARN_CNT_OVERFLOW_THR) {
@@ -208,7 +208,7 @@ static int32_t statusCodeCheck(int32_t status) {
             break;
         default:
             return PMIC_ST_ERR_INV_STATUS_TYPE;
-            break;
+            break; /* DA_JUSTIFY: PMICDRV-2355 */
     }
 
     return PMIC_ST_SUCCESS;
@@ -223,8 +223,8 @@ static int32_t getDiagnosticEntry(Pmic_Diagnostic_t *diag) {
     }
 
     if (statusType == PMIC_ST_TYPE_ERROR) {
-        if (!isValidErrorId(statusId)) {
-            return PMIC_ST_ERR_INV_STATUS_ID;
+        if (!isValidErrorId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+            return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
         }
         if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             diag->cnt = sysDiagnostics.errCnt[statusId];
@@ -233,8 +233,8 @@ static int32_t getDiagnosticEntry(Pmic_Diagnostic_t *diag) {
             diag->flag = sysDiagnostics.errCntOverflow[statusId];
         }
     } else if (statusType == PMIC_ST_TYPE_WARNING) {
-        if (!isValidWarningId(statusId)) {
-            return PMIC_ST_ERR_INV_STATUS_ID;
+        if (!isValidWarningId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+            return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
         }
         if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             diag->cnt = sysDiagnostics.warnCnt[statusId];
@@ -257,8 +257,8 @@ static int32_t clrDiagnosticEntry(const Pmic_Diagnostic_t *diag) {
     }
 
     if (statusType == PMIC_ST_TYPE_ERROR) {
-        if (!isValidErrorId(statusId)) {
-            return PMIC_ST_ERR_INV_STATUS_ID;
+        if (!isValidErrorId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+            return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
         }
         if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             sysDiagnostics.errCnt[statusId] = 0U;
@@ -267,8 +267,8 @@ static int32_t clrDiagnosticEntry(const Pmic_Diagnostic_t *diag) {
             sysDiagnostics.errCntOverflow[statusId] = (bool)false;
         }
     } else if (statusType == PMIC_ST_TYPE_WARNING) {
-        if (!isValidWarningId(statusId)) {
-            return PMIC_ST_ERR_INV_STATUS_ID;
+        if (!isValidWarningId(statusId)) { /* DA_JUSTIFY: PMICDRV-2356 */
+            return PMIC_ST_ERR_INV_STATUS_ID; /* DA_JUSTIFY: PMICDRV-2356 */
         }
         if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
             sysDiagnostics.warnCnt[statusId] = 0U;
@@ -310,7 +310,7 @@ int32_t Pmic_logStatus(const Pmic_Handle_t *handle, int32_t status) {
     if (statusCheck != PMIC_ST_SUCCESS) {
         incResult = incrementErrCnt(statusCheck);
         Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-        if (incResult != PMIC_ST_SUCCESS) {
+        if (incResult != PMIC_ST_SUCCESS) { /* DA_JUSTIFY: PMICDRV-2356 */
             return incResult;
         }
         return statusCheck;
@@ -319,8 +319,8 @@ int32_t Pmic_logStatus(const Pmic_Handle_t *handle, int32_t status) {
     // Update diagnostic information for error type
     if (statusType == PMIC_ST_TYPE_ERROR) {
         incResult = incrementErrCnt(status);
-        if (incResult != PMIC_ST_SUCCESS) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
+        if (incResult != PMIC_ST_SUCCESS) { /* DA_JUSTIFY: PMICDRV-2356 */
+            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC); /* DA_JUSTIFY: PMICDRV-2356 */
             return incResult;
         }
     }
@@ -328,8 +328,8 @@ int32_t Pmic_logStatus(const Pmic_Handle_t *handle, int32_t status) {
     // Update diagnostic information for warning type
     if (statusType == PMIC_ST_TYPE_WARNING) {
         incResult = incrementWarnCnt(status);
-        if (incResult != PMIC_ST_SUCCESS) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
+        if (incResult != PMIC_ST_SUCCESS) { /* DA_JUSTIFY: PMICDRV-2356 */
+            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC); /* DA_JUSTIFY: PMICDRV-2356 */
             return incResult;
         }
     }

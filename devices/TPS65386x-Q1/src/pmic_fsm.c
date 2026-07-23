@@ -377,7 +377,7 @@ static int32_t FSM_setAllCfg(const Pmic_Handle_t *handle, const Pmic_FsmCfg_t *f
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
          Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_STBY_EN_VALID) ||
          Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||
@@ -568,7 +568,7 @@ static int32_t FSM_getAllCfg(const Pmic_Handle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) &&
+    if ((status == PMIC_ST_SUCCESS) && /* DA_JUSTIFY: PMICDRV-2356 */
         (Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_NRST_ACTIVE_IN_STBY_SEQ_VALID) ||
          Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_STBY_EN_VALID) ||
          Pmic_validParamCheck(fsmCfg->validParams, PMIC_CFG_FSM_HIGHER_VBAT_STBY_EXIT_THR_VALID) ||

@@ -33,8 +33,6 @@
 #ifndef WDG_TEST_H
 #define WDG_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -318,9 +316,20 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullParam); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgExtractAnsCntAndQues_nullParam); \
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgExtractAnsCntAndQues_intTopStatusClear); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgWriteAnswer_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_wdg_wdgWriteAnswer_nullParam); \
-    PLATFORM_RUN_TEST(test_pos_wdg_wdgWriteAnswer_success)
+    PLATFORM_RUN_TEST(test_pos_wdg_wdgWriteAnswer_success); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_thresholds_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_qaConfigurations_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_resetEnableCfg_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_longWindowInterval_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_getQuestionAndAnswer_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgState_enableStateReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgSetCfg_checkCfgState_returnToLongWindowReadFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgQaWriteAnswer_getQuestionAndAnswer_intTopStatusClear); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_window1Interval_readFail); \
+    PLATFORM_RUN_TEST(test_neg_wdg_wdgGetCfg_window2Interval_readFail)
 
 /* Test: TC-WDG-0063 */
 #define WDG_TEST_LP8772X_SPECIFIC() \
@@ -378,6 +387,7 @@ void test_neg_wdg_wdgDisable_nullHandle(void);
 void test_neg_wdg_wdgEnable_nullHandle(void);
 void test_neg_wdg_wdgExtractAnsCntAndQues_nullHandle(void);
 void test_neg_wdg_wdgExtractAnsCntAndQues_nullParam(void);
+void test_pos_wdg_wdgExtractAnsCntAndQues_intTopStatusClear(void);
 void test_neg_wdg_wdgExtractFdbk_nullParam(void);
 void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullHandle(void);
 void test_neg_wdg_wdgGetAnsCntAndQuesRegData_nullParam(void);
@@ -449,6 +459,19 @@ void test_pos_wdg_wdgSetCfg_win2Code(void);
 void test_pos_wdg_wdgSetPowerHold_enableDisable(void);
 void test_pos_wdg_wdgSetReturnToLongWindow_enableDisable(void);
 void test_pos_wdg_wdgWriteAnswer_success(void);
+
+/* WDG static function I/O failure coverage tests */
+void test_neg_wdg_wdgSetCfg_thresholds_readFail(void);
+void test_neg_wdg_wdgSetCfg_qaConfigurations_readFail(void);
+void test_neg_wdg_wdgSetCfg_resetEnableCfg_readFail(void);
+void test_neg_wdg_wdgGetCfg_longWindowInterval_readFail(void);
+void test_neg_wdg_wdgQaWriteAnswer_getQuestionAndAnswer_readFail(void);
+
+void test_neg_wdg_wdgSetCfg_checkCfgState_enableStateReadFail(void);
+void test_neg_wdg_wdgSetCfg_checkCfgState_returnToLongWindowReadFail(void);
+void test_neg_wdg_wdgQaWriteAnswer_getQuestionAndAnswer_intTopStatusClear(void);
+void test_neg_wdg_wdgGetCfg_window1Interval_readFail(void);
+void test_neg_wdg_wdgGetCfg_window2Interval_readFail(void);
 
 #ifdef __cplusplus
 }

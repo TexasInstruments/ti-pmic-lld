@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef TIMER_TEST_H
 #define TIMER_TEST_H
 
@@ -67,7 +66,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeStdbyWu); \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeOperSeqStdby); \
     PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_modeOperSeqStdbyWu); \
-    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescaleAndModeVerify)
+    PLATFORM_RUN_TEST(test_pos_timer_timerSetCfg_prescaleAndModeVerify); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_ioRxByteFail)
 
 #define TIMER_TEST_NEG_TIMERSETCFG() \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_invalidPrescale); \
@@ -75,7 +75,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_invalidMode); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_nullHandle); \
     PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_validParamsZero); \
-    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_prescaleWhileRunning)
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_prescaleWhileRunning); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerSetCfg_prescaleCfgStateIoFail)
 
 /* Test: TC-TIMER-0001 */
 #define TIMER_TEST_TIMERSETCFG() \
@@ -139,7 +140,8 @@ extern "C" {
 #define TIMER_TEST_POS_TIMERCLR() \
     PLATFORM_RUN_TEST(test_pos_timer_timerClr_resetCounter); \
     PLATFORM_RUN_TEST(test_pos_timer_timerClr_verifyZero); \
-    PLATFORM_RUN_TEST(test_pos_timer_timerClr_sequenceVerify)
+    PLATFORM_RUN_TEST(test_pos_timer_timerClr_sequenceVerify); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerClr_ioRxByteFail)
 
 #define TIMER_TEST_NEG_TIMERCLR() \
     PLATFORM_RUN_TEST(test_neg_timer_timerClr_nullHandle)
@@ -158,7 +160,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode3); \
     PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode4); \
     PLATFORM_RUN_TEST(test_pos_timer_timerStop_fromMode5); \
-    PLATFORM_RUN_TEST(test_pos_timer_timerStop_verifyStopped)
+    PLATFORM_RUN_TEST(test_pos_timer_timerStop_verifyStopped); \
+    PLATFORM_RUN_TEST(test_neg_timer_timerStop_ioRxByteFail)
 
 #define TIMER_TEST_NEG_TIMERSTOP() \
     PLATFORM_RUN_TEST(test_neg_timer_timerStop_nullHandle)
@@ -246,6 +249,7 @@ void test_pos_timer_timerSetCfg_modeStdbyWu(void);
 void test_pos_timer_timerSetCfg_modeOperSeqStdby(void);
 void test_pos_timer_timerSetCfg_modeOperSeqStdbyWu(void);
 void test_pos_timer_timerSetCfg_prescaleAndModeVerify(void);
+void test_neg_timer_timerSetCfg_ioRxByteFail(void);
 
 /* Positive Tests - timerGetCfg */
 /* (Verified through timerSetCfg tests) */
@@ -264,6 +268,7 @@ void test_pos_timer_timerSetCnt_boundary2Verify(void);
 void test_pos_timer_timerClr_resetCounter(void);
 void test_pos_timer_timerClr_verifyZero(void);
 void test_pos_timer_timerClr_sequenceVerify(void);
+void test_neg_timer_timerClr_ioRxByteFail(void);
 
 /* Positive Tests - timerStop */
 void test_pos_timer_timerStop_fromMode1(void);
@@ -272,6 +277,7 @@ void test_pos_timer_timerStop_fromMode3(void);
 void test_pos_timer_timerStop_fromMode4(void);
 void test_pos_timer_timerStop_fromMode5(void);
 void test_pos_timer_timerStop_verifyStopped(void);
+void test_neg_timer_timerStop_ioRxByteFail(void);
 
 /* Positive Tests - timerSetWakeupValue */
 void test_pos_timer_timerSetWakeupValue_minValueVerify(void);
@@ -291,6 +297,8 @@ void test_neg_timer_timerSetCfg_invalidMode(void);
 void test_neg_timer_timerSetCfg_nullHandle(void);
 void test_neg_timer_timerSetCfg_validParamsZero(void);
 void test_neg_timer_timerSetCfg_prescaleWhileRunning(void);
+/* Coverage-gap: TIMER_checkPrescaleCfgState MC/DC line 76 false-branch */
+void test_neg_timer_timerSetCfg_prescaleCfgStateIoFail(void);
 
 /* Negative Tests - timerGetCfg */
 void test_neg_timer_timerGetCfg_nullCfg(void);

@@ -33,8 +33,6 @@
 #ifndef POWER_TEST_H
 #define POWER_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -245,7 +243,9 @@ extern "C" {
 /* ======================================================================== */
 
 #define POWER_TEST_POS_PWRGETRESOURCECFG() \
-    PLATFORM_RUN_TEST(test_pos_power_powerGetPgoodLevel_validBuck)
+    PLATFORM_RUN_TEST(test_pos_power_powerGetPgoodLevel_validBuck); \
+    PLATFORM_RUN_TEST(test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_lswMode); \
+    PLATFORM_RUN_TEST(test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_vmonMode)
 
 #define POWER_TEST_NEG_PWRGETRESOURCECFG() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_gpo_unsupportedDeglitch); \
@@ -267,7 +267,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_getIlimCfg_resourceOutOfBounds); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getModeCfg_unsupportedResource); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds); \
-    PLATFORM_RUN_TEST(test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1)
+    PLATFORM_RUN_TEST(test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_lswOnly); \
+    PLATFORM_RUN_TEST(test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_bypVmonOnly)
 
 /* Test: TC-POWER-0024 */
 #define POWER_TEST_PWRGETRESOURCECFG() \
@@ -369,7 +371,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_outOfBounds_resource); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getResourceCfgs_zeroNumConfigs); \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged)
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_errorMidBatch_outputUnchanged); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfgs_numConfigsExceedsMax)
 
 /* Test: TC-POWER-0026 */
 #define POWER_TEST_PWRGETRESOURCECFGS() \
@@ -443,6 +446,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_nullParam_config); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_numConfigs_zero); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_numConfigsExceedsMax); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck1_shutdownDelay); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck1_startupDelay); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck2_shutdownDelay); \
@@ -473,7 +477,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_numConfigs_zero); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_outOfBounds_resource); \
-    PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged)
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_errorMidBatch_outputUnchanged); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetSequenceCfgs_numConfigsExceedsMax)
 
 /* Test: TC-POWER-0030 */
 #define POWER_TEST_PWRGETSEQUENCECFGS() \
@@ -495,7 +500,14 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_twarnLvl); \
     PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_tsdOrdLvl); \
     PLATFORM_RUN_TEST(test_neg_power_thermal_invalid_twarnConfig); \
-    PLATFORM_RUN_TEST(test_neg_power_thermal_no_valid_params)
+    PLATFORM_RUN_TEST(test_neg_power_thermal_no_valid_params); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetThermalCfg_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfg_readModifyWrite_writeFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfg_setModeCfgLdoLs1_writeFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrSetResourceCfg_setModeCfgLs2Vmon2_writeFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_firstReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_secondReadFail); \
+    PLATFORM_RUN_TEST(test_neg_power_pwrGetResourceCfg_getModeCfgLs2Vmon2_readFail)
 
 /* Test: TC-POWER-0031 */
 #define POWER_TEST_PWRSETTHERMALCFG() \
@@ -815,6 +827,7 @@ void test_neg_power_pwrSetResourceCfgs_vccaVmon_scReaction(void);
 void test_neg_power_pwrGetResourceCfgs_nullParam_config(void);
 void test_neg_power_pwrGetResourceCfgs_nullParam_handle(void);
 void test_neg_power_pwrGetResourceCfgs_outOfBounds_resource(void);
+void test_neg_power_pwrGetResourceCfgs_numConfigsExceedsMax(void);
 
 /* ========================================================================== */
 /*                    pwrSetSequenceCfg API Tests                     */
@@ -873,6 +886,7 @@ void test_neg_power_pwrGetSequenceCfg_nullParam_handle(void);
 void test_neg_power_pwrSetSequenceCfgs_nullParam_config(void);
 void test_neg_power_pwrSetSequenceCfgs_nullParam_handle(void);
 void test_neg_power_pwrSetSequenceCfgs_numConfigs_zero(void);
+void test_neg_power_pwrSetSequenceCfgs_numConfigsExceedsMax(void);
 void test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck1_shutdownDelay(void);
 void test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck1_startupDelay(void);
 void test_neg_power_pwrSetSequenceCfgs_outOfBounds_buck2_shutdownDelay(void);
@@ -897,6 +911,7 @@ void test_neg_power_pwrSetSequenceCfgs_vccaVmon_startupDelay(void);
 void test_neg_power_pwrGetSequenceCfgs_nullParam_config(void);
 void test_neg_power_pwrGetSequenceCfgs_nullParam_handle(void);
 void test_neg_power_pwrGetSequenceCfgs_numConfigs_zero(void);
+void test_neg_power_pwrGetSequenceCfgs_numConfigsExceedsMax(void);
 void test_neg_power_pwrGetSequenceCfgs_outOfBounds_resource(void);
 
 /* ========================================================================== */
@@ -915,6 +930,10 @@ void test_neg_power_pwr_getModeCfg_unsupportedResource(void);
 void test_neg_power_pwr_getResourceCfgs_zeroNumConfigs(void);
 void test_neg_power_pwr_getVoltageCfg_resourceOutOfBounds(void);
 void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1(void);
+void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_lswOnly(void);
+void test_neg_power_pwr_invalidModeCombination_ldoLs1Vmon1_bypVmonOnly(void);
+void test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_lswMode(void);
+void test_pos_power_pwr_getModeCfg_ldoLs1Vmon1_vmonMode(void);
 void test_neg_power_pwr_setIlimCfg_resourceOutOfBounds(void);
 void test_neg_power_pwr_setResourceCfg_excessiveNumConfigs(void);
 void test_neg_power_pwr_setResourceCfg_zeroNumConfigs(void);
@@ -947,6 +966,17 @@ void test_neg_power_thermal_no_valid_params(void);
 
 /* MC/DC coverage test functions */
 void test_pos_power_setGetResourceCfg_buck1_enable_mcdc(void);
+
+/* pwrGetThermalCfg mock coverage tests */
+void test_neg_power_pwrGetThermalCfg_ioRxByteCSFail(void);
+
+/* PWR_readModifyWrite / PWR_setModeCfg* / PWR_getModeCfg* mock coverage tests */
+void test_neg_power_pwrSetResourceCfg_readModifyWrite_writeFail(void);
+void test_neg_power_pwrSetResourceCfg_setModeCfgLdoLs1_writeFail(void);
+void test_neg_power_pwrSetResourceCfg_setModeCfgLs2Vmon2_writeFail(void);
+void test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_firstReadFail(void);
+void test_neg_power_pwrGetResourceCfg_getModeCfgLdoLs1_secondReadFail(void);
+void test_neg_power_pwrGetResourceCfg_getModeCfgLs2Vmon2_readFail(void);
 
 #ifdef __cplusplus
 }

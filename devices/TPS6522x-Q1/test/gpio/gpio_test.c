@@ -31,8 +31,6 @@
  *
  *****************************************************************************/
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -43,6 +41,12 @@
 #include "test_constants.h"
 #include <stdlib.h>
 #include <time.h>
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_core.h"
+#include "pmic_mock_types.h"
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                             Global Variables                               */
@@ -988,8 +992,7 @@ void test_pos_gpio_property_pinConfigurations(void)
 }
 
 /**
- * @brief Test Pmic_gpioGetPinCfg with zero validParams
- * Covers line 359 in pmic_gpio.c
+ * @brief Test Pmic_gpioGetPinCfg with zero validParams.
  */
 void test_neg_gpio_gpiogetPinCfg_zeroValidParams(void)
 {
@@ -1003,8 +1006,7 @@ void test_neg_gpio_gpiogetPinCfg_zeroValidParams(void)
 }
 
 /**
- * @brief Test Pmic_gpioSetNIntEnDrvCfg with zero validParams
- * Covers line 492 in pmic_gpio.c
+ * @brief Test Pmic_gpioSetNIntEnDrvCfg with zero validParams.
  */
 void test_neg_gpio_gpiosetNIntEnDrvCfg_zeroValidParams(void)
 {
@@ -1017,8 +1019,7 @@ void test_neg_gpio_gpiosetNIntEnDrvCfg_zeroValidParams(void)
 }
 
 /**
- * @brief Test Pmic_gpioSetEnPbVSenseCfg with zero validParams
- * Covers line 624 in pmic_gpio.c
+ * @brief Test Pmic_gpioSetEnPbVSenseCfg with zero validParams.
  */
 void test_neg_gpio_gpiosetEnPbVSenseCfg_zeroValidParams(void)
 {
@@ -1031,8 +1032,7 @@ void test_neg_gpio_gpiosetEnPbVSenseCfg_zeroValidParams(void)
 }
 
 /**
- * @brief Test Pmic_gpioSetEnPbVSenseCfg with invalid deglitch value
- * Covers lines 674-675 in pmic_gpio.c
+ * @brief Test Pmic_gpioSetEnPbVSenseCfg with invalid deglitch value.
  */
 void test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch(void)
 {
@@ -1047,8 +1047,7 @@ void test_neg_gpio_gpiosetEnPbVSenseCfg_invalidDeglitch(void)
 }
 
 /**
- * @brief Test Pmic_gpioGetEnPbVSenseCfg to get EN/PB deglitch setting
- * Covers lines 732-733 in pmic_gpio.c - reading enPbDegl when DEGL_VALID is set
+ * @brief Test Pmic_gpioGetEnPbVSenseCfg to get EN/PB deglitch setting.
  */
 void test_pos_gpio_getEnPbDegl(void)
 {
@@ -1061,8 +1060,7 @@ void test_pos_gpio_getEnPbDegl(void)
 }
 
 /**
- * @brief Test Pmic_gpioGetEnPbVSenseStatus with zero validParams
- * Covers line 759 in pmic_gpio.c
+ * @brief Test Pmic_gpioGetEnPbVSenseStatus with zero validParams.
  */
 void test_neg_gpio_gpiogetEnPbVSenseStatus_zeroValidParams(void)
 {
@@ -1072,6 +1070,264 @@ void test_neg_gpio_gpiogetEnPbVSenseStatus_zeroValidParams(void)
 
     int32_t status = Pmic_gpioGetEnPbVSenseStatus(&pmicHandle, &status_var);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/**
+ * @brief Test Pmic_gpioGetEnPbVSenseCfg with ioRxByte_CS failure.
+ */
+void test_neg_gpio_gpioGetEnPbVSenseCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetEnPbVSenseCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_gpioGetEnPbVSenseStatus with ioRxByte_CS failure.
+ */
+void test_neg_gpio_gpioGetEnPbVSenseStatus_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioEnPbVSenseStatus_t statusCfg = {
+        .validParams = PMIC_GPIO_EN_LVL_HIGH_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetEnPbVSenseStatus(&pmicHandle, &statusCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_gpioGetNIntEnDrvCfg with ioRxByte_CS failure.
+ */
+void test_neg_gpio_gpioGetNIntEnDrvCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_FXN_SEL_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetNIntEnDrvCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_gpioGetPinCfg with ioRxByte_CS failure.
+ */
+void test_neg_gpio_gpioGetPinCfg_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioPinCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
+        .pinNum = PMIC_GPIO_PIN1
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetPinCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_gpioSetNIntEnDrvCfg with EN_PU_RESISTOR_VALID and enPuResistor=false.
+ */
+void test_pos_gpio_gpioSetNIntEnDrvCfg_enPuResistorFalse(void)
+{
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_NINT_ENDRV_EN_PU_RESISTOR_VALID,
+        .enPuResistor = false
+    };
+
+    int32_t status = Pmic_gpioSetNIntEnDrvCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * @brief Test Pmic_gpioSetPinCfg with ioRxByte failure.
+ */
+void test_neg_gpio_gpioSetPinCfg_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    Pmic_GpioPinCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_DIR_VALID,
+        .pinNum = PMIC_GPIO_PIN1,
+        .dir = PMIC_GPIO_PIN_OUTPUT
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetPinCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// EN/PB/VSense status partial-validParams test functions
+/* ========================================================================== */
+
+// Test gpioGetEnPbVSenseStatus with only PB_LVL_HIGH_VALID set
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noPbLvlValid(void)
+{
+    Pmic_GpioEnPbVSenseStatus_t statusData = {
+        .validParams = PMIC_GPIO_EN_LVL_HIGH_VALID | PMIC_GPIO_VSENSE_LVL_HIGH_VALID
+    };
+
+    int32_t status = Pmic_gpioGetEnPbVSenseStatus(&pmicHandle, &statusData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+// Test gpioGetEnPbVSenseStatus with only EN_LVL_HIGH_VALID set
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noEnLvlValid(void)
+{
+    Pmic_GpioEnPbVSenseStatus_t statusData = {
+        .validParams = PMIC_GPIO_PB_LVL_HIGH_VALID | PMIC_GPIO_VSENSE_LVL_HIGH_VALID
+    };
+
+    int32_t status = Pmic_gpioGetEnPbVSenseStatus(&pmicHandle, &statusData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+// Test gpioGetEnPbVSenseStatus with only VSENSE_LVL_HIGH_VALID set
+void test_pos_gpio_gpioGetEnPbVSenseStatus_noVsenseLvlValid(void)
+{
+    Pmic_GpioEnPbVSenseStatus_t statusData = {
+        .validParams = PMIC_GPIO_PB_LVL_HIGH_VALID | PMIC_GPIO_EN_LVL_HIGH_VALID
+    };
+
+    int32_t status = Pmic_gpioGetEnPbVSenseStatus(&pmicHandle, &statusData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+// Test gpioSetEnPbVSenseCfg with FN_VALID but no EN_PB_DEGL_VALID (else branch)
+void test_pos_gpio_gpioSetEnPbVSenseCfg_noFnValid(void)
+{
+    /* Only set deglitch valid without FN_VALID — this hits the path where
+     * fxnSel is not being validated against ENABLE or PB, reaching the
+     * "else" branch of the deglitch fxnSel check (vsense function). */
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID |
+                       PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE,
+        .enPbDegl = 0U
+    };
+
+    int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+// Test gpioSetEnPbVSenseCfg with PB function and deglitch (PB branch)
+void test_pos_gpio_gpioSetEnPbVSenseCfg_pbFnDeglitch(void)
+{
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID |
+                       PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_PB,
+        .enPbDegl = PMIC_GPIO_PB_DEGLITCH_200_MS
+    };
+
+    int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * @brief Test Pmic_gpioSetEnPbVSenseCfg with only DEGL_VALID (no FN_VALID).
+ */
+void test_pos_gpio_gpioSetEnPbVSenseCfg_deglitchOnlyNoFnSel(void)
+{
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID,
+        // fxnSel is intentionally not set — FN_VALID is absent
+        .enPbDegl = PMIC_GPIO_EN_DEGLITCH_120_US  // 0U: valid for EN, PB, and VSENSE
+    };
+
+    int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Read back the deglitch field to verify it was written
+    Pmic_GpioNIntEnDrvCfg_t getCfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_EN_PB_DEGL_VALID
+    };
+    status = Pmic_gpioGetEnPbVSenseCfg(&pmicHandle, &getCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(PMIC_GPIO_EN_DEGLITCH_120_US, getCfg.enPbDegl);
+}
+
+// Test gpioSetEnPbVSenseCfg with VSENSE function (else deglitch branch)
+void test_pos_gpio_gpioSetEnPbVSenseCfg_vsenseFn(void)
+{
+    Pmic_GpioNIntEnDrvCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_EN_PB_VSENSE_FN_VALID,
+        .fxnSel = PMIC_GPIO_EN_PB_VSENSE_FN_VSENSE
+    };
+
+    int32_t status = Pmic_gpioSetEnPbVSenseCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * @brief Test Pmic_gpioGetPinCfg when PMIC_CFG_GPIO_DIR_VALID is NOT set.
+ */
+void test_pos_gpio_gpioGetPinCfg_noDirValid(void)
+{
+    // Request only fxnSel — intentionally omit PMIC_CFG_GPIO_DIR_VALID
+    Pmic_GpioPinCfg_t cfg = {
+        .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
+        .pinNum = PMIC_GPIO_PIN1,
+        .dir = 0U
+    };
+
+    int32_t status = Pmic_gpioGetPinCfg(&pmicHandle, &cfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    // dir must remain unchanged — the field was not written
+    TEST_ASSERT_EQUAL(0U, cfg.dir);
 }
 
 /* ========================================================================== */

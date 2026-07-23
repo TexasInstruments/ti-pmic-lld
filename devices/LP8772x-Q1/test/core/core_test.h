@@ -33,8 +33,6 @@
 #ifndef CORE_TEST_H
 #define CORE_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -59,7 +57,11 @@ extern "C" {
 
 #define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
     PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailure)
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_ioFailure); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_pollExhaustion); \
+    PLATFORM_RUN_TEST(test_neg_core_configCrcValidate_pollLoopback); \
+    PLATFORM_RUN_TEST(test_neg_core_CORE_performCrcSequence_clearCalcIoFailure); \
+    PLATFORM_RUN_TEST(test_neg_core_CORE_performCrcSequence_setCalcIoFailure)
 
 /* Test: TC-CORE-0023 */
 #define CORE_TEST_CONFIGCRCCALCULATE() \
@@ -123,7 +125,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_setConfigCrc_writeValue)
 
 #define CORE_TEST_NEG_SETCONFIGCRC() \
-    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_nullHandle)
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_nullHandle); \
+    PLATFORM_RUN_TEST(test_neg_core_setConfigCrc_ioTxByteFail)
 
 /* Test: TC-CORE-0131 */
 #define CORE_TEST_SETCONFIGCRC() \
@@ -263,7 +266,6 @@ extern "C" {
 #define CORE_TEST_CALCUL_CONFIG_CRC_1_REG TEST_REG_CALCUL_CRC_1
 #define CORE_TEST_CALCUL_CONFIG_CRC_2_REG TEST_REG_CALCUL_CRC_2
 
-
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
@@ -323,6 +325,10 @@ void test_neg_core_getConfigCrcStatus_nullStatus(void);
 /* ========================================================================== */
 void test_neg_core_configCrcCalculate_nullHandle(void);
 void test_neg_core_configCrcCalculate_ioFailure(void);
+void test_neg_core_configCrcValidate_pollExhaustion(void);
+void test_neg_core_configCrcValidate_pollLoopback(void);
+void test_neg_core_CORE_performCrcSequence_clearCalcIoFailure(void);
+void test_neg_core_CORE_performCrcSequence_setCalcIoFailure(void);
 
 /* ========================================================================== */
 /*                   getConfigCrc API Tests                                   */
@@ -335,6 +341,7 @@ void test_neg_core_getConfigCrc_nullValue(void);
 /*                   setConfigCrc API Tests                                   */
 /* ========================================================================== */
 void test_pos_core_setConfigCrc_writeValue(void);
+void test_neg_core_setConfigCrc_ioTxByteFail(void);
 void test_neg_core_setConfigCrc_nullHandle(void);
 
 /* ========================================================================== */

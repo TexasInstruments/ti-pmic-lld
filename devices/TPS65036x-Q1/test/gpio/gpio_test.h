@@ -65,7 +65,8 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_invalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_functionality); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpio_outOfBounds_polarity); \
-    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_invalidValidParams)
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpio_ioRxByteCSFail)
 
 /* Test: TC-GPIO-0017 */
 #define GPIO_TEST_GPIOSETGETCFG_GPIO() \
@@ -85,11 +86,15 @@ extern "C" {
 
 #define GPIO_TEST_NEG_GPIOSETGETCFG_NINTGPI() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_nonZeroInvalidValidParams); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_functionality); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_polarity); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_puPdCfg); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_outOfBounds_odPpCfg); \
-    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams)
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_nonZeroInvalidValidParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nIntGpi_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_nIntGpi_ioRxByteFail)
 
 /* Test: TC-GPIO-0018 */
 #define GPIO_TEST_GPIOSETGETCFG_NINTGPI() \
@@ -123,7 +128,9 @@ extern "C" {
 /* ======================================================================== */
 #define GPIO_TEST_POS_GPIOACTIVATION() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioActivateDeactivate); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetActivationState)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSetActivationState); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetActivationState_ioRxByteCSFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetActivationState_ioRxByteFail)
 
 #define GPIO_TEST_NEG_GPIOACTIVATION() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetActivationState_nullHandle); \
@@ -189,6 +196,10 @@ void test_neg_gpio_gpioGetCfg_invalidGpioPin(void);
 void test_neg_gpio_gpioGetCfg_zeroValidParams(void);
 void test_neg_gpio_gpioGetCfg_gpio_invalidValidParams(void);
 void test_neg_gpio_gpioGetCfg_nIntGpi_invalidValidParams(void);
+void test_neg_gpio_gpioGetCfg_nIntGpi_nonZeroInvalidValidParams(void);
+
+/* Negative tests - Pmic_gpioSetCfg (additional) */
+void test_neg_gpio_gpioSetCfg_nIntGpi_nonZeroInvalidValidParams(void);
 
 /* Negative tests - Pmic_gpioSetActivationState */
 void test_neg_gpio_gpioSetActivationState_nullHandle(void);
@@ -219,6 +230,13 @@ void test_pos_gpio_gpioSetGetCfg_nIntGpi_all_params(void);
 void test_pos_gpio_gpioActivateDeactivate(void);
 void test_pos_gpio_gpioSetActivationState(void);
 void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void);
+void test_neg_gpio_gpioGetActivationState_ioRxByteCSFail(void);
+void test_neg_gpio_gpioSetActivationState_ioRxByteFail(void);
+
+/* Negative tests - GPIO static function I/O failures */
+void test_neg_gpio_gpioGetCfg_gpio_ioRxByteCSFail(void);
+void test_neg_gpio_gpioGetCfg_nIntGpi_ioRxByteCSFail(void);
+void test_neg_gpio_gpioSetCfg_nIntGpi_ioRxByteFail(void);
 
 #ifdef __cplusplus
 }

@@ -33,8 +33,6 @@
 #ifndef PMIC_TEST_H
 #define PMIC_TEST_H
 
-
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -60,6 +58,8 @@ extern "C" {
 #define PMIC_TEST_NEG_CHECKHANDLE() \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_invalidCommMode); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullTimerWithRetry); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullIoWrite); \
+    PLATFORM_RUN_TEST(test_neg_pmic_checkHandle_nullCriticalSectionStop); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkPmicCoreHandle_incorrectDrvInitStatus); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkPmicCoreHandle_nullCommHandle0); \
     PLATFORM_RUN_TEST(test_neg_pmic_checkPmicCoreHandle_nullHandle); \
@@ -101,7 +101,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_pmic_init_withCrcEnabled); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryCnt); \
     PLATFORM_RUN_TEST(test_pos_pmic_init_withRetryInterval); \
-    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs)
+    PLATFORM_RUN_TEST(test_pos_pmic_init_withTimerWaitMs); \
+    PLATFORM_RUN_TEST(test_pos_pmic_init_noCommModeValidBit); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noIoReadValidBit); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_noCritSecStartValidBit)
 
 #define PMIC_TEST_NEG_INIT() \
     PLATFORM_RUN_TEST(test_neg_pmic_init_incorrectCoreCfgCommMode); \
@@ -113,7 +116,12 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCoreCfgIoWrite); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullCoreCfgIrqResponseCallback); \
     PLATFORM_RUN_TEST(test_neg_pmic_init_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull)
+    PLATFORM_RUN_TEST(test_neg_pmic_init_timerWaitNull); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_getPmicInfo_secondReadFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_configureDeviceCrc_ioFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_validateComms_readFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_configureDeviceCrc_lockDisableFail); \
+    PLATFORM_RUN_TEST(test_neg_pmic_init_configureDeviceCrc_lockEnableFail)
 
 /* Test: TC-PMIC-0009 */
 #define PMIC_TEST_INIT() \
@@ -176,6 +184,16 @@ void test_pos_pmic_init_withCrcEnabled(void);
 void test_pos_pmic_init_withRetryCnt(void);
 void test_pos_pmic_init_withRetryInterval(void);
 void test_pos_pmic_init_withTimerWaitMs(void);
+void test_pos_pmic_init_noCommModeValidBit(void);
+void test_neg_pmic_init_noIoReadValidBit(void);
+void test_neg_pmic_init_noCritSecStartValidBit(void);
+void test_neg_pmic_init_getPmicInfo_secondReadFail(void);
+void test_neg_pmic_init_configureDeviceCrc_ioFail(void);
+void test_neg_pmic_init_validateComms_readFail(void);
+void test_neg_pmic_init_configureDeviceCrc_lockDisableFail(void);
+void test_neg_pmic_init_configureDeviceCrc_lockEnableFail(void);
+void test_neg_pmic_checkHandle_nullIoWrite(void);
+void test_neg_pmic_checkHandle_nullCriticalSectionStop(void);
 
 #ifdef __cplusplus
 }

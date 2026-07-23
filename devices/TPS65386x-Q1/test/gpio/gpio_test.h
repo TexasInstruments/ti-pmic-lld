@@ -31,8 +31,6 @@
  *
  *****************************************************************************/
 
-
-
 #ifndef GPIO_TEST_H
 #define GPIO_TEST_H
 
@@ -103,7 +101,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo1); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo2); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo3); \
-    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo4)
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_invalidValue_gpo4); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpi1_4_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpo1_2_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetCfg_gpo3_4_ioRxByteFail)
 
 /* Test: TC-GPIO-0001 */
 #define GPIO_TEST_GPIOSETCFG() \
@@ -120,7 +121,10 @@ extern "C" {
 #define GPIO_TEST_NEG_GPIOGETCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullParam_handle); \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_nullParam_gpioCfg); \
-    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidParam_validParams)
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_invalidParam_validParams); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpi1_4_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpo1_2_ioRxByteFail); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioGetCfg_gpo3_4_ioRxByteFail)
 
 /* Test: TC-GPIO-0002 */
 #define GPIO_TEST_GPIOGETCFG() \
@@ -150,7 +154,8 @@ extern "C" {
 
 #define GPIO_TEST_POS_GPIOSETSAFEOUTCFG() \
     PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOutSetGet); \
-    PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOut_individual)
+    PLATFORM_RUN_TEST(test_pos_gpio_gpioSafeOut_individual); \
+    PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_ioRxByteFail)
 
 #define GPIO_TEST_NEG_GPIOSETSAFEOUTCFG() \
     PLATFORM_RUN_TEST(test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle); \
@@ -274,6 +279,7 @@ void test_pos_gpio_gpioGetOutputValue_allGpos(void);
 
 void test_pos_gpio_gpioSafeOutSetGet(void);
 void test_pos_gpio_gpioSafeOut_individual(void);
+void test_neg_gpio_gpioSetSafeOutCfg_ioRxByteFail(void);
 
 /* ========================================================================== */
 /*                    Negative Test Declarations - gpioSetCfg/gpioGetCfg     */
@@ -311,6 +317,17 @@ void test_neg_gpio_gpioSetSafeOutCfg_nullParam_handle(void);
 void test_neg_gpio_gpioSetSafeOutCfg_invalidParam_validParams(void);
 void test_neg_gpio_gpioGetSafeOutCfg_nullParam_handle(void);
 void test_neg_gpio_gpioGetSafeOutCfg_nullParam_config(void);
+
+/* ========================================================================== */
+/*          Coverage Gap: I/O failure tests for getCfg/setCfg sub-functions   */
+/* ========================================================================== */
+
+void test_neg_gpio_gpioGetCfg_gpi1_4_ioRxByteFail(void);
+void test_neg_gpio_gpioGetCfg_gpo1_2_ioRxByteFail(void);
+void test_neg_gpio_gpioGetCfg_gpo3_4_ioRxByteFail(void);
+void test_neg_gpio_gpioSetCfg_gpi1_4_ioRxByteFail(void);
+void test_neg_gpio_gpioSetCfg_gpo1_2_ioRxByteFail(void);
+void test_neg_gpio_gpioSetCfg_gpo3_4_ioRxByteFail(void);
 
 #ifdef __cplusplus
 }

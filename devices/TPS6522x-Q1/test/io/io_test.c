@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 #include "platform.h"
 #include "io_test.h"
 #include "pmic_io.h"
@@ -137,12 +136,82 @@ static void mockTimerWait(uint32_t ms)
     (void)ms;
 }
 
+// Async error injection mock helpers
+
+/**
+ * @brief Async RxStart mock that always returns a communication error.
+ *
+ * Used for Row 49: asyncRxStart (read) failure path coverage.
+ * Buffer is non-const for RxStart (device writes into it).
+ */
+static int32_t mockAsyncRxStart_alwaysFail(const Pmic_Handle_t *handle, uint8_t page,
+                                            uint8_t regAddr, uint8_t *buf, uint8_t bufLen)
+{
+    (void)handle;
+    (void)page;
+    (void)regAddr;
+    (void)buf;
+    (void)bufLen;
+    return PMIC_ST_ERR_I2C_COMM_FAIL;
+}
+
+/**
+ * @brief Async TxStart mock that always returns a communication error.
+ *
+ * Used for Row 50: asyncTxStart (write) failure path coverage.
+ * Buffer is const for TxStart (host writes from it to device).
+ */
+static int32_t mockAsyncTxStart_alwaysFail(const Pmic_Handle_t *handle, uint8_t page,
+                                            uint8_t regAddr, const uint8_t *buf, uint8_t bufLen)
+{
+    (void)handle;
+    (void)page;
+    (void)regAddr;
+    (void)buf;
+    (void)bufLen;
+    return PMIC_ST_ERR_I2C_COMM_FAIL;
+}
+
+/**
+ * @brief Async TxStart mock that fails twice then succeeds (const-correct).
+ *
+ * Used for Row 53/54: covers Pmic_incrementRetryCnt (retry body) and the
+ * attemptNum > retryCnt break condition in the SPI write retry loop.
+ * With retryCnt=1: attempt 1 fails (body executes), attempt 2 fails
+ * (attemptNum=2 > retryCnt=1 → break).
+ */
+static uint32_t g_asyncTxFailCount = 0U;
+static int32_t mockAsyncTxStart_failTwice(const Pmic_Handle_t *handle, uint8_t page,
+                                           uint8_t regAddr, const uint8_t *buf, uint8_t bufLen)
+{
+    (void)handle;
+    (void)page;
+    (void)regAddr;
+    (void)buf;
+    (void)bufLen;
+    g_asyncTxFailCount++;
+    if (g_asyncTxFailCount <= 2U)
+    {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
+    }
+    return PMIC_ST_SUCCESS;
+}
+
+/**
+ * @brief Async await mock that always succeeds (no-op).
+ */
+static int32_t mockAsyncAwait_alwaysSucceed(const Pmic_Handle_t *handle)
+{
+    (void)handle;
+    return PMIC_ST_SUCCESS;
+}
+
 /* ========================================================================== */
 /*                       Negative Test Functions                              */
 /* ========================================================================== */
 
 /**
- * @brief Test Pmic_ioTxByte with NULL handle
+ * @brief Test Pmic_ioTxByte with NULL handle.
  */
 void test_neg_io_ioTxByte_nullHandle(void)
 {
@@ -151,7 +220,7 @@ void test_neg_io_ioTxByte_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioTxByte_CS with NULL handle
+ * @brief Test Pmic_ioTxByte_CS with NULL handle.
  */
 void test_neg_io_ioTxByte_CS_nullHandle(void)
 {
@@ -160,7 +229,7 @@ void test_neg_io_ioTxByte_CS_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte with NULL handle
+ * @brief Test Pmic_ioRxByte with NULL handle.
  */
 void test_neg_io_ioRxByte_nullHandle(void)
 {
@@ -170,7 +239,7 @@ void test_neg_io_ioRxByte_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte with NULL rxData pointer
+ * @brief Test Pmic_ioRxByte with NULL rxData pointer.
  */
 void test_neg_io_ioRxByte_nullRxData(void)
 {
@@ -179,7 +248,7 @@ void test_neg_io_ioRxByte_nullRxData(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte_CS with NULL handle
+ * @brief Test Pmic_ioRxByte_CS with NULL handle.
  */
 void test_neg_io_ioRxByte_CS_nullHandle(void)
 {
@@ -189,7 +258,7 @@ void test_neg_io_ioRxByte_CS_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte_CS with NULL rxData pointer
+ * @brief Test Pmic_ioRxByte_CS with NULL rxData pointer.
  */
 void test_neg_io_ioRxByte_CS_nullRxData(void)
 {
@@ -198,7 +267,7 @@ void test_neg_io_ioRxByte_CS_nullRxData(void)
 }
 
 /**
- * @brief Test Pmic_ioTxByte with NULL ioWrite function pointer
+ * @brief Test Pmic_ioTxByte with NULL ioWrite function pointer.
  */
 void test_neg_io_ioTxByte_nullIoWrite(void)
 {
@@ -209,7 +278,7 @@ void test_neg_io_ioTxByte_nullIoWrite(void)
 }
 
 /**
- * @brief Test Pmic_ioTxByte with NULL commHandle0
+ * @brief Test Pmic_ioTxByte with NULL commHandle0.
  */
 void test_neg_io_ioTxByte_nullCommHandle(void)
 {
@@ -220,7 +289,39 @@ void test_neg_io_ioTxByte_nullCommHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte with NULL ioRead function pointer
+ * @brief Test IO_validatePmicHandle with asyncEnable=true but NULL commHandle0.
+ */
+void test_neg_io_validatePmicHandle_asyncEnabledNullCommHandle(void)
+{
+#ifdef BUILD_MOCK
+    Pmic_Handle_t testHandle = pmicHandle;
+    uint8_t rxData = 0U;
+    int32_t status;
+
+    /* Set asyncEnable to true so the async code path is selected, but leave
+     * commHandle0 as NULL so IO_validatePmicHandle returns early with
+     * PMIC_ST_ERR_NULL_PARAM before reaching the async hook checks. */
+    testHandle.asyncEnable = true;
+    testHandle.commHandle0 = NULL;
+    testHandle.asyncRxStart = mockAsyncRxStart_alwaysFail;
+    testHandle.asyncTxStart = mockAsyncTxStart_alwaysFail;
+    testHandle.asyncRxAwait = mockAsyncAwait_alwaysSucceed;
+    testHandle.asyncTxAwait = mockAsyncAwait_alwaysSucceed;
+
+    // Pmic_ioTxByte -> IO_validatePmicHandle -> commHandle0==NULL path
+    status = Pmic_ioTxByte(&testHandle, DEV_REV_REG, 0x00U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+
+    // Pmic_ioRxByte -> IO_validatePmicHandle -> commHandle0==NULL path
+    status = Pmic_ioRxByte(&testHandle, DEV_REV_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioRxByte with NULL ioRead function pointer.
  */
 void test_neg_io_ioRxByte_nullIoRead(void)
 {
@@ -232,7 +333,7 @@ void test_neg_io_ioRxByte_nullIoRead(void)
 }
 
 /**
- * @brief Test Pmic_ioRxByte with NULL commHandle0
+ * @brief Test Pmic_ioRxByte with NULL commHandle0.
  */
 void test_neg_io_ioRxByte_nullCommHandle(void)
 {
@@ -244,7 +345,7 @@ void test_neg_io_ioRxByte_nullCommHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioUpdateByte with NULL handle
+ * @brief Test Pmic_ioUpdateByte with NULL handle.
  */
 void test_neg_io_ioUpdateByte_nullHandle(void)
 {
@@ -253,7 +354,7 @@ void test_neg_io_ioUpdateByte_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioUpdateByte_CS with NULL handle
+ * @brief Test Pmic_ioUpdateByte_CS with NULL handle.
  */
 void test_neg_io_ioUpdateByte_CS_nullHandle(void)
 {
@@ -262,7 +363,7 @@ void test_neg_io_ioUpdateByte_CS_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioUpdateByte_b with NULL handle
+ * @brief Test Pmic_ioUpdateByte_b with NULL handle.
  */
 void test_neg_io_ioUpdateByte_b_nullHandle(void)
 {
@@ -271,7 +372,7 @@ void test_neg_io_ioUpdateByte_b_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioUpdateByte_bCS with NULL handle
+ * @brief Test Pmic_ioUpdateByte_bCS with NULL handle.
  */
 void test_neg_io_ioUpdateByte_bCS_nullHandle(void)
 {
@@ -280,7 +381,7 @@ void test_neg_io_ioUpdateByte_bCS_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioSetCrcEnableState with NULL handle
+ * @brief Test Pmic_ioSetCrcEnableState with NULL handle.
  */
 void test_neg_io_ioSetCrcEnableState_nullHandle(void)
 {
@@ -299,7 +400,7 @@ void test_neg_io_ioSetCrcEnableState_nullCfg(void)
 }
 
 /**
- * @brief Test Pmic_ioCrcEnable with NULL handle
+ * @brief Test Pmic_ioCrcEnable with NULL handle.
  */
 void test_neg_io_ioCrcEnable_nullHandle(void)
 {
@@ -308,7 +409,7 @@ void test_neg_io_ioCrcEnable_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioCrcDisable with NULL handle
+ * @brief Test Pmic_ioCrcDisable with NULL handle.
  */
 void test_neg_io_ioCrcDisable_nullHandle(void)
 {
@@ -317,7 +418,7 @@ void test_neg_io_ioCrcDisable_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioGetCrcEnableState with NULL handle
+ * @brief Test Pmic_ioGetCrcEnableState with NULL handle.
  */
 void test_neg_io_ioGetCrcEnableState_nullHandle(void)
 {
@@ -327,7 +428,7 @@ void test_neg_io_ioGetCrcEnableState_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_ioGetCrcEnableState with NULL enabled pointer
+ * @brief Test Pmic_ioGetCrcEnableState with NULL enabled pointer.
  */
 void test_neg_io_ioGetCrcEnableState_nullEnabled(void)
 {
@@ -340,7 +441,7 @@ void test_neg_io_ioGetCrcEnableState_nullEnabled(void)
 /* ========================================================================== */
 
 /**
- * @brief Test single register read
+ * @brief Test single register read.
  */
 void test_pos_io_ioRxByte_singleRegisterRead(void)
 {
@@ -353,7 +454,7 @@ void test_pos_io_ioRxByte_singleRegisterRead(void)
 }
 
 /**
- * @brief Test single register write and readback
+ * @brief Test single register write and readback.
  */
 void test_pos_io_ioTxByte_singleRegisterWrite(void)
 {
@@ -372,7 +473,7 @@ void test_pos_io_ioTxByte_singleRegisterWrite(void)
 }
 
 /**
- * @brief Test single register read with critical section
+ * @brief Test single register read with critical section.
  */
 void test_pos_io_ioRxByte_CS_singleRegisterRead(void)
 {
@@ -385,7 +486,7 @@ void test_pos_io_ioRxByte_CS_singleRegisterRead(void)
 }
 
 /**
- * @brief Test single register write with critical section
+ * @brief Test single register write with critical section.
  */
 void test_pos_io_ioTxByte_CS_singleRegisterWrite(void)
 {
@@ -404,7 +505,7 @@ void test_pos_io_ioTxByte_CS_singleRegisterWrite(void)
 }
 
 /**
- * @brief Test read-modify-write operation
+ * @brief Test read-modify-write operation.
  */
 void test_pos_io_ioUpdateByte_readModifyWrite(void)
 {
@@ -429,7 +530,7 @@ void test_pos_io_ioUpdateByte_readModifyWrite(void)
 }
 
 /**
- * @brief Test read-modify-write operation with critical section
+ * @brief Test read-modify-write operation with critical section.
  */
 void test_pos_io_ioUpdateByte_CS_readModifyWrite(void)
 {
@@ -454,7 +555,7 @@ void test_pos_io_ioUpdateByte_CS_readModifyWrite(void)
 }
 
 /**
- * @brief Test read-modify-write single bit operation
+ * @brief Test read-modify-write single bit operation.
  */
 void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void)
 {
@@ -486,7 +587,7 @@ void test_pos_io_ioUpdateByte_b_readModifyWriteBit(void)
 }
 
 /**
- * @brief Test read-modify-write single bit operation with critical section
+ * @brief Test read-modify-write single bit operation with critical section.
  */
 void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void)
 {
@@ -518,7 +619,7 @@ void test_pos_io_ioUpdateByte_bCS_readModifyWriteBit(void)
 }
 
 /**
- * @brief Test CRC enable and disable functionality
+ * @brief Test CRC enable and disable functionality.
  */
 void test_pos_io_ioCrcEnable_crcEnableDisable(void)
 {
@@ -549,7 +650,7 @@ void test_pos_io_ioCrcEnable_crcEnableDisable(void)
 }
 
 /**
- * @brief Test CRC set enable state functionality
+ * @brief Test CRC set enable state functionality.
  */
 void test_pos_io_ioSetCrcEnableState_crcSetEnableState(void)
 {
@@ -589,7 +690,7 @@ void test_pos_io_ioSetCrcEnableState_crcSetEnableState(void)
 }
 
 /**
- * @brief Test setting crcEnable1 via Pmic_ioSetCrcEnableState
+ * @brief Test setting crcEnable1 via Pmic_ioSetCrcEnableState.
  */
 void test_pos_io_ioSetCrcEnableState_crcEnable1(void)
 {
@@ -613,7 +714,7 @@ void test_pos_io_ioSetCrcEnableState_crcEnable1(void)
 }
 
 /**
- * @brief Test setting both crcEnable0 and crcEnable1 in a single call
+ * @brief Test setting both crcEnable0 and crcEnable1 in a single call.
  */
 void test_pos_io_ioSetCrcEnableState_crcEnableBoth(void)
 {
@@ -641,7 +742,7 @@ void test_pos_io_ioSetCrcEnableState_crcEnableBoth(void)
 }
 
 /**
- * @brief Test reading crcEnable0 via Pmic_ioGetCrcEnableState
+ * @brief Test reading crcEnable0 via Pmic_ioGetCrcEnableState.
  */
 void test_pos_io_ioGetCrcEnableState_crcEnable0(void)
 {
@@ -668,7 +769,7 @@ void test_pos_io_ioGetCrcEnableState_crcEnable0(void)
 }
 
 /**
- * @brief Test reading crcEnable1 via Pmic_ioGetCrcEnableState
+ * @brief Test reading crcEnable1 via Pmic_ioGetCrcEnableState.
  */
 void test_pos_io_ioGetCrcEnableState_crcEnable1(void)
 {
@@ -695,7 +796,7 @@ void test_pos_io_ioGetCrcEnableState_crcEnable1(void)
 }
 
 /**
- * @brief Test reading both crcEnable0 and crcEnable1 via Pmic_ioGetCrcEnableState
+ * @brief Test reading both crcEnable0 and crcEnable1 via Pmic_ioGetCrcEnableState.
  */
 void test_pos_io_ioGetCrcEnableState_crcEnableBoth(void)
 {
@@ -727,7 +828,7 @@ void test_pos_io_ioGetCrcEnableState_crcEnableBoth(void)
 }
 
 /**
- * @brief Test writing to a WDG window register with I2C2 CRC enabled
+ * @brief Test writing to a WDG window register with I2C2 CRC enabled.
  */
 void test_pos_io_ioTxByte_wdgWriteWithCrc(void)
 {
@@ -796,7 +897,7 @@ void test_pos_io_ioTxByte_wdgWriteWithCrc(void)
 }
 
 /**
- * @brief Test reading from a WDG window register with I2C2 CRC enabled
+ * @brief Test reading from a WDG window register with I2C2 CRC enabled.
  */
 void test_pos_io_ioRxByte_wdgReadWithCrc(void)
 {
@@ -866,7 +967,7 @@ void test_pos_io_ioRxByte_wdgReadWithCrc(void)
 }
 
 /**
- * @brief Test multiple register write and readback
+ * @brief Test multiple register write and readback.
  */
 void test_pos_io_ioTxByte_multipleRegisterAccess(void)
 {
@@ -906,7 +1007,7 @@ void test_pos_io_ioTxByte_multipleRegisterAccess(void)
 }
 
 /**
- * @brief Test register read verification
+ * @brief Test register read verification.
  */
 void test_pos_io_ioRxByte_registerReadVerification(void)
 {
@@ -926,7 +1027,7 @@ void test_pos_io_ioRxByte_registerReadVerification(void)
 }
 
 /**
- * @brief Test CRC control with register access
+ * @brief Test CRC control with register access.
  */
 void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void)
 {
@@ -971,7 +1072,7 @@ void test_pos_io_ioCrcEnable_crcWithRegisterAccess(void)
 }
 
 /**
- * @brief Test read operation with CRC validation enabled
+ * @brief Test read operation with CRC validation enabled.
  *
  * This test enables CRC, performs a read operation, and verifies that
  * CRC validation occurs correctly with valid CRC from the mock device.
@@ -1012,7 +1113,7 @@ void test_pos_io_ioRxByte_readWithCrcValidation(void)
 }
 
 /**
- * @brief Test write operation with CRC calculation
+ * @brief Test write operation with CRC calculation.
  *
  * This test enables CRC, performs write operations, and verifies that
  * CRC calculation is performed correctly for transmitted data.
@@ -1061,7 +1162,7 @@ void test_pos_io_ioTxByte_writeWithCrcCalculation(void)
 }
 
 /**
- * @brief Test CRC enable/disable state transitions
+ * @brief Test CRC enable/disable state transitions.
  *
  * This test verifies that CRC can be properly enabled and disabled,
  * and that the state is correctly reflected in the handle.
@@ -1136,7 +1237,7 @@ void test_pos_io_ioCrcEnable_crcEnableDisableTransitions(void)
 }
 
 /**
- * @brief Test I2C mode write with CRC enabled
+ * @brief Test I2C mode write with CRC enabled.
  *
  * This test specifically covers the I2C CRC write path that was previously uncovered.
  */
@@ -1200,7 +1301,7 @@ void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
 }
 
 /**
- * @brief Test async write operation in SPI mode
+ * @brief Test async write operation in SPI mode.
  *
  * This test covers async write paths (lines 176-180).
  */
@@ -1273,7 +1374,7 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
 }
 
 /**
- * @brief Test async write operation in I2C mode
+ * @brief Test async write operation in I2C mode.
  *
  * This test covers async I2C write paths (lines 209-213).
  */
@@ -1346,7 +1447,7 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
 }
 
 /**
- * @brief Test async read operation in SPI mode
+ * @brief Test async read operation in SPI mode.
  *
  * This test covers async SPI read paths.
  */
@@ -1418,7 +1519,7 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
 }
 
 /**
- * @brief Test async read operation in I2C mode
+ * @brief Test async read operation in I2C mode.
  *
  * This test covers async I2C read paths.
  */
@@ -1490,10 +1591,7 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
 }
 
 /**
- * @brief Test CRC state transitions with I/O operations
- *
- * This test verifies that I/O operations work correctly when CRC state
- * is changed between operations.
+ * @brief Test CRC state transitions with I/O operations.
  */
 void test_pos_io_ioCrcEnable_crcStateTransitionsWithOperations(void)
 {
@@ -1556,7 +1654,7 @@ void test_pos_io_ioCrcEnable_crcStateTransitionsWithOperations(void)
 }
 
 /**
- * @brief Test ioRxByte with CRC error and retry logic
+ * @brief Test ioRxByte with CRC error and retry logic.
  */
 void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 {
@@ -1595,7 +1693,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 }
 
 /**
- * @brief Test ioTxByte with I/O failure and retry logic
+ * @brief Test ioTxByte with I/O failure and retry logic.
  */
 void test_pos_io_ioTxByte_withRetryOnFailure(void)
 {
@@ -1632,7 +1730,7 @@ void test_pos_io_ioTxByte_withRetryOnFailure(void)
 }
 
 /**
- * @brief Test CRC error exhausts retries
+ * @brief Test CRC error exhausts retries.
  */
 void test_neg_io_ioRxByte_crcErrorExhaustsRetries(void)
 {
@@ -1703,7 +1801,7 @@ void test_neg_io_ioRxByte_crcErrorExhaustsRetries(void)
 }
 
 /**
- * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
+ * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt.
  */
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
@@ -1740,7 +1838,7 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 }
 
 /**
- * @brief Test ioRxByte with zero retry count (no retries allowed)
+ * @brief Test ioRxByte with zero retry count (no retries allowed).
  */
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
@@ -1771,7 +1869,7 @@ void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 }
 
 /**
- * @brief Test ioTxByte with multiple retry attempts before success
+ * @brief Test ioTxByte with multiple retry attempts before success.
  */
 void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
@@ -1802,8 +1900,7 @@ void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 }
 
 /**
- * @brief Test NULL timer with retry configuration
- * Covers line 147 in pmic_io.c
+ * @brief Test NULL timer with retry configuration.
  */
 void test_neg_io_ioTxByte_nullTimerWithRetry(void)
 {
@@ -1823,8 +1920,7 @@ void test_neg_io_ioTxByte_nullTimerWithRetry(void)
 }
 
 /**
- * @brief Test NULL async hooks with async enabled
- * Covers line 162 in pmic_io.c
+ * @brief Test NULL async hooks with async enabled.
  */
 void test_neg_io_ioTxByte_nullAsyncHooks(void)
 {
@@ -1863,8 +1959,99 @@ void test_neg_io_ioTxByte_nullAsyncHooks(void)
 }
 
 /**
- * @brief Test I2C TX retry logic
- * Covers lines 275-277 in pmic_io.c
+ * @brief Test NULL commHandle1 in dual I2C mode (isolated from commHandle0).
+ */
+void test_neg_io_ioTxByte_dualI2cNullCommHandle1(void)
+{
+    int32_t status;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.commMode = PMIC_INTF_I2C_DUAL;
+    testHandle.commHandle1 = NULL;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
+}
+
+/**
+ * @brief Test NULL asyncRxStart in async mode (isolated from the other 3 async hooks).
+ */
+void test_neg_io_ioTxByte_nullAsyncRxStartAlone(void)
+{
+    int32_t status;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.asyncEnable = true;
+    testHandle.asyncRxStart = NULL;
+    testHandle.asyncTxStart = test_pmic_asyncTxStart;
+    testHandle.asyncRxAwait = test_pmic_asyncRxAwait;
+    testHandle.asyncTxAwait = test_pmic_asyncTxAwait;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test NULL asyncTxStart in async mode (isolated from the other 3 async hooks).
+ */
+void test_neg_io_ioTxByte_nullAsyncTxStartAlone(void)
+{
+    int32_t status;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.asyncEnable = true;
+    testHandle.asyncRxStart = test_pmic_asyncRxStart;
+    testHandle.asyncTxStart = NULL;
+    testHandle.asyncRxAwait = test_pmic_asyncRxAwait;
+    testHandle.asyncTxAwait = test_pmic_asyncTxAwait;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test NULL asyncTxAwait in async mode (isolated from the other 3 async hooks).
+ */
+void test_neg_io_ioTxByte_nullAsyncTxAwaitAlone(void)
+{
+    int32_t status;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.asyncEnable = true;
+    testHandle.asyncRxStart = test_pmic_asyncRxStart;
+    testHandle.asyncTxStart = test_pmic_asyncTxStart;
+    testHandle.asyncRxAwait = test_pmic_asyncRxAwait;
+    testHandle.asyncTxAwait = NULL;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test NULL asyncRxAwait in async mode (isolated from the other 3 async hooks).
+ */
+void test_neg_io_ioTxByte_nullAsyncRxAwaitAlone(void)
+{
+    int32_t status;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.asyncEnable = true;
+    testHandle.asyncRxStart = test_pmic_asyncRxStart;
+    testHandle.asyncTxStart = test_pmic_asyncTxStart;
+    testHandle.asyncRxAwait = NULL;
+    testHandle.asyncTxAwait = test_pmic_asyncTxAwait;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_1_REG, 0U);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test I2C TX retry logic.
  */
 void test_pos_io_ioTxByte_i2cTxRetry(void)
 {
@@ -1896,8 +2083,7 @@ void test_pos_io_ioTxByte_i2cTxRetry(void)
 }
 
 /**
- * @brief Test SPI RX CRC mismatch error
- * Covers lines 353-354 in pmic_io.c
+ * @brief Test SPI RX CRC mismatch error.
  */
 void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
 {
@@ -1938,8 +2124,7 @@ void test_neg_io_ioRxByte_spiRxCrcMismatch(void)
 }
 
 /**
- * @brief Test I2C RX CRC mismatch error
- * Covers lines 406-407 in pmic_io.c
+ * @brief Test I2C RX CRC mismatch error.
  */
 void test_neg_io_ioRxByte_i2cRxCrcMismatch(void)
 {
@@ -1976,8 +2161,7 @@ void test_neg_io_ioRxByte_i2cRxCrcMismatch(void)
 }
 
 /**
- * @brief Test I2C RX retry logic
- * Covers lines 415-417 in pmic_io.c
+ * @brief Test I2C RX retry logic.
  */
 void test_pos_io_ioRxByte_i2cRxRetry(void)
 {
@@ -2006,6 +2190,533 @@ void test_pos_io_ioRxByte_i2cRxRetry(void)
 
     /* Verify retry occurred */
     PLATFORM_ASSERT(g_mockIoReadCallCount == 2U);
+}
+
+/**
+ * @brief Test ioRxByte with I/O failure on first call, succeeds on retry.
+ */
+void test_pos_io_ioRxByte_retrySucceeds(void)
+{
+    int32_t status;
+    uint8_t regData = 0U;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead = &mockIoRead;
+    testHandle.ioWrite = &mockIoWrite;
+    testHandle.timerWaitMs = &mockTimerWait;
+    testHandle.retryCnt = 3U;
+    testHandle.retryIntervalMs = 10U;
+
+    resetMockIoState();
+
+    // Inject one read failure; mock auto-clears after one call
+    g_mockIoReadReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
+
+    status = Pmic_ioRxByte(&testHandle, SCRATCH_PAD_REG_1_REG, &regData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(g_mockIoReadCallCount == 2U);
+}
+
+/**
+ * @brief Test ioRxByte async SPI read path.
+ */
+void test_pos_io_ioRxByte_asyncSpi(void)
+{
+#ifdef BUILD_MOCK
+    uint8_t rxData = 0U;
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_ioRxByte(&asyncHandle, DEV_REV_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test ioTxByte with I/O failure on first call, succeeds on retry.
+ */
+void test_pos_io_ioTxByte_retrySucceeds(void)
+{
+    int32_t status;
+    uint8_t writeVal = TEST_PATTERN_AA;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead = &mockIoRead;
+    testHandle.ioWrite = &mockIoWrite;
+    testHandle.timerWaitMs = &mockTimerWait;
+    testHandle.retryCnt = 3U;
+    testHandle.retryIntervalMs = 10U;
+
+    resetMockIoState();
+
+    // Inject one write failure; mock auto-clears after one call
+    g_mockIoWriteReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
+
+    status = Pmic_ioTxByte(&testHandle, SCRATCH_PAD_REG_2_REG, writeVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
+}
+
+/**
+ * @brief Test ioTxByte async SPI write path.
+ */
+void test_pos_io_ioTxByte_asyncSpi(void)
+{
+#ifdef BUILD_MOCK
+    uint8_t txData = 0xBCU;
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&asyncHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_ioTxByte(&asyncHandle, SCRATCH_PAD_REG_3_REG, txData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioRxByte when asyncRxStart fails in SPI async mode.
+ */
+void test_neg_io_ioRxByte_asyncSpiRxStartFail(void)
+{
+#ifdef BUILD_MOCK
+    uint8_t rxData = 0U;
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Swap asyncRxStart to failing mock only for the test IO call
+    asyncHandle.asyncRxStart = mockAsyncRxStart_alwaysFail;
+
+    // asyncRxStart fails — asyncRxAwait is skipped, error propagates
+    status = Pmic_ioRxByte(&asyncHandle, DEV_REV_REG, &rxData);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioRxByte when asyncRxStart fails in I2C async mode.
+ */
+void test_neg_io_ioRxByte_asyncI2cRxStartFail(void)
+{
+#ifdef BUILD_MOCK
+    uint8_t rxData = 0U;
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Swap asyncRxStart to failing mock only for the test IO call
+    asyncHandle.asyncRxStart = mockAsyncRxStart_alwaysFail;
+
+    // asyncRxStart fails — asyncRxAwait is skipped, error propagates
+    status = Pmic_ioRxByte(&asyncHandle, DEV_REV_REG, &rxData);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioTxByte when asyncTxStart fails in SPI async mode.
+ */
+void test_neg_io_ioTxByte_asyncSpiTxStartFail(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&asyncHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Swap asyncTxStart to failing mock only for the test IO call
+    asyncHandle.asyncTxStart = mockAsyncTxStart_alwaysFail;
+
+    // asyncTxStart fails — asyncTxAwait is skipped, error propagates
+    status = Pmic_ioTxByte(&asyncHandle, SCRATCH_PAD_REG_1_REG, 0xAAU);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioTxByte when asyncTxStart fails in I2C async mode.
+ */
+void test_neg_io_ioTxByte_asyncI2cTxStartFail(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_I2C_SINGLE,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&asyncHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Swap asyncTxStart to failing mock only for the test IO call
+    asyncHandle.asyncTxStart = mockAsyncTxStart_alwaysFail;
+
+    // asyncTxStart fails — asyncTxAwait is skipped, error propagates
+    status = Pmic_ioTxByte(&asyncHandle, SCRATCH_PAD_REG_1_REG, 0xBBU);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioTxByte SPI async retry body: asyncTxStart fails twice.
+ */
+void test_neg_io_ioTxByte_asyncSpiRetryExhausted(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&asyncHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Install fail-twice mock and configure retry after setup is complete
+    asyncHandle.asyncTxStart = mockAsyncTxStart_failTwice;
+    asyncHandle.asyncTxAwait = mockAsyncAwait_alwaysSucceed;
+    asyncHandle.retryCnt = 1U;
+    asyncHandle.retryIntervalMs = 1U;
+    asyncHandle.timerWaitMs = &mockTimerWait;
+    g_asyncTxFailCount = 0U;
+
+    /* asyncTxStart fails on both attempts; retry body executes once before
+     * exhausting retryCnt, covering Pmic_incrementRetryCnt and the break
+     * condition when attemptNum > retryCnt. */
+    status = Pmic_ioTxByte(&asyncHandle, SCRATCH_PAD_REG_1_REG, 0xCCU);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(g_asyncTxFailCount == 2U);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
+}
+
+/**
+ * @brief Test Pmic_ioRxByte SPI async retry body: asyncRxStart fails on all attempts.
+ */
+void test_neg_io_ioRxByte_asyncSpiRetryExhausted(void)
+{
+#ifdef BUILD_MOCK
+    uint8_t rxData = 0U;
+    int32_t status;
+    Pmic_Handle_t asyncHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .crcEnable0 = false,
+        .asyncEnable = true,
+        .commHandle0 = platform_getCommHandle0(),
+        .taskHandle = platform_getCommHandle0(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .asyncRxStart = test_pmic_asyncRxStart,
+        .asyncTxStart = test_pmic_asyncTxStart,
+        .asyncRxAwait = test_pmic_asyncRxAwait,
+        .asyncTxAwait = test_pmic_asyncTxAwait,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop,
+        .irqResponseCallback = &platform_irqResponse
+    };
+
+    status = Pmic_init(&asyncHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Install always-fail mock and configure retry after setup is complete
+    asyncHandle.asyncRxStart = mockAsyncRxStart_alwaysFail;
+    asyncHandle.asyncRxAwait = mockAsyncAwait_alwaysSucceed;
+    asyncHandle.retryCnt = 1U;
+    asyncHandle.retryIntervalMs = 1U;
+    asyncHandle.timerWaitMs = &mockTimerWait;
+
+    /* asyncRxStart fails on both attempts; retry body executes once before
+     * exhausting retryCnt, covering Pmic_incrementRetryCnt and the break
+     * condition when attemptNum > retryCnt. */
+    status = Pmic_ioRxByte(&asyncHandle, DEV_REV_REG, &rxData);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 /* ========================================================================== */

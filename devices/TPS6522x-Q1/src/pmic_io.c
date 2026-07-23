@@ -127,7 +127,7 @@ static uint8_t getCRC8Val(const uint8_t data[PMIC_IO_FRAME_LEN_MAX], uint8_t len
 {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
 
-    for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < length); i++)
+    for (uint8_t i = 0U; (i < PMIC_IO_FRAME_LEN_MAX) && (i < length); i++) /* DA_JUSTIFY: PMICDRV-2356 */
     {
         crc = CRC8_TABLE[data[i] ^ crc];
     }
@@ -167,7 +167,7 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle)
         if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) ||
             (handle->asyncTxAwait == NULL) || (handle->asyncRxAwait == NULL))
         {
-            return PMIC_ST_ERR_NULL_FPTR; /* LCOV_EXCL_LINE - validated in Pmic_init() */
+            return PMIC_ST_ERR_NULL_FPTR;
         }
     }
     // Check sync hooks
@@ -175,7 +175,7 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle)
     {
         if ((handle->ioRead == NULL) || (handle->ioWrite == NULL))
         {
-            return PMIC_ST_ERR_NULL_FPTR; /* LCOV_EXCL_LINE - validated in Pmic_checkHandle() */
+            return PMIC_ST_ERR_NULL_FPTR;
         }
     }
 
@@ -210,7 +210,7 @@ static int32_t IO_txSpiWithRetry(const Pmic_Handle_t *handle, uint8_t page, cons
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     return status;
 }
@@ -243,7 +243,7 @@ static int32_t IO_txI2cWithRetry(const Pmic_Handle_t *handle, uint8_t page, cons
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     return status;
 }
@@ -365,7 +365,7 @@ static int32_t IO_rxSpiWithRetry(const Pmic_Handle_t *handle, uint8_t page, uint
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     return status;
 }
@@ -408,7 +408,7 @@ static int32_t IO_rxI2cWithRetry(const Pmic_Handle_t *handle, uint8_t page, uint
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while ((bool)true);
+    } while ((bool)true); /* DA_JUSTIFY: PMICDRV-2355 */
 
     return status;
 }

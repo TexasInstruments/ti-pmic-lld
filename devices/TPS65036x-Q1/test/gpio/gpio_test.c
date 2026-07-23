@@ -43,7 +43,8 @@
 
 #ifdef BUILD_MOCK
 #include "test_inject.h"
-
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
 #endif
 
 /* ========================================================================== */
@@ -51,6 +52,10 @@
 /* ========================================================================== */
 
 static Pmic_Handle_t pmicHandle = {0U};
+
+#ifdef BUILD_MOCK
+extern PmicMockDevice_t *platform_getMockDevice(void);
+#endif
 
 /* ========================================================================== */
 /*                           Function Definitions                             */
@@ -93,7 +98,6 @@ void gpio_test(void *args)
     if (status == PMIC_ST_SUCCESS)
     {
         testUtils_printSiRev(&pmicHandle);
-
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -600,6 +604,141 @@ void test_pos_gpio_gpio_nIntGpi_repeatedFunctionality(void)
 #else
     // Cannot test mock injection on hardware
     return;
+#endif
+}
+
+/* ========================================================================== */
+// Mock-gated I/O Failure Tests (BUILD_MOCK only)
+/* ========================================================================== */
+
+void test_neg_gpio_gpioGetActivationState_ioRxByteCSFail(void)
+{
+    // after Pmic_ioRxByte_CS in Pmic_gpioGetActivationState
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+    bool activated = (bool)false;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetActivationState(&pmicHandle, &activated);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_gpio_gpioSetActivationState_ioRxByteFail(void)
+{
+    // after Pmic_ioRxByte (non-CS) in Pmic_gpioSetActivationState
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetActivationState(&pmicHandle, (bool)true);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Negative Tests - NINT_GPI nonZeroInvalidValidParams
+/* ========================================================================== */
+
+void test_neg_gpio_gpioGetCfg_nIntGpi_nonZeroInvalidValidParams(void)
+{
+    // nIntGpiValidParams = bits 0-3 (FUNCTIONALITY|POLARITY|PU_PD_CFG|OD_PP_CFG)
+    // Use validParams with only bit 4 set — non-zero but no bits in nIntGpiValidParams
+    Pmic_GpioCfg_t gpioCfg = {
+        .validParams = (uint32_t)(1UL << 4U)  // Non-zero, but not in nIntGpiValidParams
+    };
+    int32_t status = Pmic_gpioGetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+}
+
+void test_neg_gpio_gpioSetCfg_nIntGpi_nonZeroInvalidValidParams(void)
+{
+    // nIntGpiValidParams = bits 0-3 (FUNCTIONALITY|POLARITY|PU_PD_CFG|OD_PP_CFG)
+    // Use validParams with only bit 4 set — non-zero but no bits in nIntGpiValidParams
+    Pmic_GpioCfg_t gpioCfg = {
+        .validParams = (uint32_t)(1UL << 4U)  // Non-zero, but not in nIntGpiValidParams
+    };
+    int32_t status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_FAIL);
+}
+
+void test_neg_gpio_gpioGetCfg_gpio_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_GpioCfg_t gpioCfg = {
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetCfg(&pmicHandle, PMIC_GPIO, &gpioCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_gpio_gpioGetCfg_nIntGpi_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    int32_t status;
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_GpioCfg_t gpioCfg = {
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioGetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+void test_neg_gpio_gpioSetCfg_nIntGpi_ioRxByteFail(void)
+{
+    // after Pmic_ioRxByte (FUNC_CONF read) in static GPIO_setNINTGPICfg,
+    // invoked via Pmic_gpioSetCfg(handle, PMIC_NINT_GPI, ...)
+#ifdef BUILD_MOCK
+    int32_t status;
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_GpioCfg_t gpioCfg = {
+        .validParams = PMIC_CFG_GPIO_FUNCTIONALITY_VALID,
+        .functionality = PMIC_NINT_GPI_NINT
+    };
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_gpioSetCfg(&pmicHandle, PMIC_NINT_GPI, &gpioCfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
 #endif
 }
 

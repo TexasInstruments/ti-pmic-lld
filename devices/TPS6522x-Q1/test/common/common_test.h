@@ -145,7 +145,10 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxErrorId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_exceedsMaxWarningId); \
     PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStop)
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_outOfRangeErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostic_outOfRangeWarningId); \
+    PLATFORM_RUN_TEST(test_neg_common_getDiagnostics_outOfRangeErrorId)
 
 /* Test: TC-COMMON-0014 */
 #define COMMON_TEST_GETDIAGNOSTIC() \
@@ -192,7 +195,9 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStart); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_nullCritSecStop); \
     PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullCritSecStart); \
-    PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullCritSecStop)
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnosticsAll_nullCritSecStop); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_outOfRangeErrorId); \
+    PLATFORM_RUN_TEST(test_neg_common_clrDiagnostics_outOfRangeWarningId)
 
 /* Test: TC-COMMON-0015 */
 #define COMMON_TEST_CLRDIAGNOSTIC() \
@@ -510,6 +515,9 @@ void test_neg_common_getDiagnostics_invalidStatusCodeInArray(void);
 void test_neg_common_getDiagnostics_successTypeInArray(void);
 void test_neg_common_getDiagnostics_nullCritSecStart(void);
 void test_neg_common_getDiagnostics_nullCritSecStop(void);
+void test_neg_common_getDiagnostic_outOfRangeErrorId(void);
+void test_neg_common_getDiagnostic_outOfRangeWarningId(void);
+void test_neg_common_getDiagnostics_outOfRangeErrorId(void);
 
 /* clrDiagnostic Tests */
 void test_neg_common_clrDiagnostic_nullHandle(void);
@@ -531,6 +539,8 @@ void test_neg_common_clrDiagnostics_nullCritSecStart(void);
 void test_neg_common_clrDiagnostics_nullCritSecStop(void);
 void test_neg_common_clrDiagnosticsAll_nullCritSecStart(void);
 void test_neg_common_clrDiagnosticsAll_nullCritSecStop(void);
+void test_neg_common_clrDiagnostics_outOfRangeErrorId(void);
+void test_neg_common_clrDiagnostics_outOfRangeWarningId(void);
 
 /* getRetryCnt Tests */
 void test_neg_common_getRetryCnt_nullHandle(void);

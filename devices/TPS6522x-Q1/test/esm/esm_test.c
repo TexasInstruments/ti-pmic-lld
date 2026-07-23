@@ -31,10 +31,14 @@
  *
  *****************************************************************************/
 
-
 #include "platform.h"
 #include "esm_test.h"
 #include "pmic_gpio.h"
+
+#ifdef BUILD_MOCK
+#include "pmic_mock_types.h"
+#include "pmic_mock_core.h"
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -47,7 +51,7 @@ static Pmic_Handle_t pmicHandle = {0};
 /* ========================================================================== */
 
 /**
- * @brief Test Pmic_esmSetEnableState with NULL handle
+ * @brief Test Pmic_esmSetEnableState with NULL handle.
  */
 void test_neg_esm_setEnableState_nullHandle(void)
 {
@@ -56,7 +60,7 @@ void test_neg_esm_setEnableState_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetEnableState with NULL handle
+ * @brief Test Pmic_esmGetEnableState with NULL handle.
  */
 void test_neg_esm_getEnableState_nullHandle(void)
 {
@@ -66,7 +70,7 @@ void test_neg_esm_getEnableState_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetEnableState with NULL isEnabled parameter
+ * @brief Test Pmic_esmGetEnableState with NULL isEnabled parameter.
  */
 void test_neg_esm_getEnableState_nullIsEnabled(void)
 {
@@ -75,7 +79,7 @@ void test_neg_esm_getEnableState_nullIsEnabled(void)
 }
 
 /**
- * @brief Test Pmic_esmSetStartState with NULL handle
+ * @brief Test Pmic_esmSetStartState with NULL handle.
  */
 void test_neg_esm_setStartState_nullHandle(void)
 {
@@ -84,7 +88,7 @@ void test_neg_esm_setStartState_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetStartState with NULL handle
+ * @brief Test Pmic_esmGetStartState with NULL handle.
  */
 void test_neg_esm_getStartState_nullHandle(void)
 {
@@ -94,7 +98,7 @@ void test_neg_esm_getStartState_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetStartState with NULL started parameter
+ * @brief Test Pmic_esmGetStartState with NULL started parameter.
  */
 void test_neg_esm_getStartState_nullStarted(void)
 {
@@ -103,7 +107,7 @@ void test_neg_esm_getStartState_nullStarted(void)
 }
 
 /**
- * @brief Test Pmic_esmSetCfg with NULL handle
+ * @brief Test Pmic_esmSetCfg with NULL handle.
  */
 void test_neg_esm_setCfg_nullHandle(void)
 {
@@ -113,7 +117,7 @@ void test_neg_esm_setCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmSetCfg with NULL esmCfg parameter
+ * @brief Test Pmic_esmSetCfg with NULL esmCfg parameter.
  */
 void test_neg_esm_setCfg_nullEsmCfg(void)
 {
@@ -122,7 +126,7 @@ void test_neg_esm_setCfg_nullEsmCfg(void)
 }
 
 /**
- * @brief Test Pmic_esmSetCfg with invalid validParams (zero)
+ * @brief Test Pmic_esmSetCfg with invalid validParams (zero).
  */
 void test_neg_esm_setCfg_invalidValidParams(void)
 {
@@ -134,7 +138,7 @@ void test_neg_esm_setCfg_invalidValidParams(void)
 }
 
 /**
- * @brief Test Pmic_esmSetCfg with invalid mode value
+ * @brief Test Pmic_esmSetCfg with invalid mode value.
  */
 void test_neg_esm_setCfg_invalidMode(void)
 {
@@ -147,7 +151,7 @@ void test_neg_esm_setCfg_invalidMode(void)
 }
 
 /**
- * @brief Test Pmic_esmSetCfg with invalid errCntThr value
+ * @brief Test Pmic_esmSetCfg with invalid errCntThr value.
  */
 void test_neg_esm_setCfg_invalidErrCntThr(void)
 {
@@ -160,7 +164,7 @@ void test_neg_esm_setCfg_invalidErrCntThr(void)
 }
 
 /**
- * @brief Test Pmic_esmGetCfg with NULL handle
+ * @brief Test Pmic_esmGetCfg with NULL handle.
  */
 void test_neg_esm_getCfg_nullHandle(void)
 {
@@ -170,7 +174,7 @@ void test_neg_esm_getCfg_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetCfg with NULL esmCfg parameter
+ * @brief Test Pmic_esmGetCfg with NULL esmCfg parameter.
  */
 void test_neg_esm_getCfg_nullEsmCfg(void)
 {
@@ -179,7 +183,7 @@ void test_neg_esm_getCfg_nullEsmCfg(void)
 }
 
 /**
- * @brief Test Pmic_esmGetCfg with invalid validParams (zero)
+ * @brief Test Pmic_esmGetCfg with invalid validParams (zero).
  */
 void test_neg_esm_getCfg_invalidValidParams(void)
 {
@@ -191,7 +195,7 @@ void test_neg_esm_getCfg_invalidValidParams(void)
 }
 
 /**
- * @brief Test Pmic_esmGetErrCnt with NULL handle
+ * @brief Test Pmic_esmGetErrCnt with NULL handle.
  */
 void test_neg_esm_getErrCnt_nullHandle(void)
 {
@@ -201,7 +205,7 @@ void test_neg_esm_getErrCnt_nullHandle(void)
 }
 
 /**
- * @brief Test Pmic_esmGetErrCnt with NULL esmErrCnt parameter
+ * @brief Test Pmic_esmGetErrCnt with NULL esmErrCnt parameter.
  */
 void test_neg_esm_getErrCnt_nullEsmErrCnt(void)
 {
@@ -214,61 +218,61 @@ void test_neg_esm_getErrCnt_nullEsmErrCnt(void)
 /* ========================================================================== */
 
 /**
- * @brief Test ESM enable and disable functionality
+ * @brief Test ESM enable and disable functionality.
  */
 void test_pos_esm_setGetEnableState(void)
 {
     bool isEnabled = false;
     int32_t status;
 
-    /* Disable ESM */
+    // Disable ESM
     status = Pmic_esmSetEnableState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify disabled state */
+    // Verify disabled state
     status = Pmic_esmGetEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == false);
 
-    /* Enable ESM */
+    // Enable ESM
     status = Pmic_esmSetEnableState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify enabled state */
+    // Verify enabled state
     status = Pmic_esmGetEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == true);
 }
 
 /**
- * @brief Test ESM start and stop functionality
+ * @brief Test ESM start and stop functionality.
  */
 void test_pos_esm_setGetStartState(void)
 {
     bool started = false;
     int32_t status;
 
-    /* Stop ESM */
+    // Stop ESM
     status = Pmic_esmSetStartState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify stopped state */
+    // Verify stopped state
     status = Pmic_esmGetStartState(&pmicHandle, &started);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(started == false);
 
-    /* Start ESM */
+    // Start ESM
     status = Pmic_esmSetStartState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify started state */
+    // Verify started state
     status = Pmic_esmGetStartState(&pmicHandle, &started);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(started == true);
 }
 
 /**
- * @brief Test ESM configuration set and get for mode
+ * @brief Test ESM configuration set and get for mode.
  */
 void test_pos_esm_setCfg_mode(void)
 {
@@ -281,28 +285,28 @@ void test_pos_esm_setCfg_mode(void)
     };
     int32_t status;
 
-    /* Set level mode */
+    // Set level mode
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get and verify */
+    // Get and verify
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.mode == PMIC_ESM_MODE_LEVEL);
 
-    /* Set PWM mode */
+    // Set PWM mode
     esmCfgSet.mode = PMIC_ESM_MODE_PWM;
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get and verify */
+    // Get and verify
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.mode == PMIC_ESM_MODE_PWM);
 }
 
 /**
- * @brief Test ESM configuration set and get for error count threshold
+ * @brief Test ESM configuration set and get for error count threshold.
  */
 void test_pos_esm_setCfg_errCntThr(void)
 {
@@ -328,7 +332,7 @@ void test_pos_esm_setCfg_errCntThr(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for delay1
+ * @brief Test ESM configuration set and get for delay1.
  */
 void test_pos_esm_setCfg_delay1(void)
 {
@@ -354,7 +358,7 @@ void test_pos_esm_setCfg_delay1(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for delay2
+ * @brief Test ESM configuration set and get for delay2.
  */
 void test_pos_esm_setCfg_delay2(void)
 {
@@ -380,7 +384,7 @@ void test_pos_esm_setCfg_delay2(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for hmax
+ * @brief Test ESM configuration set and get for hmax.
  */
 void test_pos_esm_setCfg_hmax(void)
 {
@@ -406,7 +410,7 @@ void test_pos_esm_setCfg_hmax(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for hmin
+ * @brief Test ESM configuration set and get for hmin.
  */
 void test_pos_esm_setCfg_hmin(void)
 {
@@ -432,7 +436,7 @@ void test_pos_esm_setCfg_hmin(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for lmax
+ * @brief Test ESM configuration set and get for lmax.
  */
 void test_pos_esm_setCfg_lmax(void)
 {
@@ -458,7 +462,7 @@ void test_pos_esm_setCfg_lmax(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for lmin
+ * @brief Test ESM configuration set and get for lmin.
  */
 void test_pos_esm_setCfg_lmin(void)
 {
@@ -484,7 +488,7 @@ void test_pos_esm_setCfg_lmin(void)
 }
 
 /**
- * @brief Test ESM configuration set and get for clrEnDrvOnFailInt
+ * @brief Test ESM configuration set and get for clrEnDrvOnFailInt.
  */
 void test_pos_esm_setCfg_clrEnDrvOnFailInt(void)
 {
@@ -497,47 +501,47 @@ void test_pos_esm_setCfg_clrEnDrvOnFailInt(void)
     };
     int32_t status;
 
-    /* Set to true */
+    // Set to true
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get and verify */
+    // Get and verify
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.clrEnDrvOnFailInt == true);
 
-    /* Set to false */
+    // Set to false
     esmCfgSet.clrEnDrvOnFailInt = false;
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Get and verify */
+    // Get and verify
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.clrEnDrvOnFailInt == false);
 }
 
 /**
- * @brief Test ESM error count read functionality
+ * @brief Test ESM error count read functionality.
  */
 void test_pos_esm_getErrCnt(void)
 {
     uint8_t errCnt = 0U;
     int32_t status;
 
-    /* Read error count */
+    // Read error count
     status = Pmic_esmGetErrCnt(&pmicHandle, &errCnt);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**
- * @brief Test combined configuration parameters
+ * @brief Test combined configuration parameters.
  */
 void test_pos_esm_setCfg_combined(void)
 {
     int32_t status;
 
-    /* Set multiple configuration parameters at once */
+    // Set multiple configuration parameters at once
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
                        PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID |
@@ -552,7 +556,7 @@ void test_pos_esm_setCfg_combined(void)
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     Pmic_EsmCfg_t esmCfgGet = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
                        PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID |
@@ -569,13 +573,13 @@ void test_pos_esm_setCfg_combined(void)
 }
 
 /**
- * @brief Test PWM mode configuration with timing parameters
+ * @brief Test PWM mode configuration with timing parameters.
  */
 void test_pos_esm_setCfg_pwmMode(void)
 {
     int32_t status;
 
-    /* Configure ESM for PWM mode with all timing parameters */
+    // Configure ESM for PWM mode with all timing parameters
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMIN_VALID |
                        PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_LMIN_VALID |
@@ -590,7 +594,7 @@ void test_pos_esm_setCfg_pwmMode(void)
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     Pmic_EsmCfg_t esmCfgGet = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMIN_VALID |
                        PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_LMIN_VALID |
@@ -607,7 +611,7 @@ void test_pos_esm_setCfg_pwmMode(void)
 }
 
 /**
- * @brief Test complete ESM configuration and enable sequence
+ * @brief Test complete ESM configuration and enable sequence.
  */
 void test_pos_esm_completeSequence(void)
 {
@@ -615,7 +619,7 @@ void test_pos_esm_completeSequence(void)
     bool isEnabled = false;
     bool started = false;
 
-    /* Configure GPIO6 as nERR_MCU and drive TIVA PA2 high. */
+    // Configure GPIO6 as nERR_MCU and drive TIVA PA2 high.
     Pmic_GpioPinCfg_t gpioCfg = {
         .validParams = PMIC_CFG_GPIO_FXN_SEL_VALID,
         .pinNum = PMIC_GPIO_PIN6,
@@ -625,7 +629,7 @@ void test_pos_esm_completeSequence(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     platform_setEsmPin(true);
 
-    /* Enable ESM first before configuring, per datasheet sequencing. */
+    // Enable ESM first before configuring, per datasheet sequencing.
     status = Pmic_esmSetEnableState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -633,8 +637,8 @@ void test_pos_esm_completeSequence(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == true);
 
-    /* Configure ESM in Level mode with delay and error threshold parameters.
-     * hmin/hmax/lmin/lmax are PWM-specific and omitted for Level mode. */
+    // Configure ESM in Level mode with delay and error threshold parameters.
+    // hmin/hmax/lmin/lmax are PWM-specific and omitted for Level mode.
     Pmic_EsmCfg_t esmCfg = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
                        PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID |
@@ -662,7 +666,7 @@ void test_pos_esm_completeSequence(void)
     PLATFORM_ASSERT(esmCfgReadback.delay2 == 0x30);
     PLATFORM_ASSERT(esmCfgReadback.clrEnDrvOnFailInt == false);
 
-    /* Start ESM */
+    // Start ESM
     status = Pmic_esmSetStartState(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -670,23 +674,23 @@ void test_pos_esm_completeSequence(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(started == true);
 
-    /* Stop ESM */
+    // Stop ESM
     status = Pmic_esmSetStartState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Disable ESM */
+    // Disable ESM
     status = Pmic_esmSetEnableState(&pmicHandle, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 /**
- * @brief Test ESM configuration readback verification
+ * @brief Test ESM configuration readback verification.
  */
 void test_pos_esm_getCfg_readback(void)
 {
     int32_t status;
 
-    /* Set specific configuration */
+    // Set specific configuration
     Pmic_EsmCfg_t esmCfgSet = {
         .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
                        PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID,
@@ -699,34 +703,515 @@ void test_pos_esm_getCfg_readback(void)
     status = Pmic_esmSetCfg(&pmicHandle, &esmCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify each parameter */
+    // Read back and verify each parameter
     Pmic_EsmCfg_t esmCfgGet = {0};
 
-    /* Verify mode */
+    // Verify mode
     esmCfgGet.validParams = PMIC_CFG_ESM_MODE_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.mode == PMIC_ESM_MODE_LEVEL);
 
-    /* Verify error count threshold */
+    // Verify error count threshold
     esmCfgGet.validParams = PMIC_CFG_ESM_ERR_CNT_THR_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.errCntThr == 0xA);
 
-    /* Verify delay1 */
+    // Verify delay1
     esmCfgGet.validParams = PMIC_CFG_ESM_DELAY1_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.delay1 == 0xAA);
 
-    /* Verify delay2 */
+    // Verify delay2
     esmCfgGet.validParams = PMIC_CFG_ESM_DELAY2_VALID;
     status = Pmic_esmGetCfg(&pmicHandle, &esmCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(esmCfgGet.delay2 == 0x55);
 }
 
+/* ========================================================================== */
+// Negative Tests - Pmic_EsmGetEnableState / Pmic_EsmGetErrCnt
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_esmGetEnableState I/O read failure.
+ */
+void test_neg_esm_esmGetEnableState_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    bool isEnabled;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetEnableState(&pmicHandle, &isEnabled);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetErrCnt I/O read failure.
+ */
+void test_neg_esm_esmGetErrCnt_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    uint8_t errCnt;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetErrCnt(&pmicHandle, &errCnt);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetStartState I/O read failure.
+ */
+void test_neg_esm_esmGetStartState_ioRxByteCSFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    bool startState;
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetStartState(&pmicHandle, &startState);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetEnableState I/O read failure.
+ */
+void test_neg_esm_esmSetEnableState_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetEnableState(&pmicHandle, true);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetStartState I/O read failure.
+ */
+void test_neg_esm_esmSetStartState_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetStartState(&pmicHandle, true);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg I/O read failure inside ESM_readDelayRegs.
+ */
+void test_neg_esm_esmGetCfg_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ESM_readModeCfg (first ioRxByte_CS call) fails.
+ */
+void test_neg_esm_esmGetCfg_modeCfgReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_DELAY1_VALID |
+                       PMIC_CFG_ESM_DELAY2_VALID | PMIC_CFG_ESM_HMAX_VALID |
+                       PMIC_CFG_ESM_HMIN_VALID | PMIC_CFG_ESM_LMAX_VALID |
+                       PMIC_CFG_ESM_LMIN_VALID | PMIC_CFG_ESM_ERR_CNT_THR_VALID |
+                       PMIC_CFG_ESM_CLR_EN_DRV_ON_FAIL_INT_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Inject error on the FIRST read call (skipCount=0): fails inside ESM_readModeCfg.
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when the second ioRxByte_CS call fails.
+ */
+void test_neg_esm_esmGetCfg_secondReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_DELAY1_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip first I/O call (ESM_readModeCfg read), fail on second (ESM_readDelayRegs).
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetCfg I/O failure inside ESM_setDelayRegs.
+ */
+void test_neg_esm_esmSetCfg_ioTxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID,
+        .delay1 = 0x40
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/* ========================================================================== */
+// Static helper coverage: ESM_setDelayRegs / ESM_setHmaxHminRegs /
+// ESM_setLmaxLminRegs / ESM_readDelayRegs / ESM_readHmaxHminRegs /
+// ESM_readLmaxLminRegs  — internal I/O failures
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_esmSetCfg when ioRxByte for DELAY2 inside ESM_setDelayRegs fails.
+ */
+void test_neg_esm_esmSetCfg_delay2ReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_DELAY1_VALID | PMIC_CFG_ESM_DELAY2_VALID,
+        .delay1 = 0x40U,
+        .delay2 = 0x40U
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip DELAY1 read+write (#0, #1), fail DELAY2 read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetCfg when ioRxByte for HMAX inside ESM_setHmaxHminRegs fails.
+ */
+void test_neg_esm_esmSetCfg_hmaxReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_HMAX_VALID,
+        .hmax = 0x40U
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // First I/O is ioRxByte(HMAX) — inject failure immediately
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetCfg when ioRxByte for HMIN inside ESM_setHmaxHminRegs fails.
+ */
+void test_neg_esm_esmSetCfg_hminReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_HMAX_VALID | PMIC_CFG_ESM_HMIN_VALID,
+        .hmax = 0x40U,
+        .hmin = 0x10U
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip HMAX read+write (#0, #1), fail HMIN read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetCfg when ioRxByte for LMAX inside ESM_setLmaxLminRegs fails.
+ */
+void test_neg_esm_esmSetCfg_lmaxReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_LMAX_VALID,
+        .lmax = 0x40U
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // First I/O is ioRxByte(LMAX) — inject failure immediately
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 0U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmSetCfg when ioRxByte for LMIN inside ESM_setLmaxLminRegs fails.
+ */
+void test_neg_esm_esmSetCfg_lminReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_LMAX_VALID | PMIC_CFG_ESM_LMIN_VALID,
+        .lmax = 0x40U,
+        .lmin = 0x10U
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip LMAX read+write (#0, #1), fail LMIN read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmSetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ioRxByte_CS for DELAY2 inside ESM_readDelayRegs fails.
+ */
+void test_neg_esm_esmGetCfg_delay2ReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_DELAY1_VALID |
+                       PMIC_CFG_ESM_DELAY2_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip MODE read (#0) and DELAY1 read (#1), fail DELAY2 read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ioRxByte_CS for HMAX inside ESM_readHmaxHminRegs fails.
+ */
+void test_neg_esm_esmGetCfg_hmaxReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMAX_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip MODE read (#0), fail HMAX read (#1)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ioRxByte_CS for HMIN inside ESM_readHmaxHminRegs fails.
+ */
+void test_neg_esm_esmGetCfg_hminReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_HMAX_VALID |
+                       PMIC_CFG_ESM_HMIN_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip MODE read (#0) and HMAX read (#1), fail HMIN read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ioRxByte_CS for LMAX inside ESM_readLmaxLminRegs fails.
+ */
+void test_neg_esm_esmGetCfg_lmaxReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_LMAX_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip MODE read (#0), fail LMAX read (#1)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
+
+/**
+ * @brief Test Pmic_esmGetCfg when ioRxByte_CS for LMIN inside ESM_readLmaxLminRegs fails.
+ */
+void test_neg_esm_esmGetCfg_lminReadFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    Pmic_EsmCfg_t cfg = {
+        .validParams = PMIC_CFG_ESM_MODE_VALID | PMIC_CFG_ESM_LMAX_VALID |
+                       PMIC_CFG_ESM_LMIN_VALID
+    };
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    // Skip MODE read (#0) and LMAX read (#1), fail LMIN read (#2)
+    status = PmicMock_InjectErrorAfterN(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 2U, 1U);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_esmGetCfg(&pmicHandle, &cfg);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
+}
 
 /* ========================================================================== */
 /*                         Entry Point Function                               */
@@ -741,7 +1226,7 @@ void esm_test(void *args)
     testTimer_startModule("ESM");
     platform_setupTests();
 
-    /* Initialize PMIC handle */
+    // Initialize PMIC handle
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CFG_INIT_I2C_ADDR0_VALID |

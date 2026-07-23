@@ -31,7 +31,6 @@
  *
  *****************************************************************************/
 
-
 /* ========================================================================== */
 /*                              Include Files                                 */
 /* ========================================================================== */
@@ -48,8 +47,8 @@
 /* ========================================================================== */
 
 /* Test register addresses - using scratchpad registers for safe testing */
-#define IO_TEST_SCRATCHPAD1_REG     PMIC_CUSTOMER_SCRATCH1_REG  /* 0x68 */
-#define IO_TEST_SCRATCHPAD2_REG     PMIC_CUSTOMER_SCRATCH2_REG  /* 0x69 */
+#define IO_TEST_SCRATCHPAD1_REG     PMIC_CUSTOMER_SCRATCH1_REG  // 0x68
+#define IO_TEST_SCRATCHPAD2_REG     PMIC_CUSTOMER_SCRATCH2_REG  // 0x69
 
 /* Test bit field positions for RMW tests */
 #define IO_TEST_BIT_POS_0           (0U)
@@ -95,7 +94,7 @@ static void resetMockIoState(void)
     g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
     g_mockCrcCorruptionMask = 0x00U;
 
-    /* Reset async mock state */
+    // Reset async mock state
     g_mockAsyncRxStartCallCount = 0U;
     g_mockAsyncTxStartCallCount = 0U;
     g_mockAsyncRxAwaitCallCount = 0U;
@@ -119,11 +118,11 @@ static int32_t mockIoRead(const Pmic_Handle_t *handle, uint8_t page, uint8_t reg
         g_mockIoReadReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* Call the actual mock backend read function */
+    // Call the actual mock backend read function
     status = platform_rxByte(handle, page, regAddr, buffer, bufLen);
     if ((g_mockCrcCorruptionMask != 0x00U) && (bufLen == 4U) && (status == PMIC_ST_SUCCESS))
     {
-        /* For SPI, CRC is at index 3 (4-byte frame) */
+        // For SPI, CRC is at index 3 (4-byte frame)
         buffer[3] ^= g_mockCrcCorruptionMask;
         g_mockCrcCorruptionMask = 0x00U;
     }
@@ -141,7 +140,7 @@ static int32_t mockIoWrite(const Pmic_Handle_t *handle, uint8_t page, uint8_t re
         g_mockIoWriteReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* Call the actual mock backend write function */
+    // Call the actual mock backend write function
     return platform_txByte(handle, page, regAddr, buffer, bufLen);
 }
 
@@ -165,8 +164,8 @@ static int32_t mockAsyncRxStart(const Pmic_Handle_t *handle, uint8_t page, uint8
         g_mockAsyncRxStartReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* In real async implementation, this would initiate DMA/interrupt-based read */
-    /* For mock, we complete the operation synchronously */
+    // In real async implementation, this would initiate DMA/interrupt-based read
+    // For mock, we complete the operation synchronously
     return mockIoRead(handle, page, regAddr, buffer, bufLen);
 }
 
@@ -176,54 +175,54 @@ static int32_t mockAsyncTxStart(const Pmic_Handle_t *handle, uint8_t page, uint8
     int32_t status;
     g_mockAsyncTxStartCallCount++;
 
-    /* Check persistent failure counter first */
+    // Check persistent failure counter first
     if (g_mockAsyncTxStartFailureCount > 0U)
     {
         g_mockAsyncTxStartFailureCount--;
         return g_mockAsyncTxStartReturnStatus;
     }
 
-    /* Then check one-shot failure */
+    // Then check one-shot failure
     if (g_mockAsyncTxStartReturnStatus != PMIC_ST_SUCCESS)
     {
         status = g_mockAsyncTxStartReturnStatus;
         g_mockAsyncTxStartReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* In real async implementation, this would initiate DMA/interrupt-based write */
-    /* For mock, we complete the operation synchronously */
+    // In real async implementation, this would initiate DMA/interrupt-based write
+    // For mock, we complete the operation synchronously
     return mockIoWrite(handle, page, regAddr, buffer, bufLen);
 }
 
 static int32_t mockAsyncRxAwait(const Pmic_Handle_t *handle)
 {
     int32_t status;
-    (void)handle;  /* Unused in mock implementation */
+    (void)handle;  // Unused in mock implementation
     g_mockAsyncRxAwaitCallCount++;
 
-    /* Check persistent failure counter first */
+    // Check persistent failure counter first
     if (g_mockAsyncRxAwaitFailureCount > 0U)
     {
         g_mockAsyncRxAwaitFailureCount--;
         return g_mockAsyncRxAwaitReturnStatus;
     }
 
-    /* Then check one-shot failure */
+    // Then check one-shot failure
     if (g_mockAsyncRxAwaitReturnStatus != PMIC_ST_SUCCESS)
     {
         status = g_mockAsyncRxAwaitReturnStatus;
         g_mockAsyncRxAwaitReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* In real async implementation, this would wait for DMA/interrupt completion */
-    /* For mock, the operation is already complete from asyncRxStart */
+    // In real async implementation, this would wait for DMA/interrupt completion
+    // For mock, the operation is already complete from asyncRxStart
     return PMIC_ST_SUCCESS;
 }
 
 static int32_t mockAsyncTxAwait(const Pmic_Handle_t *handle)
 {
     int32_t status;
-    (void)handle;  /* Unused in mock implementation */
+    (void)handle;  // Unused in mock implementation
     g_mockAsyncTxAwaitCallCount++;
     if (g_mockAsyncTxAwaitReturnStatus != PMIC_ST_SUCCESS)
     {
@@ -231,8 +230,8 @@ static int32_t mockAsyncTxAwait(const Pmic_Handle_t *handle)
         g_mockAsyncTxAwaitReturnStatus = PMIC_ST_SUCCESS;
         return status;
     }
-    /* In real async implementation, this would wait for DMA/interrupt completion */
-    /* For mock, the operation is already complete from asyncTxStart */
+    // In real async implementation, this would wait for DMA/interrupt completion
+    // For mock, the operation is already complete from asyncTxStart
     return PMIC_ST_SUCCESS;
 }
 
@@ -244,7 +243,7 @@ void io_test(void *args)
 {
     (void)args;
     int32_t status = PMIC_ST_SUCCESS;
-    /* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
+    // Dummy handle for mock - driver validates non-NULL but doesn't dereference
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
 
     Pmic_HandleCfg_t pmicCfg = {
@@ -255,7 +254,7 @@ void io_test(void *args)
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
         .commMode = PMIC_INTF_SPI,
-        .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
+        .commHandle0 = (void*)&dummyCommHandle,  // Driver requires non-NULL, even for mock
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
@@ -265,7 +264,7 @@ void io_test(void *args)
     platform_init();
     testTimer_startModule("I/O");
 
-    /* Initialize PMIC */
+    // Initialize PMIC
     status = Pmic_init(&g_pmicHandle, &pmicCfg);
     if (status != PMIC_ST_SUCCESS)
     {
@@ -273,10 +272,10 @@ void io_test(void *args)
         platform_deinit();
         return;
     }
-    /* Run all I/O tests */
+    // Run all I/O tests
     IO_TEST_RUN_ALL();
 
-    /* Cleanup */
+    // Cleanup
     testTimer_endModule();
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
@@ -358,7 +357,7 @@ void test_neg_io_ioTxWordSeq_nullHandle(void)
 void test_neg_io_ioRxWordSeq_invalidCount(void)
 {
     uint32_t rxData = 0U;
-    /* Count exceeds uint32_t size (4 bytes) */
+    // Count exceeds uint32_t size (4 bytes)
     int32_t status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &rxData, 5U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -366,7 +365,7 @@ void test_neg_io_ioRxWordSeq_invalidCount(void)
 void test_neg_io_ioTxWordSeq_invalidCount(void)
 {
     uint32_t txData = 0xAABBCCDDU;
-    /* Count exceeds uint32_t size (4 bytes) */
+    // Count exceeds uint32_t size (4 bytes)
     int32_t status = Pmic_ioTxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, txData, 5U);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 }
@@ -381,11 +380,11 @@ void test_pos_io_ioTxByte_scratchpad1(void)
     uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
-    /* Write test pattern */
+    // Write test pattern
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -397,11 +396,11 @@ void test_pos_io_ioRxByte_scratchpad1(void)
     uint8_t writeData = TEST_PATTERN_A5;
     uint8_t readData = 0U;
 
-    /* Write test pattern */
+    // Write test pattern
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -413,11 +412,11 @@ void test_pos_io_ioTxByte_scratchpad2(void)
     uint8_t writeData = TEST_PATTERN_5A;
     uint8_t readData = 0U;
 
-    /* Write test pattern */
+    // Write test pattern
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -429,11 +428,11 @@ void test_pos_io_ioRxByte_scratchpad2(void)
     uint8_t writeData = TEST_PATTERN_5A;
     uint8_t readData = 0U;
 
-    /* Write test pattern */
+    // Write test pattern
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -445,11 +444,11 @@ void test_pos_io_ioTxByte_CS_scratchpad1(void)
     uint8_t writeData = 0x3CU;
     uint8_t readData = 0U;
 
-    /* Write test pattern with critical section */
+    // Write test pattern with critical section
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify with critical section */
+    // Read back and verify with critical section
     status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -461,11 +460,11 @@ void test_pos_io_ioRxByte_CS_scratchpad1(void)
     uint8_t writeData = 0x3CU;
     uint8_t readData = 0U;
 
-    /* Write test pattern with critical section */
+    // Write test pattern with critical section
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify with critical section */
+    // Read back and verify with critical section
     status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -477,11 +476,11 @@ void test_pos_io_ioTxByte_CS_scratchpad2(void)
     uint8_t writeData = 0xC3U;
     uint8_t readData = 0U;
 
-    /* Write test pattern with critical section */
+    // Write test pattern with critical section
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify with critical section */
+    // Read back and verify with critical section
     status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -493,11 +492,11 @@ void test_pos_io_ioRxByte_CS_scratchpad2(void)
     uint8_t writeData = 0xC3U;
     uint8_t readData = 0U;
 
-    /* Write test pattern with critical section */
+    // Write test pattern with critical section
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify with critical section */
+    // Read back and verify with critical section
     status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData == writeData);
@@ -513,11 +512,11 @@ void test_pos_io_ioTxRxWordSeq_1byte(void)
     uint32_t writeData = 0x000000ABU;
     uint32_t readData = 0U;
 
-    /* Write 1 byte */
+    // Write 1 byte
     status = Pmic_ioTxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData, 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData & 0xFFU) == (writeData & 0xFFU));
@@ -529,16 +528,15 @@ void test_pos_io_ioTxRxWordSeq_2bytes(void)
     uint32_t writeData = 0x0000ABCDU;
     uint32_t readData = 0U;
 
-    /* Write 2 bytes sequentially starting at SCRATCHPAD1 */
+    // Write 2 bytes sequentially starting at SCRATCHPAD1
     status = Pmic_ioTxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back and verify */
+    // Read back and verify
     status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData & 0xFFFFU) == (writeData & 0xFFFFU));
 }
-
 
 /* ========================================================================== */
 /*          Positive Tests - Read-Modify-Write Operations                     */
@@ -551,16 +549,16 @@ void test_pos_io_ioUpdateByte_singleBitField(void)
     uint8_t readData = 0U;
     uint8_t expectedValue;
 
-    /* Initialize register */
+    // Initialize register
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Modify single bit (bit 0) */
+    // Modify single bit (bit 0)
     status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify modification */
+    // Verify modification
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     expectedValue = initialValue | (1UL << IO_TEST_BIT_POS_0);
@@ -575,20 +573,39 @@ void test_pos_io_ioUpdateByte_multiBitField(void)
     uint8_t newFieldValue = 0x0AU;
     uint8_t expectedValue;
 
-    /* Initialize register */
+    // Initialize register
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Modify nibble (bits 3:0) */
+    // Modify nibble (bits 3:0)
     status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                IO_TEST_BIT_POS_0, IO_TEST_BIT_MASK_NIBBLE, newFieldValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify modification */
+    // Verify modification
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     expectedValue = (initialValue & ~IO_TEST_BIT_MASK_NIBBLE) | newFieldValue;
     PLATFORM_ASSERT(readData == expectedValue);
+}
+
+void test_neg_io_ioUpdateByte_ioRxByteFail(void)
+{
+#ifdef BUILD_MOCK
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
+    int32_t status;
+
+    PLATFORM_ASSERT(mockDevice != NULL);
+
+    status = PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_COMM_FAILURE, 1);
+    PLATFORM_ASSERT(status == PMIC_MOCK_SUCCESS);
+
+    status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
+                               IO_TEST_BIT_POS_0, IO_TEST_BIT_MASK_SINGLE, 1U);
+    PLATFORM_ASSERT(status != PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for error injection");
+#endif
 }
 
 void test_pos_io_ioUpdateByte_b_setBit(void)
@@ -597,16 +614,16 @@ void test_pos_io_ioUpdateByte_b_setBit(void)
     uint8_t initialValue = 0x00U;
     uint8_t readData = 0U;
 
-    /* Initialize register */
+    // Initialize register
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Set bit 4 using boolean API */
+    // Set bit 4 using boolean API
     status = Pmic_ioUpdateByte_b(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                  IO_TEST_BIT_POS_4, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify bit is set */
+    // Verify bit is set
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) != 0U);
@@ -618,16 +635,16 @@ void test_pos_io_ioUpdateByte_b_clearBit(void)
     uint8_t initialValue = TEST_MASK_FULL_BYTE;
     uint8_t readData = 0U;
 
-    /* Initialize register with all bits set */
+    // Initialize register with all bits set
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Clear bit 4 using boolean API */
+    // Clear bit 4 using boolean API
     status = Pmic_ioUpdateByte_b(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                  IO_TEST_BIT_POS_4, false);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify bit is cleared */
+    // Verify bit is cleared
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) == 0U);
@@ -640,16 +657,16 @@ void test_pos_io_ioUpdateByte_CS_singleBitField(void)
     uint8_t readData = 0U;
     uint8_t expectedValue;
 
-    /* Initialize register */
+    // Initialize register
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Modify bit field with critical section */
+    // Modify bit field with critical section
     status = Pmic_ioUpdateByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG,
                                   IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 0U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify modification */
+    // Verify modification
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     expectedValue = initialValue & ~(1UL << IO_TEST_BIT_POS_0);
@@ -662,16 +679,16 @@ void test_pos_io_ioUpdateByte_bCS_setBit(void)
     uint8_t initialValue = TEST_PATTERN_AA;
     uint8_t readData = 0U;
 
-    /* Initialize register */
+    // Initialize register
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, initialValue);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Set bit with critical section using boolean API */
+    // Set bit with critical section using boolean API
     status = Pmic_ioUpdateByte_bCS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG,
                                    IO_TEST_BIT_POS_4, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify bit is set */
+    // Verify bit is set
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData & (1UL << IO_TEST_BIT_POS_4)) != 0U);
@@ -689,14 +706,14 @@ void test_pos_io_ioTxRxByte_registerBoundaries(void)
     uint8_t readData1 = 0U;
     uint8_t readData2 = 0U;
 
-    /* Test writing to both scratchpad registers */
+    // Test writing to both scratchpad registers
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData1);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData2);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify both registers independently */
+    // Verify both registers independently
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData1);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData1 == writeData1);
@@ -712,7 +729,7 @@ void test_pos_io_ioTxRxByte_allScratchpadRegs(void)
     uint8_t writePattern[2] = {0xABU, 0xCDU};
     uint8_t readData = 0U;
 
-    /* Write different patterns to each scratchpad register */
+    // Write different patterns to each scratchpad register
     for (uint8_t i = 0U; i < 2U; i++)
     {
         uint16_t regAddr = IO_TEST_SCRATCHPAD1_REG + i;
@@ -721,7 +738,7 @@ void test_pos_io_ioTxRxByte_allScratchpadRegs(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     }
 
-    /* Verify each scratchpad register independently */
+    // Verify each scratchpad register independently
     for (uint8_t i = 0U; i < 2U; i++)
     {
         uint16_t regAddr = IO_TEST_SCRATCHPAD1_REG + i;
@@ -741,11 +758,10 @@ void test_pos_io_read_with_crc_validation(void)
     int32_t status;
     uint8_t testData[] = {0x12U, 0x34U, 0x56U, 0x78U};
 
-    /* TPS65386x-Q1 always has CRC enabled in SPI protocol
-     * This test verifies that read operations with CRC validation work correctly
-     */
+    // TPS65386x-Q1 always has CRC enabled in SPI protocol
+    // This test verifies that read operations with CRC validation work correctly
 
-    /* Write test patterns to scratchpad registers */
+    // Write test patterns to scratchpad registers
     for (uint8_t i = 0U; i < 2U; i++)
     {
         uint16_t regAddr = IO_TEST_SCRATCHPAD1_REG + i;
@@ -753,7 +769,7 @@ void test_pos_io_read_with_crc_validation(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     }
 
-    /* Read back and verify - CRC validation occurs internally in Pmic_ioRxByte */
+    // Read back and verify - CRC validation occurs internally in Pmic_ioRxByte
     for (uint8_t i = 0U; i < 2U; i++)
     {
         uint8_t readData = 0U;
@@ -764,12 +780,12 @@ void test_pos_io_read_with_crc_validation(void)
         PLATFORM_ASSERT(readData == testData[i]);
     }
 
-    /* Verify sequential read operations maintain CRC integrity */
+    // Verify sequential read operations maintain CRC integrity
     uint32_t seqReadData = 0U;
     status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &seqReadData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify sequential read matches individual reads */
+    // Verify sequential read matches individual reads
     uint8_t byte0 = (uint8_t)(seqReadData & 0xFFU);
     uint8_t byte1 = (uint8_t)((seqReadData >> 8U) & 0xFFU);
     PLATFORM_ASSERT(byte0 == testData[0]);
@@ -781,38 +797,37 @@ void test_neg_io_ioRxByte_crcError(void)
 #ifdef BUILD_MOCK
     int32_t status;
     uint8_t readData = 0U;
-    PmicMockDevice_t* mockDevice = platform_getMockDevice();
+    PmicMockDevice_t *mockDevice = platform_getMockDevice();
 
-    /* TPS65386x-Q1 validates CRC in Pmic_ioRxByte (line 161 of pmic_io.c)
-     * If CRC validation fails, it returns PMIC_ST_ERR_DATA_IO_CRC
-     *
-     * This test injects a CRC error to verify the error handling path.
-     */
+    // TPS65386x-Q1 validates CRC in Pmic_ioRxByte (line 161 of pmic_io.c)
+    // If CRC validation fails, it returns PMIC_ST_ERR_DATA_IO_CRC
+    //
+    // This test injects a CRC error to verify the error handling path.
 
     PLATFORM_ASSERT(mockDevice != NULL);
 
-    /* Inject CRC error for the next read operation */
+    // Inject CRC error for the next read operation
     PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_CRC_MISMATCH, 1);
 
-    /* Perform read operation - should detect CRC mismatch */
+    // Perform read operation - should detect CRC mismatch
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
 
-    /* Verify CRC error was detected */
+    // Verify CRC error was detected
     PLATFORM_ASSERT(status == PMIC_ST_ERR_DATA_IO_CRC);
 
-    /* Clear error injection for subsequent tests */
+    // Clear error injection for subsequent tests
     PmicMock_ClearErrors(mockDevice);
 
-    /* Verify normal operation resumes after clearing errors */
+    // Verify normal operation resumes after clearing errors
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Test CRC error with critical section variant */
+    // Test CRC error with critical section variant
     PmicMock_InjectError(mockDevice, PMIC_MOCK_ERROR_CRC_MISMATCH, 1);
     status = Pmic_ioRxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_DATA_IO_CRC);
 
-    /* Cleanup */
+    // Cleanup
     PmicMock_ClearErrors(mockDevice);
 #else
     TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for CRC error injection");
@@ -824,35 +839,34 @@ void test_pos_io_write_with_crc_calculation(void)
     int32_t status;
     uint8_t testPatterns[] = {TEST_PATTERN_AA, TEST_PATTERN_55, TEST_MASK_HIGH_NIBBLE, TEST_MASK_LOW_NIBBLE};
 
-    /* TPS65386x-Q1 calculates CRC for write operations in Pmic_ioTxByte (line 221 of pmic_io.c)
-     * spiBuf[3] = getCRC8Val(spiBuf, bufLen) where bufLen=3
-     * This test verifies write operations with CRC calculation work correctly
-     */
+    // TPS65386x-Q1 calculates CRC for write operations in Pmic_ioTxByte (line 221 of pmic_io.c)
+    // spiBuf[3] = getCRC8Val(spiBuf, bufLen) where bufLen=3
+    // This test verifies write operations with CRC calculation work correctly
 
-    /* Test writing multiple patterns to verify CRC calculation for different data */
+    // Test writing multiple patterns to verify CRC calculation for different data
     for (uint8_t i = 0U; i < 4U; i++)
     {
-        /* Write with CRC calculation */
+        // Write with CRC calculation
         status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, testPatterns[i]);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        /* Read back to verify write succeeded */
+        // Read back to verify write succeeded
         uint8_t readData = 0U;
         status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(readData == testPatterns[i]);
     }
 
-    /* Verify write with critical section also calculates CRC correctly */
+    // Verify write with critical section also calculates CRC correctly
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, 0xCCU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify sequential write operations maintain CRC integrity */
+    // Verify sequential write operations maintain CRC integrity
     uint32_t writeData = 0x0000ABCDU;
     status = Pmic_ioTxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Read back sequential write to verify integrity */
+    // Read back sequential write to verify integrity
     uint32_t readData = 0U;
     status = Pmic_ioRxWordSeq(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData, 2U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -863,18 +877,17 @@ void test_pos_io_crc_enable_disable_transitions(void)
 {
     int32_t status;
 
-    /* TPS65386x-Q1 always has CRC enabled in SPI protocol - no disable capability
-     * This is different from LP8772x-Q1 which has Pmic_ioCrcEnable/Disable APIs
-     *
-     * This test verifies that CRC remains consistently active across multiple operations
-     * and state transitions (init/deinit/reinit)
-     */
+    // TPS65386x-Q1 always has CRC enabled in SPI protocol - no disable capability
+    // This is different from LP8772x-Q1 which has Pmic_ioCrcEnable/Disable APIs
+    //
+    // This test verifies that CRC remains consistently active across multiple operations
+    // and state transitions (init/deinit/reinit)
 
-    /* Perform operations to verify CRC is consistently active */
+    // Perform operations to verify CRC is consistently active
     uint8_t writeData1 = TEST_PATTERN_A5;
     uint8_t readData1 = 0U;
 
-    /* Write and read with CRC active */
+    // Write and read with CRC active
     status = Pmic_ioTxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, writeData1);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
@@ -882,18 +895,18 @@ void test_pos_io_crc_enable_disable_transitions(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData1 == writeData1);
 
-    /* Perform read-modify-write operation to verify CRC during complex operations */
+    // Perform read-modify-write operation to verify CRC during complex operations
     status = Pmic_ioUpdateByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                IO_TEST_BIT_POS_0, (1UL << IO_TEST_BIT_POS_0), 1U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify modified value */
+    // Verify modified value
     uint8_t readData2 = 0U;
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData2);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT((readData2 & 0x01U) == 0x01U);
 
-    /* Perform critical section operations to verify CRC during protected operations */
+    // Perform critical section operations to verify CRC during protected operations
     uint8_t writeData3 = TEST_PATTERN_5A;
     status = Pmic_ioTxByte_CS(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, writeData3);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -903,12 +916,12 @@ void test_pos_io_crc_enable_disable_transitions(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readData3 == writeData3);
 
-    /* Verify boolean update operations maintain CRC integrity */
+    // Verify boolean update operations maintain CRC integrity
     status = Pmic_ioUpdateByte_b(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG,
                                  IO_TEST_BIT_POS_4, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify bit was set */
+    // Verify bit was set
     uint8_t readData4 = 0U;
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD1_REG, &readData4);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -930,7 +943,7 @@ void test_pos_io_ioRxByte_withRetryOnCrcError(void)
 
     resetMockIoState();
 
-    /* TPS65386x-Q1 always has CRC enabled in SPI protocol */
+    // TPS65386x-Q1 always has CRC enabled in SPI protocol
     g_mockCrcCorruptionMask = TEST_MASK_FULL_BYTE;
 
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &regData);
@@ -988,7 +1001,7 @@ void test_neg_io_crcErrorExhaustsRetries(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(initialRetryCnt == 0U);
 
-    /* TPS65386x-Q1 always has CRC enabled in SPI protocol */
+    // TPS65386x-Q1 always has CRC enabled in SPI protocol
     g_mockIoReadReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
 
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &regData);
@@ -1019,7 +1032,7 @@ void test_neg_io_crcErrorExhaustsRetries(void)
 /* ========================================================================== */
 
 /**
- * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt
+ * @brief Test ioTxByte retry succeeds on exactly the last allowed attempt.
  */
 void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 {
@@ -1027,28 +1040,28 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
     uint8_t writeVal = 0xBBU;
     Pmic_Handle_t testHandle;
 
-    /* Initialize test handle with mock functions */
+    // Initialize test handle with mock functions
     (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
     testHandle.ioRead = &mockIoRead;
     testHandle.ioWrite = &mockIoWrite;
     testHandle.timerWaitMs = &mockTimerWait;
-    testHandle.retryCnt = 1U;         /* Allow exactly 1 retry (2 total attempts) */
+    testHandle.retryCnt = 1U;  // Allow exactly 1 retry (2 total attempts)
     testHandle.retryIntervalMs = 10U;
 
-    /* Reset mock state */
+    // Reset mock state
     resetMockIoState();
 
-    /* Configure mock to fail on first write attempt, succeed on second */
+    // Configure mock to fail on first write attempt, succeed on second
     g_mockIoWriteReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
 
-    /* Perform write - should fail on first, succeed on second (last retry) */
+    // Perform write - should fail on first, succeed on second (last retry)
     status = Pmic_ioTxByte(&testHandle, IO_TEST_SCRATCHPAD2_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify exactly 2 write calls (original + 1 retry) */
+    // Verify exactly 2 write calls (original + 1 retry)
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
 
-    /* Verify the value was actually written */
+    // Verify the value was actually written
     uint8_t readVal = 0U;
     status = Pmic_ioRxByte(&g_pmicHandle, IO_TEST_SCRATCHPAD2_REG, &readVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1056,7 +1069,7 @@ void test_pos_io_ioTxByte_retrySucceedsOnLastAttempt(void)
 }
 
 /**
- * @brief Test ioRxByte with zero retry count (no retries allowed)
+ * @brief Test ioRxByte with zero retry count (no retries allowed).
  */
 void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
 {
@@ -1064,30 +1077,30 @@ void test_neg_io_ioRxByte_zeroRetryCntImmediateFail(void)
     uint8_t regData = 0U;
     Pmic_Handle_t testHandle;
 
-    /* Initialize test handle with mock functions */
+    // Initialize test handle with mock functions
     (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
     testHandle.ioRead = &mockIoRead;
     testHandle.ioWrite = &mockIoWrite;
     testHandle.timerWaitMs = &mockTimerWait;
-    testHandle.retryCnt = 0U;         /* No retries allowed */
+    testHandle.retryCnt = 0U;  // No retries allowed
     testHandle.retryIntervalMs = 10U;
 
-    /* Reset mock state */
+    // Reset mock state
     resetMockIoState();
 
-    /* Configure mock to fail */
+    // Configure mock to fail
     g_mockIoReadReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
 
-    /* Perform read - should fail immediately with no retry */
+    // Perform read - should fail immediately with no retry
     status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_I2C_COMM_FAIL);
 
-    /* Verify only 1 read call was made (no retry) */
+    // Verify only 1 read call was made (no retry)
     PLATFORM_ASSERT(g_mockIoReadCallCount == 1U);
 }
 
 /**
- * @brief Test ioTxByte with multiple retry attempts before success
+ * @brief Test ioTxByte with multiple retry attempts before success.
  */
 void test_pos_io_ioTxByte_multipleRetryAttempts(void)
 {
@@ -1095,32 +1108,30 @@ void test_pos_io_ioTxByte_multipleRetryAttempts(void)
     uint8_t writeVal = 0xCCU;
     Pmic_Handle_t testHandle;
 
-    /* Initialize test handle with mock functions */
+    // Initialize test handle with mock functions
     (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
     testHandle.ioRead = &mockIoRead;
     testHandle.ioWrite = &mockIoWrite;
     testHandle.timerWaitMs = &mockTimerWait;
-    testHandle.retryCnt = 3U;         /* Allow up to 3 retries */
+    testHandle.retryCnt = 3U;  // Allow up to 3 retries
     testHandle.retryIntervalMs = 5U;
 
-    /* Reset mock state */
+    // Reset mock state
     resetMockIoState();
 
-    /* First attempt: fail */
+    // First attempt: fail
     g_mockIoWriteReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
 
-    /* Perform write - should succeed on retry */
+    // Perform write - should succeed on retry
     status = Pmic_ioTxByte(&testHandle, IO_TEST_SCRATCHPAD2_REG, writeVal);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Should have 2 attempts (1 failure + 1 success) */
+    // Should have 2 attempts (1 failure + 1 success)
     PLATFORM_ASSERT(g_mockIoWriteCallCount == 2U);
 }
 
 /**
- * @brief Test IO with NULL commHandle0
- *
- * Covers line 138 in pmic_io.c - commHandle0 NULL validation
+ * @brief Test IO with NULL commHandle0.
  */
 void test_neg_io_nullCommHandle(void)
 {
@@ -1139,9 +1150,7 @@ void test_neg_io_nullCommHandle(void)
 }
 
 /**
- * @brief Test IO with NULL ioRead/ioWrite function pointers
- *
- * Covers line 142 in pmic_io.c - ioRead/ioWrite NULL validation
+ * @brief Test IO with NULL ioRead/ioWrite function pointers.
  */
 void test_neg_io_nullIoFptrs(void)
 {
@@ -1165,9 +1174,7 @@ void test_neg_io_nullIoFptrs(void)
 }
 
 /**
- * @brief Test IO with NULL timer but non-zero retry interval
- *
- * Covers line 146 in pmic_io.c - timer validation when retry interval is set
+ * @brief Test IO with NULL timer but non-zero retry interval.
  */
 void test_neg_io_nullTimerWithRetry(void)
 {
@@ -1184,14 +1191,97 @@ void test_neg_io_nullTimerWithRetry(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 }
 
+/**
+ * @brief Test IO_validatePmicHandle when asyncEnable=true but an async hook is NULL.
+ */
+void test_neg_io_asyncHandleNullHook(void)
+{
+    Pmic_Handle_t testHandle;
+    uint8_t rxData = 0U;
+
+    // Start from a valid, fully-initialised handle and corrupt it
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+
+    // Enable async mode — all four hooks are required
+    testHandle.asyncEnable   = true;
+    testHandle.asyncRxStart  = &mockAsyncRxStart;
+    testHandle.asyncTxStart  = &mockAsyncTxStart;
+    testHandle.asyncRxAwait  = &mockAsyncRxAwait;
+    testHandle.asyncTxAwait  = &mockAsyncTxAwait;
+
+    // Null out one of the required async hooks to trigger the NULL check
+    testHandle.asyncRxStart = NULL;
+
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test IO_validatePmicHandle with NULL asyncTxStart (isolated from the other 3 hooks).
+ */
+void test_neg_io_asyncHandleNullAsyncTxStart(void)
+{
+    Pmic_Handle_t testHandle;
+    uint8_t rxData = 0U;
+
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+
+    testHandle.asyncEnable   = true;
+    testHandle.asyncRxStart  = &mockAsyncRxStart;
+    testHandle.asyncTxStart  = NULL;
+    testHandle.asyncRxAwait  = &mockAsyncRxAwait;
+    testHandle.asyncTxAwait  = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test IO_validatePmicHandle with NULL asyncRxAwait (isolated from the other 3 hooks).
+ */
+void test_neg_io_asyncHandleNullAsyncRxAwait(void)
+{
+    Pmic_Handle_t testHandle;
+    uint8_t rxData = 0U;
+
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+
+    testHandle.asyncEnable   = true;
+    testHandle.asyncRxStart  = &mockAsyncRxStart;
+    testHandle.asyncTxStart  = &mockAsyncTxStart;
+    testHandle.asyncRxAwait  = NULL;
+    testHandle.asyncTxAwait  = &mockAsyncTxAwait;
+
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
+/**
+ * @brief Test IO_validatePmicHandle with NULL asyncTxAwait (isolated from the other 3 hooks).
+ */
+void test_neg_io_asyncHandleNullAsyncTxAwait(void)
+{
+    Pmic_Handle_t testHandle;
+    uint8_t rxData = 0U;
+
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+
+    testHandle.asyncEnable   = true;
+    testHandle.asyncRxStart  = &mockAsyncRxStart;
+    testHandle.asyncTxStart  = &mockAsyncTxStart;
+    testHandle.asyncRxAwait  = &mockAsyncRxAwait;
+    testHandle.asyncTxAwait  = NULL;
+
+    int32_t status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
+}
+
 /* ========================================================================== */
 /*                      Async Negative Tests - Validation                     */
 /* ========================================================================== */
 
 /**
- * @brief Test async TX operation when asyncTxStart fails
- *
- * Covers line 282 in pmic_io.c - asyncTxStart error handling
+ * @brief Test async TX operation when asyncTxStart fails.
  */
 void test_neg_io_ioTxByte_asyncStartFails(void)
 {
@@ -1200,7 +1290,7 @@ void test_neg_io_ioTxByte_asyncStartFails(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t txData = TEST_PATTERN_A5;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1228,23 +1318,21 @@ void test_neg_io_ioTxByte_asyncStartFails(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Inject failure in asyncTxStart */
+    // Inject failure in asyncTxStart
     resetMockIoState();
     g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
 
-    /* Attempt async write - should fail immediately */
+    // Attempt async write - should fail immediately
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
     PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
-    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 0U);  /* Await should not be called */
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 0U);  // Await should not be called
 
     Pmic_deinit(&asyncHandle);
 }
 
 /**
- * @brief Test async RX operation when asyncRxStart fails
- *
- * Covers line 196 in pmic_io.c - asyncRxStart error handling
+ * @brief Test async RX operation when asyncRxStart fails.
  */
 void test_neg_io_ioRxByte_asyncStartFails(void)
 {
@@ -1253,7 +1341,7 @@ void test_neg_io_ioRxByte_asyncStartFails(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t rxData = 0U;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1281,23 +1369,21 @@ void test_neg_io_ioRxByte_asyncStartFails(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Inject failure in asyncRxStart */
+    // Inject failure in asyncRxStart
     resetMockIoState();
     g_mockAsyncRxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
 
-    /* Attempt async read - should fail immediately */
+    // Attempt async read - should fail immediately
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
     PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
-    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 0U);  /* Await should not be called */
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 0U);  // Await should not be called
 
     Pmic_deinit(&asyncHandle);
 }
 
 /**
- * @brief Test async TX operation when asyncTxAwait fails
- *
- * Covers line 284 in pmic_io.c - asyncTxAwait error handling
+ * @brief Test async TX operation when asyncTxAwait fails.
  */
 void test_neg_io_ioTxByte_asyncAwaitFails(void)
 {
@@ -1306,7 +1392,7 @@ void test_neg_io_ioTxByte_asyncAwaitFails(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t txData = TEST_PATTERN_55;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1334,23 +1420,21 @@ void test_neg_io_ioTxByte_asyncAwaitFails(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Inject failure in asyncTxAwait (after successful start) */
+    // Inject failure in asyncTxAwait (after successful start)
     resetMockIoState();
     g_mockAsyncTxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
 
-    /* Attempt async write - start succeeds, await fails */
+    // Attempt async write - start succeeds, await fails
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
     PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
-    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  /* Await was called */
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  // Await was called
 
     Pmic_deinit(&asyncHandle);
 }
 
 /**
- * @brief Test async RX operation when asyncRxAwait fails
- *
- * Covers line 198 in pmic_io.c - asyncRxAwait error handling
+ * @brief Test async RX operation when asyncRxAwait fails.
  */
 void test_neg_io_ioRxByte_asyncAwaitFails(void)
 {
@@ -1359,7 +1443,7 @@ void test_neg_io_ioRxByte_asyncAwaitFails(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t rxData = 0U;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1387,15 +1471,15 @@ void test_neg_io_ioRxByte_asyncAwaitFails(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Inject failure in asyncRxAwait (after successful start) */
+    // Inject failure in asyncRxAwait (after successful start)
     resetMockIoState();
     g_mockAsyncRxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
 
-    /* Attempt async read - start succeeds, await fails */
+    // Attempt async read - start succeeds, await fails
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
     PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
-    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);  /* Await was called */
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);  // Await was called
 
     Pmic_deinit(&asyncHandle);
 }
@@ -1405,9 +1489,7 @@ void test_neg_io_ioRxByte_asyncAwaitFails(void)
 /* ========================================================================== */
 
 /**
- * @brief Test successful async write operation in SPI mode
- *
- * Covers lines 281-285 in pmic_io.c - async TX path
+ * @brief Test successful async write operation in SPI mode.
  */
 void test_pos_io_ioTxByte_asyncWriteSpi(void)
 {
@@ -1416,7 +1498,7 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t txData = TEST_PATTERN_A5;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1444,19 +1526,19 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Reset mock state */
+    // Reset mock state
     resetMockIoState();
 
-    /* Perform async write */
+    // Perform async write
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify async hooks were called */
+    // Verify async hooks were called
     PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);
     PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);
-    PLATFORM_ASSERT(g_mockIoWriteCallCount == 1U);  /* Via mockAsyncTxStart */
+    PLATFORM_ASSERT(g_mockIoWriteCallCount == 1U);  // Via mockAsyncTxStart
 
-    /* Verify data was written correctly */
+    // Verify data was written correctly
     uint8_t rxData = 0U;
     resetMockIoState();
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
@@ -1467,9 +1549,7 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
 }
 
 /**
- * @brief Test successful async read operation in SPI mode
- *
- * Covers lines 195-199 in pmic_io.c - async RX path
+ * @brief Test successful async read operation in SPI mode.
  */
 void test_pos_io_ioRxByte_asyncReadSpi(void)
 {
@@ -1479,7 +1559,7 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
     uint8_t txData = TEST_PATTERN_55;
     uint8_t rxData = 0U;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1507,31 +1587,29 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* First write test data */
+    // First write test data
     resetMockIoState();
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Perform async read */
+    // Perform async read
     resetMockIoState();
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify async hooks were called */
+    // Verify async hooks were called
     PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);
     PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);
-    PLATFORM_ASSERT(g_mockIoReadCallCount == 1U);  /* Via mockAsyncRxStart */
+    PLATFORM_ASSERT(g_mockIoReadCallCount == 1U);  // Via mockAsyncRxStart
 
-    /* Verify data was read correctly */
+    // Verify data was read correctly
     PLATFORM_ASSERT(rxData == txData);
 
     Pmic_deinit(&asyncHandle);
 }
 
 /**
- * @brief Test successful async read-modify-write operation
- *
- * Covers async paths in both ioRxByte and ioTxByte via ioUpdateByte
+ * @brief Test successful async read-modify-write operation.
  */
 void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
 {
@@ -1539,10 +1617,10 @@ void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
     Pmic_HandleCfg_t asyncCfg;
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t initialData = 0xF0U;
-    uint8_t expectedData = 0xFAU;  /* Upper nibble 0xF, lower nibble 0xA */
+    uint8_t expectedData = 0xFAU;  // Upper nibble 0xF, lower nibble 0xA
     uint8_t rxData = 0U;
 
-    /* Setup async handle */
+    // Setup async handle
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1570,24 +1648,24 @@ void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Write initial data (upper nibble = 0xF) */
+    // Write initial data (upper nibble = 0xF)
     resetMockIoState();
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, initialData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Perform async RMW - update lower nibble to 0xA */
+    // Perform async RMW - update lower nibble to 0xA
     resetMockIoState();
     status = Pmic_ioUpdateByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG,
                                IO_TEST_BIT_POS_0, IO_TEST_BIT_MASK_NIBBLE, 0xAU);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify both async read and write were called during RMW */
-    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);  /* Read phase */
+    // Verify both async read and write were called during RMW
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 1U);  // Read phase
     PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 1U);
-    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);  /* Write phase */
+    PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 1U);  // Write phase
     PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);
 
-    /* Verify final value */
+    // Verify final value
     resetMockIoState();
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -1601,9 +1679,7 @@ void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
 /* ========================================================================== */
 
 /**
- * @brief Test async retry logic when asyncTxStart fails initially
- *
- * Covers retry loop (lines 277-297 in pmic_io.c) with async operations
+ * @brief Test async retry logic when asyncTxStart fails initially.
  */
 void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
 {
@@ -1612,7 +1688,7 @@ void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t txData = TEST_PATTERN_AA;
 
-    /* Setup async handle with retry enabled */
+    // Setup async handle with retry enabled
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1646,26 +1722,24 @@ void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Configure mock to fail first call, succeed second */
+    // Configure mock to fail first call, succeed second
     resetMockIoState();
     g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
-    /* Mock will auto-reset to SUCCESS after first failure */
+    // Mock will auto-reset to SUCCESS after first failure
 
-    /* Perform async write (should retry and succeed) */
+    // Perform async write (should retry and succeed)
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify retry occurred (should have 2 start calls: 1 failed + 1 success) */
+    // Verify retry occurred (should have 2 start calls: 1 failed + 1 success)
     PLATFORM_ASSERT(g_mockAsyncTxStartCallCount == 2U);
-    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  /* Only called on successful start */
+    PLATFORM_ASSERT(g_mockAsyncTxAwaitCallCount == 1U);  // Only called on successful start
 
     Pmic_deinit(&asyncHandle);
 }
 
 /**
- * @brief Test async retry logic when asyncRxAwait fails initially
- *
- * Covers retry loop (lines 191-218 in pmic_io.c) with async operations
+ * @brief Test async retry logic when asyncRxAwait fails initially.
  */
 void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
 {
@@ -1675,7 +1749,7 @@ void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t rxData = 0U;
 
-    /* Setup async handle with retry enabled */
+    // Setup async handle with retry enabled
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1709,23 +1783,23 @@ void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* First write test data */
+    // First write test data
     resetMockIoState();
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, TEST_PATTERN_55);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Configure mock to fail first await call, succeed second */
+    // Configure mock to fail first await call, succeed second
     resetMockIoState();
     g_mockAsyncRxAwaitReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
-    /* Mock will auto-reset to SUCCESS after first failure */
+    // Mock will auto-reset to SUCCESS after first failure
 
-    /* Perform async read (should retry and succeed) */
+    // Perform async read (should retry and succeed)
     status = Pmic_ioRxByte(&asyncHandle, IO_TEST_SCRATCHPAD2_REG, &rxData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Verify retry occurred */
-    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 2U);  /* 2 attempts */
-    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 2U);  /* Await called on both */
+    // Verify retry occurred
+    PLATFORM_ASSERT(g_mockAsyncRxStartCallCount == 2U);  // 2 attempts
+    PLATFORM_ASSERT(g_mockAsyncRxAwaitCallCount == 2U);  // Await called on both
     PLATFORM_ASSERT(rxData == TEST_PATTERN_55);
 
     Pmic_deinit(&asyncHandle);
@@ -1735,9 +1809,7 @@ void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
 }
 
 /**
- * @brief Test async operation exhausting all retries
- *
- * Covers retry loop exhaustion (line 212 in pmic_io.c) with async operations
+ * @brief Test async operation exhausting all retries.
  */
 void test_neg_io_ioTxByte_asyncExhaustRetries(void)
 {
@@ -1746,7 +1818,7 @@ void test_neg_io_ioTxByte_asyncExhaustRetries(void)
     static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
     uint8_t txData = TEST_PATTERN_AA;
 
-    /* Setup async handle with limited retries */
+    // Setup async handle with limited retries
     (void)memset(&asyncCfg, 0, sizeof(asyncCfg));
     asyncCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                            PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
@@ -1773,28 +1845,88 @@ void test_neg_io_ioTxByte_asyncExhaustRetries(void)
     asyncCfg.asyncTxStart = &mockAsyncTxStart;
     asyncCfg.asyncRxAwait = &mockAsyncRxAwait;
     asyncCfg.asyncTxAwait = &mockAsyncTxAwait;
-    asyncCfg.retryCnt = 2U;  /* Allow 2 retries = 3 total attempts */
+    asyncCfg.retryCnt = 2U;  // Allow 2 retries = 3 total attempts
     asyncCfg.retryIntervalMs = 10U;
     asyncCfg.timerWaitMs = &mockTimerWait;
 
     int32_t status = Pmic_init(&asyncHandle, &asyncCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    /* Configure mock to persistently fail for all retry attempts */
+    // Configure mock to persistently fail for all retry attempts
     resetMockIoState();
     g_mockAsyncTxStartReturnStatus = PMIC_ST_ERR_SPI_COMM_FAIL;
-    g_mockAsyncTxStartFailureCount = asyncCfg.retryCnt + 1U;  /* Fail 3 times total */
-    uint32_t expectedAttempts = asyncCfg.retryCnt + 1U;  /* 3 attempts */
+    g_mockAsyncTxStartFailureCount = asyncCfg.retryCnt + 1U;  // Fail 3 times total
+    uint32_t expectedAttempts = asyncCfg.retryCnt + 1U;  // 3 attempts
 
-    /* Attempt async write - should fail after exhausting retries */
+    // Attempt async write - should fail after exhausting retries
     status = Pmic_ioTxByte(&asyncHandle, IO_TEST_SCRATCHPAD1_REG, txData);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_SPI_COMM_FAIL);
 
-    /* Verify all attempts were made but eventually failed */
-    /* Note: Due to mock auto-reset, we get at least 1 attempt */
+    // Verify all attempts were made but eventually failed
+    // Note: Due to mock auto-reset, we get at least 1 attempt
     PLATFORM_ASSERT(g_mockAsyncTxStartCallCount >= 1U);
 
     Pmic_deinit(&asyncHandle);
+}
+
+/* ========================================================================== */
+// Positive Tests - Pmic_ioRxByte
+/* ========================================================================== */
+
+/**
+ * @brief Test Pmic_ioRxByte retry loop iterates more than once (gap row 73).
+ */
+void test_pos_io_ioRxByte_retrySucceeds(void)
+{
+    int32_t status;
+    uint8_t regData = 0U;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead        = &mockIoRead;
+    testHandle.ioWrite       = &mockIoWrite;
+    testHandle.timerWaitMs   = &mockTimerWait;
+    testHandle.retryCnt      = 1U;  // allow 1 retry → 2 total loop iterations
+    testHandle.retryIntervalMs = 10U;
+
+    resetMockIoState();
+
+    // First ioRead attempt will fail; mock auto-resets so second succeeds
+    g_mockIoReadReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
+
+    status = Pmic_ioRxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, &regData);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Two calls confirm the loop iterated more than once
+    PLATFORM_ASSERT(g_mockIoReadCallCount >= 2U);
+}
+
+/**
+ * @brief Test Pmic_ioTxByte retry loop iterates more than once (gap row 74).
+ */
+void test_pos_io_ioTxByte_retrySucceeds(void)
+{
+    int32_t status;
+    uint8_t writeVal = TEST_PATTERN_AA;
+    Pmic_Handle_t testHandle;
+
+    (void)memcpy(&testHandle, &g_pmicHandle, sizeof(Pmic_Handle_t));
+    testHandle.ioRead        = &mockIoRead;
+    testHandle.ioWrite       = &mockIoWrite;
+    testHandle.timerWaitMs   = &mockTimerWait;
+    testHandle.retryCnt      = 1U;
+    testHandle.retryIntervalMs = 10U;
+
+    resetMockIoState();
+
+    // First ioWrite attempt will fail; mock auto-resets so second succeeds
+    g_mockIoWriteReturnStatus = PMIC_ST_ERR_I2C_COMM_FAIL;
+
+    status = Pmic_ioTxByte(&testHandle, IO_TEST_SCRATCHPAD1_REG, writeVal);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    // Two calls confirm the loop iterated more than once
+    PLATFORM_ASSERT(g_mockIoWriteCallCount >= 2U);
 }
 
 /* NOTE: setUp() and tearDown() removed - already defined in test_runner.c */
