@@ -55,8 +55,9 @@ DEVICE_DIR := devices
 
 # Pass-through variables for device Makefiles
 MAKE_VARS := CC=$(CC)
-ifdef build
-	MAKE_VARS += build=$(build)
+BUILD ?= mock
+ifdef BUILD
+	MAKE_VARS += BUILD=$(BUILD)
 endif
 
 # Default target: build all devices
@@ -116,7 +117,7 @@ endif
 .PHONY: test
 test:
 ifndef DEVICE
-	@echo "Running tests for all PMIC device variants (mock platform)..."
+	@echo "Running tests for all PMIC device variants ($(BUILD) platform)..."
 	@echo ""
 	@results_file=$$(mktemp); \
 	any_failed=0; \
@@ -130,7 +131,7 @@ ifndef DEVICE
 		if [ -d "$(DEVICE_DIR)/$$device/test" ]; then \
 			output_file=$$(mktemp); \
 			result=0; \
-			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test test BUILD=mock > $$output_file 2>&1; \
+			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test test BUILD=$(BUILD) > $$output_file 2>&1; \
 			result=$$?; \
 			cat $$output_file; \
 			tests=0; failures=0; ignored=0; \
@@ -176,12 +177,12 @@ ifndef DEVICE
 		echo "All device tests completed successfully!"; \
 	fi
 else
-	@echo "Testing device: $(DEVICE) (mock platform)"
+	@echo "Testing device: $(DEVICE) ($(BUILD) platform)"
 	@if [ ! -d "$(DEVICE_DIR)/$(DEVICE)/test" ]; then \
 		echo "Error: Test directory $(DEVICE_DIR)/$(DEVICE)/test not found"; \
 		exit 1; \
 	fi
-	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test test BUILD=mock
+	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test test BUILD=$(BUILD)
 endif
 
 # Generate coverage reports (context-aware: all devices or specific device)

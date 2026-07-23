@@ -78,7 +78,7 @@ ifeq ($(BUILD), mock)
 else ifeq ($(BUILD), host)
 	# Host-controlled build - tests run on PC, communicate with pmic-tiva-host firmware
 	CFLAGS += -I$(UNITY_DIR)/src
-	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE
+	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE -D_DEFAULT_SOURCE
 
 	# Platform sources - serial-based implementation
 	PLATFORM_SOURCES = platform.c platform_serial.c

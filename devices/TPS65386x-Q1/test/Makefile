@@ -80,7 +80,7 @@ ifeq ($(BUILD), mock)
 else ifeq ($(BUILD), host)
 	# Host-controlled build - tests run on PC, communicate with pmic-tiva-host firmware via SPI
 	CFLAGS += -I$(UNITY_DIR)/src
-	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE
+	CFLAGS += -DBUILD_HOST -DUNITY_INCLUDE_DOUBLE -D_DEFAULT_SOURCE
 
 	# Platform sources - SPI serial-based implementation (TPS65386x-Q1 uses SPI, not I2C)
 	PLATFORM_SOURCES = platform.c platform_serial_spi.c
@@ -170,7 +170,7 @@ test-debug: check-mock-lib
 	@echo "Compiling Unity framework (relaxed warnings)..."
 	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources with debug support..."
-	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
+	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(TEST_COMMON_DIR)/debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests with debug logging..."
 	./$(TARGET)
 else ifeq ($(BUILD), host)
@@ -183,7 +183,7 @@ test-debug:
 	@echo "Compiling Unity framework (relaxed warnings)..."
 	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources with debug support..."
-	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
+	@$(CC) $(CFLAGS) -DPMIC_DEBUG=1 -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(TEST_COMMON_DIR)/debug.c $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $(TARGET) $(LDFLAGS)
 	@echo "Running tests with debug logging (requires pmic-tiva-host firmware on TM4C123)..."
 	./$(TARGET)
 endif

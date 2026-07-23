@@ -42,49 +42,7 @@
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
-static Pmic_Handle_t g_handle;
-
-/* Dummy handle for mock - driver validates non-NULL but doesn't dereference */
-static uint32_t dummyCommHandle = TEST_DUMMY_HANDLE;
-
-/* ========================================================================== */
-/*                           Helper Functions                                 */
-/* ========================================================================== */
-
-/**
- * @brief Helper function to initialize PMIC handle for each test.
- */
-static int32_t helper_initPmic(Pmic_Handle_t *handle)
-{
-    Pmic_HandleCfg_t pmicCfg = {
-        .validParams = PMIC_COMM_MODE_VALID |
-                       PMIC_COMM_HANDLE_0_VALID |
-                       PMIC_IO_READ_VALID |
-                       PMIC_IO_WRITE_VALID |
-                       PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
-        .commMode = PMIC_INTF_SPI,
-        .commHandle0 = (void*)&dummyCommHandle,
-        .ioRead = &platform_rxByte,
-        .ioWrite = &platform_txByte,
-        .criticalSectionStart = &platform_critSecStart,
-        .criticalSectionStop = &platform_critSecStop
-    };
-    int32_t status;
-
-    platform_init();
-    status = Pmic_init(handle, &pmicCfg);
-    return status;
-}
-
-/**
- * @brief Helper function to deinitialize PMIC handle after each test.
- */
-static void helper_deinitPmic(Pmic_Handle_t *handle)
-{
-    Pmic_deinit(handle);
-    platform_deinit();
-}
+static Pmic_Handle_t pmicHandle;
 
 /* ========================================================================== */
 /*                         Positive Test Implementations                      */
@@ -95,28 +53,25 @@ void test_pos_esm_esmSetGetStartState(void)
     int32_t status;
     bool startSet, startGet;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Test: Start ESM */
     startSet = true;
-    status = Pmic_esmSetStartState(&g_handle, startSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetStartState(&pmicHandle, startSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetStartState(&g_handle, &startGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(startSet, startGet);
+    status = Pmic_esmGetStartState(&pmicHandle, &startGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(startGet == startSet);
 
     /* Test: Stop ESM */
     startSet = false;
-    status = Pmic_esmSetStartState(&g_handle, startSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetStartState(&pmicHandle, startSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetStartState(&g_handle, &startGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(startSet, startGet);
+    status = Pmic_esmGetStartState(&pmicHandle, &startGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(startGet == startSet);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmStart(void)
@@ -124,17 +79,14 @@ void test_pos_esm_esmStart(void)
     int32_t status;
     bool startState;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmStart(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmStart(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetStartState(&g_handle, &startState);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(true, startState);
+    status = Pmic_esmGetStartState(&pmicHandle, &startState);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(startState == true);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmStop(void)
@@ -142,22 +94,19 @@ void test_pos_esm_esmStop(void)
     int32_t status;
     bool startState;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Start ESM first */
-    status = Pmic_esmStart(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmStart(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Then stop ESM */
-    status = Pmic_esmStop(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmStop(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetStartState(&g_handle, &startState);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(false, startState);
+    status = Pmic_esmGetStartState(&pmicHandle, &startState);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(startState == false);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_enable(void)
@@ -165,30 +114,27 @@ void test_pos_esm_esmSetCfg_enable(void)
     int32_t status;
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Test enable = true */
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgSet.enable = true;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.enable, cfgGet.enable);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.enable == cfgSet.enable);
 
     /* Test enable = false */
     cfgSet.enable = false;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.enable, cfgGet.enable);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.enable == cfgSet.enable);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_mode(void)
@@ -196,30 +142,27 @@ void test_pos_esm_esmSetCfg_mode(void)
     int32_t status;
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Test LEVEL_MODE */
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgSet.mode = PMIC_ESM_LEVEL_MODE;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.mode, cfgGet.mode);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.mode == cfgSet.mode);
 
     /* Test PWM_MODE */
     cfgSet.mode = PMIC_ESM_PWM_MODE;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.mode, cfgGet.mode);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.mode == cfgSet.mode);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_errThr(void)
@@ -228,8 +171,6 @@ void test_pos_esm_esmSetCfg_errThr(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x0, 0x7, 0xF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -237,15 +178,14 @@ void test_pos_esm_esmSetCfg_errThr(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.errThr = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.errThr, cfgGet.errThr);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.errThr == cfgSet.errThr);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_polarity(void)
@@ -253,31 +193,28 @@ void test_pos_esm_esmSetCfg_polarity(void)
     int32_t status;
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
 
     /* Test POLARITY_LOW_GOOD */
     cfgSet.polarity = PMIC_ESM_POLARITY_LOW_GOOD;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.polarity, cfgGet.polarity);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.polarity == cfgSet.polarity);
 
     /* Test POLARITY_HIGH_GOOD */
     cfgSet.polarity = PMIC_ESM_POLARITY_HIGH_GOOD;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.polarity, cfgGet.polarity);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.polarity == cfgSet.polarity);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_deglitch(void)
@@ -285,31 +222,28 @@ void test_pos_esm_esmSetCfg_deglitch(void)
     int32_t status;
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
 
     /* Test DEGLITCH_1_US */
     cfgSet.deglitch = PMIC_ESM_DEGLITCH_1_US;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.deglitch, cfgGet.deglitch);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.deglitch == cfgSet.deglitch);
 
     /* Test DEGLITCH_4_US */
     cfgSet.deglitch = PMIC_ESM_DEGLITCH_4_US;
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.deglitch, cfgGet.deglitch);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.deglitch == cfgSet.deglitch);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_timeBase(void)
@@ -323,8 +257,6 @@ void test_pos_esm_esmSetCfg_timeBase(void)
         PMIC_ESM_TIME_BASE_96_US
     };
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -332,15 +264,14 @@ void test_pos_esm_esmSetCfg_timeBase(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.timeBase = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.timeBase, cfgGet.timeBase);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.timeBase == cfgSet.timeBase);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_delay1(void)
@@ -349,8 +280,6 @@ void test_pos_esm_esmSetCfg_delay1(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x55, 0xAA, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_CFG_ESM_DELAY1_VALID_SHIFT;
     cfgGet.validParams = PMIC_CFG_ESM_DELAY1_VALID_SHIFT;
@@ -358,15 +287,14 @@ void test_pos_esm_esmSetCfg_delay1(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.delay1 = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.delay1, cfgGet.delay1);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.delay1 == cfgSet.delay1);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_delay2(void)
@@ -375,8 +303,6 @@ void test_pos_esm_esmSetCfg_delay2(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x55, 0xAA, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_CFG_ESM_DELAY2_VALID_SHIFT;
     cfgGet.validParams = PMIC_CFG_ESM_DELAY2_VALID_SHIFT;
@@ -384,15 +310,14 @@ void test_pos_esm_esmSetCfg_delay2(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.delay2 = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.delay2, cfgGet.delay2);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.delay2 == cfgSet.delay2);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_hmax(void)
@@ -401,8 +326,6 @@ void test_pos_esm_esmSetCfg_hmax(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x7F, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -410,15 +333,14 @@ void test_pos_esm_esmSetCfg_hmax(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.hmax = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.hmax, cfgGet.hmax);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.hmax == cfgSet.hmax);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_hmin(void)
@@ -427,8 +349,6 @@ void test_pos_esm_esmSetCfg_hmin(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x7F, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -436,15 +356,14 @@ void test_pos_esm_esmSetCfg_hmin(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.hmin = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.hmin, cfgGet.hmin);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.hmin == cfgSet.hmin);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_lmax(void)
@@ -453,8 +372,6 @@ void test_pos_esm_esmSetCfg_lmax(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x7F, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -462,15 +379,14 @@ void test_pos_esm_esmSetCfg_lmax(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.lmax = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.lmax, cfgGet.lmax);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.lmax == cfgSet.lmax);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_lmin(void)
@@ -479,8 +395,6 @@ void test_pos_esm_esmSetCfg_lmin(void)
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
     uint8_t testValues[] = {0x00, 0x7F, 0xFF};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     cfgSet.validParams = PMIC_ESM_CFG_VALID;
     cfgGet.validParams = PMIC_ESM_CFG_VALID;
@@ -488,15 +402,14 @@ void test_pos_esm_esmSetCfg_lmin(void)
     for (uint32_t i = 0; i < sizeof(testValues); i++)
     {
         cfgSet.lmin = testValues[i];
-        status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-        status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(cfgSet.lmin, cfgGet.lmin);
+        status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+        PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+        PLATFORM_ASSERT(cfgGet.lmin == cfgSet.lmin);
     }
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmSetCfg_multiple(void)
@@ -504,8 +417,6 @@ void test_pos_esm_esmSetCfg_multiple(void)
     int32_t status;
     Pmic_EsmCfg_t cfgSet = {0}, cfgGet = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Configure multiple parameters at once */
     cfgSet.validParams = PMIC_ESM_CFG_VALID |
@@ -521,20 +432,19 @@ void test_pos_esm_esmSetCfg_multiple(void)
     cfgSet.deglitch = PMIC_ESM_DEGLITCH_4_US;
     cfgSet.timeBase = PMIC_ESM_TIME_BASE_32_US;
 
-    status = Pmic_esmSetCfg(&g_handle, &cfgSet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     cfgGet.validParams = cfgSet.validParams;
-    status = Pmic_esmGetCfg(&g_handle, &cfgGet);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(cfgSet.enable, cfgGet.enable);
-    TEST_ASSERT_EQUAL(cfgSet.mode, cfgGet.mode);
-    TEST_ASSERT_EQUAL(cfgSet.errThr, cfgGet.errThr);
-    TEST_ASSERT_EQUAL(cfgSet.polarity, cfgGet.polarity);
-    TEST_ASSERT_EQUAL(cfgSet.deglitch, cfgGet.deglitch);
-    TEST_ASSERT_EQUAL(cfgSet.timeBase, cfgGet.timeBase);
+    status = Pmic_esmGetCfg(&pmicHandle, &cfgGet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT(cfgGet.enable == cfgSet.enable);
+    PLATFORM_ASSERT(cfgGet.mode == cfgSet.mode);
+    PLATFORM_ASSERT(cfgGet.errThr == cfgSet.errThr);
+    PLATFORM_ASSERT(cfgGet.polarity == cfgSet.polarity);
+    PLATFORM_ASSERT(cfgGet.deglitch == cfgSet.deglitch);
+    PLATFORM_ASSERT(cfgGet.timeBase == cfgSet.timeBase);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmGetStatus_esmErr(void)
@@ -542,14 +452,11 @@ void test_pos_esm_esmGetStatus_esmErr(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = PMIC_ESM_ERR_VALID_SHIFT;
-    status = Pmic_esmGetStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmGetStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmGetStatus_delay1Err(void)
@@ -557,14 +464,11 @@ void test_pos_esm_esmGetStatus_delay1Err(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = PMIC_ESM_DELAY1_ERR_VALID_SHIFT;
-    status = Pmic_esmGetStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmGetStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmGetStatus_delay2Err(void)
@@ -572,14 +476,11 @@ void test_pos_esm_esmGetStatus_delay2Err(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = PMIC_ESM_DELAY2_ERR_VALID_SHIFT;
-    status = Pmic_esmGetStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmGetStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmGetStatus_errCnt(void)
@@ -587,14 +488,11 @@ void test_pos_esm_esmGetStatus_errCnt(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = PMIC_ESM_ERR_CNT_VALID_SHIFT;
-    status = Pmic_esmGetStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmGetStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_pos_esm_esmClrStatus(void)
@@ -602,17 +500,14 @@ void test_pos_esm_esmClrStatus(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Clear all clearable status flags */
     esmStatus.validParams = PMIC_ESM_ERR_VALID_SHIFT |
                             PMIC_ESM_DELAY1_ERR_VALID_SHIFT |
                             PMIC_ESM_DELAY2_ERR_VALID_SHIFT;
-    status = Pmic_esmClrStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    status = Pmic_esmClrStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    helper_deinitPmic(&g_handle);
 }
 
 /* ========================================================================== */
@@ -624,7 +519,7 @@ void test_neg_esm_esmSetStartState_nullHandle(void)
     int32_t status;
 
     status = Pmic_esmSetStartState(NULL, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmGetStartState_nullHandle(void)
@@ -633,20 +528,17 @@ void test_neg_esm_esmGetStartState_nullHandle(void)
     bool startState;
 
     status = Pmic_esmGetStartState(NULL, &startState);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmGetStartState_nullPointer(void)
 {
     int32_t status;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmGetStartState(&g_handle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    status = Pmic_esmGetStartState(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmStart_nullHandle(void)
@@ -654,7 +546,7 @@ void test_neg_esm_esmStart_nullHandle(void)
     int32_t status;
 
     status = Pmic_esmStart(NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmStop_nullHandle(void)
@@ -662,7 +554,7 @@ void test_neg_esm_esmStop_nullHandle(void)
     int32_t status;
 
     status = Pmic_esmStop(NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmSetCfg_nullHandle(void)
@@ -672,20 +564,17 @@ void test_neg_esm_esmSetCfg_nullHandle(void)
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     status = Pmic_esmSetCfg(NULL, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmSetCfg_nullPointer(void)
 {
     int32_t status;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmSetCfg(&g_handle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidParams(void)
@@ -693,14 +582,11 @@ void test_neg_esm_esmSetCfg_invalidParams(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = 0U;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidMode(void)
@@ -708,15 +594,12 @@ void test_neg_esm_esmSetCfg_invalidMode(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     esmCfg.mode = PMIC_ESM_MODE_MAX + 1;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidErrThr(void)
@@ -724,15 +607,12 @@ void test_neg_esm_esmSetCfg_invalidErrThr(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     esmCfg.errThr = PMIC_ESM_ERR_THR_MAX + 1;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidPolarity(void)
@@ -740,15 +620,12 @@ void test_neg_esm_esmSetCfg_invalidPolarity(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     esmCfg.polarity = PMIC_ESM_POLARITY_MAX + 1;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidDeglitch(void)
@@ -756,15 +633,12 @@ void test_neg_esm_esmSetCfg_invalidDeglitch(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     esmCfg.deglitch = PMIC_ESM_DEGLITCH_MAX + 1;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmSetCfg_invalidTimeBase(void)
@@ -772,15 +646,12 @@ void test_neg_esm_esmSetCfg_invalidTimeBase(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     esmCfg.timeBase = PMIC_ESM_TIME_BASE_MAX + 1;
-    status = Pmic_esmSetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmSetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmGetCfg_nullHandle(void)
@@ -790,20 +661,17 @@ void test_neg_esm_esmGetCfg_nullHandle(void)
 
     esmCfg.validParams = PMIC_ESM_CFG_VALID;
     status = Pmic_esmGetCfg(NULL, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmGetCfg_nullPointer(void)
 {
     int32_t status;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmGetCfg(&g_handle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    status = Pmic_esmGetCfg(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmGetCfg_invalidParams(void)
@@ -811,14 +679,11 @@ void test_neg_esm_esmGetCfg_invalidParams(void)
     int32_t status;
     Pmic_EsmCfg_t esmCfg = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmCfg.validParams = 0U;
-    status = Pmic_esmGetCfg(&g_handle, &esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmGetCfg(&pmicHandle, &esmCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmGetStatus_nullHandle(void)
@@ -828,20 +693,17 @@ void test_neg_esm_esmGetStatus_nullHandle(void)
 
     esmStatus.validParams = PMIC_ESM_ERR_VALID_SHIFT;
     status = Pmic_esmGetStatus(NULL, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmGetStatus_nullPointer(void)
 {
     int32_t status;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmGetStatus(&g_handle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    status = Pmic_esmGetStatus(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmGetStatus_invalidParams(void)
@@ -849,14 +711,11 @@ void test_neg_esm_esmGetStatus_invalidParams(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = 0U;
-    status = Pmic_esmGetStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmGetStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmClrStatus_nullHandle(void)
@@ -866,20 +725,17 @@ void test_neg_esm_esmClrStatus_nullHandle(void)
 
     esmStatus.validParams = PMIC_ESM_ERR_VALID_SHIFT;
     status = Pmic_esmClrStatus(NULL, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
 void test_neg_esm_esmClrStatus_nullPointer(void)
 {
     int32_t status;
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_esmClrStatus(&g_handle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+    status = Pmic_esmClrStatus(&pmicHandle, NULL);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmClrStatus_invalidParams(void)
@@ -887,14 +743,11 @@ void test_neg_esm_esmClrStatus_invalidParams(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     esmStatus.validParams = 0U;
-    status = Pmic_esmClrStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    status = Pmic_esmClrStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
 
-    helper_deinitPmic(&g_handle);
 }
 
 void test_neg_esm_esmClrStatus_unsupportedErrCnt(void)
@@ -902,15 +755,12 @@ void test_neg_esm_esmClrStatus_unsupportedErrCnt(void)
     int32_t status;
     Pmic_EsmStatus_t esmStatus = {0};
 
-    status = helper_initPmic(&g_handle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Attempting to clear ERR_CNT is not supported on TPS65386x-Q1 */
     esmStatus.validParams = PMIC_ESM_ERR_CNT_VALID_SHIFT;
-    status = Pmic_esmClrStatus(&g_handle, &esmStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
+    status = Pmic_esmClrStatus(&pmicHandle, &esmStatus);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
 
-    helper_deinitPmic(&g_handle);
 }
 
 /* ========================================================================== */
@@ -925,28 +775,47 @@ void test_neg_esm_esmClrStatus_unsupportedErrCnt(void)
  */
 void esm_test(void *args)
 {
-    int32_t status;
-    (void)args;  /* Unused parameter */
+    (void)args;
+    char msg[50U] = {0};
+    int32_t status = PMIC_ST_SUCCESS;
 
-    /* Initialize once for all ESM tests */
     platform_init();
+
     testTimer_startModule("ESM");
-    status = helper_initPmic(&g_handle);
-    if (status != PMIC_ST_SUCCESS)
+
+    Pmic_HandleCfg_t pmicCfg = {
+        .validParams = PMIC_COMM_MODE_VALID |
+                       PMIC_COMM_HANDLE_0_VALID |
+                       PMIC_IO_READ_VALID |
+                       PMIC_IO_WRITE_VALID |
+                       PMIC_CRITICAL_SECTION_START_VALID |
+                       PMIC_CRITICAL_SECTION_STOP_VALID,
+        .commMode = PMIC_INTF_SPI,
+        .commHandle0 = platform_getCommHandle(),
+        .ioRead = &platform_rxByte,
+        .ioWrite = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop = &platform_critSecStop
+    };
+
+    status = Pmic_init(&pmicHandle, &pmicCfg);
+
+    if (status == PMIC_ST_SUCCESS)
     {
-        printf("ERROR: ESM test initialization failed with status: %d\r\n", status);
-        platform_deinit();
-        return;
+        platform_unlockRegisters();
+        platform_setupTests();
+        ESM_TEST_RUN_ALL();
+        platform_tearDownTests();
+    }
+    else
+    {
+        (void)sprintf(msg, "Error in initializing PMIC LLD: %d\r\n", status);
+        platform_printString(msg);
     }
 
-    /* Run all ESM tests */
-    platform_setupTests();
-    ESM_TEST_RUN_ALL();
-    platform_tearDownTests();
-
-    /* Cleanup */
     testTimer_endModule();
-    helper_deinitPmic(&g_handle);
+
+    (void)Pmic_deinit(&pmicHandle);
     platform_deinit();
 
 }

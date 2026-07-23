@@ -23,7 +23,6 @@ coverage_report/
 build_log.txt
 
 # Test artifacts
-build/
 *.gcna
 unity.o
 

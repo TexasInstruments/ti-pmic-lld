@@ -273,7 +273,6 @@ void io_test(void *args)
         platform_deinit();
         return;
     }
-
     /* Run all I/O tests */
     IO_TEST_RUN_ALL();
 

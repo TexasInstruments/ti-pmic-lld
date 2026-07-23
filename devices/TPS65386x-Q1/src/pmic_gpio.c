@@ -70,42 +70,47 @@ static int32_t GPIO_setCfgGpi1_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Start critical section; read GPI_CFG register
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
-
-    // Set GPI1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI1_VALID, status))
     {
         if (gpioCfg->gpi1 > PMIC_GPI1_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK, gpioCfg->gpi1);
-        }
     }
 
-    // Set GPI4 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI4_VALID, status))
     {
         if (gpioCfg->gpi4 > PMIC_GPI4_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Start critical section; read GPI_CFG register
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
+
+        // Set GPI1 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI1_VALID, status))
+        {
+            Pmic_setBitField(&regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK, gpioCfg->gpi1);
+        }
+
+        // Set GPI4 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI4_VALID, status))
         {
             Pmic_setBitField(&regData, GPI4_CFG_SHIFT, GPI4_CFG_MASK, gpioCfg->gpi4);
         }
-    }
 
-    // Write new register value back to PMIC; stop critical section
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
+        // Write new register value back to PMIC; stop critical section
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -115,42 +120,47 @@ static int32_t GPIO_setCfgGpo1_2(const Pmic_Handle_t *handle, const Pmic_GpioCfg
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Start critical section; read GPO_CFG1 register
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
-
-    // Set GPO1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID, status))
     {
         if (gpioCfg->gpo1 > PMIC_GPO1_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK, gpioCfg->gpo1);
-        }
     }
 
-    // Set GPO2 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO2_VALID, status))
     {
         if (gpioCfg->gpo2 > PMIC_GPO2_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Start critical section; read GPO_CFG1 register
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
+
+        // Set GPO1 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID, status))
+        {
+            Pmic_setBitField(&regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK, gpioCfg->gpo1);
+        }
+
+        // Set GPO2 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO2_VALID, status))
         {
             Pmic_setBitField(&regData, GPO2_CFG_SHIFT, GPO2_CFG_MASK, gpioCfg->gpo2);
         }
-    }
 
-    // Write new register value back to PMIC; stop critical section
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
+        // Write new register value back to PMIC; stop critical section
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -160,42 +170,47 @@ static int32_t GPIO_setCfgGpo3_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Start critical section; read GPO_CFG2 register
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
-
-    // Set GPO3 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO3_VALID, status))
     {
         if (gpioCfg->gpo3 > PMIC_GPO3_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK, gpioCfg->gpo3);
-        }
     }
 
-    // Set GPO4 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO4_VALID, status))
     {
         if (gpioCfg->gpo4 > PMIC_GPO4_CFG_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Start critical section; read GPO_CFG2 register
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
+
+        // Set GPO3 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO3_VALID, status))
+        {
+            Pmic_setBitField(&regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK, gpioCfg->gpo3);
+        }
+
+        // Set GPO4 configuration
+        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO4_VALID, status))
         {
             Pmic_setBitField(&regData, GPO4_CFG_SHIFT, GPO4_CFG_MASK, gpioCfg->gpo4);
         }
-    }
 
-    // Write new register value back to PMIC; stop critical section
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
+        // Write new register value back to PMIC; stop critical section
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }

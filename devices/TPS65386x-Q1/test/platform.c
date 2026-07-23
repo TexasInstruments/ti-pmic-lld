@@ -108,7 +108,8 @@ void platform_init(void)
 
     /* If already initialized, just return success */
     if (g_platform_initialized) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Already initialized, skipping");
+        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Already initialized, flushing serial buffer");
+        serial_flush();
         return;
     }
 
@@ -210,33 +211,63 @@ void platform_init(void)
         exit(1);
     }
 
-    /* Assert device enable on PB5 (active high).
-     * TPS65386x-Q1 requires this GPIO to be driven high before SPI communication.
-     * Port B is already enabled by the SPI init (SSI2 uses PB4/PB6/PB7). */
-    printf("Asserting device enable (PB5)...\n");
+    /* Assert WAKE1 (PB5) high — must be held high for normal device operation.
+     * Port B is already enabled by the SPI init (SSI2 uses PB4/PB6/PB7).
+     *
+     * Command format: gpioc <port> <bitmask_decimal> <dir> <pulltype> <strength>
+     *   port "pb" → argv[1][1]='b' → PORT_B (firmware indexes second char)
+     *   bitmask 32 = 0x20 = PB5 (decimal required; atoi("0x20")=0, not 32)
+     *   dir "o" = output, pulltype 8 = GPIO_PIN_TYPE_STD, strength 1 = GPIO_STRENGTH_2MA
+     * Command format: gpiow <port> <bitmask_decimal> <value_decimal> <timer_ms>
+     *   value 32 = 0x20 = PB5 high, timer 0 = no auto-restore
+     */
+    printf("Asserting WAKE1 (PB5) high...\n");
     {
         char gpio_response[256];
+        int32_t rc;
 
-        status = serial_send_command("gpioc B 0x20 o pu 2");
-        if (status == 0) {
-            serial_read_response(gpio_response, sizeof(gpio_response));
+        rc = serial_send_command("gpioc pb 32 o 8 1");
+        if (rc != 0 ||
+                (rc = serial_read_response(gpio_response, sizeof(gpio_response))) < 0 ||
+                strstr(gpio_response, "STATUS: OK") == NULL) {
+            fprintf(stderr, "ERROR: gpioc pb 32 o 8 1 failed (rc=%d): %s\n", rc, gpio_response);
+            serial_close();
+            exit(1);
         }
-        status = serial_send_command("gpiow B 0x20 0x20");
-        if (status == 0) {
-            serial_read_response(gpio_response, sizeof(gpio_response));
+
+        /* Drive WAKE1 low first to generate a guaranteed rising edge.
+         * If the device is in STANDBY from a previous test run it needs
+         * a LOW-to-HIGH transition to wake up; simply driving HIGH when
+         * the pin is already HIGH provides no edge and the device stays
+         * in STANDBY, causing SPI reads to fail. */
+        rc = serial_send_command("gpiow pb 32 0 0");
+        if (rc != 0 ||
+                (rc = serial_read_response(gpio_response, sizeof(gpio_response))) < 0 ||
+                strstr(gpio_response, "STATUS: OK") == NULL) {
+            fprintf(stderr, "ERROR: gpiow pb 32 0 0 failed (rc=%d): %s\n", rc, gpio_response);
+            serial_close();
+            exit(1);
         }
-        if (status != 0) {
-            fprintf(stderr, "ERROR: Failed to assert device enable GPIO\n");
+        usleep(5000);  /* 5ms LOW hold - ensures clean edge */
+
+        rc = serial_send_command("gpiow pb 32 32 0");
+        if (rc != 0 ||
+                (rc = serial_read_response(gpio_response, sizeof(gpio_response))) < 0 ||
+                strstr(gpio_response, "STATUS: OK") == NULL) {
+            fprintf(stderr, "ERROR: gpiow pb 32 32 0 failed (rc=%d): %s\n", rc, gpio_response);
             serial_close();
             exit(1);
         }
     }
-    usleep(10000);  /* 10ms for device to power up */
+    usleep(100000);  /* 100ms for device to wake from STANDBY and stabilize */
 
     printf("Host-controlled platform initialized successfully\n\n");
 
-    /* Set initialization state after all validation passes */
+    /* Set initialization state before CRC disable so platform helpers work */
     g_platform_initialized = true;
+
+    /* Unlock registers and disable CFG CRC monitoring on first init. */
+    platform_unlockRegisters();
 
     PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "Initialization complete - SPI mode");
 #endif
@@ -261,14 +292,39 @@ void platform_deinit(void)
     g_platform_initialized = false;
 }
 
+void platform_wakeFromStandby(void)
+{
+#ifdef BUILD_HOST
+    char gpio_response[256];
+    int32_t rc;
+
+    /* Rising edge on WAKE1 (PB5) wakes device from STANDBY.
+     * Serial round-trip latency provides sufficient hold time between commands. */
+    rc = serial_send_command("gpiow pb 32 0 0");
+    if (rc == 0)
+    {
+        (void)serial_read_response(gpio_response, sizeof(gpio_response));
+    }
+
+    rc = serial_send_command("gpiow pb 32 32 0");
+    if (rc == 0)
+    {
+        (void)serial_read_response(gpio_response, sizeof(gpio_response));
+    }
+    (void)rc;
+#endif
+}
+
 void platform_setupTests(void)
 {
-    /* No setup needed for host mode */
+    /* IRQ state is now cleared per-test in setUp() */
 }
 
 void platform_tearDownTests(void)
 {
-    /* No teardown needed for host mode */
+#ifdef BUILD_HOST
+    platform_resetDevice();
+#endif
 }
 
 void platform_printChar(char c)
@@ -347,6 +403,14 @@ int32_t platform_txByte(
         return PMIC_ST_ERR_INV_PARAM;
     }
 
+    /* Unlock registers before every write — EXCEPT the unlock registers
+     * themselves (0x03 = CFG_REG_UNLOCK_SEQ_REG, 0x04 = CNT_REG_UNLOCK_SEQ_REG).
+     * Those registers are always writable and require a precise 2-byte sequence;
+     * inserting an unlock sequence between the two bytes corrupts it. */
+    if (regAddr != 0x03U && regAddr != 0x04U) {
+        platform_unlockRegisters();
+    }
+
     /* Write via SPI (2MHz = 2000 kHz) */
     status = platform_serial_write(regAddr, buffer, bufLen, 2000);
     if (status != 0) {
@@ -405,35 +469,247 @@ int32_t platform_rxByte(
 #endif
 }
 
-void platform_unlockRegisters(void)
+#ifdef BUILD_HOST
+static uint8_t platform_crc8(const uint8_t *buf, uint8_t len)
+{
+    uint8_t crc = 0xFFU;
+    for (uint8_t i = 0U; i < len; i++) {
+        crc ^= buf[i];
+        for (uint8_t bit = 0U; bit < 8U; bit++) {
+            uint8_t msb = crc & 0x80U;
+            crc = (uint8_t)((unsigned int)crc << 1U);
+            if (msb != 0U) { crc ^= 0x07U; }
+        }
+    }
+    return crc;
+}
+#endif
+
+void platform_resetDevice(void)
 {
 #ifdef BUILD_HOST
-    /* TPS65386x-Q1: Unlock mechanism depends on device specification
-     * Placeholder - device may not have register locking like LP8772x-Q1
-     * Check device datasheet for unlock sequence if needed
-     */
-    PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, ">>> platform_unlockRegisters");
-
-    /* Validate platform is initialized */
     if (!g_platform_initialized) {
-        PLATFORM_DEBUG(DEBUG_LEVEL_ERROR, "Platform not initialized");
-        fprintf(stderr, "ERROR: Platform not initialized\n");
         return;
     }
 
-    /* TPS65386x-Q1 may not require unlock sequence - verify from datasheet */
-    PLATFORM_DEBUG(DEBUG_LEVEL_TRACE, "<<< platform_unlockRegisters (no-op for TPS65386x-Q1)");
+    /* Issue PMIC_OFF_REQUEST (5) by writing STATE_REQ bits [2:0] in STATE_CTRL_REG (0x16).
+     * Uses raw SPI to avoid needing a pmicHandle (each module owns its own static handle). */
+    uint8_t regData = 0U;
+    uint8_t frame[4U] = {0x16U, 0x10U, 0x00U, 0x00U};
+    frame[3U] = platform_crc8(frame, 3U);
+    if (platform_serial_read(0U, frame, 4U, 2000U) == 0) {
+        regData = frame[2U];
+    }
+    regData = (regData & ~(uint8_t)0x07U) | (uint8_t)0x05U;  /* STATE_REQ = PMIC_OFF_REQUEST */
+    uint8_t wframe[4U] = {0x16U, 0x00U, regData, 0x00U};
+    wframe[3U] = platform_crc8(wframe, 3U);
+    (void)platform_serial_write(0U, wframe, 4U, 2000U);
+
+    /* Wait for device to complete power-down sequence */
+    usleep(100000U);  /* 100ms */
+
+    /* Wake device: drive WAKE1 LOW→HIGH to start PWRU_SEQ → ACTIVE */
+    platform_wakeFromStandby();
+
+    /* Wait for PWRU_SEQ → ACTIVE to stabilize */
+    usleep(100000U);  /* 100ms */
+
+    /* Re-unlock registers (reset clears unlock state) */
+    platform_unlockRegisters();
+#endif
+}
+
+void platform_irqClrAll(void)
+{
+#ifdef BUILD_HOST
+    static const uint8_t irq_stat_regs[] = {
+        0x09U, 0x0BU, 0x0FU, 0x10U, 0x46U, 0x51U,
+        0x5AU, 0x5CU, 0x5EU, 0x5FU, 0x62U, 0x65U,
+        0x66U, 0x67U, 0x77U, 0x78U
+    };
+
+    if (!g_platform_initialized) {
+        return;
+    }
+
+    /* Clear OFF_STATE_STAT1 (0x0F) and OFF_STATE_STAT2 (0x10) via OFF_STATE_CLR_REG (0x11) */
+    {
+        uint8_t frame[4U] = {0x11U, 0x00U, 0x01U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        (void)platform_serial_write(0U, frame, 4U, 2000U);
+    }
+
+    /* Clear DEV_ERR_STAT (0x66): set bit 7 only, preserve DEV_ERR_CNT bits 0-4 */
+    {
+        uint8_t rframe[4U] = {0x66U, 0x10U, 0x00U, 0x00U};
+        rframe[3U] = platform_crc8(rframe, 3U);
+        if (platform_serial_read(0U, rframe, 4U, 2000U) == 0) {
+            uint8_t val = (rframe[2U] & 0x1FU) | 0x80U;
+            uint8_t wframe[4U] = {0x66U, 0x00U, val, 0x00U};
+            wframe[3U] = platform_crc8(wframe, 3U);
+            (void)platform_serial_write(0U, wframe, 4U, 2000U);
+        }
+    }
+
+    /* W1C clear all other status registers; check 0x67 after each write to
+     * identify which register address triggers ADDR_ERR (bit 2 of 0x67). */
+    for (uint8_t i = 0U; i < (uint8_t)(sizeof(irq_stat_regs) / sizeof(irq_stat_regs[0])); i++) {
+        uint8_t reg = irq_stat_regs[i];
+        if (reg == 0x0FU || reg == 0x10U || reg == 0x66U) {
+            continue;
+        }
+        uint8_t frame[4U] = {reg, 0x00U, 0xFFU, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        (void)platform_serial_write(0U, frame, 4U, 2000U);
+
+    }
+#endif
+}
+
+static void platform_dumpAllRegisters(void)
+{
+    static const uint8_t reg_addrs[] = {
+        0x00U, 0x01U, 0x02U, 0x07U, 0x09U, 0x0AU, 0x0BU, 0x0CU, 0x0DU, 0x0EU,
+        0x0FU, 0x10U, 0x11U, 0x12U, 0x13U, 0x14U, 0x15U, 0x16U, 0x17U, 0x18U,
+        0x19U, 0x1AU, 0x1BU, 0x1EU, 0x1FU, 0x20U, 0x21U, 0x22U, 0x23U, 0x24U,
+        0x25U, 0x26U, 0x27U, 0x28U, 0x29U, 0x2AU, 0x2BU, 0x2CU, 0x2FU, 0x30U,
+        0x31U, 0x32U, 0x33U, 0x34U, 0x35U, 0x36U, 0x37U, 0x38U, 0x39U, 0x3AU,
+        0x3BU, 0x3CU, 0x3DU, 0x3EU, 0x3FU, 0x40U, 0x41U, 0x42U, 0x43U, 0x44U,
+        0x45U, 0x46U, 0x47U, 0x48U, 0x49U, 0x4AU, 0x4BU, 0x4CU, 0x4DU, 0x4EU,
+        0x4FU, 0x50U, 0x51U, 0x52U, 0x54U, 0x55U, 0x56U, 0x57U, 0x58U, 0x59U,
+        0x5AU, 0x5BU, 0x5CU, 0x5EU, 0x5FU, 0x60U, 0x61U, 0x62U, 0x63U, 0x64U,
+        0x65U, 0x66U, 0x67U, 0x68U, 0x69U, 0x6AU, 0x6BU, 0x6CU, 0x6DU, 0x6EU,
+        0x6FU, 0x70U, 0x77U, 0x78U, 0x79U, 0x7AU, 0x7BU, 0x7CU, 0x7DU, 0x7EU,
+        0x7FU, 0x80U, 0x81U, 0x82U
+    };
+    const uint32_t count = sizeof(reg_addrs) / sizeof(reg_addrs[0]);
+
+    printf("=== REGISTER DUMP (pre-test) ===\n");
+    for (uint32_t i = 0U; i < count; i++) {
+        uint8_t frame[4U] = {reg_addrs[i], 0x10U, 0x00U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        if (platform_serial_read(0U, frame, 4U, 2000U) == 0) {
+            printf("0x%02X: 0x%02X\n", reg_addrs[i], frame[2U]);
+        } else {
+            printf("0x%02X: ERR\n", reg_addrs[i]);
+        }
+    }
+    printf("================================\n");
+}
+
+void platform_unlockRegisters(void)
+{
+#ifdef BUILD_HOST
+    /* Unlock CFG registers: write 0x98 then 0xB8 to reg 0x03 (CFG_REG_UNLOCK_SEQ_REG).
+     * Unlock CNT registers: write 0x13 then 0x7D to reg 0x04 (CNT_REG_UNLOCK_SEQ_REG).
+     * Frame: [addr, ctrl, data, crc8]. CRC8 poly=0x07 init=0xFF.
+     * Uses platform_serial_write (not raw serial_send_command) because TIVA always
+     * sends STATUS: OK + RESULTS — platform_serial_write drains both lines. */
+    /* CFG window remains open until either a state transition (ACTIVE/SAFE/OFF)
+     * or a write to reg 0x03 with a value other than the unlock sequence. There
+     * is no one-write limit; all CFG-bank writes succeed until the window closes.
+     * NOTE: Whether reg 0x08 (SAFETY_CTRL) is in the CFG bank is unconfirmed —
+     * the Step 2 write below may be silently rejected. Pending logic analyzer
+     * verification. */
+
+    static const uint8_t cnt_unlock[2U][4U] = {
+        {0x04U, 0x00U, 0x13U, 0xF9U},  /* CNT seq byte 1 */
+        {0x04U, 0x00U, 0x7DU, 0xF4U},  /* CNT seq byte 2 */
+    };
+    static const uint8_t cfg_unlock[2U][4U] = {
+        {0x03U, 0x00U, 0x98U, 0x57U},  /* CFG seq byte 1 */
+        {0x03U, 0x00U, 0xB8U, 0xB7U},  /* CFG seq byte 2 */
+    };
+
+    if (!g_platform_initialized) {
+        return;
+    }
+
+    /* Step 1: Unlock CNT registers.
+     * Force to locked state first — writing any non-unlock byte re-locks the bank.
+     * This makes the sequence idempotent when registers are already unlocked. */
+    {
+        uint8_t frame[4U] = {0x04U, 0x00U, 0x00U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        (void)platform_serial_write(0U, frame, 4U, 2000U);
+    }
+    for (uint8_t i = 0U; i < 2U; i++) {
+        (void)platform_serial_write(0U, cnt_unlock[i], 4U, 2000U);
+    }
+
+    /* Step 2: Re-disable CFG CRC monitoring before opening the CFG write window.
+     * NOTE: CFG-bank membership of reg 0x08 (SAFETY_CTRL) is unconfirmed — if it
+     * is CFG-protected this write is silently rejected until the unlock in Step 4. */
+    {
+        uint8_t frame[4U] = {0x08U, 0x10U, 0x00U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        if (platform_serial_read(0U, frame, 4U, 2000U) == 0)
+        {
+            uint8_t safetyCtrl = frame[2U] & ~(uint8_t)0x01U;
+            uint8_t wframe[4U] = {0x08U, 0x00U, safetyCtrl, 0x00U};
+            wframe[3U] = platform_crc8(wframe, 3U);
+            (void)platform_serial_write(0U, wframe, 4U, 2000U);
+        }
+    }
+
+    /* Step 3: Clear the CFG CRC error sticky flag (REG_STAT reg 0x09, bit 0, W1C).
+     * Must come before the CFG unlock (same reason as Step 2). */
+    {
+        uint8_t frame[4U] = {0x09U, 0x00U, 0x01U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        (void)platform_serial_write(0U, frame, 4U, 2000U);
+    }
+
+    /* Step 4: Unlock CFG registers. Window remains open until next state
+     * transition or a non-unlock write to reg 0x03.
+     * Force to locked state first for the same reason as Step 1. */
+    {
+        uint8_t frame[4U] = {0x03U, 0x00U, 0x00U, 0x00U};
+        frame[3U] = platform_crc8(frame, 3U);
+        (void)platform_serial_write(0U, frame, 4U, 2000U);
+    }
+    for (uint8_t i = 0U; i < 2U; i++) {
+        (void)platform_serial_write(0U, cfg_unlock[i], 4U, 2000U);
+    }
 #endif
     /* Mock: No-op (mock doesn't enforce register locking) */
+}
+
+void platform_checkDevState(const char *testName)
+{
+#ifdef BUILD_HOST
+    static uint8_t prev_state = 0xFFU;
+
+    if (!g_platform_initialized) {
+        return;
+    }
+
+    uint8_t frame[4U] = {0x17U, 0x10U, 0x00U, 0x00U};
+    frame[3U] = platform_crc8(frame, 3U);
+    if (platform_serial_read(0U, frame, 4U, 2000U) != 0) {
+        return;
+    }
+    uint8_t state = frame[2U] & 0x0FU;
+
+    if (state != prev_state) {
+        PLATFORM_DEBUG(DEBUG_LEVEL_INFO, "[STATE] 0x%X -> 0x%X  after: %s", prev_state, state, testName);
+        if (state == 0x9U) {
+            PLATFORM_DEBUG(DEBUG_LEVEL_WARNING, "[STATE] *** SAFE STATE ENTERED — nRST asserted ***");
+        }
+        prev_state = state;
+    }
+#endif
 }
 
 void platform_runTestLoop(void (*testCallback)(void))
 {
 #ifdef BUILD_HOST
-    /* Host build: Just run tests once, no interaction */
+    platform_init();
+#ifdef PMIC_DUMP_REGISTERS
+    platform_dumpAllRegisters();
+#endif
     testCallback();
 #else
-    /* Should not reach here for host build */
     testCallback();
 #endif
 }

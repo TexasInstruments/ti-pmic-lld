@@ -137,244 +137,229 @@ static void irqTest_setGetMask(uint8_t irqNum, bool maskVal)
 /*                        irqSetCfg/irqGetCfg API Tests                       */
 /* ========================================================================== */
 
+/**
+ * @brief Set IRQ to interrupt-only mode, then verify unmask and mask.
+ *
+ * Sets INT_CFG=0 (interrupt-only) before the unmask/mask sequence so that
+ * even if the error condition is asserting during the unmask step, the device
+ * only generates an interrupt rather than a state machine transition.  Without
+ * this, a transition to ACTIVE/SAFE/RESET-MCU would re-assert CFG_REG_LOCK,
+ * silently rejecting the subsequent mask write and causing readback to fail.
+ */
+static void irqTest_maskTest(uint8_t irqNum)
+{
+    Pmic_IrqCfg_t cfgSet;
+    int32_t status;
+
+    memset(&cfgSet, 0, sizeof(cfgSet));
+    cfgSet.validParams = PMIC_IRQ_CFG_CONFIG_VALID;
+    cfgSet.irqNum = irqNum;
+    cfgSet.config = PMIC_IRQ_CONFIG0_INT_SET;
+
+    status = Pmic_irqSetCfg(&g_pmicHandle, &cfgSet);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    irqTest_setGetMask(irqNum, false);
+    irqTest_setGetMask(irqNum, true);
+}
+
 /* DCDC (BB/Buck-Boost) IRQ Tests */
 void test_pos_irq_irqSetCfg_bb_uvErr_mask(void)
 {
-    /* Test unmask */
-    irqTest_setGetMask(PMIC_BB_UV_ERR_INT, false);
-    /* Test mask */
-    irqTest_setGetMask(PMIC_BB_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_BB_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_bb_ovErr_mask(void)
 {
-    /* Test unmask */
-    irqTest_setGetMask(PMIC_BB_OV_ERR_INT, false);
-    /* Test mask */
-    irqTest_setGetMask(PMIC_BB_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_BB_OV_ERR_INT);
 }
 
 /* LDO1 IRQ Tests */
 void test_pos_irq_irqSetCfg_ldo1_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO1_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO1_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO1_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_ldo1_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO1_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO1_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO1_OV_ERR_INT);
 }
 
 /* LDO2 IRQ Tests */
 void test_pos_irq_irqSetCfg_ldo2_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO2_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO2_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO2_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_ldo2_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO2_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO2_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO2_OV_ERR_INT);
 }
 
 /* LDO3 IRQ Tests */
 void test_pos_irq_irqSetCfg_ldo3_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO3_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO3_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO3_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_ldo3_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO3_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO3_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO3_OV_ERR_INT);
 }
 
 /* LDO4 IRQ Tests */
 void test_pos_irq_irqSetCfg_ldo4_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO4_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO4_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO4_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_ldo4_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_LDO4_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_LDO4_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_LDO4_OV_ERR_INT);
 }
 
 /* PLDO1 IRQ Tests */
 void test_pos_irq_irqSetCfg_pldo1_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_PLDO1_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_PLDO1_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_PLDO1_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_pldo1_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_PLDO1_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_PLDO1_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_PLDO1_OV_ERR_INT);
 }
 
 /* PLDO2 IRQ Tests */
 void test_pos_irq_irqSetCfg_pldo2_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_PLDO2_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_PLDO2_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_PLDO2_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_pldo2_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_PLDO2_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_PLDO2_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_PLDO2_OV_ERR_INT);
 }
 
 /* External VMON1 IRQ Tests */
 void test_pos_irq_irqSetCfg_extVmon1_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_EXT_VMON1_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_EXT_VMON1_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_EXT_VMON1_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_extVmon1_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_EXT_VMON1_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_EXT_VMON1_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_EXT_VMON1_OV_ERR_INT);
 }
 
 /* External VMON2 IRQ Tests */
 void test_pos_irq_irqSetCfg_extVmon2_uvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_EXT_VMON2_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_EXT_VMON2_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_EXT_VMON2_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_extVmon2_ovErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_EXT_VMON2_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_EXT_VMON2_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_EXT_VMON2_OV_ERR_INT);
 }
 
 /* Watchdog IRQ Tests */
 void test_pos_irq_irqSetCfg_wdTh1Err_mask(void)
 {
-    irqTest_setGetMask(PMIC_WD_TH1_ERR_INT, false);
-    irqTest_setGetMask(PMIC_WD_TH1_ERR_INT, true);
+    irqTest_maskTest(PMIC_WD_TH1_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_wdTh2Err_mask(void)
 {
-    irqTest_setGetMask(PMIC_WD_TH2_ERR_INT, false);
-    irqTest_setGetMask(PMIC_WD_TH2_ERR_INT, true);
+    irqTest_maskTest(PMIC_WD_TH2_ERR_INT);
 }
 
 /* ESM IRQ Tests */
 void test_pos_irq_irqSetCfg_esmDly1Err_mask(void)
 {
-    irqTest_setGetMask(PMIC_ESM_DLY1_ERR_INT, false);
-    irqTest_setGetMask(PMIC_ESM_DLY1_ERR_INT, true);
+    irqTest_maskTest(PMIC_ESM_DLY1_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_esmDly2Err_mask(void)
 {
-    irqTest_setGetMask(PMIC_ESM_DLY2_ERR_INT, false);
-    irqTest_setGetMask(PMIC_ESM_DLY2_ERR_INT, true);
+    irqTest_maskTest(PMIC_ESM_DLY2_ERR_INT);
 }
 
 /* Readback Error IRQ Tests */
 void test_pos_irq_irqSetCfg_nrstRdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_NRST_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_NRST_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_NRST_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_safeOut1RdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_SAFE_OUT1_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_SAFE_OUT1_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_SAFE_OUT1_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_enOutRdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_EN_OUT_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_EN_OUT_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_EN_OUT_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_gpo1RdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_GPO1_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_GPO1_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_GPO1_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_gpo2RdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_GPO2_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_GPO2_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_GPO2_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_gpo3RdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_GPO3_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_GPO3_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_GPO3_RDBK_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_gpo4RdbkErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_GPO4_RDBK_ERR_INT, false);
-    irqTest_setGetMask(PMIC_GPO4_RDBK_ERR_INT, true);
+    irqTest_maskTest(PMIC_GPO4_RDBK_ERR_INT);
 }
 
 /* Comparator 1 IRQ Tests */
 void test_pos_irq_irqSetCfg_comp1pUvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP1P_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP1P_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP1P_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp1pOvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP1P_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP1P_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP1P_OV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp1nUvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP1N_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP1N_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP1N_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp1nOvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP1N_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP1N_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP1N_OV_ERR_INT);
 }
 
 /* Comparator 2 IRQ Tests */
 void test_pos_irq_irqSetCfg_comp2pUvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP2P_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP2P_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP2P_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp2pOvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP2P_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP2P_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP2P_OV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp2nUvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP2N_UV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP2N_UV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP2N_UV_ERR_INT);
 }
 
 void test_pos_irq_irqSetCfg_comp2nOvErr_mask(void)
 {
-    irqTest_setGetMask(PMIC_COMP2N_OV_ERR_INT, false);
-    irqTest_setGetMask(PMIC_COMP2N_OV_ERR_INT, true);
+    irqTest_maskTest(PMIC_COMP2N_OV_ERR_INT);
 }
 
 /* Multiple IRQ Configuration Test */
@@ -1345,8 +1330,8 @@ void irq_test(void *args)
         platform_deinit();
         return;
     }
-
     /* Run all IRQ tests */
+    platform_unlockRegisters();
     platform_setupTests();
     IRQ_TEST_RUN_ALL();
     platform_tearDownTests();

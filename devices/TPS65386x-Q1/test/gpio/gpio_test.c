@@ -756,8 +756,8 @@ void gpio_test(void *args)
         platform_deinit();
         return;
     }
-
     /* Run all GPIO tests */
+    platform_unlockRegisters();
     platform_setupTests();
     GPIO_TEST_RUN_ALL();
     platform_tearDownTests();

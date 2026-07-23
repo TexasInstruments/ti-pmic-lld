@@ -136,6 +136,21 @@ void platform_setModuleName(const char* moduleName);
         } while(0)
 #endif
 
+#ifdef BUILD_HOST
+#undef PLATFORM_RUN_TEST
+#define PLATFORM_RUN_TEST(test) \
+    do { \
+        if (testFilter_shouldRunTestWithGroup(#test)) { \
+            platform_resetDevice(); \
+            testTimer_startTest(#test); \
+            if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
+            RUN_TEST(test); \
+            testTimer_endTest(); \
+            platform_checkDevState(#test); \
+        } \
+    } while(0)
+#endif
+
 #define PLATFORM_ASSERT(condition)  TEST_ASSERT(condition)
 
 /* ========================================================================= */
@@ -283,6 +298,40 @@ void platform_unlockRegisters(void);
  * @param testCallback Function that executes all test suites
  */
 void platform_runTestLoop(void (*testCallback)(void));
+
+/**
+ * @brief Wake device from STANDBY by toggling WAKE1 (PB5).
+ *
+ * @details Issues a falling then rising edge on PB5 via the TIVA serial interface.
+ *          No-op on non-host builds. Call after sending PMIC_STANDBY_REQUEST before
+ *          any subsequent SPI communication.
+ */
+void platform_wakeFromStandby(void);
+
+/**
+ * @brief Issue PMIC_OFF_REQUEST, wait for power-down, wake via WAKE1, and re-unlock registers.
+ *
+ * @details Called automatically by PLATFORM_RUN_TEST after every positive test to prevent
+ *          ACTIVE→SAFE cascade failures caused by VMON faults on newly-configured rails.
+ *          No-op on non-host builds or before platform_init().
+ */
+void platform_resetDevice(void);
+
+/**
+ * @brief Read all 16 IRQ status registers, log any non-zero values, then clear them.
+ *
+ * @details Called once per module boundary (from platform_setupTests()) to prevent
+ *          fault flags left by a preceding module from silently blocking writes in
+ *          the next module. No-op on non-host builds or before platform_init().
+ */
+void platform_irqClrAll(void);
+
+/**
+ * @brief Read FSM state register and log any state change (HOST build only).
+ *
+ * @param testName Name of the test that just completed (stringified by macro).
+ */
+void platform_checkDevState(const char *testName);
 
 #endif /* !BUILD_MOCK - End of function declarations */
 

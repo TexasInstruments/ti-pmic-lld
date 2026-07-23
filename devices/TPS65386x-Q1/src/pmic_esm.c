@@ -160,23 +160,11 @@ static int32_t ESM_setCfg1(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, ESM_CFG1_REG, &regData);
-
-    if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID, status))
-    {
-        Pmic_setBitField_b(&regData, ESM_EN_SHIFT, esmCfg->enable);
-    }
-
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_MODE_VALID, status))
     {
         if (esmCfg->mode > PMIC_ESM_MODE_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, ESM_CFG_SHIFT, ESM_CFG_MASK, esmCfg->mode);
         }
     }
 
@@ -186,38 +174,47 @@ static int32_t ESM_setCfg1(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, ESM_ERR_TH_SHIFT, ESM_ERR_TH_MASK, esmCfg->errThr);
-        }
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, ESM_CFG1_REG, regData);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, ESM_CFG1_REG, &regData);
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_ENABLE_VALID, status))
+        {
+            Pmic_setBitField_b(&regData, ESM_EN_SHIFT, esmCfg->enable);
+        }
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_MODE_VALID, status))
+        {
+            Pmic_setBitField(&regData, ESM_CFG_SHIFT, ESM_CFG_MASK, esmCfg->mode);
+        }
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_ERR_THR_VALID, status))
+        {
+            Pmic_setBitField(&regData, ESM_ERR_TH_SHIFT, ESM_ERR_TH_MASK, esmCfg->errThr);
+        }
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, ESM_CFG1_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
-static int32_t ESM_setCfg2(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+static int32_t ESM_validateCfg2(const Pmic_EsmCfg_t *esmCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, ESM_CFG2_REG, &regData);
 
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID, status))
     {
         if (esmCfg->polarity > PMIC_ESM_POLARITY_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
-        }
-        else
-        {
-            Pmic_setBitField(&regData, ESM_LVL_POL_SHIFT, ESM_LVL_POL_MASK, esmCfg->polarity);
         }
     }
 
@@ -227,10 +224,6 @@ static int32_t ESM_setCfg2(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, ESM_DGL_SHIFT, ESM_DGL_MASK, esmCfg->deglitch);
-        }
     }
 
     if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_TIME_BASE_VALID, status))
@@ -239,17 +232,42 @@ static int32_t ESM_setCfg2(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esm
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, ESM_TIME_CFG_SHIFT, ESM_TIME_CFG_MASK, esmCfg->timeBase);
-        }
     }
+
+    return status;
+}
+
+static int32_t ESM_setCfg2(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+{
+    int32_t status = ESM_validateCfg2(esmCfg);
+    uint8_t regData = 0U;
 
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, ESM_CFG2_REG, regData);
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, ESM_CFG2_REG, &regData);
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_POLARITY_VALID, status))
+        {
+            Pmic_setBitField(&regData, ESM_LVL_POL_SHIFT, ESM_LVL_POL_MASK, esmCfg->polarity);
+        }
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_DEGLITCH_VALID, status))
+        {
+            Pmic_setBitField(&regData, ESM_DGL_SHIFT, ESM_DGL_MASK, esmCfg->deglitch);
+        }
+
+        if (Pmic_validParamStatusCheck(esmCfg->validParams, PMIC_CFG_ESM_TIME_BASE_VALID, status))
+        {
+            Pmic_setBitField(&regData, ESM_TIME_CFG_SHIFT, ESM_TIME_CFG_MASK, esmCfg->timeBase);
+        }
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, ESM_CFG2_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }

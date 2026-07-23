@@ -41,6 +41,8 @@
 #endif
 #include "test_constants.h"
 #include "regmap/wdg.h"
+#include "pmic_fsm.h"
+#include "pmic_irq.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -62,13 +64,45 @@ static void wdg_setupForConfig(void)
 {
     int32_t status;
 
-    /* Enable watchdog */
+    /* Disable WDG to reset any corrupted Q&A state from previous test */
+    (void)Pmic_wdgDisable(&pmicHandle);
+
+    /* Clear all error flags after disable */
+    status = Pmic_wdgClrErrStatusAll(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Enable watchdog (fresh start with clean Q&A state) */
     status = Pmic_wdgEnable(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     /* Enable return to long window */
     status = Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Set PWR_HOLD to keep WDG in long window mode during configuration */
+    status = Pmic_wdgSetPowerHold(&pmicHandle, true);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Wait for watchdog to enter long window mode */
+    platform_timerWaitMs(25U);
+}
+
+static void wdg_cleanupAfterTest(void)
+{
+    /* Return to long window from any Q&A mode — best effort, no assert */
+    (void)Pmic_wdgSetReturnToLongWindow(&pmicHandle, true);
+    (void)Pmic_wdgSetPowerHold(&pmicHandle, true);
+
+    platform_timerWaitMs(5U);
+
+    /* Clear accumulated error flags */
+    (void)Pmic_wdgClrErrStatusAll(&pmicHandle);
+
+    /* Disable WDG safely from long window */
+    (void)Pmic_wdgDisable(&pmicHandle);
+
+    /* Final error clear after disable */
+    (void)Pmic_wdgClrErrStatusAll(&pmicHandle);
 }
 
 /* ========================================================================== */
@@ -83,9 +117,7 @@ void test_pos_wdg_wdgEnable_enableDisable(void)
     int32_t status;
     bool wdgEnabled = false;
 
-    /* Enable Watchdog */
-    status = Pmic_wdgEnable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_setupForConfig();
 
     /* Verify watchdog is enabled */
     status = Pmic_wdgGetEnableState(&pmicHandle, &wdgEnabled);
@@ -100,6 +132,8 @@ void test_pos_wdg_wdgEnable_enableDisable(void)
     status = Pmic_wdgGetEnableState(&pmicHandle, &wdgEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgEnabled == false);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -125,6 +159,8 @@ void test_pos_wdg_wdgSetCfg_longWindowDuration(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.longWinCode == TEST_INVALID_PARAM_255);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -150,6 +186,8 @@ void test_pos_wdg_wdgSetCfg_window1Duration(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.win1Code == 0x40U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -175,6 +213,8 @@ void test_pos_wdg_wdgSetCfg_window2Duration(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.win2Code == 0x40U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -200,6 +240,8 @@ void test_pos_wdg_wdgSetCfg_failThreshold(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.threshold1 == 7U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -225,6 +267,8 @@ void test_pos_wdg_wdgSetCfg_resetThreshold(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.threshold2 == 7U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -251,6 +295,8 @@ void test_pos_wdg_wdgSetCfg_threshold1IntBehavior(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.threshold1IntBehavior == 1U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -291,6 +337,8 @@ void test_pos_wdg_wdgSetCfg_wdgMode(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.mode == PMIC_WDG_TRIGGER_MODE);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -317,6 +365,8 @@ void test_pos_wdg_wdgSetCfg_threshold2IntBehavior(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.threshold2IntBehavior == 1U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -350,6 +400,8 @@ void test_pos_wdg_wdgSetCfg_returnLongWindow(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.longWinCode == TEST_INVALID_PARAM_255);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -375,6 +427,8 @@ void test_pos_wdg_wdgSetCfg_QA_feedback(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.qaFdbk == 1U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -400,6 +454,8 @@ void test_pos_wdg_wdgSetCfg_QA_LFSR(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.qaLfsr == 0x3U);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -425,6 +481,8 @@ void test_pos_wdg_wdgSetCfg_QA_questionSeed(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.qaQuesSeed == 0x5U);
+
+    wdg_cleanupAfterTest();
 }
 
 /* ========================================================================== */
@@ -462,8 +520,7 @@ void test_pos_wdg_wdgQaWriteAnswer_fullSequence(void)
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     }
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -485,8 +542,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk0(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -508,8 +564,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk1(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -531,8 +586,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk2(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -554,8 +608,7 @@ void test_pos_wdg_wdgQaWriteAnswer_qaFdbk3(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -577,8 +630,7 @@ void test_pos_wdg_wdgQaWriteAnswer_differentSeeds(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -600,8 +652,7 @@ void test_pos_wdg_wdgQaWriteAnswer_differentLfsr(void)
     status = Pmic_wdgQaWriteAnswer(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_wdgDisable(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1311,6 +1362,8 @@ void test_pos_wdg_wdgSetCfg_timeBase(void)
     status = Pmic_wdgGetCfg(&pmicHandle, &wdgCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(wdgCfg.timeBase == PMIC_WDG_TIME_BASE_550_US);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1404,6 +1457,8 @@ void test_pos_wdg_wdgSetMode_triggerMode(void)
     status = Pmic_wdgGetMode(&pmicHandle, &mode);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(mode == PMIC_WDG_TRIGGER_MODE);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1426,6 +1481,8 @@ void test_pos_wdg_wdgSetMode_qAndAMode(void)
     status = Pmic_wdgGetMode(&pmicHandle, &mode);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(mode == PMIC_WDG_QA_MODE);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1448,6 +1505,8 @@ void test_pos_wdg_wdgSetPowerHold_enable(void)
     status = Pmic_wdgGetPowerHold(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == true);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1470,6 +1529,8 @@ void test_pos_wdg_wdgSetPowerHold_disable(void)
     status = Pmic_wdgGetPowerHold(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == false);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1492,6 +1553,8 @@ void test_pos_wdg_wdgSetReturnToLongWindow_enable(void)
     status = Pmic_wdgGetReturnToLongWindow(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == true);
+
+    wdg_cleanupAfterTest();
 }
 
 /**
@@ -1514,6 +1577,8 @@ void test_pos_wdg_wdgSetReturnToLongWindow_disable(void)
     status = Pmic_wdgGetReturnToLongWindow(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == false);
+
+    wdg_cleanupAfterTest();
 }
 
 /* ========================================================================== */
@@ -1903,6 +1968,10 @@ void wdg_test(void *args)
 {
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+    testTimer_startModule("WDG");
+
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_COMM_MODE_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
@@ -1918,14 +1987,13 @@ void wdg_test(void *args)
         .criticalSectionStop = &platform_critSecStop
     };
 
-    platform_init();
-    testTimer_startModule("WDG");
-
     status = Pmic_init(&pmicHandle, &pmicCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {
         testUtils_printSiRev(&pmicHandle);
+
+        platform_unlockRegisters();
 
         platform_setupTests();
         WDG_TEST_RUN_ALL();

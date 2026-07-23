@@ -53,6 +53,7 @@
  */
 
 #include "platform_serial_spi.h"
+#include "debug.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -315,6 +316,7 @@ int32_t serial_read_response(char *response, size_t max_len)
             }
             /* If we got LF first, line ending is complete */
 
+            SERIAL_DEBUG(DEBUG_LEVEL_TRACE, "serial_read_response: pos=%zu response='%s'", pos, response);
             return (int32_t)pos;
         }
 
@@ -323,6 +325,7 @@ int32_t serial_read_response(char *response, size_t max_len)
 
     /* Buffer full without finding newline */
     response[max_len - 1] = '\0';
+    SERIAL_DEBUG(DEBUG_LEVEL_WARNING, "serial_read_response: buffer full (max_len=%zu), response='%s'", max_len, response);
     snprintf(g_serial.error_msg, sizeof(g_serial.error_msg),
              "Response buffer too small");
     return -4;
@@ -725,7 +728,7 @@ int32_t platform_serial_write(uint8_t regAddr, const uint8_t *buffer, uint8_t bu
      * - read_len=0 (no read)
      * - access=0 (STARTSTOP - complete transaction)
      */
-    n = snprintf(cmd, sizeof(cmd), "spi 0 %u 0 0x%02X", speed_khz, regAddr);
+    n = snprintf(cmd, sizeof(cmd), "spi 0 %u 0", speed_khz);
 
     if (n < 0 || n >= (int)sizeof(cmd)) {
         return -1;
@@ -760,8 +763,17 @@ int32_t platform_serial_write(uint8_t regAddr, const uint8_t *buffer, uint8_t bu
 
     /* Check for success */
     if (strstr(response, "STATUS: OK") == NULL) {
+        SERIAL_DEBUG(DEBUG_LEVEL_WARNING, "platform_serial_write: bad STATUS response='%s'", response);
         return -1;
     }
+
+    SERIAL_DEBUG(DEBUG_LEVEL_DEBUG, "platform_serial_write: STATUS OK, draining RESULTS line");
+
+    /* TIVA always sends a RESULTS line even for writes (readDataSize=0).
+     * Consume it here so the buffer stays in sync for subsequent reads. */
+    memset(response, 0, sizeof(response));
+    (void)serial_read_response(response, sizeof(response));
+    SERIAL_DEBUG(DEBUG_LEVEL_TRACE, "platform_serial_write: RESULTS drain='%s'", response);
 
     return 0;
 }
@@ -788,22 +800,20 @@ int32_t platform_serial_read(uint8_t regAddr, uint8_t *buffer, uint8_t bufLen, u
         return -1;
     }
 
-    /* Build SPI read command: address byte + bufLen dummy 0x00 bytes.
-     * The firmware clocks writeDataSize bytes (full-duplex), so we must
-     * send N+1 bytes to receive N data bytes back. readDataSize = bufLen+1
-     * causes the firmware to report all received bytes in RESULTS.
+    /* Build SPI read command: transmit buffer[] verbatim (already contains
+     * the pre-built frame: addr, ctrl, data, crc). Request bufLen bytes back.
      */
-    n = snprintf(cmd, sizeof(cmd), "spi 0 %u 0 0x%02X", speed_khz, regAddr);
+    n = snprintf(cmd, sizeof(cmd), "spi 0 %u 0", speed_khz);
     if (n < 0 || n >= (int)sizeof(cmd)) {
         return -1;
     }
     for (i = 0; i < bufLen; i++) {
-        n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " 0x00");
+        n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " 0x%02X", buffer[i]);
         if (n >= (int)sizeof(cmd)) {
             return -1;
         }
     }
-    n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " %d 0", bufLen + 1);
+    n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " %d 0", bufLen);
     if (n >= (int)sizeof(cmd)) {
         return -1;
     }
@@ -823,6 +833,7 @@ int32_t platform_serial_read(uint8_t regAddr, uint8_t *buffer, uint8_t bufLen, u
 
     /* Check for success */
     if (strstr(response, "STATUS: OK") == NULL) {
+        SERIAL_DEBUG(DEBUG_LEVEL_WARNING, "platform_serial_read: bad STATUS response='%s'", response);
         return -1;
     }
 
@@ -830,27 +841,46 @@ int32_t platform_serial_read(uint8_t regAddr, uint8_t *buffer, uint8_t bufLen, u
     memset(response, 0, sizeof(response));
     status = serial_read_response(response, sizeof(response));
     if (status < 0) {
+        SERIAL_DEBUG(DEBUG_LEVEL_WARNING, "platform_serial_read: RESULTS read failed status=%d", status);
         return status;
     }
+
+    SERIAL_DEBUG(DEBUG_LEVEL_DEBUG, "platform_serial_read: RESULTS line='%s' (len=%d)", response, status);
 
     /* Find "RESULTS:" prefix */
     results = strstr(response, "RESULTS:");
     if (results == NULL) {
+        SERIAL_DEBUG(DEBUG_LEVEL_WARNING, "platform_serial_read: no RESULTS prefix in response='%s'", response);
         return -1;
     }
 
     /* Skip to the actual data after "RESULTS: spi 0 2000 0 <read_len>" */
     /* Format: "RESULTS: spi 0 2000 0 2 0xAA 0xBB" */
+    {
+        ptrdiff_t results_offset = results - response;
+        ptrdiff_t response_len = (ptrdiff_t)strlen(response);
+        SERIAL_DEBUG(DEBUG_LEVEL_TRACE,
+            "platform_serial_read: RESULTS prefix at offset=%td, response_len=%td, sizeof(response)=%zu",
+            results_offset, response_len, sizeof(response));
+        if (results_offset + 9 > response_len) {
+            SERIAL_DEBUG(DEBUG_LEVEL_WARNING,
+                "platform_serial_read: RESULTS+9 would exceed response (offset=%td len=%td)",
+                results_offset, response_len);
+            return -1;
+        }
+    }
     results += 9;  /* Skip "RESULTS: " */
 
     /* Skip command echo: "spi 0 2000 0 2" - tokenize until we find hex values */
     token = strtok(results, " \n\r");
+    SERIAL_DEBUG(DEBUG_LEVEL_TRACE, "platform_serial_read: first token='%s'", token ? token : "(null)");
     while (token != NULL) {
         /* Check if this is a hex value (starts with 0x) */
         if (token[0] == '0' && (token[1] == 'x' || token[1] == 'X')) {
             break;  /* Found first data byte */
         }
         token = strtok(NULL, " \n\r");
+        SERIAL_DEBUG(DEBUG_LEVEL_TRACE, "platform_serial_read: skip token='%s'", token ? token : "(null)");
     }
 
     /* Parse data bytes */
@@ -859,12 +889,16 @@ int32_t platform_serial_read(uint8_t regAddr, uint8_t *buffer, uint8_t bufLen, u
         /* Convert string to byte (base 0 = auto-detect hex with 0x prefix) */
         unsigned long val = strtoul(token, NULL, 0);
         buffer[idx] = (uint8_t)val;
+        SERIAL_DEBUG(DEBUG_LEVEL_TRACE, "platform_serial_read: byte[%u]=0x%02lX (token='%s')", idx, val, token);
         idx++;
         token = strtok(NULL, " \n\r");
     }
 
     /* Verify we got the expected number of bytes */
     if (idx != bufLen) {
+        SERIAL_DEBUG(DEBUG_LEVEL_WARNING,
+            "platform_serial_read: byte count mismatch idx=%u bufLen=%u last_token='%s'",
+            idx, bufLen, token ? token : "(null)");
         return -1;
     }
 

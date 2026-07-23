@@ -649,6 +649,10 @@ void core_test(void *args)
 {
     char msg[50U] = {0};
     int32_t status = PMIC_ST_SUCCESS;
+
+    platform_init();
+    testTimer_startModule("Core");
+
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_COMM_MODE_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
@@ -663,9 +667,6 @@ void core_test(void *args)
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop
     };
-
-    platform_init();
-    testTimer_startModule("Core");
 
     status = Pmic_init(&pmicHandle, &pmicCfg);
 

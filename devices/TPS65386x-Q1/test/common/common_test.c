@@ -36,6 +36,8 @@
 
 #include "common_test.h"
 #include "test_constants.h"
+#include "pmic_fsm.h"
+#include "pmic_irq.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */

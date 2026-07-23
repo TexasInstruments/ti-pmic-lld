@@ -233,54 +233,59 @@ static int32_t PWR_setBbSsEnLvlPGoodCfg(const Pmic_Handle_t *handle, const Pmic_
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    // Read BUCK_BST_CFG
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, BUCK_BST_CFG_REG, &regData);
-
-    // Modify BB_PGOOD_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID))
-    {
-        Pmic_setBitField_b(&regData, BB_PGOOD_CFG_SHIFT, buckBoostCfg->includeOvUvStatInPGood);
-    }
-
-    // Modify BB_SS_EN
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_SS_EN_VALID))
-    {
-        Pmic_setBitField_b(&regData, BB_SS_EN_SHIFT, buckBoostCfg->ssEn);
-    }
-
-    // Modify BB_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_LVL_VALID))
+    if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_LVL_VALID, status))
     {
         if (buckBoostCfg->lvl > PMIC_PWR_BB_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, BB_LVL_CFG_SHIFT, BB_LVL_CFG_MASK, buckBoostCfg->lvl);
-        }
     }
 
-    // Modify BB_STBY_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_STBY_LVL_VALID))
+    if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_STBY_LVL_VALID, status))
     {
         if (buckBoostCfg->stbyLvl > PMIC_PWR_BB_STBY_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read BUCK_BST_CFG
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, BUCK_BST_CFG_REG, &regData);
+
+        // Modify BB_PGOOD_CFG
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID, status))
+        {
+            Pmic_setBitField_b(&regData, BB_PGOOD_CFG_SHIFT, buckBoostCfg->includeOvUvStatInPGood);
+        }
+
+        // Modify BB_SS_EN
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_SS_EN_VALID, status))
+        {
+            Pmic_setBitField_b(&regData, BB_SS_EN_SHIFT, buckBoostCfg->ssEn);
+        }
+
+        // Modify BB_LVL_CFG
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_LVL_VALID, status))
+        {
+            Pmic_setBitField(&regData, BB_LVL_CFG_SHIFT, BB_LVL_CFG_MASK, buckBoostCfg->lvl);
+        }
+
+        // Modify BB_STBY_LVL_CFG
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_STBY_LVL_VALID, status))
         {
             Pmic_setBitField(&regData, BB_STBY_LVL_CFG_SHIFT, BB_STBY_LVL_CFG_MASK, buckBoostCfg->stbyLvl);
         }
-    }
 
-    // Write BUCK_BST_CFG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, BUCK_BST_CFG_REG, regData);
+        // Write BUCK_BST_CFG
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, BUCK_BST_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -291,42 +296,47 @@ static int32_t PWR_setBbVmonThrBstTmo(const Pmic_Handle_t *handle, const Pmic_Pw
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    // Read VMON_TH_CFG3
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, VMON_TH_CFG3_REG, &regData);
-
-    // Modify BB_VMON_TH
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_VMON_THR_VALID))
+    if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_VMON_THR_VALID, status))
     {
         if (buckBoostCfg->vmonThr > PMIC_PWR_BB_VMON_THR_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, BB_VMON_TH_SHIFT, BB_VMON_TH_MASK, buckBoostCfg->vmonThr);
-        }
     }
 
-    // Modify BB_BST_TMO_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_BOOST_TMO_VALID))
+    if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_BOOST_TMO_VALID, status))
     {
         if (buckBoostCfg->boostTmo > PMIC_PWR_BOOST_TMO_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read VMON_TH_CFG3
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, VMON_TH_CFG3_REG, &regData);
+
+        // Modify BB_VMON_TH
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_VMON_THR_VALID, status))
+        {
+            Pmic_setBitField(&regData, BB_VMON_TH_SHIFT, BB_VMON_TH_MASK, buckBoostCfg->vmonThr);
+        }
+
+        // Modify BB_BST_TMO_CFG
+        if (Pmic_validParamStatusCheck(buckBoostCfg->validParams, PMIC_PWR_CFG_BB_BOOST_TMO_VALID, status))
         {
             Pmic_setBitField(&regData, BB_BST_TMO_CFG_SHIFT, BB_BST_TMO_CFG_MASK, buckBoostCfg->boostTmo);
         }
-    }
 
-    // Write VMON_TH_CFG3
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, VMON_TH_CFG3_REG, regData);
+        // Write VMON_TH_CFG3
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, VMON_TH_CFG3_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -541,64 +551,77 @@ int32_t Pmic_pwrGetBuckBoostCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckBoostCf
     return Pmic_logStatus(handle, status);
 }
 
-// Set LDO ramp time, voltage level, and current limit level
-static int32_t PWR_setLdoRtLvlIlimLvl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+static int32_t PWR_validateLdoRtLvlIlimLvl(const Pmic_PwrLdoCfg_t *ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
 
-    // LDOx_CFG registers are contiguous in the PMIC register map
-    const uint8_t ldoCfgReg = LDO_CFG_REGS[PWR_getRsrcId(ldoCfg->ldo)];
-
-    // Read LDOx_CFG
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, ldoCfgReg, &regData);
-
-    // Modify LDOx_RT_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_RAMP_TIME_VALID))
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_RAMP_TIME_VALID, status))
     {
         if (ldoCfg->rampTime > PMIC_PWR_RT_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, LDO_RT_CFG_SHIFT, LDO_RT_CFG_MASK, ldoCfg->rampTime);
-        }
     }
 
-    // Modify LDOx_ILIM_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_ILIM_LVL_VALID))
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_ILIM_LVL_VALID, status))
     {
         if (ldoCfg->ilimLvl > PMIC_PWR_LDO_ILIM_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, LDO_ILIM_LVL_CFG_SHIFT, LDO_ILIM_LVL_CFG_MASK, ldoCfg->ilimLvl);
-        }
     }
 
-    // Modify LDOx_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_LVL_VALID))
+    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_LVL_VALID, status))
     {
         if (ldoCfg->lvl > PMIC_PWR_LDO_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    return status;
+}
+
+// Set LDO ramp time, voltage level, and current limit level
+static int32_t PWR_setLdoRtLvlIlimLvl(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+{
+    int32_t status = PWR_validateLdoRtLvlIlimLvl(ldoCfg);
+    uint8_t regData = 0U;
+
+    // LDOx_CFG registers are contiguous in the PMIC register map
+    const uint8_t ldoCfgReg = LDO_CFG_REGS[PWR_getRsrcId(ldoCfg->ldo)];
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read LDOx_CFG
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, ldoCfgReg, &regData);
+
+        // Modify LDOx_RT_CFG
+        if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_RAMP_TIME_VALID, status))
+        {
+            Pmic_setBitField(&regData, LDO_RT_CFG_SHIFT, LDO_RT_CFG_MASK, ldoCfg->rampTime);
+        }
+
+        // Modify LDOx_ILIM_LVL_CFG
+        if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_ILIM_LVL_VALID, status))
+        {
+            Pmic_setBitField(&regData, LDO_ILIM_LVL_CFG_SHIFT, LDO_ILIM_LVL_CFG_MASK, ldoCfg->ilimLvl);
+        }
+
+        // Modify LDOx_LVL_CFG
+        if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_PWR_CFG_LDO_LVL_VALID, status))
         {
             Pmic_setBitField(&regData, LDO_LVL_CFG_SHIFT, LDO_LVL_CFG_MASK, ldoCfg->lvl);
         }
-    }
 
-    // Write LDOx_CFG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, ldoCfgReg, regData);
+        // Write LDOx_CFG
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, ldoCfgReg, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1093,48 +1116,53 @@ static int32_t PWR_setPldoTrackingModeLvlIlimLvl(const Pmic_Handle_t *handle, co
     uint8_t regData = 0U;
     const uint8_t pldoCfgReg = (pldoCfg->pldo == PMIC_PWR_PLDO1) ? PLDO1_CFG_REG : PLDO2_CFG_REG;
 
-    // Read PLDOx_CFG
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, pldoCfgReg, &regData);
-
-    // Modify PLDOx_MODE
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID))
-    {
-        Pmic_setBitField_b(&regData, PLDO_MODE_SHIFT, pldoCfg->trackingMode);
-    }
-
-    // Modify PLDOx_ILIM_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID))
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID, status))
     {
         if (pldoCfg->ilimLvl > PMIC_PWR_PLDO_ILIM_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, PLDO_ILIM_LVL_CFG_SHIFT, PLDO_ILIM_LVL_CFG_MASK, pldoCfg->ilimLvl);
-        }
     }
 
-    // Modify PLDOx_LVL_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_LVL_VALID))
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_LVL_VALID, status))
     {
         if (pldoCfg->lvl > PMIC_PWR_PLDO_LVL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read PLDOx_CFG
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, pldoCfgReg, &regData);
+
+        // Modify PLDOx_MODE
+        if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID, status))
+        {
+            Pmic_setBitField_b(&regData, PLDO_MODE_SHIFT, pldoCfg->trackingMode);
+        }
+
+        // Modify PLDOx_ILIM_LVL_CFG
+        if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID, status))
+        {
+            Pmic_setBitField(&regData, PLDO_ILIM_LVL_CFG_SHIFT, PLDO_ILIM_LVL_CFG_MASK, pldoCfg->ilimLvl);
+        }
+
+        // Modify PLDOx_LVL_CFG
+        if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_LVL_VALID, status))
         {
             Pmic_setBitField(&regData, PLDO_LVL_CFG_SHIFT, PLDO_LVL_CFG_MASK, pldoCfg->lvl);
         }
-    }
 
-    // Write PLDOx_CFG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, pldoCfgReg, regData);
+        // Write PLDOx_CFG
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, pldoCfgReg, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1145,54 +1173,58 @@ static int32_t PWR_setPldoRtVTrackRange(const Pmic_Handle_t *handle, const Pmic_
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read PLDO_CFG
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, PLDO_CFG_REG, &regData);
-
-    // Modify VTRACK_RNG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID))
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID, status))
     {
         if (pldoCfg->vtrackRange > PMIC_PWR_VTRACK_RANGE_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-        else
-        {
-            Pmic_setBitField(&regData, VTRACK_RNG_SHIFT, VTRACK_RNG_MASK, pldoCfg->vtrackRange);
-        }
     }
 
-    // Modify PLDOx_RT_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_RT_VALID))
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_RT_VALID, status))
     {
         if (pldoCfg->rampTime > PMIC_PWR_RT_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-
-        if (pldoCfg->pldo == PMIC_PWR_PLDO1)
-        {
-            shift = PLDO1_RT_CFG_SHIFT;
-            mask = PLDO1_RT_CFG_MASK;
-        }
-        else
-        {
-            shift = PLDO2_RT_CFG_SHIFT;
-            mask = PLDO2_RT_CFG_MASK;
-        }
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            Pmic_setBitField(&regData, shift, mask, pldoCfg->rampTime);
-        }
     }
 
-    // Write PLDO_CFG
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, PLDO_CFG_REG, regData);
+        // Read PLDO_CFG
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, PLDO_CFG_REG, &regData);
+
+        // Modify VTRACK_RNG
+        if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID, status))
+        {
+            Pmic_setBitField(&regData, VTRACK_RNG_SHIFT, VTRACK_RNG_MASK, pldoCfg->vtrackRange);
+        }
+
+        // Modify PLDOx_RT_CFG
+        if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_RT_VALID, status))
+        {
+            if (pldoCfg->pldo == PMIC_PWR_PLDO1)
+            {
+                shift = PLDO1_RT_CFG_SHIFT;
+                mask = PLDO1_RT_CFG_MASK;
+            }
+            else
+            {
+                shift = PLDO2_RT_CFG_SHIFT;
+                mask = PLDO2_RT_CFG_MASK;
+            }
+
+            Pmic_setBitField(&regData, shift, mask, pldoCfg->rampTime);
+        }
+
+        // Write PLDO_CFG
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, PLDO_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1220,20 +1252,12 @@ static int32_t PWR_setPldoPGoodCfg(const Pmic_Handle_t *handle, const Pmic_PwrPl
     return status;
 }
 
-// Set PLDO mode
-static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+static int32_t PWR_validatePldoMode(const Pmic_PwrPldoCfg_t *pldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read PLDO_EN_OUT_CTRL
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, PLDO_EN_OUT_CTRL_REG, &regData);
-
-    // Modify PLDOx_CTRL
-    if (status == PMIC_ST_SUCCESS)
+    if (Pmic_validParamStatusCheck(pldoCfg->validParams, PMIC_PWR_CFG_PLDO_MODE_VALID, status))
     {
-        // Validate mode based on PLDO resource
         if (pldoCfg->pldo == PMIC_PWR_PLDO1)
         {
             if (pldoCfg->mode > PMIC_PWR_PLDO1_MODE_MAX)
@@ -1250,10 +1274,26 @@ static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCf
         }
         else
         {
-            // Invalid PLDO identifier
             status = PMIC_ST_ERR_INV_PARAM;
         }
+    }
 
+    return status;
+}
+
+// Set PLDO mode
+static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
+{
+    int32_t status = PWR_validatePldoMode(pldoCfg);
+    uint8_t regData = 0U, shift = 0U, mask = 0U;
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read PLDO_EN_OUT_CTRL
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, PLDO_EN_OUT_CTRL_REG, &regData);
+
+        // Modify PLDOx_CTRL
         if (status == PMIC_ST_SUCCESS)
         {
             if (pldoCfg->pldo == PMIC_PWR_PLDO1)
@@ -1268,15 +1308,10 @@ static int32_t PWR_setPldoMode(const Pmic_Handle_t *handle, const Pmic_PwrPldoCf
             }
 
             Pmic_setBitField(&regData, shift, mask, pldoCfg->mode);
+            status = Pmic_ioTxByte(handle, PLDO_EN_OUT_CTRL_REG, regData);
         }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-
-    // Write PLDO_EN_OUT_CTRL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, PLDO_EN_OUT_CTRL_REG, regData);
-    }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1310,41 +1345,36 @@ static int32_t PWR_setPldoVmonThr(const Pmic_Handle_t *handle, const Pmic_PwrPld
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read VMON_TH_CFG2
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, VMON_TH_CFG2_REG, &regData);
+    if (pldoCfg->vmonThr > PMIC_PWR_PLDO_VMON_THR_MAX)
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
 
-    // Modify PLDOx_VMON_TH
     if (status == PMIC_ST_SUCCESS)
     {
-        if (pldoCfg->vmonThr > PMIC_PWR_PLDO_VMON_THR_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
+        // Read VMON_TH_CFG2
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, VMON_TH_CFG2_REG, &regData);
 
-        if (pldoCfg->pldo == PMIC_PWR_PLDO1)
-        {
-            shift = PLDO1_VMON_TH_SHIFT;
-            mask = PLDO1_VMON_TH_MASK;
-        }
-        else
-        {
-            shift = PLDO2_VMON_TH_SHIFT;
-            mask = PLDO2_VMON_TH_MASK;
-        }
-
+        // Modify PLDOx_VMON_TH
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField(&regData, shift, mask, pldoCfg->vmonThr);
-        }
-    }
+            if (pldoCfg->pldo == PMIC_PWR_PLDO1)
+            {
+                shift = PLDO1_VMON_TH_SHIFT;
+                mask = PLDO1_VMON_TH_MASK;
+            }
+            else
+            {
+                shift = PLDO2_VMON_TH_SHIFT;
+                mask = PLDO2_VMON_TH_MASK;
+            }
 
-    // Write VMON_TH_CFG2
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, VMON_TH_CFG2_REG, regData);
+            Pmic_setBitField(&regData, shift, mask, pldoCfg->vmonThr);
+            status = Pmic_ioTxByte(handle, VMON_TH_CFG2_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1355,41 +1385,36 @@ static int32_t PWR_setPldoVmonDgl(const Pmic_Handle_t *handle, const Pmic_PwrPld
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read VMON_DGL_CFG3
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, VMON_DGL_CFG3_REG, &regData);
+    if (pldoCfg->vmonDgl > PMIC_PWR_RSRC_VMON_DGL_MAX)
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
 
-    // Modify PLDOx_VMON_DGL
     if (status == PMIC_ST_SUCCESS)
     {
-        if (pldoCfg->vmonDgl > PMIC_PWR_RSRC_VMON_DGL_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
+        // Read VMON_DGL_CFG3
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, VMON_DGL_CFG3_REG, &regData);
 
-        if (pldoCfg->pldo == PMIC_PWR_PLDO1)
-        {
-            shift = PLDO1_VMON_DGL_SHIFT;
-            mask = PLDO1_VMON_DGL_MASK;
-        }
-        else
-        {
-            shift = PLDO2_VMON_DGL_SHIFT;
-            mask = PLDO2_VMON_DGL_MASK;
-        }
-
+        // Modify PLDOx_VMON_DGL
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField(&regData, shift, mask, pldoCfg->vmonDgl);
-        }
-    }
+            if (pldoCfg->pldo == PMIC_PWR_PLDO1)
+            {
+                shift = PLDO1_VMON_DGL_SHIFT;
+                mask = PLDO1_VMON_DGL_MASK;
+            }
+            else
+            {
+                shift = PLDO2_VMON_DGL_SHIFT;
+                mask = PLDO2_VMON_DGL_MASK;
+            }
 
-    // Write VMON_DGL_CFG3
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, VMON_DGL_CFG3_REG, regData);
+            Pmic_setBitField(&regData, shift, mask, pldoCfg->vmonDgl);
+            status = Pmic_ioTxByte(handle, VMON_DGL_CFG3_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1400,41 +1425,36 @@ static int32_t PWR_setPldoIlimDgl(const Pmic_Handle_t *handle, const Pmic_PwrPld
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read ILIM_DGL_CFG
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, ILIM_DGL_CFG_REG, &regData);
+    if (pldoCfg->ilimDgl > PMIC_PWR_LDO_ILIM_DEGLITCH_MAX)
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
 
-    // Modify PLDOx_ILIM_DGL_CFG
     if (status == PMIC_ST_SUCCESS)
     {
-        if (pldoCfg->ilimDgl > PMIC_PWR_LDO_ILIM_DEGLITCH_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
+        // Read ILIM_DGL_CFG
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, ILIM_DGL_CFG_REG, &regData);
 
-        if (pldoCfg->pldo == PMIC_PWR_PLDO1)
-        {
-           shift = PLDO1_ILIM_DGL_CFG_SHIFT;
-           mask = PLDO1_ILIM_DGL_CFG_MASK;
-        }
-        else
-        {
-            shift = PLDO2_ILIM_DGL_CFG_SHIFT;
-            mask = PLDO2_ILIM_DGL_CFG_MASK;
-        }
-
+        // Modify PLDOx_ILIM_DGL_CFG
         if (status == PMIC_ST_SUCCESS)
         {
-            Pmic_setBitField(&regData, shift, mask, pldoCfg->ilimDgl);
-        }
-    }
+            if (pldoCfg->pldo == PMIC_PWR_PLDO1)
+            {
+                shift = PLDO1_ILIM_DGL_CFG_SHIFT;
+                mask = PLDO1_ILIM_DGL_CFG_MASK;
+            }
+            else
+            {
+                shift = PLDO2_ILIM_DGL_CFG_SHIFT;
+                mask = PLDO2_ILIM_DGL_CFG_MASK;
+            }
 
-    // Write ILIM_DGL_CFG
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ioTxByte(handle, ILIM_DGL_CFG_REG, regData);
+            Pmic_setBitField(&regData, shift, mask, pldoCfg->ilimDgl);
+            status = Pmic_ioTxByte(handle, ILIM_DGL_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
@@ -1832,49 +1852,52 @@ static int32_t PWR_setExtVmonModePGoodCfg(const Pmic_Handle_t *handle, const Pmi
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U, shift = 0U, mask = 0U;
 
-    // Read EXT_VMON_CFG_CTRL
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, EXT_VMON_CFG_CTRL_REG, &regData);
-
-    // Modify EXT_VMONx_CTRL
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(extVmonCfg->validParams, PMIC_PWR_CFG_EXT_VMON_MODE_VALID))
+    if (Pmic_validParamStatusCheck(extVmonCfg->validParams, PMIC_PWR_CFG_EXT_VMON_MODE_VALID, status))
     {
         if (extVmonCfg->mode > PMIC_PWR_EXT_VMON_MODE_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-
-        if (extVmonCfg->extVmon == PMIC_PWR_EXT_VMON1)
-        {
-            shift = EXT_VMON1_CTRL_SHIFT;
-            mask = EXT_VMON1_CTRL_MASK;
-        }
-        else
-        {
-            shift = EXT_VMON2_CTRL_SHIFT;
-            mask = EXT_VMON2_CTRL_MASK;
-        }
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            Pmic_setBitField(&regData, shift, mask, extVmonCfg->mode);
-        }
     }
 
-    // Modify EXT_VMONx_PGOOD_CFG
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(extVmonCfg->validParams,
-                                   PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID))
-    {
-        shift = (extVmonCfg->extVmon == PMIC_PWR_EXT_VMON1) ? EXT_VMON1_PGOOD_CFG_SHIFT : EXT_VMON2_PGOOD_CFG_SHIFT;
-        Pmic_setBitField_b(&regData, shift, extVmonCfg->includeOvUvStatInPGood);
-    }
-
-    // Write EXT_VMON_CFG_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, EXT_VMON_CFG_CTRL_REG, regData);
+        // Read EXT_VMON_CFG_CTRL
+        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+        status = Pmic_ioRxByte(handle, EXT_VMON_CFG_CTRL_REG, &regData);
+
+        // Modify EXT_VMONx_CTRL
+        if (Pmic_validParamStatusCheck(extVmonCfg->validParams, PMIC_PWR_CFG_EXT_VMON_MODE_VALID, status))
+        {
+            if (extVmonCfg->extVmon == PMIC_PWR_EXT_VMON1)
+            {
+                shift = EXT_VMON1_CTRL_SHIFT;
+                mask = EXT_VMON1_CTRL_MASK;
+            }
+            else
+            {
+                shift = EXT_VMON2_CTRL_SHIFT;
+                mask = EXT_VMON2_CTRL_MASK;
+            }
+
+            Pmic_setBitField(&regData, shift, mask, extVmonCfg->mode);
+        }
+
+        // Modify EXT_VMONx_PGOOD_CFG
+        if (Pmic_validParamStatusCheck(extVmonCfg->validParams,
+                                       PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID, status))
+        {
+            shift = (extVmonCfg->extVmon == PMIC_PWR_EXT_VMON1) ? EXT_VMON1_PGOOD_CFG_SHIFT : EXT_VMON2_PGOOD_CFG_SHIFT;
+            Pmic_setBitField_b(&regData, shift, extVmonCfg->includeOvUvStatInPGood);
+        }
+
+        // Write EXT_VMON_CFG_CTRL
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = Pmic_ioTxByte(handle, EXT_VMON_CFG_CTRL_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }

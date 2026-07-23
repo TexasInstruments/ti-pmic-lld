@@ -47,6 +47,9 @@
  */
 void setUp(void)
 {
+#ifdef BUILD_HOST
+    platform_irqClrAll();
+#endif
     /* Unlock registers to ensure clean state */
     platform_unlockRegisters();
 

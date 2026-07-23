@@ -67,6 +67,11 @@ static void unlockCntRegisters(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
+static void timerWaitMsWrapper(uint32_t ms)
+{
+    platform_timerWaitMs((uint16_t)ms);
+}
+
 /* ========================================================================== */
 /*                         POSITIVE TEST CASES                                */
 /* ========================================================================== */
@@ -1004,13 +1009,15 @@ void timer_test(void *args)
                        PMIC_IO_READ_VALID |
                        PMIC_IO_WRITE_VALID |
                        PMIC_CRITICAL_SECTION_START_VALID |
-                       PMIC_CRITICAL_SECTION_STOP_VALID,
+                       PMIC_CRITICAL_SECTION_STOP_VALID |
+                       PMIC_TIMER_WAIT_MS_VALID,
         .commMode = PMIC_INTF_SPI,
         .commHandle0 = (void*)&dummyCommHandle,  /* Driver requires non-NULL, even for mock */
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
         .criticalSectionStart = &platform_critSecStart,
-        .criticalSectionStop = &platform_critSecStop
+        .criticalSectionStop = &platform_critSecStop,
+        .timerWaitMs = &timerWaitMsWrapper
     };
 
     platform_init();
@@ -1022,6 +1029,7 @@ void timer_test(void *args)
     {
         testUtils_printSiRev(&pmicHandle);
 
+        platform_unlockRegisters();
         platform_setupTests();
         TIMER_TEST_RUN_ALL();
         platform_tearDownTests();
