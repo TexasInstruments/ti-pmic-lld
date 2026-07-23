@@ -191,18 +191,18 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WDG_LONG_WIN_CODE_VALID          (1UL << 0U)
-#define PMIC_CFG_WDG_WIN1_CODE_VALID             (1UL << 1U)
-#define PMIC_CFG_WDG_WIN2_CODE_VALID             (1UL << 2U)
-#define PMIC_CFG_WDG_THRESHOLD_1_VALID              (1UL << 3U)
-#define PMIC_CFG_WDG_THRESHOLD_2_VALID              (1UL << 4U)
-#define PMIC_CFG_WDG_MODE_VALID                     (1UL << 5U)
-#define PMIC_CFG_WDG_QA_FDBK_VALID                  (1UL << 6U)
-#define PMIC_CFG_WDG_QA_LFSR_VALID                  (1UL << 7U)
-#define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (1UL << 8U)
-#define PMIC_CFG_WDG_TIME_BASE_VALID                (1UL << 9U)
-#define PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID  (1UL << 10U)
-#define PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID  (1UL << 11U)
+#define PMIC_CFG_WDG_LONG_WIN_CODE_VALID           (1UL << 0U)
+#define PMIC_CFG_WDG_WIN1_CODE_VALID               (1UL << 1U)
+#define PMIC_CFG_WDG_WIN2_CODE_VALID               (1UL << 2U)
+#define PMIC_CFG_WDG_THRESHOLD_1_VALID             (1UL << 3U)
+#define PMIC_CFG_WDG_THRESHOLD_2_VALID             (1UL << 4U)
+#define PMIC_CFG_WDG_MODE_VALID                    (1UL << 5U)
+#define PMIC_CFG_WDG_QA_FDBK_VALID                 (1UL << 6U)
+#define PMIC_CFG_WDG_QA_LFSR_VALID                 (1UL << 7U)
+#define PMIC_CFG_WDG_QA_QUES_SEED_VALID            (1UL << 8U)
+#define PMIC_CFG_WDG_TIME_BASE_VALID               (1UL << 9U)
+#define PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID (1UL << 10U)
+#define PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID (1UL << 11U)
 /** @} */
 
 /**
@@ -214,10 +214,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WDG_CFG_ALL_VALID_SHIFT             (\
-    PMIC_CFG_WDG_LONG_WIN_CODE_VALID         |\
-    PMIC_CFG_WDG_WIN1_CODE_VALID            |\
-    PMIC_CFG_WDG_WIN2_CODE_VALID            |\
+#define PMIC_CFG_WDG_CFG_ALL_VALID_SHIFT       (\
+    PMIC_CFG_WDG_LONG_WIN_CODE_VALID           |\
+    PMIC_CFG_WDG_WIN1_CODE_VALID               |\
+    PMIC_CFG_WDG_WIN2_CODE_VALID               |\
     PMIC_CFG_WDG_THRESHOLD_1_VALID             |\
     PMIC_CFG_WDG_THRESHOLD_2_VALID             |\
     PMIC_CFG_WDG_MODE_VALID                    |\

@@ -25,15 +25,15 @@ MOCK_LIB_SRCS = $(wildcard $(MOCK_DIR)/mock/*.c) \
                 $(wildcard $(MOCK_DIR)/behaviors/*.c) \
                 $(wildcard $(MOCK_DIR)/devices/*/*.c)
 
-# Auto-build mock library if needed
+# Auto-build mock library if needed.
+# Uses make's $(wildcard) function for Windows/Unix portability;
+# avoids POSIX shell constructs ([ ], find) that fail on cmd.exe.
 .PHONY: check-mock-lib
+ifeq ($(wildcard $(MOCK_LIB)),)
 check-mock-lib:
-	@if [ ! -f "$(MOCK_LIB)" ]; then \
-		echo "Mock library not found, building it..."; \
-		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
-	elif [ -n "$$(find $(MOCK_DIR) -name '*.c' -newer $(MOCK_LIB) 2>/dev/null | head -1)" ]; then \
-		echo "Mock library out of date, rebuilding..."; \
-		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
-	else \
-		echo "Mock library up to date"; \
-	fi
+	@echo "Mock library not found, building it..."
+	@"$(MAKE)" -C "$(MOCK_DIR)" CC=$(CC)
+else
+check-mock-lib:
+	@echo "Mock library up to date"
+endif

@@ -88,32 +88,32 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_ENABLE_VALID                      (1UL << 0U)
-#define PMIC_BUCK_PLDN_EN_VALID                     (1UL << 1U)
-#define PMIC_BUCK_FPWM_EN_VALID                     (1UL << 2U)
-#define PMIC_BUCK_UV_THR_VALID                      (1UL << 3U)
-#define PMIC_BUCK_OV_THR_VALID                      (1UL << 4U)
-#define PMIC_BUCK_ILIM_SEL_VALID                    (1UL << 5U)
-#define PMIC_BUCK_OVP_SEL_VALID                     (1UL << 6U)
-#define PMIC_BUCK_OV_SEL_VALID                      (1UL << 7U)
-#define PMIC_BUCK_UV_SEL_VALID                      (1UL << 8U)
-#define PMIC_BUCK_SC_SEL_VALID                      (1UL << 9U)
-#define PMIC_BUCK_RV_CONF_VALID                     (1UL << 10U)
-#define PMIC_BUCK_SLEW_RATE_VALID                   (1UL << 11U)
-#define PMIC_BUCK_DEGLITCH_SEL_VALID                (1UL << 12U)
-#define PMIC_BUCK_DISCHARGE_SEL_VALID               (1UL << 13U)
-#define PMIC_BUCK_SS_EN_VALID                       (1UL << 14U)
-#define PMIC_BUCK_SSM_SEL_VALID                     (1UL << 15U)
-#define PMIC_BUCK_VSET_VALID                        (1UL << 16U)
-#define PMIC_BUCK_UVLO_RISING_VALID                 (1UL << 17U)
-#define PMIC_BUCK_UVLO_FALLING_VALID                (1UL << 18U)
-#define PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID         (1UL << 19U)
-#define PMIC_BUCK_VSET_ACTIVE_VALID                 (1UL << 20U)
-#define PMIC_BUCK_VSET_LPWR_VALID                   (1UL << 21U)
-#define PMIC_BUCK_VMON_ONLY_VALID                   (1UL << 22U)
-#define PMIC_BUCK_CTRL_ALL_VALID                    (PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID | \
-                                                     PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | \
-                                                     PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID)
+#define PMIC_CFG_PWR_BUCK_ENABLE_VALID                      (1UL << 0U)
+#define PMIC_CFG_PWR_BUCK_PLDN_EN_VALID                     (1UL << 1U)
+#define PMIC_CFG_PWR_BUCK_FPWM_EN_VALID                     (1UL << 2U)
+#define PMIC_CFG_PWR_BUCK_UV_THR_VALID                      (1UL << 3U)
+#define PMIC_CFG_PWR_BUCK_OV_THR_VALID                      (1UL << 4U)
+#define PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID                    (1UL << 5U)
+#define PMIC_CFG_PWR_BUCK_OVP_SEL_VALID                     (1UL << 6U)
+#define PMIC_CFG_PWR_BUCK_OV_SEL_VALID                      (1UL << 7U)
+#define PMIC_CFG_PWR_BUCK_UV_SEL_VALID                      (1UL << 8U)
+#define PMIC_CFG_PWR_BUCK_SC_SEL_VALID                      (1UL << 9U)
+#define PMIC_CFG_PWR_BUCK_RV_CONF_VALID                     (1UL << 10U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID                   (1UL << 11U)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID                (1UL << 12U)
+#define PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID               (1UL << 13U)
+#define PMIC_CFG_PWR_BUCK_SS_EN_VALID                       (1UL << 14U)
+#define PMIC_CFG_PWR_BUCK_SSM_SEL_VALID                     (1UL << 15U)
+#define PMIC_CFG_PWR_BUCK_VSET_VALID                        (1UL << 16U)
+#define PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID                 (1UL << 17U)
+#define PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID                (1UL << 18U)
+#define PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID         (1UL << 19U)
+#define PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID                 (1UL << 20U)
+#define PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID                   (1UL << 21U)
+#define PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID                   (1UL << 22U)
+#define PMIC_CFG_PWR_BUCK_CTRL_ALL_VALID                    (PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID | PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID | \
+                                                     PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID | \
+                                                     PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_ENABLE_VALID)
 /** @} */
 
 /**
@@ -397,9 +397,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_SLEW_RATE_CONTROLLED              ((uint8_t)0U)
-#define PMIC_BUCK_RESISTIVE_DISCHARGE               ((uint8_t)1U)
-#define PMIC_BUCK_DISCHARGE_SEL_MAX                 (PMIC_BUCK_RESISTIVE_DISCHARGE)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED              ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE               ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_MAX                 (PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE)
 /** @} */
 
 /**
@@ -411,11 +411,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_SLEW_RATE_10_MV_PER_US            ((uint8_t)0U)
-#define PMIC_BUCK_SLEW_RATE_5_MV_PER_US             ((uint8_t)1U)
-#define PMIC_BUCK_SLEW_RATE_2P5_MV_PER_US           ((uint8_t)2U)
-#define PMIC_BUCK_SLEW_RATE_1P25_MV_PER_US          ((uint8_t)3U)
-#define PMIC_BUCK_SLEW_RATE_MAX                     (PMIC_BUCK_SLEW_RATE_1P25_MV_PER_US)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_10_MV_PER_US            ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_5_MV_PER_US             ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_2P5_MV_PER_US           ((uint8_t)2U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_1P25_MV_PER_US          ((uint8_t)3U)
+#define PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX                     (PMIC_CFG_PWR_BUCK_SLEW_RATE_1P25_MV_PER_US)
 /** @} */
 
 /**
@@ -426,11 +426,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_UV_THR_4_PCT                      ((uint8_t)0U)
-#define PMIC_BUCK_UV_THR_4P5_PCT                    ((uint8_t)1U)
-#define PMIC_BUCK_UV_THR_5_PCT                      ((uint8_t)2U)
-#define PMIC_BUCK_UV_THR_5P5_PCT                    ((uint8_t)3U)
-#define PMIC_BUCK_UV_THR_MAX                        (PMIC_BUCK_UV_THR_5P5_PCT)
+#define PMIC_CFG_PWR_BUCK_UV_THR_4_PCT                      ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_UV_THR_4P5_PCT                    ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_UV_THR_5_PCT                      ((uint8_t)2U)
+#define PMIC_CFG_PWR_BUCK_UV_THR_5P5_PCT                    ((uint8_t)3U)
+#define PMIC_CFG_PWR_BUCK_UV_THR_MAX                        (PMIC_CFG_PWR_BUCK_UV_THR_5P5_PCT)
 /** @} */
 
 /**
@@ -441,11 +441,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_OV_THR_4_PCT                      ((uint8_t)0U)
-#define PMIC_BUCK_OV_THR_4P5_PCT                    ((uint8_t)1U)
-#define PMIC_BUCK_OV_THR_5_PCT                      ((uint8_t)2U)
-#define PMIC_BUCK_OV_THR_5P5_PCT                    ((uint8_t)3U)
-#define PMIC_BUCK_OV_THR_MAX                        (PMIC_BUCK_OV_THR_5P5_PCT)
+#define PMIC_CFG_PWR_BUCK_OV_THR_4_PCT                      ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_OV_THR_4P5_PCT                    ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_OV_THR_5_PCT                      ((uint8_t)2U)
+#define PMIC_CFG_PWR_BUCK_OV_THR_5P5_PCT                    ((uint8_t)3U)
+#define PMIC_CFG_PWR_BUCK_OV_THR_MAX                        (PMIC_CFG_PWR_BUCK_OV_THR_5P5_PCT)
 /** @} */
 
 /**
@@ -456,9 +456,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_RAIL_DISCHARGE                    ((uint8_t)0U)
-#define PMIC_BUCK_RV_IGNORE                         ((uint8_t)1U)
-#define PMIC_BUCK_RV_CONF_MAX                       (PMIC_BUCK_RV_IGNORE)
+#define PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE                    ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_RV_IGNORE                         ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_RV_CONF_MAX                       (PMIC_CFG_PWR_BUCK_RV_IGNORE)
 /** @} */
 
 /**
@@ -496,11 +496,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_BUCK_DEGLITCH_SEL_10_US                ((uint8_t)0U)
-#define PMIC_BUCK_DEGLITCH_SEL_20_US                ((uint8_t)1U)
-#define PMIC_BUCK_DEGLITCH_SEL_30_US                ((uint8_t)2U)
-#define PMIC_BUCK_DEGLITCH_SEL_50_US                ((uint8_t)3U)
-#define PMIC_BUCK_DEGLITCH_SEL_MAX                  (PMIC_BUCK_DEGLITCH_SEL_50_US)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_10_US                ((uint8_t)0U)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_20_US                ((uint8_t)1U)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_30_US                ((uint8_t)2U)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_50_US                ((uint8_t)3U)
+#define PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_MAX                  (PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_50_US)
 /** @} */
 
 /**
@@ -885,29 +885,29 @@ typedef struct Pmic_PwrBuckLdoSeqDly_s
  * API call.
  *
  * @details The following options are configurable via this API
- * 1. Enable (validParams: PMIC_BUCK_ENABLE_VALID)
- * 2. Pulldown enable (validParams: PMIC_BUCK_PLDN_EN_VALID)
- * 3. Forced PWM option (validParams: PMIC_BUCK_FPWM_EN_VALID)
- * 4. Undervoltage threshold (validParams: PMIC_BUCK_UV_THR_VALID)
- * 5. Overvoltage threshold (validParams: PMIC_BUCK_OV_THR_VALID)
- * 6. Current limit selection (validParams: PMIC_BUCK_ILIM_SEL_VALID)
- * 7. Overvoltage protection fault response (validParams: PMIC_BUCK_OVP_SEL_VALID)
- * 8. Overvoltage fault response (validParams: PMIC_BUCK_OV_SEL_VALID)
- * 9. Undervoltage fault response (validParams: PMIC_BUCK_UV_SEL_VALID)
- * 10. Short circuit fault response (validParams: PMIC_BUCK_SC_SEL_VALID)
- * 11. Residual voltage configuration (validParams: PMIC_BUCK_RV_CONF_VALID)
- * 12. Slew rate (validParams: PMIC_BUCK_SLEW_RATE_VALID)
- * 13. Deglitch selection (validParams: PMIC_BUCK_DEGLITCH_SEL_VALID)
- * 14. Discharge selection (validParams: PMIC_BUCK_DISCHARGE_SEL_VALID)
- * 15. Spread spectrum enable (validParams: PMIC_BUCK_SS_EN_VALID)
- * 16. Spread spectrum modulation selection (validParams: PMIC_BUCK_SSM_SEL_VALID)
- * 17. VSET (BUCK1 only; validParam: PMIC_BUCK_VSET_VALID)
- * 18. Undervoltage lockout rising (BUCK1 only; validParam: PMIC_BUCK_UVLO_RISING_VALID)
- * 19. Undervoltage lockout falling (BUCK1 only; validParam: PMIC_BUCK_UVLO_FALLING_VALID)
- * 20. High side slew rate (BUCK1 only; validParam: PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID)
- * 21. VSET_ACTIVE (BUCK2 and BUCK3 only; validParam: PMIC_BUCK_VSET_ACTIVE_VALID)
- * 22. VSET_LPWR (BUCK2 and BUCK3 only; validParam: PMIC_BUCK_VSET_LPWR_VALID)
- * 23. VMON only option (BUCK2 and BUCK3 only; validParam: PMIC_BUCK_VMON_ONLY_VALID)
+ * 1. Enable (validParams: PMIC_CFG_PWR_BUCK_ENABLE_VALID)
+ * 2. Pulldown enable (validParams: PMIC_CFG_PWR_BUCK_PLDN_EN_VALID)
+ * 3. Forced PWM option (validParams: PMIC_CFG_PWR_BUCK_FPWM_EN_VALID)
+ * 4. Undervoltage threshold (validParams: PMIC_CFG_PWR_BUCK_UV_THR_VALID)
+ * 5. Overvoltage threshold (validParams: PMIC_CFG_PWR_BUCK_OV_THR_VALID)
+ * 6. Current limit selection (validParams: PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID)
+ * 7. Overvoltage protection fault response (validParams: PMIC_CFG_PWR_BUCK_OVP_SEL_VALID)
+ * 8. Overvoltage fault response (validParams: PMIC_CFG_PWR_BUCK_OV_SEL_VALID)
+ * 9. Undervoltage fault response (validParams: PMIC_CFG_PWR_BUCK_UV_SEL_VALID)
+ * 10. Short circuit fault response (validParams: PMIC_CFG_PWR_BUCK_SC_SEL_VALID)
+ * 11. Residual voltage configuration (validParams: PMIC_CFG_PWR_BUCK_RV_CONF_VALID)
+ * 12. Slew rate (validParams: PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID)
+ * 13. Deglitch selection (validParams: PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID)
+ * 14. Discharge selection (validParams: PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID)
+ * 15. Spread spectrum enable (validParams: PMIC_CFG_PWR_BUCK_SS_EN_VALID)
+ * 16. Spread spectrum modulation selection (validParams: PMIC_CFG_PWR_BUCK_SSM_SEL_VALID)
+ * 17. VSET (BUCK1 only; validParam: PMIC_CFG_PWR_BUCK_VSET_VALID)
+ * 18. Undervoltage lockout rising (BUCK1 only; validParam: PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID)
+ * 19. Undervoltage lockout falling (BUCK1 only; validParam: PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID)
+ * 20. High side slew rate (BUCK1 only; validParam: PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID)
+ * 21. VSET_ACTIVE (BUCK2 and BUCK3 only; validParam: PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID)
+ * 22. VSET_LPWR (BUCK2 and BUCK3 only; validParam: PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID)
+ * 23. VMON only option (BUCK2 and BUCK3 only; validParam: PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID)
  * For more information on the buck configurations, refer to @ref Pmic_PwrBuckCfg.
  *
  * @param handle [IN]  PMIC interface handle.

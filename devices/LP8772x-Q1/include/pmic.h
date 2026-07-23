@@ -258,8 +258,8 @@ extern "C" {
  * can be used to support Pseudo-nINT functionality when servicing WD QA sequences.
  * While performing a WD QA sequence, the PMIC LLD will check the INT_TOP_STATUS
  * field, and if set will call this function to notify the user that an
- * interrupt is pending. Valid only when `PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID` bit of
- * `validParams` is set.
+ * interrupt is pending. Valid only when `PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID`
+ * bit of `validParams` is set.
  *
  * @param timerWaitMs Function pointer to platform-specific timer-based wait API.
  * Upon invocation, the user-implemented hook waits a specified period of time

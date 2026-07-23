@@ -104,7 +104,7 @@ static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrBuc
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read CLK_CONF register
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID | PMIC_CFG_PWR_BUCK_SSM_SEL_VALID))
     {
         status = Pmic_ioRxByte_CS(handle, PMIC_CLK_CONF_REG, &regData);
     }
@@ -112,13 +112,13 @@ static int32_t PWR_getSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrBuc
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract SS_EN bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID))
         {
             buckCfg->ssEn = Pmic_getBitField_b(regData, PMIC_SS_EN_SHIFT);
         }
 
         // Extract SSM_SEL bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SSM_SEL_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SSM_SEL_VALID))
         {
             buckCfg->ssmSel = Pmic_getBitField(regData, PMIC_SSM_SEL_SHIFT, PMIC_SSM_SEL_MASK);
         }
@@ -132,7 +132,7 @@ static int32_t PWR_getBuckVSET(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
     {
         // Read BUCK1_VOUT register
         status = Pmic_ioRxByte_CS(handle, PMIC_BUCK1_VOUT_REG, &regData);
@@ -151,7 +151,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *handle, Pmic_PwrBu
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID))
     {
         uint8_t regData = 0U;
         uint8_t regAddr;
@@ -181,7 +181,7 @@ static int32_t PWR_getBuckActiveLPwrVSET(const Pmic_Handle_t *handle, Pmic_PwrBu
         }
     }
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_LPWR_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID))
     {
         uint8_t regData = 0U;
         uint8_t regAddr;
@@ -223,7 +223,7 @@ static int32_t PWR_getBuckVout(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     {
         // BUCK1 does not support active VSET or LP VSET configurations
         if (Pmic_validParamCheck(buckCfg->validParams,
-                                PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID))
+                                PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID | PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -231,7 +231,7 @@ static int32_t PWR_getBuckVout(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     else
     {
         // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -256,7 +256,7 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck1CtrlValidParams = PMIC_BUCK_CTRL_ALL_VALID;
+    const uint32_t buck1CtrlValidParams = PMIC_CFG_PWR_BUCK_CTRL_ALL_VALID;
 
     if (Pmic_validParamCheck(buckCfg->validParams, buck1CtrlValidParams))
     {
@@ -267,39 +267,39 @@ static int32_t PWR_getBuck1Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract BUCK1_EN_HS_ON_SR bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
         {
             buckCfg->highSideSlewRate = Pmic_getBitField(
                 regData, PMIC_BUCK1_EN_HS_ON_SR_SHIFT, PMIC_BUCK1_EN_HS_ON_SR_MASK);
         }
 
         // Extract BUCK1_DISCHARGE_SEL bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_DISCHARGE_SEL_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
         {
             buckCfg->dischargeSel = Pmic_getBitField(
                 regData, PMIC_BUCK1_DISCHARGE_SEL_SHIFT, PMIC_BUCK1_DISCHARGE_SEL_MASK);
         }
 
         // Extract BUCK1_PLDN bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_PLDN_EN_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
         {
             buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK1_PLDN_SHIFT);
         }
 
         // Extract BUCK1_SLEW_RATE bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SLEW_RATE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
         {
             buckCfg->slewRate = Pmic_getBitField(regData, PMIC_BUCK1_SLEW_RATE_SHIFT, PMIC_BUCK1_SLEW_RATE_MASK);
         }
 
         // Extract BUCK1_FPWM bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_FPWM_EN_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
         {
             buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK1_FPWM_SHIFT);
         }
 
         // Extract BUCK1_EN bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_ENABLE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
         {
             buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK1_EN_SHIFT);
         }
@@ -312,8 +312,8 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck2_3CtrlValidParams = PMIC_BUCK_VMON_ONLY_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID |
-        PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID;
+    const uint32_t buck2_3CtrlValidParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID | PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID |
+        PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_ENABLE_VALID;
 
     // Read BUCKx_CTRL (x=2 or x=3)
     if (Pmic_validParamCheck(buckCfg->validParams, buck2_3CtrlValidParams))
@@ -326,37 +326,37 @@ static int32_t PWR_getBuck2_3Ctrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract BUCKx_VMON_ONLY (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
         {
             buckCfg->vmonOnly = Pmic_getBitField_b(regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT);
         }
 
         // Extract BUCKx_DISCHARGE_SEL (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_DISCHARGE_SEL_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID))
         {
             buckCfg->dischargeSel = Pmic_getBitField(regData, PMIC_BUCK2_3_DISCHARGE_SEL_SHIFT, PMIC_BUCK2_3_DISCHARGE_SEL_MASK);
         }
 
         // Extract BUCKx_PLDN (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_PLDN_EN_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID))
         {
             buckCfg->pldnEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_PLDN_SHIFT);
         }
 
         // Extract BUCKx_SLEW_RATE (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SLEW_RATE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
         {
             buckCfg->slewRate = Pmic_getBitField(regData, PMIC_BUCK2_3_SLEW_RATE_SHIFT, PMIC_BUCK2_3_SLEW_RATE_MASK);
         }
 
         // Extract BUCKx_FPWM (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_FPWM_EN_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID))
         {
             buckCfg->fpwmEn = Pmic_getBitField_b(regData, PMIC_BUCK2_3_FPWM_SHIFT);
         }
 
         // Extract BUCKx_EN (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_ENABLE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID))
         {
             buckCfg->enable = Pmic_getBitField_b(regData, PMIC_BUCK2_3_EN_SHIFT);
         }
@@ -373,7 +373,7 @@ static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     if (buckCfg->resource == PMIC_BUCK1)
     {
         // BUCK1 does not have the VMON_ONLY configuration
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -381,7 +381,7 @@ static int32_t PWR_getBuckCtrl(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *b
     else
     {
         // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -406,8 +406,8 @@ static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint32_t buckMonConfValidParams = PMIC_BUCK_UV_THR_VALID | PMIC_BUCK_OV_THR_VALID |
-        PMIC_BUCK_RV_CONF_VALID | PMIC_BUCK_ILIM_SEL_VALID | PMIC_BUCK_DEGLITCH_SEL_VALID;
+    uint32_t buckMonConfValidParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID | PMIC_CFG_PWR_BUCK_OV_THR_VALID |
+        PMIC_CFG_PWR_BUCK_RV_CONF_VALID | PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID | PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID;
 
     // Read BUCKx_MON_CONF (x=1, x=2, or x=3)
     if (Pmic_validParamCheck(buckCfg->validParams, buckMonConfValidParams))
@@ -433,31 +433,31 @@ static int32_t PWR_getBuckMonConf(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract BUCKx_UV_THR bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UV_THR_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_THR_VALID))
         {
             buckCfg->uvThr = Pmic_getBitField(regData, PMIC_BUCK_UV_THR_SHIFT, PMIC_BUCK_UV_THR_MASK);
         }
 
         // Extract BUCKx_OV_THR bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OV_THR_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_THR_VALID))
         {
             buckCfg->ovThr = Pmic_getBitField(regData, PMIC_BUCK_OV_THR_SHIFT, PMIC_BUCK_OV_THR_MASK);
         }
 
         // Extract BUCKx_RV_CONF bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_RV_CONF_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_RV_CONF_VALID))
         {
             buckCfg->rvConf = Pmic_getBitField(regData, PMIC_BUCK_RV_CONF_SHIFT, PMIC_BUCK_RV_CONF_MASK);
         }
 
         // Extract BUCKx_ILIM_SEL bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_ILIM_SEL_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID))
         {
             buckCfg->ilimSel = Pmic_getBitField(regData, PMIC_BUCK_ILIM_SEL_SHIFT, PMIC_BUCK_ILIM_SEL_MASK);
         }
 
         // Extract BUCKx_DEGLITCH_SEL bit field (x=1, x=2, or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_DEGLITCH_SEL_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID))
         {
             buckCfg->deglitchSel = Pmic_getBitField(regData, PMIC_BUCK_DEGLITCH_SEL_SHIFT, PMIC_BUCK_DEGLITCH_SEL_MASK);
         }
@@ -470,7 +470,7 @@ static int32_t PWR_getBuckOvpResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckC
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OVP_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OVP_SEL_VALID))
     {
         uint8_t regData = 0U;
         uint8_t bitShift;
@@ -509,7 +509,7 @@ static int32_t PWR_getBuckOvResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCf
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OV_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_SEL_VALID))
     {
         uint8_t regData = 0U;
         uint8_t bitShift;
@@ -548,7 +548,7 @@ static int32_t PWR_getBuckUvResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCf
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UV_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_SEL_VALID))
     {
         uint8_t regData = 0U;
         uint8_t bitShift;
@@ -587,7 +587,7 @@ static int32_t PWR_getBuckScResponse(const Pmic_Handle_t *handle, Pmic_PwrBuckCf
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SC_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SC_SEL_VALID))
     {
         uint8_t regData = 0U;
         uint8_t bitShift;
@@ -654,7 +654,7 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read BUCK1_UVLO register
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID | PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID))
     {
         if (buckCfg->resource == PMIC_BUCK1)
         {
@@ -669,14 +669,14 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract BUCK1_UVLO_FALLING bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UVLO_FALLING_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID))
         {
             buckCfg->uvloFalling = Pmic_getBitField(
                 regData, PMIC_BUCK1_UVLO_FALLING_SHIFT, PMIC_BUCK1_UVLO_FALLING_MASK);
         }
 
         // Extract BUCK1_UVLO_RISING bit field
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UVLO_RISING_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID))
         {
             buckCfg->uvloRising = Pmic_getBitField(
                 regData, PMIC_BUCK1_UVLO_RISING_SHIFT, PMIC_BUCK1_UVLO_RISING_MASK);
@@ -693,13 +693,13 @@ static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_
 
     // Read CLK_CONF register
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID | PMIC_CFG_PWR_BUCK_SSM_SEL_VALID))
     {
         status = Pmic_ioRxByte(handle, PMIC_CLK_CONF_REG, &regData);
     }
 
     // Modify SSM_SEL bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SSM_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SSM_SEL_VALID, status))
     {
         if (buckCfg->ssmSel > PMIC_SSM_SEL_MAX)
         {
@@ -712,13 +712,13 @@ static int32_t PWR_setSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_
     }
 
     // Modify SS_EN bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID, status))
     {
         Pmic_setBitField_b(&regData, PMIC_SS_EN_SHIFT, PMIC_SS_EN_MASK, buckCfg->ssEn);
     }
 
     // Write new register value back to PMIC
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SS_EN_VALID | PMIC_BUCK_SSM_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SS_EN_VALID | PMIC_CFG_PWR_BUCK_SSM_SEL_VALID, status))
     {
         status = Pmic_ioTxByte(handle, PMIC_CLK_CONF_REG, regData);
     }
@@ -736,7 +736,7 @@ static int32_t PWR_setBuckVout(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
     {
         // BUCK1 does not support active VSET or LP VSET configurations
         if (Pmic_validParamCheck(buckCfg->validParams,
-                                PMIC_BUCK_VSET_ACTIVE_VALID | PMIC_BUCK_VSET_LPWR_VALID))
+                                PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID | PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -744,7 +744,7 @@ static int32_t PWR_setBuckVout(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
     else
     {
         // BUCK2 and BUCK3 do not support non-active and non-LP VSET configurations
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -773,7 +773,7 @@ static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
     if (buckCfg->resource == PMIC_BUCK1)
     {
         // BUCK1 does not have the VMON_ONLY configuration
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -781,7 +781,7 @@ static int32_t PWR_setBuckCtrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
     else
     {
         // BUCK2 and BUCK3 do not have the EN_HS_ON_SR configuration
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -807,8 +807,8 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t regAddr = 0U;
-    const uint32_t buckMonConfValidParam = PMIC_BUCK_UV_THR_VALID | PMIC_BUCK_OV_THR_VALID |
-        PMIC_BUCK_RV_CONF_VALID | PMIC_BUCK_ILIM_SEL_VALID | PMIC_BUCK_DEGLITCH_SEL_VALID;
+    const uint32_t buckMonConfValidParam = PMIC_CFG_PWR_BUCK_UV_THR_VALID | PMIC_CFG_PWR_BUCK_OV_THR_VALID |
+        PMIC_CFG_PWR_BUCK_RV_CONF_VALID | PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID | PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID;
 
     // Read BUCKx_MON_CONF register (x=1, x=2, or x=3)
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -832,9 +832,9 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     }
 
     // Modify BUCKx_UV_THR bit field (x=1, x=2, or x=3)
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_UV_THR_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_THR_VALID, status))
     {
-        if (buckCfg->uvThr > PMIC_BUCK_UV_THR_MAX)
+        if (buckCfg->uvThr > PMIC_CFG_PWR_BUCK_UV_THR_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -845,9 +845,9 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     }
 
     // Modify BUCKx_OV_THR bit field (x=1, x=2, or x=3)
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_OV_THR_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_THR_VALID, status))
     {
-        if (buckCfg->ovThr > PMIC_BUCK_OV_THR_MAX)
+        if (buckCfg->ovThr > PMIC_CFG_PWR_BUCK_OV_THR_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -858,9 +858,9 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     }
 
     // Modify BUCKx_RV_CONF bit field (x=1, x=2, or x=3)
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_RV_CONF_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_RV_CONF_VALID, status))
     {
-        if (buckCfg->rvConf > PMIC_BUCK_RV_CONF_MAX)
+        if (buckCfg->rvConf > PMIC_CFG_PWR_BUCK_RV_CONF_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -871,7 +871,7 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     }
 
     // Modify BUCKx_ILIM_SEL bit field (x=1, x=2, or x=3)
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_ILIM_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID, status))
     {
         if (((buckCfg->resource == PMIC_BUCK1) && (buckCfg->ilimSel > PMIC_BUCK1_ILIM_MAX)) ||
             ((buckCfg->resource != PMIC_BUCK1) && (buckCfg->ilimSel > PMIC_BUCK2_3_ILIM_MAX)))
@@ -885,9 +885,9 @@ static int32_t PWR_setBuckMonConf(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     }
 
     // Modify BUCKx_DEGLITCH_SEL bit field (x=1, x=2, or x=3)
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_DEGLITCH_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID, status))
     {
-        if (buckCfg->deglitchSel > PMIC_BUCK_DEGLITCH_SEL_MAX)
+        if (buckCfg->deglitchSel > PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -938,7 +938,7 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck1UvloValidParams = PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID;
+    const uint32_t buck1UvloValidParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID | PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID;
 
     // Read BUCK1_UVLO register
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -955,7 +955,7 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_UVLO_FALLING bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_UVLO_FALLING_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID, status))
     {
         if (buckCfg->uvloFalling > PMIC_BUCK1_UVLO_FALLING_MAX)
         {
@@ -968,7 +968,7 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_UVLO_RISING bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_UVLO_RISING_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID, status))
     {
         if (buckCfg->uvloRising > PMIC_BUCK1_UVLO_RISING_MAX)
         {
@@ -1128,7 +1128,7 @@ static int32_t PWR_setBuckVSET(const Pmic_Handle_t *handle, const Pmic_PwrBuckCf
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
     {
         if (buckCfg->vset > PMIC_BUCK1_VSET_MAX)
         {
@@ -1250,12 +1250,12 @@ static int32_t PWR_setBuckActiveLPwrVSET(const Pmic_Handle_t *handle, const Pmic
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID))
     {
         status = PWR_setBuckActiveVSET(handle, buckCfg);
     }
 
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_VSET_LPWR_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID, status))
     {
         status = PWR_setBuckLPwrVSET(handle, buckCfg);
     }
@@ -1267,7 +1267,7 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint32_t buck1CtrlValidParams = PMIC_BUCK_CTRL_ALL_VALID;
+    const uint32_t buck1CtrlValidParams = PMIC_CFG_PWR_BUCK_CTRL_ALL_VALID;
 
     // Read BUCK1_CTRL register
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1277,7 +1277,7 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_EN_HS_ON_SR bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID, status))
     {
         if (buckCfg->highSideSlewRate > PMIC_BUCK1_EN_HS_ON_SR_MAX)
         {
@@ -1291,9 +1291,9 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_DISCHARGE_SEL bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_DISCHARGE_SEL_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID, status))
     {
-        if (buckCfg->dischargeSel > PMIC_BUCK_DISCHARGE_SEL_MAX)
+        if (buckCfg->dischargeSel > PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1305,15 +1305,15 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_PLDN bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_PLDN_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID, status))
     {
         Pmic_setBitField_b(&regData, PMIC_BUCK1_PLDN_SHIFT, PMIC_BUCK1_PLDN_MASK, buckCfg->pldnEn);
     }
 
     // Modify BUCK1_SLEW_RATE bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SLEW_RATE_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID, status))
     {
-        if (buckCfg->slewRate > PMIC_BUCK_SLEW_RATE_MAX)
+        if (buckCfg->slewRate > PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1325,13 +1325,13 @@ static int32_t PWR_setBuck1Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuckC
     }
 
     // Modify BUCK1_FPWM bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_FPWM_EN_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID, status))
     {
         Pmic_setBitField_b(&regData, PMIC_BUCK1_FPWM_SHIFT, PMIC_BUCK1_FPWM_MASK, buckCfg->fpwmEn);
     }
 
     // Modify BUCK1_EN bit field
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_ENABLE_VALID, status))
+    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID, status))
     {
         Pmic_setBitField_b(&regData, PMIC_BUCK1_EN_SHIFT, PMIC_BUCK1_EN_MASK, buckCfg->enable);
     }
@@ -1351,8 +1351,8 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t regAddr = 0U;
-    const uint32_t buck2_3CtrlValidParams = PMIC_BUCK_VMON_ONLY_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID |
-        PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID | PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_ENABLE_VALID;
+    const uint32_t buck2_3CtrlValidParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID | PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID |
+        PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_ENABLE_VALID;
 
     // Read BUCKx_CTRL register (x=2 or x=3)
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1366,16 +1366,16 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
     if (status == PMIC_ST_SUCCESS)
     {
         // Modify BUCKx_VMON_ONLY bit field (x=2 or x=3)
-        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VMON_ONLY_VALID))
+        if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID))
         {
             Pmic_setBitField_b(
                 &regData, PMIC_BUCK2_3_VMON_ONLY_SHIFT, PMIC_BUCK2_3_VMON_ONLY_MASK, buckCfg->vmonOnly);
         }
 
         // Modify BUCKx_DISCHARGE_SEL bit field (x=2 or x=3)
-        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_DISCHARGE_SEL_VALID, status))
+        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID, status))
         {
-            if (buckCfg->dischargeSel > PMIC_BUCK_DISCHARGE_SEL_MAX)
+            if (buckCfg->dischargeSel > PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1387,15 +1387,15 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
         }
 
         // Modify BUCKx_PLDN bit field (x=2 or x=3)
-        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_PLDN_EN_VALID, status))
+        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID, status))
         {
             Pmic_setBitField_b(&regData, PMIC_BUCK2_3_PLDN_SHIFT, PMIC_BUCK2_3_PLDN_MASK, buckCfg->pldnEn);
         }
 
         // Modify BUCKx_SLEW_RATE bit field (x=2 or x=3)
-        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_SLEW_RATE_VALID, status))
+        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID, status))
         {
-            if (buckCfg->slewRate > PMIC_BUCK_SLEW_RATE_MAX)
+            if (buckCfg->slewRate > PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1407,13 +1407,13 @@ static int32_t PWR_setBuck2_3Ctrl(const Pmic_Handle_t *handle, const Pmic_PwrBuc
         }
 
         // Modify BUCKx_FPWM bit field (x=2 or x=3)
-        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_FPWM_EN_VALID, status))
+        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_FPWM_EN_VALID, status))
         {
             Pmic_setBitField_b(&regData, PMIC_BUCK2_3_FPWM_SHIFT, PMIC_BUCK2_3_FPWM_MASK, buckCfg->fpwmEn);
         }
 
         // Modify BUCKx_EN bit field (x=2 or x=3)
-        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_BUCK_ENABLE_VALID, status))
+        if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_ENABLE_VALID, status))
         {
             Pmic_setBitField_b(&regData, PMIC_BUCK2_3_EN_SHIFT, PMIC_BUCK2_3_EN_MASK, buckCfg->enable);
         }
@@ -1434,7 +1434,7 @@ static int32_t PWR_setBuckOvpResponse(const Pmic_Handle_t *handle, const Pmic_Pw
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OVP_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OVP_SEL_VALID))
     {
         // Read REG_OVP_CONF register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1487,7 +1487,7 @@ static int32_t PWR_setBuckOvResponse(const Pmic_Handle_t *handle, const Pmic_Pwr
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OV_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_OV_SEL_VALID))
     {
         // Read REG_OV_CONF register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1540,7 +1540,7 @@ static int32_t PWR_setBuckUvResponse(const Pmic_Handle_t *handle, const Pmic_Pwr
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UV_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_UV_SEL_VALID))
     {
         // Read REG_UV_CONF register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -1593,7 +1593,7 @@ static int32_t PWR_setBuckScResponse(const Pmic_Handle_t *handle, const Pmic_Pwr
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_SC_SEL_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SC_SEL_VALID))
     {
         // Read REG_SC_CONF register
         Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);

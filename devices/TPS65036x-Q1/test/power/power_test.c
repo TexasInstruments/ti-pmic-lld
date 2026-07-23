@@ -108,7 +108,7 @@ void power_test(void *args)
     {
         testUtils_printSiRev(&pmicHandle);
 
-    
+
         if (status == PMIC_ST_SUCCESS)
         {
             status = Pmic_irqClrAllFlags(&pmicHandle);
@@ -693,7 +693,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
-    setCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
     setCfg.ssmSel = PMIC_SSM_SEL_MAX;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &setCfg);
@@ -701,7 +701,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck1(void)
 
     Pmic_PwrBuckCfg_t getCfg = {0};
     getCfg.resource = PMIC_BUCK1;
-    getCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    getCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -712,7 +712,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK2;
-    setCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
     setCfg.ssmSel = PMIC_SSM_SEL_MAX;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &setCfg);
@@ -720,7 +720,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck2(void)
 
     Pmic_PwrBuckCfg_t getCfg = {0};
     getCfg.resource = PMIC_BUCK2;
-    getCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    getCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -731,7 +731,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK3;
-    setCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
     setCfg.ssmSel = PMIC_SSM_SEL_MAX;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &setCfg);
@@ -739,7 +739,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_buck3(void)
 
     Pmic_PwrBuckCfg_t getCfg = {0};
     getCfg.resource = PMIC_BUCK3;
-    getCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    getCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -751,7 +751,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_allValues(void)
     // Test SSM_SEL with all valid values on BUCK1
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
-    setCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
 
     for (uint8_t val = 0; val <= PMIC_SSM_SEL_MAX; val++)
     {
@@ -761,7 +761,7 @@ void test_pos_power_buckSetGetCfg_ssmSel_allValues(void)
 
         Pmic_PwrBuckCfg_t getCfg = {0};
         getCfg.resource = PMIC_BUCK1;
-        getCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+        getCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
 
         status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -773,7 +773,7 @@ void test_neg_power_buckSetCfg_ssmSel_outOfBounds(void)
 {
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_SSM_SEL_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_SSM_SEL_VALID;
     buckCfg.ssmSel = PMIC_SSM_SEL_MAX + 1U;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -788,7 +788,7 @@ void test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
-    setCfg.validParams = PMIC_BUCK_UVLO_RISING_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID;
 
     for (uint8_t val = 0; val <= PMIC_BUCK1_UVLO_RISING_MAX; val++)
     {
@@ -798,7 +798,7 @@ void test_pos_power_buckSetGetCfg_uvloRising_buck1_allValues(void)
 
         Pmic_PwrBuckCfg_t getCfg = {0};
         getCfg.resource = PMIC_BUCK1;
-        getCfg.validParams = PMIC_BUCK_UVLO_RISING_VALID;
+        getCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID;
 
         status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -810,7 +810,7 @@ void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 {
     // Set RISING to max first so all FALLING values satisfy the hardware constraint (FALLING < RISING)
     Pmic_PwrBuckCfg_t risingCfg = {
-        .validParams = PMIC_BUCK_UVLO_RISING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID,
         .resource = PMIC_BUCK1,
         .uvloRising = PMIC_BUCK1_UVLO_RISING_MAX
     };
@@ -819,7 +819,7 @@ void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 
     // Verify RISING write landed before sweeping FALLING
     Pmic_PwrBuckCfg_t risingCheck = {
-        .validParams = PMIC_BUCK_UVLO_RISING_VALID | PMIC_BUCK_UVLO_FALLING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID | PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID,
         .resource = PMIC_BUCK1
     };
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &risingCheck);
@@ -828,7 +828,7 @@ void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
-    setCfg.validParams = PMIC_BUCK_UVLO_FALLING_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID;
 
     // Hardware enforces FALLING <= RISING - 4 codes (approx 0.5V hysteresis minimum).
     // With RISING at max (0xF), valid FALLING range is 0x0..0xB.
@@ -841,7 +841,7 @@ void test_pos_power_buckSetGetCfg_uvloFalling_buck1_allValues(void)
 
         Pmic_PwrBuckCfg_t getCfg = {0};
         getCfg.resource = PMIC_BUCK1;
-        getCfg.validParams = PMIC_BUCK_UVLO_FALLING_VALID;
+        getCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID;
 
         status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -853,7 +853,7 @@ void test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1(void)
 {
     Pmic_PwrBuckCfg_t setCfg = {0};
     setCfg.resource = PMIC_BUCK1;
-    setCfg.validParams = PMIC_BUCK_UVLO_RISING_VALID | PMIC_BUCK_UVLO_FALLING_VALID;
+    setCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID | PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID;
     setCfg.uvloRising = 0x5;
     setCfg.uvloFalling = 0xA;
 
@@ -862,7 +862,7 @@ void test_pos_power_buckSetGetCfg_uvloRisingAndFalling_buck1(void)
 
     Pmic_PwrBuckCfg_t getCfg = {0};
     getCfg.resource = PMIC_BUCK1;
-    getCfg.validParams = PMIC_BUCK_UVLO_RISING_VALID | PMIC_BUCK_UVLO_FALLING_VALID;
+    getCfg.validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID | PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID;
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -879,7 +879,7 @@ void test_neg_power_pwrSetBuckCfg_buck1_vsetActiveNotSupported(void)
     // BUCK1 does not support VSET_ACTIVE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VSET_ACTIVE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID;
     buckCfg.vsetActive = 0x10;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -891,7 +891,7 @@ void test_neg_power_pwrGetBuckCfg_buck1_vsetActiveNotSupported(void)
     // BUCK1 does not support VSET_ACTIVE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VSET_ACTIVE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -902,7 +902,7 @@ void test_neg_power_pwrSetBuckCfg_buck1_vsetLpwrNotSupported(void)
     // BUCK1 does not support VSET_LPWR parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VSET_LPWR_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID;
     buckCfg.vsetLPwr = 0x10;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -914,7 +914,7 @@ void test_neg_power_pwrGetBuckCfg_buck1_vsetLpwrNotSupported(void)
     // BUCK1 does not support VSET_LPWR parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VSET_LPWR_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -925,7 +925,7 @@ void test_neg_power_pwrSetBuckCfg_buck2_vsetNotSupported(void)
     // BUCK2 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK2;
-    buckCfg.validParams = PMIC_BUCK_VSET_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_VALID;
     buckCfg.vset = 0x10;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -937,7 +937,7 @@ void test_neg_power_pwrGetBuckCfg_buck2_vsetNotSupported(void)
     // BUCK2 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK2;
-    buckCfg.validParams = PMIC_BUCK_VSET_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -948,7 +948,7 @@ void test_neg_power_pwrSetBuckCfg_buck3_vsetNotSupported(void)
     // BUCK3 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK3;
-    buckCfg.validParams = PMIC_BUCK_VSET_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_VALID;
     buckCfg.vset = 0x10;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -960,7 +960,7 @@ void test_neg_power_pwrGetBuckCfg_buck3_vsetNotSupported(void)
     // BUCK3 does not support non-active VSET parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK3;
-    buckCfg.validParams = PMIC_BUCK_VSET_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VSET_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -971,7 +971,7 @@ void test_neg_power_pwrSetBuckCfg_buck1_vmonOnlyNotSupported(void)
     // BUCK1 does not support VMON_ONLY parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VMON_ONLY_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID;
     buckCfg.vmonOnly = true;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -983,7 +983,7 @@ void test_neg_power_pwrGetBuckCfg_buck1_vmonOnlyNotSupported(void)
     // BUCK1 does not support VMON_ONLY parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK1;
-    buckCfg.validParams = PMIC_BUCK_VMON_ONLY_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -994,7 +994,7 @@ void test_neg_power_pwrSetBuckCfg_buck2_highSideSlewRateNotSupported(void)
     // BUCK2 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK2;
-    buckCfg.validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
     buckCfg.highSideSlewRate = 0x1;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -1006,7 +1006,7 @@ void test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported(void)
     // BUCK2 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK2;
-    buckCfg.validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1017,7 +1017,7 @@ void test_neg_power_pwrSetBuckCfg_buck3_highSideSlewRateNotSupported(void)
     // BUCK3 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK3;
-    buckCfg.validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
     buckCfg.highSideSlewRate = 0x1;
 
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -1029,7 +1029,7 @@ void test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported(void)
     // BUCK3 does not support HIGH_SIDE_SLEW_RATE parameter
     Pmic_PwrBuckCfg_t buckCfg = {0};
     buckCfg.resource = PMIC_BUCK3;
-    buckCfg.validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
+    buckCfg.validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID;
 
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -1563,7 +1563,7 @@ void test_pos_power_seqTrigSetGet_allResources(void)
     // Get all sequence triggers
     status = Pmic_pwrGetBuckLdoSeqTrig(&pmicHandle, seqTrigCfgGet, 4U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     // Verify all sequence triggers
     for (uint8_t i = 0U; i < 4U; i++)
     {
@@ -1742,7 +1742,7 @@ void test_pos_power_seqDlySetGet_allResources(void)
     // Get all sequence delays
     status = Pmic_pwrGetBuckLdoSeqDly(&pmicHandle, seqDlyCfgGet, 4U);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    
+
     // Verify all sequence delays
     for (uint8_t i = 0U; i < 4U; i++)
     {
@@ -1763,12 +1763,12 @@ void test_pos_power_buckSetGetCfg_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK1,
         .enable = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -1784,12 +1784,12 @@ void test_pos_power_buckSetGetCfg_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2,
         .enable = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -1805,12 +1805,12 @@ void test_pos_power_buckSetGetCfg_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3,
         .enable = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -1826,12 +1826,12 @@ void test_pos_power_buckSetGetCfg_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK1,
         .enable = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -1847,12 +1847,12 @@ void test_pos_power_buckSetGetCfg_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2,
         .enable = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -1868,12 +1868,12 @@ void test_pos_power_buckSetGetCfg_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3,
         .enable = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -1889,12 +1889,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1,
         .fpwmEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -1910,12 +1910,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK2,
         .fpwmEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -1931,12 +1931,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK3,
         .fpwmEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -1952,12 +1952,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1,
         .fpwmEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -1973,12 +1973,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK2,
         .fpwmEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -1994,12 +1994,12 @@ void test_pos_power_buckSetGetCfg_fpwmEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK3,
         .fpwmEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2015,12 +2015,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK1,
         .pldnEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2036,12 +2036,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK2,
         .pldnEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2057,12 +2057,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK3,
         .pldnEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2078,12 +2078,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK1,
         .pldnEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2099,12 +2099,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK2,
         .pldnEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2120,12 +2120,12 @@ void test_pos_power_buckSetGetCfg_pldnEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK3,
         .pldnEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_PLDN_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_PLDN_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2141,12 +2141,12 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck1_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK1,
-        .dischargeSel = PMIC_BUCK_SLEW_RATE_CONTROLLED
+        .dischargeSel = PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2155,19 +2155,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck1_active(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED);
 }
 
 void test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK1,
-        .dischargeSel = PMIC_BUCK_RESISTIVE_DISCHARGE
+        .dischargeSel = PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2176,19 +2176,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck1_resistive(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE);
 }
 
 void test_pos_power_buckSetGetCfg_dischargeSel_buck2_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK2,
-        .dischargeSel = PMIC_BUCK_SLEW_RATE_CONTROLLED
+        .dischargeSel = PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2197,19 +2197,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck2_active(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED);
 }
 
 void test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK2,
-        .dischargeSel = PMIC_BUCK_RESISTIVE_DISCHARGE
+        .dischargeSel = PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2218,19 +2218,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck2_resistive(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE);
 }
 
 void test_pos_power_buckSetGetCfg_dischargeSel_buck3_active(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3,
-        .dischargeSel = PMIC_BUCK_SLEW_RATE_CONTROLLED
+        .dischargeSel = PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2239,19 +2239,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck3_active(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_SLEW_RATE_CONTROLLED);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED);
 }
 
 void test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3,
-        .dischargeSel = PMIC_BUCK_RESISTIVE_DISCHARGE
+        .dischargeSel = PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2260,19 +2260,19 @@ void test_pos_power_buckSetGetCfg_dischargeSel_buck3_resistive(void)
 
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_BUCK_RESISTIVE_DISCHARGE);
+    PLATFORM_ASSERT(getCfg.dischargeSel == PMIC_CFG_PWR_BUCK_RESISTIVE_DISCHARGE);
 }
 
 void test_pos_power_buckSetGetCfg_ssEn_enable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK1,
         .ssEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2288,12 +2288,12 @@ void test_pos_power_buckSetGetCfg_ssEn_enable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK2,
         .ssEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2309,12 +2309,12 @@ void test_pos_power_buckSetGetCfg_ssEn_enable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK3,
         .ssEn = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2330,12 +2330,12 @@ void test_pos_power_buckSetGetCfg_ssEn_disable_buck1(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK1,
         .ssEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2351,12 +2351,12 @@ void test_pos_power_buckSetGetCfg_ssEn_disable_buck2(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK2,
         .ssEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2372,12 +2372,12 @@ void test_pos_power_buckSetGetCfg_ssEn_disable_buck3(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK3,
         .ssEn = false
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SS_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SS_EN_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2397,7 +2397,7 @@ void test_pos_power_buckSetGetCfg_ssEn_disable_buck3(void)
 void test_pos_power_buckGetCfg_ovpSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2407,7 +2407,7 @@ void test_pos_power_buckGetCfg_ovpSel_buck1(void)
 void test_pos_power_buckGetCfg_ovpSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2417,7 +2417,7 @@ void test_pos_power_buckGetCfg_ovpSel_buck2(void)
 void test_pos_power_buckGetCfg_ovpSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2428,7 +2428,7 @@ void test_pos_power_buckGetCfg_ovpSel_buck3(void)
 void test_pos_power_buckGetCfg_ovSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2438,7 +2438,7 @@ void test_pos_power_buckGetCfg_ovSel_buck1(void)
 void test_pos_power_buckGetCfg_ovSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2448,7 +2448,7 @@ void test_pos_power_buckGetCfg_ovSel_buck2(void)
 void test_pos_power_buckGetCfg_ovSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2459,7 +2459,7 @@ void test_pos_power_buckGetCfg_ovSel_buck3(void)
 void test_pos_power_buckGetCfg_uvSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2469,7 +2469,7 @@ void test_pos_power_buckGetCfg_uvSel_buck1(void)
 void test_pos_power_buckGetCfg_uvSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2479,7 +2479,7 @@ void test_pos_power_buckGetCfg_uvSel_buck2(void)
 void test_pos_power_buckGetCfg_uvSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2490,7 +2490,7 @@ void test_pos_power_buckGetCfg_uvSel_buck3(void)
 void test_pos_power_buckGetCfg_scSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2500,7 +2500,7 @@ void test_pos_power_buckGetCfg_scSel_buck1(void)
 void test_pos_power_buckGetCfg_scSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2510,7 +2510,7 @@ void test_pos_power_buckGetCfg_scSel_buck2(void)
 void test_pos_power_buckGetCfg_scSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2521,7 +2521,7 @@ void test_pos_power_buckGetCfg_scSel_buck3(void)
 void test_pos_power_buckGetCfg_rvConf_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2531,7 +2531,7 @@ void test_pos_power_buckGetCfg_rvConf_buck1(void)
 void test_pos_power_buckGetCfg_rvConf_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2541,7 +2541,7 @@ void test_pos_power_buckGetCfg_rvConf_buck2(void)
 void test_pos_power_buckGetCfg_rvConf_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2552,7 +2552,7 @@ void test_pos_power_buckGetCfg_rvConf_buck3(void)
 void test_pos_power_buckGetCfg_ilimSel_buck1(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2562,7 +2562,7 @@ void test_pos_power_buckGetCfg_ilimSel_buck1(void)
 void test_pos_power_buckGetCfg_ilimSel_buck2(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2572,7 +2572,7 @@ void test_pos_power_buckGetCfg_ilimSel_buck2(void)
 void test_pos_power_buckGetCfg_ilimSel_buck3(void)
 {
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &getCfg);
@@ -2591,11 +2591,11 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2616,11 +2616,11 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2641,11 +2641,11 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2666,12 +2666,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ilimSel = PMIC_BUCK1_ILIM_3P1_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2689,12 +2689,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck1_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ilimSel = PMIC_BUCK1_ILIM_3P6_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2712,12 +2712,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ilimSel = PMIC_BUCK2_3_ILIM_4P5_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2735,12 +2735,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ilimSel = PMIC_BUCK2_3_ILIM_3_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2758,12 +2758,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ilimSel = PMIC_BUCK2_3_ILIM_4P5_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2781,12 +2781,12 @@ void test_pos_power_buckSetGetCfg_ilimSel_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ilimSel = PMIC_BUCK2_3_ILIM_3_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2808,12 +2808,12 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovpSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2831,12 +2831,12 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovpSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2854,12 +2854,12 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck2_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ovpSel = PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2877,12 +2877,12 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck3_ordShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ovpSel = PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -2900,12 +2900,12 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck1_immShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovpSel = PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2923,11 +2923,11 @@ void test_pos_power_buckSetGetCfg_ovpSel_buck2_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2952,12 +2952,12 @@ void test_pos_power_buckSetGetCfg_ovSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -2975,12 +2975,12 @@ void test_pos_power_buckSetGetCfg_ovSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ovSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -2998,12 +2998,12 @@ void test_pos_power_buckSetGetCfg_ovSel_buck3_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ovSel = PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3021,11 +3021,11 @@ void test_pos_power_buckSetGetCfg_ovSel_buck1_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3050,12 +3050,12 @@ void test_pos_power_buckSetGetCfg_uvSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1,
         .uvSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3073,12 +3073,12 @@ void test_pos_power_buckSetGetCfg_uvSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK2,
         .uvSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3096,11 +3096,11 @@ void test_pos_power_buckSetGetCfg_uvSel_buck3_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3121,12 +3121,12 @@ void test_pos_power_buckSetGetCfg_uvSel_buck1_waitPwrCycle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1,
         .uvSel = PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3148,12 +3148,12 @@ void test_pos_power_buckSetGetCfg_scSel_buck1_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1,
         .scSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3171,12 +3171,12 @@ void test_pos_power_buckSetGetCfg_scSel_buck2_assertNint(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK2,
         .scSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3194,11 +3194,11 @@ void test_pos_power_buckSetGetCfg_scSel_buck3_allResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3219,12 +3219,12 @@ void test_pos_power_buckSetGetCfg_scSel_buck1_ordShutdown(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1,
         .scSel = PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3246,12 +3246,12 @@ void test_pos_power_buckSetGetCfg_rvConf_buck1_wait(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1,
-        .rvConf = PMIC_BUCK_RAIL_DISCHARGE
+        .rvConf = PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3262,19 +3262,19 @@ void test_pos_power_buckSetGetCfg_rvConf_buck1_wait(void)
     // Get BUCK1 RV configuration
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RAIL_DISCHARGE);
+    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE);
 }
 
 void test_pos_power_buckSetGetCfg_rvConf_buck2_ignore(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK2,
-        .rvConf = PMIC_BUCK_RV_IGNORE
+        .rvConf = PMIC_CFG_PWR_BUCK_RV_IGNORE
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3285,23 +3285,23 @@ void test_pos_power_buckSetGetCfg_rvConf_buck2_ignore(void)
     // Get BUCK2 RV configuration
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
+    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_CFG_PWR_BUCK_RV_IGNORE);
 }
 
 void test_pos_power_buckSetGetCfg_rvConf_buck3_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK3
     };
 
     // Test all valid RV configuration values for BUCK3
-    for (uint8_t rvConf = PMIC_BUCK_RAIL_DISCHARGE; rvConf <= PMIC_BUCK_RV_CONF_MAX; rvConf++)
+    for (uint8_t rvConf = PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE; rvConf <= PMIC_CFG_PWR_BUCK_RV_CONF_MAX; rvConf++)
     {
         buckCfgSet.rvConf = rvConf;
         status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
@@ -3321,12 +3321,12 @@ void test_pos_power_buckSetCfg_buck2OvpSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ovpSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3344,12 +3344,12 @@ void test_pos_power_buckSetCfg_buck3OvpSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ovpSel = PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3367,12 +3367,12 @@ void test_pos_power_buckSetCfg_buck2OvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ovSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3390,12 +3390,12 @@ void test_pos_power_buckSetCfg_buck3OvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK3,
         .ovSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3413,12 +3413,12 @@ void test_pos_power_buckSetCfg_buck2UvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK2,
         .uvSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3436,12 +3436,12 @@ void test_pos_power_buckSetCfg_buck3UvSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK3,
         .uvSel = PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3459,12 +3459,12 @@ void test_pos_power_buckSetCfg_buck2ScSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK2,
         .scSel = PMIC_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3482,12 +3482,12 @@ void test_pos_power_buckSetCfg_buck3ScSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK3,
         .scSel = PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3505,12 +3505,12 @@ void test_pos_power_buckSetCfg_buck1RvConf(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1,
-        .rvConf = PMIC_BUCK_RV_IGNORE
+        .rvConf = PMIC_CFG_PWR_BUCK_RV_IGNORE
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3521,19 +3521,19 @@ void test_pos_power_buckSetCfg_buck1RvConf(void)
     // Verify BUCK1 RV configuration was set correctly
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_BUCK_RV_IGNORE);
+    PLATFORM_ASSERT(buckCfgGet.rvConf == PMIC_CFG_PWR_BUCK_RV_IGNORE);
 }
 
 void test_pos_power_buckSetCfg_buck1IlimSel(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ilimSel = PMIC_BUCK1_ILIM_3P6_A
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3556,8 +3556,8 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_VALID |
-                       PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_VALID |
+                       PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1,
         .enable = true,
         .vset = PMIC_BUCK1_VSET_MIN,
@@ -3565,8 +3565,8 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
         .fpwmEn = true
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_VALID |
-                       PMIC_BUCK_PLDN_EN_VALID | PMIC_BUCK_FPWM_EN_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_VALID |
+                       PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3588,17 +3588,17 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(vo
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
-                       PMIC_BUCK_UV_THR_VALID | PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID |
+                       PMIC_CFG_PWR_BUCK_UV_THR_VALID | PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2,
         .enable = true,
         .vsetActive = PMIC_BUCK2_3_VSET_MIN,
-        .uvThr = PMIC_BUCK_UV_THR_4_PCT,
-        .ovThr = PMIC_BUCK_OV_THR_4_PCT
+        .uvThr = PMIC_CFG_PWR_BUCK_UV_THR_4_PCT,
+        .ovThr = PMIC_CFG_PWR_BUCK_OV_THR_4_PCT
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
-                       PMIC_BUCK_UV_THR_VALID | PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID |
+                       PMIC_CFG_PWR_BUCK_UV_THR_VALID | PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3619,21 +3619,21 @@ void test_pos_power_buckSetGetCfg_multiParam_buck3_allCommonParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
-                       PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID |
-                       PMIC_BUCK_DEGLITCH_SEL_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_PLDN_EN_VALID |
+                       PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID |
+                       PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID | PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3,
         .enable = true,
         .pldnEn = true,
         .fpwmEn = false,
-        .slewRate = PMIC_BUCK_SLEW_RATE_10_MV_PER_US,
-        .deglitchSel = PMIC_BUCK_DEGLITCH_SEL_10_US,
-        .dischargeSel = PMIC_BUCK_SLEW_RATE_CONTROLLED
+        .slewRate = PMIC_CFG_PWR_BUCK_SLEW_RATE_10_MV_PER_US,
+        .deglitchSel = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_10_US,
+        .dischargeSel = PMIC_CFG_PWR_BUCK_SLEW_RATE_CONTROLLED
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
-                       PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_SLEW_RATE_VALID |
-                       PMIC_BUCK_DEGLITCH_SEL_VALID | PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_PLDN_EN_VALID |
+                       PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID |
+                       PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID | PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3656,8 +3656,8 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID | PMIC_BUCK_OV_SEL_VALID |
-                       PMIC_BUCK_UV_SEL_VALID | PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID | PMIC_CFG_PWR_BUCK_OV_SEL_VALID |
+                       PMIC_CFG_PWR_BUCK_UV_SEL_VALID | PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovpSel = PMIC_ASSERT_NINT_PIN,
         .ovSel = PMIC_WARM_RESET_AND_ASSERT_NINT_PIN,
@@ -3665,8 +3665,8 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_allFaultResponses(void)
         .scSel = PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID | PMIC_BUCK_OV_SEL_VALID |
-                       PMIC_BUCK_UV_SEL_VALID | PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID | PMIC_CFG_PWR_BUCK_OV_SEL_VALID |
+                       PMIC_CFG_PWR_BUCK_UV_SEL_VALID | PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3688,10 +3688,10 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
-                       PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
-                       PMIC_BUCK_VSET_LPWR_VALID | PMIC_BUCK_ILIM_SEL_VALID |
-                       PMIC_BUCK_RV_CONF_VALID | PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_PLDN_EN_VALID |
+                       PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID |
+                       PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID | PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID |
+                       PMIC_CFG_PWR_BUCK_RV_CONF_VALID | PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK2,
         .enable = true,
         .pldnEn = false,
@@ -3699,14 +3699,14 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
         .vsetActive = PMIC_BUCK2_3_VSET_MIN,
         .vsetLPwr = PMIC_BUCK2_3_VSET_MAX,
         .ilimSel = PMIC_BUCK2_3_ILIM_4P5_A,
-        .rvConf = PMIC_BUCK_RAIL_DISCHARGE,
+        .rvConf = PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE,
         .vmonOnly = false
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_ENABLE_VALID | PMIC_BUCK_PLDN_EN_VALID |
-                       PMIC_BUCK_FPWM_EN_VALID | PMIC_BUCK_VSET_ACTIVE_VALID |
-                       PMIC_BUCK_VSET_LPWR_VALID | PMIC_BUCK_ILIM_SEL_VALID |
-                       PMIC_BUCK_RV_CONF_VALID | PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_PLDN_EN_VALID |
+                       PMIC_CFG_PWR_BUCK_FPWM_EN_VALID | PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID |
+                       PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID | PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID |
+                       PMIC_CFG_PWR_BUCK_RV_CONF_VALID | PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3736,12 +3736,12 @@ void test_pos_power_buckSetGetCfg_vset_buck1_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x00
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3757,12 +3757,12 @@ void test_pos_power_buckSetGetCfg_vset_buck1_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x06
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3778,12 +3778,12 @@ void test_pos_power_buckSetGetCfg_vset_buck1_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x0D
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3799,12 +3799,12 @@ void test_pos_power_buckSetGetCfg_vset_buck1_boundary_low(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x01
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3820,12 +3820,12 @@ void test_pos_power_buckSetGetCfg_vset_buck1_boundary_high(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x0C
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -3842,12 +3842,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2,
         .vsetActive = PMIC_BUCK2_3_VSET_MIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3863,12 +3863,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2,
         .vsetActive = 0x22
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3884,12 +3884,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2,
         .vsetActive = 0x45
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3905,12 +3905,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3,
         .vsetActive = PMIC_BUCK2_3_VSET_MIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3926,12 +3926,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3,
         .vsetActive = 0x22
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3947,12 +3947,12 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3,
         .vsetActive = 0x45
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -3970,11 +3970,11 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary(void)
 
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -3995,11 +3995,11 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck3_boundary(void)
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t boundaryValues[] = {PMIC_BUCK2_3_VSET_MIN + 1, PMIC_BUCK2_3_VSET_MAX - 1};
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4020,12 +4020,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2,
         .vsetLPwr = PMIC_BUCK2_3_VSET_MIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4041,12 +4041,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2,
         .vsetLPwr = 0x45
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4062,12 +4062,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_min(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3,
         .vsetLPwr = PMIC_BUCK2_3_VSET_MIN
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4083,12 +4083,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_max(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3,
         .vsetLPwr = 0x45
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4104,12 +4104,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck2_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2,
         .vsetLPwr = 0x22
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4125,12 +4125,12 @@ void test_pos_power_buckSetGetCfg_vsetLPwr_buck3_mid(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3,
         .vsetLPwr = 0x22
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4147,12 +4147,12 @@ void test_pos_power_buckSetGetCfg_vmonOnly_buck2_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK2,
         .vmonOnly = true
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4168,12 +4168,12 @@ void test_pos_power_buckSetGetCfg_vmonOnly_buck3_enable(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK3,
         .vmonOnly = true
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_VMON_ONLY_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VMON_ONLY_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4190,12 +4190,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck1_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK1,
         .uvThr = 0
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4211,12 +4211,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck1_val1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK1,
         .uvThr = 1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4232,12 +4232,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck2_val2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK2,
         .uvThr = 2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4253,12 +4253,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck2_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK2,
         .uvThr = 3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4274,12 +4274,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck3_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK3,
         .uvThr = 0
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4295,12 +4295,12 @@ void test_pos_power_buckSetGetCfg_uvThr_buck3_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK3,
         .uvThr = 3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4317,12 +4317,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck1_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK1,
         .ovThr = 0
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4338,12 +4338,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck1_val1(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK1,
         .ovThr = 1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4359,12 +4359,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck2_val2(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2,
         .ovThr = 2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4380,12 +4380,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck2_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2,
         .ovThr = 3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4401,12 +4401,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck3_val0(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK3,
         .ovThr = 0
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4422,12 +4422,12 @@ void test_pos_power_buckSetGetCfg_ovThr_buck3_val3(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK3,
         .ovThr = 3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4444,16 +4444,16 @@ void test_pos_power_buckSetGetCfg_slewRate_buck1_allValues(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1
     };
 
     // Test all valid slew rate values for BUCK1
-    for (uint8_t slewRate = PMIC_BUCK_SLEW_RATE_10_MV_PER_US; slewRate <= PMIC_BUCK_SLEW_RATE_MAX; slewRate++)
+    for (uint8_t slewRate = PMIC_CFG_PWR_BUCK_SLEW_RATE_10_MV_PER_US; slewRate <= PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX; slewRate++)
     {
         buckCfgSet.slewRate = slewRate;
         status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
@@ -4468,13 +4468,13 @@ void test_pos_power_buckSetGetCfg_slewRate_buck1_allValues(void)
 void test_pos_power_buckSetGetCfg_slewRate_buck2_minMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
+    uint8_t slewRateValues[] = {PMIC_CFG_PWR_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX};
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK2
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4493,13 +4493,13 @@ void test_pos_power_buckSetGetCfg_slewRate_buck2_minMax(void)
 void test_pos_power_buckSetGetCfg_slewRate_buck3_minMax(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t slewRateValues[] = {PMIC_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_BUCK_SLEW_RATE_MAX};
+    uint8_t slewRateValues[] = {PMIC_CFG_PWR_BUCK_SLEW_RATE_10_MV_PER_US, PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX};
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK3
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4520,12 +4520,12 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_fast(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1,
         .highSideSlewRate = 0
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4541,12 +4541,12 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slow(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1,
         .highSideSlewRate = 1
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4562,12 +4562,12 @@ void test_pos_power_buckSetGetCfg_highSideSlewRate_buck1_slowest(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1,
         .highSideSlewRate = PMIC_HIGH_SIDE_SLEW_RATE_SLOWEST
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1
     };
 
@@ -4585,11 +4585,11 @@ void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t resources[] = {PMIC_BUCK1, PMIC_BUCK2, PMIC_BUCK3};
     Pmic_PwrBuckCfg_t buckCfgSet = {
-        .validParams = PMIC_BUCK_DEGLITCH_SEL_VALID,
-        .deglitchSel = PMIC_BUCK_DEGLITCH_SEL_10_US
+        .validParams = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID,
+        .deglitchSel = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_10_US
     };
     Pmic_PwrBuckCfg_t buckCfgGet = {
-        .validParams = PMIC_BUCK_DEGLITCH_SEL_VALID
+        .validParams = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID
     };
 
     // Test deglitch selection for all three BUCKs
@@ -4603,7 +4603,7 @@ void test_pos_power_buckSetGetCfg_deglitchSel_allBucks(void)
 
         status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-        PLATFORM_ASSERT(buckCfgGet.deglitchSel == PMIC_BUCK_DEGLITCH_SEL_10_US);
+        PLATFORM_ASSERT(buckCfgGet.deglitchSel == PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_10_US);
     }
 }
 
@@ -4615,7 +4615,7 @@ void test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle(void)
 {
     // Pass NULL pmicHandle into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK1,
         .enable = true
     };
@@ -4641,7 +4641,7 @@ void test_neg_power_pwrSetBuckCfg_invalidParam_resource(void)
 {
     // Pass invalid resource into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK_MAX + 1U,
         .enable = true
     };
@@ -4653,7 +4653,7 @@ void test_neg_power_pwrGetBuckCfg_invalidParam_resource(void)
 {
     // Pass invalid resource into Pmic_pwrGetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK_MAX + 1U
     };
     int32_t status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfg);
@@ -4687,7 +4687,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vset(void)
 {
     // Pass out of bounds vset into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_VSET_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
         .resource = PMIC_BUCK1,
         .vset = 0x0EU  // PMIC_BUCK1_VSET_MAX is 0x0D
     };
@@ -4699,7 +4699,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetActive(void)
 {
     // Pass out of bounds vsetActive into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2,
         .vsetActive = 0x46U  // PMIC_BUCK2_3_VSET_MAX is 0x45
     };
@@ -4711,7 +4711,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_vsetLPwr(void)
 {
     // Pass out of bounds vsetLPwr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_VSET_LPWR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_LPWR_VALID,
         .resource = PMIC_BUCK2,
         .vsetLPwr = 0x46U  // PMIC_BUCK2_3_VSET_MAX is 0x45
     };
@@ -4723,9 +4723,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvThr(void)
 {
     // Pass out of bounds uvThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_THR_VALID,
         .resource = PMIC_BUCK1,
-        .uvThr = PMIC_BUCK_UV_THR_MAX + 1U
+        .uvThr = PMIC_CFG_PWR_BUCK_UV_THR_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4735,9 +4735,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovThr(void)
 {
     // Pass out of bounds ovThr into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_OV_THR_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK1,
-        .ovThr = PMIC_BUCK_OV_THR_MAX + 1U
+        .ovThr = PMIC_CFG_PWR_BUCK_OV_THR_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4747,7 +4747,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck1(void)
 {
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK1
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ilimSel = PMIC_BUCK1_ILIM_MAX + 1U
     };
@@ -4759,7 +4759,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ilimSel_buck2(void)
 {
     // Pass out of bounds ilimSel into Pmic_pwrSetBuckCfg() for BUCK2
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ILIM_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ILIM_SEL_VALID,
         .resource = PMIC_BUCK2,
         .ilimSel = PMIC_BUCK2_3_ILIM_MAX + 1U
     };
@@ -4771,7 +4771,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovpSel(void)
 {
     // Pass out of bounds ovpSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_OVP_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OVP_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovpSel = PMIC_REGULATOR_FAULT_RESPONSE_MAX + 1U
     };
@@ -4783,7 +4783,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_ovSel(void)
 {
     // Pass out of bounds ovSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_OV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_OV_SEL_VALID,
         .resource = PMIC_BUCK1,
         .ovSel = PMIC_REGULATOR_FAULT_RESPONSE_MAX + 1U
     };
@@ -4795,7 +4795,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvSel(void)
 {
     // Pass out of bounds uvSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UV_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UV_SEL_VALID,
         .resource = PMIC_BUCK1,
         .uvSel = PMIC_REGULATOR_FAULT_RESPONSE_MAX + 1U
     };
@@ -4807,7 +4807,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_scSel(void)
 {
     // Pass out of bounds scSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_SC_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SC_SEL_VALID,
         .resource = PMIC_BUCK1,
         .scSel = PMIC_REGULATOR_FAULT_RESPONSE_MAX + 1U
     };
@@ -4819,9 +4819,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_rvConf(void)
 {
     // Pass out of bounds rvConf into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_RV_CONF_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_RV_CONF_VALID,
         .resource = PMIC_BUCK1,
-        .rvConf = PMIC_BUCK_RV_CONF_MAX + 1U
+        .rvConf = PMIC_CFG_PWR_BUCK_RV_CONF_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4831,9 +4831,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_slewRate(void)
 {
     // Pass out of bounds slewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1,
-        .slewRate = PMIC_BUCK_SLEW_RATE_MAX + 1U
+        .slewRate = PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4843,9 +4843,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_deglitchSel(void)
 {
     // Pass out of bounds deglitchSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_DEGLITCH_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_VALID,
         .resource = PMIC_BUCK1,
-        .deglitchSel = PMIC_BUCK_DEGLITCH_SEL_MAX + 1U
+        .deglitchSel = PMIC_CFG_PWR_BUCK_DEGLITCH_SEL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4855,9 +4855,9 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_dischargeSel(void)
 {
     // Pass out of bounds dischargeSel into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK1,
-        .dischargeSel = PMIC_BUCK_DISCHARGE_SEL_MAX + 1U
+        .dischargeSel = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_MAX + 1U
     };
     int32_t status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_PARAM);
@@ -4867,7 +4867,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloRising(void)
 {
     // Pass out of bounds uvloRising into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UVLO_RISING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID,
         .resource = PMIC_BUCK1,
         .uvloRising = 0xFU + 1U
     };
@@ -4879,7 +4879,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_uvloFalling(void)
 {
     // Pass out of bounds uvloFalling into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UVLO_FALLING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID,
         .resource = PMIC_BUCK1,
         .uvloFalling = 0xFU + 1U
     };
@@ -4891,7 +4891,7 @@ void test_neg_power_pwrSetBuckCfg_outOfBounds_highSideSlewRate(void)
 {
     // Pass out of bounds highSideSlewRate into Pmic_pwrSetBuckCfg()
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_HIGH_SIDE_SLEW_RATE_VALID,
         .resource = PMIC_BUCK1,
         .highSideSlewRate = PMIC_BUCK1_EN_HS_ON_SR_MAX + 1U
     };
@@ -4907,7 +4907,7 @@ void test_pos_power_powerGetCfg_buck2Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4919,12 +4919,12 @@ void test_pos_power_powerSetCfg_buck2Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2,
         .enable = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4940,7 +4940,7 @@ void test_pos_power_powerGetVoutCfg_buck2Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4952,12 +4952,12 @@ void test_pos_power_powerSetVoutCfg_buck2Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2,
         .vsetActive = 0x20
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK2
     };
 
@@ -4973,7 +4973,7 @@ void test_pos_power_powerGetCfg_buck3Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -4985,12 +4985,12 @@ void test_pos_power_powerSetCfg_buck3Enable(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3,
         .enable = true
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_ENABLE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -5006,7 +5006,7 @@ void test_pos_power_powerGetVoutCfg_buck3Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -5018,12 +5018,12 @@ void test_pos_power_powerSetVoutCfg_buck3Voltage(void)
 {
     int32_t status;
     Pmic_PwrBuckCfg_t setCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3,
         .vsetActive = 0x30
     };
     Pmic_PwrBuckCfg_t getCfg = {
-        .validParams = PMIC_BUCK_VSET_ACTIVE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_ACTIVE_VALID,
         .resource = PMIC_BUCK3
     };
 
@@ -5062,7 +5062,7 @@ void test_neg_power_pwr_getUvlo_invalidBuck(void)
     // Test invalid BUCK resource for UVLO (line 654)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID | PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID,
         .resource = PMIC_BUCK2  // Only BUCK1 supports UVLO
     };
 
@@ -5075,7 +5075,7 @@ void test_neg_power_pwr_setUvlo_invalidBuck(void)
     // Test invalid BUCK resource for UVLO (line 931)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_UVLO_FALLING_VALID | PMIC_CFG_PWR_BUCK_UVLO_RISING_VALID,
         .resource = PMIC_BUCK3,  // Only BUCK1 supports UVLO
         .uvloFalling = 0x5U,
         .uvloRising = 0x3U
@@ -5090,9 +5090,9 @@ void test_neg_power_pwr_setBuck_invalidDischargeSel(void)
     // Test invalid discharge selector (lines 1358-1359)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_DISCHARGE_SEL_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_VALID,
         .resource = PMIC_BUCK2,
-        .dischargeSel = PMIC_BUCK_DISCHARGE_SEL_MAX + 1U  // Out of bounds
+        .dischargeSel = PMIC_CFG_PWR_BUCK_DISCHARGE_SEL_MAX + 1U  // Out of bounds
     };
 
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);
@@ -5104,9 +5104,9 @@ void test_neg_power_pwr_setBuck_invalidSlewRate(void)
     // Test invalid slew rate (lines 1378-1379)
     int32_t status;
     Pmic_PwrBuckCfg_t buckCfg = {
-        .validParams = PMIC_BUCK_SLEW_RATE_VALID,
+        .validParams = PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID,
         .resource = PMIC_BUCK2,
-        .slewRate = PMIC_BUCK_SLEW_RATE_MAX + 1U  // Out of bounds
+        .slewRate = PMIC_CFG_PWR_BUCK_SLEW_RATE_MAX + 1U  // Out of bounds
     };
 
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfg);

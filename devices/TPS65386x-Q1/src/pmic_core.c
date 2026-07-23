@@ -113,12 +113,13 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 static int32_t CORE_calculateCrc(const Pmic_Handle_t *handle, uint16_t *crc)
 {
     int32_t status = PMIC_ST_SUCCESS;
+    uint16_t regAddr = 0U;
     uint8_t regData = 0U;
 
     *crc = CONFIG_CRC_INIT;
 
-    for (uint8_t regAddr = CONFIG_CRC_REG_LO; regAddr <= CONFIG_CRC_REG_HI; regAddr++) {
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
+    for (regAddr = CONFIG_CRC_REG_LO; regAddr <= CONFIG_CRC_REG_HI; regAddr++) {
+        status = Pmic_ioRxByte(handle, (uint8_t)regAddr, &regData);
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
@@ -675,16 +676,21 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    uint32_t validParams = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (configCrcStat->validParams == 0U)) {
+    if (status == PMIC_ST_SUCCESS) {
+        validParams = configCrcStat->validParams;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (validParams == 0U)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if (Pmic_validParamStatusCheck(configCrcStat->validParams, PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID, status)) {
         status = Pmic_ioRxByte_CS(handle, SAFETY_CTRL_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -692,7 +698,7 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
         }
     }
 
-    if (Pmic_validParamStatusCheck(configCrcStat->validParams, PMIC_CONFIG_CRC_STAT_ERROR_VALID, status)) {
+    if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_ERROR_VALID, status)) {
         status = Pmic_ioRxByte_CS(handle, REG_STAT_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -702,25 +708,31 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
 
     return Pmic_logStatus(handle, status);
 }
+
 int32_t Pmic_clrConfigCrcStatus(const Pmic_Handle_t *handle, const Pmic_ConfigCrcStat_t *configCrcStat)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
+    uint32_t validParams = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (configCrcStat->validParams == 0U)) {
+    if (status == PMIC_ST_SUCCESS) {
+        validParams = configCrcStat->validParams;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (validParams == 0U)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if (Pmic_validParamStatusCheck(configCrcStat->validParams, PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID, status)) {
         Pmic_setBitField_b(&regData, CFG_REG_CRC_CALC_DONE_SHIFT, (bool)true);
         status = Pmic_ioTxByte_CS(handle, SAFETY_CTRL_REG, regData);
     }
 
-    if (Pmic_validParamStatusCheck(configCrcStat->validParams, PMIC_CONFIG_CRC_STAT_ERROR_VALID, status)) {
+    if (Pmic_validParamStatusCheck(validParams, PMIC_CONFIG_CRC_STAT_ERROR_VALID, status)) {
         regData = 0U;
         Pmic_setBitField_b(&regData, CFG_REG_CRC_ERR_SHIFT, (bool)true);
         status = Pmic_ioTxByte_CS(handle, REG_STAT_REG, regData);

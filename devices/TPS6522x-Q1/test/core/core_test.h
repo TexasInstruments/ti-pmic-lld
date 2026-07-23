@@ -139,7 +139,7 @@ extern "C" {
     CORE_TEST_NEG_GETCONFIGCRCVAL()
 
 /* ========================================================================
-/*                      Test APIs: setScratchPadValue                       */
+ *                      Test APIs: setScratchPadValue                       */
 /* ======================================================================== */
 #define CORE_TEST_POS_CORESETSCRATCHPADVALUE() \
     PLATFORM_RUN_TEST(test_pos_core_coreSetScratchPadValue_reg1); \

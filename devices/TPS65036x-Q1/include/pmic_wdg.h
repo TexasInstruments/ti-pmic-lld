@@ -70,36 +70,35 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_WD_RST_EN_VALID                    (1UL << 0U)
-#define PMIC_WD_MODE_VALID                      (1UL << 1U)
-#define PMIC_WD_TRIG_SEL_VALID                  (1UL << 2U)
-#define PMIC_WD_FAIL_THR_VALID                  (1UL << 3U)
-#define PMIC_WD_RST_THR_VALID                   (1UL << 4U)
-#define PMIC_WD_LONG_WIN_DURATION_VALID         (1UL << 5U)
-#define PMIC_WD_WIN1_DURATION_VALID             (1UL << 6U)
-#define PMIC_WD_WIN2_DURATION_VALID             (1UL << 7U)
-#define PMIC_WD_QA_FDBK_VALID                   (1UL << 8U)
-#define PMIC_WD_QA_LFSR_VALID                   (1UL << 9U)
-#define PMIC_WD_QA_SEED_VALID                   (1UL << 10U)
-#define PMIC_WD_QA_CFG_ALL_VALID                (PMIC_WD_QA_FDBK_VALID | PMIC_WD_QA_LFSR_VALID | PMIC_WD_QA_SEED_VALID)
-#define PMIC_WD_CFG_TRIGGER_VALID_ALL           (PMIC_WD_RST_EN_VALID | \
-                                                 PMIC_WD_MODE_VALID | \
-                                                 PMIC_WD_TRIG_SEL_VALID | \
-                                                 PMIC_WD_FAIL_THR_VALID | \
-                                                 PMIC_WD_RST_THR_VALID | \
-                                                 PMIC_WD_LONG_WIN_DURATION_VALID | \
-                                                 PMIC_WD_WIN1_DURATION_VALID | \
-                                                 PMIC_WD_WIN2_DURATION_VALID)
-#define PMIC_WD_CFG_QA_VALID_ALL                (PMIC_WD_RST_EN_VALID | \
-                                                 PMIC_WD_MODE_VALID | \
-                                                 PMIC_WD_FAIL_THR_VALID | \
-                                                 PMIC_WD_RST_THR_VALID | \
-                                                 PMIC_WD_LONG_WIN_DURATION_VALID | \
-                                                 PMIC_WD_WIN1_DURATION_VALID | \
-                                                 PMIC_WD_WIN2_DURATION_VALID | \
-                                                 PMIC_WD_QA_FDBK_VALID | \
-                                                 PMIC_WD_QA_LFSR_VALID | \
-                                                 PMIC_WD_QA_SEED_VALID)
+#define PMIC_CFG_WDG_RST_EN_VALID                    (1UL << 0U)
+#define PMIC_CFG_WDG_MODE_VALID                      (1UL << 1U)
+#define PMIC_CFG_WDG_TRIG_SEL_VALID                  (1UL << 2U)
+#define PMIC_CFG_WDG_FAIL_THR_VALID                  (1UL << 3U)
+#define PMIC_CFG_WDG_RST_THR_VALID                   (1UL << 4U)
+#define PMIC_CFG_WDG_LONG_WIN_DURATION_VALID         (1UL << 5U)
+#define PMIC_CFG_WDG_WIN1_DURATION_VALID             (1UL << 6U)
+#define PMIC_CFG_WDG_WIN2_DURATION_VALID             (1UL << 7U)
+#define PMIC_CFG_WDG_QA_FDBK_VALID                   (1UL << 8U)
+#define PMIC_CFG_WDG_QA_LFSR_VALID                   (1UL << 9U)
+#define PMIC_CFG_WDG_QA_SEED_VALID                   (1UL << 10U)
+#define PMIC_CFG_WDG_TRIGGER_CFG_ALL_VALID           (PMIC_CFG_WDG_RST_EN_VALID | \
+                                                 PMIC_CFG_WDG_MODE_VALID | \
+                                                 PMIC_CFG_WDG_TRIG_SEL_VALID | \
+                                                 PMIC_CFG_WDG_FAIL_THR_VALID | \
+                                                 PMIC_CFG_WDG_RST_THR_VALID | \
+                                                 PMIC_CFG_WDG_LONG_WIN_DURATION_VALID | \
+                                                 PMIC_CFG_WDG_WIN1_DURATION_VALID | \
+                                                 PMIC_CFG_WDG_WIN2_DURATION_VALID)
+#define PMIC_CFG_WDG_QA_CFG_ALL_VALID                (PMIC_CFG_WDG_RST_EN_VALID | \
+                                                 PMIC_CFG_WDG_MODE_VALID | \
+                                                 PMIC_CFG_WDG_FAIL_THR_VALID | \
+                                                 PMIC_CFG_WDG_RST_THR_VALID | \
+                                                 PMIC_CFG_WDG_LONG_WIN_DURATION_VALID | \
+                                                 PMIC_CFG_WDG_WIN1_DURATION_VALID | \
+                                                 PMIC_CFG_WDG_WIN2_DURATION_VALID | \
+                                                 PMIC_CFG_WDG_QA_FDBK_VALID | \
+                                                 PMIC_CFG_WDG_QA_LFSR_VALID | \
+                                                 PMIC_CFG_WDG_QA_SEED_VALID)
 /** @} */
 
 /**
@@ -432,17 +431,17 @@ int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *handle, bool *wdgEnabled);
  * Architecture: PMICDRV-504, PMICDRV-506, PMICDRV-521, PMICDRV-522, PMICDRV-523, PMICDRV-538
  *
  * @details The following options are configurable via this API
- * 1. Reset enable (validParams: PMIC_WD_RST_EN_VALID)
- * 2. Mode of operation (validParams: PMIC_WD_MODE_VALID)
- * 3. Trigger select (validParams: PMIC_WD_TRIG_SEL_VALID)
- * 4. Fail threshold (validParams: PMIC_WD_FAIL_THR_VALID)
- * 5. Reset threshold (validParams: PMIC_WD_RST_THR_VALID)
- * 6. Long Window duration (validParams: PMIC_WD_LONG_WIN_DURATION_VALID)
- * 7. Window-1 duration (validParams: PMIC_WD_WIN1_DURATION_VALID)
- * 8. Window-2 duration (validParams: PMIC_WD_WIN2_DURATION_VALID)
- * 9. Q&A Feedback (validParams: PMIC_WD_QA_FDBK_VALID)
- * 10. Q&A LFSR (validParams: PMIC_WD_QA_LFSR_VALID)
- * 11. Q&A question seed (validParams: PMIC_WD_QA_SEED_VALID)
+ * 1. Reset enable (validParams: PMIC_CFG_WDG_RST_EN_VALID)
+ * 2. Mode of operation (validParams: PMIC_CFG_WDG_MODE_VALID)
+ * 3. Trigger select (validParams: PMIC_CFG_WDG_TRIG_SEL_VALID)
+ * 4. Fail threshold (validParams: PMIC_CFG_WDG_FAIL_THR_VALID)
+ * 5. Reset threshold (validParams: PMIC_CFG_WDG_RST_THR_VALID)
+ * 6. Long Window duration (validParams: PMIC_CFG_WDG_LONG_WIN_DURATION_VALID)
+ * 7. Window-1 duration (validParams: PMIC_CFG_WDG_WIN1_DURATION_VALID)
+ * 8. Window-2 duration (validParams: PMIC_CFG_WDG_WIN2_DURATION_VALID)
+ * 9. Q&A Feedback (validParams: PMIC_CFG_WDG_QA_FDBK_VALID)
+ * 10. Q&A LFSR (validParams: PMIC_CFG_WDG_QA_LFSR_VALID)
+ * 11. Q&A question seed (validParams: PMIC_CFG_WDG_QA_SEED_VALID)
  * For more information on watchdog configurations, refer to @ref Pmic_WdgCfg.
  *
  * @attention Watchdog must be in Long Window and enabled before configuration.

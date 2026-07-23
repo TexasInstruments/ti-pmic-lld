@@ -115,7 +115,7 @@ $(TARGET): check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Compiling Unity framework (relaxed warnings)..."
 	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources..."
-	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
 	@echo "Build complete: $@"
 else ifeq ($(BUILD), host)
 $(TARGET): $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
@@ -229,12 +229,20 @@ endif
 	@$(PMIC_COVERAGE) generate test_runner test_runner.profdata $(PMIC_SOURCES)
 
 # Clean build artifacts
+ifeq ($(OS),Windows_NT)
+clean:
+	@echo "Cleaning build artifacts..."
+	-@del /f /q test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o *.profraw *.profdata *.gcov 2>nul
+	-@if exist coverage rmdir /s /q coverage
+	@echo "Clean complete"
+else
 clean:
 	@echo "Cleaning build artifacts..."
 	@rm -f test_runner test_runner.exe test_hardware.elf test_hardware.bin test_hardware_demo *.o unity.o startup.o
 	@rm -f *.profraw *.profdata *.gcov
 	@rm -rf coverage
 	@echo "Clean complete"
+endif
 
 # Convenience targets for test filtering
 # These targets provide shortcuts for common filtering scenarios
