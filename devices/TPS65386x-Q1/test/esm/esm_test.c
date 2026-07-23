@@ -928,11 +928,6 @@ void esm_test(void *args)
     int32_t status;
     (void)args;  /* Unused parameter */
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 ESM Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Initialize once for all ESM tests */
     platform_init();
     testTimer_startModule("ESM");
@@ -954,7 +949,4 @@ void esm_test(void *args)
     helper_deinitPmic(&g_handle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    ESM Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }

@@ -1788,11 +1788,6 @@ void common_test(void *args)
     platform_init();
     testTimer_startModule("Common");
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 Common Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     status = Pmic_init(&g_pmicHandle, &pmicCfg);
     if (status != PMIC_ST_SUCCESS)
     {
@@ -1807,7 +1802,4 @@ void common_test(void *args)
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    Common Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }

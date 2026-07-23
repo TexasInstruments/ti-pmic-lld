@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 
-#include "../platform.h"
+#include "platform.h"
 #include "io_test.h"
 #include "pmic_io.h"
 #include "regmap/core.h"
@@ -898,6 +898,7 @@ void test_pos_io_ioTxByte_i2cWriteWithCrc(void)
  */
 void test_pos_io_ioTxByte_asyncWriteSpi(void)
 {
+#ifdef BUILD_MOCK
     uint8_t txData = 0xCDU;
     int32_t status;
     Pmic_Handle_t asyncHandle = {0};
@@ -958,6 +959,9 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 /**
@@ -967,6 +971,7 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
  */
 void test_pos_io_ioTxByte_asyncWriteI2c(void)
 {
+#ifdef BUILD_MOCK
     uint8_t txData = 0xABU;
     int32_t status;
     Pmic_Handle_t asyncHandle = {0};
@@ -1027,6 +1032,9 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 /**
@@ -1036,6 +1044,7 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
  */
 void test_pos_io_ioRxByte_asyncReadSpi(void)
 {
+#ifdef BUILD_MOCK
     uint8_t rxData = 0U;
     int32_t status;
     Pmic_Handle_t asyncHandle = {0};
@@ -1095,6 +1104,9 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 /**
@@ -1104,6 +1116,7 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
  */
 void test_pos_io_ioRxByte_asyncReadI2c(void)
 {
+#ifdef BUILD_MOCK
     uint8_t rxData = 0U;
     int32_t status;
     Pmic_Handle_t asyncHandle = {0};
@@ -1163,6 +1176,9 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     Pmic_deinit(&asyncHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 /**

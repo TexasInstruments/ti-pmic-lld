@@ -78,20 +78,12 @@ void pmic_test(void *args)
     platform_init();
     testTimer_startModule("PMIC");
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 PMIC Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Run all PMIC tests */
     PMIC_TEST_RUN_ALL();
 
     testTimer_endModule();
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    PMIC Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }
 
 /**

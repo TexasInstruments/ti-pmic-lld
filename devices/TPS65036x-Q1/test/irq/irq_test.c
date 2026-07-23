@@ -38,10 +38,6 @@
 
 #include "irq_test.h"
 
-static void testTimerWaitWrapper(uint32_t ms)
-{
-    platform_timerWaitMs((uint16_t)ms);
-}
 #ifdef BUILD_MOCK
 #include "test_inject.h"
 
@@ -93,7 +89,7 @@ void irq_test(void *args)
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse,
-        .timerWaitMs = &testTimerWaitWrapper
+        .timerWaitMs = &testUtils_timerWaitMs
     };
 
     testTimer_startModule("IRQ");
@@ -1229,6 +1225,7 @@ void test_neg_irq_irqGetMask_numMasks_exceeds_max(void)
 
 void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1249,10 +1246,14 @@ void test_pos_irq_irqGetStatus_trigger_L1_BUCK_LDO(void)
     // Get IRQ status - should trigger IRQ_readL1IntBuckLdo
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1278,10 +1279,14 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK1_2(void)
     // Get IRQ status - should trigger IRQ_readL2IntBuck1_2
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1307,10 +1312,14 @@ void test_pos_irq_irqGetStatus_trigger_L2_BUCK3_LDO(void)
     // Get IRQ status - should trigger IRQ_readL2IntBuck3Ldo
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1331,10 +1340,14 @@ void test_pos_irq_irqGetStatus_trigger_L1_MISC(void)
     // Get IRQ status - should trigger IRQ_readL1IntMisc
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1355,10 +1368,14 @@ void test_pos_irq_irqGetStatus_trigger_L1_MODERATE_ERR(void)
     // Get IRQ status - should trigger IRQ_readL1IntModerateErr
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1379,10 +1396,14 @@ void test_pos_irq_irqGetStatus_trigger_L1_SEVERE_ERR(void)
     // Get IRQ status - should trigger IRQ_readL1IntSevereErr
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1403,10 +1424,14 @@ void test_pos_irq_irqGetStatus_trigger_L1_FSM_ERR(void)
     // Get IRQ status - should trigger IRQ_readL1IntFsmErr
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1432,10 +1457,14 @@ void test_pos_irq_irqGetStatus_trigger_L2_WD_ERR_STATUS(void)
     // Get IRQ status - should trigger IRQ_readL2WdErrStatus
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1461,10 +1490,14 @@ void test_pos_irq_irqGetStatus_trigger_L2_COMM_ERR(void)
     // Get IRQ status - should trigger IRQ_readL2IntCommErr
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
@@ -1490,10 +1523,14 @@ void test_pos_irq_irqGetStatus_trigger_L2_ESM(void)
     // Get IRQ status - should trigger IRQ_readL2IntEsm
     status = Pmic_irqGetStatus(&pmicHandle, &irqStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1539,10 +1576,14 @@ void test_pos_irq_irqGetStatus_full_hierarchy_cascade(void)
     }
 
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }
 
 void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
 {
+#ifdef BUILD_MOCK
     Pmic_IrqStatus_t irqStat = {0U};
     uint8_t irqNum = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -1585,4 +1626,7 @@ void test_pos_irq_irqGetStatus_all_L2_interrupts(void)
 
     PLATFORM_ASSERT(status == PMIC_ST_WARN_NO_IRQ_REMAINING);
     PLATFORM_ASSERT(count > 0U);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for interrupt injection");
+#endif
 }

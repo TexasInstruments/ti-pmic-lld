@@ -651,16 +651,12 @@ void core_test(void *args)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
                         PMIC_IO_READ_VALID |
                         PMIC_IO_WRITE_VALID |
                         PMIC_CRITICAL_SECTION_START_VALID |
                         PMIC_CRITICAL_SECTION_STOP_VALID),
         .commMode = PMIC_INTF_SPI,
-        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
-        .i2cAddr1 = 0,
-        .i2cAddr2 = 0,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
@@ -670,10 +666,6 @@ void core_test(void *args)
 
     platform_init();
     testTimer_startModule("Core");
-
-    platform_printString("\r\n");
-    platform_printString("CORE_TEST\r\n");
-    platform_printString("-------\r\n\r\n");
 
     status = Pmic_init(&pmicHandle, &pmicCfg);
 

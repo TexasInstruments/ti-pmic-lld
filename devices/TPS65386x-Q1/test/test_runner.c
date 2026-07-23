@@ -35,6 +35,8 @@
 #include "unity.h"
 #include "platform.h"
 #include "test_utils.h"
+#include "debug.h"
+#include "test_filter.h"
 #ifdef BUILD_MOCK
 #include "pmic_mock_types.h"
 #include "pmic_mock_core.h"
@@ -91,11 +93,53 @@ extern void pmic_test(void *args);
 extern void power_test(void *args);
 extern void timer_test(void *args);
 
+/* ========================================================================= */
+/*                         Test Module Registry                              */
+/* ========================================================================= */
+
+typedef void (*TestModuleFunc_t)(void *args);
+
+typedef struct {
+    const char *name;
+    const char *displayName;
+    TestModuleFunc_t func;
+} TestModuleEntry_t;
+
+static const TestModuleEntry_t g_testModules[] = {
+    {"common", "Common",    common_test},
+    {"pmic",   "PMIC Init", pmic_test},
+    {"core",   "Core",      core_test},
+    {"io",     "I/O",       io_test},
+    {"fsm",    "FSM",       fsm_test},
+    {"wdg",    "WDG",       wdg_test},
+    {"esm",    "ESM",       esm_test},
+    {"irq",    "IRQ",       irq_test},
+    {"power",  "POWER",     power_test},
+    {"gpio",   "GPIO",      gpio_test},
+    {"timer",  "TIMER",     timer_test},
+};
+
+#define NUM_TEST_MODULES (sizeof(g_testModules) / sizeof(g_testModules[0]))
+
+static void runAllTests(void)
+{
+    testFilter_printConfig();
+    for (uint32_t i = 0; i < NUM_TEST_MODULES; i++) {
+        const TestModuleEntry_t *module = &g_testModules[i];
+        if (testFilter_shouldRunModule(module->name)) {
+            module->func(NULL);
+        }
+    }
+}
+
 /**
  * @brief Main test runner entry point
  */
 int main(void)
 {
+    debug_init();
+    testFilter_init();
+
     printf("======================================\n");
     printf("TPS65386x-Q1 PMIC Unity Test Suite\n");
 #ifdef BUILD_MOCK
@@ -105,43 +149,16 @@ int main(void)
 #endif
     printf("======================================\n\n");
 
-    /* Initialize Unity test framework */
+    testTimer_init();
+    testTimer_startSuite();
+
     UNITY_BEGIN();
 
-    /* Run all test suites - each calls its own setup/teardown */
-    printf("\n=== Running Common Tests ===\n");
-    common_test(NULL);
+    platform_runTestLoop(&runAllTests);
 
-    printf("\n=== Running Core Tests ===\n");
-    core_test(NULL);
+    int result = UNITY_END();
 
-    printf("\n=== Running WDG Tests ===\n");
-    wdg_test(NULL);
+    testTimer_endSuite();
 
-    printf("\n=== Running PMIC Tests ===\n");
-    pmic_test(NULL);
-
-    printf("\n=== Running GPIO Tests ===\n");
-    gpio_test(NULL);
-
-    printf("\n=== Running IO Tests ===\n");
-    io_test(NULL);
-
-    printf("\n=== Running IRQ Tests ===\n");
-    irq_test(NULL);
-
-    printf("\n=== Running Power Tests ===\n");
-    power_test(NULL);
-
-    printf("\n=== Running ESM Tests ===\n");
-    esm_test(NULL);
-
-    printf("\n=== Running FSM Tests ===\n");
-    fsm_test(NULL);
-
-    printf("\n=== Running Timer Tests ===\n");
-    timer_test(NULL);
-
-    /* Finalize Unity and get results */
-    return UNITY_END();
+    return result;
 }

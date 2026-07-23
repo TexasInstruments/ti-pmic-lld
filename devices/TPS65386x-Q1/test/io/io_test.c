@@ -39,7 +39,9 @@
 #include "io_test.h"
 #include "test_constants.h"
 #include "regmap/core.h"
+#ifdef BUILD_MOCK
 #include "pmic_mock_core.h"
+#endif
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -263,11 +265,6 @@ void io_test(void *args)
     platform_init();
     testTimer_startModule("I/O");
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 I/O Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Initialize PMIC */
     status = Pmic_init(&g_pmicHandle, &pmicCfg);
     if (status != PMIC_ST_SUCCESS)
@@ -285,9 +282,6 @@ void io_test(void *args)
     (void)Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    I/O Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }
 
 /* ========================================================================== */
@@ -785,6 +779,7 @@ void test_pos_io_read_with_crc_validation(void)
 
 void test_neg_io_ioRxByte_crcError(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint8_t readData = 0U;
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
@@ -820,6 +815,9 @@ void test_neg_io_ioRxByte_crcError(void)
 
     /* Cleanup */
     PmicMock_ClearErrors(mockDevice);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for CRC error injection");
+#endif
 }
 
 void test_pos_io_write_with_crc_calculation(void)

@@ -781,21 +781,32 @@ int32_t platform_serial_read(uint8_t regAddr, uint8_t *buffer, uint8_t bufLen, u
     char *results;
     char *token;
     uint8_t idx;
+    int n;
+    uint8_t i;
 
     if (buffer == NULL || bufLen == 0) {
         return -1;
     }
 
-    /* Build SPI read command
-     * Format: spi 0 2000 0 <reg_addr> <read_len> 0
-     * - host=0 (SSI2)
-     * - speed=2000 kHz (2MHz)
-     * - cs=0 (active low)
-     * - First data byte is register address (write)
-     * - read_len=bufLen (number of bytes to read)
-     * - access=0 (STARTSTOP - complete transaction)
+    /* Build SPI read command: address byte + bufLen dummy 0x00 bytes.
+     * The firmware clocks writeDataSize bytes (full-duplex), so we must
+     * send N+1 bytes to receive N data bytes back. readDataSize = bufLen+1
+     * causes the firmware to report all received bytes in RESULTS.
      */
-    snprintf(cmd, sizeof(cmd), "spi 0 %u 0 0x%02X %d 0", speed_khz, regAddr, bufLen);
+    n = snprintf(cmd, sizeof(cmd), "spi 0 %u 0 0x%02X", speed_khz, regAddr);
+    if (n < 0 || n >= (int)sizeof(cmd)) {
+        return -1;
+    }
+    for (i = 0; i < bufLen; i++) {
+        n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " 0x00");
+        if (n >= (int)sizeof(cmd)) {
+            return -1;
+        }
+    }
+    n += snprintf(&cmd[n], sizeof(cmd) - (size_t)n, " %d 0", bufLen + 1);
+    if (n >= (int)sizeof(cmd)) {
+        return -1;
+    }
 
     /* Send command */
     status = serial_send_command(cmd);

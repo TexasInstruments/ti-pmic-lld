@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 
-#include "../platform.h"
+#include "platform.h"
 #include "wdg_test.h"
 
 /*                            Global Variables                                */

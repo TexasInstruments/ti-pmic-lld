@@ -152,8 +152,6 @@ static const TestModuleEntry_t g_testModules[] = {
  */
 static void runAllTests(void)
 {
-    printf("Starting tests\n");
-
     /* Print active filter configuration */
     testFilter_printConfig();
 
@@ -166,8 +164,6 @@ static void runAllTests(void)
             module->func(NULL);
         }
     }
-
-    printf("All tests completed\n");
 }
 
 /**

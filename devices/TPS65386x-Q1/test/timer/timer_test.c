@@ -1016,10 +1016,6 @@ void timer_test(void *args)
     platform_init();
     testTimer_startModule("Timer");
 
-    platform_printString("\r\n");
-    platform_printString("TIMER_TEST\r\n");
-    platform_printString("----------\r\n\r\n");
-
     status = Pmic_init(&pmicHandle, &pmicCfg);
 
     if (status == PMIC_ST_SUCCESS)

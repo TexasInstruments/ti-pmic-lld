@@ -40,6 +40,7 @@
 /* ========================================================================== */
 
 #include "platform.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {

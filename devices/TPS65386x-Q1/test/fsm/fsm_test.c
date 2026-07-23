@@ -1563,11 +1563,6 @@ void fsm_test(void *args)
     int32_t status;
     (void)args;  /* Unused parameter */
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 FSM Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Initialize once for all FSM tests */
     platform_init();
     testTimer_startModule("FSM");
@@ -1589,9 +1584,6 @@ void fsm_test(void *args)
     helper_deinitPmic(&g_handle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    FSM Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }
 
 /* ========================================================================== */
@@ -1638,7 +1630,7 @@ void test_pos_fsm_fsmGetDevState_initStateMapping(void)
 
     helper_deinitPmic(&g_handle);
 #else
-    TEST_ASSERT_TRUE(true);  // Skip if not BUILD_MOCK
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1666,7 +1658,7 @@ void test_pos_fsm_fsmGetDevState_offStateRepeated(void)
 
     helper_deinitPmic(&g_handle);
 #else
-    TEST_ASSERT_TRUE(true);  // Skip if not BUILD_MOCK
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 

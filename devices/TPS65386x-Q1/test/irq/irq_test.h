@@ -39,7 +39,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "../platform.h"
+#include "platform.h"
 #include "pmic_irq.h"
 
 #ifdef __cplusplus

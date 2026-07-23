@@ -58,13 +58,6 @@ static void pmicTest_nullParamPmicInit(const char *param);
 
 static Pmic_Handle_t pmicHandle = {0U};
 
-/* Wrapper for platform timer wait to match PMIC API signature */
-static void testTimerWaitWrapper(uint32_t ms)
-{
-    /* Platform function takes uint16_t, truncate if needed */
-    platform_timerWaitMs((uint16_t)ms);
-}
-
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
@@ -105,7 +98,7 @@ static void pmicTest_initPmicCfg(Pmic_HandleCfg_t *pmicCfg)
     pmicCfg->criticalSectionStart = &platform_critSecStart;
     pmicCfg->criticalSectionStop = &platform_critSecStop;
     pmicCfg->irqResponseCallback = &platform_irqResponse;
-    pmicCfg->timerWaitMs = &testTimerWaitWrapper;
+    pmicCfg->timerWaitMs = &testUtils_timerWaitMs;
 }
 
 void test_neg_pmic_init_nullHandle(void)
@@ -255,7 +248,7 @@ void test_pos_pmic_init_withRetryInterval(void)
     // Note: When retryIntervalMs is non-zero, timerWaitMs must also be provided
     pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 100U;
-    pmicCfg.timerWaitMs = &testTimerWaitWrapper;
+    pmicCfg.timerWaitMs = &testUtils_timerWaitMs;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -278,13 +271,13 @@ void test_pos_pmic_init_withTimerWaitMs(void)
 
     // Add timer wait callback configuration
     pmicCfg.validParams |= PMIC_TIMER_WAIT_MS_VALID;
-    pmicCfg.timerWaitMs = &testTimerWaitWrapper;
+    pmicCfg.timerWaitMs = &testUtils_timerWaitMs;
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     // Verify timer wait callback is set in handle
-    PLATFORM_ASSERT(handle.timerWaitMs == &testTimerWaitWrapper);
+    PLATFORM_ASSERT(handle.timerWaitMs == &testUtils_timerWaitMs);
 
     // Clean up
     status = Pmic_deinit(&handle);
@@ -385,7 +378,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     // Initialize with VALID configuration including timer
     pmicCfg.validParams |= PMIC_RETRY_INTERVAL_MS_VALID | PMIC_TIMER_WAIT_MS_VALID;
     pmicCfg.retryIntervalMs = 10U;  // Non-zero retry interval
-    pmicCfg.timerWaitMs = &testTimerWaitWrapper;  // Provide timer during init
+    pmicCfg.timerWaitMs = &testUtils_timerWaitMs;  // Provide timer during init
 
     int32_t status = Pmic_init(&handle, &pmicCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
@@ -400,7 +393,7 @@ void test_neg_pmic_checkHandle_nullTimerWithRetry(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
 
     // Restore handle for deinit
-    handle.timerWaitMs = &testTimerWaitWrapper;
+    handle.timerWaitMs = &testUtils_timerWaitMs;
     status = Pmic_deinit(&handle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }

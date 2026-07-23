@@ -39,7 +39,9 @@
 
 #include "gpio_test.h"
 #include "test_constants.h"
+#ifdef BUILD_MOCK
 #include "pmic_mock_core.h"
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -417,6 +419,7 @@ void test_pos_gpio_gpioGetOutputValue_allGpos(void)
  */
 void test_pos_gpio_gpioGpo1Hiz_duplicate(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_GpioCfg_t getCfg;
     PmicMockDevice_t* mockDevice = platform_getMockDevice();
@@ -440,6 +443,9 @@ void test_pos_gpio_gpioGpo1Hiz_duplicate(void)
 
     /* Verify that GPO1 was converted from 6 to 2 (PMIC_GPO1_HIZ) */
     PLATFORM_ASSERT(getCfg.gpo1 == PMIC_GPO1_HIZ);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /* ========================================================================== */
@@ -740,11 +746,6 @@ void gpio_test(void *args)
     int32_t status;
     (void)args;  /* Unused parameter */
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 GPIO Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Initialize once for all GPIO tests */
     platform_init();
     testTimer_startModule("GPIO");
@@ -766,7 +767,4 @@ void gpio_test(void *args)
     Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    GPIO Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }

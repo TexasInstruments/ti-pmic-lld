@@ -1335,11 +1335,6 @@ void irq_test(void *args)
     int32_t status;
     (void)args;  /* Unused parameter */
 
-    printf("\r\n");
-    printf("==================================================\r\n");
-    printf("    TPS65386x-Q1 IRQ Module Tests\r\n");
-    printf("==================================================\r\n\r\n");
-
     /* Initialize once for all IRQ tests */
     platform_init();
     testTimer_startModule("IRQ");
@@ -1361,7 +1356,4 @@ void irq_test(void *args)
     Pmic_deinit(&g_pmicHandle);
     platform_deinit();
 
-    printf("\r\n==================================================\r\n");
-    printf("    IRQ Module Tests Complete\r\n");
-    printf("==================================================\r\n\r\n");
 }

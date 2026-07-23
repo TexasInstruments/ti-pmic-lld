@@ -36,7 +36,7 @@
 /*                              Include Files                                */
 /* ========================================================================= */
 
-#include "../platform.h"
+#include "platform.h"
 #include "pmic.h"
 #include "pmic_adc.h"
 #include "test_constants.h"
@@ -660,8 +660,11 @@ static uint8_t getRandomSrcSel(void)
     return (uint8_t)(rand() % (PMIC_ADC_SRC_SEL_MAX + 1));
 }
 
+#endif /* BUILD_MOCK */
+
 void test_pos_adc_property_randomChannelConfigurations(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_AdcCfg_t setCfg, getCfg;
     uint16_t iteration;
@@ -694,6 +697,7 @@ void test_pos_adc_property_randomChannelConfigurations(void)
         PLATFORM_ASSERT(getCfg.contConvEn == setCfg.contConvEn);
         PLATFORM_ASSERT(getCfg.srcSel == setCfg.srcSel);
     }
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for property-based testing");
+#endif
 }
-
-#endif /* BUILD_MOCK */

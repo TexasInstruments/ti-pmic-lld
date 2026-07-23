@@ -41,11 +41,6 @@
 
 #include "esm_test.h"
 
-static void testTimerWaitWrapper(uint32_t ms)
-{
-    platform_timerWaitMs((uint16_t)ms);
-}
-
 /* ========================================================================== */
 /*                             Global Variables                               */
 /* ========================================================================== */
@@ -79,7 +74,7 @@ void esm_test(void *args)
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse,
-        .timerWaitMs = &testTimerWaitWrapper
+        .timerWaitMs = &testUtils_timerWaitMs
     };
 
     testTimer_startModule("ESM");

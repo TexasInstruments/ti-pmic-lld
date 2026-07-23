@@ -623,8 +623,7 @@ void test_pos_wdg_wdgGetErrStatus_afterAnswerError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -653,8 +652,7 @@ void test_pos_wdg_wdgGetErrStatus_timeout(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.timeout == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -696,8 +694,7 @@ void test_pos_wdg_wdgGetErrStatus_answerEarlyError(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerEarlyError == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -719,8 +716,7 @@ void test_pos_wdg_wdgGetErrStatus_sequenceErr(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -742,8 +738,7 @@ void test_pos_wdg_wdgGetErrStatus_answerErr(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -765,8 +760,7 @@ void test_pos_wdg_wdgGetErrStatus_triggerEarly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.triggerEarlyError == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -788,8 +782,7 @@ void test_pos_wdg_wdgGetErrStatus_th1Int(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold1Error == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -811,8 +804,7 @@ void test_pos_wdg_wdgGetErrStatus_th2Int(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold2Error == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -851,8 +843,7 @@ void test_pos_wdg_wdgGetErrStatus_allFlags(void)
     PLATFORM_ASSERT(errors.threshold1Error == true);
     PLATFORM_ASSERT(errors.threshold2Error == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -865,6 +856,7 @@ void test_pos_wdg_wdgGetErrStatus_allFlags(void)
  */
 void test_pos_wdg_wdgClrErrStatus_timeout(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -883,6 +875,9 @@ void test_pos_wdg_wdgClrErrStatus_timeout(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.timeout == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -890,6 +885,7 @@ void test_pos_wdg_wdgClrErrStatus_timeout(void)
  */
 void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -908,6 +904,9 @@ void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.longWindowTimeout == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -915,6 +914,7 @@ void test_pos_wdg_wdgClrErrStatus_longWindowTimeout(void)
  */
 void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -933,6 +933,9 @@ void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerEarlyError == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -940,6 +943,7 @@ void test_pos_wdg_wdgClrErrStatus_answerEarlyError(void)
  */
 void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -958,6 +962,9 @@ void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -965,6 +972,7 @@ void test_pos_wdg_wdgClrErrStatus_sequenceErr(void)
  */
 void test_pos_wdg_wdgClrErrStatus_answerErr(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -983,6 +991,9 @@ void test_pos_wdg_wdgClrErrStatus_answerErr(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.answerError == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -990,6 +1001,7 @@ void test_pos_wdg_wdgClrErrStatus_answerErr(void)
  */
 void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -1008,6 +1020,9 @@ void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.triggerEarlyError == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -1015,6 +1030,7 @@ void test_pos_wdg_wdgClrErrStatus_triggerEarly(void)
  */
 void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -1033,6 +1049,9 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold1Error == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -1040,6 +1059,7 @@ void test_pos_wdg_wdgClrErrStatus_th1ErrorOnly(void)
  */
 void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -1058,6 +1078,9 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
     status = Pmic_wdgGetErrStatus(&pmicHandle, &errors);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.threshold2Error == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -1065,6 +1088,7 @@ void test_pos_wdg_wdgClrErrStatus_th2ErrorOnly(void)
  */
 void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     Pmic_WdgErrStatus_t errors = {0};
 
@@ -1087,6 +1111,9 @@ void test_pos_wdg_wdgClrErrStatus_seqErrorOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(errors.sequenceError == false);
     PLATFORM_ASSERT(errors.answerError == true);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
+#endif
 }
 
 /**
@@ -1105,8 +1132,7 @@ void test_pos_wdg_wdgClrErrStatusAll_whenNoErrors(void)
     status = Pmic_wdgClrErrStatusAll(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1132,8 +1158,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badEvent(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(failCount.badEvent == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1155,8 +1180,7 @@ void test_pos_wdg_wdgGetFailCntStatus_goodEvent(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(failCount.goodEvent == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1178,8 +1202,7 @@ void test_pos_wdg_wdgGetFailCntStatus_wdFailCnt(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(failCount.wdFailCnt == 5U);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1209,8 +1232,7 @@ void test_pos_wdg_wdgGetFailCntStatus_allFields(void)
     PLATFORM_ASSERT(failCount.goodEvent == true);
     PLATFORM_ASSERT(failCount.longWinActive == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1234,8 +1256,7 @@ void test_pos_wdg_wdgGetFailCntStatus_failCntOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(failCount.wdFailCnt == 6U);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1259,8 +1280,7 @@ void test_pos_wdg_wdgGetFailCntStatus_badCntOnly(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(failCount.badEvent == true);
 #else
-    /* Test requires mock support for register injection */
-    PLATFORM_ASSERT(true);
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 #endif
 }
 
@@ -1885,16 +1905,12 @@ void wdg_test(void *args)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_HandleCfg_t pmicCfg = {
         .validParams = (PMIC_COMM_MODE_VALID |
-                        PMIC_I2C_ADDR0_VALID |
                         PMIC_COMM_HANDLE_0_VALID |
                         PMIC_IO_READ_VALID |
                         PMIC_IO_WRITE_VALID |
                         PMIC_CRITICAL_SECTION_START_VALID |
                         PMIC_CRITICAL_SECTION_STOP_VALID),
         .commMode = PMIC_INTF_SPI,
-        .i2cAddr0 = PLATFORM_TARGET_I2C_ADDR,
-        .i2cAddr1 = 0,
-        .i2cAddr2 = 0,
         .commHandle0 = platform_getCommHandle(),
         .ioRead = &platform_rxByte,
         .ioWrite = &platform_txByte,
@@ -1904,10 +1920,6 @@ void wdg_test(void *args)
 
     platform_init();
     testTimer_startModule("WDG");
-
-    platform_printString("\r\n");
-    platform_printString("WDG_TEST\r\n");
-    platform_printString("-------\r\n\r\n");
 
     status = Pmic_init(&pmicHandle, &pmicCfg);
 

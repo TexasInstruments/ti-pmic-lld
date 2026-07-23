@@ -2285,7 +2285,7 @@ void test_pos_power_pwr_getPldoMode_disabledFallback(void)
 #else
 void test_pos_power_pwr_getPldoMode_disabledFallback(void)
 {
-    TEST_ASSERT_TRUE(true);  // Skip if not BUILD_MOCK
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for register injection");
 }
 #endif
 

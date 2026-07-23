@@ -717,6 +717,7 @@ void test_pos_pmic_pmicCheckHandle_all_validations(void)
 
 void test_pos_pmic_pmicInit_async_mode(void)
 {
+#ifdef BUILD_MOCK
     // Initialize with async mode enabled
     // Note: Even in async mode, synchronous I/O is needed for initialization (getPmicInfo)
     Pmic_HandleCfg_t handleCfg = {0};
@@ -766,6 +767,9 @@ void test_pos_pmic_pmicInit_async_mode(void)
 
     // Clean up
     Pmic_deinit(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for async I/O testing");
+#endif
 }
 
 void test_pos_pmic_pmicInit_with_i2c_addresses(void)

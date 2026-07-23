@@ -328,14 +328,14 @@ void platform_runTestLoop(void (*testCallback)(void));
     #undef PLATFORM_RUN_TEST
     #endif
     #include "platform_mock.h"
-
-    /* Async test helper functions (TPS6522x-specific) */
-    extern int32_t test_pmic_asyncRxStart(const Pmic_Handle_t *handle, uint8_t page,
-                                          uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_asyncTxStart(const Pmic_Handle_t *handle, uint8_t page,
-                                          uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
-    extern int32_t test_pmic_asyncRxAwait(const Pmic_Handle_t *handle);
-    extern int32_t test_pmic_asyncTxAwait(const Pmic_Handle_t *handle);
 #endif
+
+/* Async test helper functions (TPS6522x-specific) */
+extern int32_t test_pmic_asyncRxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                      uint8_t regAddr, uint8_t *buffer, uint8_t bufLen);
+extern int32_t test_pmic_asyncTxStart(const Pmic_Handle_t *handle, uint8_t page,
+                                      uint8_t regAddr, const uint8_t *buffer, uint8_t bufLen);
+extern int32_t test_pmic_asyncRxAwait(const Pmic_Handle_t *handle);
+extern int32_t test_pmic_asyncTxAwait(const Pmic_Handle_t *handle);
 
 #endif /* PMIC_TEST_PLATFORM_H */

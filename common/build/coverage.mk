@@ -4,17 +4,9 @@
 # Coverage flags
 COV_FLAGS = -fprofile-instr-generate -fcoverage-mapping -fcoverage-mcdc
 
-# Coverage tools (OS-aware)
-ifeq ($(OS),Windows_NT)
-    LLVM_PROFDATA = llvm-profdata
-    LLVM_COV = llvm-cov
-else ifeq ($(shell uname -s),Darwin)
-    LLVM_PROFDATA = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-profdata
-    LLVM_COV = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov
-else
-    LLVM_PROFDATA = llvm-profdata
-    LLVM_COV = llvm-cov
-endif
+# Coverage tools - can be overridden via environment variables
+LLVM_PROFDATA ?= llvm-profdata
+LLVM_COV ?= llvm-cov
 
 # Coverage tools from pmic-lld-utils (inherit from root or detect)
 ifndef PMIC_COVERAGE

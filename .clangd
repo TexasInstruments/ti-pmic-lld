@@ -68,6 +68,10 @@ CompileFlags:
     # ============================================================================
     - "-std=c99"
 
+    # Force C language mode (prevent Objective-C++ auto-detection on macOS)
+    - "-x"
+    - "c"
+
   # Remove flags that confuse the language server
   Remove:
     - "-Werror"                 # Don't treat warnings as errors in editor

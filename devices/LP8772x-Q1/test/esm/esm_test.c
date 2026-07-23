@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 
-#include "../platform.h"
+#include "platform.h"
 #include "esm_test.h"
 #include "test_constants.h"
 

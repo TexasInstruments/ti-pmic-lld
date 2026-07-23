@@ -39,7 +39,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "../platform.h"
+#include "platform.h"
 
 #ifdef __cplusplus
 extern "C" {

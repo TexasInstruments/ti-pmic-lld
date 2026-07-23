@@ -46,7 +46,7 @@
 /* ========================================================================== */
 #include "platform.h"
 #include "debug.h"
-#include <stdbool.h> /* For bool type */
+#include <stdbool.h>
 
 #ifdef BUILD_HOST
 #include "platform_serial.h"

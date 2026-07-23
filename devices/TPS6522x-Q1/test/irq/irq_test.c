@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 
-#include "../platform.h"
+#include "platform.h"
 #include "irq_test.h"
 #include "pmic.h"
 #ifdef BUILD_MOCK

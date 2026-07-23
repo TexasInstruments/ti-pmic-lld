@@ -43,6 +43,7 @@
 #include "pmic_common.h"
 #include "unity.h"
 #include "platform.h"
+#include "test_utils.h"
 
 #ifdef __cplusplus
 extern "C" {

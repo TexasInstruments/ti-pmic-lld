@@ -37,7 +37,7 @@
 /*                              Include Files                                 */
 /* ========================================================================== */
 
-#include "../platform.h"
+#include "platform.h"
 #include "gpio_test.h"
 #include "pmic_gpio.h"
 #include "test_constants.h"
@@ -914,10 +914,10 @@ void test_pos_gpio_gpioSetValue_validPin(void)
 /*                          Property Test Functions                           */
 /* ========================================================================== */
 
-#ifdef BUILD_MOCK
 /* Property test: GPIO pin configuration combinations (500 iterations) */
 void test_pos_gpio_property_pinConfigurations(void)
 {
+#ifdef BUILD_MOCK
     const uint32_t iterations = 500U;
     uint32_t successCount = 0U;
 
@@ -982,8 +982,10 @@ void test_pos_gpio_property_pinConfigurations(void)
 
     // In property testing, we expect high success rate
     TEST_ASSERT_GREATER_THAN(iterations * 90 / 100, successCount);
-}
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for property-based testing");
 #endif
+}
 
 /**
  * @brief Test Pmic_gpioGetPinCfg with zero validParams

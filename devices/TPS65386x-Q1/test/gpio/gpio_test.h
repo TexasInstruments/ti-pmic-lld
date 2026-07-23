@@ -40,7 +40,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "../platform.h"
+#include "platform.h"
 #include "pmic_gpio.h"
 
 #ifdef __cplusplus

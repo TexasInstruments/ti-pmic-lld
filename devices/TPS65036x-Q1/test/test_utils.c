@@ -75,3 +75,8 @@ void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
         platform_printString(msg);
     }
 }
+
+void testUtils_timerWaitMs(uint32_t ms)
+{
+    platform_timerWaitMs((uint16_t)ms);
+}

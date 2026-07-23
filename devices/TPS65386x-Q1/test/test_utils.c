@@ -72,11 +72,3 @@ void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle)
     }
 }
 
-void platform_unlockRegisters(void)
-{
-    #ifndef BUILD_MOCK
-    // Hardware: Device-specific unlock sequence for TPS65386x-Q1
-    // NOTE: Register unlock not needed for mock testing; implement for hardware tests
-    #endif
-    // Mock: No-op (mock doesn't enforce register locking)
-}

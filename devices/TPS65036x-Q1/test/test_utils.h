@@ -56,6 +56,14 @@ extern "C" {
  */
 void testUtils_printSiRev(const Pmic_Handle_t *pmicHandle);
 
+/**
+ * @brief Timer wait adapter: bridges PMIC API (uint32_t) to platform (uint16_t)
+ * @param ms Milliseconds to wait (truncated to uint16_t for platform call)
+ * @note PMIC API expects uint32_t callback signature, but platform function
+ *       takes uint16_t. For test purposes, delays >65535ms are not used.
+ */
+void testUtils_timerWaitMs(uint32_t ms);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

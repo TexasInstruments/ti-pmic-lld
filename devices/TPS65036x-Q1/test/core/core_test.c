@@ -57,11 +57,6 @@ static Pmic_Handle_t pmicHandle = {0U};
 
 static int32_t coreTest_unlockPmicRegs(Pmic_Handle_t *pHandle);
 
-static void testTimerWaitWrapper(uint32_t ms)
-{
-    platform_timerWaitMs((uint16_t)ms);
-}
-
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
@@ -89,7 +84,7 @@ void core_test(void *args)
         .criticalSectionStart = &platform_critSecStart,
         .criticalSectionStop = &platform_critSecStop,
         .irqResponseCallback = &platform_irqResponse,
-        .timerWaitMs = &testTimerWaitWrapper
+        .timerWaitMs = &testUtils_timerWaitMs
     };
 
     testTimer_startModule("Core");

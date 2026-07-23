@@ -48,7 +48,7 @@
 /* ========================================================================== */
 #include "platform.h"
 #include "debug.h"
-#include <stdbool.h> /* For bool type */
+#include <stdbool.h>
 
 #ifdef BUILD_HOST
 #include "platform_serial_spi.h"
@@ -209,6 +209,29 @@ void platform_init(void)
         serial_close();
         exit(1);
     }
+
+    /* Assert device enable on PB5 (active high).
+     * TPS65386x-Q1 requires this GPIO to be driven high before SPI communication.
+     * Port B is already enabled by the SPI init (SSI2 uses PB4/PB6/PB7). */
+    printf("Asserting device enable (PB5)...\n");
+    {
+        char gpio_response[256];
+
+        status = serial_send_command("gpioc B 0x20 o pu 2");
+        if (status == 0) {
+            serial_read_response(gpio_response, sizeof(gpio_response));
+        }
+        status = serial_send_command("gpiow B 0x20 0x20");
+        if (status == 0) {
+            serial_read_response(gpio_response, sizeof(gpio_response));
+        }
+        if (status != 0) {
+            fprintf(stderr, "ERROR: Failed to assert device enable GPIO\n");
+            serial_close();
+            exit(1);
+        }
+    }
+    usleep(10000);  /* 10ms for device to power up */
 
     printf("Host-controlled platform initialized successfully\n\n");
 

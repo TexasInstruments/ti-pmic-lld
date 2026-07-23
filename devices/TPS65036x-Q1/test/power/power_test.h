@@ -43,7 +43,7 @@
 /* ========================================================================== */
 #include "pmic.h"
 #include "pmic_power.h"
-#include "../test_utils.h"
+#include "test_utils.h"
 #include "platform.h"
 
 #ifdef __cplusplus
@@ -147,7 +147,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ssEn_disable_buck3)
 
-#ifdef BUILD_MOCK
 #define POWER_TEST_NEG_PWRSETBUCKCFG() \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle); \
     PLATFORM_RUN_TEST(test_neg_power_pwrSetBuckCfg_nullParam_buckCfg); \
@@ -182,11 +181,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidDischargeSel); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setBuck_invalidSlewRate); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_setUvlo_invalidBuck)
-#else
-#define POWER_TEST_NEG_PWRSETBUCKCFG()
-#endif
 
-#ifdef BUILD_MOCK
 #define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED() \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck1_allValues); \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_ilimSel_buck2_allValues); \
@@ -290,9 +285,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_powerSetVoutCfg_buck3Voltage); \
     PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_powerGetStat_buck3)
-#else
-#define POWER_TEST_POS_PWRSETBUCKCFG_EXTENDED()
-#endif
 
 /* Test: TC-POWER-0034 */
 #define POWER_TEST_PWRSETBUCKCFG() \
@@ -324,7 +316,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck2); \
     PLATFORM_RUN_TEST(test_pos_power_buckGetCfg_ilimSel_buck3)
 
-#ifdef BUILD_MOCK
 #define POWER_TEST_NEG_PWRGETBUCKCFG() \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_nullParam_buckCfg); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_invalidParam_resource); \
@@ -337,9 +328,6 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck2_highSideSlewRateNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwrGetBuckCfg_buck3_highSideSlewRateNotSupported); \
     PLATFORM_RUN_TEST(test_neg_power_pwr_getUvlo_invalidBuck)
-#else
-#define POWER_TEST_NEG_PWRGETBUCKCFG()
-#endif
 
 /* Test: TC-POWER-0035 */
 #define POWER_TEST_PWRGETBUCKCFG() \
@@ -663,7 +651,6 @@ void test_pos_power_buckGetCfg_ilimSel_buck1(void);
 void test_pos_power_buckGetCfg_ilimSel_buck2(void);
 void test_pos_power_buckGetCfg_ilimSel_buck3(void);
 
-#ifdef BUILD_MOCK
 /* Buck Configuration Tests - Negative */
 void test_neg_power_pwrSetBuckCfg_nullParam_pmicHandle(void);
 void test_neg_power_pwrSetBuckCfg_nullParam_buckCfg(void);
@@ -837,6 +824,7 @@ void test_neg_power_pwr_getUvlo_invalidBuck(void);
 void test_neg_power_pwr_setUvlo_invalidBuck(void);
 void test_neg_power_pwr_setBuck_invalidDischargeSel(void);
 void test_neg_power_pwr_setBuck_invalidSlewRate(void);
+
 void test_neg_power_pwr_setLdoCfg_zeroValidParams(void);
 void test_neg_power_pwr_getLdoCfg_zeroValidParams(void);
 void test_neg_power_pwr_setTsdCfg_zeroValidParams(void);
@@ -851,7 +839,6 @@ void test_neg_power_pwr_setSeqDelay_zeroLen(void);
 void test_neg_power_pwr_setSeqDelay_invalidConfig(void);
 void test_neg_power_pwr_getSeqDelay_zeroLen(void);
 void test_neg_power_pwr_getSeqDelay_invalidConfig(void);
-#endif
 
 #ifdef __cplusplus
 }

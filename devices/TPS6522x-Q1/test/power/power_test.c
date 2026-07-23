@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 
-#include "../platform.h"
+#include "platform.h"
 #include "power_test.h"
 
 #ifdef BUILD_MOCK
@@ -1448,13 +1448,12 @@ void test_pos_power_spreadSpectrum_combinedConfig(void)
 /*                        Build Mock Property Tests                           */
 /* ========================================================================== */
 
-#ifdef BUILD_MOCK
-
 /**
  * @brief Property test: BUCK voltage bounds
  */
 void test_pos_power_property_buckVoltageBounds(void)
 {
+#ifdef BUILD_MOCK
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_POWER_BUCK_VSET_VALID,
         .resource = PMIC_POWER_RESOURCE_BUCK1,
@@ -1467,6 +1466,9 @@ void test_pos_power_property_buckVoltageBounds(void)
     buckCfgSet.vset = PMIC_POWER_BUCK1_VSET_MAX;
     status = Pmic_pwrSetBuckCfg(&pmicHandle, &buckCfgSet);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for property-based testing");
+#endif
 }
 
 /**
@@ -1474,6 +1476,7 @@ void test_pos_power_property_buckVoltageBounds(void)
  */
 void test_pos_power_property_vmonThresholdEnumeration(void)
 {
+#ifdef BUILD_MOCK
     Pmic_PwrVccaVmonCfg_t vccaVmonCfgSet = {
         .validParams = PMIC_POWER_VCCA_VMON_THR_VALID,
         .resource = PMIC_POWER_RESOURCE_VCCA_VMON
@@ -1486,9 +1489,10 @@ void test_pos_power_property_vmonThresholdEnumeration(void)
         status = Pmic_pwrSetVccaVmonCfg(&pmicHandle, &vccaVmonCfgSet);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     }
-}
-
+#else
+    TEST_IGNORE_MESSAGE("Test requires BUILD_MOCK for property-based testing");
 #endif
+}
 
 /* ========================================================================== */
 /*                         MC/DC Coverage Tests                               */
