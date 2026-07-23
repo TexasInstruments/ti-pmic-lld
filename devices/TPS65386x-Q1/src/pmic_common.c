@@ -166,7 +166,7 @@ static inline int32_t incrementErrCnt(int32_t status) {
         return PMIC_ST_ERR_INV_STATUS_ID;
     }
 
-    if (sysDiagnostics.errCnt[statusId] == PMIC_ERR_CNT_OVERFLOW_THR) {
+    if (sysDiagnostics.errCnt[statusId] >= PMIC_ERR_CNT_OVERFLOW_THR) {
         sysDiagnostics.errCntOverflow[statusId] = (bool)true;
         sysDiagnostics.errCnt[statusId] = 0U;
     } else {
@@ -189,7 +189,7 @@ static inline int32_t incrementWarnCnt(int32_t status) {
         return PMIC_ST_ERR_INV_STATUS_ID;
     }
 
-    if (sysDiagnostics.warnCnt[statusId] == PMIC_WARN_CNT_OVERFLOW_THR) {
+    if (sysDiagnostics.warnCnt[statusId] >= PMIC_WARN_CNT_OVERFLOW_THR) {
         sysDiagnostics.warnCntOverflow[statusId] = (bool)true;
         sysDiagnostics.warnCnt[statusId] = 0U;
     } else {
@@ -228,10 +228,80 @@ static int32_t statusCodeCheck(int32_t status) {
     return PMIC_ST_SUCCESS;
 }
 
+static int32_t getDiagnosticEntry(Pmic_Diagnostic_t *diag) {
+    const uint16_t statusType = getStatusCodeType(diag->code);
+    const uint16_t statusId = getStatusCodeId(diag->code);
+
+    if (diag->validParams == 0U) {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (statusType == PMIC_ST_TYPE_ERROR) {
+        if (!isValidErrorId(statusId)) {
+            return PMIC_ST_ERR_INV_STATUS_ID;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
+            diag->cnt = sysDiagnostics.errCnt[statusId];
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
+            diag->flag = sysDiagnostics.errCntOverflow[statusId];
+        }
+    } else if (statusType == PMIC_ST_TYPE_WARNING) {
+        if (!isValidWarningId(statusId)) {
+            return PMIC_ST_ERR_INV_STATUS_ID;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
+            diag->cnt = sysDiagnostics.warnCnt[statusId];
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
+            diag->flag = sysDiagnostics.warnCntOverflow[statusId];
+        }
+    } else {
+        return PMIC_ST_ERR_INV_STATUS_TYPE;
+    }
+
+    return PMIC_ST_SUCCESS;
+}
+
+static int32_t clrDiagnosticEntry(const Pmic_Diagnostic_t *diag) {
+    const uint16_t statusType = getStatusCodeType(diag->code);
+    const uint16_t statusId = getStatusCodeId(diag->code);
+
+    if (diag->validParams == 0U) {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (statusType == PMIC_ST_TYPE_ERROR) {
+        if (!isValidErrorId(statusId)) {
+            return PMIC_ST_ERR_INV_STATUS_ID;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
+            sysDiagnostics.errCnt[statusId] = 0U;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
+            sysDiagnostics.errCntOverflow[statusId] = (bool)false;
+        }
+    } else if (statusType == PMIC_ST_TYPE_WARNING) {
+        if (!isValidWarningId(statusId)) {
+            return PMIC_ST_ERR_INV_STATUS_ID;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
+            sysDiagnostics.warnCnt[statusId] = 0U;
+        }
+        if (Pmic_validParamCheck(diag->validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
+            sysDiagnostics.warnCntOverflow[statusId] = (bool)false;
+        }
+    } else {
+        return PMIC_ST_ERR_INV_STATUS_TYPE;
+    }
+
+    return PMIC_ST_SUCCESS;
+}
+
 int32_t Pmic_logStatus(const Pmic_Handle_t *handle, int32_t status) {
-    int32_t statusCheck;
-    int32_t incrementResult;
-    uint16_t statusType;
+    int32_t statusCheck = 0;
+    int32_t incrementResult = 0;
+    uint16_t statusType = 0U;
 
     // If status is success, no need to log
     if (status == PMIC_ST_SUCCESS) {
@@ -285,10 +355,9 @@ int32_t Pmic_logStatus(const Pmic_Handle_t *handle, int32_t status) {
 }
 
 int32_t Pmic_getDiagnostic(const Pmic_Handle_t *handle, Pmic_Diagnostic_t *diagnostic) {
-    Pmic_Diagnostic_t localDiagnostic;
-    int32_t statusCheck;
-    uint16_t statusId;
-    uint16_t statusType;
+    Pmic_Diagnostic_t localDiagnostic = (Pmic_Diagnostic_t){0};
+    int32_t statusCheck = 0;
+    int32_t retVal = 0;
 
     if ((handle == NULL) || (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_HANDLE);
@@ -307,62 +376,25 @@ int32_t Pmic_getDiagnostic(const Pmic_Handle_t *handle, Pmic_Diagnostic_t *diagn
     statusCheck = statusCodeCheck(localDiagnostic.code);
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
 
-    // If status isn't valid (invalid type or ID), increment error counter and return
     if (statusCheck != PMIC_ST_SUCCESS) {
         (void)incrementErrCnt(statusCheck);
         Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
         return statusCheck;
     }
 
-    statusId = getStatusCodeId(localDiagnostic.code);
-    statusType = getStatusCodeType(localDiagnostic.code);
+    retVal = getDiagnosticEntry(&localDiagnostic);
+    Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
 
-    // get counter value and flag state for error type
-    if (statusType == PMIC_ST_TYPE_ERROR) {
-        /* Defensive bounds check before array access */
-        if (!isValidErrorId(statusId)) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-            localDiagnostic.cnt = sysDiagnostics.errCnt[statusId];
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-            localDiagnostic.flag = sysDiagnostics.errCntOverflow[statusId];
-        }
-    // Get counter value and flag state for warning type
-    } else if (statusType == PMIC_ST_TYPE_WARNING) {
-        /* Defensive bounds check before array access */
-        if (!isValidWarningId(statusId)) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-            localDiagnostic.cnt = sysDiagnostics.warnCnt[statusId];
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-            localDiagnostic.flag = sysDiagnostics.warnCntOverflow[statusId];
-        }
-    // This API does not support getting diagnostic information for other status types
-    } else {
-        Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_TYPE);
+    if (retVal != PMIC_ST_SUCCESS) {
+        return Pmic_logStatus(handle, retVal);
     }
 
-    Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
     copyDiagnostic(&localDiagnostic, diagnostic);
     return Pmic_logStatus(handle, PMIC_ST_SUCCESS);
 }
 
-int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagnostic[], uint8_t numDiagnostics) {
-    Pmic_Diagnostic_t localDiagnostics[PMIC_MAX_DIAGNOSTIC_ID + 1U];
-    uint16_t statusId = 0U, statusType = 0U;
-    int32_t statusCheck = PMIC_ST_SUCCESS;
-
+static int32_t validateDiagnosticsArgs(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t *diagnostic, uint8_t numDiagnostics)
+{
     if ((handle == NULL) || (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_HANDLE);
     }
@@ -379,63 +411,30 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
     }
 
+    return PMIC_ST_SUCCESS;
+}
+
+int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagnostic[], uint8_t numDiagnostics) {
+    Pmic_Diagnostic_t localDiagnostics[PMIC_MAX_DIAGNOSTIC_ID + 1U] = {0};
+    int32_t entryStatus = 0;
+    int32_t status = 0;
+
+    status = validateDiagnosticsArgs(handle, diagnostic, numDiagnostics);
+    if (status != PMIC_ST_SUCCESS) {
+        return status;
+    }
+
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
         copyDiagnostic(&diagnostic[i], &localDiagnostics[i]);
     }
 
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
-        // At least one parameter must be valid
-        if (localDiagnostics[i].validParams == 0U) {
+        entryStatus = getDiagnosticEntry(&localDiagnostics[i]);
+        if (entryStatus != PMIC_ST_SUCCESS) {
+            (void)incrementErrCnt(entryStatus);
             Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
-        }
-
-        // If status isn't valid (invalid type or ID), increment error counter and return
-        statusCheck = statusCodeCheck(localDiagnostics[i].code);
-        if (statusCheck != PMIC_ST_SUCCESS) {
-            (void)incrementErrCnt(statusCheck);
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return statusCheck;
-        }
-
-        statusId = getStatusCodeId(localDiagnostics[i].code);
-        statusType = getStatusCodeType(localDiagnostics[i].code);
-
-        // Get counter value and flag state for error type
-        if (statusType == PMIC_ST_TYPE_ERROR) {
-            /* Defensive bounds check before array access */
-            if (!isValidErrorId(statusId)) {
-                Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-                return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-                localDiagnostics[i].cnt = sysDiagnostics.errCnt[statusId];
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-                localDiagnostics[i].flag = sysDiagnostics.errCntOverflow[statusId];
-            }
-        // Get counter value and flag state for warning type
-        } else if (statusType == PMIC_ST_TYPE_WARNING) {
-            /* Defensive bounds check before array access */
-            if (!isValidWarningId(statusId)) {
-                Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-                return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-                localDiagnostics[i].cnt = sysDiagnostics.warnCnt[statusId];
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-                localDiagnostics[i].flag = sysDiagnostics.warnCntOverflow[statusId];
-            }
-        // This API does not support getting diagnostic information for other status types
-        } else {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_TYPE);
+            return entryStatus;
         }
     }
     Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
@@ -448,10 +447,9 @@ int32_t Pmic_getDiagnostics(const Pmic_Handle_t *handle, Pmic_Diagnostic_t diagn
 }
 
 int32_t Pmic_clrDiagnostic(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t *diagnostic) {
-    Pmic_Diagnostic_t localDiagnostic;
-    int32_t statusCheck;
-    uint16_t statusId;
-    uint16_t statusType;
+    Pmic_Diagnostic_t localDiagnostic = (Pmic_Diagnostic_t){0};
+    int32_t statusCheck = 0;
+    int32_t retVal = 0;
 
     if ((handle == NULL) || (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_INV_HANDLE);
@@ -470,75 +468,30 @@ int32_t Pmic_clrDiagnostic(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t 
     statusCheck = statusCodeCheck(localDiagnostic.code);
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
 
-    // If status isn't valid (invalid type or ID), increment error counter and return
     if (statusCheck != PMIC_ST_SUCCESS) {
         (void)incrementErrCnt(statusCheck);
         Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
         return statusCheck;
     }
 
-    statusId = getStatusCodeId(localDiagnostic.code);
-    statusType = getStatusCodeType(localDiagnostic.code);
-
-    // Clear counter and flag for error type
-    if (statusType == PMIC_ST_TYPE_ERROR) {
-        /* Defensive bounds check before array access */
-        if (!isValidErrorId(statusId)) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-            sysDiagnostics.errCnt[statusId] = 0U;
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-            sysDiagnostics.errCntOverflow[statusId] = (bool)false;
-        }
-    // Clear counter and flag for warning type
-    } else if (statusType == PMIC_ST_TYPE_WARNING) {
-        /* Defensive bounds check before array access */
-        if (!isValidWarningId(statusId)) {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-            sysDiagnostics.warnCnt[statusId] = 0U;
-        }
-
-        if (Pmic_validParamCheck(localDiagnostic.validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-            sysDiagnostics.warnCntOverflow[statusId] = (bool)false;
-        }
-    // This API does not support clearing diagnostic information for other status types
-    } else {
-        Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_TYPE);
-    }
+    retVal = clrDiagnosticEntry(&localDiagnostic);
     Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
+
+    if (retVal != PMIC_ST_SUCCESS) {
+        return Pmic_logStatus(handle, retVal);
+    }
 
     return Pmic_logStatus(handle, PMIC_ST_SUCCESS);
 }
 
 int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t diagnostic[], uint8_t numDiagnostics) {
-    Pmic_Diagnostic_t localDiagnostics[PMIC_MAX_DIAGNOSTIC_ID + 1U];
-    uint16_t statusId = 0U, statusType = 0U;
-    int32_t statusCheck = PMIC_ST_SUCCESS;
+    Pmic_Diagnostic_t localDiagnostics[PMIC_MAX_DIAGNOSTIC_ID + 1U] = {0};
+    int32_t entryStatus = 0;
+    int32_t status = 0;
 
-    if ((handle == NULL) || (handle->criticalSectionStart == NULL) || (handle->criticalSectionStop == NULL)) {
-        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_HANDLE);
-    }
-
-    if (diagnostic == NULL) {
-        return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);
-    }
-
-    if (numDiagnostics == 0U) {
-        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
-    }
-
-    if (numDiagnostics > (PMIC_MAX_DIAGNOSTIC_ID + 1U)) {
-        return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
+    status = validateDiagnosticsArgs(handle, diagnostic, numDiagnostics);
+    if (status != PMIC_ST_SUCCESS) {
+        return status;
     }
 
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
@@ -547,57 +500,11 @@ int32_t Pmic_clrDiagnostics(const Pmic_Handle_t *handle, const Pmic_Diagnostic_t
 
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
     for (uint8_t i = 0U; i < numDiagnostics; i++) {
-        // At least one parameter must be valid
-        if (localDiagnostics[i].validParams == 0U) {
+        entryStatus = clrDiagnosticEntry(&localDiagnostics[i]);
+        if (entryStatus != PMIC_ST_SUCCESS) {
+            (void)incrementErrCnt(entryStatus);
             Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_PARAM);
-        }
-
-        // If status isn't valid (invalid type or ID), increment error counter and return
-        statusCheck = statusCodeCheck(localDiagnostics[i].code);
-        if (statusCheck != PMIC_ST_SUCCESS) {
-            (void)incrementErrCnt(statusCheck);
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return statusCheck;
-        }
-
-        statusId = getStatusCodeId(localDiagnostics[i].code);
-        statusType = getStatusCodeType(localDiagnostics[i].code);
-
-        // Clear counter and flag for error type
-        if (statusType == PMIC_ST_TYPE_ERROR) {
-            /* Defensive bounds check before array access */
-            if (!isValidErrorId(statusId)) {
-                Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-                return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-                sysDiagnostics.errCnt[statusId] = 0U;
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-                sysDiagnostics.errCntOverflow[statusId] = (bool)false;
-            }
-        // Clear counter and flag for warning type
-        } else if (statusType == PMIC_ST_TYPE_WARNING) {
-            /* Defensive bounds check before array access */
-            if (!isValidWarningId(statusId)) {
-                Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-                return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_ID);
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_CNT_VALID)) {
-                sysDiagnostics.warnCnt[statusId] = 0U;
-            }
-
-            if (Pmic_validParamCheck(localDiagnostics[i].validParams, PMIC_COMMON_DIAGNOSTIC_FLAG_VALID)) {
-                sysDiagnostics.warnCntOverflow[statusId] = (bool)false;
-            }
-        // This API does not support clearing diagnostic information for other status types
-        } else {
-            Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
-            return Pmic_logStatus(handle, PMIC_ST_ERR_INV_STATUS_TYPE);
+            return entryStatus;
         }
     }
     Pmic_criticalSectionStop(handle, PMIC_DIAGNOSTIC);
@@ -684,7 +591,7 @@ int32_t Pmic_incrementRetryCnt(const Pmic_Handle_t *handle) {
 
     // Increment retry counter. If threshold is reached, reset counter and set flag
     Pmic_criticalSectionStart(handle, PMIC_DIAGNOSTIC);
-    if (sysDiagnostics.retryCnt == PMIC_RETRY_CNT_OVERFLOW_THR) {
+    if (sysDiagnostics.retryCnt >= PMIC_RETRY_CNT_OVERFLOW_THR) {
         sysDiagnostics.retryCntOverflow = (bool)true;
         sysDiagnostics.retryCnt = 0U;
     } else {

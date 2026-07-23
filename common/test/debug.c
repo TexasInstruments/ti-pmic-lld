@@ -24,7 +24,7 @@ static struct {
 } g_debug_config = {
     .level = DEBUG_LEVEL_NONE,
     .module_mask = 0,
-    .initialized = false
+    .initialized = (bool)false
 };
 
 /**
@@ -152,7 +152,7 @@ void debug_init(void) {
         }
     }
 
-    g_debug_config.initialized = true;
+    g_debug_config.initialized = (bool)true;
 
     /* Print initialization info at INFO level */
     if (g_debug_config.level >= DEBUG_LEVEL_INFO && g_debug_config.module_mask) {
@@ -173,15 +173,15 @@ bool debug_should_log(DebugModule_t module, DebugLevel_t level) {
 
     /* Check level threshold */
     if (level > g_debug_config.level) {
-        return false;
+        return (bool)false;
     }
 
     /* Check module mask */
     if ((g_debug_config.module_mask & module) == 0) {
-        return false;
+        return (bool)false;
     }
 
-    return true;
+    return (bool)true;
 }
 
 /**

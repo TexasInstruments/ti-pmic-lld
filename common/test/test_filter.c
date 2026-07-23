@@ -87,7 +87,7 @@ TestFilterConfig_t g_testFilter;
 static bool matchWildcard(const char *pattern, const char *str)
 {
     if (!pattern || !str) {
-        return false;
+        return (bool)false;
     }
 
     while (*pattern && *str) {
@@ -95,21 +95,21 @@ static bool matchWildcard(const char *pattern, const char *str)
             pattern++;
             /* Trailing * matches everything */
             if (!*pattern) {
-                return true;
+                return (bool)true;
             }
             /* Try matching rest of pattern at each position in str */
             while (*str) {
                 if (matchWildcard(pattern, str)) {
-                    return true;
+                    return (bool)true;
                 }
                 str++;
             }
-            return false;
+            return (bool)false;
         } else if (*pattern == '?' || *pattern == *str) {
             pattern++;
             str++;
         } else {
-            return false;
+            return (bool)false;
         }
     }
 
@@ -132,11 +132,11 @@ static void parseModuleFilter(const char *envValue, TestModuleFilter_t *filter)
     }
 
     filter->numModules = 0;
-    filter->allModules = false;
+    filter->allModules = (bool)false;
 
     /* Handle special "ALL" keyword */
     if (strcmp(envValue, "ALL") == 0 || strcmp(envValue, "all") == 0) {
-        filter->allModules = true;
+        filter->allModules = (bool)true;
         return;
     }
 
@@ -181,11 +181,11 @@ static void parseNameFilter(const char *envValue, TestNameFilter_t *filter)
     }
 
     filter->numPatterns = 0;
-    filter->allTests = false;
+    filter->allTests = (bool)false;
 
     /* Handle special "ALL" keyword */
     if (strcmp(envValue, "ALL") == 0 || strcmp(envValue, "all") == 0) {
-        filter->allTests = true;
+        filter->allTests = (bool)true;
         return;
     }
 
@@ -251,21 +251,21 @@ static TestGroupFilter_e parseGroupFilter(const char *envValue)
 static bool isPositiveTest(const char *testName)
 {
     if (!testName) {
-        return true;
+        return (bool)true;
     }
 
     /* Check for test_pos_ prefix */
     if (strncmp(testName, "test_pos_", 9) == 0) {
-        return true;
+        return (bool)true;
     }
 
     /* Check for test_neg_ prefix */
     if (strncmp(testName, "test_neg_", 9) == 0) {
-        return false;
+        return (bool)false;
     }
 
     /* Default to positive if no clear indication */
-    return true;
+    return (bool)true;
 }
 
 /* ========================================================================= */
@@ -276,9 +276,9 @@ void testFilter_init(void)
 {
     /* Initialize to defaults (run everything) */
     g_testFilter.moduleFilter.numModules = 0;
-    g_testFilter.moduleFilter.allModules = true;
+    g_testFilter.moduleFilter.allModules = (bool)true;
     g_testFilter.nameFilter.numPatterns = 0;
-    g_testFilter.nameFilter.allTests = true;
+    g_testFilter.nameFilter.allTests = (bool)true;
     g_testFilter.groupFilter = TEST_GROUP_ALL;
 
     /* Parse PMIC_TEST_MODULES */
@@ -287,7 +287,7 @@ void testFilter_init(void)
         parseModuleFilter(modulesEnv, &g_testFilter.moduleFilter);
         /* If modules were parsed, disable allModules flag */
         if (g_testFilter.moduleFilter.numModules > 0) {
-            g_testFilter.moduleFilter.allModules = false;
+            g_testFilter.moduleFilter.allModules = (bool)false;
         }
     }
 
@@ -297,7 +297,7 @@ void testFilter_init(void)
         parseNameFilter(filterEnv, &g_testFilter.nameFilter);
         /* If patterns were parsed, disable allTests flag */
         if (g_testFilter.nameFilter.numPatterns > 0) {
-            g_testFilter.nameFilter.allTests = false;
+            g_testFilter.nameFilter.allTests = (bool)false;
         }
     }
 
@@ -311,12 +311,12 @@ void testFilter_init(void)
 bool testFilter_shouldRunModule(const char *moduleName)
 {
     if (!moduleName) {
-        return false;
+        return (bool)false;
     }
 
     /* If no filter specified, run all modules */
     if (g_testFilter.moduleFilter.allModules) {
-        return true;
+        return (bool)true;
     }
 
     /* Check if module is in the enabled list (normalize both sides to strip
@@ -327,56 +327,56 @@ bool testFilter_shouldRunModule(const char *moduleName)
     for (uint8_t i = 0; i < g_testFilter.moduleFilter.numModules; i++) {
         normalizeModuleName(g_testFilter.moduleFilter.modules[i], normFilter, sizeof(normFilter));
         if (str_icmp(normFilter, normModule) == 0) {
-            return true;
+            return (bool)true;
         }
     }
 
-    return false;
+    return (bool)false;
 }
 
 bool testFilter_shouldRunTest(const char *testName)
 {
     if (!testName) {
-        return false;
+        return (bool)false;
     }
 
     /* If no filter specified, run all tests */
     if (g_testFilter.nameFilter.allTests) {
-        return true;
+        return (bool)true;
     }
 
     /* Check if test name matches any pattern */
     for (uint8_t i = 0; i < g_testFilter.nameFilter.numPatterns; i++) {
         if (matchWildcard(g_testFilter.nameFilter.patterns[i], testName)) {
-            return true;
+            return (bool)true;
         }
     }
 
-    return false;
+    return (bool)false;
 }
 
 bool testFilter_shouldRunGroup(bool isPositive)
 {
     /* If no filter specified, run all groups */
     if (g_testFilter.groupFilter == TEST_GROUP_ALL) {
-        return true;
+        return (bool)true;
     }
 
     /* Check if group matches filter */
     if (g_testFilter.groupFilter == TEST_GROUP_POSITIVE && isPositive) {
-        return true;
+        return (bool)true;
     }
 
     if (g_testFilter.groupFilter == TEST_GROUP_NEGATIVE && !isPositive) {
-        return true;
+        return (bool)true;
     }
 
-    return false;
+    return (bool)false;
 }
 
 void testFilter_printConfig(void)
 {
-    bool hasFilters = false;
+    bool hasFilters = (bool)false;
 
     printf("=== Test Filter Configuration ===\n");
 
@@ -390,7 +390,7 @@ void testFilter_printConfig(void)
             }
         }
         printf(" (%d modules)\n", g_testFilter.moduleFilter.numModules);
-        hasFilters = true;
+        hasFilters = (bool)true;
     }
 
     /* Name filter */
@@ -403,7 +403,7 @@ void testFilter_printConfig(void)
             }
         }
         printf(" (pattern matching)\n");
-        hasFilters = true;
+        hasFilters = (bool)true;
     }
 
     /* Group filter */
@@ -413,7 +413,7 @@ void testFilter_printConfig(void)
         } else if (g_testFilter.groupFilter == TEST_GROUP_NEGATIVE) {
             printf("Groups: negative tests only\n");
         }
-        hasFilters = true;
+        hasFilters = (bool)true;
     }
 
     if (!hasFilters) {
@@ -435,19 +435,19 @@ void testFilter_printConfig(void)
 bool testFilter_shouldRunTestWithGroup(const char *testName)
 {
     if (!testName) {
-        return false;
+        return (bool)false;
     }
 
     /* Check name filter first (quick rejection) */
     if (!testFilter_shouldRunTest(testName)) {
-        return false;
+        return (bool)false;
     }
 
     /* Check group filter */
     bool isPositive = isPositiveTest(testName);
     if (!testFilter_shouldRunGroup(isPositive)) {
-        return false;
+        return (bool)false;
     }
 
-    return true;
+    return (bool)true;
 }

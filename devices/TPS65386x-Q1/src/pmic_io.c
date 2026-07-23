@@ -162,7 +162,7 @@ static int32_t IO_validatePmicHandle(const Pmic_Handle_t *handle) {
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxBuffer) {
     uint32_t attemptNum = 0U;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
-    uint8_t bufLen;
+    uint8_t bufLen = 0U;
 
     // Validate handle
     int32_t status = IO_validatePmicHandle(handle);
@@ -215,7 +215,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxB
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (true);
+    } while ((bool)true);
 
     // Save RDATA[7:0]
     if (status == PMIC_ST_SUCCESS) {
@@ -250,7 +250,7 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *
 int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txData) {
     uint32_t attemptNum = 0U;
     uint8_t spiBuf[PMIC_IO_BUF_SIZE] = {0U};
-    uint8_t bufLen;
+    uint8_t bufLen = 0U;
 
     // Validate handle
     int32_t status = IO_validatePmicHandle(handle);
@@ -294,7 +294,7 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (true);
+    } while ((bool)true);
 
     return status;
 }

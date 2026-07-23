@@ -65,9 +65,35 @@ static inline void GPIO_copyGpioCfg(const Pmic_GpioCfg_t *src, Pmic_GpioCfg_t *d
     (void)memmove((void *)dst, (const void *)src, sizeof(Pmic_GpioCfg_t));
 }
 
+static int32_t GPIO_applyGpi1_4Cfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI1_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK, gpioCfg->gpi1);
+    }
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI4_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPI4_CFG_SHIFT, GPI4_CFG_MASK, gpioCfg->gpi4);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
+    }
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+
+    return status;
+}
+
 static int32_t GPIO_setCfgGpi1_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI1_VALID, status))
@@ -88,36 +114,41 @@ static int32_t GPIO_setCfgGpi1_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Start critical section; read GPI_CFG register
-        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
-
-        // Set GPI1 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI1_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK, gpioCfg->gpi1);
-        }
-
-        // Set GPI4 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI4_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPI4_CFG_SHIFT, GPI4_CFG_MASK, gpioCfg->gpi4);
-        }
-
-        // Write new register value back to PMIC; stop critical section
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
-        }
-        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+        status = GPIO_applyGpi1_4Cfg(handle, gpioCfg);
     }
+
+    return status;
+}
+
+static int32_t GPIO_applyGpo1_2Cfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO1_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK, gpioCfg->gpo1);
+    }
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO2_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPO2_CFG_SHIFT, GPO2_CFG_MASK, gpioCfg->gpo2);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
+    }
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
 static int32_t GPIO_setCfgGpo1_2(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO1_VALID, status))
@@ -138,36 +169,41 @@ static int32_t GPIO_setCfgGpo1_2(const Pmic_Handle_t *handle, const Pmic_GpioCfg
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Start critical section; read GPO_CFG1 register
-        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
-
-        // Set GPO1 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO1_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK, gpioCfg->gpo1);
-        }
-
-        // Set GPO2 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO2_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPO2_CFG_SHIFT, GPO2_CFG_MASK, gpioCfg->gpo2);
-        }
-
-        // Write new register value back to PMIC; stop critical section
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
-        }
-        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+        status = GPIO_applyGpo1_2Cfg(handle, gpioCfg);
     }
+
+    return status;
+}
+
+static int32_t GPIO_applyGpo3_4Cfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO3_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK, gpioCfg->gpo3);
+    }
+
+    if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO4_VALID, status))
+    {
+        Pmic_setBitField(&regData, GPO4_CFG_SHIFT, GPO4_CFG_MASK, gpioCfg->gpo4);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
+    }
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return status;
 }
 
 static int32_t GPIO_setCfgGpo3_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO3_VALID, status))
@@ -188,28 +224,7 @@ static int32_t GPIO_setCfgGpo3_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Start critical section; read GPO_CFG2 register
-        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
-
-        // Set GPO3 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO3_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK, gpioCfg->gpo3);
-        }
-
-        // Set GPO4 configuration
-        if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO4_VALID, status))
-        {
-            Pmic_setBitField(&regData, GPO4_CFG_SHIFT, GPO4_CFG_MASK, gpioCfg->gpo4);
-        }
-
-        // Write new register value back to PMIC; stop critical section
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
-        }
-        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+        status = GPIO_applyGpo3_4Cfg(handle, gpioCfg);
     }
 
     return status;
@@ -218,7 +233,7 @@ static int32_t GPIO_setCfgGpo3_4(const Pmic_Handle_t *handle, const Pmic_GpioCfg
 int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_GpioCfg_t localGpioCfg;
+    Pmic_GpioCfg_t localGpioCfg = (Pmic_GpioCfg_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -348,10 +363,38 @@ static int32_t GPIO_getCfgGpo3_4(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gp
     return status;
 }
 
+static int32_t GPIO_getAllCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        ((Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI1_VALID)) ||
+         (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPI4_VALID))))
+    {
+        status = GPIO_getCfgGpi1_4(handle, gpioCfg);
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        ((Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO1_VALID)) ||
+         (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO2_VALID))))
+    {
+        status = GPIO_getCfgGpo1_2(handle, gpioCfg);
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        ((Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO3_VALID)) ||
+         (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPIO_GPO4_VALID))))
+    {
+        status = GPIO_getCfgGpo3_4(handle, gpioCfg);
+    }
+
+    return status;
+}
+
 int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    Pmic_GpioCfg_t localGpioCfg;
+    Pmic_GpioCfg_t localGpioCfg = (Pmic_GpioCfg_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -366,30 +409,7 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *gpioCfg)
     if (status == PMIC_ST_SUCCESS)
     {
         GPIO_copyGpioCfg(gpioCfg, &localGpioCfg);
-    }
-
-    // Get GPI1 and GPI4 configurations
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPI1_VALID)) ||
-         (Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPI4_VALID))))
-    {
-        status = GPIO_getCfgGpi1_4(handle, &localGpioCfg);
-    }
-
-    // Get GPO1 and GPO2 configurations
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPO1_VALID)) ||
-         (Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPO2_VALID))))
-    {
-        status = GPIO_getCfgGpo1_2(handle, &localGpioCfg);
-    }
-
-    // Get GPO3 and GPO4 configurations
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPO3_VALID)) ||
-         (Pmic_validParamCheck(localGpioCfg.validParams, PMIC_CFG_GPIO_GPO4_VALID))))
-    {
-        status = GPIO_getCfgGpo3_4(handle, &localGpioCfg);
+        status = GPIO_getAllCfg(handle, &localGpioCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)

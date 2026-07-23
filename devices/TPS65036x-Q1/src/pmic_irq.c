@@ -328,13 +328,15 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
                 continue;
             }
 
-            if (masks[i].mask != false) {
+            if (masks[i].mask != (bool)false) {
                 regData |= userMask;
             } else {
                 regData &= ~userMask;
             }
 
-            *processedMasks += 1U;
+            if (*processedMasks < numMasks) {
+                *processedMasks += 1U;
+            }
         }
     }
 
@@ -393,10 +395,36 @@ int32_t Pmic_irqSetMasks(const Pmic_Handle_t *handle, uint8_t numMasks, const Pm
     return Pmic_logStatus(handle, status);
 }
 
+static void IRQ_readOneMask(const Pmic_Handle_t *handle, Pmic_IrqMask_t *localMask, int32_t *status)
+{
+    uint8_t regData = 0U;
+    const uint8_t irqNum = localMask->irqNum;
+    uint8_t irqMaskRegAddr = 0U;
+    uint8_t irqMaskBitShift = 0U;
+
+    if (irqNum > PMIC_IRQ_MAX) {
+        *status = PMIC_ST_ERR_INV_PARAM;
+    } else {
+        irqMaskRegAddr = pmicIRQs[irqNum].maskRegAddr;
+        irqMaskBitShift = pmicIRQs[irqNum].bitShift;
+    }
+
+    if ((*status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
+        *status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if (*status == PMIC_ST_SUCCESS) {
+        *status = Pmic_ioRxByte_CS(handle, irqMaskRegAddr, &regData);
+    }
+
+    if (*status == PMIC_ST_SUCCESS) {
+        localMask->mask = Pmic_getBitField_b(regData, irqMaskBitShift);
+    }
+}
+
 int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks) {
     Pmic_IrqMask_t localMasks[PMIC_IRQ_NUM];
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -408,35 +436,9 @@ int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_I
 
     if (status == PMIC_ST_SUCCESS) {
         for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
-            const uint8_t irqNum = irqMasks[i].irqNum;
-            uint8_t irqMaskRegAddr = 0U, irqMaskBitShift = 0U;
-
-            // Copy irqNum to local array
-            localMasks[i].irqNum = irqNum;
-
-            // Check for invalid IRQ number
-            if (irqNum > PMIC_IRQ_MAX) {
-                status = PMIC_ST_ERR_INV_PARAM;
-            } else {
-                irqMaskRegAddr = pmicIRQs[irqNum].maskRegAddr;
-                irqMaskBitShift = pmicIRQs[irqNum].bitShift;
-            }
-
-            // Check whether IRQ is maskable
-            if ((status == PMIC_ST_SUCCESS) &&
-                (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
-                status = PMIC_ST_ERR_NOT_SUPPORTED;
-            }
-
-            // Read IRQ mask register
-            if (status == PMIC_ST_SUCCESS) {
-                status = Pmic_ioRxByte_CS(handle, irqMaskRegAddr, &regData);
-            }
-
-            if (status == PMIC_ST_SUCCESS) {
-                // Extract IRQ mask bit field to local array
-                localMasks[i].mask = Pmic_getBitField_b(regData, irqMaskBitShift);
-            } else {
+            localMasks[i].irqNum = irqMasks[i].irqNum;
+            IRQ_readOneMask(handle, &localMasks[i], &status);
+            if (status != PMIC_ST_SUCCESS) {
                 break;
             }
         }
@@ -769,7 +771,7 @@ static int32_t IRQ_readL0(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
 
 int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat)
 {
-    Pmic_IrqStatus_t localStat;
+    Pmic_IrqStatus_t localStat = (Pmic_IrqStatus_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL))

@@ -58,6 +58,13 @@
 #define PMIC_IRQ_MASKABLE     ((bool)true)
 #define PMIC_IRQ_NON_MASKABLE ((bool)false)
 
+typedef int32_t (*IRQ_StatHandler_t)(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat);
+
+typedef struct {
+    uint8_t           shift;
+    IRQ_StatHandler_t handler;
+} IRQ_StatDispatch_t;
+
 // Used to hold information about IRQs, which register contains their status
 // bit, and which register contains their mask bit, along with the relevant
 // bitshift to use.
@@ -274,13 +281,15 @@ static int32_t IRQ_handleRecordsForReg(const Pmic_Handle_t *handle,
                 continue;
             }
 
-            if (masks[i].mask != false) {
+            if (masks[i].mask != (bool)false) {
                 regData |= userMask;
             } else {
                 regData &= ~userMask;
             }
 
-            *processedMasks += 1U;
+            if (*processedMasks < (uint8_t)UINT8_MAX) {
+                *processedMasks += 1U;
+            }
         }
     }
 
@@ -351,10 +360,45 @@ int32_t Pmic_irqSetMasks(const Pmic_Handle_t *handle, uint8_t numMasks, const Pm
     return Pmic_logStatus(handle, status);
 }
 
-int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks) {
-    Pmic_IrqMask_t localIrqMasks[PMIC_IRQ_NUM];
-    int32_t status = Pmic_checkHandle(handle);
+static int32_t IRQ_readOneMask(const Pmic_Handle_t *handle, Pmic_IrqMask_t *entry)
+{
+    const uint8_t irqNum = entry->irqNum;
+    uint8_t irqMaskRegAddr = 0U;
+    uint8_t irqMaskBitShift = 0U;
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Check for invalid IRQ number
+    if (irqNum > PMIC_IRQ_MAX) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    } else {
+        irqMaskRegAddr = pmicIRQs[irqNum].maskReg;
+        irqMaskBitShift = pmicIRQs[irqNum].shift;
+    }
+
+    // Check whether IRQ is maskable
+    if ((status == PMIC_ST_SUCCESS) &&
+        (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    // Read IRQ mask register
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, irqMaskRegAddr, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        // Extract IRQ mask bit field
+        entry->mask = Pmic_getBitField_b(regData, irqMaskBitShift);
+    }
+
+    return status;
+}
+
+static int32_t IRQ_validateGetMaskArgs(
+    const Pmic_Handle_t *handle, const Pmic_IrqMask_t *irqMasks, uint8_t numIrqMasks)
+{
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -364,48 +408,27 @@ int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_I
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
+    return status;
+}
+
+int32_t Pmic_irqGetMask(const Pmic_Handle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks) {
+    Pmic_IrqMask_t localIrqMasks[PMIC_IRQ_NUM] = {0};
+    int32_t status = IRQ_validateGetMaskArgs(handle, irqMasks, numIrqMasks);
+
     if (status == PMIC_ST_SUCCESS) {
         for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
             IRQ_copyIrqMask(&irqMasks[i], &localIrqMasks[i]);
         }
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
         for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
-            const uint8_t irqNum = localIrqMasks[i].irqNum;
-            uint8_t irqMaskRegAddr = 0U, irqMaskBitShift = 0U;
-
-            // Check for invalid IRQ number
-            if (irqNum > PMIC_IRQ_MAX) {
-                status = PMIC_ST_ERR_INV_PARAM;
-            } else {
-                irqMaskRegAddr = pmicIRQs[irqNum].maskReg;
-                irqMaskBitShift = pmicIRQs[irqNum].shift;
-            }
-
-            // Check whether IRQ is maskable
-            if ((status == PMIC_ST_SUCCESS) &&
-                (pmicIRQs[irqNum].isMaskable == PMIC_IRQ_NON_MASKABLE)) {
-                status = PMIC_ST_ERR_NOT_SUPPORTED;
-            }
-
-            // Read IRQ mask register
-            if (status == PMIC_ST_SUCCESS) {
-                status = Pmic_ioRxByte_CS(handle, irqMaskRegAddr, &regData);
-            }
-
-            if (status == PMIC_ST_SUCCESS) {
-                // Extract IRQ mask bit field
-                localIrqMasks[i].mask = Pmic_getBitField_b(regData, irqMaskBitShift);
-            } else {
-                break;
-            }
+            status = IRQ_readOneMask(handle, &localIrqMasks[i]);
+            if (status != PMIC_ST_SUCCESS) { break; }
         }
-    }
 
-    if (status == PMIC_ST_SUCCESS) {
-        for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
-            IRQ_copyIrqMask(&localIrqMasks[i], &irqMasks[i]);
+        if (status == PMIC_ST_SUCCESS) {
+            for (uint8_t i = 0U; (i < PMIC_IRQ_LOOP_MAX) && (i < numIrqMasks); i++) {
+                IRQ_copyIrqMask(&localIrqMasks[i], &irqMasks[i]);
+            }
         }
     }
 
@@ -473,7 +496,7 @@ static int32_t IRQ_getStatFSM(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irq
     wdInt = Pmic_getBitField_b(regData, WD_INT_SHIFT);
 
     // If ESM_MCU_INT is set, read and extract bits from L1 register INT_ESM
-    if ((status == PMIC_ST_SUCCESS) && (esmMcuInt == true)) {
+    if ((status == PMIC_ST_SUCCESS) && (esmMcuInt == (bool)true)) {
         status = Pmic_ioRxByte(handle, INT_ESM_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -482,7 +505,7 @@ static int32_t IRQ_getStatFSM(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irq
     }
 
     // If COMM_ERR_INT is set, read and extract bits from L1 register INT_COMM_ERR
-    if ((status == PMIC_ST_SUCCESS) && (commErrInt == true)) {
+    if ((status == PMIC_ST_SUCCESS) && (commErrInt == (bool)true)) {
         status = Pmic_ioRxByte(handle, INT_COMM_ERR_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -491,7 +514,7 @@ static int32_t IRQ_getStatFSM(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irq
     }
 
     // If WD_INT is set, read and extract bits from L1 register WD_ERR_STAT
-    if ((status == PMIC_ST_SUCCESS) && (wdInt == true)) {
+    if ((status == PMIC_ST_SUCCESS) && (wdInt == (bool)true)) {
         status = Pmic_ioRxByte(handle, WD_ERR_STAT_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -642,14 +665,14 @@ static int32_t IRQ_getStatBucks(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *i
     }
 
     // Extract L1 indicator bits from regData so it can be repurposed
-    buck12 = ((Pmic_getBitField_b(regData, BUCK1_INT_SHIFT) == true) ||
-              (Pmic_getBitField_b(regData, BUCK2_INT_SHIFT) == true));
-    buck3Ldo = ((Pmic_getBitField_b(regData, BUCK3_INT_SHIFT) == true) ||
-                (Pmic_getBitField_b(regData, LDO_LS1_VMON1_INT_SHIFT) == true));
+    buck12 = ((Pmic_getBitField_b(regData, BUCK1_INT_SHIFT) == (bool)true) ||
+              (Pmic_getBitField_b(regData, BUCK2_INT_SHIFT) == (bool)true));
+    buck3Ldo = ((Pmic_getBitField_b(regData, BUCK3_INT_SHIFT) == (bool)true) ||
+                (Pmic_getBitField_b(regData, LDO_LS1_VMON1_INT_SHIFT) == (bool)true));
 
     // If BUCK1_INT or BUCK2_INT are set, read and extract bits from L1 register
     // INT_BUCK_12
-    if ((status == PMIC_ST_SUCCESS) && (buck12 == true)) {
+    if ((status == PMIC_ST_SUCCESS) && (buck12 == (bool)true)) {
         status = Pmic_ioRxByte(handle, INT_BUCK_12_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -659,7 +682,7 @@ static int32_t IRQ_getStatBucks(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *i
 
     // If BUCK3_INT or LDO_LS2_VMON1_INT are set, read and extract bits from L1
     // register INT_BUCK3_LDO_LS1_VMON1
-    if ((status == PMIC_ST_SUCCESS) && (buck3Ldo == true)) {
+    if ((status == PMIC_ST_SUCCESS) && (buck3Ldo == (bool)true)) {
         status = Pmic_ioRxByte(handle, INT_BUCK3_LDO_LS1_VMON1_REG, &regData);
 
         if (status == PMIC_ST_SUCCESS) {
@@ -669,6 +692,20 @@ static int32_t IRQ_getStatBucks(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *i
 
     return status;
 }
+
+static const IRQ_StatDispatch_t IRQ_STAT_DISPATCH[] = {
+    { FSM_ERR_INT_SHIFT,            IRQ_getStatFSM       },
+    { SEVERE_ERR_INT_SHIFT,         IRQ_getStatSevere    },
+    { MODERATE_ERR_INT_SHIFT,       IRQ_getStatModerate  },
+    { MISC_INT_SHIFT,               IRQ_getStatMisc      },
+    { STARTUP_INT_SHIFT,            IRQ_getStatStartup   },
+    { VCCA_INT_SHIFT,               IRQ_getStatVccaVmon1 },
+    { LS2_VMON2_INT_SHIFT,          IRQ_getStatLs2Vmon2  },
+    { BUCK_LDO_LS1_VMON1_INT_SHIFT, IRQ_getStatBucks     },
+};
+
+#define IRQ_STAT_DISPATCH_LEN \
+    ((uint8_t)(sizeof(IRQ_STAT_DISPATCH) / sizeof(IRQ_STAT_DISPATCH[0])))
 
 static int32_t IRQ_getStat(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat) {
     int32_t status = PMIC_ST_SUCCESS;
@@ -684,36 +721,10 @@ static int32_t IRQ_getStat(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqSta
 
     status = Pmic_ioRxByte(handle, INT_TOP_REG, &regData);
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, FSM_ERR_INT_SHIFT)) {
-        status = IRQ_getStatFSM(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, SEVERE_ERR_INT_SHIFT)) {
-        status = IRQ_getStatSevere(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, MODERATE_ERR_INT_SHIFT)) {
-        status = IRQ_getStatModerate(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, MISC_INT_SHIFT)) {
-        status = IRQ_getStatMisc(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, STARTUP_INT_SHIFT)) {
-        status = IRQ_getStatStartup(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, VCCA_INT_SHIFT)) {
-        status = IRQ_getStatVccaVmon1(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, LS2_VMON2_INT_SHIFT)) {
-        status = IRQ_getStatLs2Vmon2(handle, irqStat);
-    }
-
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, BUCK_LDO_LS1_VMON1_INT_SHIFT)) {
-        status = IRQ_getStatBucks(handle, irqStat);
+    for (uint8_t i = 0U; (i < IRQ_STAT_DISPATCH_LEN) && (status == PMIC_ST_SUCCESS); i++) {
+        if (Pmic_getBitField_b(regData, IRQ_STAT_DISPATCH[i].shift)) {
+            status = IRQ_STAT_DISPATCH[i].handler(handle, irqStat);
+        }
     }
 
     // Release critical section
@@ -723,7 +734,7 @@ static int32_t IRQ_getStat(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqSta
 }
 
 int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat) {
-    Pmic_IrqStatus_t localIrqStat;
+    Pmic_IrqStatus_t localIrqStat = (Pmic_IrqStatus_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL)) {
@@ -743,7 +754,7 @@ int32_t Pmic_irqGetStatus(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat
 
 static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
     uint8_t statIndex = 0U, bitPos = 0U;
-    bool foundFlag = false;
+    bool foundFlag = (bool)false;
 
     // For each element in struct member intrStat of irqStat...
     for (statIndex = 0U; statIndex < PMIC_NUM_ELEM_IN_INTR_STAT; statIndex++) {
@@ -760,7 +771,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
                 // Clear bit in intrStat element and exit loop
                 irqStat->intrStat[statIndex] &= ~mask;
 
-                foundFlag = true;
+                foundFlag = (bool)true;
                 break;
             }
         }
@@ -775,9 +786,9 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStatus_t *irqStat) {
 }
 
 int32_t Pmic_irqGetNextFlag(const Pmic_Handle_t *handle, Pmic_IrqStatus_t *irqStat, uint8_t *irqNum) {
-    Pmic_IrqStatus_t localIrqStat;
+    Pmic_IrqStatus_t localIrqStat = (Pmic_IrqStatus_t){0};
     int32_t status = PMIC_ST_SUCCESS;
-    bool irqStatEmpty = false;
+    bool irqStatEmpty = (bool)false;
 
     if (((irqStat == NULL) || (irqNum == NULL))) {
         status = PMIC_ST_ERR_NULL_PARAM;

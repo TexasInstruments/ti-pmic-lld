@@ -87,7 +87,7 @@ static double calculateElapsedMs(const struct timeval* start, const struct timev
 static void startTiming(TimingContext_t* ctx, const char* name)
 {
     ctx->name = name;
-    ctx->active = true;
+    ctx->active = (bool)true;
     gettimeofday(&ctx->startTime, NULL);
 }
 
@@ -98,7 +98,7 @@ static void startTiming(TimingContext_t* ctx, const char* name)
 static void stopTiming(TimingContext_t* ctx)
 {
     gettimeofday(&ctx->endTime, NULL);
-    ctx->active = false;
+    ctx->active = (bool)false;
 }
 
 /**

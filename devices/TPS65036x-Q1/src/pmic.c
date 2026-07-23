@@ -108,7 +108,38 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
     return status;
 }
 
-static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+static int32_t setOtherHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config, int32_t status)
+{
+    int32_t localStatus = status;
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID, localStatus))
+    {
+        if (config->irqResponseCallback == NULL)
+        {
+            localStatus = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->irqResponseCallback = config->irqResponseCallback;
+        }
+    }
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, localStatus))
+    {
+        if (config->timerWaitMs == NULL)
+        {
+            localStatus = PMIC_ST_ERR_NULL_FPTR;
+        }
+        else
+        {
+            handle->timerWaitMs = config->timerWaitMs;
+        }
+    }
+
+    return localStatus;
+}
+
+static int32_t setIOHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -138,6 +169,15 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
         }
     }
 
+    return status;
+}
+
+static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    status = setIOHooks(handle, config);
+
     // criticalSectionStart
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID, status))
     {
@@ -164,33 +204,7 @@ static int32_t validateAndSetUserHooks(Pmic_Handle_t *handle, const Pmic_HandleC
         }
     }
 
-    // irqResponseCallback
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID, status))
-    {
-        if (config->irqResponseCallback == NULL)
-        {
-            status = PMIC_ST_ERR_NULL_FPTR;
-        }
-        else
-        {
-            handle->irqResponseCallback = config->irqResponseCallback;
-        }
-    }
-
-    // timerWaitMs
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, status))
-    {
-        if (config->timerWaitMs == NULL)
-        {
-            status = PMIC_ST_ERR_NULL_FPTR;
-        }
-        else
-        {
-            handle->timerWaitMs = config->timerWaitMs;
-        }
-    }
-
-    return status;
+    return setOtherHooks(handle, config, status);
 }
 
 static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
@@ -308,53 +322,43 @@ static int32_t decipherWhetherA0(Pmic_Handle_t *handle)
     return status;
 }
 
+static int32_t setupDeviceRevision(Pmic_Handle_t *handle)
+{
+    const bool isB1 = Pmic_getBitField_b(handle->devSiRev, DEVICE_PG_IDENTIFIER);
+
+    handle->isA0 = (bool)false;
+    if (!isB1)
+    {
+        return decipherWhetherA0(handle);
+    }
+    return PMIC_ST_SUCCESS;
+}
+
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Check whether parameters are valid
     if ((handle == NULL) || (config == NULL))
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        return PMIC_ST_ERR_NULL_PARAM;
     }
 
-    /* Initialize handle to safe defaults */
-    if (status == PMIC_ST_SUCCESS)
-    {
-        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
-    }
+    *handle = (Pmic_Handle_t){0};
+    setI2CConfig(handle, config);
+    setRetryConfig(handle, config);
 
-    // Set I2C configuration
-    if (status == PMIC_ST_SUCCESS)
-    {
-        setI2CConfig(handle, config);
-    }
+    status = validateAndSetUserHandles(handle, config);
 
-    // Set retry configuration
-    if (status == PMIC_ST_SUCCESS)
-    {
-        setRetryConfig(handle, config);
-    }
-
-    // Validate and set user handles
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = validateAndSetUserHandles(handle, config);
-    }
-
-    // Validate and set user hooks
     if (status == PMIC_ST_SUCCESS)
     {
         status = validateAndSetUserHooks(handle, config);
     }
 
-    /* Validate PMIC handle once configurations have been set */
     if (status == PMIC_ST_SUCCESS)
     {
         status = validatePmicHandle(handle);
     }
 
-    // Get PMIC info, store info in pmic handle
     if (status == PMIC_ST_SUCCESS)
     {
         status = getPmicInfo(handle);
@@ -362,21 +366,10 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        const bool isB1 = Pmic_getBitField_b(handle->devSiRev, DEVICE_PG_IDENTIFIER);
-
-        handle->isA0 = (bool)false;
-        if (!isB1)
-        {
-            // Device is not B1. Decipher whether device is A0 or B0
-            status = decipherWhetherA0(handle);
-        }
+        status = setupDeviceRevision(handle);
     }
 
-    // Set the driver initialization status (only if handle is valid)
-    if (handle != NULL)
-    {
-        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : (uint32_t)(~PMIC_DRV_INIT_SUCCESS);
-    }
+    handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : (uint32_t)(~PMIC_DRV_INIT_SUCCESS);
 
     return status;
 }

@@ -235,9 +235,31 @@ static int32_t ESM_setLmaxLminRegs(const Pmic_Handle_t *handle, const Pmic_EsmCf
     return status;
 }
 
+static int32_t ESM_setTimingRegs(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+{
+    int32_t status = ESM_setDelayRegs(handle, esmCfg);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_setHmaxHminRegs(handle, esmCfg);
+    }
+
+    return status;
+}
+
+static int32_t ESM_setLevelRegs(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
+{
+    int32_t status = ESM_setLmaxLminRegs(handle, esmCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_setModeCfg(handle, esmCfg);
+    }
+    return status;
+}
+
 int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
-    Pmic_EsmCfg_t localCfg;
+    Pmic_EsmCfg_t localCfg = (Pmic_EsmCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
@@ -255,28 +277,14 @@ int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
         ESM_copyEsmCfg(esmCfg, &localCfg);
     }
 
-    // Set ESM_DELAY1_REG and ESM_DELAY2_REG registers
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_setDelayRegs(handle, &localCfg);
+        status = ESM_setTimingRegs(handle, &localCfg);
     }
 
-    // Set ESM_HMAX_REG and ESM_HMIN_REG registers
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_setHmaxHminRegs(handle, &localCfg);
-    }
-
-    // Set ESM_LMAX_REG and ESM_LMIN_REG registers
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = ESM_setLmaxLminRegs(handle, &localCfg);
-    }
-
-    // Set ESM_MODE_CFG register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = ESM_setModeCfg(handle, &localCfg);
+        status = ESM_setLevelRegs(handle, &localCfg);
     }
 
     return Pmic_logStatus(handle, status);
@@ -413,9 +421,31 @@ static int32_t ESM_readLmaxLminRegs(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *
     return status;
 }
 
+static int32_t ESM_readTimingRegs(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+{
+    int32_t status = ESM_readModeCfg(handle, esmCfg);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_readDelayRegs(handle, esmCfg);
+    }
+
+    return status;
+}
+
+static int32_t ESM_readLevelRegs(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
+{
+    int32_t status = ESM_readHmaxHminRegs(handle, esmCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = ESM_readLmaxLminRegs(handle, esmCfg);
+    }
+    return status;
+}
+
 int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
-    Pmic_EsmCfg_t localCfg;
+    Pmic_EsmCfg_t localCfg = (Pmic_EsmCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
@@ -433,28 +463,14 @@ int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
         ESM_copyEsmCfg(esmCfg, &localCfg);
     }
 
-    // Read ESM_MODE_CFG register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_readModeCfg(handle, &localCfg);
+        status = ESM_readTimingRegs(handle, &localCfg);
     }
 
-    // Read ESM_DELAY1_REG and ESM_DELAY2_REG registers
     if (status == PMIC_ST_SUCCESS)
     {
-        status = ESM_readDelayRegs(handle, &localCfg);
-    }
-
-    // Read ESM_HMAX_REG and ESM_HMIN_REG registers
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = ESM_readHmaxHminRegs(handle, &localCfg);
-    }
-
-    // Read ESM_LMAX_REG and ESM_LMIN_REG registers
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = ESM_readLmaxLminRegs(handle, &localCfg);
+        status = ESM_readLevelRegs(handle, &localCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -525,9 +541,27 @@ int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *start)
     return Pmic_logStatus(handle, status);
 }
 
+static void ESM_extractStatusBits(uint8_t regData, Pmic_EsmStatus_t *stat)
+{
+    if (Pmic_validParamCheck(stat->validParams, PMIC_ESM_RST_INT_VALID))
+    {
+        stat->rstInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_RST_INT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(stat->validParams, PMIC_ESM_FAIL_INT_VALID))
+    {
+        stat->failInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_FAIL_INT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(stat->validParams, PMIC_ESM_PIN_INT_VALID))
+    {
+        stat->pinInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_PIN_INT_SHIFT);
+    }
+}
+
 int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)
 {
-    Pmic_EsmStatus_t localStat;
+    Pmic_EsmStatus_t localStat = (Pmic_EsmStatus_t){0};
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 
@@ -555,23 +589,7 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract ESM_MCU_RST_INT bit field
-        if (Pmic_validParamCheck(localStat.validParams, PMIC_ESM_RST_INT_VALID))
-        {
-            localStat.rstInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_RST_INT_SHIFT);
-        }
-
-        // Extract ESM_MCU_FAIL_INT bit field
-        if (Pmic_validParamCheck(localStat.validParams, PMIC_ESM_FAIL_INT_VALID))
-        {
-            localStat.failInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_FAIL_INT_SHIFT);
-        }
-
-        // Extract ESM_MCU_PIN_INT bit field
-        if (Pmic_validParamCheck(localStat.validParams, PMIC_ESM_PIN_INT_VALID))
-        {
-            localStat.pinInt = Pmic_getBitField_b(regData, PMIC_ESM_MCU_PIN_INT_SHIFT);
-        }
+        ESM_extractStatusBits(regData, &localStat);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -584,7 +602,7 @@ int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat
 
 int32_t Pmic_esmClrStatus(const Pmic_Handle_t *handle, const Pmic_EsmStatus_t *esmStat)
 {
-    Pmic_EsmStatus_t localStat;
+    Pmic_EsmStatus_t localStat = (Pmic_EsmStatus_t){0};
     uint8_t regData = 0U;
     int32_t status = Pmic_checkHandle(handle);
 

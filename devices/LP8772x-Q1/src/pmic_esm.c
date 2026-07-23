@@ -557,12 +557,12 @@ int32_t Pmic_esmGetErrCnt(const Pmic_Handle_t *handle, uint8_t *esmErrCnt)
 
 int32_t Pmic_esmStart(const Pmic_Handle_t *handle)
 {
-    return Pmic_esmSetStartState(handle, true);
+    return Pmic_esmSetStartState(handle, (bool)true);
 }
 
 int32_t Pmic_esmStop(const Pmic_Handle_t *handle)
 {
-    return Pmic_esmSetStartState(handle, false);
+    return Pmic_esmSetStartState(handle, (bool)false);
 }
 
 int32_t Pmic_esmGetStatus(const Pmic_Handle_t *handle, Pmic_EsmStatus_t *esmStat)

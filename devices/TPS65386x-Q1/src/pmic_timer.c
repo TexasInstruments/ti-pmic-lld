@@ -67,7 +67,7 @@ static inline void TIMER_copyTimerCfg(const Pmic_TimerCfg_t *src, Pmic_TimerCfg_
  * @return PMIC_ST_SUCCESS if state is valid, PMIC_ST_ERR_NOT_SUPPORTED otherwise
  */
 static int32_t TIMER_checkPrescaleCfgState(const Pmic_Handle_t *handle) {
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
     Pmic_TimerCfg_t timerCfg = {0};
 
     timerCfg.validParams = PMIC_CFG_TMR_MODE_VALID;
@@ -80,13 +80,62 @@ static int32_t TIMER_checkPrescaleCfgState(const Pmic_Handle_t *handle) {
     return status;
 }
 
+static int32_t TIMER_validateCfgParams(const Pmic_TimerCfg_t *cfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamCheck(cfg->validParams, PMIC_CFG_TMR_PRESCALE_VALID))
+    {
+        if (cfg->prescale > PMIC_TMR_PRESCALE_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        Pmic_validParamCheck(cfg->validParams, PMIC_CFG_TMR_MODE_VALID))
+    {
+        if (cfg->mode > PMIC_TMR_MODE_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    return status;
+}
+
+static int32_t TIMER_applyTimerCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *localTimerCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
+
+    if (Pmic_validParamStatusCheck(localTimerCfg->validParams, PMIC_CFG_TMR_PRESCALE_VALID, status))
+    {
+        Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, localTimerCfg->prescale);
+    }
+
+    if (Pmic_validParamStatusCheck(localTimerCfg->validParams, PMIC_CFG_TMR_MODE_VALID, status))
+    {
+        Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, localTimerCfg->mode);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
+    }
+    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+
+    return status;
+}
+
 int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
-    Pmic_TimerCfg_t localTimerCfg;
+    Pmic_TimerCfg_t localTimerCfg = (Pmic_TimerCfg_t){0};
 
-    // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -100,28 +149,9 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *tim
     if (status == PMIC_ST_SUCCESS)
     {
         TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
+        status = TIMER_validateCfgParams(&localTimerCfg);
     }
 
-    // Validate parameters first (fail fast on invalid parameters)
-    if ((status == PMIC_ST_SUCCESS) &&
-        Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
-    {
-        if (localTimerCfg.prescale > PMIC_TMR_PRESCALE_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-
-    if ((status == PMIC_ST_SUCCESS) &&
-        Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID))
-    {
-        if (localTimerCfg.mode > PMIC_TMR_MODE_MAX)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-
-    // Validate state after parameters are confirmed valid
     if ((status == PMIC_ST_SUCCESS) &&
         Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
     {
@@ -130,40 +160,31 @@ int32_t Pmic_timerSetCfg(const Pmic_Handle_t *handle, const Pmic_TimerCfg_t *tim
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Read TMR_CFG_REG
-        Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-        status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
-
-        // Modify timer prescale
-        if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID, status))
-        {
-            Pmic_setBitField(&regData, TMR_PS_SHIFT, TMR_PS_MASK, localTimerCfg.prescale);
-        }
-
-        // Modify timer mode
-        if (Pmic_validParamStatusCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID, status))
-        {
-            Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, localTimerCfg.mode);
-        }
-
-        // Write new register value back to PMIC
-        if (status == PMIC_ST_SUCCESS)
-        {
-            status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
-        }
-        Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
+        status = TIMER_applyTimerCfg(handle, &localTimerCfg);
     }
 
     return Pmic_logStatus(handle, status);
+}
+
+static void TIMER_extractTimerCfgFields(uint8_t regData, Pmic_TimerCfg_t *localTimerCfg)
+{
+    if (Pmic_validParamCheck(localTimerCfg->validParams, PMIC_CFG_TMR_PRESCALE_VALID))
+    {
+        localTimerCfg->prescale = Pmic_getBitField(regData, TMR_PS_SHIFT, TMR_PS_MASK);
+    }
+
+    if (Pmic_validParamCheck(localTimerCfg->validParams, PMIC_CFG_TMR_MODE_VALID))
+    {
+        localTimerCfg->mode = Pmic_getBitField(regData, TMR_CFG_SHIFT, TMR_CFG_MASK);
+    }
 }
 
 int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_TimerCfg_t *timerCfg)
 {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
-    Pmic_TimerCfg_t localTimerCfg;
+    Pmic_TimerCfg_t localTimerCfg = (Pmic_TimerCfg_t){0};
 
-    // Parameter check
     if ((status == PMIC_ST_SUCCESS) && (timerCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -179,7 +200,6 @@ int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_TimerCfg_t *timerCfg)
         TIMER_copyTimerCfg(timerCfg, &localTimerCfg);
     }
 
-    // Read TMR_CFG_REG
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioRxByte_CS(handle, TMR_CFG_REG, &regData);
@@ -187,18 +207,7 @@ int32_t Pmic_timerGetCfg(const Pmic_Handle_t *handle, Pmic_TimerCfg_t *timerCfg)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Get timer prescale
-        if (Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_PRESCALE_VALID))
-        {
-            localTimerCfg.prescale = Pmic_getBitField(regData, TMR_PS_SHIFT, TMR_PS_MASK);
-        }
-
-        // Get timer mode
-        if (Pmic_validParamCheck(localTimerCfg.validParams, PMIC_CFG_TMR_MODE_VALID))
-        {
-            localTimerCfg.mode = Pmic_getBitField(regData, TMR_CFG_SHIFT, TMR_CFG_MASK);
-        }
-
+        TIMER_extractTimerCfgFields(regData, &localTimerCfg);
         TIMER_copyTimerCfg(&localTimerCfg, timerCfg);
     }
 

@@ -64,10 +64,9 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
+static int32_t initCommCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
-    /* Check and update PMIC Handle Comm Mode */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_COMM_MODE_VALID, status)) {
         if (config->commMode != PMIC_INTF_SPI) {
             status = PMIC_ST_ERR_INV_PARAM;
@@ -76,7 +75,6 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
         }
     }
 
-    /* Check and update PMIC Handle Comm Handle */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_COMM_HANDLE_0_VALID, status)) {
         if (config->commHandle0 == NULL) {
             status = PMIC_ST_ERR_NULL_PARAM;
@@ -85,23 +83,36 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
         }
     }
 
-    /* Update retry count */
+    return status;
+}
+
+static int32_t initRetryAndTimerCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
+    int32_t status = PMIC_ST_SUCCESS;
+
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID, status)) {
         handle->retryCnt = config->retryCnt;
     }
 
-    /* Update retry interval */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID, status)) {
         handle->retryIntervalMs = config->retryIntervalMs;
     }
 
-    /* Update timer hook */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, status)) {
         if (config->timerWaitMs == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
             handle->timerWaitMs = config->timerWaitMs;
         }
+    }
+
+    return status;
+}
+
+static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
+    int32_t status = initCommCfg(config, handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = initRetryAndTimerCfg(config, handle);
     }
 
     return status;
@@ -233,7 +244,7 @@ static int32_t getPmicInfo(Pmic_Handle_t *handle) {
 
 static int32_t validatePmicHandle(const Pmic_Handle_t *handle) {
     /* Validate async hooks if async mode enabled */
-    if (handle->asyncEnable != false) {
+    if (handle->asyncEnable != (bool)false) {
         if ((handle->asyncRxStart == NULL) || (handle->asyncTxStart == NULL) ||
             (handle->asyncRxAwait == NULL) || (handle->asyncTxAwait == NULL)) {
             return PMIC_ST_ERR_NULL_FPTR;
@@ -264,6 +275,20 @@ static int32_t validateComms(const Pmic_Handle_t *handle) {
     return status;
 }
 
+static int32_t initHandleFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
+    int32_t status = initCommsFunctions(config, handle);
+    if (status == PMIC_ST_SUCCESS) { status = initCritSecFunctions(config, handle); }
+    if (status == PMIC_ST_SUCCESS) { status = initAsyncFunctions(config, handle); }
+    return status;
+}
+
+static int32_t validateAndGetPmicInfo(Pmic_Handle_t *handle) {
+    int32_t status = validatePmicHandle(handle);
+    if (status == PMIC_ST_SUCCESS) { status = getPmicInfo(handle); }
+    if (status == PMIC_ST_SUCCESS) { status = validateComms(handle); }
+    return status;
+}
+
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
@@ -276,7 +301,7 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
 
     /* Initialize handle to safe defaults */
     if (status == PMIC_ST_SUCCESS) {
-        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
+        *handle = (Pmic_Handle_t){0};
     }
 
     /* Check and update PMIC Handle for device type, Comm Mode, Main Slave Address
@@ -285,34 +310,12 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
         status = initHandleBasicDevCfg(config, handle);
     }
 
-    /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn */
     if (status == PMIC_ST_SUCCESS) {
-        status = initCommsFunctions(config, handle);
+        status = initHandleFunctions(config, handle);
     }
 
-    /* Check and update PMIC handle for Critical section Start/Stop */
     if (status == PMIC_ST_SUCCESS) {
-        status = initCritSecFunctions(config, handle);
-    }
-
-    /* Check and update PMIC handle for async functions */
-    if (status == PMIC_ST_SUCCESS) {
-        status = initAsyncFunctions(config, handle);
-    }
-
-    /* Validate PMIC handle once configurations have been set */
-    if (status == PMIC_ST_SUCCESS) {
-        status = validatePmicHandle(handle);
-    }
-
-    // Get PMIC info, store info in pmic handle
-    if (status == PMIC_ST_SUCCESS) {
-        status = getPmicInfo(handle);
-    }
-
-    // Validate communication with the device.
-    if (status == PMIC_ST_SUCCESS) {
-        status = validateComms(handle);
+        status = validateAndGetPmicInfo(handle);
     }
 
     // Set the driver initialization status (only if handle is valid)
@@ -336,7 +339,7 @@ int32_t Pmic_deinit(Pmic_Handle_t *handle) {
         handle->criticalSectionStop = NULL;
         handle->ioRead = NULL;
         handle->ioWrite = NULL;
-        handle->asyncEnable = false;
+        handle->asyncEnable = (bool)false;
         handle->taskHandle = NULL;
         handle->asyncRxStart = NULL;
         handle->asyncTxStart = NULL;

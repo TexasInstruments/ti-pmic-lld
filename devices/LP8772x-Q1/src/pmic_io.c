@@ -170,7 +170,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *pRx
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (true);
+    } while ((bool)true);
 
     // Store read data
     if (status == PMIC_ST_SUCCESS) {
@@ -181,7 +181,7 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *pRx
 }
 
 int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t *rxBuffer) {
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, regAddr, rxBuffer);
@@ -233,13 +233,13 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txDa
 
         (void)Pmic_incrementRetryCnt(handle);
         Pmic_timerWaitMs(handle, handle->retryIntervalMs);
-    } while (true);
+    } while ((bool)true);
 
     return status;
 }
 
 int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint8_t regAddr, uint8_t txData) {
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioTxByte(handle, regAddr, txData);

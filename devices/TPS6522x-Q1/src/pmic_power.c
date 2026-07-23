@@ -207,14 +207,18 @@ static inline void PWR_getVmonPgWindowRegAddr(uint8_t vmonId, uint16_t *regAddr)
 static inline void PWR_getBuckGrpSelInfo(uint8_t buckId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_1_REG;
-    *shift = (uint8_t)((buckId - 1U) * 2U);
+    *shift = ((buckId >= 1U) && (buckId <= PMIC_POWER_RESOURCE_ID_BUCK4))
+             ? (uint8_t)((buckId - 1U) * 2U)
+             : 0U;
 }
 
 // Get LDO group select register and shift based on LDO ID
 static inline void PWR_getLdoGrpSelInfo(uint8_t ldoId, uint16_t *regAddr, uint8_t *shift)
 {
     *regAddr = RAIL_SEL_2_REG;
-    *shift = (uint8_t)(ldoId * 2U);
+    *shift = (ldoId <= PMIC_POWER_RESOURCE_ID_LDO3)
+             ? (uint8_t)(ldoId * 2U)
+             : 0U;
 }
 
 // Get VMON group select register and shift based on VMON ID
@@ -230,15 +234,11 @@ static inline void PWR_getVmonGrpSelInfo(uint8_t vmonId, uint16_t *regAddr, uint
     }
 }
 
-// Set buck configuration
-static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
+static int32_t PWR_setBuckCtrlReg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t buckId = 0U;
-    PWR_getRsrcId((uint16_t)((uint16_t)buckCfg->resource), &buckId);
 
-    // Set BUCK control register fields (EN, PLDN, VMON_EN, FPWM)
     if ((Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_EN_VALID)) ||
         (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID)) ||
         (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_EN_VALID)) ||
@@ -276,8 +276,15 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    // Set buck slew rate
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setBuckSlewRate(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
     {
         if (buckCfg->slewRate > PMIC_POWER_BUCK_SLEW_RATE_MAX)
         {
@@ -299,8 +306,14 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
         }
     }
 
-    // Set buck voltage
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setBuckVset(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
     {
         uint8_t vsetMin, vsetMax;
         if (buckId == PMIC_POWER_RESOURCE_ID_BUCK1)
@@ -326,8 +339,15 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
         }
     }
 
-    // Set buck VMON threshold
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_THR_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setBuckVmonThr(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_THR_VALID))
     {
         if (buckCfg->vmonThr > PMIC_POWER_VMON_THR_MAX)
         {
@@ -349,11 +369,18 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
         }
     }
 
-    // Set buck group select
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setBuckGrpSel(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_GRP_SEL_VALID))
     {
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
 
         if (buckCfg->grpSel > PMIC_POWER_GRP_SEL_MAX)
         {
@@ -362,7 +389,6 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
         else
         {
             PWR_getBuckGrpSelInfo(buckId, &grpSelRegAddr, &grpSelShift);
-
             Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
             status = Pmic_ioRxByte(handle, grpSelRegAddr, &regData);
 
@@ -378,15 +404,42 @@ static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg
     return status;
 }
 
-// Get buck configuration
-static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
+// Set buck configuration
+static int32_t PWR_setBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
     uint8_t buckId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)buckCfg->resource), &buckId);
 
-    // Get BUCK control register fields
+    int32_t status = PWR_setBuckCtrlReg(handle, buckCfg, buckId);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckSlewRate(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckVset(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckVmonThr(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setBuckGrpSel(handle, buckCfg, buckId);
+    }
+
+    return status;
+}
+
+static int32_t PWR_getBuckCtrlReg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
     if ((Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_EN_VALID)) ||
         (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_PLDN_EN_VALID)) ||
         (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_EN_VALID)) ||
@@ -420,8 +473,15 @@ static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *bu
         }
     }
 
-    // Get buck slew rate
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getBuckSlewRate(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_SLEW_RATE_VALID))
     {
         uint16_t confRegAddr = 0U;
         PWR_getBuckConfRegAddr(buckId, &confRegAddr);
@@ -433,8 +493,15 @@ static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *bu
         }
     }
 
-    // Get buck voltage
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getBuckVset(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VSET_VALID))
     {
         uint16_t voutRegAddr = 0U;
         PWR_getBuckVoutRegAddr(buckId, &voutRegAddr);
@@ -446,8 +513,15 @@ static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *bu
         }
     }
 
-    // Get buck VMON threshold
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_THR_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getBuckVmonThr(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_VMON_THR_VALID))
     {
         uint16_t pgWindowRegAddr = 0U;
         PWR_getBuckPgWindowRegAddr(buckId, &pgWindowRegAddr);
@@ -459,14 +533,19 @@ static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *bu
         }
     }
 
-    // Get buck group select
-    if (Pmic_validParamStatusCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getBuckGrpSel(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg, uint8_t buckId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_CFG_PWR_BUCK_GRP_SEL_VALID))
     {
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
-
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
         PWR_getBuckGrpSelInfo(buckId, &grpSelRegAddr, &grpSelShift);
-
         status = Pmic_ioRxByte_CS(handle, grpSelRegAddr, &regData);
 
         if (status == PMIC_ST_SUCCESS)
@@ -478,15 +557,42 @@ static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *bu
     return status;
 }
 
-// Set LDO configuration
-static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
+// Get buck configuration
+static int32_t PWR_getBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
+{
+    uint8_t buckId = 0U;
+    PWR_getRsrcId((uint16_t)((uint16_t)buckCfg->resource), &buckId);
+
+    int32_t status = PWR_getBuckCtrlReg(handle, buckCfg, buckId);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getBuckSlewRate(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getBuckVset(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getBuckVmonThr(handle, buckCfg, buckId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getBuckGrpSel(handle, buckCfg, buckId);
+    }
+
+    return status;
+}
+
+static int32_t PWR_setLdoCtrlReg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t ldoId = 0U;
-    PWR_getRsrcId((uint16_t)((uint16_t)ldoCfg->resource), &ldoId);
 
-    // Set LDO control register fields (EN, VMON_EN, DISCHARGE_EN)
     if ((Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_EN_VALID)) ||
         (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_EN_VALID)) ||
         (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_DISCHARGE_EN_VALID)))
@@ -518,9 +624,16 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    // Set LDO VSET and bypass enable
-    if ((Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VSET_VALID, status)) ||
-        (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_BYP_EN_VALID, status)))
+    return status;
+}
+
+static int32_t PWR_setLdoVoutReg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if ((Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VSET_VALID)) ||
+        (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_BYP_EN_VALID)))
     {
         uint16_t voutRegAddr = 0U;
         PWR_getLdoVoutRegAddr(ldoId, &voutRegAddr);
@@ -563,8 +676,15 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    // Set LDO VMON threshold
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_THR_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setLdoVmonThr(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_THR_VALID))
     {
         if (ldoCfg->vmonThr > PMIC_POWER_VMON_THR_MAX)
         {
@@ -586,11 +706,18 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
         }
     }
 
-    // Set LDO group select
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setLdoGrpSel(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_GRP_SEL_VALID))
     {
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
 
         if (ldoCfg->grpSel > PMIC_POWER_GRP_SEL_MAX)
         {
@@ -599,7 +726,6 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
         else
         {
             PWR_getLdoGrpSelInfo(ldoId, &grpSelRegAddr, &grpSelShift);
-
             Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
             status = Pmic_ioRxByte(handle, grpSelRegAddr, &regData);
 
@@ -615,15 +741,37 @@ static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t
     return status;
 }
 
-// Get LDO configuration
-static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+// Set LDO configuration
+static int32_t PWR_setLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
     uint8_t ldoId = 0U;
     PWR_getRsrcId((uint16_t)((uint16_t)ldoCfg->resource), &ldoId);
 
-    // Get LDO control register fields
+    int32_t status = PWR_setLdoCtrlReg(handle, ldoCfg, ldoId);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoVoutReg(handle, ldoCfg, ldoId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoVmonThr(handle, ldoCfg, ldoId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setLdoGrpSel(handle, ldoCfg, ldoId);
+    }
+
+    return status;
+}
+
+static int32_t PWR_getLdoCtrlReg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
     if ((Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_EN_VALID)) ||
         (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_EN_VALID)) ||
         (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_DISCHARGE_EN_VALID)))
@@ -651,9 +799,16 @@ static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoC
         }
     }
 
-    // Get LDO VSET and bypass enable
-    if ((Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VSET_VALID, status)) ||
-        (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_BYP_EN_VALID, status)))
+    return status;
+}
+
+static int32_t PWR_getLdoVoutReg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if ((Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VSET_VALID)) ||
+        (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_BYP_EN_VALID)))
     {
         uint16_t voutRegAddr = 0U;
         PWR_getLdoVoutRegAddr(ldoId, &voutRegAddr);
@@ -673,8 +828,15 @@ static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoC
         }
     }
 
-    // Get LDO VMON threshold
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_THR_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getLdoVmonThr(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_VMON_THR_VALID))
     {
         uint16_t pgWindowRegAddr = 0U;
         PWR_getLdoPgWindowRegAddr(ldoId, &pgWindowRegAddr);
@@ -686,14 +848,19 @@ static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoC
         }
     }
 
-    // Get LDO group select
-    if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getLdoGrpSel(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg, uint8_t ldoId)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(ldoCfg->validParams, PMIC_CFG_PWR_LDO_GRP_SEL_VALID))
     {
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
-
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
         PWR_getLdoGrpSelInfo(ldoId, &grpSelRegAddr, &grpSelShift);
-
         status = Pmic_ioRxByte_CS(handle, grpSelRegAddr, &regData);
 
         if (status == PMIC_ST_SUCCESS)
@@ -705,18 +872,41 @@ static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoC
     return status;
 }
 
-// Set VCCA_VMON/VMONx configuration
-static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+// Get LDO configuration
+static int32_t PWR_getLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
+{
+    uint8_t ldoId = 0U;
+    PWR_getRsrcId((uint16_t)((uint16_t)ldoCfg->resource), &ldoId);
+
+    int32_t status = PWR_getLdoCtrlReg(handle, ldoCfg, ldoId);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoVoutReg(handle, ldoCfg, ldoId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoVmonThr(handle, ldoCfg, ldoId);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getLdoGrpSel(handle, ldoCfg, ldoId);
+    }
+
+    return status;
+}
+
+static int32_t PWR_setVccaVmonEn(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg, bool isVcca)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    const bool isVcca = (vccaVmonCfg->resource == PMIC_POWER_RESOURCE_VCCA_VMON);
 
-    // Set VMON enable
-    if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_EN_VALID, status))
+    if (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_EN_VALID))
     {
         uint8_t vmonId = 0U;
-        uint8_t vmonEnShift;
+        uint8_t vmonEnShift = 0U;
         PWR_getRsrcId((uint16_t)((uint16_t)vccaVmonCfg->resource), &vmonId);
 
         if (isVcca)
@@ -743,9 +933,68 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    // Set PG set and threshold
-    if ((Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID, status)) ||
-        (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID, status)))
+    return status;
+}
+
+static int32_t PWR_setVccaVmonThrField(uint8_t *regData, uint8_t vmonThr, bool isVcca)
+{
+    const uint8_t thrMax = isVcca ? PMIC_POWER_VCCA_VMON_THR_MAX : PMIC_POWER_VMON_THR_MAX;
+    const uint8_t thrShift = isVcca ? VCCA_VMON_THR_SHIFT : VMON_THR_SHIFT;
+    const uint8_t thrMask = isVcca ? VCCA_VMON_THR_MASK : VMON_THR_MASK;
+
+    if (vmonThr > thrMax)
+    {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+    Pmic_setBitField(regData, thrShift, thrMask, vmonThr);
+    return PMIC_ST_SUCCESS;
+}
+
+static int32_t PWR_setVccaPgSetField(uint8_t *regData, uint8_t pgSet)
+{
+    if (pgSet > PMIC_POWER_VCCA_VMON_PG_SET_MAX)
+    {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+    Pmic_setBitField(regData, VCCA_PG_SET_SHIFT, VCCA_PG_SET_MASK, pgSet);
+    return PMIC_ST_SUCCESS;
+}
+
+static int32_t PWR_setVmonPgSetReg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+{
+    uint8_t vmonId = 0U;
+    uint16_t pgLevelRegAddr = 0U;
+    uint8_t pgSetMin = 0U;
+    uint8_t pgSetMax = 0U;
+
+    PWR_getRsrcId((uint16_t)((uint16_t)vccaVmonCfg->resource), &vmonId);
+    PWR_getVmonPgLevelRegAddr(vmonId, &pgLevelRegAddr);
+
+    if (vmonId == PMIC_POWER_RESOURCE_ID_VMON1)
+    {
+        pgSetMin = PMIC_POWER_VMON1_PG_SET_MIN;
+        pgSetMax = PMIC_POWER_VMON1_PG_SET_MAX;
+    }
+    else
+    {
+        pgSetMin = PMIC_POWER_VMON2_PG_SET_MIN;
+        pgSetMax = PMIC_POWER_VMON2_PG_SET_MAX;
+    }
+
+    if ((vccaVmonCfg->pgSet < pgSetMin) || (vccaVmonCfg->pgSet > pgSetMax))
+    {
+        return PMIC_ST_ERR_INV_PARAM;
+    }
+    return Pmic_ioTxByte(handle, pgLevelRegAddr, vccaVmonCfg->pgSet);
+}
+
+static int32_t PWR_setVccaVmonPgWindow(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg, bool isVcca)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if ((Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID)) ||
+        (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID)))
     {
         uint16_t pgWindowRegAddr = 0U;
         if (isVcca)
@@ -764,61 +1013,18 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
 
         if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID, status))
         {
-            uint8_t thrMax = isVcca ? PMIC_POWER_VCCA_VMON_THR_MAX : PMIC_POWER_VMON_THR_MAX;
-
-            if (vccaVmonCfg->vmonThr > thrMax)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-            else
-            {
-                uint8_t thrShift = isVcca ? VCCA_VMON_THR_SHIFT : VMON_THR_SHIFT;
-                uint8_t thrMask = isVcca ? VCCA_VMON_THR_MASK : VMON_THR_MASK;
-                Pmic_setBitField(&regData, thrShift, thrMask, vccaVmonCfg->vmonThr);
-            }
+            status = PWR_setVccaVmonThrField(&regData, vccaVmonCfg->vmonThr, isVcca);
         }
 
         if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID, status))
         {
             if (isVcca)
             {
-                if (vccaVmonCfg->pgSet > PMIC_POWER_VCCA_VMON_PG_SET_MAX)
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-                else
-                {
-                    Pmic_setBitField(&regData, VCCA_PG_SET_SHIFT, VCCA_PG_SET_MASK, vccaVmonCfg->pgSet);
-                }
+                status = PWR_setVccaPgSetField(&regData, vccaVmonCfg->pgSet);
             }
             else
             {
-                // For VMON1/VMON2, write to separate PG_LEVEL register
-                uint8_t vmonId = 0U;
-                uint16_t pgLevelRegAddr = 0U;
-                uint8_t pgSetMin, pgSetMax;
-                PWR_getRsrcId((uint16_t)((uint16_t)vccaVmonCfg->resource), &vmonId);
-                PWR_getVmonPgLevelRegAddr(vmonId, &pgLevelRegAddr);
-
-                if (vmonId == PMIC_POWER_RESOURCE_ID_VMON1)
-                {
-                    pgSetMin = PMIC_POWER_VMON1_PG_SET_MIN;
-                    pgSetMax = PMIC_POWER_VMON1_PG_SET_MAX;
-                }
-                else
-                {
-                    pgSetMin = PMIC_POWER_VMON2_PG_SET_MIN;
-                    pgSetMax = PMIC_POWER_VMON2_PG_SET_MAX;
-                }
-
-                if ((vccaVmonCfg->pgSet < pgSetMin) || (vccaVmonCfg->pgSet > pgSetMax))
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-                else
-                {
-                    status = Pmic_ioTxByte(handle, pgLevelRegAddr, vccaVmonCfg->pgSet);
-                }
+                status = PWR_setVmonPgSetReg(handle, vccaVmonCfg);
             }
         }
 
@@ -831,11 +1037,18 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
         Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
     }
 
-    // Set group select
-    if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_setVccaVmonGrpSel(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_GRP_SEL_VALID))
     {
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
 
         if (vccaVmonCfg->grpSel > PMIC_POWER_GRP_SEL_MAX)
         {
@@ -862,18 +1075,35 @@ static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVcc
     return status;
 }
 
-// Get VCCA_VMON/VMONx configuration
-static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+// Set VCCA_VMON/VMONx configuration
+static int32_t PWR_setVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+{
+    const bool isVcca = (vccaVmonCfg->resource == PMIC_POWER_RESOURCE_VCCA_VMON);
+
+    int32_t status = PWR_setVccaVmonEn(handle, vccaVmonCfg, isVcca);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setVccaVmonPgWindow(handle, vccaVmonCfg, isVcca);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_setVccaVmonGrpSel(handle, vccaVmonCfg);
+    }
+
+    return status;
+}
+
+static int32_t PWR_getVccaVmonEn(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg, bool isVcca)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    const bool isVcca = (vccaVmonCfg->resource == PMIC_POWER_RESOURCE_VCCA_VMON);
 
-    // Get VMON enable
-    if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_EN_VALID, status))
+    if (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_EN_VALID))
     {
         uint8_t vmonId = 0U;
-        uint8_t vmonEnShift;
+        uint8_t vmonEnShift = 0U;
         PWR_getRsrcId((uint16_t)((uint16_t)vccaVmonCfg->resource), &vmonId);
 
         if (isVcca)
@@ -897,9 +1127,16 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
         }
     }
 
-    // Get PG window (threshold)
-    if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID, status) ||
-        (isVcca && Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID, status)))
+    return status;
+}
+
+static int32_t PWR_getVccaVmonPgWindow(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg, bool isVcca)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if ((Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_THR_VALID)) ||
+        (isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID)))
     {
         uint8_t vmonId = 0U;
         uint16_t pgWindowRegAddr = 0U;
@@ -931,8 +1168,15 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
         }
     }
 
-    // Get PG level (for VMON1/VMON2)
-    if (!isVcca && Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getVccaVmonPgLevel(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg, bool isVcca)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (!isVcca && Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_PG_SET_VALID))
     {
         uint8_t vmonId = 0U;
         uint16_t pgLevelRegAddr = 0U;
@@ -947,16 +1191,21 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
         }
     }
 
-    // Get group select
-    if (Pmic_validParamStatusCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_GRP_SEL_VALID, status))
+    return status;
+}
+
+static int32_t PWR_getVccaVmonGrpSel(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+
+    if (Pmic_validParamCheck(vccaVmonCfg->validParams, PMIC_CFG_PWR_VCCA_VMON_GRP_SEL_VALID))
     {
         uint8_t vmonId = 0U;
-        uint16_t grpSelRegAddr;
-        uint8_t grpSelShift;
+        uint16_t grpSelRegAddr = 0U;
+        uint8_t grpSelShift = 0U;
         PWR_getRsrcId((uint16_t)((uint16_t)vccaVmonCfg->resource), &vmonId);
-
         PWR_getVmonGrpSelInfo(vmonId, &grpSelRegAddr, &grpSelShift);
-
         status = Pmic_ioRxByte_CS(handle, grpSelRegAddr, &regData);
 
         if (status == PMIC_ST_SUCCESS)
@@ -968,13 +1217,38 @@ static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonC
     return status;
 }
 
+// Get VCCA_VMON/VMONx configuration
+static int32_t PWR_getVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
+{
+    const bool isVcca = (vccaVmonCfg->resource == PMIC_POWER_RESOURCE_VCCA_VMON);
+
+    int32_t status = PWR_getVccaVmonEn(handle, vccaVmonCfg, isVcca);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getVccaVmonPgWindow(handle, vccaVmonCfg, isVcca);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getVccaVmonPgLevel(handle, vccaVmonCfg, isVcca);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = PWR_getVccaVmonGrpSel(handle, vccaVmonCfg);
+    }
+
+    return status;
+}
+
 /* ========================================================================== */
 /*                          Public API Implementations                        */
 /* ========================================================================== */
 
 int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
-    Pmic_PwrBuckCfg_t buckCfgLocal;
+    Pmic_PwrBuckCfg_t buckCfgLocal = (Pmic_PwrBuckCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1003,7 +1277,7 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_Handle_t *handle, const Pmic_PwrBuckCfg_t 
 
 int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckCfg)
 {
-    Pmic_PwrBuckCfg_t buckCfgLocal;
+    Pmic_PwrBuckCfg_t buckCfgLocal = (Pmic_PwrBuckCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1039,7 +1313,7 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_Handle_t *handle, Pmic_PwrBuckCfg_t *buckC
 
 int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    Pmic_PwrLdoCfg_t ldoCfgLocal;
+    Pmic_PwrLdoCfg_t ldoCfgLocal = (Pmic_PwrLdoCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1068,7 +1342,7 @@ int32_t Pmic_pwrSetLdoCfg(const Pmic_Handle_t *handle, const Pmic_PwrLdoCfg_t *l
 
 int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    Pmic_PwrLdoCfg_t ldoCfgLocal;
+    Pmic_PwrLdoCfg_t ldoCfgLocal = (Pmic_PwrLdoCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1104,7 +1378,7 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_Handle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 
 int32_t Pmic_pwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
 {
-    Pmic_PwrVccaVmonCfg_t vccaVmonCfgLocal;
+    Pmic_PwrVccaVmonCfg_t vccaVmonCfgLocal = (Pmic_PwrVccaVmonCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1133,7 +1407,7 @@ int32_t Pmic_pwrSetVccaVmonCfg(const Pmic_Handle_t *handle, const Pmic_PwrVccaVm
 
 int32_t Pmic_pwrGetVccaVmonCfg(const Pmic_Handle_t *handle, Pmic_PwrVccaVmonCfg_t *vccaVmonCfg)
 {
-    Pmic_PwrVccaVmonCfg_t vccaVmonCfgLocal;
+    Pmic_PwrVccaVmonCfg_t vccaVmonCfgLocal = (Pmic_PwrVccaVmonCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -1195,7 +1469,7 @@ int32_t Pmic_pwrSetGlobalVmonDegl(const Pmic_Handle_t *handle, uint8_t vmonDegl)
 
 int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermalCfg_t *thermalCfg)
 {
-    Pmic_PwrThermalCfg_t thermalCfgLocal;
+    Pmic_PwrThermalCfg_t thermalCfgLocal = (Pmic_PwrThermalCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -1254,7 +1528,7 @@ int32_t Pmic_pwrSetThermalCfg(const Pmic_Handle_t *handle, const Pmic_PwrThermal
 
 int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t *thermalCfg)
 {
-    Pmic_PwrThermalCfg_t thermalCfgLocal;
+    Pmic_PwrThermalCfg_t thermalCfgLocal = (Pmic_PwrThermalCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -1296,7 +1570,7 @@ int32_t Pmic_pwrGetThermalCfg(const Pmic_Handle_t *handle, Pmic_PwrThermalCfg_t 
 
 int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg)
 {
-    Pmic_PwrSpreadSpectrumCfg_t spreadSpectrumCfgLocal;
+    Pmic_PwrSpreadSpectrumCfg_t spreadSpectrumCfgLocal = (Pmic_PwrSpreadSpectrumCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -1341,7 +1615,7 @@ int32_t Pmic_pwrSetSpreadSpectrumCfg(const Pmic_Handle_t *handle, const Pmic_Pwr
 
 int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpreadSpectrumCfg_t *spreadSpectrumCfg)
 {
-    Pmic_PwrSpreadSpectrumCfg_t spreadSpectrumCfgLocal;
+    Pmic_PwrSpreadSpectrumCfg_t spreadSpectrumCfgLocal = (Pmic_PwrSpreadSpectrumCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -1381,11 +1655,110 @@ int32_t Pmic_pwrGetSpreadSpectrumCfg(const Pmic_Handle_t *handle, Pmic_PwrSpread
     return Pmic_logStatus(handle, status);
 }
 
+static void PWR_extractBuckUvovFields(uint8_t regData, Pmic_PwrRsrcStatus_t *rsrcStatus)
+{
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK1_UVOV_VALID))
+    {
+        rsrcStatus->buck1UVOV = Pmic_getBitField_b(regData, BUCK1_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK2_UVOV_VALID))
+    {
+        rsrcStatus->buck2UVOV = Pmic_getBitField_b(regData, BUCK2_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK3_UVOV_VALID))
+    {
+        rsrcStatus->buck3UVOV = Pmic_getBitField_b(regData, BUCK3_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK4_UVOV_VALID))
+    {
+        rsrcStatus->buck4UVOV = Pmic_getBitField_b(regData, BUCK4_UVOV_STAT_SHIFT);
+    }
+}
+
+static void PWR_extractLdoVmonUvovFields(uint8_t regData, Pmic_PwrRsrcStatus_t *rsrcStatus)
+{
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO1_UVOV_VALID))
+    {
+        rsrcStatus->ldo1UVOV = Pmic_getBitField_b(regData, LDO1_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO2_UVOV_VALID))
+    {
+        rsrcStatus->ldo2UVOV = Pmic_getBitField_b(regData, LDO2_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO3_UVOV_VALID))
+    {
+        rsrcStatus->ldo3UVOV = Pmic_getBitField_b(regData, LDO3_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VMON1_UVOV_VALID))
+    {
+        rsrcStatus->vmon1UVOV = Pmic_getBitField_b(regData, VMON1_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VMON2_UVOV_VALID))
+    {
+        rsrcStatus->vmon2UVOV = Pmic_getBitField_b(regData, VMON2_UVOV_STAT_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VCCA_VMON_UVOV_VALID))
+    {
+        rsrcStatus->vccaVmonUVOV = Pmic_getBitField_b(regData, VCCA_UVOV_STAT_SHIFT);
+    }
+}
+
+static int32_t PWR_getBuckUvovStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *rsrcStatus)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if ((Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK1_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK2_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK3_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_BUCK4_UVOV_VALID)))
+    {
+        uint8_t regData = 0U;
+        status = Pmic_ioRxByte_CS(handle, STAT_BUCK_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            PWR_extractBuckUvovFields(regData, rsrcStatus);
+        }
+    }
+
+    return status;
+}
+
+static int32_t PWR_getLdoVmonUvovStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *rsrcStatus)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if ((Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO1_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO2_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_LDO3_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VMON1_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VMON2_UVOV_VALID)) ||
+        (Pmic_validParamCheck(rsrcStatus->validParams, PMIC_PWR_VCCA_VMON_UVOV_VALID)))
+    {
+        uint8_t regData = 0U;
+        status = Pmic_ioRxByte_CS(handle, STAT_LDO_VMON_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            PWR_extractLdoVmonUvovFields(regData, rsrcStatus);
+        }
+    }
+
+    return status;
+}
+
 int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t *rsrcStatus)
 {
-    Pmic_PwrRsrcStatus_t rsrcStatusLocal;
+    Pmic_PwrRsrcStatus_t rsrcStatusLocal = (Pmic_PwrRsrcStatus_t){0};
     int32_t status = Pmic_checkHandle(handle);
-    uint8_t regData = 0U;
 
     if (status != PMIC_ST_SUCCESS)
     {
@@ -1404,82 +1777,11 @@ int32_t Pmic_pwrGetRsrcStatus(const Pmic_Handle_t *handle, Pmic_PwrRsrcStatus_t 
 
     PWR_copyPwrRsrcStatus(rsrcStatus, &rsrcStatusLocal);
 
-    // Get buck UVOV status
-    if (
-        (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK1_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK2_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK3_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK4_UVOV_VALID)))
+    status = PWR_getBuckUvovStatus(handle, &rsrcStatusLocal);
+
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte_CS(handle, STAT_BUCK_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK1_UVOV_VALID))
-            {
-                rsrcStatusLocal.buck1UVOV = Pmic_getBitField_b(regData, BUCK1_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK2_UVOV_VALID))
-            {
-                rsrcStatusLocal.buck2UVOV = Pmic_getBitField_b(regData, BUCK2_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK3_UVOV_VALID))
-            {
-                rsrcStatusLocal.buck3UVOV = Pmic_getBitField_b(regData, BUCK3_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_BUCK4_UVOV_VALID))
-            {
-                rsrcStatusLocal.buck4UVOV = Pmic_getBitField_b(regData, BUCK4_UVOV_STAT_SHIFT);
-            }
-        }
-    }
-
-    // Get LDO and VMON UVOV status
-    if ((status == PMIC_ST_SUCCESS) &&
-        (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO1_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO2_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO3_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VMON1_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VMON2_UVOV_VALID) ||
-         Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VCCA_VMON_UVOV_VALID)))
-    {
-        status = Pmic_ioRxByte_CS(handle, STAT_LDO_VMON_REG, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO1_UVOV_VALID))
-            {
-                rsrcStatusLocal.ldo1UVOV = Pmic_getBitField_b(regData, LDO1_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO2_UVOV_VALID))
-            {
-                rsrcStatusLocal.ldo2UVOV = Pmic_getBitField_b(regData, LDO2_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_LDO3_UVOV_VALID))
-            {
-                rsrcStatusLocal.ldo3UVOV = Pmic_getBitField_b(regData, LDO3_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VMON1_UVOV_VALID))
-            {
-                rsrcStatusLocal.vmon1UVOV = Pmic_getBitField_b(regData, VMON1_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VMON2_UVOV_VALID))
-            {
-                rsrcStatusLocal.vmon2UVOV = Pmic_getBitField_b(regData, VMON2_UVOV_STAT_SHIFT);
-            }
-
-            if (Pmic_validParamCheck(rsrcStatusLocal.validParams, PMIC_PWR_VCCA_VMON_UVOV_VALID))
-            {
-                rsrcStatusLocal.vccaVmonUVOV = Pmic_getBitField_b(regData, VCCA_UVOV_STAT_SHIFT);
-            }
-        }
+        status = PWR_getLdoVmonUvovStatus(handle, &rsrcStatusLocal);
     }
 
     if (status == PMIC_ST_SUCCESS)

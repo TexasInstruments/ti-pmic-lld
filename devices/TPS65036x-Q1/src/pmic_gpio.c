@@ -58,7 +58,7 @@ static inline void GPIO_copyGpioCfg(const Pmic_GpioCfg_t *src, Pmic_GpioCfg_t *d
 static int32_t GPIO_setGPIOCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read INTERFACE_CONF
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
@@ -100,17 +100,10 @@ static int32_t GPIO_setGPIOCfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t
     return status;
 }
 
-/** @brief Set NINT_GPI configuration */
-static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_applyNINTGPIStyleBits(const Pmic_GpioCfg_t *gpioCfg, uint8_t *regData)
 {
-    uint8_t regData = 0U;
-    int32_t status;
+    int32_t status = PMIC_ST_SUCCESS;
 
-    // Read FUNC_CONF
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
-    status = Pmic_ioRxByte(handle, PMIC_FUNC_CONF_REG, &regData);
-
-    // Set NINT_GPI pullup/pulldown resistor configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_PU_PD_CFG_VALID, status))
     {
         if (gpioCfg->puPdCfg > PMIC_PU_PD_CFG_MAX)
@@ -119,11 +112,10 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_NINT_GPI_PU_PD_SEL_SHIFT, PMIC_NINT_GPI_PU_PD_SEL_MASK, gpioCfg->puPdCfg);
+            Pmic_setBitField(regData, PMIC_NINT_GPI_PU_PD_SEL_SHIFT, PMIC_NINT_GPI_PU_PD_SEL_MASK, gpioCfg->puPdCfg);
         }
     }
 
-    // Set NINT_GPI open-drain/push-pull output configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_OD_PP_CFG_VALID, status))
     {
         if (gpioCfg->odPpCfg > PMIC_OD_PP_CFG_MAX)
@@ -132,11 +124,17 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_NINT_PP_OD_SHIFT, PMIC_NINT_PP_OD_MASK, gpioCfg->odPpCfg);
+            Pmic_setBitField(regData, PMIC_NINT_PP_OD_SHIFT, PMIC_NINT_PP_OD_MASK, gpioCfg->odPpCfg);
         }
     }
 
-    // Set NINT_GPI polarity
+    return status;
+}
+
+static int32_t GPIO_applyNINTGPIFuncBits(const Pmic_GpioCfg_t *gpioCfg, uint8_t *regData)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_POLARITY_VALID, status))
     {
         if (gpioCfg->polarity > PMIC_POLARITY_MAX)
@@ -145,11 +143,10 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_NINT_GPI_POL_SHIFT, PMIC_NINT_GPI_POL_MASK, gpioCfg->polarity);
+            Pmic_setBitField(regData, PMIC_NINT_GPI_POL_SHIFT, PMIC_NINT_GPI_POL_MASK, gpioCfg->polarity);
         }
     }
 
-    // Set NINT_GPI functionality
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, (uint32_t)PMIC_CFG_GPIO_FUNCTIONALITY_VALID, status))
     {
         if (gpioCfg->functionality > PMIC_NINT_GPI_FUNCTIONALITY_MAX)
@@ -158,8 +155,31 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_NINT_GPI_SEL_SHIFT, PMIC_NINT_GPI_SEL_MASK, gpioCfg->functionality);
+            Pmic_setBitField(regData, PMIC_NINT_GPI_SEL_SHIFT, PMIC_NINT_GPI_SEL_MASK, gpioCfg->functionality);
         }
+    }
+
+    return status;
+}
+
+/** @brief Set NINT_GPI configuration */
+static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
+{
+    uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Read FUNC_CONF
+    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
+    status = Pmic_ioRxByte(handle, PMIC_FUNC_CONF_REG, &regData);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = GPIO_applyNINTGPIStyleBits(gpioCfg, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = GPIO_applyNINTGPIFuncBits(gpioCfg, &regData);
     }
 
     // Write FUNC_CONF
@@ -174,7 +194,7 @@ static int32_t GPIO_setNINTGPICfg(const Pmic_Handle_t *handle, const Pmic_GpioCf
 
 int32_t Pmic_gpioSetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg)
 {
-    Pmic_GpioCfg_t localCfg;
+    Pmic_GpioCfg_t localCfg = (Pmic_GpioCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     const uint32_t gpioValidParams = PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
     const uint32_t nIntGpiValidParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID | PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
@@ -286,12 +306,9 @@ static int32_t GPIO_getNINTGPICfg(const Pmic_Handle_t *handle, Pmic_GpioCfg_t *g
     return status;
 }
 
-int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg)
+static int32_t GPIO_validateGetCfgArgs(const Pmic_Handle_t *handle, uint8_t gpioPin, const Pmic_GpioCfg_t *gpioCfg)
 {
-    Pmic_GpioCfg_t localCfg;
     int32_t status = Pmic_checkHandle(handle);
-    const uint32_t gpioValidParams = PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
-    const uint32_t nIntGpiValidParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID | PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -307,6 +324,16 @@ int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioC
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
+
+    return status;
+}
+
+int32_t Pmic_gpioGetCfg(const Pmic_Handle_t *handle, uint8_t gpioPin, Pmic_GpioCfg_t *gpioCfg)
+{
+    Pmic_GpioCfg_t localCfg = (Pmic_GpioCfg_t){0};
+    const uint32_t gpioValidParams = PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
+    const uint32_t nIntGpiValidParams = PMIC_CFG_GPIO_PU_PD_CFG_VALID | PMIC_CFG_GPIO_OD_PP_CFG_VALID | PMIC_CFG_GPIO_POLARITY_VALID | PMIC_CFG_GPIO_FUNCTIONALITY_VALID;
+    int32_t status = GPIO_validateGetCfgArgs(handle, gpioPin, gpioCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {

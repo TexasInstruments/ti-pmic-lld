@@ -168,7 +168,7 @@ const char* debug_level_name(DebugLevel_t level);
  * if debug.c is not compiled but code still has calls to these functions */
 static inline void debug_init(void) { }
 static inline bool debug_should_log(DebugModule_t module, DebugLevel_t level) {
-    (void)module; (void)level; return false;
+    (void)module; (void)level; return (bool)false;
 }
 static inline const char* debug_module_name(DebugModule_t module) {
     (void)module; return "";

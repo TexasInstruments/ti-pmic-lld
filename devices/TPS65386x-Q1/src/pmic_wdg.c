@@ -80,7 +80,7 @@ static int32_t WDG_validatePmicCoreHandle(const Pmic_Handle_t *handle) {
  *
  * @return PMIC_ST_SUCCESS if all parameters valid, PMIC_ST_ERR_INV_PARAM otherwise
  */
-static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
+static int32_t WDG_validateTimingModeBase(const Pmic_WdgCfg_t *config)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -92,7 +92,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_TIME_BASE_VALID))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_TIME_BASE_VALID, status))
     {
         if (config->timeBase > PMIC_WDG_TIME_BASE_MAX)
         {
@@ -100,7 +100,14 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID))
+    return status;
+}
+
+static int32_t WDG_validateTimingThresholds(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID, status))
     {
         if (config->threshold1 > PMIC_WDG_THRESHOLD_COUNT_MAX)
         {
@@ -108,7 +115,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_2_VALID))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_2_VALID, status))
     {
         if (config->threshold2 > PMIC_WDG_THRESHOLD_COUNT_MAX)
         {
@@ -116,7 +123,26 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_QA_FDBK_VALID))
+    return status;
+}
+
+static int32_t WDG_validateTimingParams(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = WDG_validateTimingModeBase(config);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_validateTimingThresholds(config);
+    }
+
+    return status;
+}
+
+static int32_t WDG_validateQACfgParams(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_QA_FDBK_VALID))
     {
         if (config->qaFdbk > PMIC_WDG_QA_FEEDBACK_VALUE_MAX)
         {
@@ -124,7 +150,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_QA_LFSR_VALID))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_QA_LFSR_VALID, status))
     {
         if (config->qaLfsr > PMIC_WDG_QA_LFSR_VALUE_MAX)
         {
@@ -132,7 +158,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_QA_QUES_SEED_VALID))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_QA_QUES_SEED_VALID, status))
     {
         if (config->qaQuesSeed > PMIC_WDG_QA_QUES_SEED_VALUE_MAX)
         {
@@ -140,7 +166,14 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID))
+    return status;
+}
+
+static int32_t WDG_validateIntCfgParams(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID, status))
     {
         if (config->threshold1IntBehavior > PMIC_WDG_THRESHOLD_INT_BEHAVIOR_MAX)
         {
@@ -148,12 +181,36 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
         }
     }
 
-    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID, status))
     {
         if (config->threshold2IntBehavior > PMIC_WDG_THRESHOLD_INT_BEHAVIOR_MAX)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
+    }
+
+    return status;
+}
+
+static int32_t WDG_validateQAAndIntParams(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = WDG_validateQACfgParams(config);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_validateIntCfgParams(config);
+    }
+
+    return status;
+}
+
+static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
+{
+    int32_t status = WDG_validateTimingParams(config);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = WDG_validateQAAndIntParams(config);
     }
 
     return status;
@@ -169,7 +226,7 @@ static int32_t WDG_validateParams(const Pmic_WdgCfg_t *config)
  */
 static int32_t WDG_checkCfgState(const Pmic_Handle_t *handle) {
     int32_t status;
-    bool isEnabled = false;
+    bool isEnabled = (bool)false;
 
     status = Pmic_wdgGetEnableState(handle, &isEnabled);
     if ((status == PMIC_ST_SUCCESS) && !isEnabled) {
@@ -647,9 +704,31 @@ int32_t Pmic_wdgGetEnableState(const Pmic_Handle_t *handle, bool *isEnabled) {
     return Pmic_logStatus(handle, status);
 }
 
+static int32_t WDG_setAllCfgFields(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
+    int32_t status = WDG_setWindowsTimeIntervals(handle, config);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_setThresholds(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_setModeAndTimeBaseCfg(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_setQAConfigurations(handle, config);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_setThrIntBehavior(handle, config);
+    }
+
+    return status;
+}
+
 int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
-    Pmic_WdgCfg_t localConfig;
+    Pmic_WdgCfg_t localConfig = (Pmic_WdgCfg_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -675,23 +754,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setWindowsTimeIntervals(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setThresholds(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setModeAndTimeBaseCfg(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setQAConfigurations(handle, &localConfig);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setThrIntBehavior(handle, &localConfig);
+        status = WDG_setAllCfgFields(handle, &localConfig);
     }
 
     return Pmic_logStatus(handle, status);
@@ -699,7 +762,7 @@ int32_t Pmic_wdgSetCfg(const Pmic_Handle_t *handle, const Pmic_WdgCfg_t *config)
 
 int32_t Pmic_wdgGetCfg(const Pmic_Handle_t *handle, Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
-    Pmic_WdgCfg_t localConfig;
+    Pmic_WdgCfg_t localConfig = (Pmic_WdgCfg_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -873,10 +936,42 @@ int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_Handle_t *handle, bool *isEnabl
     return Pmic_logStatus(handle, status);
 }
 
+static void WDG_extractErrStatFields1(uint8_t regVal, Pmic_WdgErrStatus_t *errors)
+{
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {
+        errors->longWindowTimeout = Pmic_getBitField_b(regVal, PMIC_WD_LONGWIN_TMO_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TIMEOUT_ERR_VALID)) {
+        errors->timeout = Pmic_getBitField_b(regVal, PMIC_WD_TMO_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TRIG_EARLY_ERR_VALID)) {
+        errors->triggerEarlyError = Pmic_getBitField_b(regVal, PMIC_WD_TRIG_EARLY_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_ANSW_EARLY_ERR_VALID)) {
+        errors->answerEarlyError = Pmic_getBitField_b(regVal, PMIC_WD_ANSW_EARLY_SHIFT);
+    }
+}
+
+static void WDG_extractErrStatFields2(uint8_t regVal, Pmic_WdgErrStatus_t *errors)
+{
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_SEQ_ERR_ERR_VALID)) {
+        errors->sequenceError = Pmic_getBitField_b(regVal, PMIC_WD_SEQ_ERR_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_ANSW_ERR_ERR_VALID)) {
+        errors->answerError = Pmic_getBitField_b(regVal, PMIC_WD_ANSW_ERR_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TH1_INT_ERR_VALID)) {
+        errors->threshold1Error = Pmic_getBitField_b(regVal, PMIC_WD_TH1_ERR_SHIFT);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
+        errors->threshold2Error = Pmic_getBitField_b(regVal, PMIC_WD_TH2_ERR_SHIFT);
+    }
+}
+
 int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
-    Pmic_WdgErrStatus_t localErrors;
+    Pmic_WdgErrStatus_t localErrors = (Pmic_WdgErrStatus_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -895,48 +990,50 @@ int32_t Pmic_wdgGetErrStatus(const Pmic_Handle_t *handle, Pmic_WdgErrStatus_t *e
 
     /* Extract watchdog error status fields */
     if (status == PMIC_ST_SUCCESS) {
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {
-            localErrors.longWindowTimeout = Pmic_getBitField_b(regVal, PMIC_WD_LONGWIN_TMO_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TIMEOUT_ERR_VALID)) {
-            localErrors.timeout = Pmic_getBitField_b(regVal, PMIC_WD_TMO_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TRIG_EARLY_ERR_VALID)) {
-            localErrors.triggerEarlyError = Pmic_getBitField_b(regVal, PMIC_WD_TRIG_EARLY_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_ANSW_EARLY_ERR_VALID)) {
-            localErrors.answerEarlyError = Pmic_getBitField_b(regVal, PMIC_WD_ANSW_EARLY_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_SEQ_ERR_ERR_VALID)) {
-            localErrors.sequenceError = Pmic_getBitField_b(regVal, PMIC_WD_SEQ_ERR_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_ANSW_ERR_ERR_VALID)) {
-            localErrors.answerError = Pmic_getBitField_b(regVal, PMIC_WD_ANSW_ERR_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TH1_INT_ERR_VALID)) {
-            localErrors.threshold1Error = Pmic_getBitField_b(regVal, PMIC_WD_TH1_ERR_SHIFT);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
-            localErrors.threshold2Error = Pmic_getBitField_b(regVal, PMIC_WD_TH2_ERR_SHIFT);
-        }
-
+        WDG_extractErrStatFields1(regVal, &localErrors);
+        WDG_extractErrStatFields2(regVal, &localErrors);
         WDG_copyWdgError(&localErrors, errors);
     }
 
     return Pmic_logStatus(handle, status);
 }
 
+static void WDG_buildErrStatRegVal1(const Pmic_WdgErrStatus_t *errors, uint8_t *regVal)
+{
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_LONGWIN_TMO_SHIFT, errors->longWindowTimeout);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TIMEOUT_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_TMO_SHIFT, errors->timeout);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TRIG_EARLY_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_TRIG_EARLY_SHIFT, errors->triggerEarlyError);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_ANSW_EARLY_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_ANSW_EARLY_SHIFT, errors->answerEarlyError);
+    }
+}
+
+static void WDG_buildErrStatRegVal2(const Pmic_WdgErrStatus_t *errors, uint8_t *regVal)
+{
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_SEQ_ERR_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_SEQ_ERR_SHIFT, errors->sequenceError);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_ANSW_ERR_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_ANSW_ERR_SHIFT, errors->answerError);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TH1_INT_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_TH1_ERR_SHIFT, errors->threshold1Error);
+    }
+    if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
+        Pmic_setBitField_b(regVal, PMIC_WD_TH2_ERR_SHIFT, errors->threshold2Error);
+    }
+}
+
 int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatus_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
-    Pmic_WdgErrStatus_t localErrors;
+    Pmic_WdgErrStatus_t localErrors = (Pmic_WdgErrStatus_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -947,37 +1044,8 @@ int32_t Pmic_wdgClrErrStatus(const Pmic_Handle_t *handle, const Pmic_WdgErrStatu
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_LONGWIN_TMO_SHIFT, localErrors.longWindowTimeout);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TIMEOUT_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_TMO_SHIFT, localErrors.timeout);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TRIG_EARLY_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_TRIG_EARLY_SHIFT, localErrors.triggerEarlyError);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_ANSW_EARLY_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_ANSW_EARLY_SHIFT, localErrors.answerEarlyError);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_SEQ_ERR_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_SEQ_ERR_SHIFT, localErrors.sequenceError);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_ANSW_ERR_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_ANSW_ERR_SHIFT, localErrors.answerError);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TH1_INT_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_TH1_ERR_SHIFT, localErrors.threshold1Error);
-        }
-
-        if (Pmic_validParamCheck(localErrors.validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
-            Pmic_setBitField_b(&regVal, PMIC_WD_TH2_ERR_SHIFT, localErrors.threshold2Error);
-        }
+        WDG_buildErrStatRegVal1(&localErrors, &regVal);
+        WDG_buildErrStatRegVal2(&localErrors, &regVal);
     }
 
     // WD_ERR_STAT register is write 1 to clear, write composed data back to register (if any bits are set).
@@ -1006,7 +1074,7 @@ int32_t Pmic_wdgClrErrStatusAll(const Pmic_Handle_t *handle) {
 int32_t Pmic_wdgGetFailCntStatus(const Pmic_Handle_t *handle, Pmic_WdgFailCntStatus_t *failCount) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x00U;
-    Pmic_WdgFailCntStatus_t localFailCount;
+    Pmic_WdgFailCntStatus_t localFailCount = (Pmic_WdgFailCntStatus_t){0};
 
     if ((status == PMIC_ST_SUCCESS) && (failCount == NULL)) {
         return Pmic_logStatus(handle, PMIC_ST_ERR_NULL_PARAM);

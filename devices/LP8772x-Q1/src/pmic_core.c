@@ -243,7 +243,7 @@ int32_t Pmic_configCrcDisable(Pmic_Handle_t *handle)
 
 int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
 {
-    Pmic_ConfigCrcStat_t localConfigCrcStat;
+    Pmic_ConfigCrcStat_t localConfigCrcStat = (Pmic_ConfigCrcStat_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -281,6 +281,44 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
     return Pmic_logStatus(handle, status);
 }
 
+static int32_t CORE_performCrcSequence(const Pmic_Handle_t *handle, uint8_t regData)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t localRegData = regData;
+
+    if (Pmic_getBitField_b(localRegData, CONFIG_CRC_CALC_SHIFT)) {
+        Pmic_setBitField_b(&localRegData, CONFIG_CRC_CALC_SHIFT, PMIC_DISABLE);
+        status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, localRegData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_setBitField_b(&localRegData, CONFIG_CRC_CALC_SHIFT, PMIC_ENABLE);
+        status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, localRegData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        uint8_t pollCnt = 0U;
+        do {
+            status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &localRegData);
+            pollCnt++;
+        } while ((status == PMIC_ST_SUCCESS) &&
+                 (!Pmic_getBitField_b(localRegData, CONFIG_CRC_STATUS_SHIFT)) &&
+                 (pollCnt < CORE_CRC_STATUS_POLL_MAX));
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioUpdateByte_b(handle, CONFIG_CRC_CONFIG_REG,
+                                     CONFIG_CRC_CALC_SHIFT, (bool)false);
+    }
+
+    if ((status == PMIC_ST_SUCCESS) &&
+        Pmic_getBitField_b(localRegData, CONFIG_CRC_STATUS_SHIFT)) {
+        status = PMIC_ST_ERR_CONFIG_REG_CRC;
+    }
+
+    return status;
+}
+
 static int32_t CORE_configCrcValidate(const Pmic_Handle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -289,53 +327,12 @@ static int32_t CORE_configCrcValidate(const Pmic_Handle_t *handle)
     Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &regData);
 
-    // This operation should only be performed if Config CRC feature is
-    // currently disabled
     if (Pmic_getBitField_b(regData, CONFIG_CRC_EN_SHIFT)) {
         status = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
-    // If the CRC_CALC bit is already high, set it low, calculation is triggered
-    // by rising edge of this signal
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, CONFIG_CRC_CALC_SHIFT)) {
-        Pmic_setBitField_b(&regData, CONFIG_CRC_CALC_SHIFT, PMIC_DISABLE);
-        status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, regData);
-    }
-
-    // Set the CRC_CALC bit and write to the register
     if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField_b(&regData, CONFIG_CRC_CALC_SHIFT, PMIC_ENABLE);
-        status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, regData);
-    }
-
-    // Poll CONFIG_CRC_CONFIG until CONFIG_CRC_STATUS is set. Hardware requires
-    // CONFIG_CRC_CALC to remain high for at least 30us before STATUS is valid.
-    // Each I2C read provides ~30us of dwell time at 400 kHz, so polling up to
-    // CORE_CRC_STATUS_POLL_MAX times gives sufficient margin without an
-    // explicit delay.
-    if (status == PMIC_ST_SUCCESS) {
-        uint8_t pollCnt = 0U;
-
-        do {
-            status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &regData);
-            pollCnt++;
-        } while ((status == PMIC_ST_SUCCESS) &&
-                 (!Pmic_getBitField_b(regData, CONFIG_CRC_STATUS_SHIFT)) &&
-                 (pollCnt < CORE_CRC_STATUS_POLL_MAX));
-    }
-
-    // Clear the CRC_CALC bit using a read-modify-write to preserve CONFIG_CRC_EN
-    // and any other writable bits. Writing 0x00 to the entire register would
-    // silently disable CRC protection if CONFIG_CRC_EN had been set between
-    // our initial check and this write.
-    if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioUpdateByte_b(handle, CONFIG_CRC_CONFIG_REG, CONFIG_CRC_CALC_SHIFT, (bool)false);
-    }
-
-    // If the CRC_STATUS bit is set then the calculated CRC does not match,
-    // return an error code, otherwise we can return success
-    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, CONFIG_CRC_STATUS_SHIFT)) {
-        status = PMIC_ST_ERR_CONFIG_REG_CRC;
+        status = CORE_performCrcSequence(handle, regData);
     }
 
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);

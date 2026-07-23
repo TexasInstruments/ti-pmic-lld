@@ -336,7 +336,7 @@ int32_t Pmic_esmGetStartState(const Pmic_Handle_t *handle, bool *started)
 
 int32_t Pmic_esmSetCfg(const Pmic_Handle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
-    Pmic_EsmCfg_t esmCfgLocal;
+    Pmic_EsmCfg_t esmCfgLocal = (Pmic_EsmCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -513,7 +513,7 @@ static int32_t ESM_readLmaxLminRegs(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *
 
 int32_t Pmic_esmGetCfg(const Pmic_Handle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
-    Pmic_EsmCfg_t esmCfgLocal;
+    Pmic_EsmCfg_t esmCfgLocal = (Pmic_EsmCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)

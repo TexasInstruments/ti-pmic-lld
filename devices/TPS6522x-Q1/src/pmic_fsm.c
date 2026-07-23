@@ -257,7 +257,7 @@ static int32_t Pmic_fsmGetTrigSel2(const Pmic_Handle_t *handle, Pmic_FsmTriggerC
 
 int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTriggerCfg_t *triggerCfg)
 {
-    Pmic_FsmTriggerCfg_t triggerCfgLocal;
+    Pmic_FsmTriggerCfg_t triggerCfgLocal = (Pmic_FsmTriggerCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -299,7 +299,7 @@ int32_t Pmic_fsmSetTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmTrigger
 
 int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t *triggerCfg)
 {
-    Pmic_FsmTriggerCfg_t triggerCfgLocal;
+    Pmic_FsmTriggerCfg_t triggerCfgLocal = (Pmic_FsmTriggerCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
 
     if (status != PMIC_ST_SUCCESS)
@@ -341,7 +341,7 @@ int32_t Pmic_fsmGetTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmTriggerCfg_t 
 
 int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
-    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal = (Pmic_FsmGpioTriggerCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;
@@ -404,7 +404,7 @@ int32_t Pmic_fsmSetGpioTriggerCfg(const Pmic_Handle_t *handle, const Pmic_FsmGpi
 
 int32_t Pmic_fsmGetGpioTriggerCfg(const Pmic_Handle_t *handle, Pmic_FsmGpioTriggerCfg_t *gpioTriggerCfg)
 {
-    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal;
+    Pmic_FsmGpioTriggerCfg_t gpioTriggerCfgLocal = (Pmic_FsmGpioTriggerCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     const Pmic_FsmGpioPinMap_t *pinMap = NULL;
     uint8_t regData = 0U;

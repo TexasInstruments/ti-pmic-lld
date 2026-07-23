@@ -55,7 +55,7 @@ static inline void ADC_copyAdcCfg(const Pmic_AdcCfg_t *src, Pmic_AdcCfg_t *dst)
 
 int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
 {
-    Pmic_AdcCfg_t adcCfgLocal;
+    Pmic_AdcCfg_t adcCfgLocal = (Pmic_AdcCfg_t){0};
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
@@ -115,6 +115,24 @@ int32_t Pmic_adcSetCfg(const Pmic_Handle_t *handle, const Pmic_AdcCfg_t *adcCfg)
     return Pmic_logStatus(handle, status);
 }
 
+static void ADC_extractCfgFields(uint8_t regData, Pmic_AdcCfg_t *adcCfg)
+{
+    if (Pmic_validParamCheck(adcCfg->validParams, PMIC_CFG_ADC_RDIV_EN_VALID))
+    {
+        adcCfg->rDivEn = Pmic_getBitField_b(regData, ADC_RDIV_EN_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(adcCfg->validParams, PMIC_CFG_ADC_CONT_CONV_EN_VALID))
+    {
+        adcCfg->contConvEn = Pmic_getBitField_b(regData, ADC_CONT_CONV_SHIFT);
+    }
+
+    if (Pmic_validParamCheck(adcCfg->validParams, PMIC_CFG_ADC_SRC_SEL_VALID))
+    {
+        adcCfg->srcSel = Pmic_getBitField(regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK);
+    }
+}
+
 int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
 {
     Pmic_AdcCfg_t adcCfgLocal = {0};
@@ -129,34 +147,12 @@ int32_t Pmic_adcGetCfg(const Pmic_Handle_t *handle, Pmic_AdcCfg_t *adcCfg)
     if (status == PMIC_ST_SUCCESS)
     {
         ADC_copyAdcCfg(adcCfg, &adcCfgLocal);
-    }
-
-    // Read ADC_CTRL register
-    if (status == PMIC_ST_SUCCESS)
-    {
         status = Pmic_ioRxByte_CS(handle, ADC_CTRL_REG, &regData);
     }
 
-    // Get resistor divider enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_RDIV_EN_VALID, status))
-    {
-        adcCfgLocal.rDivEn = Pmic_getBitField_b(regData, ADC_RDIV_EN_SHIFT);
-    }
-
-    // Get continuous conversion enable
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_CONT_CONV_EN_VALID, status))
-    {
-        adcCfgLocal.contConvEn = Pmic_getBitField_b(regData, ADC_CONT_CONV_SHIFT);
-    }
-
-    // Get ADC source select
-    if (Pmic_validParamStatusCheck(adcCfgLocal.validParams, PMIC_CFG_ADC_SRC_SEL_VALID, status))
-    {
-        adcCfgLocal.srcSel = Pmic_getBitField(regData, ADC_THERMAL_SEL_SHIFT, ADC_THERMAL_SEL_MASK);
-    }
-
     if (status == PMIC_ST_SUCCESS)
     {
+        ADC_extractCfgFields(regData, &adcCfgLocal);
         ADC_copyAdcCfg(&adcCfgLocal, adcCfg);
     }
 
@@ -191,7 +187,7 @@ int32_t Pmic_adcStartSingleConversion(const Pmic_Handle_t *handle)
     // Set ADC_START bit to start conversion
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, ADC_START_SHIFT, true);
+        Pmic_setBitField_b(&regData, ADC_START_SHIFT, (bool)true);
         status = Pmic_ioTxByte(handle, ADC_CTRL_REG, regData);
     }
     Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
@@ -204,7 +200,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
     uint32_t iter = 0U;
-    bool adcBusy = true;
+    bool adcBusy = (bool)true;
 
     // Wait for ADC to become idle
     while ((status == PMIC_ST_SUCCESS) && adcBusy && (iter < handle->maxLoopCnt))
@@ -225,7 +221,7 @@ int32_t Pmic_adcStartSingleConversionBlocking(const Pmic_Handle_t *handle)
     // Set ADC_START bit to start conversion
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField_b(&regData, ADC_START_SHIFT, true);
+        Pmic_setBitField_b(&regData, ADC_START_SHIFT, (bool)true);
         status = Pmic_ioTxByte_CS(handle, ADC_CTRL_REG, regData);
     }
 

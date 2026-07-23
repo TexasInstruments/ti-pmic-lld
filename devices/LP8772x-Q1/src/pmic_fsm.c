@@ -50,7 +50,7 @@
 /* ========================================================================== */
 static inline bool FSM_assertMcuCommandValid(uint8_t cmd)
 {
-    bool commandValid = false;
+    bool commandValid = (bool)false;
 
     const uint8_t validCommands[] = {
         (uint8_t)PMIC_FSM_COMMAND_OFF_REQ,
@@ -62,7 +62,7 @@ static inline bool FSM_assertMcuCommandValid(uint8_t cmd)
 
     for (uint8_t i = 0U; i < (uint8_t)COUNT(validCommands); i++) {
         if (cmd == validCommands[i]) {
-            commandValid = true;
+            commandValid = (bool)true;
             break;
         }
     }
@@ -75,7 +75,7 @@ int32_t Pmic_fsmSetDevState(const Pmic_Handle_t *handle, uint8_t cmd)
     int32_t status = Pmic_checkHandle(handle);
 
     // validate that the requested command is supported, otherwise return error
-    if ((status == PMIC_ST_SUCCESS) && (FSM_assertMcuCommandValid(cmd) == false)) {
+    if ((status == PMIC_ST_SUCCESS) && (FSM_assertMcuCommandValid(cmd) == (bool)false)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 

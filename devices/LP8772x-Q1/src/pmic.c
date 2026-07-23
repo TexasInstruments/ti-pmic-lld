@@ -60,6 +60,54 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+static int32_t initTimerWaitHook(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle,
+                                  int32_t status)
+{
+    int32_t localStatus = status;
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, localStatus)) {
+        if (config->timerWaitMs == NULL) {
+            localStatus = PMIC_ST_ERR_NULL_FPTR;
+        } else {
+            handle->timerWaitMs = config->timerWaitMs;
+        }
+    }
+
+    return localStatus;
+}
+
+static int32_t initHandleAddrAndTiming(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle, int32_t status)
+{
+    int32_t localStatus = status;
+
+    /* Assign PMIC i2cAddr0 */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR0_VALID, localStatus)) {
+        handle->i2cAddr0 = config->i2cAddr0;
+    }
+
+    /* Assign PMIC i2cAddr1 */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR1_VALID, localStatus)) {
+        handle->i2cAddr1 = config->i2cAddr1;
+    }
+
+    /* Assign PMIC i2cAddr2 */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR2_VALID, localStatus)) {
+        handle->i2cAddr2 = config->i2cAddr2;
+    }
+
+    /* Assign PMIC retry count */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID, localStatus)) {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    /* Assign PMIC retry interval */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID, localStatus)) {
+        handle->retryIntervalMs = config->retryIntervalMs;
+    }
+
+    return initTimerWaitHook(config, handle, localStatus);
+}
+
 static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -81,41 +129,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_HandleCfg_t *config, Pmic_Handle
         }
     }
 
-    /* Assign PMIC i2cAddr0 */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR0_VALID, status)) {
-        handle->i2cAddr0 = config->i2cAddr0;
-    }
-
-    /* Assign PMIC i2cAddr1 */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR1_VALID, status)) {
-        handle->i2cAddr1 = config->i2cAddr1;
-    }
-
-    /* Assign PMIC i2cAddr2 */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_I2C_ADDR2_VALID, status)) {
-        handle->i2cAddr2 = config->i2cAddr2;
-    }
-
-    /* Assign PMIC retry count */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID, status)) {
-        handle->retryCnt = config->retryCnt;
-    }
-
-    /* Assign PMIC retry interval */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID, status)) {
-        handle->retryIntervalMs = config->retryIntervalMs;
-    }
-
-    /* Assign PMIC timer wait hook */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TIMER_WAIT_MS_VALID, status)) {
-        if (config->timerWaitMs == NULL) {
-            status = PMIC_ST_ERR_NULL_FPTR;
-        } else {
-            handle->timerWaitMs = config->timerWaitMs;
-        }
-    }
-
-    return status;
+    return initHandleAddrAndTiming(config, handle, status);
 }
 
 static int32_t initCommsFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle) {
@@ -160,6 +174,17 @@ static int32_t initCritSecFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_
         } else {
             handle->criticalSectionStop = config->criticalSectionStop;
         }
+    }
+
+    return status;
+}
+
+static int32_t initHandleFnPtrs(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle)
+{
+    int32_t status = initCommsFunctions(config, handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = initCritSecFunctions(config, handle);
     }
 
     return status;
@@ -249,7 +274,7 @@ static int32_t configureDeviceCrc(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_CONFIG_CRC_ENABLE_VALID, status)) {
         handle->configCrcEnable = config->configCrcEnable;
 
-        if (config->configCrcEnable != false) {
+        if (config->configCrcEnable != (bool)false) {
             status = Pmic_configCrcEnable(handle, PMIC_CFG_CRC_RECALCULATE);
         }
     }
@@ -292,6 +317,19 @@ static int32_t validateHandle(const Pmic_Handle_t *handle) {
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
+static int32_t finalizeInit(const Pmic_HandleCfg_t *config, Pmic_Handle_t *handle, int32_t status)
+{
+    int32_t localStatus = status;
+
+    if (localStatus == PMIC_ST_SUCCESS) { localStatus = validateComms(handle); }
+    if (handle != NULL) {
+        handle->drvInitStat = (localStatus == PMIC_ST_SUCCESS)
+                              ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
+    }
+    if (localStatus == PMIC_ST_SUCCESS) { localStatus = configureDeviceCrc(config, handle); }
+    return localStatus;
+}
+
 int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -299,55 +337,28 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    /* Initialize handle to safe defaults */
     if (status == PMIC_ST_SUCCESS) {
-        (void)memset(handle, 0, sizeof(Pmic_Handle_t));
-    }
-
-    /* Check and update PMIC Handle for device type, Comm Mode, I2C addresses */
-    if (status == PMIC_ST_SUCCESS) {
+        *handle = (Pmic_Handle_t){0};
         status = initHandleBasicDevCfg(config, handle);
     }
 
-    /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn */
     if (status == PMIC_ST_SUCCESS) {
-        status = initCommsFunctions(config, handle);
+        status = initHandleFnPtrs(config, handle);
     }
 
-    /* Check and update PMIC handle for Critical section Start/Stop */
-    if (status == PMIC_ST_SUCCESS) {
-        status = initCritSecFunctions(config, handle);
-    }
-
-    /* Validate PMIC handle once configurations have been set */
     if (status == PMIC_ST_SUCCESS) {
         status = validatePmicHandle(handle);
     }
 
-    // Get PMIC info, store info in pmic handle
     if (status == PMIC_ST_SUCCESS) {
         status = getPmicInfo(handle);
     }
 
-    // Initialize any other user provided callback functions
     if (status == PMIC_ST_SUCCESS) {
         status = initCallbackFunctions(config, handle);
     }
 
-    // Validate communication with the device.
-    if (status == PMIC_ST_SUCCESS) {
-        status = validateComms(handle);
-    }
-
-    // Set the driver initialization status (only if handle is valid)
-    if (handle != NULL) {
-        handle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
-    }
-
-    // Configure CRC for HW and PMIC handle
-    if (status == PMIC_ST_SUCCESS) {
-        status = configureDeviceCrc(config, handle);
-    }
+    status = finalizeInit(config, handle, status);
 
     return status;
 }
