@@ -22,4 +22,9 @@
 #define TEST_INVALID_PARAM_99        ((uint8_t)99U)
 #define TEST_INVALID_PARAM_255       ((uint8_t)255U)
 
+/* BUCK2/3 active VSET safe for multi-parameter tests: one step below the OTP
+ * default (0x21 on this board), so the write produces no output-voltage change
+ * and does not trigger a UV fault that would reset BUCK_CTRL before readback. */
+#define TEST_BUCK2_3_VSET_ACTIVE_SAFE  ((uint8_t)0x20U)
+
 #endif /* TEST_CONSTANTS_H */

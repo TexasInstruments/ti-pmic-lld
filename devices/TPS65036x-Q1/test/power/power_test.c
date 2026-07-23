@@ -3555,12 +3555,22 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
+    // Read BUCK1 OTP vset (after cold boot) so the multiParam write does
+    // not change the output voltage and trigger a UV fault that would reset
+    // BUCK1_CTRL before the readback.
+    Pmic_PwrBuckCfg_t buckCfgOtp = {
+        .validParams = PMIC_CFG_PWR_BUCK_VSET_VALID,
+        .resource = PMIC_BUCK1
+    };
+    status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgOtp);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_VALID |
                        PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,
         .resource = PMIC_BUCK1,
         .enable = true,
-        .vset = PMIC_BUCK1_VSET_MIN,
+        .vset = buckCfgOtp.vset,   // OTP value = no voltage change = no UV fault
         .pldnEn = true,
         .fpwmEn = true
     };
@@ -3592,7 +3602,7 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_enableVsetActiveThresholds(vo
                        PMIC_CFG_PWR_BUCK_UV_THR_VALID | PMIC_CFG_PWR_BUCK_OV_THR_VALID,
         .resource = PMIC_BUCK2,
         .enable = true,
-        .vsetActive = PMIC_BUCK2_3_VSET_MIN,
+        .vsetActive = TEST_BUCK2_3_VSET_ACTIVE_SAFE,
         .uvThr = PMIC_CFG_PWR_BUCK_UV_THR_4_PCT,
         .ovThr = PMIC_CFG_PWR_BUCK_OV_THR_4_PCT
     };
@@ -3695,8 +3705,8 @@ void test_pos_power_buckSetGetCfg_multiParam_buck2_fullConfig(void)
         .resource = PMIC_BUCK2,
         .enable = true,
         .pldnEn = false,
-        .fpwmEn = true,
-        .vsetActive = PMIC_BUCK2_3_VSET_MIN,
+        .fpwmEn = false,
+        .vsetActive = TEST_BUCK2_3_VSET_ACTIVE_SAFE,
         .vsetLPwr = PMIC_BUCK2_3_VSET_MAX,
         .ilimSel = PMIC_BUCK2_3_ILIM_4P5_A,
         .rvConf = PMIC_CFG_PWR_BUCK_RAIL_DISCHARGE,
@@ -3987,6 +3997,7 @@ void test_pos_power_buckSetGetCfg_vsetActive_buck2_boundary(void)
         status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgGet);
         PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
         PLATFORM_ASSERT(buckCfgGet.vsetActive == boundaryValues[i]);
+        platform_softReboot();
     }
 }
 

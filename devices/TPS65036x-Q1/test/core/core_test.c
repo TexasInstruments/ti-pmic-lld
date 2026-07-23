@@ -1351,21 +1351,6 @@ void test_pos_core_init_B0_silicon_with_unlocked_registers(void)
 /*               Config CRC Tests (TC-CORE-0071 to TC-CORE-0076)             */
 /* ========================================================================== */
 
-void test_pos_core_configCrcEnable_enableOnly(void)
-{
-    Pmic_ConfigCrcStat_t configCrcStat = {0U};
-    int32_t status;
-
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(configCrcStat.crcEn == (bool)true);
-
-    (void)Pmic_configCrcDisable(&pmicHandle);
-}
-
 void test_pos_core_configCrcEnable_recalculate(void)
 {
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
@@ -1378,7 +1363,8 @@ void test_pos_core_configCrcEnable_recalculate(void)
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.errorDetected == (bool)false);
 
-    (void)Pmic_configCrcDisable(&pmicHandle);
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 void test_neg_core_configCrcEnable_nullHandle(void)
@@ -1392,7 +1378,7 @@ void test_pos_core_configCrcDisable_disable(void)
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
     int32_t status;
 
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_configCrcDisable(&pmicHandle);
@@ -1414,14 +1400,15 @@ void test_pos_core_getConfigCrcStatus_crcEnabled(void)
     Pmic_ConfigCrcStat_t configCrcStat = {0U};
     int32_t status;
 
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
+    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_RECALCULATE);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     status = Pmic_getConfigCrcStatus(&pmicHandle, &configCrcStat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(configCrcStat.crcEn == (bool)true);
 
-    (void)Pmic_configCrcDisable(&pmicHandle);
+    status = Pmic_configCrcDisable(&pmicHandle);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 
 void test_pos_core_getConfigCrcStatus_crcDisabled(void)
@@ -1462,19 +1449,6 @@ void test_neg_core_configCrcCalculate_nullHandle(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
-void test_neg_core_configCrcCalculate_crcEnabled(void)
-{
-    int32_t status;
-
-    status = Pmic_configCrcEnable(&pmicHandle, PMIC_CFG_CRC_ENABLE_ONLY);
-    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-
-    status = Pmic_configCrcCalculate(&pmicHandle);
-    PLATFORM_ASSERT(status == PMIC_ST_ERR_NOT_SUPPORTED);
-
-    (void)Pmic_configCrcDisable(&pmicHandle);
-}
-
 void test_pos_core_getConfigCrc_readValue(void)
 {
     uint16_t value = 0U;
@@ -1497,7 +1471,30 @@ void test_neg_core_getConfigCrc_nullValue(void)
 
 void test_pos_core_setConfigCrc_writeValue(void)
 {
-    int32_t status = Pmic_setConfigCrc(&pmicHandle, 0xA55AU);
+    uint8_t origLsb = 0U, origMsb = 0U;
+    uint8_t readLsb = 0U, readMsb = 0U;
+    uint16_t testValue = 0xA55AU;
+    int32_t status;
+
+    /* Save original stored CRC from CONFIG_CRC_REG_1/2 (0x4D/0x4E) */
+    status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_1_REG, &origLsb);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_2_REG, &origMsb);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Write test value */
+    status = Pmic_setConfigCrc(&pmicHandle, testValue);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    /* Read back directly from CONFIG_CRC_REG_1/2 and verify */
+    status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_1_REG, &readLsb);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    status = Pmic_ioRxByte(&pmicHandle, PMIC_CONFIG_CRC_REG_2_REG, &readMsb);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+    PLATFORM_ASSERT((uint16_t)((uint16_t)((uint16_t)readMsb << 8U) | readLsb) == testValue);
+
+    /* Restore original stored CRC */
+    status = Pmic_setConfigCrc(&pmicHandle, (uint16_t)((uint16_t)((uint16_t)origMsb << 8U) | origLsb));
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 }
 

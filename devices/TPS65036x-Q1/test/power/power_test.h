@@ -45,6 +45,7 @@
 #include "pmic_power.h"
 #include "test_utils.h"
 #include "platform.h"
+#include "test_constants.h"
 
 #ifdef __cplusplus
 extern "C" {

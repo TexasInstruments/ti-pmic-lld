@@ -90,8 +90,7 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 static int32_t CORE_calculateCrc(const Pmic_Handle_t *handle, uint16_t *crc)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-    uint8_t regAddr;
+    uint8_t regData = 0U, regAddr = 0U;
 
     *crc = CONFIG_CRC_INIT;
     for (regAddr = CONFIG_CRC_REG_LO; regAddr <= CONFIG_CRC_REG_HI; regAddr++)
@@ -683,18 +682,10 @@ int32_t Pmic_configCrcEnable(const Pmic_Handle_t *handle, bool calculate)
         status = Pmic_configCrcCalculate(handle);
     }
 
-    Pmic_criticalSectionStart(handle, PMIC_COMMUNICATION);
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, &regData);
+        status = Pmic_ioUpdateByte_bCS(handle, PMIC_CONFIG_CRC_CONFIG_REG, PMIC_CONFIG_CRC_EN_SHIFT, (bool)true);
     }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_EN_SHIFT, PMIC_CONFIG_CRC_EN_MASK, (bool)true);
-        status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
-    }
-    Pmic_criticalSectionStop(handle, PMIC_COMMUNICATION);
 
     return Pmic_logStatus(handle, status);
 }
@@ -731,13 +722,7 @@ int32_t Pmic_getConfigCrcStatus(const Pmic_Handle_t *handle, Pmic_ConfigCrcStat_
     {
         configCrcStat->crcEn = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_EN_SHIFT);
         configCrcStat->crcCalc = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_CALC_SHIFT);
-
-        status = Pmic_ioRxByte_CS(handle, PMIC_STAT_MODERATE_ERR_REG, &regData);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        configCrcStat->errorDetected = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_STAT_SHIFT);
+        configCrcStat->errorDetected = Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_STATUS_SHIFT);
     }
 
     return Pmic_logStatus(handle, status);

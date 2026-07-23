@@ -148,35 +148,55 @@ extern void wdg_test(void *args);
  */
 static void runAllTests(void)
 {
-    printf("\n=== Running Common Tests ===\n");
-    common_test(NULL);
+    if (testFilter_shouldRunModule("common")) {
+        printf("\n=== Running Common Tests ===\n");
+        common_test(NULL);
+    }
 
-    printf("\n=== Running PMIC Init Tests ===\n");
-    pmic_test(NULL);
+    if (testFilter_shouldRunModule("pmic")) {
+        printf("\n=== Running PMIC Init Tests ===\n");
+        pmic_test(NULL);
+    }
 
-    printf("\n=== Running Core Tests ===\n");
-    core_test(NULL);
+    if (testFilter_shouldRunModule("core")) {
+        printf("\n=== Running Core Tests ===\n");
+        core_test(NULL);
+    }
 
-    printf("\n=== Running FSM Tests ===\n");
-    fsm_test(NULL);
+    if (testFilter_shouldRunModule("fsm")) {
+        printf("\n=== Running FSM Tests ===\n");
+        fsm_test(NULL);
+    }
 
-    printf("\n=== Running IRQ Tests ===\n");
-    irq_test(NULL);
+    if (testFilter_shouldRunModule("irq")) {
+        printf("\n=== Running IRQ Tests ===\n");
+        irq_test(NULL);
+    }
 
-    printf("\n=== Running WDG Tests ===\n");
-    wdg_test(NULL);
+    if (testFilter_shouldRunModule("wdg")) {
+        printf("\n=== Running WDG Tests ===\n");
+        wdg_test(NULL);
+    }
 
-    printf("\n=== Running Power Tests ===\n");
-    power_test(NULL);
+    if (testFilter_shouldRunModule("power")) {
+        printf("\n=== Running Power Tests ===\n");
+        power_test(NULL);
+    }
 
-    printf("\n=== Running ESM Tests ===\n");
-    esm_test(NULL);
+    if (testFilter_shouldRunModule("esm")) {
+        printf("\n=== Running ESM Tests ===\n");
+        esm_test(NULL);
+    }
 
-    printf("\n=== Running GPIO Tests ===\n");
-    gpio_test(NULL);
+    if (testFilter_shouldRunModule("gpio")) {
+        printf("\n=== Running GPIO Tests ===\n");
+        gpio_test(NULL);
+    }
 
-    printf("\n=== Running I/O Tests ===\n");
-    io_test(NULL);
+    if (testFilter_shouldRunModule("io")) {
+        printf("\n=== Running I/O Tests ===\n");
+        io_test(NULL);
+    }
 }
 
 /**

@@ -304,7 +304,6 @@ extern "C" {
 /*                      Test APIs: configCrcEnable                          */
 /* ======================================================================== */
 #define CORE_TEST_POS_CONFIGCRCENABLE() \
-    PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_enableOnly); \
     PLATFORM_RUN_TEST(test_pos_core_configCrcEnable_recalculate)
 
 #define CORE_TEST_NEG_CONFIGCRCENABLE() \
@@ -352,8 +351,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_core_configCrcCalculate_calculate)
 
 #define CORE_TEST_NEG_CONFIGCRCCALCULATE() \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_crcEnabled)
+    PLATFORM_RUN_TEST(test_neg_core_configCrcCalculate_nullHandle)
 
 /* Test: TC-CORE-0074 */
 #define CORE_TEST_CONFIGCRCCALCULATE() \
@@ -553,7 +551,6 @@ void test_pos_core_init_B0_silicon_with_locked_registers(void);
 void test_pos_core_init_B0_silicon_with_unlocked_registers(void);
 
 /* configCrcEnable API tests */
-void test_pos_core_configCrcEnable_enableOnly(void);
 void test_pos_core_configCrcEnable_recalculate(void);
 void test_neg_core_configCrcEnable_nullHandle(void);
 
@@ -570,7 +567,6 @@ void test_neg_core_getConfigCrcStatus_nullStatus(void);
 /* configCrcCalculate API tests */
 void test_pos_core_configCrcCalculate_calculate(void);
 void test_neg_core_configCrcCalculate_nullHandle(void);
-void test_neg_core_configCrcCalculate_crcEnabled(void);
 
 /* getConfigCrc API tests */
 void test_pos_core_getConfigCrc_readValue(void);

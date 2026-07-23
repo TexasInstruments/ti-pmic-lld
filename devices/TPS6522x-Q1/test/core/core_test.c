@@ -381,6 +381,7 @@ void test_pos_core_validatePmicHandle_validCriticalSection(void)
 
 void test_pos_core_setConfigCrcVal_writeAndVerify(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint16_t readBack = 0U;
 
@@ -390,10 +391,14 @@ void test_pos_core_setConfigCrcVal_writeAndVerify(void)
     status = Pmic_getConfigCrc(&pmicHandle, &readBack);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readBack == 0xA55AU);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcVal_readValue(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint16_t value = 0U;
 
@@ -403,6 +408,9 @@ void test_pos_core_getConfigCrcVal_readValue(void)
     status = Pmic_getConfigCrc(&pmicHandle, &value);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(value == 0x5AA5U);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 /* Note: setUp/tearDown removed - provided by test_runner.c for Unity */

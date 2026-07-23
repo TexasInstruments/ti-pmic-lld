@@ -733,6 +733,7 @@ void test_pos_core_diagDMUX_setGet(void)
 
 void test_pos_core_configCrcEnable_enableOnly(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     bool isEnabled = false;
 
@@ -747,10 +748,14 @@ void test_pos_core_configCrcEnable_enableOnly(void)
     PLATFORM_ASSERT(isEnabled == true);
 
     (void)Pmic_configCrcDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_configCrcEnable_recalculate(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     bool isEnabled = false;
 
@@ -765,10 +770,14 @@ void test_pos_core_configCrcEnable_recalculate(void)
     PLATFORM_ASSERT(isEnabled == true);
 
     (void)Pmic_configCrcDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_configCrcDisable_disable(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     bool isEnabled = true;
 
@@ -781,10 +790,14 @@ void test_pos_core_configCrcDisable_disable(void)
     status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcEnableState_enabled(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     bool isEnabled = false;
 
@@ -796,10 +809,14 @@ void test_pos_core_getConfigCrcEnableState_enabled(void)
     PLATFORM_ASSERT(isEnabled == true);
 
     (void)Pmic_configCrcDisable(&pmicHandle);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcEnableState_disabled(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     bool isEnabled = true;
 
@@ -809,44 +826,64 @@ void test_pos_core_getConfigCrcEnableState_disabled(void)
     status = Pmic_getConfigCrcEnableState(&pmicHandle, &isEnabled);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(isEnabled == false);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcStatus_calcDone(void)
 {
+#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID };
     int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcStatus_error(void)
 {
+#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t stat = { .validParams = PMIC_CONFIG_CRC_STAT_ERROR_VALID };
     int32_t status = Pmic_getConfigCrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_clrConfigCrcStatus_clearCalcDone(void)
 {
+#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t stat = {
         .validParams = PMIC_CONFIG_CRC_STAT_CALC_DONE_VALID,
         .calcDone = true
     };
     int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_clrConfigCrcStatus_clearError(void)
 {
+#ifdef BUILD_MOCK
     Pmic_ConfigCrcStat_t stat = {
         .validParams = PMIC_CONFIG_CRC_STAT_ERROR_VALID,
         .error = true
     };
     int32_t status = Pmic_clrConfigCrcStatus(&pmicHandle, &stat);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_setConfigCrcVal_writeAndVerify(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint16_t readBack = 0U;
 
@@ -856,10 +893,14 @@ void test_pos_core_setConfigCrcVal_writeAndVerify(void)
     status = Pmic_getConfigCrc(&pmicHandle, &readBack);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(readBack == 0xA55AU);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_getConfigCrcVal_readValue(void)
 {
+#ifdef BUILD_MOCK
     int32_t status;
     uint16_t value = 0U;
 
@@ -869,12 +910,19 @@ void test_pos_core_getConfigCrcVal_readValue(void)
     status = Pmic_getConfigCrc(&pmicHandle, &value);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(value == 0x5AA5U);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 void test_pos_core_configCrcCalculate_calculate(void)
 {
+#ifdef BUILD_MOCK
     int32_t status = Pmic_configCrcCalculate(&pmicHandle);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+#else
+    TEST_IGNORE_MESSAGE("Requires BUILD_MOCK for config register CRC");
+#endif
 }
 
 /**

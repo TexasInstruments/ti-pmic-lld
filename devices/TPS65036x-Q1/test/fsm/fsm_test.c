@@ -399,9 +399,13 @@ void test_pos_fsm_getClrRecovCnt(void)
     status = Pmic_fsmSetDevState(&pmicHandle, PMIC_SAFE_RECOVERY_REQUEST);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 
+    platform_timerWaitMs(200U);
+
     // Clear all IRQs and unlock PMIC registers
-    status = Pmic_irqClrAllFlags(&pmicHandle);
+    status = fsmTest_unlockPmicRegs(&pmicHandle);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    status = Pmic_irqClrAllFlags(&pmicHandle);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 
     // Get new recovery count and compare initial vs. new recovery count
@@ -436,9 +440,13 @@ void test_pos_fsm_getClrResetCnt(void)
     status = Pmic_fsmSetDevState(&pmicHandle, PMIC_WARM_RESET_REQUEST);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 
+    platform_timerWaitMs(200U);
+
     // Clear all IRQs and unlock PMIC registers
-    status = Pmic_irqClrAllFlags(&pmicHandle);
+    status = fsmTest_unlockPmicRegs(&pmicHandle);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
+
+    status = Pmic_irqClrAllFlags(&pmicHandle);
     PLATFORM_ASSERT((status == PMIC_ST_SUCCESS) || (status == PMIC_ST_ERR_I2C_COMM_FAIL));
 
     // Get new reset count and compare initial vs. new reset count
