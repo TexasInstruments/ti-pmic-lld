@@ -1215,13 +1215,13 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_TASK_HANDLE_VALID |
-                       PMIC_ASYNC_RX_START_VALID |
-                       PMIC_ASYNC_TX_START_VALID |
-                       PMIC_ASYNC_RX_AWAIT_VALID |
-                       PMIC_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
@@ -1288,13 +1288,13 @@ void test_pos_io_ioTxByte_asyncWriteI2c(void)
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_TASK_HANDLE_VALID |
-                       PMIC_ASYNC_RX_START_VALID |
-                       PMIC_ASYNC_TX_START_VALID |
-                       PMIC_ASYNC_RX_AWAIT_VALID |
-                       PMIC_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
@@ -1361,13 +1361,13 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_TASK_HANDLE_VALID |
-                       PMIC_ASYNC_RX_START_VALID |
-                       PMIC_ASYNC_TX_START_VALID |
-                       PMIC_ASYNC_RX_AWAIT_VALID |
-                       PMIC_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
@@ -1433,13 +1433,13 @@ void test_pos_io_ioRxByte_asyncReadI2c(void)
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                        PMIC_CRC_ENABLE_0_VALID |
-                       PMIC_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                       PMIC_TASK_HANDLE_VALID |
-                       PMIC_ASYNC_RX_START_VALID |
-                       PMIC_ASYNC_TX_START_VALID |
-                       PMIC_ASYNC_RX_AWAIT_VALID |
-                       PMIC_ASYNC_TX_AWAIT_VALID |
+                       PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                       PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                       PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                        PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                        PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
@@ -1835,7 +1835,7 @@ void test_neg_io_ioTxByte_nullAsyncHooks(void)
     /* Initialize handle with async enabled but NULL hooks */
     Pmic_HandleCfg_t handleCfg = {
         .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
-                       PMIC_ASYNC_ENABLE_VALID |
+                       PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                        PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
                        PMIC_CFG_INIT_IO_READ_VALID |
                        PMIC_CFG_INIT_IO_WRITE_VALID |

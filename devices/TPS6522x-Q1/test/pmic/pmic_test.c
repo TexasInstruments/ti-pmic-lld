@@ -219,7 +219,7 @@ void test_neg_pmic_pmicInit_nullTaskHandle(void)
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_TASK_HANDLE_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_TASK_HANDLE_VALID;
     handleCfg.taskHandle = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
@@ -258,7 +258,7 @@ void test_neg_pmic_pmicInit_nullAsyncRxStart(void)
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_ASYNC_RX_START_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_ASYNC_RX_START_VALID;
     handleCfg.asyncRxStart = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -271,7 +271,7 @@ void test_neg_pmic_pmicInit_nullAsyncTxStart(void)
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_ASYNC_TX_START_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_ASYNC_TX_START_VALID;
     handleCfg.asyncTxStart = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -284,7 +284,7 @@ void test_neg_pmic_pmicInit_nullAsyncRxAwait(void)
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_ASYNC_RX_AWAIT_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID;
     handleCfg.asyncRxAwait = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -297,7 +297,7 @@ void test_neg_pmic_pmicInit_nullAsyncTxAwait(void)
     Pmic_Handle_t handle = {0};
 
     pmicInitTest_initHandleCfg(&handleCfg);
-    handleCfg.validParams |= PMIC_ASYNC_TX_AWAIT_VALID;
+    handleCfg.validParams |= PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     handleCfg.asyncTxAwait = NULL;
     int32_t status = Pmic_init(&handle, &handleCfg);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_FPTR);
@@ -770,13 +770,13 @@ void test_pos_pmic_pmicInit_async_mode(void)
     Pmic_HandleCfg_t handleCfg = {0};
     handleCfg.validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
                             PMIC_CRC_ENABLE_0_VALID |
-                            PMIC_ASYNC_ENABLE_VALID |
+                            PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
                             PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
-                            PMIC_TASK_HANDLE_VALID |
-                            PMIC_ASYNC_RX_START_VALID |
-                            PMIC_ASYNC_TX_START_VALID |
-                            PMIC_ASYNC_RX_AWAIT_VALID |
-                            PMIC_ASYNC_TX_AWAIT_VALID |
+                            PMIC_CFG_INIT_TASK_HANDLE_VALID |
+                            PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                            PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                            PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                            PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                             PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
@@ -870,7 +870,7 @@ void test_pos_pmic_pmicInit_with_task_handle(void)
                             PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                             PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
                             PMIC_CFG_INIT_IRQ_RESPONSE_CALLBACK_VALID |
-                            PMIC_TASK_HANDLE_VALID;
+                            PMIC_CFG_INIT_TASK_HANDLE_VALID;
     handleCfg.commMode = PMIC_INTF_SPI;
     handleCfg.crcEnable0 = PMIC_DISABLE;
     handleCfg.commHandle0 = platform_getCommHandle0();

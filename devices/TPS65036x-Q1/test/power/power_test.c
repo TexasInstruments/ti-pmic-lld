@@ -3565,6 +3565,7 @@ void test_pos_power_buckSetGetCfg_multiParam_buck1_enableVsetPldnFpwm(void)
     status = Pmic_pwrGetBuckCfg(&pmicHandle, &buckCfgOtp);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
+
     Pmic_PwrBuckCfg_t buckCfgSet = {
         .validParams = PMIC_CFG_PWR_BUCK_ENABLE_VALID | PMIC_CFG_PWR_BUCK_VSET_VALID |
                        PMIC_CFG_PWR_BUCK_PLDN_EN_VALID | PMIC_CFG_PWR_BUCK_FPWM_EN_VALID,

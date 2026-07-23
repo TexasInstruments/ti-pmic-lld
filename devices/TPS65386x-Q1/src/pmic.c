@@ -158,32 +158,32 @@ static int32_t initAsyncFunctions(const Pmic_HandleCfg_t *config, Pmic_Handle_t 
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update async enable flag */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_ENABLE_VALID, status)) {
         handle->asyncEnable = config->asyncEnable;
     }
 
     /* Check and update task handle */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TASK_HANDLE_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TASK_HANDLE_VALID, status)) {
         handle->taskHandle = config->taskHandle;
     }
 
     /* Check and update async RX start function */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_START_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_RX_START_VALID, status)) {
         handle->asyncRxStart = config->asyncRxStart;
     }
 
     /* Check and update async TX start function */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_START_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_TX_START_VALID, status)) {
         handle->asyncTxStart = config->asyncTxStart;
     }
 
     /* Check and update async RX await function */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID, status)) {
         handle->asyncRxAwait = config->asyncRxAwait;
     }
 
     /* Check and update async TX await function */
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status)) {
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID, status)) {
         handle->asyncTxAwait = config->asyncTxAwait;
     }
 

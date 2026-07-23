@@ -117,12 +117,12 @@ extern "C" {
 #define PMIC_CFG_INIT_RETRY_CNT_VALID              (1UL << 10U)
 #define PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID      (1UL << 11U)
 #define PMIC_CFG_INIT_TIMER_WAIT_MS_VALID          (1UL << 12U)
-#define PMIC_ASYNC_ENABLE_VALID           (1UL << 13U)
-#define PMIC_TASK_HANDLE_VALID            (1UL << 14U)
-#define PMIC_ASYNC_RX_START_VALID         (1UL << 15U)
-#define PMIC_ASYNC_TX_START_VALID         (1UL << 16U)
-#define PMIC_ASYNC_RX_AWAIT_VALID         (1UL << 17U)
-#define PMIC_ASYNC_TX_AWAIT_VALID         (1UL << 18U)
+#define PMIC_CFG_INIT_ASYNC_ENABLE_VALID           (1UL << 13U)
+#define PMIC_CFG_INIT_TASK_HANDLE_VALID            (1UL << 14U)
+#define PMIC_CFG_INIT_ASYNC_RX_START_VALID         (1UL << 15U)
+#define PMIC_CFG_INIT_ASYNC_TX_START_VALID         (1UL << 16U)
+#define PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID         (1UL << 17U)
+#define PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID         (1UL << 18U)
 /** @} */
 
 /**

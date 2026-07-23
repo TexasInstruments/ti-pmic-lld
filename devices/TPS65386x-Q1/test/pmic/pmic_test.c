@@ -1180,7 +1180,7 @@ void test_neg_pmic_pmicInit_nullAsyncRxStart(void)
     initTestHandleCfg(&pmicCfg);
 
     /* Enable async mode and set valid param flag but provide NULL callback */
-    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_RX_START_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_ASYNC_ENABLE_VALID | PMIC_CFG_INIT_ASYNC_RX_START_VALID;
     pmicCfg.asyncEnable = true;
     pmicCfg.asyncRxStart = NULL;
 
@@ -1200,7 +1200,7 @@ void test_neg_pmic_pmicInit_nullAsyncTxStart(void)
     initTestHandleCfg(&pmicCfg);
 
     /* Enable async mode and set valid param flag but provide NULL callback */
-    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_TX_START_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_ASYNC_ENABLE_VALID | PMIC_CFG_INIT_ASYNC_TX_START_VALID;
     pmicCfg.asyncEnable = true;
     pmicCfg.asyncTxStart = NULL;
 
@@ -1220,7 +1220,7 @@ void test_neg_pmic_pmicInit_nullAsyncRxAwait(void)
     initTestHandleCfg(&pmicCfg);
 
     /* Enable async mode and set valid param flag but provide NULL callback */
-    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_RX_AWAIT_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_ASYNC_ENABLE_VALID | PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID;
     pmicCfg.asyncEnable = true;
     pmicCfg.asyncRxAwait = NULL;
 
@@ -1240,7 +1240,7 @@ void test_neg_pmic_pmicInit_nullAsyncTxAwait(void)
     initTestHandleCfg(&pmicCfg);
 
     /* Enable async mode and set valid param flag but provide NULL callback */
-    pmicCfg.validParams |= PMIC_ASYNC_ENABLE_VALID | PMIC_ASYNC_TX_AWAIT_VALID;
+    pmicCfg.validParams |= PMIC_CFG_INIT_ASYNC_ENABLE_VALID | PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     pmicCfg.asyncEnable = true;
     pmicCfg.asyncTxAwait = NULL;
 

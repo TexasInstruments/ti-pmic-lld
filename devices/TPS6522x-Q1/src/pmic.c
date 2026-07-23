@@ -163,7 +163,7 @@ static int32_t validateAndSetUserHandles(Pmic_Handle_t *handle, const Pmic_Handl
     }
 
     // taskHandle
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_TASK_HANDLE_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_TASK_HANDLE_VALID, status))
     {
         if (config->taskHandle == NULL)
         {
@@ -216,7 +216,7 @@ static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_Handle
     int32_t status = PMIC_ST_SUCCESS;
 
     // asyncRxStart
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_RX_START_VALID, status))
     {
         if (config->asyncRxStart == NULL)
         {
@@ -229,7 +229,7 @@ static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // asyncTxStart
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_START_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_TX_START_VALID, status))
     {
         if (config->asyncTxStart == NULL)
         {
@@ -242,7 +242,7 @@ static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // asyncRxAwait
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_RX_AWAIT_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID, status))
     {
         if (config->asyncRxAwait == NULL)
         {
@@ -255,7 +255,7 @@ static int32_t validateAndSetAsyncHooks(Pmic_Handle_t *handle, const Pmic_Handle
     }
 
     // asyncTxAwait
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_ASYNC_TX_AWAIT_VALID, status))
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID, status))
     {
         if (config->asyncTxAwait == NULL)
         {
@@ -353,43 +353,7 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // crcEnable0
-    if (Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_0_VALID))
-    {
-        handle->crcEnable0 = config->crcEnable0;
-    }
-
-    // crcEnable1
-    if (Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_1_VALID))
-    {
-        handle->crcEnable1 = config->crcEnable1;
-    }
-
-    // retryCnt
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID))
-    {
-        handle->retryCnt = config->retryCnt;
-    }
-
-    // retryIntervalMs
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID))
-    {
-        handle->retryIntervalMs = config->retryIntervalMs;
-    }
-
-    // maxLoopCnt
-    if (Pmic_validParamCheck(config->validParams, PMIC_INIT_MAX_LOOP_CNT_VALID))
-    {
-        handle->maxLoopCnt = config->maxLoopCnt;
-    }
-
-    // asyncEnable
-    if (Pmic_validParamCheck(config->validParams, PMIC_ASYNC_ENABLE_VALID))
-    {
-        handle->asyncEnable = config->asyncEnable;
-    }
-
-    // commMode
+    // commMode — validate before any handle fields are written
     if (Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_COMM_MODE_VALID))
     {
         if (config->commMode > PMIC_INTF_MAX)
@@ -401,6 +365,44 @@ static int32_t validateAndSetHandleCfg(Pmic_Handle_t *handle, const Pmic_HandleC
             handle->commMode = config->commMode;
         }
     }
+
+
+    // crcEnable0
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_0_VALID))
+    {
+        handle->crcEnable0 = config->crcEnable0;
+    }
+
+    // crcEnable1
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CRC_ENABLE_1_VALID))
+    {
+        handle->crcEnable1 = config->crcEnable1;
+    }
+
+    // retryCnt
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_CNT_VALID))
+    {
+        handle->retryCnt = config->retryCnt;
+    }
+
+    // retryIntervalMs
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID))
+    {
+        handle->retryIntervalMs = config->retryIntervalMs;
+    }
+
+    // maxLoopCnt
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_INIT_MAX_LOOP_CNT_VALID))
+    {
+        handle->maxLoopCnt = config->maxLoopCnt;
+    }
+
+    // asyncEnable
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(config->validParams, PMIC_CFG_INIT_ASYNC_ENABLE_VALID))
+    {
+        handle->asyncEnable = config->asyncEnable;
+    }
+
 
     // Validate I2C configuration
     if (status == PMIC_ST_SUCCESS)
@@ -481,6 +483,20 @@ static int32_t validatePmicHandle(const Pmic_Handle_t *handle)
     return PMIC_ST_SUCCESS;
 }
 
+static int32_t syncCrcEnableFromHw(Pmic_Handle_t *handle)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_ioRxByte_CS(handle, CONFIG_2_REG, &regData);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        handle->crcEnable0 = Pmic_getBitField(regData, I2C1_SPI_CRC_EN_SHIFT, I2C1_SPI_CRC_EN_MASK) != 0U;
+        handle->crcEnable1 = Pmic_getBitField(regData, I2C2_CRC_EN_SHIFT, I2C2_CRC_EN_MASK) != 0U;
+    }
+
+    return status;
+}
+
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
@@ -512,6 +528,13 @@ int32_t Pmic_init(Pmic_Handle_t *handle, const Pmic_HandleCfg_t *config)
     if (status == PMIC_ST_SUCCESS)
     {
         status = getPmicInfo(handle);
+    }
+
+    // Sync CRC enable state from hardware — handle fields set by caller may diverge
+    // from actual hardware state after a warm reset restores NVM defaults
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = syncCrcEnableFromHw(handle);
     }
 
     // Set the driver initialization status (only if handle is valid)

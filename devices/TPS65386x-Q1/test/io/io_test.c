@@ -1208,11 +1208,11 @@ void test_neg_io_ioTxByte_asyncStartFails(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1261,11 +1261,11 @@ void test_neg_io_ioRxByte_asyncStartFails(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1314,11 +1314,11 @@ void test_neg_io_ioTxByte_asyncAwaitFails(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1367,11 +1367,11 @@ void test_neg_io_ioRxByte_asyncAwaitFails(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1424,11 +1424,11 @@ void test_pos_io_ioTxByte_asyncWriteSpi(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1487,11 +1487,11 @@ void test_pos_io_ioRxByte_asyncReadSpi(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1550,11 +1550,11 @@ void test_pos_io_ioUpdateByte_asyncReadModifyWrite(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID;
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID;
     asyncCfg.commMode = PMIC_INTF_SPI;
     asyncCfg.commHandle0 = (void*)&dummyCommHandle;
     asyncCfg.ioRead = &mockIoRead;
@@ -1620,11 +1620,11 @@ void test_pos_io_ioTxByte_asyncRetryOnStartFailure(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                            PMIC_CFG_INIT_RETRY_CNT_VALID |
                            PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID |
                            PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
@@ -1682,11 +1682,11 @@ void test_pos_io_ioRxByte_asyncRetryOnAwaitFailure(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                            PMIC_CFG_INIT_RETRY_CNT_VALID |
                            PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID |
                            PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;
@@ -1750,11 +1750,11 @@ void test_neg_io_ioTxByte_asyncExhaustRetries(void)
                            PMIC_CFG_INIT_IO_WRITE_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
                            PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID |
-                           PMIC_ASYNC_ENABLE_VALID |
-                           PMIC_ASYNC_RX_START_VALID |
-                           PMIC_ASYNC_TX_START_VALID |
-                           PMIC_ASYNC_RX_AWAIT_VALID |
-                           PMIC_ASYNC_TX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_ENABLE_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_START_VALID |
+                           PMIC_CFG_INIT_ASYNC_RX_AWAIT_VALID |
+                           PMIC_CFG_INIT_ASYNC_TX_AWAIT_VALID |
                            PMIC_CFG_INIT_RETRY_CNT_VALID |
                            PMIC_CFG_INIT_RETRY_INTERVAL_MS_VALID |
                            PMIC_CFG_INIT_TIMER_WAIT_MS_VALID;

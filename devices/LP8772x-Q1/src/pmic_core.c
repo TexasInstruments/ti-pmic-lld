@@ -50,6 +50,13 @@
 #define CONFIG_CRC_REG_LO (0x14U)
 #define CONFIG_CRC_REG_HI (0x43U)
 
+// Maximum number of CONFIG_CRC_CONFIG reads to poll for CONFIG_CRC_STATUS.
+// Hardware requires CONFIG_CRC_CALC to remain high for at least 30us before
+// the STATUS bit is valid. Each I2C read takes ~30us at 400 kHz (9 bytes x
+// ~3.4us/byte), so a single read is not guaranteed to be sufficient.
+// Polling up to 10 times provides ample margin with no busy-wait delay needed.
+#define CORE_CRC_STATUS_POLL_MAX (10U)
+
 static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 {
     static const uint16_t CRC16LUT[] = {
@@ -301,17 +308,28 @@ static int32_t CORE_configCrcValidate(const Pmic_Handle_t *handle)
         status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, regData);
     }
 
-    // Now must allow the CONFIG_CRC_CALC bit to remain high for at least 30us,
-    // this timing should be met automatically by the transmission speed of I2C
+    // Poll CONFIG_CRC_CONFIG until CONFIG_CRC_STATUS is set. Hardware requires
+    // CONFIG_CRC_CALC to remain high for at least 30us before STATUS is valid.
+    // Each I2C read provides ~30us of dwell time at 400 kHz, so polling up to
+    // CORE_CRC_STATUS_POLL_MAX times gives sufficient margin without an
+    // explicit delay.
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &regData);
+        uint8_t pollCnt = 0U;
+
+        do {
+            status = Pmic_ioRxByte(handle, CONFIG_CRC_CONFIG_REG, &regData);
+            pollCnt++;
+        } while ((status == PMIC_ST_SUCCESS) &&
+                 (!Pmic_getBitField_b(regData, CONFIG_CRC_STATUS_SHIFT)) &&
+                 (pollCnt < CORE_CRC_STATUS_POLL_MAX));
     }
 
-    // Set the CRC_CALC bit back low as a good citizen, it is not self clearing,
-    // we can write all 0's at this point as CONFIG_CRC_STATUS is RO, and we
-    // have already confirmed that CONFIG_CRC_EN must be zero.
+    // Clear the CRC_CALC bit using a read-modify-write to preserve CONFIG_CRC_EN
+    // and any other writable bits. Writing 0x00 to the entire register would
+    // silently disable CRC protection if CONFIG_CRC_EN had been set between
+    // our initial check and this write.
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_ioTxByte(handle, CONFIG_CRC_CONFIG_REG, 0x00U);
+        status = Pmic_ioUpdateByte_b(handle, CONFIG_CRC_CONFIG_REG, CONFIG_CRC_CALC_SHIFT, (bool)false);
     }
 
     // If the CRC_STATUS bit is set then the calculated CRC does not match,
