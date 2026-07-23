@@ -1,6 +1,6 @@
 # PMIC Test Infrastructure
 
-This directory contains shared test infrastructure used across all PMIC device test harnesses (LP8772x-Q1, TPS65036x-Q1, TPS6522x-Q1, TPS65386x-Q1).
+This directory contains shared test infrastructure used across all PMIC device test harnesses.
 
 ## Infrastructure Components
 
@@ -155,7 +155,7 @@ This ensures production builds have no debug code overhead.
 
 ### Overview
 
-The test filtering system provides flexible, environment-variable-based test execution control without requiring recompilation. This enables rapid debugging of specific test failures and efficient development workflows.
+The test filtering system provides environment-variable-based test execution control without requiring recompilation. This allows selective test execution for debugging specific test failures.
 
 ### Features
 
@@ -445,7 +445,7 @@ The performance timing system provides hierarchical timing instrumentation for t
 - **Per-Module Timing**: Aggregates timing for each test module
 - **Suite-Level Timing**: Total execution time across all tests
 - **Minimal Overhead**: Lightweight timing that doesn't significantly impact performance
-- **Automatic Integration**: Works seamlessly with Unity test framework
+- **Automatic Integration**: Integrates with Unity test framework
 
 ### Timing Hierarchy
 

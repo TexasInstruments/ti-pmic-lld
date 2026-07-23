@@ -61,29 +61,22 @@
 
 /**
  * @brief Platform-specific include(s).
+ *
+ * BUILD_MOCK: platform_mock.h deferred to end of file (prevents macro conflicts)
+ * BUILD_HOST: Serial communication handled by platform_serial.h
  */
-#ifndef BUILD_MOCK
-#include "driverlib/gpio.h"
-#include "driverlib/i2c.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/timer.h"
-#include "driverlib/uart.h"
-#include "inc/hw_memmap.h"
-#include "inc/tm4c123gh6pm.h"
-#else
-#include "platform_mock.h"
-#endif
 
 /**
  * @brief Testing framework include(s).
  */
 #include "unity.h"
+#include "test_filter.h"
+#include "test_timer.h"
 
-#ifndef BUILD_MOCK
-
-#ifdef __cplusplus
-extern "C" {
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
 #endif
 
 /* ========================================================================= */
@@ -93,22 +86,74 @@ extern "C" {
 /**
  * @brief PMIC-related information.
  */
+#ifndef PLATFORM_TARGET_I2C_ADDR
 #define PLATFORM_TARGET_I2C_ADDR    (0x60U)
+#endif
 
 /**
  * @brief Generic "invalid value" define used in test source codebase.
  */
 #define PLATFORM_INVALID_VALUE      (0x00U)
 
+/* ========================================================================= */
+/*                        Module Name Tracking                               */
+/* ========================================================================= */
+
+/**
+ * @brief Current module name for test result prefixes
+ */
+extern const char* g_currentModuleName;
+
+/**
+ * @brief Set the current module name for test result prefixes
+ * @param moduleName The module name to use as a prefix (e.g., "ESM", "WDG")
+ *
+ * @note Internal use only - called automatically by testTimer_startModule().
+ *       Test code should use testTimer_startModule() instead of calling this directly.
+ */
+void platform_setModuleName(const char* moduleName);
+
 /**
  * @brief Macros/defines relating to testing framework.
+ *
+ * PLATFORM_RUN_TEST wraps Unity's RUN_TEST with test filtering and (on hardware)
+ * TEST_PROTECT to catch assertion failures. Test filtering allows selective
+ * test execution via environment variables without recompilation.
+ *
+ * Filtering is controlled by:
+ * - PMIC_TEST_MODULES: Comma-separated module list (e.g., "irq,power")
+ * - PMIC_TEST_FILTER: Wildcard pattern (e.g., "*mask*", "test_pos_*")
+ * - PMIC_TEST_GROUPS: "positive", "negative", or "all"
+ *
+ * Note: platform_mock.h may have already defined PLATFORM_RUN_TEST, so we
+ * undefine it first to ensure our filtered version is used.
  */
-#define PLATFORM_RUN_TEST(test)     RUN_TEST(test)
+#ifdef PLATFORM_RUN_TEST
+#undef PLATFORM_RUN_TEST
+#endif
+
+#if defined(BUILD_MOCK) || defined(BUILD_HOST)
+    /* Mock/Host build: Use standard RUN_TEST with filtering */
+    #define PLATFORM_RUN_TEST(test) \
+        do { \
+            if (testFilter_shouldRunTestWithGroup(#test)) { \
+                testTimer_startTest(#test); \
+                if (g_currentModuleName) printf("[%s] ", g_currentModuleName); \
+                RUN_TEST(test); \
+                testTimer_endTest(); \
+            } \
+        } while(0)
+#endif
+
 #define PLATFORM_ASSERT(condition)  TEST_ASSERT(condition)
 
 /* ========================================================================= */
 /*                           Function Declarations                           */
 /* ========================================================================= */
+
+#if !defined(BUILD_MOCK)
+/* Function declarations (for BUILD_HOST and legacy hardware builds) */
+/* BUILD_MOCK provides these as macros in platform_mock.h */
 
 /**
  * @brief Initialize platform and its peripherals for testing LLD.
@@ -185,15 +230,14 @@ void *platform_getCommHandle(void);
  *
  * @param handle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Register page number.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
- * @param pTxBuf [IN] Data to write to PMIC.
+ * @param buffer [IN] Data to write to PMIC.
  *
  * @param bufLen [IN] Number of bytes to transmit. That is to say, Length of
- * `pTxBuf`.
+ * `buffer`.
  *
  * @return Success code if `bufLen` bytes have been written to PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
@@ -207,17 +251,16 @@ int32_t platform_txByte(const Pmic_Handle_t *handle,
 /**
  * @brief Platform-specific API to read one or multiple bytes from PMIC.
  *
- * @param pmicCorehandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
- * @param instType [IN] Instance type. For valid values, refer to
- * @ref Pmic_InstType.
+ * @param page [IN] Register page number.
  *
  * @param regAddr [IN] Target PMIC register address.
  *
- * @param pRxBuf [OUT] Data obtained from PMIC.
+ * @param buffer [OUT] Data obtained from PMIC.
  *
  * @param bufLen [IN] Number of bytes to read from PMIC. That is to say, length
- * of `pRxBuf`.
+ * of `buffer`.
  *
  * @return Success code if `bufLen` bytes have been obtained from the PMIC,
  * error code otherwise. For valid success/error codes, refer to
@@ -239,8 +282,41 @@ int32_t platform_rxByte(const Pmic_Handle_t *handle,
  */
 void platform_unlockRegisters(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-#endif /* BUILD_MOCK */
+/**
+ * @brief Execute test callback with platform-appropriate behavior
+ *
+ * @details Hardware: Interactive loop (wait before start, re-run capability, wait after)
+ *          Mock: Single execution, no waits
+ *          Host: Single execution, no waits
+ *
+ * @param testCallback Function that executes all test suites
+ */
+void platform_runTestLoop(void (*testCallback)(void));
+
+#endif /* !BUILD_MOCK - End of function declarations */
+
+#if !defined(BUILD_MOCK) && !defined(BUILD_HOST)
+  #ifdef __cplusplus
+  }
+  #endif /* __cplusplus */
+#endif /* !BUILD_MOCK && !BUILD_HOST */
+
+/**
+ * @brief Include mock-specific overrides when BUILD_MOCK is defined
+ *
+ * platform_mock.h provides macro definitions that override function declarations
+ * with no-ops or redirects. This prevents double Unity initialization and other
+ * issues that occur when using the mock backend.
+ */
+#ifdef BUILD_MOCK
+    /* Undefine macros that platform_mock.h will redefine */
+    #ifdef PLATFORM_TARGET_I2C_ADDR
+    #undef PLATFORM_TARGET_I2C_ADDR
+    #endif
+    #ifdef PLATFORM_RUN_TEST
+    #undef PLATFORM_RUN_TEST
+    #endif
+    #include "platform_mock.h"
+#endif
+
 #endif /* PMIC_TEST_PLATFORM_H */

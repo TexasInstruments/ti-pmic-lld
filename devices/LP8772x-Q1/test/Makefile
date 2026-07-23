@@ -1,125 +1,25 @@
 # Makefile for LP8772x-Q1 PMIC Tests
-# Supports hardware and mock builds
-#
-# Usage:
-#   make test               # Build and run with mock backend (default)
-#   make test BUILD=mock    # Build and run with mock backend
-#   make test BUILD=host # Build and run with hardware (requires TI drivers)
-#   make clean              # Clean build artifacts
+# Uses shared build infrastructure from common/build/
 
-# Build type (mock or hardware)
-BUILD ?= mock
+# Include shared build infrastructure
+include ../../../common/build/common.mk
+include ../../../common/build/coverage.mk
+include ../../../common/build/mock.mk
 
-# Compiler default: clang on all platforms
-ifeq ($(origin CC),default)
-    CC := clang
-endif
+# Device-specific configuration
+DEVICE_NAME := LP8772x-Q1
+DEVICE_PLATFORM := lp8772x
 
-# On Windows, target MinGW ABI so clang finds headers via the GCC installation
-# rather than looking for MSVC/Windows SDK headers.
-ifeq ($(OS),Windows_NT)
-    TARGET_FLAG := --target=x86_64-w64-mingw32
-else
-    TARGET_FLAG :=
-endif
-
-# Warning flags: -Weverything is clang-only; use -Wall -Wextra for gcc
-ifeq ($(CC),gcc)
-    WARN_FLAGS := -Wall -Wextra
-else
-    WARN_FLAGS := -Weverything
-endif
-
-# Coverage flags
-COV_FLAGS = -fprofile-instr-generate -fcoverage-mapping -fcoverage-mcdc
-
-# Coverage tools (OS-aware)
-ifeq ($(OS),Windows_NT)
-    LLVM_PROFDATA = llvm-profdata
-    LLVM_COV = llvm-cov
-else ifeq ($(shell uname -s),Darwin)
-    LLVM_PROFDATA = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-profdata
-    LLVM_COV = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov
-else
-    LLVM_PROFDATA = llvm-profdata
-    LLVM_COV = llvm-cov
-endif
-
-# Unity source file
-UNITY_SRC = $(UNITY_DIR)/src/unity.c
-
-# Scripts directory
-SCRIPTS_DIR = ../../../scripts
-
-# Coverage tools from pmic-lld-utils (inherit from root or detect)
-ifndef PMIC_COVERAGE
-    PMIC_UTILS_DIR ?= ../../../../pmic-lld-utils
-    PMIC_COVERAGE := $(shell which pmic-coverage 2>/dev/null)
-    ifndef PMIC_COVERAGE
-        PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
-    endif
-endif
-
-# Directories
+# Device-specific directories
 SRC_DIR = ../src
 INC_DIR = ../include
-
-# Unity directory - uses external Unity test framework
-# Auto-detect from sibling directory (portable) or require explicit path
-ifndef UNITY_DIR
-    ifeq ($(wildcard ../../../../unity/src/unity.c),../../../../unity/src/unity.c)
-        UNITY_DIR := ../../../../unity
-    else
-        $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity as sibling to pmic-lld repository)
-    endif
-else
-    export UNITY_DIR
-endif
-
-# Mock directory - uses external pmic-lld-mocking repository
-# Auto-detect from sibling directory (portable) or require explicit path
-ifndef PMIC_MOCK_DIR
-    ifeq ($(wildcard ../../../../pmic-lld-mocking/Makefile),../../../../pmic-lld-mocking/Makefile)
-        PMIC_MOCK_DIR := ../../../../pmic-lld-mocking
-    else
-        $(error PMIC_MOCK_DIR not found. Set PMIC_MOCK_DIR environment variable or install pmic-lld-mocking as sibling to pmic-lld repository)
-    endif
-endif
-# Normalize path: strip trailing slashes to avoid double-slash issues
-# Note: PMIC_MOCK_DIR is converted to absolute path by root Makefile if needed
-MOCK_DIR = $(patsubst %/,%,$(PMIC_MOCK_DIR))
-
-# Shared test infrastructure
-TEST_COMMON_DIR = ../../../common/test
 
 # Auto-discover test subdirectories (any directory with .h files)
 TEST_INCLUDE_DIRS = $(sort $(dir $(wildcard */*.h)))
 TEST_INCLUDE_FLAGS = $(addprefix -I,$(TEST_INCLUDE_DIRS))
 
-# Compiler flags (common)
-CFLAGS = $(WARN_FLAGS) \
-         -Wno-documentation \
-         -Wno-padded \
-         -Wno-poison-system-directories \
-         -Wno-unused-parameter \
-         -Wno-unused-function \
-         -Wno-missing-prototypes \
-         -Wno-declaration-after-statement \
-         -Wno-unused-macros \
-         -Wno-unused-variable \
-         -Wno-shadow \
-         -Wno-implicit-int-conversion \
-         -Wno-pedantic \
-         -Wno-missing-noreturn \
-         -Wno-unreachable-code \
-         -Wno-unreachable-code-return \
-         -Wno-unreachable-code-break \
-         -Wno-covered-switch-default \
-         -Wno-missing-variable-declarations \
-         -Wno-unsafe-buffer-usage \
-		 -Wno-extra-semi-stmt \
-         -Werror \
-         -std=c99 $(TARGET_FLAG) -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
+# Compiler flags (device-specific includes)
+CFLAGS = $(BASE_CFLAGS) -I$(INC_DIR) -I. -I$(TEST_COMMON_DIR) $(TEST_INCLUDE_FLAGS)
 
 # PMIC driver source files (always needed)
 PMIC_SOURCES = \
@@ -159,14 +59,14 @@ ifeq ($(BUILD), mock)
 	CFLAGS += -I$(MOCK_DIR)/mock
 	CFLAGS += -I$(MOCK_DIR)/adapters
 	CFLAGS += -I$(MOCK_DIR)/utils
-	CFLAGS += -I$(MOCK_DIR)/platforms/lp8772x
+	CFLAGS += -I$(MOCK_DIR)/platforms/$(DEVICE_PLATFORM)
 	CFLAGS += -I$(UNITY_DIR)/src
 	CFLAGS += -DBUILD_MOCK -DUNITY_INCLUDE_DOUBLE
 
 	# Platform glue compiled locally (from pmic-lld-mocking/platforms/lp8772x/)
-	PLATFORM_SOURCES = $(MOCK_DIR)/platforms/lp8772x/platform_mock.c
+	PLATFORM_SOURCES = $(MOCK_DIR)/platforms/$(DEVICE_PLATFORM)/platform_mock.c
 
-	LDFLAGS = -L$(MOCK_DIR)/build/lib -lpmic_mock
+	LDFLAGS += -L$(MOCK_DIR)/build/lib -lpmic_mock
 
 	TARGET = test_runner
 
@@ -181,7 +81,7 @@ else ifeq ($(BUILD), host)
 	PLATFORM_SOURCES = platform.c platform_serial.c
 
 	# No special linking required for host build
-	LDFLAGS =
+	LDFLAGS +=
 
 	TARGET = test_runner
 
@@ -190,32 +90,6 @@ else ifeq ($(BUILD), host)
 else
 	$(error Invalid BUILD type. Use: BUILD=mock or BUILD=host)
 endif
-
-# clock_gettime is in winpthread on MinGW; harmless on Linux
-ifeq ($(OS),Windows_NT)
-    LDFLAGS += -lpthread
-endif
-
-# Mock library path and sources (for dependency tracking)
-MOCK_LIB = $(MOCK_DIR)/build/lib/libpmic_mock.a
-MOCK_LIB_SRCS = $(wildcard $(MOCK_DIR)/mock/*.c) \
-                $(wildcard $(MOCK_DIR)/adapters/*.c) \
-                $(wildcard $(MOCK_DIR)/utils/*.c) \
-                $(wildcard $(MOCK_DIR)/behaviors/*.c) \
-                $(wildcard $(MOCK_DIR)/devices/*/*.c)
-
-# Auto-build mock library if needed
-.PHONY: check-mock-lib
-check-mock-lib:
-	@if [ ! -f "$(MOCK_LIB)" ]; then \
-		echo "Mock library not found, building it..."; \
-		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
-	elif [ -n "$$(find $(MOCK_DIR) -name '*.c' -newer $(MOCK_LIB) 2>/dev/null | head -1)" ]; then \
-		echo "Mock library out of date, rebuilding..."; \
-		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
-	else \
-		echo "Mock library up to date"; \
-	fi
 
 # Default target
 all: $(TARGET)
@@ -384,7 +258,7 @@ endif
 
 # Help target
 help:
-	@echo "LP8772x-Q1 PMIC Test Makefile"
+	@echo "$(DEVICE_NAME) PMIC Test Makefile"
 	@echo ""
 	@echo "Usage:"
 	@echo "  make [TARGET] [BUILD=mock|host]"
@@ -403,15 +277,15 @@ help:
 	@echo "  BUILD=mock       - Use mock backend (no hardware required) [default]"
 	@echo "  BUILD=host       - Host-controlled (requires pmic-tiva-host firmware on TM4C123)"
 	@echo ""
-	@echo "Test Filtering (via environment variables):"
-	@echo "  PMIC_TEST_MODULES  - Comma-separated module list (e.g., 'irq,power')"
-	@echo "  PMIC_TEST_FILTER   - Wildcard pattern (e.g., '*mask*', 'test_pos_*')"
-	@echo "  PMIC_TEST_GROUPS   - 'positive', 'negative', or 'all' (default)"
-	@echo ""
 	@echo "Coverage Analysis:"
 	@echo "  make coverage                              # Mock coverage (default)"
 	@echo "  make coverage BUILD=mock                   # Explicit mock coverage"
 	@echo "  make coverage BUILD=host                   # Host coverage (PC-side only)"
+	@echo ""
+	@echo "Test Filtering (via environment variables):"
+	@echo "  PMIC_TEST_MODULES  - Comma-separated module list (e.g., 'irq,power')"
+	@echo "  PMIC_TEST_FILTER   - Wildcard pattern (e.g., '*mask*', 'test_pos_*')"
+	@echo "  PMIC_TEST_GROUPS   - 'positive', 'negative', or 'all' (default)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make test                                  # Run all tests with mock"
@@ -431,5 +305,7 @@ help:
 	@echo "  2. Connect USB cable"
 	@echo "  3. Set PMIC_SERIAL_PORT (optional, defaults to /dev/cu.usbmodem1131201)"
 	@echo "  4. Run: make test BUILD=host"
+	@echo ""
+	@echo "Note: This Makefile uses shared build infrastructure from common/build/"
 
-.PHONY: all test test-module test-single test-group clean help coverage
+.PHONY: all test test-module test-single test-group clean help coverage test-debug

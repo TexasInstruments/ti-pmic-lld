@@ -61,13 +61,10 @@
 
 /**
  * @brief Platform-specific include(s).
+ *
+ * BUILD_MOCK: platform_mock.h deferred to end of file (prevents macro conflicts)
+ * BUILD_HOST: Serial communication handled by platform_serial.h
  */
-#if defined(BUILD_MOCK)
-#include "platform_mock.h"
-#elif defined(BUILD_HOST)
-/* Host mode: No hardware-specific includes needed */
-/* Serial communication handled by platform_serial.h */
-#endif
 
 /**
  * @brief Testing framework include(s).
@@ -89,7 +86,9 @@
 /**
  * @brief PMIC-related information.
  */
+#ifndef PLATFORM_TARGET_I2C_ADDR
 #define PLATFORM_TARGET_I2C_ADDR    (0x60U)
+#endif
 
 /**
  * @brief Generic "invalid value" define used in test source codebase.
@@ -301,4 +300,23 @@ void platform_runTestLoop(void (*testCallback)(void));
   }
   #endif /* __cplusplus */
 #endif /* !BUILD_MOCK && !BUILD_HOST */
+
+/**
+ * @brief Include mock-specific overrides when BUILD_MOCK is defined
+ *
+ * platform_mock.h provides macro definitions that override function declarations
+ * with no-ops or redirects. This prevents double Unity initialization and other
+ * issues that occur when using the mock backend.
+ */
+#ifdef BUILD_MOCK
+    /* Undefine macros that platform_mock.h will redefine */
+    #ifdef PLATFORM_TARGET_I2C_ADDR
+    #undef PLATFORM_TARGET_I2C_ADDR
+    #endif
+    #ifdef PLATFORM_RUN_TEST
+    #undef PLATFORM_RUN_TEST
+    #endif
+    #include "platform_mock.h"
+#endif
+
 #endif /* PMIC_TEST_PLATFORM_H */
