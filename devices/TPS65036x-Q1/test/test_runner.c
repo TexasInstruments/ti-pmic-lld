@@ -81,6 +81,7 @@ void tearDown(void)
 extern void common_test(void *args);
 extern void core_test(void *args);
 extern void esm_test(void *args);
+extern void fsm_test(void *args);
 extern void gpio_test(void *args);
 extern void io_test(void *args);
 extern void irq_test(void *args);
@@ -114,6 +115,9 @@ int main(void)
 
     printf("\n=== Running Core Tests ===\n");
     core_test(NULL);
+
+    printf("\n=== Running FSM Tests ===\n");
+    fsm_test(NULL);
 
     printf("\n=== Running IRQ Tests ===\n");
     irq_test(NULL);

@@ -268,7 +268,9 @@
     ESM_TEST_NEG_ESMSTOP()
 
 /* ======================================================================== */
-/*                       Test APIs: ESM Integration Tests                   */
+/*              Test APIs: esmSetCfg, esmSetEnableState,                    */
+/*                         esmGetEnableState, esmSetStartState,             */
+/*                         esmGetStartState                                 */
 /* ======================================================================== */
 
 #define ESM_TEST_POS_INTEGRATION() \

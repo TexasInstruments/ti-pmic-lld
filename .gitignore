@@ -4,6 +4,7 @@
 lib/
 *.so
 *.a
+*.exe
 
 # Coverage artifacts
 *.gcov

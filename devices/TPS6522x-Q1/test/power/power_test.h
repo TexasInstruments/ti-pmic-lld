@@ -242,6 +242,7 @@ extern "C" {
 /* ========================================================================== */
 
 #ifdef BUILD_MOCK
+/* Test: TC-POWER-0043 */
 #define POWER_TEST_POS_PROPERTY() \
     PLATFORM_RUN_TEST(test_pos_power_property_buckVoltageBounds); \
     PLATFORM_RUN_TEST(test_pos_power_property_vmonThresholdEnumeration)

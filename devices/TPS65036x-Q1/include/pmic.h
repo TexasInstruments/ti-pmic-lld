@@ -51,6 +51,7 @@
 #include "pmic_common.h"
 #include "pmic_core.h"
 #include "pmic_esm.h"
+#include "pmic_fsm.h"
 #include "pmic_gpio.h"
 #include "pmic_io.h"
 #include "pmic_irq.h"

@@ -213,7 +213,7 @@ extern "C" {
     CORE_TEST_NEG_GETSILICONREV()
 
 /* ======================================================================== */
-/*                       Test APIs: diagSetOutCtrlCfg                       */
+/*                      Test APIs: setMuxCfg, getMuxCfg                     */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETOUTCTRLCFG() \
@@ -228,7 +228,7 @@ extern "C" {
     CORE_TEST_NEG_DIAGSETOUTCTRLCFG()
 
 /* ======================================================================== */
-/*                       Test APIs: diagGetOutCtrlCfg                       */
+/*                           Test APIs: getMuxCfg                           */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETOUTCTRLCFG() \
@@ -244,7 +244,7 @@ extern "C" {
     CORE_TEST_NEG_DIAGGETOUTCTRLCFG()
 
 /* ======================================================================== */
-/*                        Test APIs: diagSetAmuxCfg                         */
+/*                       Test APIs: setMuxCfg, getMuxCfg                    */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETAMUXCFG() \
@@ -260,7 +260,7 @@ extern "C" {
     CORE_TEST_NEG_DIAGSETAMUXCFG()
 
 /* ======================================================================== */
-/*                        Test APIs: diagGetAmuxCfg                         */
+/*                             Test APIs: getMuxCfg                         */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETAMUXCFG() \
@@ -276,7 +276,7 @@ extern "C" {
     CORE_TEST_NEG_DIAGGETAMUXCFG()
 
 /* ======================================================================== */
-/*                        Test APIs: diagSetDmuxCfg                         */
+/*                           Test APIs: setMuxCfg                           */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGSETDMUXCFG() \
@@ -292,7 +292,7 @@ extern "C" {
     CORE_TEST_NEG_DIAGSETDMUXCFG()
 
 /* ======================================================================== */
-/*                        Test APIs: diagGetDmuxCfg                         */
+/*                           Test APIs: getMuxCfg                           */
 /* ======================================================================== */
 
 #define CORE_TEST_POS_DIAGGETDMUXCFG() \

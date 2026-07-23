@@ -8,14 +8,23 @@ CC := clang
 endif
 
 # Normalize PMIC_MOCK_DIR if set: convert relative paths to absolute
-# This ensures relative paths work correctly when passed to test Makefiles via make -C
+# On Windows, paths like C:/... already contain a drive letter - skip abspath
+# which would prepend CWD on any path that doesn't start with /
 ifdef PMIC_MOCK_DIR
-export PMIC_MOCK_DIR := $(abspath $(PMIC_MOCK_DIR))
+    ifeq ($(findstring :/,$(PMIC_MOCK_DIR)),)
+        export PMIC_MOCK_DIR := $(abspath $(PMIC_MOCK_DIR))
+    else
+        export PMIC_MOCK_DIR := $(PMIC_MOCK_DIR)
+    endif
 endif
 
 # Normalize UNITY_DIR if set: convert relative paths to absolute
 ifdef UNITY_DIR
-export UNITY_DIR := $(abspath $(UNITY_DIR))
+    ifeq ($(findstring :/,$(UNITY_DIR)),)
+        export UNITY_DIR := $(abspath $(UNITY_DIR))
+    else
+        export UNITY_DIR := $(UNITY_DIR)
+    endif
 endif
 
 # Validate UNITY_DIR points to valid Unity source directory
@@ -32,7 +41,7 @@ ifndef PMIC_UTILS_DIR
 endif
 
 # Check if pmic-coverage is globally installed, otherwise use uv run
-PMIC_COVERAGE := $(shell command -v pmic-coverage 2>/dev/null)
+PMIC_COVERAGE := $(shell which pmic-coverage 2>/dev/null)
 ifndef PMIC_COVERAGE
     PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
 endif
@@ -57,7 +66,7 @@ all:
 	@for device in $(DEVICES); do \
 		echo ""; \
 		echo "==================== Building $$device ===================="; \
-		$(MAKE) -C $(DEVICE_DIR)/$$device $(MAKE_VARS) || exit 1; \
+		"$(MAKE)" -C $(DEVICE_DIR)/$$device $(MAKE_VARS) || exit 1; \
 	done
 
 # Build a specific device
@@ -75,7 +84,7 @@ endif
 		echo "Available devices: $(DEVICES)"; \
 		exit 1; \
 	fi
-	$(MAKE) -C $(DEVICE_DIR)/$(DEVICE) $(MAKE_VARS)
+	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE) $(MAKE_VARS)
 
 # Clean all devices
 .PHONY: clean
@@ -84,7 +93,10 @@ ifndef DEVICE
 	@echo "Cleaning all PMIC device variants..."
 	@for device in $(DEVICES); do \
 		echo "Cleaning $$device..."; \
-		$(MAKE) -C $(DEVICE_DIR)/$$device clean; \
+		"$(MAKE)" -C $(DEVICE_DIR)/$$device clean || exit 1; \
+		if [ -d "$(DEVICE_DIR)/$$device/test" ]; then \
+			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test clean || exit 1; \
+		fi; \
 	done
 	@echo "All devices cleaned!"
 else
@@ -94,7 +106,10 @@ else
 		echo "Available devices: $(DEVICES)"; \
 		exit 1; \
 	fi
-	$(MAKE) -C $(DEVICE_DIR)/$(DEVICE) clean
+	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE) clean
+	@if [ -d "$(DEVICE_DIR)/$(DEVICE)/test" ]; then \
+		"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test clean; \
+	fi
 endif
 
 # Run tests (context-aware: all devices or specific device)
@@ -115,7 +130,7 @@ ifndef DEVICE
 		if [ -d "$(DEVICE_DIR)/$$device/test" ]; then \
 			output_file=$$(mktemp); \
 			result=0; \
-			$(MAKE) -C $(DEVICE_DIR)/$$device/test test BUILD=mock > $$output_file 2>&1; \
+			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test test BUILD=mock > $$output_file 2>&1; \
 			result=$$?; \
 			cat $$output_file; \
 			tests=0; failures=0; ignored=0; \
@@ -166,7 +181,7 @@ else
 		echo "Error: Test directory $(DEVICE_DIR)/$(DEVICE)/test not found"; \
 		exit 1; \
 	fi
-	$(MAKE) -C $(DEVICE_DIR)/$(DEVICE)/test test BUILD=mock
+	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test test BUILD=mock
 endif
 
 # Generate coverage reports (context-aware: all devices or specific device)
@@ -181,7 +196,7 @@ ifndef DEVICE
 		echo ""; \
 		echo "==================== Coverage for $$device ===================="; \
 		if [ -d "$(DEVICE_DIR)/$$device/test" ]; then \
-			$(MAKE) -C $(DEVICE_DIR)/$$device/test coverage BUILD=mock || exit 1; \
+			"$(MAKE)" -C $(DEVICE_DIR)/$$device/test coverage BUILD=mock || exit 1; \
 			latest_json=$$(ls -t $(DEVICE_DIR)/$$device/test/coverage/*.json 2>/dev/null | head -1); \
 			if [ -n "$$latest_json" ]; then \
 				json_reports="$$json_reports $$latest_json"; \
@@ -208,7 +223,7 @@ else
 		echo "Error: Test directory $(DEVICE_DIR)/$(DEVICE)/test not found"; \
 		exit 1; \
 	fi
-	$(MAKE) -C $(DEVICE_DIR)/$(DEVICE)/test coverage BUILD=mock
+	"$(MAKE)" -C $(DEVICE_DIR)/$(DEVICE)/test coverage BUILD=mock
 	@echo ""
 	@echo "Coverage reports generated:"
 	@echo "  $(DEVICE_DIR)/$(DEVICE)/test/coverage/"
@@ -267,16 +282,16 @@ endif
 
 # Pattern rule for clean:device
 clean\:%:
-	@$(MAKE) clean DEVICE=$*
+	@"$(MAKE)" clean DEVICE=$*
 
 # Pattern rule for test:device
 test\:%:
-	@$(MAKE) test DEVICE=$*
+	@"$(MAKE)" test DEVICE=$*
 
 # Pattern rule for coverage:device
 coverage\:%:
-	@$(MAKE) coverage DEVICE=$*
+	@"$(MAKE)" coverage DEVICE=$*
 
 # Pattern rule for build:device (explicit build target)
 build\:%:
-	@$(MAKE) DEVICE=$*
+	@"$(MAKE)" DEVICE=$*

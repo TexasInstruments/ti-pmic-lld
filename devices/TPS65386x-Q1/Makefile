@@ -29,9 +29,9 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ifdef OS
-RM = rm
-RMDIR = rmdir
-MKDIR = mkdir
+RM = rm -f
+RMDIR = rm -rf
+MKDIR = mkdir -p
 unix_to_dos = $(subst /,\,$1)
 OSP = windows
 else
@@ -51,6 +51,15 @@ endif
 endif
 endif
 
+# -fPIC is Linux/macOS only; Windows builds a static archive instead of .so
+ifeq ($(OSP),windows)
+    FPIC_FLAG :=
+    LIB_EXT := a
+else
+    FPIC_FLAG := -fPIC
+    LIB_EXT := so
+endif
+
 # Compiler selection (override Make's built-in CC=cc default)
 ifeq ($(origin CC),default)
 CC := clang
@@ -58,14 +67,13 @@ endif
 
 INC	= -I./include
 
-CFLAGS = -fPIC $(INC) -Weverything \
+CFLAGS = $(FPIC_FLAG) $(INC) -Weverything \
 				 -Wno-documentation \
 				 -Wno-padded \
 				 -Wno-poison-system-directories \
 				 -Wno-covered-switch-default \
 				 -Wno-unreachable-code-break \
 				 -Werror
-LDFLAGS = -shared
 LIB_DIR = lib
 
 DEBUGFLAGS = -O0 -g -D _DEBUG
@@ -74,12 +82,12 @@ build ?= release
 
 ifeq ($(build), debug)
     CFLAGS += $(DEBUGFLAGS)
-    TARGET = $(LIB_DIR)/libpmic.so
+    TARGET = $(LIB_DIR)/libpmic.$(LIB_EXT)
 endif
 
 ifeq ($(build), release)
     CFLAGS += $(RELEASEFLAGS)
-    TARGET = $(LIB_DIR)/libpmic.so
+    TARGET = $(LIB_DIR)/libpmic.$(LIB_EXT)
 endif
 
 SOURCES = \
@@ -192,8 +200,11 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(MKDIR) $(LIB_DIR)
-	$(call $(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS))
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS)
+ifeq ($(OSP),windows)
+	ar rcs $@ $(OBJECTS)
+else
+	$(CC) $(CFLAGS) -shared -o $@ $(OBJECTS)
+endif
 	$(RM) $(OBJECTS)
 
 docs:
@@ -211,12 +222,12 @@ ifneq ($(UNITY_EXISTS),yes)
 	@echo "Please install Unity framework using one of these methods:"
 	@echo ""
 	@echo "Option 1: Add Unity as a git submodule (recommended):"
-	@echo "  cd /home/a0224633/Projects/pmic-lld-blackbird"
+	@echo "  cd /path/to/pmic-lld"
 	@echo "  mkdir -p third_party"
 	@echo "  git submodule add https://github.com/ThrowTheSwitch/Unity.git third_party/unity"
 	@echo ""
 	@echo "Option 2: Clone Unity manually:"
-	@echo "  cd /home/a0224633/Projects/pmic-lld-blackbird"
+	@echo "  cd /path/to/pmic-lld"
 	@echo "  mkdir -p third_party"
 	@echo "  git clone https://github.com/ThrowTheSwitch/Unity.git third_party/unity"
 	@echo ""
@@ -326,7 +337,7 @@ help:
 	@echo "Optional make variables:"
 	@echo "------------------------"
 	@echo "CC=[Cross-compiler to be used]"
-	@echo "    Default: gcc"
+	@echo "    Default: clang (gcc is a fallback)"
 	@echo "BUILD_PROFILE=[release debug]"
 	@echo "    Default: release"
 	@echo "OS=[Windows_NT linux]"
@@ -335,7 +346,12 @@ help:
 	@echo "    Default: ../../third_party/unity"
 
 clean:
-	$(RM) $(TARGET)
-	$(RM) $(OBJECTS)
-	$(RMDIR) docs/html/
-	$(RMDIR) $(LIB_DIR)
+	@echo "Cleaning..."
+	@if [ -e "$(TARGET)" ]; then rm -f "$(TARGET)" && echo "  Removed: $(TARGET)"; \
+	  else echo "  Note: $(TARGET) not found, skipping"; fi
+	@rm -f $(OBJECTS)
+	@if [ -d "docs/html" ]; then rm -rf docs/html && echo "  Removed: docs/html/"; \
+	  else echo "  Note: docs/html/ not found, skipping"; fi
+	@if [ -d "$(LIB_DIR)" ]; then rm -rf "$(LIB_DIR)" && echo "  Removed: $(LIB_DIR)/"; \
+	  else echo "  Note: $(LIB_DIR)/ not found, skipping"; fi
+	@echo "Clean complete."

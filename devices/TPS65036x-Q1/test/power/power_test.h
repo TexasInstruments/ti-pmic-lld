@@ -113,7 +113,7 @@ extern "C" {
     POWER_TEST_NEG_PWRGETLDOCFG()
 
 /* ======================================================================== */
-/*                         Test APIs: pwrSetBuckCfg                         */
+/*        Test APIs: pwrSetBuckCfg, pwrGetBuckCfg, pwrGetRsrcStatus         */
 /* ======================================================================== */
 #define POWER_TEST_POS_PWRSETBUCKCFG() \
     PLATFORM_RUN_TEST(test_pos_power_buckSetGetCfg_enable_buck1); \

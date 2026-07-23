@@ -158,6 +158,7 @@ extern "C" {
 /*                        Property Tests (BUILD_MOCK)                         */
 /* ========================================================================== */
 #ifdef BUILD_MOCK
+/* Test: TC-ADC-0007 */
 #define ADC_TEST_PROPERTY() \
     PLATFORM_RUN_TEST(test_pos_adc_property_randomChannelConfigurations)
 #else

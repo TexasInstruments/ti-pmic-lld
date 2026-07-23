@@ -73,7 +73,7 @@ extern "C" {
     IO_TEST_NEG_IOTXBYTE()
 
 /* ======================================================================== */
-/*                           Test APIs: ioRxByte                            */
+/*                     Test APIs: ioRxByte, Pmic_ioTxByte                   */
 /* ======================================================================== */
 
 #define IO_TEST_POS_IORXBYTE() \

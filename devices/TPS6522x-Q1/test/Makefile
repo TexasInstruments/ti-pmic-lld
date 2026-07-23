@@ -41,15 +41,40 @@
 # Default build mode: mock or hardware
 BUILD ?= mock
 
-# Compiler (standardized for coverage reliability)
-CC := clang
+# Compiler default: clang on all platforms
+ifeq ($(origin CC),default)
+    CC := clang
+endif
+
+# On Windows, target MinGW ABI so clang finds headers via the GCC installation
+# rather than looking for MSVC/Windows SDK headers.
+ifeq ($(OS),Windows_NT)
+    TARGET_FLAG := --target=x86_64-w64-mingw32
+else
+    TARGET_FLAG :=
+endif
+
+# Warning flags: -Weverything is clang-only; use -Wall -Wextra for gcc
+ifeq ($(CC),gcc)
+    WARN_FLAGS := -Wall -Wextra
+else
+    WARN_FLAGS := -Weverything
+endif
 
 # Coverage flags
 COV_FLAGS = -fprofile-instr-generate -fcoverage-mapping -fcoverage-mcdc
 
-# Coverage tools (use Xcode version for compatibility with Apple clang)
-LLVM_PROFDATA = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-profdata
-LLVM_COV = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov
+# Coverage tools (OS-aware)
+ifeq ($(OS),Windows_NT)
+    LLVM_PROFDATA = llvm-profdata
+    LLVM_COV = llvm-cov
+else ifeq ($(shell uname -s),Darwin)
+    LLVM_PROFDATA = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-profdata
+    LLVM_COV = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov
+else
+    LLVM_PROFDATA = llvm-profdata
+    LLVM_COV = llvm-cov
+endif
 
 # Scripts directory
 SCRIPTS_DIR = ../../../scripts
@@ -57,7 +82,7 @@ SCRIPTS_DIR = ../../../scripts
 # Coverage tools from pmic-lld-utils (inherit from root or detect)
 ifndef PMIC_COVERAGE
     PMIC_UTILS_DIR ?= ../../../../pmic-lld-utils
-    PMIC_COVERAGE := $(shell command -v pmic-coverage 2>/dev/null)
+    PMIC_COVERAGE := $(shell which pmic-coverage 2>/dev/null)
     ifndef PMIC_COVERAGE
         PMIC_COVERAGE = uv run --project $(PMIC_UTILS_DIR)/coverage pmic-coverage
     endif
@@ -71,12 +96,10 @@ TEST_ROOT = .
 # Default to common location if not set (for LDRA/automated builds)
 # Use absolute paths for LDRA compatibility
 ifndef UNITY_DIR
-    ifeq ($(wildcard /home/a0509427/Projects/rtos/unity/src/unity.c),/home/a0509427/Projects/rtos/unity/src/unity.c)
-        UNITY_DIR := /home/a0509427/Projects/rtos/unity
-    else ifeq ($(wildcard /home/a0509427/rtos/unity/src/unity.c),/home/a0509427/rtos/unity/src/unity.c)
-        UNITY_DIR := /home/a0509427/rtos/unity
+    ifeq ($(wildcard ../../../../unity/src/unity.c),../../../../unity/src/unity.c)
+        UNITY_DIR := ../../../../unity
     else
-        $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity from https://github.com/ThrowTheSwitch/Unity.git)
+        $(error UNITY_DIR not found. Set UNITY_DIR environment variable or install Unity as sibling to pmic-lld repository)
     endif
 else
     # Export UNITY_DIR to ensure it's available to child processes and LDRA tools
@@ -87,12 +110,10 @@ endif
 # Default to common location if not set (for LDRA/automated builds)
 # Use absolute paths for LDRA compatibility
 ifndef PMIC_MOCK_DIR
-    ifeq ($(wildcard /home/a0509427/Projects/rtos/pmic-lld-mocking/Makefile),/home/a0509427/Projects/rtos/pmic-lld-mocking/Makefile)
-        PMIC_MOCK_DIR := /home/a0509427/Projects/rtos/pmic-lld-mocking
-    else ifeq ($(wildcard /home/a0509427/rtos/pmic-lld-mocking/Makefile),/home/a0509427/rtos/pmic-lld-mocking/Makefile)
-        PMIC_MOCK_DIR := /home/a0509427/rtos/pmic-lld-mocking
+    ifeq ($(wildcard ../../../../pmic-lld-mocking/Makefile),../../../../pmic-lld-mocking/Makefile)
+        PMIC_MOCK_DIR := ../../../../pmic-lld-mocking
     else
-        $(error PMIC_MOCK_DIR not found. Set PMIC_MOCK_DIR environment variable or install from pmic-lld-mocking repository)
+        $(error PMIC_MOCK_DIR not found. Set PMIC_MOCK_DIR environment variable or install pmic-lld-mocking as sibling to pmic-lld repository)
     endif
 endif
 # Normalize path: strip trailing slashes to avoid double-slash issues
@@ -140,10 +161,10 @@ MOCK_LIB_SRCS = $(wildcard $(MOCK_DIR)/mock/*.c) \
 check-mock-lib:
 	@if [ ! -f "$(MOCK_LIB)" ]; then \
 		echo "Mock library not found, building it..."; \
-		$(MAKE) -C $(MOCK_DIR) CC=$(CC) || exit 1; \
+		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
 	elif [ -n "$$(find $(MOCK_DIR) -name '*.c' -newer $(MOCK_LIB) 2>/dev/null | head -1)" ]; then \
 		echo "Mock library out of date, rebuilding..."; \
-		$(MAKE) -C $(MOCK_DIR) CC=$(CC) || exit 1; \
+		"$(MAKE)" -C $(MOCK_DIR) CC=$(CC) || exit 1; \
 	else \
 		echo "Mock library up to date"; \
 	fi
@@ -183,7 +204,7 @@ INCLUDES = \
 # ============================================================================
 
 # Base flags
-CFLAGS = -Weverything \
+CFLAGS = $(WARN_FLAGS) \
          -Wno-documentation \
          -Wno-padded \
          -Wno-poison-system-directories \
@@ -204,8 +225,10 @@ CFLAGS = -Weverything \
          -Wno-missing-variable-declarations \
          -Wno-sign-conversion \
          -Wno-bad-function-cast \
+         -Wno-unsafe-buffer-usage \
+		 -Wno-extra-semi-stmt \
          -Werror \
-         -std=c99 $(INCLUDES)
+         -std=c99 $(TARGET_FLAG) $(INCLUDES)
 
 # LDRA instrumentation support - relax warnings for instrumented code
 ifdef LDRA_INSTRUMENT
@@ -238,6 +261,11 @@ UNITY_SRC = $(UNITY_DIR)/src/unity.c
 # Linker flags
 LDFLAGS = $(MOCK_LDFLAGS)
 
+# clock_gettime is in winpthread on MinGW; harmless on Linux
+ifeq ($(OS),Windows_NT)
+    LDFLAGS += -lpthread
+endif
+
 # ============================================================================
 # Build Targets
 # ============================================================================
@@ -250,7 +278,7 @@ all: test_runner
 test_runner: check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 	@echo "Building test runner for TPS6522x-Q1 (BUILD=$(BUILD))..."
 	@echo "Compiling Unity framework (relaxed warnings)..."
-	@$(CC) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources..."
 	@$(CC) $(CFLAGS) $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o $@ $(LDFLAGS)
 	@echo "Build complete: $@"
@@ -265,7 +293,7 @@ test: check-mock-lib
 	@echo "Building and running TPS6522x-Q1 test suite..."
 	@echo "================================="
 	@echo "Compiling Unity framework (relaxed warnings)..."
-	@$(CC) -std=c99 -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
+	@$(CC) -std=c99 $(TARGET_FLAG) -I$(UNITY_DIR)/src -DUNITY_INCLUDE_DOUBLE -c $(UNITY_SRC) -o unity.o
 	@echo "Compiling test and PMIC sources..."
 	@$(CC) $(CFLAGS) -DPMIC_ERR_CNT_OVERFLOW_THR=100U -DPMIC_WARN_CNT_OVERFLOW_THR=100U -DPMIC_RETRY_CNT_OVERFLOW_THR=100U $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES) unity.o -o test_runner $(LDFLAGS)
 	@echo "Running tests..."
@@ -309,7 +337,7 @@ coverage: check-mock-lib $(TEST_SOURCES) $(PLATFORM_SOURCES) $(PMIC_SOURCES)
 .PHONY: clean
 clean:
 	@echo "Cleaning test artifacts..."
-	rm -f test_runner
+	rm -f test_runner test_runner.exe *.o unity.o
 	rm -f *.o */*.o unity.o
 	rm -f *~ */*~
 	rm -f *.profraw *.profdata *.gcov

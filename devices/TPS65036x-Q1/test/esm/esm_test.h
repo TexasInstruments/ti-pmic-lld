@@ -121,7 +121,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_zero); \
     PLATFORM_RUN_TEST(test_neg_esm_esmClrStatus_invalidValidParams_outOfBounds)
 
-/* Test: TC-ESM-0028 */
+/* Test: TC-ESM-0030 */
 #define ESM_TEST_ESMSTATUS() \
     ESM_TEST_NEG_ESMSTATUS(); \
     ESM_TEST_POS_ESMSTATUS()

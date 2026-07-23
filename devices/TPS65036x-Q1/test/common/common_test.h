@@ -158,7 +158,7 @@ extern "C" {
     PLATFORM_RUN_TEST(test_pos_common_clrDiagnostics_warningFlagOnly)
 
 /* ======================================================================== */
-/*        Test APIs: getRetryCnt, incrementRetryCnt, clearRetryCnt,         */
+/*        Test APIs: getRetryCnt, incrementRetryCnt, clrRetryCnt,           */
 /*                   getRetryCntOverflow, clrRetryCntOverflow               */
 /* ======================================================================== */
 /* Test: TC-COMMON-0040 */

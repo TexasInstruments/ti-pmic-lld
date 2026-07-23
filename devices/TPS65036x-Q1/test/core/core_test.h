@@ -38,7 +38,6 @@
 /* ========================================================================== */
 
 #include "test_utils.h"
-#include "pmic_fsm.h"
 #include "regmap/core.h"
 
 #ifdef __cplusplus
@@ -134,17 +133,6 @@ extern "C" {
 /* Test: TC-CORE-0038 */
 #define CORE_TEST_IOGETCRCENABLESTATE() \
     CORE_TEST_NEG_IOGETCRCENABLESTATE()
-
-/* ======================================================================== */
-/*                        Test APIs: fsmSetDevState                         */
-/* ======================================================================== */
-#define CORE_TEST_NEG_FSMSETDEVSTATE() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetDevState_invalid_fsmCmd)
-
-/* Test: TC-CORE-0039 */
-#define CORE_TEST_FSMSETDEVSTATE() \
-    CORE_TEST_NEG_FSMSETDEVSTATE()
 
 /* ======================================================================== */
 /*                           Test APIs: setPwrOn                            */
@@ -301,108 +289,6 @@ extern "C" {
     CORE_TEST_NEG_CHECKHANDLE()
 
 /* ======================================================================== */
-/*                       Test APIs: fsmSetRecovCntThr                       */
-/* ======================================================================== */
-#define CORE_TEST_POS_FSMSETRECOVCNTTHR() \
-    PLATFORM_RUN_TEST(test_pos_core_setGetRecovCntThr)
-
-#define CORE_TEST_NEG_FSMSETRECOVCNTTHR() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold)
-
-/* Test: TC-CORE-0048 */
-#define CORE_TEST_FSMSETRECOVCNTTHR() \
-    CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
-    CORE_TEST_NEG_FSMSETRECOVCNTTHR()
-
-/* ======================================================================== */
-/*                       Test APIs: fsmGetRecovCntThr                       */
-/* ======================================================================== */
-#define CORE_TEST_NEG_FSMGETRECOVCNTTHR() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCntThr_nullParam_threshold)
-
-/* Test: TC-CORE-0049 */
-#define CORE_TEST_FSMGETRECOVCNTTHR() \
-    CORE_TEST_NEG_FSMGETRECOVCNTTHR()
-
-/* ======================================================================== */
-/*                        Test APIs: fsmGetRecovCnt                         */
-/* ======================================================================== */
-#define CORE_TEST_POS_FSMGETRECOVCNT() \
-    PLATFORM_RUN_TEST(test_pos_core_getClrRecovCnt)
-
-#define CORE_TEST_NEG_FSMGETRECOVCNT() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetRecovCnt_nullParam_recovCnt)
-
-/* Test: TC-CORE-0050 */
-#define CORE_TEST_FSMGETRECOVCNT() \
-    CORE_TEST_POS_FSMGETRECOVCNT(); \
-    CORE_TEST_NEG_FSMGETRECOVCNT()
-
-/* ======================================================================== */
-/*                        Test APIs: fsmClrRecovCnt                         */
-/* ======================================================================== */
-#define CORE_TEST_NEG_FSMCLRRECOVCNT() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle)
-
-/* Test: TC-CORE-0051 */
-#define CORE_TEST_FSMCLRRECOVCNT() \
-    CORE_TEST_NEG_FSMCLRRECOVCNT()
-
-/* ======================================================================== */
-/*                       Test APIs: fsmSetResetCntThr                       */
-/* ======================================================================== */
-#define CORE_TEST_POS_FSMSETRESETCNTTHR() \
-    PLATFORM_RUN_TEST(test_pos_core_setGetResetCntThr)
-
-#define CORE_TEST_NEG_FSMSETRESETCNTTHR() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmSetResetCntThr_outOfBounds_threshold)
-
-/* Test: TC-CORE-0052 */
-#define CORE_TEST_FSMSETRESETCNTTHR() \
-    CORE_TEST_POS_FSMSETRESETCNTTHR(); \
-    CORE_TEST_NEG_FSMSETRESETCNTTHR()
-
-/* ======================================================================== */
-/*                       Test APIs: fsmGetResetCntThr                       */
-/* ======================================================================== */
-#define CORE_TEST_NEG_FSMGETRESETCNTTHR() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCntThr_nullParam_threshold)
-
-/* Test: TC-CORE-0053 */
-#define CORE_TEST_FSMGETRESETCNTTHR() \
-    CORE_TEST_NEG_FSMGETRESETCNTTHR()
-
-/* ======================================================================== */
-/*                        Test APIs: fsmGetResetCnt                         */
-/* ======================================================================== */
-#define CORE_TEST_POS_FSMGETRESETCNT() \
-    PLATFORM_RUN_TEST(test_pos_core_getClrResetCnt)
-
-#define CORE_TEST_NEG_FSMGETRESETCNT() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_pmicHandle); \
-    PLATFORM_RUN_TEST(test_neg_core_fsmGetResetCnt_nullParam_resetCnt)
-
-/* Test: TC-CORE-0054 */
-#define CORE_TEST_FSMGETRESETCNT() \
-    CORE_TEST_POS_FSMGETRESETCNT(); \
-    CORE_TEST_NEG_FSMGETRESETCNT()
-
-/* ======================================================================== */
-/*                        Test APIs: fsmClrResetCnt                         */
-/* ======================================================================== */
-#define CORE_TEST_NEG_FSMCLRRESETCNT() \
-    PLATFORM_RUN_TEST(test_neg_core_fsmClrResetCnt_nullParam_pmicHandle)
-
-/* Test: TC-CORE-0055 */
-#define CORE_TEST_FSMCLRRESETCNT() \
-    CORE_TEST_NEG_FSMCLRRESETCNT()
-
-/* ======================================================================== */
 /*                          Test APIs: setCRC16Cfg                          */
 /* ======================================================================== */
 #define CORE_TEST_POS_SETCRC16CFG() \
@@ -471,10 +357,6 @@ extern "C" {
     CORE_TEST_POS_GETABISTSTAT(); \
     CORE_TEST_POS_SETSCRATCHPADVALUE(); \
     CORE_TEST_POS_CHECKHANDLE(); \
-    CORE_TEST_POS_FSMSETRECOVCNTTHR(); \
-    CORE_TEST_POS_FSMGETRECOVCNT(); \
-    CORE_TEST_POS_FSMSETRESETCNTTHR(); \
-    CORE_TEST_POS_FSMGETRESETCNT(); \
     CORE_TEST_POS_SETCRC16CFG(); \
     CORE_TEST_POS_GETCRC16CFG(); \
     CORE_TEST_POS_SILICON()
@@ -486,7 +368,6 @@ extern "C" {
     CORE_TEST_NEG_GETREGLOCKSTATE(); \
     CORE_TEST_NEG_IOSETCRCENABLESTATE(); \
     CORE_TEST_NEG_IOGETCRCENABLESTATE(); \
-    CORE_TEST_NEG_FSMSETDEVSTATE(); \
     CORE_TEST_NEG_SETPWRON(); \
     CORE_TEST_NEG_GETPWRON(); \
     CORE_TEST_NEG_SETLPMCFG(); \
@@ -496,14 +377,6 @@ extern "C" {
     CORE_TEST_NEG_SETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_GETSCRATCHPADVALUE(); \
     CORE_TEST_NEG_CHECKHANDLE(); \
-    CORE_TEST_NEG_FSMSETRECOVCNTTHR(); \
-    CORE_TEST_NEG_FSMGETRECOVCNTTHR(); \
-    CORE_TEST_NEG_FSMGETRECOVCNT(); \
-    CORE_TEST_NEG_FSMCLRRECOVCNT(); \
-    CORE_TEST_NEG_FSMSETRESETCNTTHR(); \
-    CORE_TEST_NEG_FSMGETRESETCNTTHR(); \
-    CORE_TEST_NEG_FSMGETRESETCNT(); \
-    CORE_TEST_NEG_FSMCLRRESETCNT(); \
     CORE_TEST_NEG_SETCRC16CFG(); \
     CORE_TEST_NEG_GETCRC16CFG()
 
@@ -546,10 +419,6 @@ void test_pos_core_enableDisableCRC8(void);
 /* ioGetCrcEnableState API tests */
 void test_neg_core_ioGetCrcEnableState_nullParam_pmicHandle(void);
 void test_neg_core_ioGetCrcEnableState_nullParam_crcEnabled(void);
-
-/* fsmSetDevState API tests */
-void test_neg_core_fsmSetDevState_nullParam_pmicHandle(void);
-void test_neg_core_fsmSetDevState_invalid_fsmCmd(void);
 
 /* setPwrOn API tests */
 void test_neg_core_setPwrOn_nullParam_pmicHandle(void);
@@ -621,40 +490,6 @@ void test_neg_core_getScratchPadValue_nullParam_value(void);
 void test_neg_core_checkHandle_nullCritSecStart(void);
 void test_neg_core_checkHandle_nullCritSecStop(void);
 void test_pos_core_checkHandle_validCriticalSection(void);
-
-/* fsmSetRecovCntThr API tests */
-void test_neg_core_fsmSetRecovCntThr_nullParam_pmicHandle(void);
-void test_neg_core_fsmSetRecovCntThr_outOfBounds_threshold(void);
-void test_pos_core_setGetRecovCntThr(void);
-
-/* fsmGetRecovCntThr API tests */
-void test_neg_core_fsmGetRecovCntThr_nullParam_pmicHandle(void);
-void test_neg_core_fsmGetRecovCntThr_nullParam_threshold(void);
-
-/* fsmGetRecovCnt API tests */
-void test_neg_core_fsmGetRecovCnt_nullParam_pmicHandle(void);
-void test_neg_core_fsmGetRecovCnt_nullParam_recovCnt(void);
-void test_pos_core_getClrRecovCnt(void);
-
-/* fsmClrRecovCnt API tests */
-void test_neg_core_fsmClrRecovCnt_nullParam_pmicHandle(void);
-
-/* fsmSetResetCntThr API tests */
-void test_neg_core_fsmSetResetCntThr_nullParam_pmicHandle(void);
-void test_neg_core_fsmSetResetCntThr_outOfBounds_threshold(void);
-void test_pos_core_setGetResetCntThr(void);
-
-/* fsmGetResetCntThr API tests */
-void test_neg_core_fsmGetResetCntThr_nullParam_pmicHandle(void);
-void test_neg_core_fsmGetResetCntThr_nullParam_threshold(void);
-
-/* fsmGetResetCnt API tests */
-void test_neg_core_fsmGetResetCnt_nullParam_pmicHandle(void);
-void test_neg_core_fsmGetResetCnt_nullParam_resetCnt(void);
-void test_pos_core_getClrResetCnt(void);
-
-/* fsmClrResetCnt API tests */
-void test_neg_core_fsmClrResetCnt_nullParam_pmicHandle(void);
 
 /* setCRC16Cfg API tests */
 void test_neg_core_setCRC16Cfg_nullParam_handle(void);
