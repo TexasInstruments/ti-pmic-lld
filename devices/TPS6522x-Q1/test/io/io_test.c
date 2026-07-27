@@ -695,22 +695,61 @@ void test_pos_io_ioSetCrcEnableState_crcSetEnableState(void)
 void test_pos_io_ioSetCrcEnableState_crcEnable1(void)
 {
     int32_t status;
+    Pmic_Handle_t dualI2cHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_1_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
+        .commMode    = PMIC_INTF_I2C_DUAL,
+        .crcEnable0  = false,
+        .crcEnable1  = false,
+        .i2cAddr0    = PLATFORM_TARGET_I2C_ADDR,
+        .i2cAddr1    = PLATFORM_I2C_ADDR_SECONDARY,
+        .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
+        .ioRead      = &platform_rxByte,
+        .ioWrite     = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop  = &platform_critSecStop,
+    };
+
+    status = Pmic_init(&dualI2cHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&dualI2cHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     const Pmic_IoCrcCfg_t enableCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable1 = PMIC_ENABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &enableCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &enableCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(pmicHandle.crcEnable1 == PMIC_ENABLE);
+    PLATFORM_ASSERT(dualI2cHandle.crcEnable1 == PMIC_ENABLE);
+
+    /* Verify CRC is applied on the wire */
+    int32_t crcOpStatus = Pmic_ioTxByte(&dualI2cHandle, WD_WIN1_CFG_REG, 0xFFU);
 
     const Pmic_IoCrcCfg_t disableCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable1 = PMIC_DISABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &disableCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &disableCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
-    PLATFORM_ASSERT(pmicHandle.crcEnable1 == PMIC_DISABLE);
+    PLATFORM_ASSERT(dualI2cHandle.crcEnable1 == PMIC_DISABLE);
+
+    Pmic_deinit(&dualI2cHandle);
+
+    PLATFORM_ASSERT(crcOpStatus == PMIC_ST_SUCCESS);
 }
 
 /**
@@ -774,25 +813,65 @@ void test_pos_io_ioGetCrcEnableState_crcEnable0(void)
 void test_pos_io_ioGetCrcEnableState_crcEnable1(void)
 {
     int32_t status;
+    uint8_t rxData = 0U;
     Pmic_IoCrcCfg_t cfg = { .validParams = PMIC_CFG_IO_CRC_ENABLE_1_VALID };
+    Pmic_Handle_t dualI2cHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_1_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
+        .commMode    = PMIC_INTF_I2C_DUAL,
+        .crcEnable0  = false,
+        .crcEnable1  = false,
+        .i2cAddr0    = PLATFORM_TARGET_I2C_ADDR,
+        .i2cAddr1    = PLATFORM_I2C_ADDR_SECONDARY,
+        .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
+        .ioRead      = &platform_rxByte,
+        .ioWrite     = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop  = &platform_critSecStop,
+    };
+
+    status = Pmic_init(&dualI2cHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&dualI2cHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     const Pmic_IoCrcCfg_t enableCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable1 = PMIC_ENABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &enableCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &enableCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_ioGetCrcEnableState(&pmicHandle, &cfg);
+    status = Pmic_ioGetCrcEnableState(&dualI2cHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(cfg.crcEnable1 == PMIC_ENABLE);
+
+    /* Verify CRC is applied on the wire */
+    int32_t crcOpStatus = Pmic_ioRxByte(&dualI2cHandle, WD_WIN2_CFG_REG, &rxData);
 
     const Pmic_IoCrcCfg_t disableCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable1 = PMIC_DISABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &disableCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &disableCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&dualI2cHandle);
+
+    PLATFORM_ASSERT(crcOpStatus == PMIC_ST_SUCCESS);
 }
 
 /**
@@ -801,30 +880,70 @@ void test_pos_io_ioGetCrcEnableState_crcEnable1(void)
 void test_pos_io_ioGetCrcEnableState_crcEnableBoth(void)
 {
     int32_t status;
+    uint8_t rxData = 0U;
     Pmic_IoCrcCfg_t cfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_0_VALID | PMIC_CFG_IO_CRC_ENABLE_1_VALID,
     };
+    Pmic_Handle_t dualI2cHandle = {0};
+
+    Pmic_HandleCfg_t handleCfg = {
+        .validParams = PMIC_CFG_INIT_COMM_MODE_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_0_VALID |
+                       PMIC_CFG_INIT_CRC_ENABLE_1_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR0_VALID |
+                       PMIC_CFG_INIT_I2C_ADDR1_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_0_VALID |
+                       PMIC_CFG_INIT_COMM_HANDLE_1_VALID |
+                       PMIC_CFG_INIT_IO_READ_VALID |
+                       PMIC_CFG_INIT_IO_WRITE_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_START_VALID |
+                       PMIC_CFG_INIT_CRITICAL_SECTION_STOP_VALID,
+        .commMode    = PMIC_INTF_I2C_DUAL,
+        .crcEnable0  = false,
+        .crcEnable1  = false,
+        .i2cAddr0    = PLATFORM_TARGET_I2C_ADDR,
+        .i2cAddr1    = PLATFORM_I2C_ADDR_SECONDARY,
+        .commHandle0 = platform_getCommHandle0(),
+        .commHandle1 = platform_getCommHandle1(),
+        .ioRead      = &platform_rxByte,
+        .ioWrite     = &platform_txByte,
+        .criticalSectionStart = &platform_critSecStart,
+        .criticalSectionStop  = &platform_critSecStop,
+    };
+
+    status = Pmic_init(&dualI2cHandle, &handleCfg);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    status = Pmic_setRegLockState(&dualI2cHandle, false);
+    PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
     const Pmic_IoCrcCfg_t enableBothCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_0_VALID | PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable0 = PMIC_ENABLE,
         .crcEnable1 = PMIC_ENABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &enableBothCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &enableBothCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
 
-    status = Pmic_ioGetCrcEnableState(&pmicHandle, &cfg);
+    status = Pmic_ioGetCrcEnableState(&dualI2cHandle, &cfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
     PLATFORM_ASSERT(cfg.crcEnable0 == PMIC_ENABLE);
     PLATFORM_ASSERT(cfg.crcEnable1 == PMIC_ENABLE);
+
+    /* Verify CRC is applied on the wire */
+    int32_t crcOpStatus = Pmic_ioRxByte(&dualI2cHandle, WD_WIN2_CFG_REG, &rxData);
 
     const Pmic_IoCrcCfg_t disableBothCfg = {
         .validParams = PMIC_CFG_IO_CRC_ENABLE_0_VALID | PMIC_CFG_IO_CRC_ENABLE_1_VALID,
         .crcEnable0 = PMIC_DISABLE,
         .crcEnable1 = PMIC_DISABLE,
     };
-    status = Pmic_ioSetCrcEnableState(&pmicHandle, &disableBothCfg);
+    status = Pmic_ioSetCrcEnableState(&dualI2cHandle, &disableBothCfg);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);
+
+    Pmic_deinit(&dualI2cHandle);
+
+    PLATFORM_ASSERT(crcOpStatus == PMIC_ST_SUCCESS);
 }
 
 /**
